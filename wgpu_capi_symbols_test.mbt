@@ -192,6 +192,7 @@ test "spec: webgpu.h symbol coverage (expected red)" {
     let _ = @wgpu_c.wgpuTextureViewAddRef
     let _ = @wgpu_c.wgpuTextureViewRelease
     let _ = @wgpu_c.wgpuTextureViewSetLabel
+
   }
   // Snapshot a stable marker so this stays green while providing symbol coverage.
   inspect("symbol coverage ok", content="symbol coverage ok")
