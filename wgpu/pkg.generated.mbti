@@ -42,23 +42,23 @@ pub let texture_usage_texture_binding : UInt64
 
 // Types and methods
 pub struct Adapter {
-  raw : @c.Adapter
+  raw : @c.WGPUAdapter
 }
 pub fn Adapter::release(Self) -> Unit
 pub fn Adapter::request_device_sync(Self, Instance) -> Device
 
 pub struct BindGroup {
-  raw : @c.BindGroup
+  raw : @c.WGPUBindGroup
 }
 pub fn BindGroup::release(Self) -> Unit
 
 pub struct BindGroupLayout {
-  raw : @c.BindGroupLayout
+  raw : @c.WGPUBindGroupLayout
 }
 pub fn BindGroupLayout::release(Self) -> Unit
 
 pub struct Buffer {
-  raw : @c.Buffer
+  raw : @c.WGPUBuffer
 }
 pub fn Buffer::destroy(Self) -> Unit
 pub fn Buffer::map_read_sync(Self, Instance, UInt64, UInt64) -> Bytes
@@ -69,12 +69,12 @@ pub fn Buffer::size(Self) -> UInt64
 pub fn Buffer::unmap(Self) -> Unit
 
 pub struct CommandBuffer {
-  raw : @c.CommandBuffer
+  raw : @c.WGPUCommandBuffer
 }
 pub fn CommandBuffer::release(Self) -> Unit
 
 pub struct CommandEncoder {
-  raw : @c.CommandEncoder
+  raw : @c.WGPUCommandEncoder
 }
 pub fn CommandEncoder::begin_compute_pass(Self) -> ComputePass
 pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
@@ -90,7 +90,7 @@ pub fn CommandEncoder::finish(Self) -> CommandBuffer
 pub fn CommandEncoder::release(Self) -> Unit
 
 pub struct ComputePass {
-  raw : @c.ComputePassEncoder
+  raw : @c.WGPUComputePassEncoder
 }
 pub fn ComputePass::dispatch_workgroups(Self, UInt, UInt, UInt) -> Unit
 pub fn ComputePass::end(Self) -> Unit
@@ -99,12 +99,12 @@ pub fn ComputePass::set_bind_group0(Self, BindGroup) -> Unit
 pub fn ComputePass::set_pipeline(Self, ComputePipeline) -> Unit
 
 pub struct ComputePipeline {
-  raw : @c.ComputePipeline
+  raw : @c.WGPUComputePipeline
 }
 pub fn ComputePipeline::release(Self) -> Unit
 
 pub struct Device {
-  raw : @c.Device
+  raw : @c.WGPUDevice
 }
 pub fn Device::create_bind_group_layout_sampler_texture_2d(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_storage_buffer(Self) -> BindGroupLayout
@@ -134,7 +134,7 @@ pub fn Device::queue(Self) -> Queue
 pub fn Device::release(Self) -> Unit
 
 pub struct Instance {
-  raw : @c.Instance
+  raw : @c.WGPUInstance
 }
 pub fn Instance::create() -> Self
 pub fn Instance::process_events(Self) -> Unit
@@ -142,12 +142,12 @@ pub fn Instance::release(Self) -> Unit
 pub fn Instance::request_adapter_sync(Self) -> Adapter
 
 pub struct PipelineLayout {
-  raw : @c.PipelineLayout
+  raw : @c.WGPUPipelineLayout
 }
 pub fn PipelineLayout::release(Self) -> Unit
 
 pub struct Queue {
-  raw : @c.Queue
+  raw : @c.WGPUQueue
 }
 pub fn Queue::release(Self) -> Unit
 pub fn Queue::submit(Self, Array[CommandBuffer]) -> Unit
@@ -156,7 +156,7 @@ pub fn Queue::write_buffer(Self, Buffer, UInt64, Bytes) -> Unit
 pub fn Queue::write_texture_rgba8_2d(Self, Texture, UInt, UInt, Bytes) -> Unit
 
 pub struct RenderPass {
-  raw : @c.RenderPassEncoder
+  raw : @c.WGPURenderPassEncoder
 }
 pub fn RenderPass::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::draw_indexed(Self, UInt, UInt, UInt, Int, UInt) -> Unit
@@ -171,28 +171,28 @@ pub fn RenderPass::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_viewport(Self, Float, Float, Float, Float, Float, Float) -> Unit
 
 pub struct RenderPipeline {
-  raw : @c.RenderPipeline
+  raw : @c.WGPURenderPipeline
 }
 pub fn RenderPipeline::release(Self) -> Unit
 
 pub struct Sampler {
-  raw : @c.Sampler
+  raw : @c.WGPUSampler
 }
 pub fn Sampler::release(Self) -> Unit
 
 pub struct ShaderModule {
-  raw : @c.ShaderModule
+  raw : @c.WGPUShaderModule
 }
 pub fn ShaderModule::release(Self) -> Unit
 
 pub struct Texture {
-  raw : @c.Texture
+  raw : @c.WGPUTexture
 }
 pub fn Texture::create_view(Self) -> TextureView
 pub fn Texture::release(Self) -> Unit
 
 pub struct TextureView {
-  raw : @c.TextureView
+  raw : @c.WGPUTextureView
 }
 pub fn TextureView::release(Self) -> Unit
 

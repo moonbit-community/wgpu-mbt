@@ -17,6 +17,7 @@ pub type UnitPtr
 
 ///|
 #external
+#alias(Adapter)
 pub type WGPUAdapter
 
 ///|
@@ -29,6 +30,7 @@ pub type WGPUAdapterInfoPtr
 
 ///|
 #external
+#alias(BindGroup)
 pub type WGPUBindGroup
 
 ///|
@@ -37,6 +39,7 @@ pub type WGPUBindGroupDescriptorPtr
 
 ///|
 #external
+#alias(BindGroupLayout)
 pub type WGPUBindGroupLayout
 
 ///|
@@ -45,6 +48,7 @@ pub type WGPUBindGroupLayoutDescriptorPtr
 
 ///|
 #external
+#alias(Buffer)
 pub type WGPUBuffer
 
 ///|
@@ -69,6 +73,7 @@ pub type WGPUColorPtr
 
 ///|
 #external
+#alias(CommandBuffer)
 pub type WGPUCommandBuffer
 
 ///|
@@ -81,6 +86,7 @@ pub type WGPUCommandBufferPtr
 
 ///|
 #external
+#alias(CommandEncoder)
 pub type WGPUCommandEncoder
 
 ///|
@@ -97,10 +103,12 @@ pub type WGPUComputePassDescriptorPtr
 
 ///|
 #external
+#alias(ComputePassEncoder)
 pub type WGPUComputePassEncoder
 
 ///|
 #external
+#alias(ComputePipeline)
 pub type WGPUComputePipeline
 
 ///|
@@ -117,6 +125,7 @@ pub type WGPUCreateRenderPipelineAsyncCallbackInfo
 
 ///|
 #external
+#alias(Device)
 pub type WGPUDevice
 
 ///|
@@ -149,6 +158,7 @@ pub type WGPUIndexFormat
 
 ///|
 #external
+#alias(Instance)
 pub type WGPUInstance
 
 ///|
@@ -169,6 +179,7 @@ pub type WGPUMapMode
 
 ///|
 #external
+#alias(PipelineLayout)
 pub type WGPUPipelineLayout
 
 ///|
@@ -197,6 +208,7 @@ pub type WGPUQueryType
 
 ///|
 #external
+#alias(Queue)
 pub type WGPUQueue
 
 ///|
@@ -229,10 +241,12 @@ pub type WGPURenderPassDescriptorPtr
 
 ///|
 #external
+#alias(RenderPassEncoder)
 pub type WGPURenderPassEncoder
 
 ///|
 #external
+#alias(RenderPipeline)
 pub type WGPURenderPipeline
 
 ///|
@@ -253,6 +267,7 @@ pub type WGPURequestDeviceCallbackInfo
 
 ///|
 #external
+#alias(Sampler)
 pub type WGPUSampler
 
 ///|
@@ -261,6 +276,7 @@ pub type WGPUSamplerDescriptorPtr
 
 ///|
 #external
+#alias(ShaderModule)
 pub type WGPUShaderModule
 
 ///|
@@ -329,6 +345,7 @@ pub type WGPUTexelCopyTextureInfoPtr
 
 ///|
 #external
+#alias(Texture)
 pub type WGPUTexture
 
 ///|
@@ -349,6 +366,7 @@ pub type WGPUTextureUsage
 
 ///|
 #external
+#alias(TextureView)
 pub type WGPUTextureView
 
 ///|

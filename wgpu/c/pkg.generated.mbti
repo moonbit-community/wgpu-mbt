@@ -2,167 +2,167 @@
 package "username/wgpu_mbt/wgpu/c"
 
 // Values
-pub fn adapter_release(Adapter) -> Unit
+pub fn adapter_release(WGPUAdapter) -> Unit
 
-pub fn adapter_request_device_sync(Instance, Adapter) -> Device
+pub fn adapter_request_device_sync(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
-pub fn bind_group_layout_release(BindGroupLayout) -> Unit
+pub fn bind_group_layout_release(WGPUBindGroupLayout) -> Unit
 
-pub fn bind_group_release(BindGroup) -> Unit
+pub fn bind_group_release(WGPUBindGroup) -> Unit
 
-pub fn buffer_destroy(Buffer) -> Unit
+pub fn buffer_destroy(WGPUBuffer) -> Unit
 
-pub fn buffer_get_size(Buffer) -> UInt64
+pub fn buffer_get_size(WGPUBuffer) -> UInt64
 
-pub fn buffer_map_read_sync(Instance, Buffer, UInt64, UInt64, Bytes, UInt64) -> Bool
+pub fn buffer_map_read_sync(WGPUInstance, WGPUBuffer, UInt64, UInt64, Bytes, UInt64) -> Bool
 
-pub fn buffer_map_write_sync(Instance, Buffer, UInt64, Bytes, UInt64) -> Bool
+pub fn buffer_map_write_sync(WGPUInstance, WGPUBuffer, UInt64, Bytes, UInt64) -> Bool
 
-pub fn buffer_readback_sync(Instance, Buffer, UInt64, UInt64, Bytes, UInt64) -> Bool
+pub fn buffer_readback_sync(WGPUInstance, WGPUBuffer, UInt64, UInt64, Bytes, UInt64) -> Bool
 
-pub fn buffer_release(Buffer) -> Unit
+pub fn buffer_release(WGPUBuffer) -> Unit
 
-pub fn buffer_unmap(Buffer) -> Unit
+pub fn buffer_unmap(WGPUBuffer) -> Unit
 
-pub fn command_buffer_release(CommandBuffer) -> Unit
+pub fn command_buffer_release(WGPUCommandBuffer) -> Unit
 
-pub fn command_encoder_begin_compute_pass(CommandEncoder) -> ComputePassEncoder
+pub fn command_encoder_begin_compute_pass(WGPUCommandEncoder) -> WGPUComputePassEncoder
 
-pub fn command_encoder_begin_render_pass_color(CommandEncoder, TextureView) -> RenderPassEncoder
+pub fn command_encoder_begin_render_pass_color(WGPUCommandEncoder, WGPUTextureView) -> WGPURenderPassEncoder
 
-pub fn command_encoder_begin_render_pass_color_clear(CommandEncoder, TextureView, Float, Float, Float, Float) -> RenderPassEncoder
+pub fn command_encoder_begin_render_pass_color_clear(WGPUCommandEncoder, WGPUTextureView, Float, Float, Float, Float) -> WGPURenderPassEncoder
 
-pub fn command_encoder_begin_render_pass_color_depth(CommandEncoder, TextureView, TextureView) -> RenderPassEncoder
+pub fn command_encoder_begin_render_pass_color_depth(WGPUCommandEncoder, WGPUTextureView, WGPUTextureView) -> WGPURenderPassEncoder
 
-pub fn command_encoder_begin_render_pass_color_load(CommandEncoder, TextureView) -> RenderPassEncoder
+pub fn command_encoder_begin_render_pass_color_load(WGPUCommandEncoder, WGPUTextureView) -> WGPURenderPassEncoder
 
-pub fn command_encoder_clear_buffer(CommandEncoder, Buffer, UInt64, UInt64) -> Unit
+pub fn command_encoder_clear_buffer(WGPUCommandEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
 
-pub fn command_encoder_copy_buffer_to_buffer(CommandEncoder, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
+pub fn command_encoder_copy_buffer_to_buffer(WGPUCommandEncoder, WGPUBuffer, UInt64, WGPUBuffer, UInt64, UInt64) -> Unit
 
-pub fn command_encoder_copy_buffer_to_texture_rgba8(CommandEncoder, Buffer, Texture, UInt, UInt) -> Unit
+pub fn command_encoder_copy_buffer_to_texture_rgba8(WGPUCommandEncoder, WGPUBuffer, WGPUTexture, UInt, UInt) -> Unit
 
-pub fn command_encoder_copy_texture_to_buffer_rgba8(CommandEncoder, Texture, Buffer, UInt, UInt) -> Unit
+pub fn command_encoder_copy_texture_to_buffer_rgba8(WGPUCommandEncoder, WGPUTexture, WGPUBuffer, UInt, UInt) -> Unit
 
-pub fn command_encoder_copy_texture_to_texture_rgba8(CommandEncoder, Texture, Texture, UInt, UInt) -> Unit
+pub fn command_encoder_copy_texture_to_texture_rgba8(WGPUCommandEncoder, WGPUTexture, WGPUTexture, UInt, UInt) -> Unit
 
-pub fn command_encoder_finish(CommandEncoder) -> CommandBuffer
+pub fn command_encoder_finish(WGPUCommandEncoder) -> WGPUCommandBuffer
 
-pub fn command_encoder_release(CommandEncoder) -> Unit
+pub fn command_encoder_release(WGPUCommandEncoder) -> Unit
 
-pub fn compute_pass_dispatch_workgroups(ComputePassEncoder, UInt, UInt, UInt) -> Unit
+pub fn compute_pass_dispatch_workgroups(WGPUComputePassEncoder, UInt, UInt, UInt) -> Unit
 
-pub fn compute_pass_end(ComputePassEncoder) -> Unit
+pub fn compute_pass_end(WGPUComputePassEncoder) -> Unit
 
-pub fn compute_pass_release(ComputePassEncoder) -> Unit
+pub fn compute_pass_release(WGPUComputePassEncoder) -> Unit
 
-pub fn compute_pass_set_bind_group0(ComputePassEncoder, BindGroup) -> Unit
+pub fn compute_pass_set_bind_group0(WGPUComputePassEncoder, WGPUBindGroup) -> Unit
 
-pub fn compute_pass_set_pipeline(ComputePassEncoder, ComputePipeline) -> Unit
+pub fn compute_pass_set_pipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
 
-pub fn compute_pipeline_release(ComputePipeline) -> Unit
+pub fn compute_pipeline_release(WGPUComputePipeline) -> Unit
 
-pub fn create_instance() -> Instance
+pub fn create_instance() -> WGPUInstance
 
-pub fn device_create_bind_group_layout_sampler_texture_2d(Device) -> BindGroupLayout
+pub fn device_create_bind_group_layout_sampler_texture_2d(WGPUDevice) -> WGPUBindGroupLayout
 
-pub fn device_create_bind_group_layout_storage_buffer(Device) -> BindGroupLayout
+pub fn device_create_bind_group_layout_storage_buffer(WGPUDevice) -> WGPUBindGroupLayout
 
-pub fn device_create_bind_group_layout_uniform_buffer(Device) -> BindGroupLayout
+pub fn device_create_bind_group_layout_uniform_buffer(WGPUDevice) -> WGPUBindGroupLayout
 
-pub fn device_create_bind_group_sampler_texture_2d(Device, BindGroupLayout, Sampler, TextureView) -> BindGroup
+pub fn device_create_bind_group_sampler_texture_2d(WGPUDevice, WGPUBindGroupLayout, WGPUSampler, WGPUTextureView) -> WGPUBindGroup
 
-pub fn device_create_bind_group_storage_buffer(Device, BindGroupLayout, Buffer) -> BindGroup
+pub fn device_create_bind_group_storage_buffer(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
 
-pub fn device_create_bind_group_uniform_buffer(Device, BindGroupLayout, Buffer) -> BindGroup
+pub fn device_create_bind_group_uniform_buffer(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
 
-pub fn device_create_buffer(Device, UInt64, UInt64, Bool) -> Buffer
+pub fn device_create_buffer(WGPUDevice, UInt64, UInt64, Bool) -> WGPUBuffer
 
-pub fn device_create_command_encoder(Device) -> CommandEncoder
+pub fn device_create_command_encoder(WGPUDevice) -> WGPUCommandEncoder
 
-pub fn device_create_compute_pipeline(Device, ShaderModule) -> ComputePipeline
+pub fn device_create_compute_pipeline(WGPUDevice, WGPUShaderModule) -> WGPUComputePipeline
 
-pub fn device_create_compute_pipeline_with_layout(Device, PipelineLayout, ShaderModule) -> ComputePipeline
+pub fn device_create_compute_pipeline_with_layout(WGPUDevice, WGPUPipelineLayout, WGPUShaderModule) -> WGPUComputePipeline
 
-pub fn device_create_pipeline_layout_1(Device, BindGroupLayout) -> PipelineLayout
+pub fn device_create_pipeline_layout_1(WGPUDevice, WGPUBindGroupLayout) -> WGPUPipelineLayout
 
-pub fn device_create_render_pipeline_rgba8(Device, ShaderModule) -> RenderPipeline
+pub fn device_create_render_pipeline_rgba8(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
-pub fn device_create_render_pipeline_rgba8_alpha_blend(Device, ShaderModule) -> RenderPipeline
+pub fn device_create_render_pipeline_rgba8_alpha_blend(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
-pub fn device_create_render_pipeline_rgba8_depth(Device, ShaderModule) -> RenderPipeline
+pub fn device_create_render_pipeline_rgba8_depth(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
-pub fn device_create_render_pipeline_rgba8_pos2(Device, ShaderModule) -> RenderPipeline
+pub fn device_create_render_pipeline_rgba8_pos2(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
-pub fn device_create_render_pipeline_rgba8_pos2_with_layout(Device, PipelineLayout, ShaderModule) -> RenderPipeline
+pub fn device_create_render_pipeline_rgba8_pos2_with_layout(WGPUDevice, WGPUPipelineLayout, WGPUShaderModule) -> WGPURenderPipeline
 
-pub fn device_create_render_pipeline_rgba8_with_layout(Device, PipelineLayout, ShaderModule) -> RenderPipeline
+pub fn device_create_render_pipeline_rgba8_with_layout(WGPUDevice, WGPUPipelineLayout, WGPUShaderModule) -> WGPURenderPipeline
 
-pub fn device_create_sampler_linear_clamp(Device) -> Sampler
+pub fn device_create_sampler_linear_clamp(WGPUDevice) -> WGPUSampler
 
-pub fn device_create_sampler_nearest_clamp(Device) -> Sampler
+pub fn device_create_sampler_nearest_clamp(WGPUDevice) -> WGPUSampler
 
-pub fn device_create_shader_module_wgsl(Device, Bytes, UInt64) -> ShaderModule
+pub fn device_create_shader_module_wgsl(WGPUDevice, Bytes, UInt64) -> WGPUShaderModule
 
-pub fn device_create_texture_depth24plus_2d(Device, UInt, UInt) -> Texture
+pub fn device_create_texture_depth24plus_2d(WGPUDevice, UInt, UInt) -> WGPUTexture
 
-pub fn device_create_texture_rgba8_2d(Device, UInt, UInt) -> Texture
+pub fn device_create_texture_rgba8_2d(WGPUDevice, UInt, UInt) -> WGPUTexture
 
-pub fn device_create_texture_rgba8_2d_with_usage(Device, UInt, UInt, UInt64) -> Texture
+pub fn device_create_texture_rgba8_2d_with_usage(WGPUDevice, UInt, UInt, UInt64) -> WGPUTexture
 
-pub fn device_get_queue(Device) -> Queue
+pub fn device_get_queue(WGPUDevice) -> WGPUQueue
 
-pub fn device_release(Device) -> Unit
+pub fn device_release(WGPUDevice) -> Unit
 
-pub fn instance_process_events(Instance) -> Unit
+pub fn instance_process_events(WGPUInstance) -> Unit
 
-pub fn instance_release(Instance) -> Unit
+pub fn instance_release(WGPUInstance) -> Unit
 
-pub fn instance_request_adapter_sync(Instance) -> Adapter
+pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
 
-pub fn pipeline_layout_release(PipelineLayout) -> Unit
+pub fn pipeline_layout_release(WGPUPipelineLayout) -> Unit
 
-pub fn queue_release(Queue) -> Unit
+pub fn queue_release(WGPUQueue) -> Unit
 
-pub fn queue_submit(Queue, UInt64, FixedArray[CommandBuffer]) -> Unit
+pub fn queue_submit(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> Unit
 
-pub fn queue_write_buffer(Queue, Buffer, UInt64, Bytes, UInt64) -> Unit
+pub fn queue_write_buffer(WGPUQueue, WGPUBuffer, UInt64, Bytes, UInt64) -> Unit
 
-pub fn queue_write_texture_rgba8_2d(Queue, Texture, UInt, UInt, Bytes, UInt64) -> Unit
+pub fn queue_write_texture_rgba8_2d(WGPUQueue, WGPUTexture, UInt, UInt, Bytes, UInt64) -> Unit
 
-pub fn render_pass_draw(RenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
+pub fn render_pass_draw(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
 
-pub fn render_pass_draw_indexed(RenderPassEncoder, UInt, UInt, UInt, Int, UInt) -> Unit
+pub fn render_pass_draw_indexed(WGPURenderPassEncoder, UInt, UInt, UInt, Int, UInt) -> Unit
 
-pub fn render_pass_end(RenderPassEncoder) -> Unit
+pub fn render_pass_end(WGPURenderPassEncoder) -> Unit
 
-pub fn render_pass_release(RenderPassEncoder) -> Unit
+pub fn render_pass_release(WGPURenderPassEncoder) -> Unit
 
-pub fn render_pass_set_bind_group0(RenderPassEncoder, BindGroup) -> Unit
+pub fn render_pass_set_bind_group0(WGPURenderPassEncoder, WGPUBindGroup) -> Unit
 
-pub fn render_pass_set_index_buffer_u16(RenderPassEncoder, Buffer, UInt64, UInt64) -> Unit
+pub fn render_pass_set_index_buffer_u16(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
 
-pub fn render_pass_set_index_buffer_u32(RenderPassEncoder, Buffer, UInt64, UInt64) -> Unit
+pub fn render_pass_set_index_buffer_u32(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
 
-pub fn render_pass_set_pipeline(RenderPassEncoder, RenderPipeline) -> Unit
+pub fn render_pass_set_pipeline(WGPURenderPassEncoder, WGPURenderPipeline) -> Unit
 
-pub fn render_pass_set_scissor_rect(RenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
+pub fn render_pass_set_scissor_rect(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
 
-pub fn render_pass_set_vertex_buffer(RenderPassEncoder, UInt, Buffer, UInt64, UInt64) -> Unit
+pub fn render_pass_set_vertex_buffer(WGPURenderPassEncoder, UInt, WGPUBuffer, UInt64, UInt64) -> Unit
 
-pub fn render_pass_set_viewport(RenderPassEncoder, Float, Float, Float, Float, Float, Float) -> Unit
+pub fn render_pass_set_viewport(WGPURenderPassEncoder, Float, Float, Float, Float, Float, Float) -> Unit
 
-pub fn render_pipeline_release(RenderPipeline) -> Unit
+pub fn render_pipeline_release(WGPURenderPipeline) -> Unit
 
-pub fn sampler_release(Sampler) -> Unit
+pub fn sampler_release(WGPUSampler) -> Unit
 
-pub fn shader_module_release(ShaderModule) -> Unit
+pub fn shader_module_release(WGPUShaderModule) -> Unit
 
-pub fn texture_create_view(Texture) -> TextureView
+pub fn texture_create_view(WGPUTexture) -> WGPUTextureView
 
-pub fn texture_release(Texture) -> Unit
+pub fn texture_release(WGPUTexture) -> Unit
 
-pub fn texture_view_release(TextureView) -> Unit
+pub fn texture_view_release(WGPUTextureView) -> Unit
 
 pub fn wgpuAdapterAddRef(WGPUAdapter) -> Unit
 
@@ -548,65 +548,12 @@ pub fn wgpuTextureViewSetLabel(WGPUTextureView, WGPUStringView) -> Unit
 
 // Types and methods
 #external
-pub type Adapter
-
-#external
-pub type BindGroup
-
-#external
-pub type BindGroupLayout
-
-#external
-pub type Buffer
-
-#external
-pub type CommandBuffer
-
-#external
-pub type CommandEncoder
-
-#external
-pub type ComputePassEncoder
-
-#external
-pub type ComputePipeline
-
-#external
-pub type Device
-
-#external
-pub type Instance
-
-#external
-pub type PipelineLayout
-
-#external
-pub type Queue
-
-#external
-pub type RenderPassEncoder
-
-#external
-pub type RenderPipeline
-
-#external
-pub type Sampler
-
-#external
-pub type ShaderModule
-
-#external
-pub type Texture
-
-#external
-pub type TextureView
-
-#external
 pub type UIntPtr
 
 #external
 pub type UnitPtr
 
+#alias(Adapter)
 #external
 pub type WGPUAdapter
 
@@ -616,18 +563,21 @@ pub type WGPUAdapterInfo
 #external
 pub type WGPUAdapterInfoPtr
 
+#alias(BindGroup)
 #external
 pub type WGPUBindGroup
 
 #external
 pub type WGPUBindGroupDescriptorPtr
 
+#alias(BindGroupLayout)
 #external
 pub type WGPUBindGroupLayout
 
 #external
 pub type WGPUBindGroupLayoutDescriptorPtr
 
+#alias(Buffer)
 #external
 pub type WGPUBuffer
 
@@ -646,6 +596,7 @@ pub type WGPUBufferUsage
 #external
 pub type WGPUColorPtr
 
+#alias(CommandBuffer)
 #external
 pub type WGPUCommandBuffer
 
@@ -655,6 +606,7 @@ pub type WGPUCommandBufferDescriptorPtr
 #external
 pub type WGPUCommandBufferPtr
 
+#alias(CommandEncoder)
 #external
 pub type WGPUCommandEncoder
 
@@ -667,9 +619,11 @@ pub type WGPUCompilationInfoCallbackInfo
 #external
 pub type WGPUComputePassDescriptorPtr
 
+#alias(ComputePassEncoder)
 #external
 pub type WGPUComputePassEncoder
 
+#alias(ComputePipeline)
 #external
 pub type WGPUComputePipeline
 
@@ -682,6 +636,7 @@ pub type WGPUCreateComputePipelineAsyncCallbackInfo
 #external
 pub type WGPUCreateRenderPipelineAsyncCallbackInfo
 
+#alias(Device)
 #external
 pub type WGPUDevice
 
@@ -706,6 +661,7 @@ pub type WGPUFutureWaitInfoPtr
 #external
 pub type WGPUIndexFormat
 
+#alias(Instance)
 #external
 pub type WGPUInstance
 
@@ -721,6 +677,7 @@ pub type WGPULimitsPtr
 #external
 pub type WGPUMapMode
 
+#alias(PipelineLayout)
 #external
 pub type WGPUPipelineLayout
 
@@ -742,6 +699,7 @@ pub type WGPUQuerySetDescriptorPtr
 #external
 pub type WGPUQueryType
 
+#alias(Queue)
 #external
 pub type WGPUQueue
 
@@ -766,9 +724,11 @@ pub type WGPURenderBundlePtr
 #external
 pub type WGPURenderPassDescriptorPtr
 
+#alias(RenderPassEncoder)
 #external
 pub type WGPURenderPassEncoder
 
+#alias(RenderPipeline)
 #external
 pub type WGPURenderPipeline
 
@@ -784,12 +744,14 @@ pub type WGPURequestAdapterOptionsPtr
 #external
 pub type WGPURequestDeviceCallbackInfo
 
+#alias(Sampler)
 #external
 pub type WGPUSampler
 
 #external
 pub type WGPUSamplerDescriptorPtr
 
+#alias(ShaderModule)
 #external
 pub type WGPUShaderModule
 
@@ -841,6 +803,7 @@ pub type WGPUTexelCopyBufferLayoutPtr
 #external
 pub type WGPUTexelCopyTextureInfoPtr
 
+#alias(Texture)
 #external
 pub type WGPUTexture
 
@@ -856,6 +819,7 @@ pub type WGPUTextureFormat
 #external
 pub type WGPUTextureUsage
 
+#alias(TextureView)
 #external
 pub type WGPUTextureView
 

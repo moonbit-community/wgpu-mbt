@@ -25,6 +25,30 @@ OUT_SPEC = REPO / "wgpu/c/webgpu_capi_spec.mbt"
 OUT_IMPL = REPO / "wgpu/c/webgpu_capi.mbt"
 OUT_TEST = REPO / "wgpu_capi_symbols_test.mbt"
 
+# WGPU handle types already exposed by `wgpu/c/raw.mbt`.
+# We keep those names working by exporting them as aliases to the official
+# WebGPU C API handle types (WGPU*).
+HANDLE_TYPE_ALIASES: dict[str, str] = {
+    "WGPUInstance": "Instance",
+    "WGPUAdapter": "Adapter",
+    "WGPUDevice": "Device",
+    "WGPUQueue": "Queue",
+    "WGPUBuffer": "Buffer",
+    "WGPUShaderModule": "ShaderModule",
+    "WGPUComputePipeline": "ComputePipeline",
+    "WGPUComputePassEncoder": "ComputePassEncoder",
+    "WGPURenderPipeline": "RenderPipeline",
+    "WGPURenderPassEncoder": "RenderPassEncoder",
+    "WGPUTexture": "Texture",
+    "WGPUTextureView": "TextureView",
+    "WGPUBindGroupLayout": "BindGroupLayout",
+    "WGPUBindGroup": "BindGroup",
+    "WGPUPipelineLayout": "PipelineLayout",
+    "WGPUCommandEncoder": "CommandEncoder",
+    "WGPUCommandBuffer": "CommandBuffer",
+    "WGPUSampler": "Sampler",
+}
+
 
 def strip_comments(s: str) -> str:
     s = re.sub(r"/\\*.*?\\*/", "", s, flags=re.S)
@@ -214,6 +238,9 @@ def write_impl(funcs: list[Func], types: set[str]) -> None:
         # Minimal representation to make signatures type-check.
         # Model all WebGPU CAPI types as opaque external handles for now.
         lines.append("#external")
+        alias = HANDLE_TYPE_ALIASES.get(t)
+        if alias is not None:
+            lines.append(f"#alias({alias})")
         lines.append(f"pub type {t}")
 
     for f in func_list:

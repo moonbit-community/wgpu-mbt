@@ -4,76 +4,9 @@
 /// These are intentionally low-level and mostly mirror the C ABI.
 
 ///|
-#external
-pub type Instance
-
-///|
-#external
-pub type Adapter
-
-///|
-#external
-pub type Device
-
-///|
-#external
-pub type Queue
-
-///|
-#external
-pub type Buffer
-
-///|
-#external
-pub type ShaderModule
-
-///|
-#external
-pub type ComputePipeline
-
-///|
-#external
-pub type ComputePassEncoder
-
-///|
-#external
-pub type RenderPipeline
-
-///|
-#external
-pub type RenderPassEncoder
-
-///|
-#external
-pub type Texture
-
-///|
-#external
-pub type TextureView
-
-///|
-#external
-pub type BindGroupLayout
-
-///|
-#external
-pub type BindGroup
-
-///|
-#external
-pub type PipelineLayout
-
-///|
-#external
-pub type CommandEncoder
-
-///|
-#external
-pub type CommandBuffer
-
-///|
-#external
-pub type Sampler
+/// Handle types (`Instance`, `Device`, `Buffer`, ...) are aliases to the
+/// corresponding WebGPU C API `WGPU*` handle types declared in
+/// `wgpu/c/webgpu_capi.mbt`.
 
 ///|
 pub extern "C" fn create_instance() -> Instance = "mbt_wgpu_create_instance"
