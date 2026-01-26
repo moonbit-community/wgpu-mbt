@@ -2,6 +2,8 @@
 package "username/wgpu_mbt"
 
 // Values
+pub fn read_rgba8_from_copy_out(Bytes, UInt, UInt) -> FixedArray[UInt]
+
 pub fn rgba_bytes(UInt, UInt, UInt, UInt) -> Bytes
 
 // Errors

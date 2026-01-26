@@ -48,6 +48,9 @@
     "wgpu_test_helpers.mbt": [
       "native"
     ],
+    "wgpu_sync_helpers_test.mbt": [
+      "native"
+    ],
     "wgpu_spec_buffer_init_test.mbt": [
       "native"
     ],
@@ -70,6 +73,18 @@
       "native"
     ],
     "wgpu_spec_sampler_linear_test.mbt": [
+      "native"
+    ],
+    "wgpu_buffer_comprehensive_test.mbt": [
+      "native"
+    ],
+    "wgpu_texture_comprehensive_test.mbt": [
+      "native"
+    ],
+    "wgpu_sampler_comprehensive_test.mbt": [
+      "native"
+    ],
+    "wgpu_smoke_matrix_test.mbt": [
       "native"
     ],
     "wgpu_capi_symbols_test.mbt": [
