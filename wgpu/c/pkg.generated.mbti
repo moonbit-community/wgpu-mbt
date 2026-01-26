@@ -126,7 +126,11 @@ pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
 
 pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr
 
+pub fn null_instance_descriptor_ptr() -> WGPUInstanceDescriptorPtr
+
 pub fn null_ptr() -> UnitPtr
+
+pub fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr
 
 pub fn null_uint_ptr() -> UIntPtr
 

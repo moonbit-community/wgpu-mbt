@@ -15,7 +15,9 @@ pub extern "C" fn null_ptr() -> UnitPtr = "mbt_wgpu_null_ptr"
 pub extern "C" fn null_uint_ptr() -> UIntPtr = "mbt_wgpu_null_uint_ptr"
 
 ///|
-pub extern "C" fn create_instance() -> Instance = "mbt_wgpu_create_instance"
+pub fn create_instance() -> Instance {
+  wgpuCreateInstance(null_instance_descriptor_ptr())
+}
 
 ///|
 pub extern "C" fn instance_request_adapter_sync(instance : Instance) -> Adapter = "mbt_wgpu_instance_request_adapter_sync"
@@ -87,7 +89,9 @@ pub extern "C" fn device_create_texture_depth24plus_2d(
 ) -> Texture = "mbt_wgpu_device_create_texture_depth24plus_2d"
 
 ///|
-pub extern "C" fn texture_create_view(texture : Texture) -> TextureView = "mbt_wgpu_texture_create_view"
+pub fn texture_create_view(texture : Texture) -> TextureView {
+  wgpuTextureCreateView(texture, null_texture_view_descriptor_ptr())
+}
 
 ///|
 pub extern "C" fn device_create_render_pipeline_rgba8(
