@@ -190,6 +190,23 @@ WGPUTexture mbt_wgpu_device_create_texture_rgba8_2d_with_usage(
   return wgpuDeviceCreateTexture(device, &desc);
 }
 
+WGPUTexture mbt_wgpu_device_create_texture_depth24plus_2d(
+    WGPUDevice device, uint32_t width, uint32_t height) {
+  WGPUTextureDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .usage = WGPUTextureUsage_RenderAttachment,
+      .dimension = WGPUTextureDimension_2D,
+      .size = (WGPUExtent3D){.width = width, .height = height, .depthOrArrayLayers = 1u},
+      .format = WGPUTextureFormat_Depth24Plus,
+      .mipLevelCount = 1u,
+      .sampleCount = 1u,
+      .viewFormatCount = 0u,
+      .viewFormats = NULL,
+  };
+  return wgpuDeviceCreateTexture(device, &desc);
+}
+
 WGPUTextureView mbt_wgpu_texture_create_view(WGPUTexture texture) {
   return wgpuTextureCreateView(texture, NULL);
 }
@@ -346,6 +363,88 @@ WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_rgba8(
       .vertex = vertex,
       .primitive = primitive,
       .depthStencil = NULL,
+      .multisample = multisample,
+      .fragment = &fragment,
+  };
+  return wgpuDeviceCreateRenderPipeline(device, &desc);
+}
+
+WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_rgba8_depth(
+    WGPUDevice device, WGPUShaderModule shader_module) {
+  static const char vs_entry[] = "vs_main";
+  static const char fs_entry[] = "fs_main";
+
+  WGPUVertexState vertex = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = vs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .bufferCount = 0u,
+      .buffers = NULL,
+  };
+
+  WGPUColorTargetState color_target = {
+      .nextInChain = NULL,
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .blend = NULL,
+      .writeMask = WGPUColorWriteMask_All,
+  };
+
+  WGPUFragmentState fragment = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = fs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .targetCount = 1u,
+      .targets = &color_target,
+  };
+
+  WGPUPrimitiveState primitive = {
+      .nextInChain = NULL,
+      .topology = WGPUPrimitiveTopology_TriangleList,
+      .stripIndexFormat = WGPUIndexFormat_Undefined,
+      .frontFace = WGPUFrontFace_CCW,
+      .cullMode = WGPUCullMode_None,
+      .unclippedDepth = 0u,
+  };
+
+  WGPUMultisampleState multisample = {
+      .nextInChain = NULL,
+      .count = 1u,
+      .mask = 0xFFFFFFFFu,
+      .alphaToCoverageEnabled = 0u,
+  };
+
+  WGPUStencilFaceState stencil = {
+      .compare = WGPUCompareFunction_Always,
+      .failOp = WGPUStencilOperation_Keep,
+      .depthFailOp = WGPUStencilOperation_Keep,
+      .passOp = WGPUStencilOperation_Keep,
+  };
+
+  WGPUDepthStencilState depth_stencil = {
+      .nextInChain = NULL,
+      .format = WGPUTextureFormat_Depth24Plus,
+      .depthWriteEnabled = WGPUOptionalBool_True,
+      .depthCompare = WGPUCompareFunction_Less,
+      .stencilFront = stencil,
+      .stencilBack = stencil,
+      .stencilReadMask = 0u,
+      .stencilWriteMask = 0u,
+      .depthBias = 0,
+      .depthBiasSlopeScale = 0.0f,
+      .depthBiasClamp = 0.0f,
+  };
+
+  WGPURenderPipelineDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = NULL,
+      .vertex = vertex,
+      .primitive = primitive,
+      .depthStencil = &depth_stencil,
       .multisample = multisample,
       .fragment = &fragment,
   };
@@ -519,6 +618,41 @@ WGPURenderPassEncoder mbt_wgpu_command_encoder_begin_render_pass_color(
   return wgpuCommandEncoderBeginRenderPass(encoder, &desc);
 }
 
+WGPURenderPassEncoder mbt_wgpu_command_encoder_begin_render_pass_color_depth(
+    WGPUCommandEncoder encoder, WGPUTextureView color_view,
+    WGPUTextureView depth_view) {
+  WGPURenderPassColorAttachment color = {
+      .nextInChain = NULL,
+      .view = color_view,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = WGPULoadOp_Clear,
+      .storeOp = WGPUStoreOp_Store,
+      .clearValue = (WGPUColor){.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+  };
+  WGPURenderPassDepthStencilAttachment depth = {
+      .view = depth_view,
+      .depthLoadOp = WGPULoadOp_Clear,
+      .depthStoreOp = WGPUStoreOp_Store,
+      .depthClearValue = 1.0f,
+      .depthReadOnly = 0u,
+      .stencilLoadOp = WGPULoadOp_Clear,
+      .stencilStoreOp = WGPUStoreOp_Store,
+      .stencilClearValue = 0u,
+      .stencilReadOnly = 1u,
+  };
+  WGPURenderPassDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = 1u,
+      .colorAttachments = &color,
+      .depthStencilAttachment = &depth,
+      .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+  return wgpuCommandEncoderBeginRenderPass(encoder, &desc);
+}
+
 void mbt_wgpu_command_encoder_copy_texture_to_buffer_rgba8(
     WGPUCommandEncoder encoder, WGPUTexture texture, WGPUBuffer buffer,
     uint32_t width, uint32_t height) {
@@ -599,6 +733,14 @@ void mbt_wgpu_render_pass_set_index_buffer_u16(WGPURenderPassEncoder pass,
                                                uint64_t offset,
                                                uint64_t size) {
   wgpuRenderPassEncoderSetIndexBuffer(pass, buffer, WGPUIndexFormat_Uint16, offset,
+                                     size);
+}
+
+void mbt_wgpu_render_pass_set_index_buffer_u32(WGPURenderPassEncoder pass,
+                                               WGPUBuffer buffer,
+                                               uint64_t offset,
+                                               uint64_t size) {
+  wgpuRenderPassEncoderSetIndexBuffer(pass, buffer, WGPUIndexFormat_Uint32, offset,
                                      size);
 }
 

@@ -33,6 +33,9 @@
     "wgpu_render_index_buffer_test.mbt": [
       "native"
     ],
+    "wgpu_render_index_buffer_u32_test.mbt": [
+      "native"
+    ],
     "wgpu_render_uniform_test.mbt": [
       "native"
     ],
@@ -43,6 +46,12 @@
       "native"
     ],
     "wgpu_render_texture_sampling_test.mbt": [
+      "native"
+    ],
+    "wgpu_render_depth_test.mbt": [
+      "native"
+    ],
+    "wgpu_clear_buffer_test.mbt": [
       "native"
     ],
     "wgpu_test_helpers.mbt": [

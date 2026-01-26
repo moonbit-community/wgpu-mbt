@@ -224,6 +224,17 @@ pub fn Device::create_texture_rgba8_2d(
 }
 
 ///|
+pub fn Device::create_texture_depth24plus_2d(
+  self : Device,
+  width : UInt,
+  height : UInt,
+) -> Texture {
+  Texture::{
+    raw: @c.device_create_texture_depth24plus_2d(self.raw, width, height),
+  }
+}
+
+///|
 pub fn Device::create_texture_rgba8_2d_with_usage(
   self : Device,
   width : UInt,
@@ -252,6 +263,19 @@ pub fn Device::create_render_pipeline_rgba8(
 ) -> RenderPipeline {
   RenderPipeline::{
     raw: @c.device_create_render_pipeline_rgba8(self.raw, shader_module.raw),
+  }
+}
+
+///|
+pub fn Device::create_render_pipeline_rgba8_depth(
+  self : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline {
+  RenderPipeline::{
+    raw: @c.device_create_render_pipeline_rgba8_depth(
+      self.raw,
+      shader_module.raw,
+    ),
   }
 }
 
@@ -413,6 +437,16 @@ pub fn CommandEncoder::finish(self : CommandEncoder) -> CommandBuffer {
 }
 
 ///|
+pub fn CommandEncoder::clear_buffer(
+  self : CommandEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit {
+  @c.command_encoder_clear_buffer(self.raw, buffer.raw, offset, size)
+}
+
+///|
 pub fn CommandEncoder::copy_buffer_to_buffer(
   self : CommandEncoder,
   source : Buffer,
@@ -494,6 +528,21 @@ pub fn CommandEncoder::begin_render_pass_color(
 ) -> RenderPass {
   RenderPass::{
     raw: @c.command_encoder_begin_render_pass_color(self.raw, view.raw),
+  }
+}
+
+///|
+pub fn CommandEncoder::begin_render_pass_color_depth(
+  self : CommandEncoder,
+  color_view : TextureView,
+  depth_view : TextureView,
+) -> RenderPass {
+  RenderPass::{
+    raw: @c.command_encoder_begin_render_pass_color_depth(
+      self.raw,
+      color_view.raw,
+      depth_view.raw,
+    ),
   }
 }
 
@@ -682,6 +731,16 @@ pub fn RenderPass::set_index_buffer_u16(
   size : UInt64,
 ) -> Unit {
   @c.render_pass_set_index_buffer_u16(self.raw, buffer.raw, offset, size)
+}
+
+///|
+pub fn RenderPass::set_index_buffer_u32(
+  self : RenderPass,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit {
+  @c.render_pass_set_index_buffer_u32(self.raw, buffer.raw, offset, size)
 }
 
 ///|

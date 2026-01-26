@@ -78,6 +78,8 @@ pub struct CommandEncoder {
 }
 pub fn CommandEncoder::begin_compute_pass(Self) -> ComputePass
 pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_color_depth(Self, TextureView, TextureView) -> RenderPass
+pub fn CommandEncoder::clear_buffer(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_buffer(Self, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8(Self, Texture, Buffer, UInt, UInt) -> Unit
@@ -115,12 +117,14 @@ pub fn Device::create_compute_pipeline(Self, ShaderModule) -> ComputePipeline
 pub fn Device::create_compute_pipeline_with_layout(Self, PipelineLayout, ShaderModule) -> ComputePipeline
 pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
+pub fn Device::create_render_pipeline_rgba8_depth(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_pos2(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_pos2_with_layout(Self, PipelineLayout, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_with_layout(Self, PipelineLayout, ShaderModule) -> RenderPipeline
 pub fn Device::create_sampler_linear_clamp(Self) -> Sampler
 pub fn Device::create_sampler_nearest_clamp(Self) -> Sampler
 pub fn Device::create_shader_module_wgsl(Self, String) -> ShaderModule
+pub fn Device::create_texture_depth24plus_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
 pub fn Device::queue(Self) -> Queue
@@ -157,6 +161,7 @@ pub fn RenderPass::end(Self) -> Unit
 pub fn RenderPass::release(Self) -> Unit
 pub fn RenderPass::set_bind_group0(Self, BindGroup) -> Unit
 pub fn RenderPass::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
+pub fn RenderPass::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_pipeline(Self, RenderPipeline) -> Unit
 pub fn RenderPass::set_scissor_rect(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit

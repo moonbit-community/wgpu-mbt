@@ -188,6 +188,16 @@ pub fn Device::create_texture_rgba8_2d(
 
 ///|
 #declaration_only
+pub fn Device::create_texture_depth24plus_2d(
+  self : Device,
+  width : UInt,
+  height : UInt,
+) -> Texture {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Device::create_texture_rgba8_2d_with_usage(
   self : Device,
   width : UInt,
@@ -218,6 +228,15 @@ pub fn Device::create_sampler_linear_clamp(self : Device) -> Sampler {
 ///|
 #declaration_only
 pub fn Device::create_render_pipeline_rgba8(
+  self : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_render_pipeline_rgba8_depth(
   self : Device,
   shader_module : ShaderModule,
 ) -> RenderPipeline {
@@ -381,6 +400,16 @@ pub fn CommandEncoder::begin_render_pass_color(
 
 ///|
 #declaration_only
+pub fn CommandEncoder::begin_render_pass_color_depth(
+  self : CommandEncoder,
+  color_view : TextureView,
+  depth_view : TextureView,
+) -> RenderPass {
+  ...
+}
+
+///|
+#declaration_only
 pub fn CommandEncoder::copy_buffer_to_buffer(
   self : CommandEncoder,
   source : Buffer,
@@ -431,6 +460,17 @@ pub fn CommandEncoder::copy_texture_to_texture_rgba8(
 ///|
 #declaration_only
 pub fn CommandEncoder::finish(self : CommandEncoder) -> CommandBuffer {
+  ...
+}
+
+///|
+#declaration_only
+pub fn CommandEncoder::clear_buffer(
+  self : CommandEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit {
   ...
 }
 
@@ -520,6 +560,17 @@ pub fn RenderPass::set_vertex_buffer(
 ///|
 #declaration_only
 pub fn RenderPass::set_index_buffer_u16(
+  self : RenderPass,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::set_index_buffer_u32(
   self : RenderPass,
   buffer : Buffer,
   offset : UInt64,

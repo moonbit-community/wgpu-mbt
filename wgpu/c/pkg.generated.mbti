@@ -30,6 +30,10 @@ pub fn command_encoder_begin_compute_pass(CommandEncoder) -> ComputePassEncoder
 
 pub fn command_encoder_begin_render_pass_color(CommandEncoder, TextureView) -> RenderPassEncoder
 
+pub fn command_encoder_begin_render_pass_color_depth(CommandEncoder, TextureView, TextureView) -> RenderPassEncoder
+
+pub fn command_encoder_clear_buffer(CommandEncoder, Buffer, UInt64, UInt64) -> Unit
+
 pub fn command_encoder_copy_buffer_to_buffer(CommandEncoder, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
 
 pub fn command_encoder_copy_buffer_to_texture_rgba8(CommandEncoder, Buffer, Texture, UInt, UInt) -> Unit
@@ -80,6 +84,8 @@ pub fn device_create_pipeline_layout_1(Device, BindGroupLayout) -> PipelineLayou
 
 pub fn device_create_render_pipeline_rgba8(Device, ShaderModule) -> RenderPipeline
 
+pub fn device_create_render_pipeline_rgba8_depth(Device, ShaderModule) -> RenderPipeline
+
 pub fn device_create_render_pipeline_rgba8_pos2(Device, ShaderModule) -> RenderPipeline
 
 pub fn device_create_render_pipeline_rgba8_pos2_with_layout(Device, PipelineLayout, ShaderModule) -> RenderPipeline
@@ -91,6 +97,8 @@ pub fn device_create_sampler_linear_clamp(Device) -> Sampler
 pub fn device_create_sampler_nearest_clamp(Device) -> Sampler
 
 pub fn device_create_shader_module_wgsl(Device, Bytes, UInt64) -> ShaderModule
+
+pub fn device_create_texture_depth24plus_2d(Device, UInt, UInt) -> Texture
 
 pub fn device_create_texture_rgba8_2d(Device, UInt, UInt) -> Texture
 
@@ -127,6 +135,8 @@ pub fn render_pass_release(RenderPassEncoder) -> Unit
 pub fn render_pass_set_bind_group0(RenderPassEncoder, BindGroup) -> Unit
 
 pub fn render_pass_set_index_buffer_u16(RenderPassEncoder, Buffer, UInt64, UInt64) -> Unit
+
+pub fn render_pass_set_index_buffer_u32(RenderPassEncoder, Buffer, UInt64, UInt64) -> Unit
 
 pub fn render_pass_set_pipeline(RenderPassEncoder, RenderPipeline) -> Unit
 

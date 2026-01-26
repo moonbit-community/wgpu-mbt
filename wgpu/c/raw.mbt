@@ -136,6 +136,13 @@ pub extern "C" fn device_create_texture_rgba8_2d_with_usage(
 ) -> Texture = "mbt_wgpu_device_create_texture_rgba8_2d_with_usage"
 
 ///|
+pub extern "C" fn device_create_texture_depth24plus_2d(
+  device : Device,
+  width : UInt,
+  height : UInt,
+) -> Texture = "mbt_wgpu_device_create_texture_depth24plus_2d"
+
+///|
 pub extern "C" fn texture_create_view(texture : Texture) -> TextureView = "mbt_wgpu_texture_create_view"
 
 ///|
@@ -143,6 +150,12 @@ pub extern "C" fn device_create_render_pipeline_rgba8(
   device : Device,
   shader_module : ShaderModule,
 ) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8"
+
+///|
+pub extern "C" fn device_create_render_pipeline_rgba8_depth(
+  device : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_depth"
 
 ///|
 pub extern "C" fn device_create_render_pipeline_rgba8_with_layout(
@@ -236,6 +249,13 @@ pub extern "C" fn command_encoder_begin_render_pass_color(
 ) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color"
 
 ///|
+pub extern "C" fn command_encoder_begin_render_pass_color_depth(
+  encoder : CommandEncoder,
+  color_view : TextureView,
+  depth_view : TextureView,
+) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color_depth"
+
+///|
 pub extern "C" fn render_pass_set_pipeline(
   pass : RenderPassEncoder,
   pipeline : RenderPipeline,
@@ -283,6 +303,14 @@ pub extern "C" fn render_pass_set_index_buffer_u16(
   offset : UInt64,
   size : UInt64,
 ) -> Unit = "mbt_wgpu_render_pass_set_index_buffer_u16"
+
+///|
+pub extern "C" fn render_pass_set_index_buffer_u32(
+  pass : RenderPassEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit = "mbt_wgpu_render_pass_set_index_buffer_u32"
 
 ///|
 pub extern "C" fn render_pass_draw(
@@ -339,6 +367,14 @@ pub extern "C" fn compute_pass_release(pass : ComputePassEncoder) -> Unit = "wgp
 pub extern "C" fn command_encoder_finish(
   encoder : CommandEncoder,
 ) -> CommandBuffer = "mbt_wgpu_command_encoder_finish"
+
+///|
+pub extern "C" fn command_encoder_clear_buffer(
+  encoder : CommandEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit = "wgpuCommandEncoderClearBuffer"
 
 ///|
 pub extern "C" fn command_encoder_copy_buffer_to_buffer(
