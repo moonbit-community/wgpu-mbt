@@ -26,6 +26,7 @@ pub type WGPUAdapterInfo
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUAdapterInfoPtr
 
 ///|
@@ -35,6 +36,7 @@ pub type WGPUBindGroup
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUBindGroupDescriptorPtr
 
 ///|
@@ -44,6 +46,7 @@ pub type WGPUBindGroupLayout
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUBindGroupLayoutDescriptorPtr
 
 ///|
@@ -53,6 +56,7 @@ pub type WGPUBuffer
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUBufferDescriptorPtr
 
 ///|
@@ -69,6 +73,7 @@ pub type WGPUBufferUsage
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUColorPtr
 
 ///|
@@ -78,10 +83,12 @@ pub type WGPUCommandBuffer
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUCommandBufferDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUCommandBufferPtr
 
 ///|
@@ -91,6 +98,7 @@ pub type WGPUCommandEncoder
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUCommandEncoderDescriptorPtr
 
 ///|
@@ -99,6 +107,7 @@ pub type WGPUCompilationInfoCallbackInfo
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUComputePassDescriptorPtr
 
 ///|
@@ -113,6 +122,7 @@ pub type WGPUComputePipeline
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUComputePipelineDescriptorPtr
 
 ///|
@@ -130,6 +140,7 @@ pub type WGPUDevice
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUDeviceDescriptorPtr
 
 ///|
@@ -138,6 +149,7 @@ pub type WGPUErrorFilter
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUExtent3DPtr
 
 ///|
@@ -150,6 +162,7 @@ pub type WGPUFuture
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUFutureWaitInfoPtr
 
 ///|
@@ -163,14 +176,17 @@ pub type WGPUInstance
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUInstanceCapabilitiesPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUInstanceDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPULimitsPtr
 
 ///|
@@ -184,6 +200,7 @@ pub type WGPUPipelineLayout
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUPipelineLayoutDescriptorPtr
 
 ///|
@@ -200,6 +217,7 @@ pub type WGPUQuerySet
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUQuerySetDescriptorPtr
 
 ///|
@@ -221,6 +239,7 @@ pub type WGPURenderBundle
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURenderBundleDescriptorPtr
 
 ///|
@@ -229,14 +248,17 @@ pub type WGPURenderBundleEncoder
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURenderBundleEncoderDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURenderBundlePtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURenderPassDescriptorPtr
 
 ///|
@@ -251,6 +273,7 @@ pub type WGPURenderPipeline
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURenderPipelineDescriptorPtr
 
 ///|
@@ -259,6 +282,7 @@ pub type WGPURequestAdapterCallbackInfo
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURequestAdapterOptionsPtr
 
 ///|
@@ -272,6 +296,7 @@ pub type WGPUSampler
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUSamplerDescriptorPtr
 
 ///|
@@ -281,6 +306,7 @@ pub type WGPUShaderModule
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUShaderModuleDescriptorPtr
 
 ///|
@@ -297,6 +323,7 @@ pub type WGPUSupportedFeatures
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUSupportedFeaturesPtr
 
 ///|
@@ -305,6 +332,7 @@ pub type WGPUSupportedWGSLLanguageFeatures
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUSupportedWGSLLanguageFeaturesPtr
 
 ///|
@@ -317,30 +345,37 @@ pub type WGPUSurfaceCapabilities
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUSurfaceCapabilitiesPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUSurfaceConfigurationPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUSurfaceDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUSurfaceTexturePtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUTexelCopyBufferInfoPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUTexelCopyBufferLayoutPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUTexelCopyTextureInfoPtr
 
 ///|
@@ -350,6 +385,7 @@ pub type WGPUTexture
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUTextureDescriptorPtr
 
 ///|
@@ -371,6 +407,7 @@ pub type WGPUTextureView
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUTextureViewDescriptorPtr
 
 ///|
@@ -385,18 +422,21 @@ pub type WGPUWaitStatus
 pub extern "C" fn wgpuAdapterAddRef(adapter : WGPUAdapter) -> Unit = "wgpuAdapterAddRef"
 
 ///|
+#borrow(features)
 pub extern "C" fn wgpuAdapterGetFeatures(
   adapter : WGPUAdapter,
   features : WGPUSupportedFeaturesPtr,
 ) -> Unit = "wgpuAdapterGetFeatures"
 
 ///|
+#borrow(info)
 pub extern "C" fn wgpuAdapterGetInfo(
   adapter : WGPUAdapter,
   info : WGPUAdapterInfoPtr,
 ) -> WGPUStatus = "wgpuAdapterGetInfo"
 
 ///|
+#borrow(limits)
 pub extern "C" fn wgpuAdapterGetLimits(
   adapter : WGPUAdapter,
   limits : WGPULimitsPtr,
@@ -417,6 +457,7 @@ pub extern "C" fn wgpuAdapterInfoFreeMembers(
 pub extern "C" fn wgpuAdapterRelease(adapter : WGPUAdapter) -> Unit = "wgpuAdapterRelease"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuAdapterRequestDevice(
   adapter : WGPUAdapter,
   descriptor : WGPUDeviceDescriptorPtr,
@@ -525,12 +566,14 @@ pub extern "C" fn wgpuCommandEncoderAddRef(
 ) -> Unit = "wgpuCommandEncoderAddRef"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuCommandEncoderBeginComputePass(
   commandEncoder : WGPUCommandEncoder,
   descriptor : WGPUComputePassDescriptorPtr,
 ) -> WGPUComputePassEncoder = "wgpuCommandEncoderBeginComputePass"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuCommandEncoderBeginRenderPass(
   commandEncoder : WGPUCommandEncoder,
   descriptor : WGPURenderPassDescriptorPtr,
@@ -555,6 +598,7 @@ pub extern "C" fn wgpuCommandEncoderCopyBufferToBuffer(
 ) -> Unit = "wgpuCommandEncoderCopyBufferToBuffer"
 
 ///|
+#borrow(source, destination, copySize)
 pub extern "C" fn wgpuCommandEncoderCopyBufferToTexture(
   commandEncoder : WGPUCommandEncoder,
   source : WGPUTexelCopyBufferInfoPtr,
@@ -563,6 +607,7 @@ pub extern "C" fn wgpuCommandEncoderCopyBufferToTexture(
 ) -> Unit = "wgpuCommandEncoderCopyBufferToTexture"
 
 ///|
+#borrow(source, destination, copySize)
 pub extern "C" fn wgpuCommandEncoderCopyTextureToBuffer(
   commandEncoder : WGPUCommandEncoder,
   source : WGPUTexelCopyTextureInfoPtr,
@@ -571,6 +616,7 @@ pub extern "C" fn wgpuCommandEncoderCopyTextureToBuffer(
 ) -> Unit = "wgpuCommandEncoderCopyTextureToBuffer"
 
 ///|
+#borrow(source, destination, copySize)
 pub extern "C" fn wgpuCommandEncoderCopyTextureToTexture(
   commandEncoder : WGPUCommandEncoder,
   source : WGPUTexelCopyTextureInfoPtr,
@@ -579,6 +625,7 @@ pub extern "C" fn wgpuCommandEncoderCopyTextureToTexture(
 ) -> Unit = "wgpuCommandEncoderCopyTextureToTexture"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuCommandEncoderFinish(
   commandEncoder : WGPUCommandEncoder,
   descriptor : WGPUCommandBufferDescriptorPtr,
@@ -677,6 +724,7 @@ pub extern "C" fn wgpuComputePassEncoderRelease(
 ) -> Unit = "wgpuComputePassEncoderRelease"
 
 ///|
+#borrow(dynamicOffsets)
 pub extern "C" fn wgpuComputePassEncoderSetBindGroup(
   computePassEncoder : WGPUComputePassEncoder,
   groupIndex : UInt,
@@ -720,6 +768,7 @@ pub extern "C" fn wgpuComputePipelineSetLabel(
 ) -> Unit = "wgpuComputePipelineSetLabel"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuCreateInstance(
   descriptor : WGPUInstanceDescriptorPtr,
 ) -> WGPUInstance = "wgpuCreateInstance"
@@ -728,36 +777,42 @@ pub extern "C" fn wgpuCreateInstance(
 pub extern "C" fn wgpuDeviceAddRef(device : WGPUDevice) -> Unit = "wgpuDeviceAddRef"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateBindGroup(
   device : WGPUDevice,
   descriptor : WGPUBindGroupDescriptorPtr,
 ) -> WGPUBindGroup = "wgpuDeviceCreateBindGroup"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateBindGroupLayout(
   device : WGPUDevice,
   descriptor : WGPUBindGroupLayoutDescriptorPtr,
 ) -> WGPUBindGroupLayout = "wgpuDeviceCreateBindGroupLayout"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateBuffer(
   device : WGPUDevice,
   descriptor : WGPUBufferDescriptorPtr,
 ) -> WGPUBuffer = "wgpuDeviceCreateBuffer"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateCommandEncoder(
   device : WGPUDevice,
   descriptor : WGPUCommandEncoderDescriptorPtr,
 ) -> WGPUCommandEncoder = "wgpuDeviceCreateCommandEncoder"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateComputePipeline(
   device : WGPUDevice,
   descriptor : WGPUComputePipelineDescriptorPtr,
 ) -> WGPUComputePipeline = "wgpuDeviceCreateComputePipeline"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateComputePipelineAsync(
   device : WGPUDevice,
   descriptor : WGPUComputePipelineDescriptorPtr,
@@ -765,30 +820,35 @@ pub extern "C" fn wgpuDeviceCreateComputePipelineAsync(
 ) -> WGPUFuture = "wgpuDeviceCreateComputePipelineAsync"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreatePipelineLayout(
   device : WGPUDevice,
   descriptor : WGPUPipelineLayoutDescriptorPtr,
 ) -> WGPUPipelineLayout = "wgpuDeviceCreatePipelineLayout"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateQuerySet(
   device : WGPUDevice,
   descriptor : WGPUQuerySetDescriptorPtr,
 ) -> WGPUQuerySet = "wgpuDeviceCreateQuerySet"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateRenderBundleEncoder(
   device : WGPUDevice,
   descriptor : WGPURenderBundleEncoderDescriptorPtr,
 ) -> WGPURenderBundleEncoder = "wgpuDeviceCreateRenderBundleEncoder"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateRenderPipeline(
   device : WGPUDevice,
   descriptor : WGPURenderPipelineDescriptorPtr,
 ) -> WGPURenderPipeline = "wgpuDeviceCreateRenderPipeline"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateRenderPipelineAsync(
   device : WGPUDevice,
   descriptor : WGPURenderPipelineDescriptorPtr,
@@ -796,18 +856,21 @@ pub extern "C" fn wgpuDeviceCreateRenderPipelineAsync(
 ) -> WGPUFuture = "wgpuDeviceCreateRenderPipelineAsync"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateSampler(
   device : WGPUDevice,
   descriptor : WGPUSamplerDescriptorPtr,
 ) -> WGPUSampler = "wgpuDeviceCreateSampler"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateShaderModule(
   device : WGPUDevice,
   descriptor : WGPUShaderModuleDescriptorPtr,
 ) -> WGPUShaderModule = "wgpuDeviceCreateShaderModule"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateTexture(
   device : WGPUDevice,
   descriptor : WGPUTextureDescriptorPtr,
@@ -822,12 +885,14 @@ pub extern "C" fn wgpuDeviceGetAdapterInfo(
 ) -> WGPUAdapterInfo = "wgpuDeviceGetAdapterInfo"
 
 ///|
+#borrow(features)
 pub extern "C" fn wgpuDeviceGetFeatures(
   device : WGPUDevice,
   features : WGPUSupportedFeaturesPtr,
 ) -> Unit = "wgpuDeviceGetFeatures"
 
 ///|
+#borrow(limits)
 pub extern "C" fn wgpuDeviceGetLimits(
   device : WGPUDevice,
   limits : WGPULimitsPtr,
@@ -867,6 +932,7 @@ pub extern "C" fn wgpuDeviceSetLabel(
 ) -> Unit = "wgpuDeviceSetLabel"
 
 ///|
+#borrow(capabilities)
 pub extern "C" fn wgpuGetInstanceCapabilities(
   capabilities : WGPUInstanceCapabilitiesPtr,
 ) -> WGPUStatus = "wgpuGetInstanceCapabilities"
@@ -878,12 +944,14 @@ pub extern "C" fn wgpuGetProcAddress(procName : WGPUStringView) -> WGPUProc = "w
 pub extern "C" fn wgpuInstanceAddRef(instance : WGPUInstance) -> Unit = "wgpuInstanceAddRef"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuInstanceCreateSurface(
   instance : WGPUInstance,
   descriptor : WGPUSurfaceDescriptorPtr,
 ) -> WGPUSurface = "wgpuInstanceCreateSurface"
 
 ///|
+#borrow(features)
 pub extern "C" fn wgpuInstanceGetWGSLLanguageFeatures(
   instance : WGPUInstance,
   features : WGPUSupportedWGSLLanguageFeaturesPtr,
@@ -902,6 +970,7 @@ pub extern "C" fn wgpuInstanceProcessEvents(instance : WGPUInstance) -> Unit = "
 pub extern "C" fn wgpuInstanceRelease(instance : WGPUInstance) -> Unit = "wgpuInstanceRelease"
 
 ///|
+#borrow(options)
 pub extern "C" fn wgpuInstanceRequestAdapter(
   instance : WGPUInstance,
   options : WGPURequestAdapterOptionsPtr,
@@ -909,6 +978,7 @@ pub extern "C" fn wgpuInstanceRequestAdapter(
 ) -> WGPUFuture = "wgpuInstanceRequestAdapter"
 
 ///|
+#borrow(futures)
 pub extern "C" fn wgpuInstanceWaitAny(
   instance : WGPUInstance,
   futureCount : UInt64,
@@ -972,6 +1042,7 @@ pub extern "C" fn wgpuQueueSetLabel(
 ) -> Unit = "wgpuQueueSetLabel"
 
 ///|
+#borrow(commands)
 pub extern "C" fn wgpuQueueSubmit(
   queue : WGPUQueue,
   commandCount : UInt64,
@@ -979,6 +1050,7 @@ pub extern "C" fn wgpuQueueSubmit(
 ) -> Unit = "wgpuQueueSubmit"
 
 ///|
+#borrow(data)
 pub extern "C" fn wgpuQueueWriteBuffer(
   queue : WGPUQueue,
   buffer : WGPUBuffer,
@@ -988,6 +1060,7 @@ pub extern "C" fn wgpuQueueWriteBuffer(
 ) -> Unit = "wgpuQueueWriteBuffer"
 
 ///|
+#borrow(destination, data, dataLayout, writeSize)
 pub extern "C" fn wgpuQueueWriteTexture(
   queue : WGPUQueue,
   destination : WGPUTexelCopyTextureInfoPtr,
@@ -1041,6 +1114,7 @@ pub extern "C" fn wgpuRenderBundleEncoderDrawIndirect(
 ) -> Unit = "wgpuRenderBundleEncoderDrawIndirect"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuRenderBundleEncoderFinish(
   renderBundleEncoder : WGPURenderBundleEncoder,
   descriptor : WGPURenderBundleDescriptorPtr,
@@ -1069,6 +1143,7 @@ pub extern "C" fn wgpuRenderBundleEncoderRelease(
 ) -> Unit = "wgpuRenderBundleEncoderRelease"
 
 ///|
+#borrow(dynamicOffsets)
 pub extern "C" fn wgpuRenderBundleEncoderSetBindGroup(
   renderBundleEncoder : WGPURenderBundleEncoder,
   groupIndex : UInt,
@@ -1173,6 +1248,7 @@ pub extern "C" fn wgpuRenderPassEncoderEndOcclusionQuery(
 ) -> Unit = "wgpuRenderPassEncoderEndOcclusionQuery"
 
 ///|
+#borrow(bundles)
 pub extern "C" fn wgpuRenderPassEncoderExecuteBundles(
   renderPassEncoder : WGPURenderPassEncoder,
   bundleCount : UInt64,
@@ -1202,6 +1278,7 @@ pub extern "C" fn wgpuRenderPassEncoderRelease(
 ) -> Unit = "wgpuRenderPassEncoderRelease"
 
 ///|
+#borrow(dynamicOffsets)
 pub extern "C" fn wgpuRenderPassEncoderSetBindGroup(
   renderPassEncoder : WGPURenderPassEncoder,
   groupIndex : UInt,
@@ -1211,6 +1288,7 @@ pub extern "C" fn wgpuRenderPassEncoderSetBindGroup(
 ) -> Unit = "wgpuRenderPassEncoderSetBindGroup"
 
 ///|
+#borrow(color)
 pub extern "C" fn wgpuRenderPassEncoderSetBlendConstant(
   renderPassEncoder : WGPURenderPassEncoder,
   color : WGPUColorPtr,
@@ -1347,12 +1425,14 @@ pub extern "C" fn wgpuSurfaceCapabilitiesFreeMembers(
 ) -> Unit = "wgpuSurfaceCapabilitiesFreeMembers"
 
 ///|
+#borrow(config)
 pub extern "C" fn wgpuSurfaceConfigure(
   surface : WGPUSurface,
   config : WGPUSurfaceConfigurationPtr,
 ) -> Unit = "wgpuSurfaceConfigure"
 
 ///|
+#borrow(capabilities)
 pub extern "C" fn wgpuSurfaceGetCapabilities(
   surface : WGPUSurface,
   adapter : WGPUAdapter,
@@ -1360,6 +1440,7 @@ pub extern "C" fn wgpuSurfaceGetCapabilities(
 ) -> WGPUStatus = "wgpuSurfaceGetCapabilities"
 
 ///|
+#borrow(surfaceTexture)
 pub extern "C" fn wgpuSurfaceGetCurrentTexture(
   surface : WGPUSurface,
   surfaceTexture : WGPUSurfaceTexturePtr,
@@ -1384,6 +1465,7 @@ pub extern "C" fn wgpuSurfaceUnconfigure(surface : WGPUSurface) -> Unit = "wgpuS
 pub extern "C" fn wgpuTextureAddRef(texture : WGPUTexture) -> Unit = "wgpuTextureAddRef"
 
 ///|
+#borrow(descriptor)
 pub extern "C" fn wgpuTextureCreateView(
   texture : WGPUTexture,
   descriptor : WGPUTextureViewDescriptorPtr,

@@ -9,6 +9,12 @@
 /// `wgpu/c/webgpu_capi.mbt`.
 
 ///|
+pub extern "C" fn null_ptr() -> UnitPtr = "mbt_wgpu_null_ptr"
+
+///|
+pub extern "C" fn null_uint_ptr() -> UIntPtr = "mbt_wgpu_null_uint_ptr"
+
+///|
 pub extern "C" fn create_instance() -> Instance = "mbt_wgpu_create_instance"
 
 ///|

@@ -7,6 +7,9 @@
 #include <stdint.h>
 #include <string.h>
 
+void *mbt_wgpu_null_ptr(void) { return NULL; }
+void *mbt_wgpu_null_uint_ptr(void) { return NULL; }
+
 // The C API provides both `wgpuInstanceWaitAny` and `wgpuInstanceProcessEvents`.
 // wgpu-native currently does not implement `wgpuInstanceWaitAny` for all builds,
 // so we use `WGPUCallbackMode_AllowProcessEvents` + `wgpuInstanceProcessEvents`

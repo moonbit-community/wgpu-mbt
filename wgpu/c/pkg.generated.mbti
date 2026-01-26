@@ -120,6 +120,10 @@ pub fn instance_release(WGPUInstance) -> Unit
 
 pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
 
+pub fn null_ptr() -> UnitPtr
+
+pub fn null_uint_ptr() -> UIntPtr
+
 pub fn pipeline_layout_release(WGPUPipelineLayout) -> Unit
 
 pub fn queue_release(WGPUQueue) -> Unit
@@ -560,6 +564,7 @@ pub type WGPUAdapter
 #external
 pub type WGPUAdapterInfo
 
+#alias(UnitPtr)
 #external
 pub type WGPUAdapterInfoPtr
 
@@ -567,6 +572,7 @@ pub type WGPUAdapterInfoPtr
 #external
 pub type WGPUBindGroup
 
+#alias(UnitPtr)
 #external
 pub type WGPUBindGroupDescriptorPtr
 
@@ -574,6 +580,7 @@ pub type WGPUBindGroupDescriptorPtr
 #external
 pub type WGPUBindGroupLayout
 
+#alias(UnitPtr)
 #external
 pub type WGPUBindGroupLayoutDescriptorPtr
 
@@ -581,6 +588,7 @@ pub type WGPUBindGroupLayoutDescriptorPtr
 #external
 pub type WGPUBuffer
 
+#alias(UnitPtr)
 #external
 pub type WGPUBufferDescriptorPtr
 
@@ -593,6 +601,7 @@ pub type WGPUBufferMapState
 #external
 pub type WGPUBufferUsage
 
+#alias(UnitPtr)
 #external
 pub type WGPUColorPtr
 
@@ -600,9 +609,11 @@ pub type WGPUColorPtr
 #external
 pub type WGPUCommandBuffer
 
+#alias(UnitPtr)
 #external
 pub type WGPUCommandBufferDescriptorPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPUCommandBufferPtr
 
@@ -610,12 +621,14 @@ pub type WGPUCommandBufferPtr
 #external
 pub type WGPUCommandEncoder
 
+#alias(UnitPtr)
 #external
 pub type WGPUCommandEncoderDescriptorPtr
 
 #external
 pub type WGPUCompilationInfoCallbackInfo
 
+#alias(UnitPtr)
 #external
 pub type WGPUComputePassDescriptorPtr
 
@@ -627,6 +640,7 @@ pub type WGPUComputePassEncoder
 #external
 pub type WGPUComputePipeline
 
+#alias(UnitPtr)
 #external
 pub type WGPUComputePipelineDescriptorPtr
 
@@ -640,12 +654,14 @@ pub type WGPUCreateRenderPipelineAsyncCallbackInfo
 #external
 pub type WGPUDevice
 
+#alias(UnitPtr)
 #external
 pub type WGPUDeviceDescriptorPtr
 
 #external
 pub type WGPUErrorFilter
 
+#alias(UnitPtr)
 #external
 pub type WGPUExtent3DPtr
 
@@ -655,6 +671,7 @@ pub type WGPUFeatureName
 #external
 pub type WGPUFuture
 
+#alias(UnitPtr)
 #external
 pub type WGPUFutureWaitInfoPtr
 
@@ -665,12 +682,15 @@ pub type WGPUIndexFormat
 #external
 pub type WGPUInstance
 
+#alias(UnitPtr)
 #external
 pub type WGPUInstanceCapabilitiesPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPUInstanceDescriptorPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPULimitsPtr
 
@@ -681,6 +701,7 @@ pub type WGPUMapMode
 #external
 pub type WGPUPipelineLayout
 
+#alias(UnitPtr)
 #external
 pub type WGPUPipelineLayoutDescriptorPtr
 
@@ -693,6 +714,7 @@ pub type WGPUProc
 #external
 pub type WGPUQuerySet
 
+#alias(UnitPtr)
 #external
 pub type WGPUQuerySetDescriptorPtr
 
@@ -709,18 +731,22 @@ pub type WGPUQueueWorkDoneCallbackInfo
 #external
 pub type WGPURenderBundle
 
+#alias(UnitPtr)
 #external
 pub type WGPURenderBundleDescriptorPtr
 
 #external
 pub type WGPURenderBundleEncoder
 
+#alias(UnitPtr)
 #external
 pub type WGPURenderBundleEncoderDescriptorPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPURenderBundlePtr
 
+#alias(UnitPtr)
 #external
 pub type WGPURenderPassDescriptorPtr
 
@@ -732,12 +758,14 @@ pub type WGPURenderPassEncoder
 #external
 pub type WGPURenderPipeline
 
+#alias(UnitPtr)
 #external
 pub type WGPURenderPipelineDescriptorPtr
 
 #external
 pub type WGPURequestAdapterCallbackInfo
 
+#alias(UnitPtr)
 #external
 pub type WGPURequestAdapterOptionsPtr
 
@@ -748,6 +776,7 @@ pub type WGPURequestDeviceCallbackInfo
 #external
 pub type WGPUSampler
 
+#alias(UnitPtr)
 #external
 pub type WGPUSamplerDescriptorPtr
 
@@ -755,6 +784,7 @@ pub type WGPUSamplerDescriptorPtr
 #external
 pub type WGPUShaderModule
 
+#alias(UnitPtr)
 #external
 pub type WGPUShaderModuleDescriptorPtr
 
@@ -767,12 +797,14 @@ pub type WGPUStringView
 #external
 pub type WGPUSupportedFeatures
 
+#alias(UnitPtr)
 #external
 pub type WGPUSupportedFeaturesPtr
 
 #external
 pub type WGPUSupportedWGSLLanguageFeatures
 
+#alias(UnitPtr)
 #external
 pub type WGPUSupportedWGSLLanguageFeaturesPtr
 
@@ -782,24 +814,31 @@ pub type WGPUSurface
 #external
 pub type WGPUSurfaceCapabilities
 
+#alias(UnitPtr)
 #external
 pub type WGPUSurfaceCapabilitiesPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPUSurfaceConfigurationPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPUSurfaceDescriptorPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPUSurfaceTexturePtr
 
+#alias(UnitPtr)
 #external
 pub type WGPUTexelCopyBufferInfoPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPUTexelCopyBufferLayoutPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPUTexelCopyTextureInfoPtr
 
@@ -807,6 +846,7 @@ pub type WGPUTexelCopyTextureInfoPtr
 #external
 pub type WGPUTexture
 
+#alias(UnitPtr)
 #external
 pub type WGPUTextureDescriptorPtr
 
@@ -823,6 +863,7 @@ pub type WGPUTextureUsage
 #external
 pub type WGPUTextureView
 
+#alias(UnitPtr)
 #external
 pub type WGPUTextureViewDescriptorPtr
 

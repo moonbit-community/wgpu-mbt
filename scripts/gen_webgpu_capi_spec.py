@@ -241,11 +241,16 @@ def write_impl(funcs: list[Func], types: set[str]) -> None:
         alias = HANDLE_TYPE_ALIASES.get(t)
         if alias is not None:
             lines.append(f"#alias({alias})")
+        elif t not in {"UIntPtr", "UnitPtr"} and t.endswith("Ptr"):
+            lines.append("#alias(UnitPtr)")
         lines.append(f"pub type {t}")
 
     for f in func_list:
         lines.append("")
         lines.append("///|")
+        borrow_params = [p.name for p in f.params if p.mbt_type.endswith("Ptr")]
+        if borrow_params:
+            lines.append(f"#borrow({', '.join(borrow_params)})")
         if f.params:
             params = ", ".join(f"{p.name} : {p.mbt_type}" for p in f.params)
         else:
