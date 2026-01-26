@@ -601,182 +601,271 @@ pub type Texture
 #external
 pub type TextureView
 
+#external
 pub type UIntPtr
 
+#external
 pub type UnitPtr
 
+#external
 pub type WGPUAdapter
 
+#external
 pub type WGPUAdapterInfo
 
+#external
 pub type WGPUAdapterInfoPtr
 
+#external
 pub type WGPUBindGroup
 
+#external
 pub type WGPUBindGroupDescriptorPtr
 
+#external
 pub type WGPUBindGroupLayout
 
+#external
 pub type WGPUBindGroupLayoutDescriptorPtr
 
+#external
 pub type WGPUBuffer
 
+#external
 pub type WGPUBufferDescriptorPtr
 
+#external
 pub type WGPUBufferMapCallbackInfo
 
+#external
 pub type WGPUBufferMapState
 
+#external
 pub type WGPUBufferUsage
 
+#external
 pub type WGPUColorPtr
 
+#external
 pub type WGPUCommandBuffer
 
+#external
 pub type WGPUCommandBufferDescriptorPtr
 
+#external
 pub type WGPUCommandBufferPtr
 
+#external
 pub type WGPUCommandEncoder
 
+#external
 pub type WGPUCommandEncoderDescriptorPtr
 
+#external
 pub type WGPUCompilationInfoCallbackInfo
 
+#external
 pub type WGPUComputePassDescriptorPtr
 
+#external
 pub type WGPUComputePassEncoder
 
+#external
 pub type WGPUComputePipeline
 
+#external
 pub type WGPUComputePipelineDescriptorPtr
 
+#external
 pub type WGPUCreateComputePipelineAsyncCallbackInfo
 
+#external
 pub type WGPUCreateRenderPipelineAsyncCallbackInfo
 
+#external
 pub type WGPUDevice
 
+#external
 pub type WGPUDeviceDescriptorPtr
 
+#external
 pub type WGPUErrorFilter
 
+#external
 pub type WGPUExtent3DPtr
 
+#external
 pub type WGPUFeatureName
 
+#external
 pub type WGPUFuture
 
+#external
 pub type WGPUFutureWaitInfoPtr
 
+#external
 pub type WGPUIndexFormat
 
+#external
 pub type WGPUInstance
 
+#external
 pub type WGPUInstanceCapabilitiesPtr
 
+#external
 pub type WGPUInstanceDescriptorPtr
 
+#external
 pub type WGPULimitsPtr
 
+#external
 pub type WGPUMapMode
 
+#external
 pub type WGPUPipelineLayout
 
+#external
 pub type WGPUPipelineLayoutDescriptorPtr
 
+#external
 pub type WGPUPopErrorScopeCallbackInfo
 
+#external
 pub type WGPUProc
 
+#external
 pub type WGPUQuerySet
 
+#external
 pub type WGPUQuerySetDescriptorPtr
 
+#external
 pub type WGPUQueryType
 
+#external
 pub type WGPUQueue
 
+#external
 pub type WGPUQueueWorkDoneCallbackInfo
 
+#external
 pub type WGPURenderBundle
 
+#external
 pub type WGPURenderBundleDescriptorPtr
 
+#external
 pub type WGPURenderBundleEncoder
 
+#external
 pub type WGPURenderBundleEncoderDescriptorPtr
 
+#external
 pub type WGPURenderBundlePtr
 
+#external
 pub type WGPURenderPassDescriptorPtr
 
+#external
 pub type WGPURenderPassEncoder
 
+#external
 pub type WGPURenderPipeline
 
+#external
 pub type WGPURenderPipelineDescriptorPtr
 
+#external
 pub type WGPURequestAdapterCallbackInfo
 
+#external
 pub type WGPURequestAdapterOptionsPtr
 
+#external
 pub type WGPURequestDeviceCallbackInfo
 
+#external
 pub type WGPUSampler
 
+#external
 pub type WGPUSamplerDescriptorPtr
 
+#external
 pub type WGPUShaderModule
 
+#external
 pub type WGPUShaderModuleDescriptorPtr
 
+#external
 pub type WGPUStatus
 
+#external
 pub type WGPUStringView
 
+#external
 pub type WGPUSupportedFeatures
 
+#external
 pub type WGPUSupportedFeaturesPtr
 
+#external
 pub type WGPUSupportedWGSLLanguageFeatures
 
+#external
 pub type WGPUSupportedWGSLLanguageFeaturesPtr
 
+#external
 pub type WGPUSurface
 
+#external
 pub type WGPUSurfaceCapabilities
 
+#external
 pub type WGPUSurfaceCapabilitiesPtr
 
+#external
 pub type WGPUSurfaceConfigurationPtr
 
+#external
 pub type WGPUSurfaceDescriptorPtr
 
+#external
 pub type WGPUSurfaceTexturePtr
 
+#external
 pub type WGPUTexelCopyBufferInfoPtr
 
+#external
 pub type WGPUTexelCopyBufferLayoutPtr
 
+#external
 pub type WGPUTexelCopyTextureInfoPtr
 
+#external
 pub type WGPUTexture
 
+#external
 pub type WGPUTextureDescriptorPtr
 
+#external
 pub type WGPUTextureDimension
 
+#external
 pub type WGPUTextureFormat
 
+#external
 pub type WGPUTextureUsage
 
+#external
 pub type WGPUTextureView
 
+#external
 pub type WGPUTextureViewDescriptorPtr
 
+#external
 pub type WGPUWGSLLanguageFeatureName
 
+#external
 pub type WGPUWaitStatus
 
 // Type aliases

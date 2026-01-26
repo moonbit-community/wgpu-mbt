@@ -1,5 +1,5 @@
 ///|
-test "spec: webgpu.h symbol coverage" {
+test "spec: webgpu.h symbol coverage (expected red)" {
   // This block is never executed; it only forces the compiler to resolve symbols.
   if false {
     let _ = @wgpu_c.wgpuAdapterAddRef
@@ -192,7 +192,7 @@ test "spec: webgpu.h symbol coverage" {
     let _ = @wgpu_c.wgpuTextureViewAddRef
     let _ = @wgpu_c.wgpuTextureViewRelease
     let _ = @wgpu_c.wgpuTextureViewSetLabel
-
   }
+  // Snapshot a stable marker so this stays green while providing symbol coverage.
   inspect("symbol coverage ok", content="symbol coverage ok")
 }
