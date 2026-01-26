@@ -1,0 +1,76 @@
+///|
+test "spec: queue.write_texture_rgba8_2d" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let queue = device.queue()
+  let data = rgba_bytes(0U, 0U, 255U, 255U)
+  let tex = device.create_texture_rgba8_2d(1U, 1U)
+  let view = tex.create_view()
+  let out_tex = device.create_texture_rgba8_2d(1U, 1U)
+  let out_view = out_tex.create_view()
+  let readback_usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let readback_buf = device.create_buffer(size=256UL, usage=readback_usage)
+  let sampler = device.create_sampler_nearest_clamp()
+  let bgl = device.create_bind_group_layout_sampler_texture_2d()
+  let pl = device.create_pipeline_layout_1(bgl)
+  let bg = device.create_bind_group_sampler_texture_2d(bgl, sampler, view)
+  let wgsl : String =
+    #|struct VSOut { @builtin(position) pos: vec4<f32> };
+    #|
+    #|@vertex
+    #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+    #|  var positions = array<vec2<f32>, 3>(
+    #|    vec2<f32>(-1.0, -1.0),
+    #|    vec2<f32>( 3.0, -1.0),
+    #|    vec2<f32>(-1.0,  3.0),
+    #|  );
+    #|  var out: VSOut;
+    #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
+    #|  return out;
+    #|}
+    #|
+    #|@group(0) @binding(0) var samp : sampler;
+    #|@group(0) @binding(1) var tex : texture_2d<f32>;
+    #|
+    #|@fragment
+    #|fn fs_main() -> @location(0) vec4<f32> {
+    #|  return textureSample(tex, samp, vec2<f32>(0.5, 0.5));
+    #|}
+    #|
+  let sm = device.create_shader_module_wgsl(wgsl)
+  let pipeline = device.create_render_pipeline_rgba8_with_layout(pl, sm)
+  queue.write_texture_rgba8_2d(tex, 1U, 1U, data)
+  let encoder = device.create_command_encoder()
+  let pass = encoder.begin_render_pass_color(out_view)
+  pass.set_pipeline(pipeline)
+  pass.set_bind_group0(bg)
+  pass.draw(3U, 1U, 0U, 0U)
+  pass.end()
+  pass.release()
+  encoder.copy_texture_to_buffer_rgba8(out_tex, readback_buf, 1U, 1U)
+  let cmd = encoder.finish()
+  queue.submit_one(cmd)
+  let out = readback_buf.readback(instance, 0UL, 4UL)
+  inspect(
+    [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
+    content="[0, 0, 255, 255]",
+  )
+  cmd.release()
+  encoder.release()
+  pipeline.release()
+  sm.release()
+  bg.release()
+  pl.release()
+  bgl.release()
+  sampler.release()
+  readback_buf.release()
+  out_view.release()
+  out_tex.release()
+  view.release()
+  tex.release()
+  queue.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}

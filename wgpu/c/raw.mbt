@@ -1,0 +1,504 @@
+///|
+/// Raw bindings for the wgpu-native C API (wgpu.h / webgpu.h).
+///
+/// These are intentionally low-level and mostly mirror the C ABI.
+
+///|
+#external
+pub type Instance
+
+///|
+#external
+pub type Adapter
+
+///|
+#external
+pub type Device
+
+///|
+#external
+pub type Queue
+
+///|
+#external
+pub type Buffer
+
+///|
+#external
+pub type ShaderModule
+
+///|
+#external
+pub type ComputePipeline
+
+///|
+#external
+pub type ComputePassEncoder
+
+///|
+#external
+pub type RenderPipeline
+
+///|
+#external
+pub type RenderPassEncoder
+
+///|
+#external
+pub type Texture
+
+///|
+#external
+pub type TextureView
+
+///|
+#external
+pub type BindGroupLayout
+
+///|
+#external
+pub type BindGroup
+
+///|
+#external
+pub type PipelineLayout
+
+///|
+#external
+pub type CommandEncoder
+
+///|
+#external
+pub type CommandBuffer
+
+///|
+#external
+pub type Sampler
+
+///|
+pub extern "C" fn create_instance() -> Instance = "mbt_wgpu_create_instance"
+
+///|
+pub extern "C" fn instance_request_adapter_sync(instance : Instance) -> Adapter = "mbt_wgpu_instance_request_adapter_sync"
+
+///|
+pub extern "C" fn instance_process_events(instance : Instance) -> Unit = "wgpuInstanceProcessEvents"
+
+///|
+pub extern "C" fn adapter_request_device_sync(
+  instance : Instance,
+  adapter : Adapter,
+) -> Device = "mbt_wgpu_adapter_request_device_sync"
+
+///|
+pub extern "C" fn device_get_queue(device : Device) -> Queue = "wgpuDeviceGetQueue"
+
+///|
+pub extern "C" fn device_create_command_encoder(
+  device : Device,
+) -> CommandEncoder = "mbt_wgpu_device_create_command_encoder"
+
+///|
+pub extern "C" fn device_create_buffer(
+  device : Device,
+  size : UInt64,
+  usage : UInt64,
+  mapped_at_creation : Bool,
+) -> Buffer = "mbt_wgpu_device_create_buffer"
+
+///|
+#borrow(code)
+pub extern "C" fn device_create_shader_module_wgsl(
+  device : Device,
+  code : Bytes,
+  code_len : UInt64,
+) -> ShaderModule = "mbt_wgpu_device_create_shader_module_wgsl"
+
+///|
+pub extern "C" fn device_create_compute_pipeline(
+  device : Device,
+  shader_module : ShaderModule,
+) -> ComputePipeline = "mbt_wgpu_device_create_compute_pipeline"
+
+///|
+pub extern "C" fn device_create_texture_rgba8_2d(
+  device : Device,
+  width : UInt,
+  height : UInt,
+) -> Texture = "mbt_wgpu_device_create_texture_rgba8_2d"
+
+///|
+pub extern "C" fn device_create_texture_rgba8_2d_with_usage(
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+) -> Texture = "mbt_wgpu_device_create_texture_rgba8_2d_with_usage"
+
+///|
+pub extern "C" fn texture_create_view(texture : Texture) -> TextureView = "mbt_wgpu_texture_create_view"
+
+///|
+pub extern "C" fn device_create_render_pipeline_rgba8(
+  device : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8"
+
+///|
+pub extern "C" fn device_create_render_pipeline_rgba8_with_layout(
+  device : Device,
+  layout : PipelineLayout,
+  shader_module : ShaderModule,
+) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_with_layout"
+
+///|
+pub extern "C" fn device_create_render_pipeline_rgba8_pos2(
+  device : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_pos2"
+
+///|
+pub extern "C" fn device_create_render_pipeline_rgba8_pos2_with_layout(
+  device : Device,
+  layout : PipelineLayout,
+  shader_module : ShaderModule,
+) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_pos2_with_layout"
+
+///|
+pub extern "C" fn device_create_bind_group_layout_uniform_buffer(
+  device : Device,
+) -> BindGroupLayout = "mbt_wgpu_device_create_bind_group_layout_uniform_buffer"
+
+///|
+pub extern "C" fn device_create_bind_group_uniform_buffer(
+  device : Device,
+  bind_group_layout : BindGroupLayout,
+  buffer : Buffer,
+) -> BindGroup = "mbt_wgpu_device_create_bind_group_uniform_buffer"
+
+///|
+pub extern "C" fn device_create_bind_group_layout_storage_buffer(
+  device : Device,
+) -> BindGroupLayout = "mbt_wgpu_device_create_bind_group_layout_storage_buffer"
+
+///|
+pub extern "C" fn device_create_sampler_nearest_clamp(
+  device : Device,
+) -> Sampler = "mbt_wgpu_device_create_sampler_nearest_clamp"
+
+///|
+pub extern "C" fn device_create_sampler_linear_clamp(
+  device : Device,
+) -> Sampler = "mbt_wgpu_device_create_sampler_linear_clamp"
+
+///|
+pub extern "C" fn device_create_bind_group_layout_sampler_texture_2d(
+  device : Device,
+) -> BindGroupLayout = "mbt_wgpu_device_create_bind_group_layout_sampler_texture_2d"
+
+///|
+pub extern "C" fn device_create_bind_group_sampler_texture_2d(
+  device : Device,
+  bind_group_layout : BindGroupLayout,
+  sampler : Sampler,
+  view : TextureView,
+) -> BindGroup = "mbt_wgpu_device_create_bind_group_sampler_texture_2d"
+
+///|
+pub extern "C" fn device_create_pipeline_layout_1(
+  device : Device,
+  bind_group_layout : BindGroupLayout,
+) -> PipelineLayout = "mbt_wgpu_device_create_pipeline_layout_1"
+
+///|
+pub extern "C" fn device_create_bind_group_storage_buffer(
+  device : Device,
+  bind_group_layout : BindGroupLayout,
+  buffer : Buffer,
+) -> BindGroup = "mbt_wgpu_device_create_bind_group_storage_buffer"
+
+///|
+pub extern "C" fn device_create_compute_pipeline_with_layout(
+  device : Device,
+  layout : PipelineLayout,
+  shader_module : ShaderModule,
+) -> ComputePipeline = "mbt_wgpu_device_create_compute_pipeline_with_layout"
+
+///|
+pub extern "C" fn command_encoder_begin_compute_pass(
+  encoder : CommandEncoder,
+) -> ComputePassEncoder = "mbt_wgpu_command_encoder_begin_compute_pass"
+
+///|
+pub extern "C" fn command_encoder_begin_render_pass_color(
+  encoder : CommandEncoder,
+  view : TextureView,
+) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color"
+
+///|
+pub extern "C" fn render_pass_set_pipeline(
+  pass : RenderPassEncoder,
+  pipeline : RenderPipeline,
+) -> Unit = "wgpuRenderPassEncoderSetPipeline"
+
+///|
+pub extern "C" fn render_pass_set_bind_group0(
+  pass : RenderPassEncoder,
+  group : BindGroup,
+) -> Unit = "mbt_wgpu_render_pass_set_bind_group0"
+
+///|
+pub extern "C" fn render_pass_set_vertex_buffer(
+  pass : RenderPassEncoder,
+  slot : UInt,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit = "wgpuRenderPassEncoderSetVertexBuffer"
+
+///|
+pub extern "C" fn render_pass_set_viewport(
+  pass : RenderPassEncoder,
+  x : Float,
+  y : Float,
+  width : Float,
+  height : Float,
+  min_depth : Float,
+  max_depth : Float,
+) -> Unit = "wgpuRenderPassEncoderSetViewport"
+
+///|
+pub extern "C" fn render_pass_set_scissor_rect(
+  pass : RenderPassEncoder,
+  x : UInt,
+  y : UInt,
+  width : UInt,
+  height : UInt,
+) -> Unit = "wgpuRenderPassEncoderSetScissorRect"
+
+///|
+pub extern "C" fn render_pass_set_index_buffer_u16(
+  pass : RenderPassEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit = "mbt_wgpu_render_pass_set_index_buffer_u16"
+
+///|
+pub extern "C" fn render_pass_draw(
+  pass : RenderPassEncoder,
+  vertex_count : UInt,
+  instance_count : UInt,
+  first_vertex : UInt,
+  first_instance : UInt,
+) -> Unit = "wgpuRenderPassEncoderDraw"
+
+///|
+pub extern "C" fn render_pass_draw_indexed(
+  pass : RenderPassEncoder,
+  index_count : UInt,
+  instance_count : UInt,
+  first_index : UInt,
+  base_vertex : Int,
+  first_instance : UInt,
+) -> Unit = "wgpuRenderPassEncoderDrawIndexed"
+
+///|
+pub extern "C" fn render_pass_end(pass : RenderPassEncoder) -> Unit = "wgpuRenderPassEncoderEnd"
+
+///|
+pub extern "C" fn render_pass_release(pass : RenderPassEncoder) -> Unit = "wgpuRenderPassEncoderRelease"
+
+///|
+pub extern "C" fn compute_pass_set_pipeline(
+  pass : ComputePassEncoder,
+  pipeline : ComputePipeline,
+) -> Unit = "wgpuComputePassEncoderSetPipeline"
+
+///|
+pub extern "C" fn compute_pass_dispatch_workgroups(
+  pass : ComputePassEncoder,
+  x : UInt,
+  y : UInt,
+  z : UInt,
+) -> Unit = "wgpuComputePassEncoderDispatchWorkgroups"
+
+///|
+pub extern "C" fn compute_pass_set_bind_group0(
+  pass : ComputePassEncoder,
+  group : BindGroup,
+) -> Unit = "mbt_wgpu_compute_pass_set_bind_group0"
+
+///|
+pub extern "C" fn compute_pass_end(pass : ComputePassEncoder) -> Unit = "wgpuComputePassEncoderEnd"
+
+///|
+pub extern "C" fn compute_pass_release(pass : ComputePassEncoder) -> Unit = "wgpuComputePassEncoderRelease"
+
+///|
+pub extern "C" fn command_encoder_finish(
+  encoder : CommandEncoder,
+) -> CommandBuffer = "mbt_wgpu_command_encoder_finish"
+
+///|
+pub extern "C" fn command_encoder_copy_buffer_to_buffer(
+  encoder : CommandEncoder,
+  source : Buffer,
+  source_offset : UInt64,
+  destination : Buffer,
+  destination_offset : UInt64,
+  size : UInt64,
+) -> Unit = "wgpuCommandEncoderCopyBufferToBuffer"
+
+///|
+pub extern "C" fn command_encoder_copy_texture_to_buffer_rgba8(
+  encoder : CommandEncoder,
+  texture : Texture,
+  buffer : Buffer,
+  width : UInt,
+  height : UInt,
+) -> Unit = "mbt_wgpu_command_encoder_copy_texture_to_buffer_rgba8"
+
+///|
+pub extern "C" fn command_encoder_copy_buffer_to_texture_rgba8(
+  encoder : CommandEncoder,
+  buffer : Buffer,
+  texture : Texture,
+  width : UInt,
+  height : UInt,
+) -> Unit = "mbt_wgpu_command_encoder_copy_buffer_to_texture_rgba8"
+
+///|
+pub extern "C" fn command_encoder_copy_texture_to_texture_rgba8(
+  encoder : CommandEncoder,
+  src : Texture,
+  dst : Texture,
+  width : UInt,
+  height : UInt,
+) -> Unit = "mbt_wgpu_command_encoder_copy_texture_to_texture_rgba8"
+
+///|
+#borrow(commands)
+pub extern "C" fn queue_submit(
+  queue : Queue,
+  command_count : UInt64,
+  commands : FixedArray[CommandBuffer],
+) -> Unit = "wgpuQueueSubmit"
+
+///|
+#borrow(data)
+pub extern "C" fn queue_write_buffer(
+  queue : Queue,
+  buffer : Buffer,
+  buffer_offset : UInt64,
+  data : Bytes,
+  size : UInt64,
+) -> Unit = "wgpuQueueWriteBuffer"
+
+///|
+#borrow(data)
+pub extern "C" fn queue_write_texture_rgba8_2d(
+  queue : Queue,
+  texture : Texture,
+  width : UInt,
+  height : UInt,
+  data : Bytes,
+  size : UInt64,
+) -> Unit = "mbt_wgpu_queue_write_texture_rgba8_2d"
+
+///|
+pub extern "C" fn command_buffer_release(
+  command_buffer : CommandBuffer,
+) -> Unit = "wgpuCommandBufferRelease"
+
+///|
+pub extern "C" fn command_encoder_release(
+  command_encoder : CommandEncoder,
+) -> Unit = "wgpuCommandEncoderRelease"
+
+///|
+pub extern "C" fn buffer_get_size(buffer : Buffer) -> UInt64 = "wgpuBufferGetSize"
+
+///|
+pub extern "C" fn buffer_destroy(buffer : Buffer) -> Unit = "wgpuBufferDestroy"
+
+///|
+pub extern "C" fn buffer_release(buffer : Buffer) -> Unit = "wgpuBufferRelease"
+
+///|
+#borrow(out)
+pub extern "C" fn buffer_map_read_sync(
+  instance : Instance,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_buffer_map_read_sync"
+
+///|
+#borrow(data)
+pub extern "C" fn buffer_map_write_sync(
+  instance : Instance,
+  buffer : Buffer,
+  offset : UInt64,
+  data : Bytes,
+  data_len : UInt64,
+) -> Bool = "mbt_wgpu_buffer_map_write_sync"
+
+///|
+pub extern "C" fn buffer_unmap(buffer : Buffer) -> Unit = "wgpuBufferUnmap"
+
+///|
+#borrow(out)
+pub extern "C" fn buffer_readback_sync(
+  instance : Instance,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_buffer_readback_sync"
+
+///|
+pub extern "C" fn shader_module_release(shader_module : ShaderModule) -> Unit = "wgpuShaderModuleRelease"
+
+///|
+pub extern "C" fn render_pipeline_release(pipeline : RenderPipeline) -> Unit = "wgpuRenderPipelineRelease"
+
+///|
+pub extern "C" fn texture_release(texture : Texture) -> Unit = "wgpuTextureRelease"
+
+///|
+pub extern "C" fn texture_view_release(view : TextureView) -> Unit = "wgpuTextureViewRelease"
+
+///|
+pub extern "C" fn bind_group_layout_release(
+  bind_group_layout : BindGroupLayout,
+) -> Unit = "wgpuBindGroupLayoutRelease"
+
+///|
+pub extern "C" fn bind_group_release(bind_group : BindGroup) -> Unit = "wgpuBindGroupRelease"
+
+///|
+pub extern "C" fn pipeline_layout_release(
+  pipeline_layout : PipelineLayout,
+) -> Unit = "wgpuPipelineLayoutRelease"
+
+///|
+pub extern "C" fn sampler_release(sampler : Sampler) -> Unit = "wgpuSamplerRelease"
+
+///|
+pub extern "C" fn compute_pipeline_release(pipeline : ComputePipeline) -> Unit = "wgpuComputePipelineRelease"
+
+///|
+pub extern "C" fn queue_release(queue : Queue) -> Unit = "wgpuQueueRelease"
+
+///|
+pub extern "C" fn device_release(device : Device) -> Unit = "wgpuDeviceRelease"
+
+///|
+pub extern "C" fn adapter_release(adapter : Adapter) -> Unit = "wgpuAdapterRelease"
+
+///|
+pub extern "C" fn instance_release(instance : Instance) -> Unit = "wgpuInstanceRelease"

@@ -1,0 +1,769 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/wgpu_mbt/wgpu/c"
+
+// Values
+pub fn adapter_release(Adapter) -> Unit
+
+pub fn adapter_request_device_sync(Instance, Adapter) -> Device
+
+pub fn bind_group_layout_release(BindGroupLayout) -> Unit
+
+pub fn bind_group_release(BindGroup) -> Unit
+
+pub fn buffer_destroy(Buffer) -> Unit
+
+pub fn buffer_get_size(Buffer) -> UInt64
+
+pub fn buffer_map_read_sync(Instance, Buffer, UInt64, UInt64, Bytes, UInt64) -> Bool
+
+pub fn buffer_map_write_sync(Instance, Buffer, UInt64, Bytes, UInt64) -> Bool
+
+pub fn buffer_readback_sync(Instance, Buffer, UInt64, UInt64, Bytes, UInt64) -> Bool
+
+pub fn buffer_release(Buffer) -> Unit
+
+pub fn buffer_unmap(Buffer) -> Unit
+
+pub fn command_buffer_release(CommandBuffer) -> Unit
+
+pub fn command_encoder_begin_compute_pass(CommandEncoder) -> ComputePassEncoder
+
+pub fn command_encoder_begin_render_pass_color(CommandEncoder, TextureView) -> RenderPassEncoder
+
+pub fn command_encoder_copy_buffer_to_buffer(CommandEncoder, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
+
+pub fn command_encoder_copy_buffer_to_texture_rgba8(CommandEncoder, Buffer, Texture, UInt, UInt) -> Unit
+
+pub fn command_encoder_copy_texture_to_buffer_rgba8(CommandEncoder, Texture, Buffer, UInt, UInt) -> Unit
+
+pub fn command_encoder_copy_texture_to_texture_rgba8(CommandEncoder, Texture, Texture, UInt, UInt) -> Unit
+
+pub fn command_encoder_finish(CommandEncoder) -> CommandBuffer
+
+pub fn command_encoder_release(CommandEncoder) -> Unit
+
+pub fn compute_pass_dispatch_workgroups(ComputePassEncoder, UInt, UInt, UInt) -> Unit
+
+pub fn compute_pass_end(ComputePassEncoder) -> Unit
+
+pub fn compute_pass_release(ComputePassEncoder) -> Unit
+
+pub fn compute_pass_set_bind_group0(ComputePassEncoder, BindGroup) -> Unit
+
+pub fn compute_pass_set_pipeline(ComputePassEncoder, ComputePipeline) -> Unit
+
+pub fn compute_pipeline_release(ComputePipeline) -> Unit
+
+pub fn create_instance() -> Instance
+
+pub fn device_create_bind_group_layout_sampler_texture_2d(Device) -> BindGroupLayout
+
+pub fn device_create_bind_group_layout_storage_buffer(Device) -> BindGroupLayout
+
+pub fn device_create_bind_group_layout_uniform_buffer(Device) -> BindGroupLayout
+
+pub fn device_create_bind_group_sampler_texture_2d(Device, BindGroupLayout, Sampler, TextureView) -> BindGroup
+
+pub fn device_create_bind_group_storage_buffer(Device, BindGroupLayout, Buffer) -> BindGroup
+
+pub fn device_create_bind_group_uniform_buffer(Device, BindGroupLayout, Buffer) -> BindGroup
+
+pub fn device_create_buffer(Device, UInt64, UInt64, Bool) -> Buffer
+
+pub fn device_create_command_encoder(Device) -> CommandEncoder
+
+pub fn device_create_compute_pipeline(Device, ShaderModule) -> ComputePipeline
+
+pub fn device_create_compute_pipeline_with_layout(Device, PipelineLayout, ShaderModule) -> ComputePipeline
+
+pub fn device_create_pipeline_layout_1(Device, BindGroupLayout) -> PipelineLayout
+
+pub fn device_create_render_pipeline_rgba8(Device, ShaderModule) -> RenderPipeline
+
+pub fn device_create_render_pipeline_rgba8_pos2(Device, ShaderModule) -> RenderPipeline
+
+pub fn device_create_render_pipeline_rgba8_pos2_with_layout(Device, PipelineLayout, ShaderModule) -> RenderPipeline
+
+pub fn device_create_render_pipeline_rgba8_with_layout(Device, PipelineLayout, ShaderModule) -> RenderPipeline
+
+pub fn device_create_sampler_linear_clamp(Device) -> Sampler
+
+pub fn device_create_sampler_nearest_clamp(Device) -> Sampler
+
+pub fn device_create_shader_module_wgsl(Device, Bytes, UInt64) -> ShaderModule
+
+pub fn device_create_texture_rgba8_2d(Device, UInt, UInt) -> Texture
+
+pub fn device_create_texture_rgba8_2d_with_usage(Device, UInt, UInt, UInt64) -> Texture
+
+pub fn device_get_queue(Device) -> Queue
+
+pub fn device_release(Device) -> Unit
+
+pub fn instance_process_events(Instance) -> Unit
+
+pub fn instance_release(Instance) -> Unit
+
+pub fn instance_request_adapter_sync(Instance) -> Adapter
+
+pub fn pipeline_layout_release(PipelineLayout) -> Unit
+
+pub fn queue_release(Queue) -> Unit
+
+pub fn queue_submit(Queue, UInt64, FixedArray[CommandBuffer]) -> Unit
+
+pub fn queue_write_buffer(Queue, Buffer, UInt64, Bytes, UInt64) -> Unit
+
+pub fn queue_write_texture_rgba8_2d(Queue, Texture, UInt, UInt, Bytes, UInt64) -> Unit
+
+pub fn render_pass_draw(RenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
+
+pub fn render_pass_draw_indexed(RenderPassEncoder, UInt, UInt, UInt, Int, UInt) -> Unit
+
+pub fn render_pass_end(RenderPassEncoder) -> Unit
+
+pub fn render_pass_release(RenderPassEncoder) -> Unit
+
+pub fn render_pass_set_bind_group0(RenderPassEncoder, BindGroup) -> Unit
+
+pub fn render_pass_set_index_buffer_u16(RenderPassEncoder, Buffer, UInt64, UInt64) -> Unit
+
+pub fn render_pass_set_pipeline(RenderPassEncoder, RenderPipeline) -> Unit
+
+pub fn render_pass_set_scissor_rect(RenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
+
+pub fn render_pass_set_vertex_buffer(RenderPassEncoder, UInt, Buffer, UInt64, UInt64) -> Unit
+
+pub fn render_pass_set_viewport(RenderPassEncoder, Float, Float, Float, Float, Float, Float) -> Unit
+
+pub fn render_pipeline_release(RenderPipeline) -> Unit
+
+pub fn sampler_release(Sampler) -> Unit
+
+pub fn shader_module_release(ShaderModule) -> Unit
+
+pub fn texture_create_view(Texture) -> TextureView
+
+pub fn texture_release(Texture) -> Unit
+
+pub fn texture_view_release(TextureView) -> Unit
+
+pub fn wgpuAdapterAddRef(WGPUAdapter) -> Unit
+
+pub fn wgpuAdapterGetFeatures(WGPUAdapter, WGPUSupportedFeaturesPtr) -> Unit
+
+pub fn wgpuAdapterGetInfo(WGPUAdapter, WGPUAdapterInfoPtr) -> WGPUStatus
+
+pub fn wgpuAdapterGetLimits(WGPUAdapter, WGPULimitsPtr) -> WGPUStatus
+
+pub fn wgpuAdapterHasFeature(WGPUAdapter, WGPUFeatureName) -> Bool
+
+pub fn wgpuAdapterInfoFreeMembers(WGPUAdapterInfo) -> Unit
+
+pub fn wgpuAdapterRelease(WGPUAdapter) -> Unit
+
+pub fn wgpuAdapterRequestDevice(WGPUAdapter, WGPUDeviceDescriptorPtr, WGPURequestDeviceCallbackInfo) -> WGPUFuture
+
+pub fn wgpuBindGroupAddRef(WGPUBindGroup) -> Unit
+
+pub fn wgpuBindGroupLayoutAddRef(WGPUBindGroupLayout) -> Unit
+
+pub fn wgpuBindGroupLayoutRelease(WGPUBindGroupLayout) -> Unit
+
+pub fn wgpuBindGroupLayoutSetLabel(WGPUBindGroupLayout, WGPUStringView) -> Unit
+
+pub fn wgpuBindGroupRelease(WGPUBindGroup) -> Unit
+
+pub fn wgpuBindGroupSetLabel(WGPUBindGroup, WGPUStringView) -> Unit
+
+pub fn wgpuBufferAddRef(WGPUBuffer) -> Unit
+
+pub fn wgpuBufferDestroy(WGPUBuffer) -> Unit
+
+pub fn wgpuBufferGetConstMappedRange(WGPUBuffer, UInt64, UInt64) -> UnitPtr
+
+pub fn wgpuBufferGetMapState(WGPUBuffer) -> WGPUBufferMapState
+
+pub fn wgpuBufferGetMappedRange(WGPUBuffer, UInt64, UInt64) -> UnitPtr
+
+pub fn wgpuBufferGetSize(WGPUBuffer) -> UInt64
+
+pub fn wgpuBufferGetUsage(WGPUBuffer) -> WGPUBufferUsage
+
+pub fn wgpuBufferMapAsync(WGPUBuffer, WGPUMapMode, UInt64, UInt64, WGPUBufferMapCallbackInfo) -> WGPUFuture
+
+pub fn wgpuBufferRelease(WGPUBuffer) -> Unit
+
+pub fn wgpuBufferSetLabel(WGPUBuffer, WGPUStringView) -> Unit
+
+pub fn wgpuBufferUnmap(WGPUBuffer) -> Unit
+
+pub fn wgpuCommandBufferAddRef(WGPUCommandBuffer) -> Unit
+
+pub fn wgpuCommandBufferRelease(WGPUCommandBuffer) -> Unit
+
+pub fn wgpuCommandBufferSetLabel(WGPUCommandBuffer, WGPUStringView) -> Unit
+
+pub fn wgpuCommandEncoderAddRef(WGPUCommandEncoder) -> Unit
+
+pub fn wgpuCommandEncoderBeginComputePass(WGPUCommandEncoder, WGPUComputePassDescriptorPtr) -> WGPUComputePassEncoder
+
+pub fn wgpuCommandEncoderBeginRenderPass(WGPUCommandEncoder, WGPURenderPassDescriptorPtr) -> WGPURenderPassEncoder
+
+pub fn wgpuCommandEncoderClearBuffer(WGPUCommandEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
+
+pub fn wgpuCommandEncoderCopyBufferToBuffer(WGPUCommandEncoder, WGPUBuffer, UInt64, WGPUBuffer, UInt64, UInt64) -> Unit
+
+pub fn wgpuCommandEncoderCopyBufferToTexture(WGPUCommandEncoder, WGPUTexelCopyBufferInfoPtr, WGPUTexelCopyTextureInfoPtr, WGPUExtent3DPtr) -> Unit
+
+pub fn wgpuCommandEncoderCopyTextureToBuffer(WGPUCommandEncoder, WGPUTexelCopyTextureInfoPtr, WGPUTexelCopyBufferInfoPtr, WGPUExtent3DPtr) -> Unit
+
+pub fn wgpuCommandEncoderCopyTextureToTexture(WGPUCommandEncoder, WGPUTexelCopyTextureInfoPtr, WGPUTexelCopyTextureInfoPtr, WGPUExtent3DPtr) -> Unit
+
+pub fn wgpuCommandEncoderFinish(WGPUCommandEncoder, WGPUCommandBufferDescriptorPtr) -> WGPUCommandBuffer
+
+pub fn wgpuCommandEncoderInsertDebugMarker(WGPUCommandEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuCommandEncoderPopDebugGroup(WGPUCommandEncoder) -> Unit
+
+pub fn wgpuCommandEncoderPushDebugGroup(WGPUCommandEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuCommandEncoderRelease(WGPUCommandEncoder) -> Unit
+
+pub fn wgpuCommandEncoderResolveQuerySet(WGPUCommandEncoder, WGPUQuerySet, UInt, UInt, WGPUBuffer, UInt64) -> Unit
+
+pub fn wgpuCommandEncoderSetLabel(WGPUCommandEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuCommandEncoderWriteTimestamp(WGPUCommandEncoder, WGPUQuerySet, UInt) -> Unit
+
+pub fn wgpuComputePassEncoderAddRef(WGPUComputePassEncoder) -> Unit
+
+pub fn wgpuComputePassEncoderDispatchWorkgroups(WGPUComputePassEncoder, UInt, UInt, UInt) -> Unit
+
+pub fn wgpuComputePassEncoderDispatchWorkgroupsIndirect(WGPUComputePassEncoder, WGPUBuffer, UInt64) -> Unit
+
+pub fn wgpuComputePassEncoderEnd(WGPUComputePassEncoder) -> Unit
+
+pub fn wgpuComputePassEncoderInsertDebugMarker(WGPUComputePassEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuComputePassEncoderPopDebugGroup(WGPUComputePassEncoder) -> Unit
+
+pub fn wgpuComputePassEncoderPushDebugGroup(WGPUComputePassEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuComputePassEncoderRelease(WGPUComputePassEncoder) -> Unit
+
+pub fn wgpuComputePassEncoderSetBindGroup(WGPUComputePassEncoder, UInt, WGPUBindGroup, UInt64, UIntPtr) -> Unit
+
+pub fn wgpuComputePassEncoderSetLabel(WGPUComputePassEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuComputePassEncoderSetPipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
+
+pub fn wgpuComputePipelineAddRef(WGPUComputePipeline) -> Unit
+
+pub fn wgpuComputePipelineGetBindGroupLayout(WGPUComputePipeline, UInt) -> WGPUBindGroupLayout
+
+pub fn wgpuComputePipelineRelease(WGPUComputePipeline) -> Unit
+
+pub fn wgpuComputePipelineSetLabel(WGPUComputePipeline, WGPUStringView) -> Unit
+
+pub fn wgpuCreateInstance(WGPUInstanceDescriptorPtr) -> WGPUInstance
+
+pub fn wgpuDeviceAddRef(WGPUDevice) -> Unit
+
+pub fn wgpuDeviceCreateBindGroup(WGPUDevice, WGPUBindGroupDescriptorPtr) -> WGPUBindGroup
+
+pub fn wgpuDeviceCreateBindGroupLayout(WGPUDevice, WGPUBindGroupLayoutDescriptorPtr) -> WGPUBindGroupLayout
+
+pub fn wgpuDeviceCreateBuffer(WGPUDevice, WGPUBufferDescriptorPtr) -> WGPUBuffer
+
+pub fn wgpuDeviceCreateCommandEncoder(WGPUDevice, WGPUCommandEncoderDescriptorPtr) -> WGPUCommandEncoder
+
+pub fn wgpuDeviceCreateComputePipeline(WGPUDevice, WGPUComputePipelineDescriptorPtr) -> WGPUComputePipeline
+
+pub fn wgpuDeviceCreateComputePipelineAsync(WGPUDevice, WGPUComputePipelineDescriptorPtr, WGPUCreateComputePipelineAsyncCallbackInfo) -> WGPUFuture
+
+pub fn wgpuDeviceCreatePipelineLayout(WGPUDevice, WGPUPipelineLayoutDescriptorPtr) -> WGPUPipelineLayout
+
+pub fn wgpuDeviceCreateQuerySet(WGPUDevice, WGPUQuerySetDescriptorPtr) -> WGPUQuerySet
+
+pub fn wgpuDeviceCreateRenderBundleEncoder(WGPUDevice, WGPURenderBundleEncoderDescriptorPtr) -> WGPURenderBundleEncoder
+
+pub fn wgpuDeviceCreateRenderPipeline(WGPUDevice, WGPURenderPipelineDescriptorPtr) -> WGPURenderPipeline
+
+pub fn wgpuDeviceCreateRenderPipelineAsync(WGPUDevice, WGPURenderPipelineDescriptorPtr, WGPUCreateRenderPipelineAsyncCallbackInfo) -> WGPUFuture
+
+pub fn wgpuDeviceCreateSampler(WGPUDevice, WGPUSamplerDescriptorPtr) -> WGPUSampler
+
+pub fn wgpuDeviceCreateShaderModule(WGPUDevice, WGPUShaderModuleDescriptorPtr) -> WGPUShaderModule
+
+pub fn wgpuDeviceCreateTexture(WGPUDevice, WGPUTextureDescriptorPtr) -> WGPUTexture
+
+pub fn wgpuDeviceDestroy(WGPUDevice) -> Unit
+
+pub fn wgpuDeviceGetAdapterInfo(WGPUDevice) -> WGPUAdapterInfo
+
+pub fn wgpuDeviceGetFeatures(WGPUDevice, WGPUSupportedFeaturesPtr) -> Unit
+
+pub fn wgpuDeviceGetLimits(WGPUDevice, WGPULimitsPtr) -> WGPUStatus
+
+pub fn wgpuDeviceGetLostFuture(WGPUDevice) -> WGPUFuture
+
+pub fn wgpuDeviceGetQueue(WGPUDevice) -> WGPUQueue
+
+pub fn wgpuDeviceHasFeature(WGPUDevice, WGPUFeatureName) -> Bool
+
+pub fn wgpuDevicePopErrorScope(WGPUDevice, WGPUPopErrorScopeCallbackInfo) -> WGPUFuture
+
+pub fn wgpuDevicePushErrorScope(WGPUDevice, WGPUErrorFilter) -> Unit
+
+pub fn wgpuDeviceRelease(WGPUDevice) -> Unit
+
+pub fn wgpuDeviceSetLabel(WGPUDevice, WGPUStringView) -> Unit
+
+pub fn wgpuGetInstanceCapabilities(WGPUInstanceCapabilitiesPtr) -> WGPUStatus
+
+pub fn wgpuGetProcAddress(WGPUStringView) -> WGPUProc
+
+pub fn wgpuInstanceAddRef(WGPUInstance) -> Unit
+
+pub fn wgpuInstanceCreateSurface(WGPUInstance, WGPUSurfaceDescriptorPtr) -> WGPUSurface
+
+pub fn wgpuInstanceGetWGSLLanguageFeatures(WGPUInstance, WGPUSupportedWGSLLanguageFeaturesPtr) -> WGPUStatus
+
+pub fn wgpuInstanceHasWGSLLanguageFeature(WGPUInstance, WGPUWGSLLanguageFeatureName) -> Bool
+
+pub fn wgpuInstanceProcessEvents(WGPUInstance) -> Unit
+
+pub fn wgpuInstanceRelease(WGPUInstance) -> Unit
+
+pub fn wgpuInstanceRequestAdapter(WGPUInstance, WGPURequestAdapterOptionsPtr, WGPURequestAdapterCallbackInfo) -> WGPUFuture
+
+pub fn wgpuInstanceWaitAny(WGPUInstance, UInt64, WGPUFutureWaitInfoPtr, UInt64) -> WGPUWaitStatus
+
+pub fn wgpuPipelineLayoutAddRef(WGPUPipelineLayout) -> Unit
+
+pub fn wgpuPipelineLayoutRelease(WGPUPipelineLayout) -> Unit
+
+pub fn wgpuPipelineLayoutSetLabel(WGPUPipelineLayout, WGPUStringView) -> Unit
+
+pub fn wgpuQuerySetAddRef(WGPUQuerySet) -> Unit
+
+pub fn wgpuQuerySetDestroy(WGPUQuerySet) -> Unit
+
+pub fn wgpuQuerySetGetCount(WGPUQuerySet) -> UInt
+
+pub fn wgpuQuerySetGetType(WGPUQuerySet) -> WGPUQueryType
+
+pub fn wgpuQuerySetRelease(WGPUQuerySet) -> Unit
+
+pub fn wgpuQuerySetSetLabel(WGPUQuerySet, WGPUStringView) -> Unit
+
+pub fn wgpuQueueAddRef(WGPUQueue) -> Unit
+
+pub fn wgpuQueueOnSubmittedWorkDone(WGPUQueue, WGPUQueueWorkDoneCallbackInfo) -> WGPUFuture
+
+pub fn wgpuQueueRelease(WGPUQueue) -> Unit
+
+pub fn wgpuQueueSetLabel(WGPUQueue, WGPUStringView) -> Unit
+
+pub fn wgpuQueueSubmit(WGPUQueue, UInt64, WGPUCommandBufferPtr) -> Unit
+
+pub fn wgpuQueueWriteBuffer(WGPUQueue, WGPUBuffer, UInt64, UnitPtr, UInt64) -> Unit
+
+pub fn wgpuQueueWriteTexture(WGPUQueue, WGPUTexelCopyTextureInfoPtr, UnitPtr, UInt64, WGPUTexelCopyBufferLayoutPtr, WGPUExtent3DPtr) -> Unit
+
+pub fn wgpuRenderBundleAddRef(WGPURenderBundle) -> Unit
+
+pub fn wgpuRenderBundleEncoderAddRef(WGPURenderBundleEncoder) -> Unit
+
+pub fn wgpuRenderBundleEncoderDraw(WGPURenderBundleEncoder, UInt, UInt, UInt, UInt) -> Unit
+
+pub fn wgpuRenderBundleEncoderDrawIndexed(WGPURenderBundleEncoder, UInt, UInt, UInt, Int, UInt) -> Unit
+
+pub fn wgpuRenderBundleEncoderDrawIndexedIndirect(WGPURenderBundleEncoder, WGPUBuffer, UInt64) -> Unit
+
+pub fn wgpuRenderBundleEncoderDrawIndirect(WGPURenderBundleEncoder, WGPUBuffer, UInt64) -> Unit
+
+pub fn wgpuRenderBundleEncoderFinish(WGPURenderBundleEncoder, WGPURenderBundleDescriptorPtr) -> WGPURenderBundle
+
+pub fn wgpuRenderBundleEncoderInsertDebugMarker(WGPURenderBundleEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuRenderBundleEncoderPopDebugGroup(WGPURenderBundleEncoder) -> Unit
+
+pub fn wgpuRenderBundleEncoderPushDebugGroup(WGPURenderBundleEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuRenderBundleEncoderRelease(WGPURenderBundleEncoder) -> Unit
+
+pub fn wgpuRenderBundleEncoderSetBindGroup(WGPURenderBundleEncoder, UInt, WGPUBindGroup, UInt64, UIntPtr) -> Unit
+
+pub fn wgpuRenderBundleEncoderSetIndexBuffer(WGPURenderBundleEncoder, WGPUBuffer, WGPUIndexFormat, UInt64, UInt64) -> Unit
+
+pub fn wgpuRenderBundleEncoderSetLabel(WGPURenderBundleEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuRenderBundleEncoderSetPipeline(WGPURenderBundleEncoder, WGPURenderPipeline) -> Unit
+
+pub fn wgpuRenderBundleEncoderSetVertexBuffer(WGPURenderBundleEncoder, UInt, WGPUBuffer, UInt64, UInt64) -> Unit
+
+pub fn wgpuRenderBundleRelease(WGPURenderBundle) -> Unit
+
+pub fn wgpuRenderBundleSetLabel(WGPURenderBundle, WGPUStringView) -> Unit
+
+pub fn wgpuRenderPassEncoderAddRef(WGPURenderPassEncoder) -> Unit
+
+pub fn wgpuRenderPassEncoderBeginOcclusionQuery(WGPURenderPassEncoder, UInt) -> Unit
+
+pub fn wgpuRenderPassEncoderDraw(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
+
+pub fn wgpuRenderPassEncoderDrawIndexed(WGPURenderPassEncoder, UInt, UInt, UInt, Int, UInt) -> Unit
+
+pub fn wgpuRenderPassEncoderDrawIndexedIndirect(WGPURenderPassEncoder, WGPUBuffer, UInt64) -> Unit
+
+pub fn wgpuRenderPassEncoderDrawIndirect(WGPURenderPassEncoder, WGPUBuffer, UInt64) -> Unit
+
+pub fn wgpuRenderPassEncoderEnd(WGPURenderPassEncoder) -> Unit
+
+pub fn wgpuRenderPassEncoderEndOcclusionQuery(WGPURenderPassEncoder) -> Unit
+
+pub fn wgpuRenderPassEncoderExecuteBundles(WGPURenderPassEncoder, UInt64, WGPURenderBundlePtr) -> Unit
+
+pub fn wgpuRenderPassEncoderInsertDebugMarker(WGPURenderPassEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuRenderPassEncoderPopDebugGroup(WGPURenderPassEncoder) -> Unit
+
+pub fn wgpuRenderPassEncoderPushDebugGroup(WGPURenderPassEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuRenderPassEncoderRelease(WGPURenderPassEncoder) -> Unit
+
+pub fn wgpuRenderPassEncoderSetBindGroup(WGPURenderPassEncoder, UInt, WGPUBindGroup, UInt64, UIntPtr) -> Unit
+
+pub fn wgpuRenderPassEncoderSetBlendConstant(WGPURenderPassEncoder, WGPUColorPtr) -> Unit
+
+pub fn wgpuRenderPassEncoderSetIndexBuffer(WGPURenderPassEncoder, WGPUBuffer, WGPUIndexFormat, UInt64, UInt64) -> Unit
+
+pub fn wgpuRenderPassEncoderSetLabel(WGPURenderPassEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuRenderPassEncoderSetPipeline(WGPURenderPassEncoder, WGPURenderPipeline) -> Unit
+
+pub fn wgpuRenderPassEncoderSetScissorRect(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
+
+pub fn wgpuRenderPassEncoderSetStencilReference(WGPURenderPassEncoder, UInt) -> Unit
+
+pub fn wgpuRenderPassEncoderSetVertexBuffer(WGPURenderPassEncoder, UInt, WGPUBuffer, UInt64, UInt64) -> Unit
+
+pub fn wgpuRenderPassEncoderSetViewport(WGPURenderPassEncoder, Float, Float, Float, Float, Float, Float) -> Unit
+
+pub fn wgpuRenderPipelineAddRef(WGPURenderPipeline) -> Unit
+
+pub fn wgpuRenderPipelineGetBindGroupLayout(WGPURenderPipeline, UInt) -> WGPUBindGroupLayout
+
+pub fn wgpuRenderPipelineRelease(WGPURenderPipeline) -> Unit
+
+pub fn wgpuRenderPipelineSetLabel(WGPURenderPipeline, WGPUStringView) -> Unit
+
+pub fn wgpuSamplerAddRef(WGPUSampler) -> Unit
+
+pub fn wgpuSamplerRelease(WGPUSampler) -> Unit
+
+pub fn wgpuSamplerSetLabel(WGPUSampler, WGPUStringView) -> Unit
+
+pub fn wgpuShaderModuleAddRef(WGPUShaderModule) -> Unit
+
+pub fn wgpuShaderModuleGetCompilationInfo(WGPUShaderModule, WGPUCompilationInfoCallbackInfo) -> WGPUFuture
+
+pub fn wgpuShaderModuleRelease(WGPUShaderModule) -> Unit
+
+pub fn wgpuShaderModuleSetLabel(WGPUShaderModule, WGPUStringView) -> Unit
+
+pub fn wgpuSupportedFeaturesFreeMembers(WGPUSupportedFeatures) -> Unit
+
+pub fn wgpuSupportedWGSLLanguageFeaturesFreeMembers(WGPUSupportedWGSLLanguageFeatures) -> Unit
+
+pub fn wgpuSurfaceAddRef(WGPUSurface) -> Unit
+
+pub fn wgpuSurfaceCapabilitiesFreeMembers(WGPUSurfaceCapabilities) -> Unit
+
+pub fn wgpuSurfaceConfigure(WGPUSurface, WGPUSurfaceConfigurationPtr) -> Unit
+
+pub fn wgpuSurfaceGetCapabilities(WGPUSurface, WGPUAdapter, WGPUSurfaceCapabilitiesPtr) -> WGPUStatus
+
+pub fn wgpuSurfaceGetCurrentTexture(WGPUSurface, WGPUSurfaceTexturePtr) -> Unit
+
+pub fn wgpuSurfacePresent(WGPUSurface) -> WGPUStatus
+
+pub fn wgpuSurfaceRelease(WGPUSurface) -> Unit
+
+pub fn wgpuSurfaceSetLabel(WGPUSurface, WGPUStringView) -> Unit
+
+pub fn wgpuSurfaceUnconfigure(WGPUSurface) -> Unit
+
+pub fn wgpuTextureAddRef(WGPUTexture) -> Unit
+
+pub fn wgpuTextureCreateView(WGPUTexture, WGPUTextureViewDescriptorPtr) -> WGPUTextureView
+
+pub fn wgpuTextureDestroy(WGPUTexture) -> Unit
+
+pub fn wgpuTextureGetDepthOrArrayLayers(WGPUTexture) -> UInt
+
+pub fn wgpuTextureGetDimension(WGPUTexture) -> WGPUTextureDimension
+
+pub fn wgpuTextureGetFormat(WGPUTexture) -> WGPUTextureFormat
+
+pub fn wgpuTextureGetHeight(WGPUTexture) -> UInt
+
+pub fn wgpuTextureGetMipLevelCount(WGPUTexture) -> UInt
+
+pub fn wgpuTextureGetSampleCount(WGPUTexture) -> UInt
+
+pub fn wgpuTextureGetUsage(WGPUTexture) -> WGPUTextureUsage
+
+pub fn wgpuTextureGetWidth(WGPUTexture) -> UInt
+
+pub fn wgpuTextureRelease(WGPUTexture) -> Unit
+
+pub fn wgpuTextureSetLabel(WGPUTexture, WGPUStringView) -> Unit
+
+pub fn wgpuTextureViewAddRef(WGPUTextureView) -> Unit
+
+pub fn wgpuTextureViewRelease(WGPUTextureView) -> Unit
+
+pub fn wgpuTextureViewSetLabel(WGPUTextureView, WGPUStringView) -> Unit
+
+// Errors
+
+// Types and methods
+#external
+pub type Adapter
+
+#external
+pub type BindGroup
+
+#external
+pub type BindGroupLayout
+
+#external
+pub type Buffer
+
+#external
+pub type CommandBuffer
+
+#external
+pub type CommandEncoder
+
+#external
+pub type ComputePassEncoder
+
+#external
+pub type ComputePipeline
+
+#external
+pub type Device
+
+#external
+pub type Instance
+
+#external
+pub type PipelineLayout
+
+#external
+pub type Queue
+
+#external
+pub type RenderPassEncoder
+
+#external
+pub type RenderPipeline
+
+#external
+pub type Sampler
+
+#external
+pub type ShaderModule
+
+#external
+pub type Texture
+
+#external
+pub type TextureView
+
+pub type UIntPtr
+
+pub type UnitPtr
+
+pub type WGPUAdapter
+
+pub type WGPUAdapterInfo
+
+pub type WGPUAdapterInfoPtr
+
+pub type WGPUBindGroup
+
+pub type WGPUBindGroupDescriptorPtr
+
+pub type WGPUBindGroupLayout
+
+pub type WGPUBindGroupLayoutDescriptorPtr
+
+pub type WGPUBuffer
+
+pub type WGPUBufferDescriptorPtr
+
+pub type WGPUBufferMapCallbackInfo
+
+pub type WGPUBufferMapState
+
+pub type WGPUBufferUsage
+
+pub type WGPUColorPtr
+
+pub type WGPUCommandBuffer
+
+pub type WGPUCommandBufferDescriptorPtr
+
+pub type WGPUCommandBufferPtr
+
+pub type WGPUCommandEncoder
+
+pub type WGPUCommandEncoderDescriptorPtr
+
+pub type WGPUCompilationInfoCallbackInfo
+
+pub type WGPUComputePassDescriptorPtr
+
+pub type WGPUComputePassEncoder
+
+pub type WGPUComputePipeline
+
+pub type WGPUComputePipelineDescriptorPtr
+
+pub type WGPUCreateComputePipelineAsyncCallbackInfo
+
+pub type WGPUCreateRenderPipelineAsyncCallbackInfo
+
+pub type WGPUDevice
+
+pub type WGPUDeviceDescriptorPtr
+
+pub type WGPUErrorFilter
+
+pub type WGPUExtent3DPtr
+
+pub type WGPUFeatureName
+
+pub type WGPUFuture
+
+pub type WGPUFutureWaitInfoPtr
+
+pub type WGPUIndexFormat
+
+pub type WGPUInstance
+
+pub type WGPUInstanceCapabilitiesPtr
+
+pub type WGPUInstanceDescriptorPtr
+
+pub type WGPULimitsPtr
+
+pub type WGPUMapMode
+
+pub type WGPUPipelineLayout
+
+pub type WGPUPipelineLayoutDescriptorPtr
+
+pub type WGPUPopErrorScopeCallbackInfo
+
+pub type WGPUProc
+
+pub type WGPUQuerySet
+
+pub type WGPUQuerySetDescriptorPtr
+
+pub type WGPUQueryType
+
+pub type WGPUQueue
+
+pub type WGPUQueueWorkDoneCallbackInfo
+
+pub type WGPURenderBundle
+
+pub type WGPURenderBundleDescriptorPtr
+
+pub type WGPURenderBundleEncoder
+
+pub type WGPURenderBundleEncoderDescriptorPtr
+
+pub type WGPURenderBundlePtr
+
+pub type WGPURenderPassDescriptorPtr
+
+pub type WGPURenderPassEncoder
+
+pub type WGPURenderPipeline
+
+pub type WGPURenderPipelineDescriptorPtr
+
+pub type WGPURequestAdapterCallbackInfo
+
+pub type WGPURequestAdapterOptionsPtr
+
+pub type WGPURequestDeviceCallbackInfo
+
+pub type WGPUSampler
+
+pub type WGPUSamplerDescriptorPtr
+
+pub type WGPUShaderModule
+
+pub type WGPUShaderModuleDescriptorPtr
+
+pub type WGPUStatus
+
+pub type WGPUStringView
+
+pub type WGPUSupportedFeatures
+
+pub type WGPUSupportedFeaturesPtr
+
+pub type WGPUSupportedWGSLLanguageFeatures
+
+pub type WGPUSupportedWGSLLanguageFeaturesPtr
+
+pub type WGPUSurface
+
+pub type WGPUSurfaceCapabilities
+
+pub type WGPUSurfaceCapabilitiesPtr
+
+pub type WGPUSurfaceConfigurationPtr
+
+pub type WGPUSurfaceDescriptorPtr
+
+pub type WGPUSurfaceTexturePtr
+
+pub type WGPUTexelCopyBufferInfoPtr
+
+pub type WGPUTexelCopyBufferLayoutPtr
+
+pub type WGPUTexelCopyTextureInfoPtr
+
+pub type WGPUTexture
+
+pub type WGPUTextureDescriptorPtr
+
+pub type WGPUTextureDimension
+
+pub type WGPUTextureFormat
+
+pub type WGPUTextureUsage
+
+pub type WGPUTextureView
+
+pub type WGPUTextureViewDescriptorPtr
+
+pub type WGPUWGSLLanguageFeatureName
+
+pub type WGPUWaitStatus
+
+// Type aliases
+
+// Traits
+

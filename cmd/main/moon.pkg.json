@@ -1,0 +1,19 @@
+{
+  "is-main": true,
+  "import": [
+    {
+      "path": "username/wgpu_mbt/wgpu",
+      "alias": "wgpu"
+    }
+  ],
+  "targets": {
+    "main.mbt": [
+      "native"
+    ]
+  },
+  "link": {
+    "native": {
+      "cc-link-flags": "vendor/wgpu-native/target/release/libwgpu_native.a -framework Metal -framework Foundation -framework QuartzCore -framework CoreGraphics -framework CoreFoundation -framework IOSurface -framework IOKit"
+    }
+  }
+}

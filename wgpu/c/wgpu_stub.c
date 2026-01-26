@@ -1,0 +1,958 @@
+#include "moonbit.h"
+
+#include "wgpu.h"
+
+// For fixed-width integer ABI compatibility with MoonBit.
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
+
+// The C API provides both `wgpuInstanceWaitAny` and `wgpuInstanceProcessEvents`.
+// wgpu-native currently does not implement `wgpuInstanceWaitAny` for all builds,
+// so we use `WGPUCallbackMode_AllowProcessEvents` + `wgpuInstanceProcessEvents`
+// to drive async adapter/device requests synchronously.
+
+typedef struct {
+  WGPURequestAdapterStatus status;
+  WGPUAdapter adapter;
+} mbt_request_adapter_result_t;
+
+static void mbt_request_adapter_cb(WGPURequestAdapterStatus status,
+                                   WGPUAdapter adapter,
+                                   WGPUStringView message,
+                                   void *userdata1, void *userdata2) {
+  (void)message;
+  (void)userdata2;
+  mbt_request_adapter_result_t *out = (mbt_request_adapter_result_t *)userdata1;
+  out->status = status;
+  out->adapter = adapter;
+}
+
+typedef struct {
+  WGPURequestDeviceStatus status;
+  WGPUDevice device;
+} mbt_request_device_result_t;
+
+static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice device,
+                                  WGPUStringView message, void *userdata1,
+                                  void *userdata2) {
+  (void)message;
+  (void)userdata2;
+  mbt_request_device_result_t *out = (mbt_request_device_result_t *)userdata1;
+  out->status = status;
+  out->device = device;
+}
+
+WGPUInstance mbt_wgpu_create_instance(void) { return wgpuCreateInstance(NULL); }
+
+WGPUAdapter mbt_wgpu_instance_request_adapter_sync(WGPUInstance instance) {
+  mbt_request_adapter_result_t out = {0};
+  WGPURequestAdapterCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_adapter_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+  (void)wgpuInstanceRequestAdapter(instance, NULL, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  if (out.status != WGPURequestAdapterStatus_Success) {
+    return NULL;
+  }
+  return out.adapter;
+}
+
+WGPUDevice mbt_wgpu_adapter_request_device_sync(WGPUInstance instance,
+                                                WGPUAdapter adapter) {
+  mbt_request_device_result_t out = {0};
+  WGPURequestDeviceCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_device_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+  (void)wgpuAdapterRequestDevice(adapter, NULL, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  if (out.status != WGPURequestDeviceStatus_Success) {
+    return NULL;
+  }
+  return out.device;
+}
+
+WGPUCommandEncoder mbt_wgpu_device_create_command_encoder(WGPUDevice device) {
+  return wgpuDeviceCreateCommandEncoder(device, NULL);
+}
+
+WGPUBuffer mbt_wgpu_device_create_buffer(WGPUDevice device, uint64_t size,
+                                        uint64_t usage,
+                                        int32_t mapped_at_creation) {
+  WGPUBufferDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .usage = (WGPUBufferUsage)usage,
+      .size = size,
+      .mappedAtCreation = mapped_at_creation ? 1u : 0u,
+  };
+  return wgpuDeviceCreateBuffer(device, &desc);
+}
+
+WGPUShaderModule mbt_wgpu_device_create_shader_module_wgsl(WGPUDevice device,
+                                                          const uint8_t *code,
+                                                          uint64_t code_len) {
+  WGPUShaderSourceWGSL wgsl = {
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_ShaderSourceWGSL,
+          },
+      .code =
+          (WGPUStringView){
+              .data = (const char *)code,
+              .length = (size_t)code_len,
+          },
+  };
+  WGPUShaderModuleDescriptor desc = {
+      .nextInChain = &wgsl.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+  return wgpuDeviceCreateShaderModule(device, &desc);
+}
+
+WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline(
+    WGPUDevice device, WGPUShaderModule shader_module) {
+  static const char entry[] = "main";
+  WGPUProgrammableStageDescriptor stage = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = entry, .length = 4},
+      .constantCount = 0,
+      .constants = NULL,
+  };
+  WGPUComputePipelineDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = NULL,
+      .compute = stage,
+  };
+  return wgpuDeviceCreateComputePipeline(device, &desc);
+}
+
+WGPUComputePassEncoder mbt_wgpu_command_encoder_begin_compute_pass(
+    WGPUCommandEncoder encoder) {
+  WGPUComputePassDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .timestampWrites = NULL,
+  };
+  return wgpuCommandEncoderBeginComputePass(encoder, &desc);
+}
+
+WGPUTexture mbt_wgpu_device_create_texture_rgba8_2d(WGPUDevice device,
+                                                    uint32_t width,
+                                                    uint32_t height) {
+  WGPUTextureDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .usage = WGPUTextureUsage_RenderAttachment | WGPUTextureUsage_CopySrc |
+               WGPUTextureUsage_CopyDst | WGPUTextureUsage_TextureBinding,
+      .dimension = WGPUTextureDimension_2D,
+      .size = (WGPUExtent3D){.width = width, .height = height, .depthOrArrayLayers = 1u},
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .mipLevelCount = 1u,
+      .sampleCount = 1u,
+      .viewFormatCount = 0u,
+      .viewFormats = NULL,
+  };
+  return wgpuDeviceCreateTexture(device, &desc);
+}
+
+WGPUTexture mbt_wgpu_device_create_texture_rgba8_2d_with_usage(
+    WGPUDevice device, uint32_t width, uint32_t height, uint64_t usage) {
+  WGPUTextureDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .usage = (WGPUTextureUsage)usage,
+      .dimension = WGPUTextureDimension_2D,
+      .size = (WGPUExtent3D){.width = width, .height = height, .depthOrArrayLayers = 1u},
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .mipLevelCount = 1u,
+      .sampleCount = 1u,
+      .viewFormatCount = 0u,
+      .viewFormats = NULL,
+  };
+  return wgpuDeviceCreateTexture(device, &desc);
+}
+
+WGPUTextureView mbt_wgpu_texture_create_view(WGPUTexture texture) {
+  return wgpuTextureCreateView(texture, NULL);
+}
+
+WGPUSampler mbt_wgpu_device_create_sampler_nearest_clamp(WGPUDevice device) {
+  WGPUSamplerDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .addressModeU = WGPUAddressMode_ClampToEdge,
+      .addressModeV = WGPUAddressMode_ClampToEdge,
+      .addressModeW = WGPUAddressMode_ClampToEdge,
+      .magFilter = WGPUFilterMode_Nearest,
+      .minFilter = WGPUFilterMode_Nearest,
+      .mipmapFilter = WGPUMipmapFilterMode_Nearest,
+      .lodMinClamp = 0.0f,
+      .lodMaxClamp = 32.0f,
+      .compare = WGPUCompareFunction_Undefined,
+      .maxAnisotropy = 1u,
+  };
+  return wgpuDeviceCreateSampler(device, &desc);
+}
+
+WGPUSampler mbt_wgpu_device_create_sampler_linear_clamp(WGPUDevice device) {
+  WGPUSamplerDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .addressModeU = WGPUAddressMode_ClampToEdge,
+      .addressModeV = WGPUAddressMode_ClampToEdge,
+      .addressModeW = WGPUAddressMode_ClampToEdge,
+      .magFilter = WGPUFilterMode_Linear,
+      .minFilter = WGPUFilterMode_Linear,
+      .mipmapFilter = WGPUMipmapFilterMode_Linear,
+      .lodMinClamp = 0.0f,
+      .lodMaxClamp = 32.0f,
+      .compare = WGPUCompareFunction_Undefined,
+      .maxAnisotropy = 1u,
+  };
+  return wgpuDeviceCreateSampler(device, &desc);
+}
+
+WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_rgba8_with_layout(
+    WGPUDevice device, WGPUPipelineLayout layout, WGPUShaderModule shader_module) {
+  static const char vs_entry[] = "vs_main";
+  static const char fs_entry[] = "fs_main";
+
+  WGPUVertexState vertex = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = vs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .bufferCount = 0u,
+      .buffers = NULL,
+  };
+
+  WGPUColorTargetState color_target = {
+      .nextInChain = NULL,
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .blend = NULL,
+      .writeMask = WGPUColorWriteMask_All,
+  };
+
+  WGPUFragmentState fragment = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = fs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .targetCount = 1u,
+      .targets = &color_target,
+  };
+
+  WGPUPrimitiveState primitive = {
+      .nextInChain = NULL,
+      .topology = WGPUPrimitiveTopology_TriangleList,
+      .stripIndexFormat = WGPUIndexFormat_Undefined,
+      .frontFace = WGPUFrontFace_CCW,
+      .cullMode = WGPUCullMode_None,
+      .unclippedDepth = 0u,
+  };
+
+  WGPUMultisampleState multisample = {
+      .nextInChain = NULL,
+      .count = 1u,
+      .mask = 0xFFFFFFFFu,
+      .alphaToCoverageEnabled = 0u,
+  };
+
+  WGPURenderPipelineDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .vertex = vertex,
+      .primitive = primitive,
+      .depthStencil = NULL,
+      .multisample = multisample,
+      .fragment = &fragment,
+  };
+  return wgpuDeviceCreateRenderPipeline(device, &desc);
+}
+
+WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_rgba8(
+    WGPUDevice device, WGPUShaderModule shader_module) {
+  static const char vs_entry[] = "vs_main";
+  static const char fs_entry[] = "fs_main";
+
+  WGPUVertexState vertex = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = vs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .bufferCount = 0u,
+      .buffers = NULL,
+  };
+
+  WGPUColorTargetState color_target = {
+      .nextInChain = NULL,
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .blend = NULL,
+      .writeMask = WGPUColorWriteMask_All,
+  };
+
+  WGPUFragmentState fragment = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = fs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .targetCount = 1u,
+      .targets = &color_target,
+  };
+
+  WGPUPrimitiveState primitive = {
+      .nextInChain = NULL,
+      .topology = WGPUPrimitiveTopology_TriangleList,
+      .stripIndexFormat = WGPUIndexFormat_Undefined,
+      .frontFace = WGPUFrontFace_CCW,
+      .cullMode = WGPUCullMode_None,
+      .unclippedDepth = 0u,
+  };
+
+  WGPUMultisampleState multisample = {
+      .nextInChain = NULL,
+      .count = 1u,
+      .mask = 0xFFFFFFFFu,
+      .alphaToCoverageEnabled = 0u,
+  };
+
+  WGPURenderPipelineDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = NULL,
+      .vertex = vertex,
+      .primitive = primitive,
+      .depthStencil = NULL,
+      .multisample = multisample,
+      .fragment = &fragment,
+  };
+  return wgpuDeviceCreateRenderPipeline(device, &desc);
+}
+
+WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_rgba8_pos2(
+    WGPUDevice device, WGPUShaderModule shader_module) {
+  static const char vs_entry[] = "vs_main";
+  static const char fs_entry[] = "fs_main";
+
+  WGPUVertexAttribute attr = {
+      .format = WGPUVertexFormat_Float32x2,
+      .offset = 0u,
+      .shaderLocation = 0u,
+  };
+  WGPUVertexBufferLayout vbuf = {
+      .stepMode = WGPUVertexStepMode_Vertex,
+      .arrayStride = 8u,
+      .attributeCount = 1u,
+      .attributes = &attr,
+  };
+  WGPUVertexState vertex = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = vs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .bufferCount = 1u,
+      .buffers = &vbuf,
+  };
+
+  WGPUColorTargetState color_target = {
+      .nextInChain = NULL,
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .blend = NULL,
+      .writeMask = WGPUColorWriteMask_All,
+  };
+
+  WGPUFragmentState fragment = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = fs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .targetCount = 1u,
+      .targets = &color_target,
+  };
+
+  WGPUPrimitiveState primitive = {
+      .nextInChain = NULL,
+      .topology = WGPUPrimitiveTopology_TriangleList,
+      .stripIndexFormat = WGPUIndexFormat_Undefined,
+      .frontFace = WGPUFrontFace_CCW,
+      .cullMode = WGPUCullMode_None,
+      .unclippedDepth = 0u,
+  };
+
+  WGPUMultisampleState multisample = {
+      .nextInChain = NULL,
+      .count = 1u,
+      .mask = 0xFFFFFFFFu,
+      .alphaToCoverageEnabled = 0u,
+  };
+
+  WGPURenderPipelineDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = NULL,
+      .vertex = vertex,
+      .primitive = primitive,
+      .depthStencil = NULL,
+      .multisample = multisample,
+      .fragment = &fragment,
+  };
+  return wgpuDeviceCreateRenderPipeline(device, &desc);
+}
+
+WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_rgba8_pos2_with_layout(
+    WGPUDevice device, WGPUPipelineLayout layout, WGPUShaderModule shader_module) {
+  static const char vs_entry[] = "vs_main";
+  static const char fs_entry[] = "fs_main";
+
+  WGPUVertexAttribute attr = {
+      .format = WGPUVertexFormat_Float32x2,
+      .offset = 0u,
+      .shaderLocation = 0u,
+  };
+  WGPUVertexBufferLayout vbuf = {
+      .stepMode = WGPUVertexStepMode_Vertex,
+      .arrayStride = 8u,
+      .attributeCount = 1u,
+      .attributes = &attr,
+  };
+  WGPUVertexState vertex = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = vs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .bufferCount = 1u,
+      .buffers = &vbuf,
+  };
+
+  WGPUColorTargetState color_target = {
+      .nextInChain = NULL,
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .blend = NULL,
+      .writeMask = WGPUColorWriteMask_All,
+  };
+
+  WGPUFragmentState fragment = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = fs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .targetCount = 1u,
+      .targets = &color_target,
+  };
+
+  WGPUPrimitiveState primitive = {
+      .nextInChain = NULL,
+      .topology = WGPUPrimitiveTopology_TriangleList,
+      .stripIndexFormat = WGPUIndexFormat_Undefined,
+      .frontFace = WGPUFrontFace_CCW,
+      .cullMode = WGPUCullMode_None,
+      .unclippedDepth = 0u,
+  };
+
+  WGPUMultisampleState multisample = {
+      .nextInChain = NULL,
+      .count = 1u,
+      .mask = 0xFFFFFFFFu,
+      .alphaToCoverageEnabled = 0u,
+  };
+
+  WGPURenderPipelineDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .vertex = vertex,
+      .primitive = primitive,
+      .depthStencil = NULL,
+      .multisample = multisample,
+      .fragment = &fragment,
+  };
+  return wgpuDeviceCreateRenderPipeline(device, &desc);
+}
+
+WGPURenderPassEncoder mbt_wgpu_command_encoder_begin_render_pass_color(
+    WGPUCommandEncoder encoder, WGPUTextureView view) {
+  WGPURenderPassColorAttachment color = {
+      .nextInChain = NULL,
+      .view = view,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = WGPULoadOp_Clear,
+      .storeOp = WGPUStoreOp_Store,
+      .clearValue = (WGPUColor){.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+  };
+  WGPURenderPassDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = 1u,
+      .colorAttachments = &color,
+      .depthStencilAttachment = NULL,
+      .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+  return wgpuCommandEncoderBeginRenderPass(encoder, &desc);
+}
+
+void mbt_wgpu_command_encoder_copy_texture_to_buffer_rgba8(
+    WGPUCommandEncoder encoder, WGPUTexture texture, WGPUBuffer buffer,
+    uint32_t width, uint32_t height) {
+  WGPUTexelCopyTextureInfo src = {
+      .texture = texture,
+      .mipLevel = 0u,
+      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
+      .aspect = WGPUTextureAspect_All,
+  };
+  WGPUTexelCopyBufferInfo dst = {
+      .layout =
+          (WGPUTexelCopyBufferLayout){
+              .offset = 0u,
+              .bytesPerRow = 256u,
+              .rowsPerImage = height,
+          },
+      .buffer = buffer,
+  };
+  WGPUExtent3D copy_size = {
+      .width = width,
+      .height = height,
+      .depthOrArrayLayers = 1u,
+  };
+  wgpuCommandEncoderCopyTextureToBuffer(encoder, &src, &dst, &copy_size);
+}
+
+void mbt_wgpu_command_encoder_copy_buffer_to_texture_rgba8(
+    WGPUCommandEncoder encoder, WGPUBuffer buffer, WGPUTexture texture,
+    uint32_t width, uint32_t height) {
+  WGPUTexelCopyBufferInfo src = {
+      .layout =
+          (WGPUTexelCopyBufferLayout){
+              .offset = 0u,
+              .bytesPerRow = 256u,
+              .rowsPerImage = height,
+          },
+      .buffer = buffer,
+  };
+  WGPUTexelCopyTextureInfo dst = {
+      .texture = texture,
+      .mipLevel = 0u,
+      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
+      .aspect = WGPUTextureAspect_All,
+  };
+  WGPUExtent3D copy_size = {
+      .width = width,
+      .height = height,
+      .depthOrArrayLayers = 1u,
+  };
+  wgpuCommandEncoderCopyBufferToTexture(encoder, &src, &dst, &copy_size);
+}
+
+void mbt_wgpu_command_encoder_copy_texture_to_texture_rgba8(
+    WGPUCommandEncoder encoder, WGPUTexture src_texture, WGPUTexture dst_texture,
+    uint32_t width, uint32_t height) {
+  WGPUTexelCopyTextureInfo src = {
+      .texture = src_texture,
+      .mipLevel = 0u,
+      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
+      .aspect = WGPUTextureAspect_All,
+  };
+  WGPUTexelCopyTextureInfo dst = {
+      .texture = dst_texture,
+      .mipLevel = 0u,
+      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
+      .aspect = WGPUTextureAspect_All,
+  };
+  WGPUExtent3D copy_size = {
+      .width = width,
+      .height = height,
+      .depthOrArrayLayers = 1u,
+  };
+  wgpuCommandEncoderCopyTextureToTexture(encoder, &src, &dst, &copy_size);
+}
+
+void mbt_wgpu_render_pass_set_index_buffer_u16(WGPURenderPassEncoder pass,
+                                               WGPUBuffer buffer,
+                                               uint64_t offset,
+                                               uint64_t size) {
+  wgpuRenderPassEncoderSetIndexBuffer(pass, buffer, WGPUIndexFormat_Uint16, offset,
+                                     size);
+}
+
+void mbt_wgpu_queue_write_texture_rgba8_2d(WGPUQueue queue, WGPUTexture texture,
+                                           uint32_t width, uint32_t height,
+                                           const uint8_t *data,
+                                           uint64_t data_len) {
+  WGPUTexelCopyTextureInfo dst = {
+      .texture = texture,
+      .mipLevel = 0u,
+      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
+      .aspect = WGPUTextureAspect_All,
+  };
+  WGPUTexelCopyBufferLayout layout = {
+      .offset = 0u,
+      .bytesPerRow = 256u,
+      .rowsPerImage = height,
+  };
+  WGPUExtent3D size = {
+      .width = width,
+      .height = height,
+      .depthOrArrayLayers = 1u,
+  };
+  wgpuQueueWriteTexture(queue, &dst, data, (size_t)data_len, &layout, &size);
+}
+
+WGPUBindGroupLayout mbt_wgpu_device_create_bind_group_layout_sampler_texture_2d(
+    WGPUDevice device) {
+  WGPUSamplerBindingLayout sampler = {
+      .nextInChain = NULL,
+      .type = WGPUSamplerBindingType_Filtering,
+  };
+  WGPUBindGroupLayoutEntry entries[2] = {
+      {
+          .nextInChain = NULL,
+          .binding = 0u,
+          .visibility = WGPUShaderStage_Fragment,
+          .buffer = (WGPUBufferBindingLayout){0},
+          .sampler = sampler,
+          .texture = (WGPUTextureBindingLayout){0},
+          .storageTexture = (WGPUStorageTextureBindingLayout){0},
+      },
+      {
+          .nextInChain = NULL,
+          .binding = 1u,
+          .visibility = WGPUShaderStage_Fragment,
+          .buffer = (WGPUBufferBindingLayout){0},
+          .sampler = (WGPUSamplerBindingLayout){0},
+          .texture =
+              (WGPUTextureBindingLayout){
+                  .nextInChain = NULL,
+                  .sampleType = WGPUTextureSampleType_Float,
+                  .viewDimension = WGPUTextureViewDimension_2D,
+                  .multisampled = 0u,
+              },
+          .storageTexture = (WGPUStorageTextureBindingLayout){0},
+      },
+  };
+  WGPUBindGroupLayoutDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .entryCount = 2u,
+      .entries = entries,
+  };
+  return wgpuDeviceCreateBindGroupLayout(device, &desc);
+}
+
+WGPUBindGroup mbt_wgpu_device_create_bind_group_sampler_texture_2d(
+    WGPUDevice device, WGPUBindGroupLayout bind_group_layout, WGPUSampler sampler,
+    WGPUTextureView view) {
+  WGPUBindGroupEntry entries[2] = {
+      {
+          .nextInChain = NULL,
+          .binding = 0u,
+          .buffer = NULL,
+          .offset = 0u,
+          .size = 0u,
+          .sampler = sampler,
+          .textureView = NULL,
+      },
+      {
+          .nextInChain = NULL,
+          .binding = 1u,
+          .buffer = NULL,
+          .offset = 0u,
+          .size = 0u,
+          .sampler = NULL,
+          .textureView = view,
+      },
+  };
+  WGPUBindGroupDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = bind_group_layout,
+      .entryCount = 2u,
+      .entries = entries,
+  };
+  return wgpuDeviceCreateBindGroup(device, &desc);
+}
+
+WGPUBindGroupLayout mbt_wgpu_device_create_bind_group_layout_uniform_buffer(
+    WGPUDevice device) {
+  WGPUBufferBindingLayout buffer = {
+      .nextInChain = NULL,
+      .type = WGPUBufferBindingType_Uniform,
+      .hasDynamicOffset = 0u,
+      .minBindingSize = 0u,
+  };
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = NULL,
+      .binding = 0u,
+      .visibility = WGPUShaderStage_Fragment,
+      .buffer = buffer,
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  WGPUBindGroupLayoutDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .entryCount = 1u,
+      .entries = &entry,
+  };
+  return wgpuDeviceCreateBindGroupLayout(device, &desc);
+}
+
+WGPUBindGroup mbt_wgpu_device_create_bind_group_uniform_buffer(
+    WGPUDevice device, WGPUBindGroupLayout bind_group_layout,
+    WGPUBuffer buffer) {
+  WGPUBindGroupEntry entry = {
+      .nextInChain = NULL,
+      .binding = 0u,
+      .buffer = buffer,
+      .offset = 0u,
+      .size = WGPU_WHOLE_SIZE,
+      .sampler = NULL,
+      .textureView = NULL,
+  };
+  WGPUBindGroupDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = bind_group_layout,
+      .entryCount = 1u,
+      .entries = &entry,
+  };
+  return wgpuDeviceCreateBindGroup(device, &desc);
+}
+
+void mbt_wgpu_render_pass_set_bind_group0(WGPURenderPassEncoder pass,
+                                         WGPUBindGroup group) {
+  wgpuRenderPassEncoderSetBindGroup(pass, 0u, group, 0u, NULL);
+}
+
+typedef struct {
+  WGPUMapAsyncStatus status;
+} mbt_map_result2_t;
+
+static void mbt_buffer_map_cb2(WGPUMapAsyncStatus status, WGPUStringView message,
+                               void *userdata1, void *userdata2) {
+  (void)message;
+  (void)userdata2;
+  mbt_map_result2_t *out = (mbt_map_result2_t *)userdata1;
+  out->status = status;
+}
+
+bool mbt_wgpu_buffer_map_read_sync(WGPUInstance instance, WGPUBuffer buffer,
+                                   uint64_t offset, uint64_t size,
+                                   uint8_t *out, uint64_t out_len) {
+  if (size > out_len) {
+    return false;
+  }
+  mbt_map_result2_t map = {0};
+  WGPUBufferMapCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_buffer_map_cb2,
+      .userdata1 = &map,
+      .userdata2 = NULL,
+  };
+  (void)wgpuBufferMapAsync(buffer, WGPUMapMode_Read, (size_t)offset,
+                          (size_t)size, info);
+  while (map.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+  if (map.status != WGPUMapAsyncStatus_Success) {
+    return false;
+  }
+  const void *mapped = wgpuBufferGetConstMappedRange(buffer, offset, size);
+  if (!mapped) {
+    return false;
+  }
+  memcpy(out, mapped, (size_t)size);
+  return true;
+}
+
+bool mbt_wgpu_buffer_map_write_sync(WGPUInstance instance, WGPUBuffer buffer,
+                                    uint64_t offset, const uint8_t *data,
+                                    uint64_t data_len) {
+  mbt_map_result2_t map = {0};
+  WGPUBufferMapCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_buffer_map_cb2,
+      .userdata1 = &map,
+      .userdata2 = NULL,
+  };
+  (void)wgpuBufferMapAsync(buffer, WGPUMapMode_Write, (size_t)offset,
+                          (size_t)data_len, info);
+  while (map.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+  if (map.status != WGPUMapAsyncStatus_Success) {
+    return false;
+  }
+  void *mapped = wgpuBufferGetMappedRange(buffer, offset, data_len);
+  if (!mapped) {
+    return false;
+  }
+  memcpy(mapped, data, (size_t)data_len);
+  return true;
+}
+
+WGPUBindGroupLayout mbt_wgpu_device_create_bind_group_layout_storage_buffer(
+    WGPUDevice device) {
+  WGPUBufferBindingLayout buffer = {
+      .nextInChain = NULL,
+      .type = WGPUBufferBindingType_Storage,
+      .hasDynamicOffset = 0u,
+      .minBindingSize = 0u,
+  };
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = NULL,
+      .binding = 0u,
+      .visibility = WGPUShaderStage_Compute,
+      .buffer = buffer,
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  WGPUBindGroupLayoutDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .entryCount = 1u,
+      .entries = &entry,
+  };
+  return wgpuDeviceCreateBindGroupLayout(device, &desc);
+}
+
+WGPUPipelineLayout mbt_wgpu_device_create_pipeline_layout_1(
+    WGPUDevice device, WGPUBindGroupLayout bind_group_layout) {
+  WGPUBindGroupLayout layouts[1] = {bind_group_layout};
+  WGPUPipelineLayoutDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .bindGroupLayoutCount = 1u,
+      .bindGroupLayouts = layouts,
+  };
+  return wgpuDeviceCreatePipelineLayout(device, &desc);
+}
+
+WGPUBindGroup mbt_wgpu_device_create_bind_group_storage_buffer(
+    WGPUDevice device, WGPUBindGroupLayout bind_group_layout, WGPUBuffer buffer) {
+  WGPUBindGroupEntry entry = {
+      .nextInChain = NULL,
+      .binding = 0u,
+      .buffer = buffer,
+      .offset = 0u,
+      .size = WGPU_WHOLE_SIZE,
+      .sampler = NULL,
+      .textureView = NULL,
+  };
+  WGPUBindGroupDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = bind_group_layout,
+      .entryCount = 1u,
+      .entries = &entry,
+  };
+  return wgpuDeviceCreateBindGroup(device, &desc);
+}
+
+WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline_with_layout(
+    WGPUDevice device, WGPUPipelineLayout layout,
+    WGPUShaderModule shader_module) {
+  static const char entry[] = "main";
+  WGPUProgrammableStageDescriptor stage = {
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = entry, .length = 4},
+      .constantCount = 0,
+      .constants = NULL,
+  };
+  WGPUComputePipelineDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .compute = stage,
+  };
+  return wgpuDeviceCreateComputePipeline(device, &desc);
+}
+
+void mbt_wgpu_compute_pass_set_bind_group0(WGPUComputePassEncoder pass,
+                                          WGPUBindGroup group) {
+  wgpuComputePassEncoderSetBindGroup(pass, 0u, group, 0u, NULL);
+}
+
+typedef struct {
+  WGPUMapAsyncStatus status;
+} mbt_map_result_t;
+
+static void mbt_buffer_map_cb(WGPUMapAsyncStatus status, WGPUStringView message,
+                              void *userdata1, void *userdata2) {
+  (void)message;
+  (void)userdata2;
+  mbt_map_result_t *out = (mbt_map_result_t *)userdata1;
+  out->status = status;
+}
+
+int32_t mbt_wgpu_buffer_readback_sync(WGPUInstance instance, WGPUBuffer buffer,
+                                     uint64_t offset, uint64_t size,
+                                     uint8_t *out, uint64_t out_len) {
+  if (out_len < size) {
+    return 0;
+  }
+
+  mbt_map_result_t map = {0};
+  WGPUBufferMapCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_buffer_map_cb,
+      .userdata1 = &map,
+      .userdata2 = NULL,
+  };
+  (void)wgpuBufferMapAsync(buffer, WGPUMapMode_Read, (size_t)offset,
+                          (size_t)size, info);
+  while (map.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  if (map.status != WGPUMapAsyncStatus_Success) {
+    return 0;
+  }
+
+  void const *ptr = wgpuBufferGetConstMappedRange(buffer, (size_t)offset,
+                                                  (size_t)size);
+  if (ptr == NULL) {
+    wgpuBufferUnmap(buffer);
+    return 0;
+  }
+  memcpy(out, ptr, (size_t)size);
+  wgpuBufferUnmap(buffer);
+  return 1;
+}
+
+WGPUCommandBuffer mbt_wgpu_command_encoder_finish(WGPUCommandEncoder encoder) {
+  return wgpuCommandEncoderFinish(encoder, NULL);
+}

@@ -1,0 +1,26 @@
+{
+  "import": [
+    {
+      "path": "username/wgpu_mbt/wgpu/c",
+      "alias": "c"
+    },
+    "moonbitlang/core/ref",
+    "moonbitlang/core/encoding/utf8"
+  ],
+  "targets": {
+    "beads.mbt": [
+      "native"
+    ],
+    "consts.mbt": [
+      "native"
+    ],
+    "wgpu.mbt": [
+      "native"
+    ]
+  },
+  "link": {
+    "native": {
+      "cc-link-flags": "vendor/wgpu-native/target/release/libwgpu_native.a -framework Metal -framework Foundation -framework QuartzCore -framework CoreGraphics -framework CoreFoundation -framework IOSurface -framework IOKit"
+    }
+  }
+}

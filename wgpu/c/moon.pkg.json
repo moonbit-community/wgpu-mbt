@@ -1,0 +1,27 @@
+{
+  "import": [],
+  "native-stub": [
+    "wgpu_stub.c"
+  ],
+  "targets": {
+    "raw.mbt": [
+      "native"
+    ]
+  },
+  "pre-build": [
+    {
+      "input": [
+        "../../vendor/wgpu-native/Cargo.toml"
+      ],
+      "output": [
+        "../../vendor/wgpu-native/target/release/libwgpu_native.a"
+      ],
+      "command": "cargo build --manifest-path $input --release --no-default-features --features metal,wgsl"
+    }
+  ],
+  "link": {
+    "native": {
+      "stub-cc-flags": "-Ivendor/wgpu-native/ffi -Ivendor/wgpu-native/ffi/webgpu-headers"
+    }
+  }
+}

@@ -1,0 +1,194 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/wgpu_mbt/wgpu"
+
+import {
+  "username/wgpu_mbt/wgpu/c",
+}
+
+// Values
+pub fn beads_record(String) -> Unit
+
+pub fn beads_set_enabled(Bool) -> Unit
+
+pub fn beads_take() -> Array[String]
+
+pub let buffer_usage_copy_dst : UInt64
+
+pub let buffer_usage_copy_src : UInt64
+
+pub let buffer_usage_index : UInt64
+
+pub let buffer_usage_map_read : UInt64
+
+pub let buffer_usage_map_write : UInt64
+
+pub let buffer_usage_storage : UInt64
+
+pub let buffer_usage_uniform : UInt64
+
+pub let buffer_usage_vertex : UInt64
+
+pub let texture_usage_copy_dst : UInt64
+
+pub let texture_usage_copy_src : UInt64
+
+pub let texture_usage_render_attachment : UInt64
+
+pub let texture_usage_storage_binding : UInt64
+
+pub let texture_usage_texture_binding : UInt64
+
+// Errors
+
+// Types and methods
+pub struct Adapter {
+  raw : @c.Adapter
+}
+pub fn Adapter::release(Self) -> Unit
+pub fn Adapter::request_device_sync(Self, Instance) -> Device
+
+pub struct BindGroup {
+  raw : @c.BindGroup
+}
+pub fn BindGroup::release(Self) -> Unit
+
+pub struct BindGroupLayout {
+  raw : @c.BindGroupLayout
+}
+pub fn BindGroupLayout::release(Self) -> Unit
+
+pub struct Buffer {
+  raw : @c.Buffer
+}
+pub fn Buffer::destroy(Self) -> Unit
+pub fn Buffer::map_read_sync(Self, Instance, UInt64, UInt64) -> Bytes
+pub fn Buffer::map_write_sync(Self, Instance, UInt64, Bytes) -> Unit
+pub fn Buffer::readback(Self, Instance, UInt64, UInt64) -> Bytes
+pub fn Buffer::release(Self) -> Unit
+pub fn Buffer::size(Self) -> UInt64
+pub fn Buffer::unmap(Self) -> Unit
+
+pub struct CommandBuffer {
+  raw : @c.CommandBuffer
+}
+pub fn CommandBuffer::release(Self) -> Unit
+
+pub struct CommandEncoder {
+  raw : @c.CommandEncoder
+}
+pub fn CommandEncoder::begin_compute_pass(Self) -> ComputePass
+pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
+pub fn CommandEncoder::copy_buffer_to_buffer(Self, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
+pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_texture_to_buffer_rgba8(Self, Texture, Buffer, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_texture_to_texture_rgba8(Self, Texture, Texture, UInt, UInt) -> Unit
+pub fn CommandEncoder::finish(Self) -> CommandBuffer
+pub fn CommandEncoder::release(Self) -> Unit
+
+pub struct ComputePass {
+  raw : @c.ComputePassEncoder
+}
+pub fn ComputePass::dispatch_workgroups(Self, UInt, UInt, UInt) -> Unit
+pub fn ComputePass::end(Self) -> Unit
+pub fn ComputePass::release(Self) -> Unit
+pub fn ComputePass::set_bind_group0(Self, BindGroup) -> Unit
+pub fn ComputePass::set_pipeline(Self, ComputePipeline) -> Unit
+
+pub struct ComputePipeline {
+  raw : @c.ComputePipeline
+}
+pub fn ComputePipeline::release(Self) -> Unit
+
+pub struct Device {
+  raw : @c.Device
+}
+pub fn Device::create_bind_group_layout_sampler_texture_2d(Self) -> BindGroupLayout
+pub fn Device::create_bind_group_layout_storage_buffer(Self) -> BindGroupLayout
+pub fn Device::create_bind_group_layout_uniform_buffer(Self) -> BindGroupLayout
+pub fn Device::create_bind_group_sampler_texture_2d(Self, BindGroupLayout, Sampler, TextureView) -> BindGroup
+pub fn Device::create_bind_group_storage_buffer(Self, BindGroupLayout, Buffer) -> BindGroup
+pub fn Device::create_bind_group_uniform_buffer(Self, BindGroupLayout, Buffer) -> BindGroup
+pub fn Device::create_buffer(Self, size~ : UInt64, usage~ : UInt64, mapped_at_creation? : Bool) -> Buffer
+pub fn Device::create_buffer_init(Self, usage~ : UInt64, Bytes) -> Buffer
+pub fn Device::create_command_encoder(Self) -> CommandEncoder
+pub fn Device::create_compute_pipeline(Self, ShaderModule) -> ComputePipeline
+pub fn Device::create_compute_pipeline_with_layout(Self, PipelineLayout, ShaderModule) -> ComputePipeline
+pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
+pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
+pub fn Device::create_render_pipeline_rgba8_pos2(Self, ShaderModule) -> RenderPipeline
+pub fn Device::create_render_pipeline_rgba8_pos2_with_layout(Self, PipelineLayout, ShaderModule) -> RenderPipeline
+pub fn Device::create_render_pipeline_rgba8_with_layout(Self, PipelineLayout, ShaderModule) -> RenderPipeline
+pub fn Device::create_sampler_linear_clamp(Self) -> Sampler
+pub fn Device::create_sampler_nearest_clamp(Self) -> Sampler
+pub fn Device::create_shader_module_wgsl(Self, String) -> ShaderModule
+pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
+pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
+pub fn Device::queue(Self) -> Queue
+pub fn Device::release(Self) -> Unit
+
+pub struct Instance {
+  raw : @c.Instance
+}
+pub fn Instance::create() -> Self
+pub fn Instance::process_events(Self) -> Unit
+pub fn Instance::release(Self) -> Unit
+pub fn Instance::request_adapter_sync(Self) -> Adapter
+
+pub struct PipelineLayout {
+  raw : @c.PipelineLayout
+}
+pub fn PipelineLayout::release(Self) -> Unit
+
+pub struct Queue {
+  raw : @c.Queue
+}
+pub fn Queue::release(Self) -> Unit
+pub fn Queue::submit(Self, Array[CommandBuffer]) -> Unit
+pub fn Queue::submit_one(Self, CommandBuffer) -> Unit
+pub fn Queue::write_buffer(Self, Buffer, UInt64, Bytes) -> Unit
+pub fn Queue::write_texture_rgba8_2d(Self, Texture, UInt, UInt, Bytes) -> Unit
+
+pub struct RenderPass {
+  raw : @c.RenderPassEncoder
+}
+pub fn RenderPass::draw(Self, UInt, UInt, UInt, UInt) -> Unit
+pub fn RenderPass::draw_indexed(Self, UInt, UInt, UInt, Int, UInt) -> Unit
+pub fn RenderPass::end(Self) -> Unit
+pub fn RenderPass::release(Self) -> Unit
+pub fn RenderPass::set_bind_group0(Self, BindGroup) -> Unit
+pub fn RenderPass::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
+pub fn RenderPass::set_pipeline(Self, RenderPipeline) -> Unit
+pub fn RenderPass::set_scissor_rect(Self, UInt, UInt, UInt, UInt) -> Unit
+pub fn RenderPass::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit
+pub fn RenderPass::set_viewport(Self, Float, Float, Float, Float, Float, Float) -> Unit
+
+pub struct RenderPipeline {
+  raw : @c.RenderPipeline
+}
+pub fn RenderPipeline::release(Self) -> Unit
+
+pub struct Sampler {
+  raw : @c.Sampler
+}
+pub fn Sampler::release(Self) -> Unit
+
+pub struct ShaderModule {
+  raw : @c.ShaderModule
+}
+pub fn ShaderModule::release(Self) -> Unit
+
+pub struct Texture {
+  raw : @c.Texture
+}
+pub fn Texture::create_view(Self) -> TextureView
+pub fn Texture::release(Self) -> Unit
+
+pub struct TextureView {
+  raw : @c.TextureView
+}
+pub fn TextureView::release(Self) -> Unit
+
+// Type aliases
+
+// Traits
+

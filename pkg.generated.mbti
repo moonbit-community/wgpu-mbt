@@ -1,0 +1,14 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/wgpu_mbt"
+
+// Values
+pub fn rgba_bytes(UInt, UInt, UInt, UInt) -> Bytes
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

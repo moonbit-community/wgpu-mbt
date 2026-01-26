@@ -1,0 +1,84 @@
+{
+  "import": [],
+  "test-import": [
+    {
+      "path": "username/wgpu_mbt/wgpu",
+      "alias": "wgpu"
+    },
+    {
+      "path": "username/wgpu_mbt/wgpu/c",
+      "alias": "wgpu_c"
+    },
+    "moonbitlang/core/ref"
+  ],
+  "targets": {
+    "wgpu_smoke_test.mbt": [
+      "native"
+    ],
+    "wgpu_compute_test.mbt": [
+      "native"
+    ],
+    "wgpu_compute_readback_test.mbt": [
+      "native"
+    ],
+    "wgpu_queue_write_buffer_test.mbt": [
+      "native"
+    ],
+    "wgpu_render_offscreen_test.mbt": [
+      "native"
+    ],
+    "wgpu_render_vertex_buffer_test.mbt": [
+      "native"
+    ],
+    "wgpu_render_index_buffer_test.mbt": [
+      "native"
+    ],
+    "wgpu_render_uniform_test.mbt": [
+      "native"
+    ],
+    "wgpu_render_viewport_scissor_test.mbt": [
+      "native"
+    ],
+    "wgpu_copy_buffer_to_texture_test.mbt": [
+      "native"
+    ],
+    "wgpu_render_texture_sampling_test.mbt": [
+      "native"
+    ],
+    "wgpu_test_helpers.mbt": [
+      "native"
+    ],
+    "wgpu_spec_buffer_init_test.mbt": [
+      "native"
+    ],
+    "wgpu_spec_queue_submit_multi_test.mbt": [
+      "native"
+    ],
+    "wgpu_spec_queue_write_texture_test.mbt": [
+      "native"
+    ],
+    "wgpu_spec_copy_texture_to_texture_test.mbt": [
+      "native"
+    ],
+    "wgpu_spec_buffer_map_test.mbt": [
+      "native"
+    ],
+    "wgpu_spec_instance_process_events_test.mbt": [
+      "native"
+    ],
+    "wgpu_spec_texture_usage_test.mbt": [
+      "native"
+    ],
+    "wgpu_spec_sampler_linear_test.mbt": [
+      "native"
+    ],
+    "wgpu_capi_symbols_test.mbt": [
+      "native"
+    ]
+  },
+  "link": {
+    "native": {
+      "cc-link-flags": "vendor/wgpu-native/target/release/libwgpu_native.a -framework Metal -framework Foundation -framework QuartzCore -framework CoreGraphics -framework CoreFoundation -framework IOSurface -framework IOKit"
+    }
+  }
+}
