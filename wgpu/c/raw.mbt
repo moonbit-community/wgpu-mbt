@@ -33,17 +33,22 @@ pub extern "C" fn adapter_request_device_sync(
 pub extern "C" fn device_get_queue(device : Device) -> Queue = "wgpuDeviceGetQueue"
 
 ///|
-pub extern "C" fn device_create_command_encoder(
-  device : Device,
-) -> CommandEncoder = "mbt_wgpu_device_create_command_encoder"
+pub fn device_create_command_encoder(device : Device) -> CommandEncoder {
+  wgpuDeviceCreateCommandEncoder(device, null_command_encoder_descriptor_ptr())
+}
 
 ///|
-pub extern "C" fn device_create_buffer(
+pub fn device_create_buffer(
   device : Device,
   size : UInt64,
   usage : UInt64,
   mapped_at_creation : Bool,
-) -> Buffer = "mbt_wgpu_device_create_buffer"
+) -> Buffer {
+  let desc = buffer_descriptor_new(size, usage, mapped_at_creation)
+  let buffer = wgpuDeviceCreateBuffer(device, desc)
+  buffer_descriptor_free(desc)
+  buffer
+}
 
 ///|
 #borrow(code)

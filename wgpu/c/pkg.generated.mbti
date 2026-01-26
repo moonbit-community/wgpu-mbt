@@ -10,6 +10,10 @@ pub fn bind_group_layout_release(WGPUBindGroupLayout) -> Unit
 
 pub fn bind_group_release(WGPUBindGroup) -> Unit
 
+pub fn buffer_descriptor_free(WGPUBufferDescriptorPtr) -> Unit
+
+pub fn buffer_descriptor_new(UInt64, UInt64, Bool) -> WGPUBufferDescriptorPtr
+
 pub fn buffer_destroy(WGPUBuffer) -> Unit
 
 pub fn buffer_get_size(WGPUBuffer) -> UInt64
@@ -119,6 +123,8 @@ pub fn instance_process_events(WGPUInstance) -> Unit
 pub fn instance_release(WGPUInstance) -> Unit
 
 pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
+
+pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr
 
 pub fn null_ptr() -> UnitPtr
 

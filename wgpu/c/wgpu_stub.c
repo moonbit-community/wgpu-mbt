@@ -5,6 +5,7 @@
 // For fixed-width integer ABI compatibility with MoonBit.
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 void *mbt_wgpu_null_ptr(void) { return NULL; }
@@ -105,6 +106,24 @@ WGPUBuffer mbt_wgpu_device_create_buffer(WGPUDevice device, uint64_t size,
   };
   return wgpuDeviceCreateBuffer(device, &desc);
 }
+
+WGPUBufferDescriptor *mbt_wgpu_buffer_descriptor_new(uint64_t size, uint64_t usage,
+                                                    int32_t mapped_at_creation) {
+  WGPUBufferDescriptor *desc = (WGPUBufferDescriptor *)malloc(sizeof(WGPUBufferDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUBufferDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .usage = (WGPUBufferUsage)usage,
+      .size = size,
+      .mappedAtCreation = mapped_at_creation ? 1u : 0u,
+  };
+  return desc;
+}
+
+void mbt_wgpu_buffer_descriptor_free(WGPUBufferDescriptor *desc) { free(desc); }
 
 WGPUShaderModule mbt_wgpu_device_create_shader_module_wgsl(WGPUDevice device,
                                                           const uint8_t *code,
