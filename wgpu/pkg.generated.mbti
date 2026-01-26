@@ -78,7 +78,9 @@ pub struct CommandEncoder {
 }
 pub fn CommandEncoder::begin_compute_pass(Self) -> ComputePass
 pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_color_clear(Self, TextureView, Float, Float, Float, Float) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_depth(Self, TextureView, TextureView) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_color_load(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::clear_buffer(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_buffer(Self, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt, UInt) -> Unit
@@ -117,6 +119,7 @@ pub fn Device::create_compute_pipeline(Self, ShaderModule) -> ComputePipeline
 pub fn Device::create_compute_pipeline_with_layout(Self, PipelineLayout, ShaderModule) -> ComputePipeline
 pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
+pub fn Device::create_render_pipeline_rgba8_alpha_blend(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_depth(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_pos2(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_pos2_with_layout(Self, PipelineLayout, ShaderModule) -> RenderPipeline

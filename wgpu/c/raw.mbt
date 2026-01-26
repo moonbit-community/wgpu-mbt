@@ -152,6 +152,12 @@ pub extern "C" fn device_create_render_pipeline_rgba8(
 ) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8"
 
 ///|
+pub extern "C" fn device_create_render_pipeline_rgba8_alpha_blend(
+  device : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_alpha_blend"
+
+///|
 pub extern "C" fn device_create_render_pipeline_rgba8_depth(
   device : Device,
   shader_module : ShaderModule,
@@ -247,6 +253,22 @@ pub extern "C" fn command_encoder_begin_render_pass_color(
   encoder : CommandEncoder,
   view : TextureView,
 ) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color"
+
+///|
+pub extern "C" fn command_encoder_begin_render_pass_color_load(
+  encoder : CommandEncoder,
+  view : TextureView,
+) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color_load"
+
+///|
+pub extern "C" fn command_encoder_begin_render_pass_color_clear(
+  encoder : CommandEncoder,
+  view : TextureView,
+  r : Float,
+  g : Float,
+  b : Float,
+  a : Float,
+) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color_clear"
 
 ///|
 pub extern "C" fn command_encoder_begin_render_pass_color_depth(

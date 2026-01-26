@@ -48,6 +48,12 @@
     "wgpu_render_texture_sampling_test.mbt": [
       "native"
     ],
+    "wgpu_render_loadop_test.mbt": [
+      "native"
+    ],
+    "wgpu_render_blend_test.mbt": [
+      "native"
+    ],
     "wgpu_render_depth_test.mbt": [
       "native"
     ],

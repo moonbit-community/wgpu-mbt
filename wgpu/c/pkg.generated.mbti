@@ -30,7 +30,11 @@ pub fn command_encoder_begin_compute_pass(CommandEncoder) -> ComputePassEncoder
 
 pub fn command_encoder_begin_render_pass_color(CommandEncoder, TextureView) -> RenderPassEncoder
 
+pub fn command_encoder_begin_render_pass_color_clear(CommandEncoder, TextureView, Float, Float, Float, Float) -> RenderPassEncoder
+
 pub fn command_encoder_begin_render_pass_color_depth(CommandEncoder, TextureView, TextureView) -> RenderPassEncoder
+
+pub fn command_encoder_begin_render_pass_color_load(CommandEncoder, TextureView) -> RenderPassEncoder
 
 pub fn command_encoder_clear_buffer(CommandEncoder, Buffer, UInt64, UInt64) -> Unit
 
@@ -83,6 +87,8 @@ pub fn device_create_compute_pipeline_with_layout(Device, PipelineLayout, Shader
 pub fn device_create_pipeline_layout_1(Device, BindGroupLayout) -> PipelineLayout
 
 pub fn device_create_render_pipeline_rgba8(Device, ShaderModule) -> RenderPipeline
+
+pub fn device_create_render_pipeline_rgba8_alpha_blend(Device, ShaderModule) -> RenderPipeline
 
 pub fn device_create_render_pipeline_rgba8_depth(Device, ShaderModule) -> RenderPipeline
 

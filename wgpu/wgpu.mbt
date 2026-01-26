@@ -267,6 +267,19 @@ pub fn Device::create_render_pipeline_rgba8(
 }
 
 ///|
+pub fn Device::create_render_pipeline_rgba8_alpha_blend(
+  self : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline {
+  RenderPipeline::{
+    raw: @c.device_create_render_pipeline_rgba8_alpha_blend(
+      self.raw,
+      shader_module.raw,
+    ),
+  }
+}
+
+///|
 pub fn Device::create_render_pipeline_rgba8_depth(
   self : Device,
   shader_module : ShaderModule,
@@ -528,6 +541,37 @@ pub fn CommandEncoder::begin_render_pass_color(
 ) -> RenderPass {
   RenderPass::{
     raw: @c.command_encoder_begin_render_pass_color(self.raw, view.raw),
+  }
+}
+
+///|
+pub fn CommandEncoder::begin_render_pass_color_load(
+  self : CommandEncoder,
+  view : TextureView,
+) -> RenderPass {
+  RenderPass::{
+    raw: @c.command_encoder_begin_render_pass_color_load(self.raw, view.raw),
+  }
+}
+
+///|
+pub fn CommandEncoder::begin_render_pass_color_clear(
+  self : CommandEncoder,
+  view : TextureView,
+  r : Float,
+  g : Float,
+  b : Float,
+  a : Float,
+) -> RenderPass {
+  RenderPass::{
+    raw: @c.command_encoder_begin_render_pass_color_clear(
+      self.raw,
+      view.raw,
+      r,
+      g,
+      b,
+      a,
+    ),
   }
 }
 
