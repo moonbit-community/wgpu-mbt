@@ -92,6 +92,10 @@ pub type PipelineLayout
 
 ///|
 #declaration_only
+pub type QuerySet
+
+///|
+#declaration_only
 pub fn Instance::create() -> Instance {
   ...
 }
@@ -159,6 +163,15 @@ pub fn Device::create_buffer_init(
   usage~ : UInt64,
   data : Bytes,
 ) -> Buffer {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_query_set_occlusion(
+  self : Device,
+  count : UInt,
+) -> QuerySet {
   ...
 }
 
@@ -453,6 +466,16 @@ pub fn CommandEncoder::begin_render_pass_color(
 
 ///|
 #declaration_only
+pub fn CommandEncoder::begin_render_pass_color_occlusion(
+  self : CommandEncoder,
+  view : TextureView,
+  query_set : QuerySet,
+) -> RenderPass {
+  ...
+}
+
+///|
+#declaration_only
 pub fn CommandEncoder::begin_render_pass_color_load(
   self : CommandEncoder,
   view : TextureView,
@@ -534,6 +557,19 @@ pub fn CommandEncoder::copy_texture_to_texture_rgba8(
 
 ///|
 #declaration_only
+pub fn CommandEncoder::resolve_query_set(
+  self : CommandEncoder,
+  query_set : QuerySet,
+  first_query : UInt,
+  query_count : UInt,
+  destination : Buffer,
+  destination_offset : UInt64,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn CommandEncoder::finish(self : CommandEncoder) -> CommandBuffer {
   ...
 }
@@ -586,6 +622,16 @@ pub fn ComputePass::dispatch_workgroups(
   x : UInt,
   y : UInt,
   z : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn ComputePass::dispatch_workgroups_indirect(
+  self : ComputePass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
 ) -> Unit {
   ...
 }
@@ -731,6 +777,50 @@ pub fn RenderPass::draw_indexed(
   first_index : UInt,
   base_vertex : Int,
   first_instance : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::draw_indirect(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::draw_indexed_indirect(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::begin_occlusion_query(
+  self : RenderPass,
+  query_index : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::end_occlusion_query(self : RenderPass) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::set_stencil_reference(
+  self : RenderPass,
+  reference : UInt,
 ) -> Unit {
   ...
 }
@@ -894,5 +984,11 @@ pub fn BindGroup::release(self : BindGroup) -> Unit {
 ///|
 #declaration_only
 pub fn PipelineLayout::release(self : PipelineLayout) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn QuerySet::release(self : QuerySet) -> Unit {
   ...
 }

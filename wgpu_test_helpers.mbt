@@ -37,3 +37,42 @@ pub fn read_rgba8_from_copy_out(
     copy_out[base + 3].to_uint(),
   ]
 }
+
+///|
+pub fn u32le_pack(xs : Array[UInt]) -> Bytes {
+  let n = xs.length()
+  Bytes::makei(n * 4, i => {
+    let word = xs[i / 4]
+    let shift = i % 4 * 8
+    ((word >> shift) & 0xFFU).reinterpret_as_int().to_byte()
+  })
+}
+
+///|
+pub fn u32le_at(bytes : Bytes, off : Int) -> UInt {
+  let b0 = bytes[off].to_uint()
+  let b1 = bytes[off + 1].to_uint()
+  let b2 = bytes[off + 2].to_uint()
+  let b3 = bytes[off + 3].to_uint()
+  b0 | (b1 << 8) | (b2 << 16) | (b3 << 24)
+}
+
+///|
+pub fn u64le_at(bytes : Bytes, off : Int) -> UInt64 {
+  let b0 = bytes[off].to_uint64()
+  let b1 = bytes[off + 1].to_uint64()
+  let b2 = bytes[off + 2].to_uint64()
+  let b3 = bytes[off + 3].to_uint64()
+  let b4 = bytes[off + 4].to_uint64()
+  let b5 = bytes[off + 5].to_uint64()
+  let b6 = bytes[off + 6].to_uint64()
+  let b7 = bytes[off + 7].to_uint64()
+  b0 |
+  (b1 << 8) |
+  (b2 << 16) |
+  (b3 << 24) |
+  (b4 << 32) |
+  (b5 << 40) |
+  (b6 << 48) |
+  (b7 << 56)
+}

@@ -63,6 +63,7 @@ HANDLE_TYPE_ALIASES: dict[str, str] = {
     "WGPUCommandEncoder": "CommandEncoder",
     "WGPUCommandBuffer": "CommandBuffer",
     "WGPUSampler": "Sampler",
+    "WGPUQuerySet": "QuerySet",
 }
 
 

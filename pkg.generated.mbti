@@ -6,6 +6,12 @@ pub fn read_rgba8_from_copy_out(Bytes, UInt, UInt) -> FixedArray[UInt]
 
 pub fn rgba_bytes(UInt, UInt, UInt, UInt) -> Bytes
 
+pub fn u32le_at(Bytes, Int) -> UInt
+
+pub fn u32le_pack(Array[UInt]) -> Bytes
+
+pub fn u64le_at(Bytes, Int) -> UInt64
+
 // Errors
 
 // Types and methods

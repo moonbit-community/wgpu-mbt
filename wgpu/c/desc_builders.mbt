@@ -201,6 +201,12 @@ pub extern "C" fn render_pass_descriptor_color_clear_default_new(
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_clear_default_new"
 
 ///|
+pub extern "C" fn render_pass_descriptor_color_clear_default_occlusion_new(
+  view : WGPUTextureView,
+  query_set : WGPUQuerySet,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_clear_default_occlusion_new"
+
+///|
 pub extern "C" fn render_pass_descriptor_color_load_new(
   view : WGPUTextureView,
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_load_new"
@@ -274,3 +280,18 @@ pub extern "C" fn extent3d_new(
 ///|
 #borrow(extent)
 pub extern "C" fn extent3d_free(extent : WGPUExtent3DPtr) -> Unit = "mbt_wgpu_extent3d_free"
+
+///|
+pub extern "C" fn query_type_occlusion() -> WGPUQueryType = "mbt_wgpu_query_type_occlusion"
+
+///|
+pub extern "C" fn query_set_descriptor_new(
+  query_type : WGPUQueryType,
+  count : UInt,
+) -> WGPUQuerySetDescriptorPtr = "mbt_wgpu_query_set_descriptor_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn query_set_descriptor_free(
+  desc : WGPUQuerySetDescriptorPtr,
+) -> Unit = "mbt_wgpu_query_set_descriptor_free"

@@ -42,6 +42,15 @@
     "wgpu_render_viewport_scissor_test.mbt": [
       "native"
     ],
+    "wgpu_render_draw_indirect_test.mbt": [
+      "native"
+    ],
+    "wgpu_compute_dispatch_indirect_test.mbt": [
+      "native"
+    ],
+    "wgpu_render_occlusion_query_test.mbt": [
+      "native"
+    ],
     "wgpu_copy_buffer_to_texture_test.mbt": [
       "native"
     ],

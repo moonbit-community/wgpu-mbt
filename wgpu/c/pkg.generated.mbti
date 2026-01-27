@@ -56,6 +56,8 @@ pub fn command_encoder_begin_render_pass_color_depth(WGPUCommandEncoder, WGPUTex
 
 pub fn command_encoder_begin_render_pass_color_load(WGPUCommandEncoder, WGPUTextureView) -> WGPURenderPassEncoder
 
+pub fn command_encoder_begin_render_pass_color_occlusion(WGPUCommandEncoder, WGPUTextureView, WGPUQuerySet) -> WGPURenderPassEncoder
+
 pub fn command_encoder_clear_buffer(WGPUCommandEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
 
 pub fn command_encoder_copy_buffer_to_buffer(WGPUCommandEncoder, WGPUBuffer, UInt64, WGPUBuffer, UInt64, UInt64) -> Unit
@@ -76,6 +78,8 @@ pub fn command_encoder_push_debug_group_utf8(WGPUCommandEncoder, Bytes, UInt64) 
 
 pub fn command_encoder_release(WGPUCommandEncoder) -> Unit
 
+pub fn command_encoder_resolve_query_set(WGPUCommandEncoder, WGPUQuerySet, UInt, UInt, WGPUBuffer, UInt64) -> Unit
+
 pub fn command_encoder_set_label_utf8(WGPUCommandEncoder, Bytes, UInt64) -> Unit
 
 pub fn compute_pass_descriptor_default_new() -> WGPUComputePassDescriptorPtr
@@ -83,6 +87,8 @@ pub fn compute_pass_descriptor_default_new() -> WGPUComputePassDescriptorPtr
 pub fn compute_pass_descriptor_free(WGPUComputePassDescriptorPtr) -> Unit
 
 pub fn compute_pass_dispatch_workgroups(WGPUComputePassEncoder, UInt, UInt, UInt) -> Unit
+
+pub fn compute_pass_dispatch_workgroups_indirect(WGPUComputePassEncoder, WGPUBuffer, UInt64) -> Unit
 
 pub fn compute_pass_end(WGPUComputePassEncoder) -> Unit
 
@@ -129,6 +135,10 @@ pub fn device_create_compute_pipeline(WGPUDevice, WGPUShaderModule) -> WGPUCompu
 pub fn device_create_compute_pipeline_with_layout(WGPUDevice, WGPUPipelineLayout, WGPUShaderModule) -> WGPUComputePipeline
 
 pub fn device_create_pipeline_layout_1(WGPUDevice, WGPUBindGroupLayout) -> WGPUPipelineLayout
+
+pub fn device_create_query_set(WGPUDevice, WGPUQuerySetDescriptorPtr) -> WGPUQuerySet
+
+pub fn device_create_query_set_occlusion(WGPUDevice, UInt) -> WGPUQuerySet
 
 pub fn device_create_render_pipeline_rgba8(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
@@ -192,6 +202,14 @@ pub fn pipeline_layout_descriptor_free(WGPUPipelineLayoutDescriptorPtr) -> Unit
 
 pub fn pipeline_layout_release(WGPUPipelineLayout) -> Unit
 
+pub fn query_set_descriptor_free(WGPUQuerySetDescriptorPtr) -> Unit
+
+pub fn query_set_descriptor_new(WGPUQueryType, UInt) -> WGPUQuerySetDescriptorPtr
+
+pub fn query_set_release(WGPUQuerySet) -> Unit
+
+pub fn query_type_occlusion() -> WGPUQueryType
+
 pub fn queue_release(WGPUQueue) -> Unit
 
 pub fn queue_submit(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> Unit
@@ -200,7 +218,11 @@ pub fn queue_write_buffer(WGPUQueue, WGPUBuffer, UInt64, Bytes, UInt64) -> Unit
 
 pub fn queue_write_texture_rgba8_2d(WGPUQueue, WGPUTexture, UInt, UInt, Bytes, UInt64) -> Unit
 
+pub fn render_pass_begin_occlusion_query(WGPURenderPassEncoder, UInt) -> Unit
+
 pub fn render_pass_descriptor_color_clear_default_new(WGPUTextureView) -> WGPURenderPassDescriptorPtr
+
+pub fn render_pass_descriptor_color_clear_default_occlusion_new(WGPUTextureView, WGPUQuerySet) -> WGPURenderPassDescriptorPtr
 
 pub fn render_pass_descriptor_color_clear_new(WGPUTextureView, Float, Float, Float, Float) -> WGPURenderPassDescriptorPtr
 
@@ -214,7 +236,13 @@ pub fn render_pass_draw(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
 
 pub fn render_pass_draw_indexed(WGPURenderPassEncoder, UInt, UInt, UInt, Int, UInt) -> Unit
 
+pub fn render_pass_draw_indexed_indirect(WGPURenderPassEncoder, WGPUBuffer, UInt64) -> Unit
+
+pub fn render_pass_draw_indirect(WGPURenderPassEncoder, WGPUBuffer, UInt64) -> Unit
+
 pub fn render_pass_end(WGPURenderPassEncoder) -> Unit
+
+pub fn render_pass_end_occlusion_query(WGPURenderPassEncoder) -> Unit
 
 pub fn render_pass_insert_debug_marker_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
 
@@ -237,6 +265,8 @@ pub fn render_pass_set_label_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
 pub fn render_pass_set_pipeline(WGPURenderPassEncoder, WGPURenderPipeline) -> Unit
 
 pub fn render_pass_set_scissor_rect(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
+
+pub fn render_pass_set_stencil_reference(WGPURenderPassEncoder, UInt) -> Unit
 
 pub fn render_pass_set_vertex_buffer(WGPURenderPassEncoder, UInt, WGPUBuffer, UInt64, UInt64) -> Unit
 
@@ -839,6 +869,7 @@ pub type WGPUPopErrorScopeCallbackInfo
 #external
 pub type WGPUProc
 
+#alias(QuerySet)
 #external
 pub type WGPUQuerySet
 

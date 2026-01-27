@@ -87,6 +87,11 @@ pub struct PipelineLayout {
 }
 
 ///|
+pub struct QuerySet {
+  raw : @c.QuerySet
+}
+
+///|
 pub struct ComputePass {
   raw : @c.ComputePassEncoder
 }
@@ -209,6 +214,14 @@ pub fn Device::create_buffer_init(
     queue.release()
   }
   buffer
+}
+
+///|
+pub fn Device::create_query_set_occlusion(
+  self : Device,
+  count : UInt,
+) -> QuerySet {
+  QuerySet::{ raw: @c.device_create_query_set_occlusion(self.raw, count) }
 }
 
 ///|
@@ -549,6 +562,25 @@ pub fn CommandEncoder::copy_texture_to_texture_rgba8(
 }
 
 ///|
+pub fn CommandEncoder::resolve_query_set(
+  self : CommandEncoder,
+  query_set : QuerySet,
+  first_query : UInt,
+  query_count : UInt,
+  destination : Buffer,
+  destination_offset : UInt64,
+) -> Unit {
+  @c.command_encoder_resolve_query_set(
+    self.raw,
+    query_set.raw,
+    first_query,
+    query_count,
+    destination.raw,
+    destination_offset,
+  )
+}
+
+///|
 pub fn CommandEncoder::begin_compute_pass(self : CommandEncoder) -> ComputePass {
   ComputePass::{ raw: @c.command_encoder_begin_compute_pass(self.raw) }
 }
@@ -597,6 +629,21 @@ pub fn CommandEncoder::begin_render_pass_color(
 ) -> RenderPass {
   RenderPass::{
     raw: @c.command_encoder_begin_render_pass_color(self.raw, view.raw),
+  }
+}
+
+///|
+pub fn CommandEncoder::begin_render_pass_color_occlusion(
+  self : CommandEncoder,
+  view : TextureView,
+  query_set : QuerySet,
+) -> RenderPass {
+  RenderPass::{
+    raw: @c.command_encoder_begin_render_pass_color_occlusion(
+      self.raw,
+      view.raw,
+      query_set.raw,
+    ),
   }
 }
 
@@ -744,6 +791,19 @@ pub fn ComputePass::dispatch_workgroups(
   z : UInt,
 ) -> Unit {
   @c.compute_pass_dispatch_workgroups(self.raw, x, y, z)
+}
+
+///|
+pub fn ComputePass::dispatch_workgroups_indirect(
+  self : ComputePass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit {
+  @c.compute_pass_dispatch_workgroups_indirect(
+    self.raw,
+    indirect_buffer.raw,
+    indirect_offset,
+  )
 }
 
 ///|
@@ -914,6 +974,49 @@ pub fn RenderPass::draw_indexed(
     base_vertex,
     first_instance,
   )
+}
+
+///|
+pub fn RenderPass::draw_indirect(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit {
+  @c.render_pass_draw_indirect(self.raw, indirect_buffer.raw, indirect_offset)
+}
+
+///|
+pub fn RenderPass::draw_indexed_indirect(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit {
+  @c.render_pass_draw_indexed_indirect(
+    self.raw,
+    indirect_buffer.raw,
+    indirect_offset,
+  )
+}
+
+///|
+pub fn RenderPass::begin_occlusion_query(
+  self : RenderPass,
+  query_index : UInt,
+) -> Unit {
+  @c.render_pass_begin_occlusion_query(self.raw, query_index)
+}
+
+///|
+pub fn RenderPass::end_occlusion_query(self : RenderPass) -> Unit {
+  @c.render_pass_end_occlusion_query(self.raw)
+}
+
+///|
+pub fn RenderPass::set_stencil_reference(
+  self : RenderPass,
+  reference : UInt,
+) -> Unit {
+  @c.render_pass_set_stencil_reference(self.raw, reference)
 }
 
 ///|
@@ -1164,6 +1267,11 @@ pub fn PipelineLayout::release(self : PipelineLayout) -> Unit {
 ///|
 pub fn ComputePipeline::release(self : ComputePipeline) -> Unit {
   @c.compute_pipeline_release(self.raw)
+}
+
+///|
+pub fn QuerySet::release(self : QuerySet) -> Unit {
+  @c.query_set_release(self.raw)
 }
 
 ///|

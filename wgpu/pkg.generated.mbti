@@ -18,9 +18,13 @@ pub let buffer_usage_copy_src : UInt64
 
 pub let buffer_usage_index : UInt64
 
+pub let buffer_usage_indirect : UInt64
+
 pub let buffer_usage_map_read : UInt64
 
 pub let buffer_usage_map_write : UInt64
+
+pub let buffer_usage_query_resolve : UInt64
 
 pub let buffer_usage_storage : UInt64
 
@@ -81,6 +85,7 @@ pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_clear(Self, TextureView, Float, Float, Float, Float) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_depth(Self, TextureView, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_load(Self, TextureView) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_color_occlusion(Self, TextureView, QuerySet) -> RenderPass
 pub fn CommandEncoder::clear_buffer(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_buffer(Self, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt, UInt) -> Unit
@@ -91,12 +96,14 @@ pub fn CommandEncoder::insert_debug_marker(Self, String) -> Unit
 pub fn CommandEncoder::pop_debug_group(Self) -> Unit
 pub fn CommandEncoder::push_debug_group(Self, String) -> Unit
 pub fn CommandEncoder::release(Self) -> Unit
+pub fn CommandEncoder::resolve_query_set(Self, QuerySet, UInt, UInt, Buffer, UInt64) -> Unit
 pub fn CommandEncoder::set_label(Self, String) -> Unit
 
 pub struct ComputePass {
   raw : @c.WGPUComputePassEncoder
 }
 pub fn ComputePass::dispatch_workgroups(Self, UInt, UInt, UInt) -> Unit
+pub fn ComputePass::dispatch_workgroups_indirect(Self, Buffer, UInt64) -> Unit
 pub fn ComputePass::end(Self) -> Unit
 pub fn ComputePass::insert_debug_marker(Self, String) -> Unit
 pub fn ComputePass::pop_debug_group(Self) -> Unit
@@ -126,6 +133,7 @@ pub fn Device::create_command_encoder(Self) -> CommandEncoder
 pub fn Device::create_compute_pipeline(Self, ShaderModule) -> ComputePipeline
 pub fn Device::create_compute_pipeline_with_layout(Self, PipelineLayout, ShaderModule) -> ComputePipeline
 pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
+pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
 pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_alpha_blend(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_depth(Self, ShaderModule) -> RenderPipeline
@@ -154,6 +162,11 @@ pub struct PipelineLayout {
 }
 pub fn PipelineLayout::release(Self) -> Unit
 
+pub struct QuerySet {
+  raw : @c.WGPUQuerySet
+}
+pub fn QuerySet::release(Self) -> Unit
+
 pub struct Queue {
   raw : @c.WGPUQueue
 }
@@ -166,9 +179,13 @@ pub fn Queue::write_texture_rgba8_2d(Self, Texture, UInt, UInt, Bytes) -> Unit
 pub struct RenderPass {
   raw : @c.WGPURenderPassEncoder
 }
+pub fn RenderPass::begin_occlusion_query(Self, UInt) -> Unit
 pub fn RenderPass::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::draw_indexed(Self, UInt, UInt, UInt, Int, UInt) -> Unit
+pub fn RenderPass::draw_indexed_indirect(Self, Buffer, UInt64) -> Unit
+pub fn RenderPass::draw_indirect(Self, Buffer, UInt64) -> Unit
 pub fn RenderPass::end(Self) -> Unit
+pub fn RenderPass::end_occlusion_query(Self) -> Unit
 pub fn RenderPass::insert_debug_marker(Self, String) -> Unit
 pub fn RenderPass::pop_debug_group(Self) -> Unit
 pub fn RenderPass::push_debug_group(Self, String) -> Unit
@@ -180,6 +197,7 @@ pub fn RenderPass::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_label(Self, String) -> Unit
 pub fn RenderPass::set_pipeline(Self, RenderPipeline) -> Unit
 pub fn RenderPass::set_scissor_rect(Self, UInt, UInt, UInt, UInt) -> Unit
+pub fn RenderPass::set_stencil_reference(Self, UInt) -> Unit
 pub fn RenderPass::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_viewport(Self, Float, Float, Float, Float, Float, Float) -> Unit
 

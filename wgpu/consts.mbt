@@ -41,6 +41,12 @@ pub let buffer_usage_vertex : UInt64 = 0x0000000000000020UL
 pub let buffer_usage_index : UInt64 = 0x0000000000000010UL
 
 ///|
+pub let buffer_usage_indirect : UInt64 = 0x0000000000000100UL
+
+///|
+pub let buffer_usage_query_resolve : UInt64 = 0x0000000000000200UL
+
+///| 
 /// Minimal bitflag constants (subset) for texture usage.
 /// Mirrors `WGPUTextureUsage` in `webgpu.h` (a `uint32_t` bitflag type).
 

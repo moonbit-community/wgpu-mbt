@@ -209,6 +209,26 @@ WGPUExtent3D *mbt_wgpu_extent3d_new(uint32_t width, uint32_t height,
 
 void mbt_wgpu_extent3d_free(WGPUExtent3D *extent) { free(extent); }
 
+WGPUQueryType mbt_wgpu_query_type_occlusion(void) { return WGPUQueryType_Occlusion; }
+
+WGPUQuerySetDescriptor *mbt_wgpu_query_set_descriptor_new(WGPUQueryType type,
+                                                          uint32_t count) {
+  WGPUQuerySetDescriptor *desc =
+      (WGPUQuerySetDescriptor *)malloc(sizeof(WGPUQuerySetDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUQuerySetDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .type = type,
+      .count = count,
+  };
+  return desc;
+}
+
+void mbt_wgpu_query_set_descriptor_free(WGPUQuerySetDescriptor *desc) { free(desc); }
+
 // The C API provides both `wgpuInstanceWaitAny` and `wgpuInstanceProcessEvents`.
 // wgpu-native currently does not implement `wgpuInstanceWaitAny` for all builds,
 // so we use `WGPUCallbackMode_AllowProcessEvents` + `wgpuInstanceProcessEvents`
@@ -1012,6 +1032,35 @@ mbt_wgpu_render_pass_descriptor_color_clear_default_new(WGPUTextureView view) {
       .colorAttachments = &out->color,
       .depthStencilAttachment = NULL,
       .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+  return &out->desc;
+}
+
+WGPURenderPassDescriptor *
+mbt_wgpu_render_pass_descriptor_color_clear_default_occlusion_new(
+    WGPUTextureView view, WGPUQuerySet query_set) {
+  mbt_render_pass_desc_color_t *out =
+      (mbt_render_pass_desc_color_t *)malloc(sizeof(mbt_render_pass_desc_color_t));
+  if (!out) {
+    return NULL;
+  }
+  out->color = (WGPURenderPassColorAttachment){
+      .nextInChain = NULL,
+      .view = view,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = WGPULoadOp_Clear,
+      .storeOp = WGPUStoreOp_Store,
+      .clearValue = (WGPUColor){.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+  };
+  out->desc = (WGPURenderPassDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = 1u,
+      .colorAttachments = &out->color,
+      .depthStencilAttachment = NULL,
+      .occlusionQuerySet = query_set,
       .timestampWrites = NULL,
   };
   return &out->desc;

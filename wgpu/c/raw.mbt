@@ -386,6 +386,20 @@ pub fn command_encoder_begin_render_pass_color(
 }
 
 ///|
+pub fn command_encoder_begin_render_pass_color_occlusion(
+  encoder : CommandEncoder,
+  view : TextureView,
+  query_set : QuerySet,
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_color_clear_default_occlusion_new(
+    view, query_set,
+  )
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
+
+///|
 pub fn command_encoder_begin_render_pass_color_load(
   encoder : CommandEncoder,
   view : TextureView,
@@ -844,3 +858,71 @@ pub extern "C" fn adapter_release(adapter : Adapter) -> Unit = "wgpuAdapterRelea
 
 ///|
 pub extern "C" fn instance_release(instance : Instance) -> Unit = "wgpuInstanceRelease"
+
+///|
+pub extern "C" fn device_create_query_set(
+  device : Device,
+  descriptor : WGPUQuerySetDescriptorPtr,
+) -> QuerySet = "wgpuDeviceCreateQuerySet"
+
+///|
+pub fn device_create_query_set_occlusion(
+  device : Device,
+  count : UInt,
+) -> QuerySet {
+  let desc = query_set_descriptor_new(query_type_occlusion(), count)
+  let qs = device_create_query_set(device, desc)
+  query_set_descriptor_free(desc)
+  qs
+}
+
+///|
+pub extern "C" fn query_set_release(query_set : QuerySet) -> Unit = "wgpuQuerySetRelease"
+
+///|
+pub extern "C" fn command_encoder_resolve_query_set(
+  encoder : CommandEncoder,
+  query_set : QuerySet,
+  first_query : UInt,
+  query_count : UInt,
+  destination : Buffer,
+  destination_offset : UInt64,
+) -> Unit = "wgpuCommandEncoderResolveQuerySet"
+
+///|
+pub extern "C" fn render_pass_begin_occlusion_query(
+  pass : RenderPassEncoder,
+  query_index : UInt,
+) -> Unit = "wgpuRenderPassEncoderBeginOcclusionQuery"
+
+///|
+pub extern "C" fn render_pass_end_occlusion_query(
+  pass : RenderPassEncoder,
+) -> Unit = "wgpuRenderPassEncoderEndOcclusionQuery"
+
+///|
+pub extern "C" fn render_pass_set_stencil_reference(
+  pass : RenderPassEncoder,
+  reference : UInt,
+) -> Unit = "wgpuRenderPassEncoderSetStencilReference"
+
+///|
+pub extern "C" fn render_pass_draw_indirect(
+  pass : RenderPassEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit = "wgpuRenderPassEncoderDrawIndirect"
+
+///|
+pub extern "C" fn render_pass_draw_indexed_indirect(
+  pass : RenderPassEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit = "wgpuRenderPassEncoderDrawIndexedIndirect"
+
+///|
+pub extern "C" fn compute_pass_dispatch_workgroups_indirect(
+  pass : ComputePassEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit = "wgpuComputePassEncoderDispatchWorkgroupsIndirect"

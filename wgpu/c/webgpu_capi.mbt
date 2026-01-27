@@ -227,6 +227,7 @@ pub type WGPUProc
 
 ///|
 #external
+#alias(QuerySet)
 pub type WGPUQuerySet
 
 ///|
