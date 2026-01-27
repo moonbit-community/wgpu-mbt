@@ -1194,11 +1194,30 @@ pub struct BindGroup {
 pub fn BindGroup::release(Self) -> Unit
 pub fn BindGroup::set_label(Self, String) -> Unit
 
+pub struct BindGroupBuilder {
+  raw : @c.WGPUTextureViewDescriptorPtr
+}
+pub fn BindGroupBuilder::add_buffer(Self, UInt, Buffer, offset? : UInt64, size? : UInt64) -> Bool
+pub fn BindGroupBuilder::add_sampler(Self, UInt, Sampler) -> Bool
+pub fn BindGroupBuilder::add_texture_view(Self, UInt, TextureView) -> Bool
+pub fn BindGroupBuilder::finish(Self, Device, BindGroupLayout, label? : String) -> BindGroup
+pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> Self
+
 pub struct BindGroupLayout {
   raw : @c.WGPUBindGroupLayout
 }
 pub fn BindGroupLayout::release(Self) -> Unit
 pub fn BindGroupLayout::set_label(Self, String) -> Unit
+
+pub struct BindGroupLayoutBuilder {
+  raw : @c.WGPUTextureViewDescriptorPtr
+}
+pub fn BindGroupLayoutBuilder::add_buffer(Self, UInt, UInt64, UInt, has_dynamic_offset? : Bool, min_binding_size? : UInt64) -> Bool
+pub fn BindGroupLayoutBuilder::add_sampler(Self, UInt, UInt64, UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_storage_texture(Self, UInt, UInt64, UInt, UInt, UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_texture(Self, UInt, UInt64, UInt, UInt, multisampled? : Bool) -> Bool
+pub fn BindGroupLayoutBuilder::finish(Self, Device, label? : String) -> BindGroupLayout
+pub fn BindGroupLayoutBuilder::new(max_entries~ : UInt64) -> Self
 
 pub struct Buffer {
   raw : @c.WGPUBuffer

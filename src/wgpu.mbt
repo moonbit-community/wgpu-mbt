@@ -115,6 +115,16 @@ pub struct BindGroup {
 }
 
 ///|
+pub struct BindGroupLayoutBuilder {
+  raw : @c.WGPUTextureViewDescriptorPtr
+}
+
+///|
+pub struct BindGroupBuilder {
+  raw : @c.WGPUTextureViewDescriptorPtr
+}
+
+///|
 pub struct PipelineLayout {
   raw : @c.PipelineLayout
 }
@@ -1325,6 +1335,155 @@ pub fn Device::create_bind_group_texture_2d(
       view.raw,
     ),
   }
+}
+
+///|
+pub fn BindGroupLayoutBuilder::new(
+  max_entries~ : UInt64,
+) -> BindGroupLayoutBuilder {
+  BindGroupLayoutBuilder::{ raw: @c.bind_group_layout_builder_new(max_entries) }
+}
+
+///|
+pub fn BindGroupLayoutBuilder::add_buffer(
+  self : BindGroupLayoutBuilder,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+  has_dynamic_offset? : Bool = false,
+  min_binding_size? : UInt64 = 0UL,
+) -> Bool {
+  @c.bind_group_layout_builder_add_buffer(
+    self.raw,
+    binding,
+    visibility,
+    type_u32,
+    has_dynamic_offset,
+    min_binding_size,
+  )
+}
+
+///|
+pub fn BindGroupLayoutBuilder::add_sampler(
+  self : BindGroupLayoutBuilder,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+) -> Bool {
+  @c.bind_group_layout_builder_add_sampler(
+    self.raw,
+    binding,
+    visibility,
+    type_u32,
+  )
+}
+
+///|
+pub fn BindGroupLayoutBuilder::add_texture(
+  self : BindGroupLayoutBuilder,
+  binding : UInt,
+  visibility : UInt64,
+  sample_type_u32 : UInt,
+  view_dimension_u32 : UInt,
+  multisampled? : Bool = false,
+) -> Bool {
+  @c.bind_group_layout_builder_add_texture(
+    self.raw,
+    binding,
+    visibility,
+    sample_type_u32,
+    view_dimension_u32,
+    multisampled,
+  )
+}
+
+///|
+pub fn BindGroupLayoutBuilder::add_storage_texture(
+  self : BindGroupLayoutBuilder,
+  binding : UInt,
+  visibility : UInt64,
+  access_u32 : UInt,
+  format_u32 : UInt,
+  view_dimension_u32 : UInt,
+) -> Bool {
+  @c.bind_group_layout_builder_add_storage_texture(
+    self.raw,
+    binding,
+    visibility,
+    access_u32,
+    format_u32,
+    view_dimension_u32,
+  )
+}
+
+///|
+pub fn BindGroupLayoutBuilder::finish(
+  self : BindGroupLayoutBuilder,
+  device : Device,
+  label? : String = "",
+) -> BindGroupLayout {
+  let bytes = utf8_bytes(label)
+  let out = @c.bind_group_layout_builder_finish(
+    device.raw,
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+  @c.bind_group_layout_builder_free(self.raw)
+  BindGroupLayout::{ raw: out }
+}
+
+///|
+pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> BindGroupBuilder {
+  BindGroupBuilder::{ raw: @c.bind_group_builder_new(max_entries) }
+}
+
+///|
+pub fn BindGroupBuilder::add_buffer(
+  self : BindGroupBuilder,
+  binding : UInt,
+  buffer : Buffer,
+  offset? : UInt64 = 0UL,
+  size? : UInt64 = whole_size,
+) -> Bool {
+  @c.bind_group_builder_add_buffer(self.raw, binding, buffer.raw, offset, size)
+}
+
+///|
+pub fn BindGroupBuilder::add_sampler(
+  self : BindGroupBuilder,
+  binding : UInt,
+  sampler : Sampler,
+) -> Bool {
+  @c.bind_group_builder_add_sampler(self.raw, binding, sampler.raw)
+}
+
+///|
+pub fn BindGroupBuilder::add_texture_view(
+  self : BindGroupBuilder,
+  binding : UInt,
+  view : TextureView,
+) -> Bool {
+  @c.bind_group_builder_add_texture_view(self.raw, binding, view.raw)
+}
+
+///|
+pub fn BindGroupBuilder::finish(
+  self : BindGroupBuilder,
+  device : Device,
+  layout : BindGroupLayout,
+  label? : String = "",
+) -> BindGroup {
+  let bytes = utf8_bytes(label)
+  let out = @c.bind_group_builder_finish(
+    device.raw,
+    layout.raw,
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+  @c.bind_group_builder_free(self.raw)
+  BindGroup::{ raw: out }
 }
 
 ///|

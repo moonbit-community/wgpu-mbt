@@ -108,6 +108,14 @@ pub type BindGroup
 
 ///|
 #declaration_only
+pub type BindGroupLayoutBuilder
+
+///|
+#declaration_only
+pub type BindGroupBuilder
+
+///|
+#declaration_only
 pub type PipelineLayout
 
 ///|
@@ -909,6 +917,101 @@ declare pub fn Device::create_bind_group_texture_2d(
   self : Device,
   bind_group_layout : BindGroupLayout,
   view : TextureView,
+) -> BindGroup
+
+///|
+#declaration_only
+declare pub fn BindGroupLayoutBuilder::new(
+  max_entries~ : UInt64,
+) -> BindGroupLayoutBuilder
+
+///|
+#declaration_only
+declare pub fn BindGroupLayoutBuilder::add_buffer(
+  self : BindGroupLayoutBuilder,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+  has_dynamic_offset? : Bool = false,
+  min_binding_size? : UInt64 = 0UL,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn BindGroupLayoutBuilder::add_sampler(
+  self : BindGroupLayoutBuilder,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn BindGroupLayoutBuilder::add_texture(
+  self : BindGroupLayoutBuilder,
+  binding : UInt,
+  visibility : UInt64,
+  sample_type_u32 : UInt,
+  view_dimension_u32 : UInt,
+  multisampled? : Bool = false,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn BindGroupLayoutBuilder::add_storage_texture(
+  self : BindGroupLayoutBuilder,
+  binding : UInt,
+  visibility : UInt64,
+  access_u32 : UInt,
+  format_u32 : UInt,
+  view_dimension_u32 : UInt,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn BindGroupLayoutBuilder::finish(
+  self : BindGroupLayoutBuilder,
+  device : Device,
+  label? : String = "",
+) -> BindGroupLayout
+
+///|
+#declaration_only
+declare pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> BindGroupBuilder
+
+///|
+#declaration_only
+declare pub fn BindGroupBuilder::add_buffer(
+  self : BindGroupBuilder,
+  binding : UInt,
+  buffer : Buffer,
+  offset? : UInt64 = 0UL,
+  size? : UInt64 = whole_size,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn BindGroupBuilder::add_sampler(
+  self : BindGroupBuilder,
+  binding : UInt,
+  sampler : Sampler,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn BindGroupBuilder::add_texture_view(
+  self : BindGroupBuilder,
+  binding : UInt,
+  view : TextureView,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn BindGroupBuilder::finish(
+  self : BindGroupBuilder,
+  device : Device,
+  layout : BindGroupLayout,
+  label? : String = "",
 ) -> BindGroup
 
 ///|

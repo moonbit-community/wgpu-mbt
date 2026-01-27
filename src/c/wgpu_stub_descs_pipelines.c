@@ -2319,3 +2319,274 @@ void mbt_wgpu_render_pass_set_bind_group0(WGPURenderPassEncoder pass,
                                          WGPUBindGroup group) {
   wgpuRenderPassEncoderSetBindGroup(pass, 0u, group, 0u, NULL);
 }
+
+// -----------------------------------------------------------------------------
+// Generic-ish BindGroupLayout / BindGroup builders
+// -----------------------------------------------------------------------------
+
+typedef struct {
+  uint64_t capacity;
+  uint64_t len;
+  WGPUBindGroupLayoutEntry *entries;
+} mbt_bind_group_layout_builder_t;
+
+void *mbt_wgpu_bind_group_layout_builder_new(uint64_t max_entries) {
+  if (max_entries == 0u) {
+    return NULL;
+  }
+  mbt_bind_group_layout_builder_t *b =
+      (mbt_bind_group_layout_builder_t *)malloc(sizeof(mbt_bind_group_layout_builder_t));
+  if (!b) {
+    return NULL;
+  }
+  b->entries = (WGPUBindGroupLayoutEntry *)calloc((size_t)max_entries,
+                                                 sizeof(WGPUBindGroupLayoutEntry));
+  if (!b->entries) {
+    free(b);
+    return NULL;
+  }
+  b->capacity = max_entries;
+  b->len = 0u;
+  return (void *)b;
+}
+
+void mbt_wgpu_bind_group_layout_builder_free(void *builder) {
+  if (!builder) {
+    return;
+  }
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  free(b->entries);
+  free(b);
+}
+
+static bool mbt_wgpu_bind_group_layout_builder_push(mbt_bind_group_layout_builder_t *b,
+                                                   WGPUBindGroupLayoutEntry entry) {
+  if (!b || !b->entries) {
+    return false;
+  }
+  if (b->len >= b->capacity) {
+    return false;
+  }
+  b->entries[b->len++] = entry;
+  return true;
+}
+
+bool mbt_wgpu_bind_group_layout_builder_add_buffer(void *builder, uint32_t binding,
+                                                   uint64_t visibility, uint32_t type_u32,
+                                                   bool has_dynamic_offset,
+                                                   uint64_t min_binding_size) {
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = NULL,
+      .binding = binding,
+      .visibility = (WGPUShaderStage)visibility,
+      .buffer =
+          (WGPUBufferBindingLayout){
+              .nextInChain = NULL,
+              .type = (WGPUBufferBindingType)type_u32,
+              .hasDynamicOffset = has_dynamic_offset ? 1u : 0u,
+              .minBindingSize = min_binding_size,
+          },
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  return mbt_wgpu_bind_group_layout_builder_push(b, entry);
+}
+
+bool mbt_wgpu_bind_group_layout_builder_add_sampler(void *builder, uint32_t binding,
+                                                    uint64_t visibility,
+                                                    uint32_t type_u32) {
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = NULL,
+      .binding = binding,
+      .visibility = (WGPUShaderStage)visibility,
+      .buffer = (WGPUBufferBindingLayout){0},
+      .sampler =
+          (WGPUSamplerBindingLayout){
+              .nextInChain = NULL,
+              .type = (WGPUSamplerBindingType)type_u32,
+          },
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  return mbt_wgpu_bind_group_layout_builder_push(b, entry);
+}
+
+bool mbt_wgpu_bind_group_layout_builder_add_texture(void *builder, uint32_t binding,
+                                                    uint64_t visibility,
+                                                    uint32_t sample_type_u32,
+                                                    uint32_t view_dimension_u32,
+                                                    bool multisampled) {
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = NULL,
+      .binding = binding,
+      .visibility = (WGPUShaderStage)visibility,
+      .buffer = (WGPUBufferBindingLayout){0},
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture =
+          (WGPUTextureBindingLayout){
+              .nextInChain = NULL,
+              .sampleType = (WGPUTextureSampleType)sample_type_u32,
+              .viewDimension = (WGPUTextureViewDimension)view_dimension_u32,
+              .multisampled = multisampled ? 1u : 0u,
+          },
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  return mbt_wgpu_bind_group_layout_builder_push(b, entry);
+}
+
+bool mbt_wgpu_bind_group_layout_builder_add_storage_texture(void *builder,
+                                                           uint32_t binding,
+                                                           uint64_t visibility,
+                                                           uint32_t access_u32,
+                                                           uint32_t format_u32,
+                                                           uint32_t view_dimension_u32) {
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = NULL,
+      .binding = binding,
+      .visibility = (WGPUShaderStage)visibility,
+      .buffer = (WGPUBufferBindingLayout){0},
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture =
+          (WGPUStorageTextureBindingLayout){
+              .nextInChain = NULL,
+              .access = (WGPUStorageTextureAccess)access_u32,
+              .format = (WGPUTextureFormat)format_u32,
+              .viewDimension = (WGPUTextureViewDimension)view_dimension_u32,
+          },
+  };
+  return mbt_wgpu_bind_group_layout_builder_push(b, entry);
+}
+
+WGPUBindGroupLayout mbt_wgpu_bind_group_layout_builder_finish(WGPUDevice device,
+                                                             void *builder,
+                                                             const uint8_t *label,
+                                                             uint64_t label_len) {
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  if (!device || !b || !b->entries || b->len == 0u) {
+    return NULL;
+  }
+  WGPUBindGroupLayoutDescriptor desc = {
+      .nextInChain = NULL,
+      .label = mbt_wgpu_string_view(label, label_len),
+      .entryCount = (size_t)b->len,
+      .entries = b->entries,
+  };
+  return wgpuDeviceCreateBindGroupLayout(device, &desc);
+}
+
+typedef struct {
+  uint64_t capacity;
+  uint64_t len;
+  WGPUBindGroupEntry *entries;
+} mbt_bind_group_builder_t;
+
+void *mbt_wgpu_bind_group_builder_new(uint64_t max_entries) {
+  if (max_entries == 0u) {
+    return NULL;
+  }
+  mbt_bind_group_builder_t *b =
+      (mbt_bind_group_builder_t *)malloc(sizeof(mbt_bind_group_builder_t));
+  if (!b) {
+    return NULL;
+  }
+  b->entries =
+      (WGPUBindGroupEntry *)calloc((size_t)max_entries, sizeof(WGPUBindGroupEntry));
+  if (!b->entries) {
+    free(b);
+    return NULL;
+  }
+  b->capacity = max_entries;
+  b->len = 0u;
+  return (void *)b;
+}
+
+void mbt_wgpu_bind_group_builder_free(void *builder) {
+  if (!builder) {
+    return;
+  }
+  mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
+  free(b->entries);
+  free(b);
+}
+
+static bool mbt_wgpu_bind_group_builder_push(mbt_bind_group_builder_t *b,
+                                            WGPUBindGroupEntry entry) {
+  if (!b || !b->entries) {
+    return false;
+  }
+  if (b->len >= b->capacity) {
+    return false;
+  }
+  b->entries[b->len++] = entry;
+  return true;
+}
+
+bool mbt_wgpu_bind_group_builder_add_buffer(void *builder, uint32_t binding,
+                                           WGPUBuffer buffer, uint64_t offset,
+                                           uint64_t size) {
+  mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
+  WGPUBindGroupEntry entry = {
+      .nextInChain = NULL,
+      .binding = binding,
+      .buffer = buffer,
+      .offset = offset,
+      .size = size,
+      .sampler = NULL,
+      .textureView = NULL,
+  };
+  return mbt_wgpu_bind_group_builder_push(b, entry);
+}
+
+bool mbt_wgpu_bind_group_builder_add_sampler(void *builder, uint32_t binding,
+                                            WGPUSampler sampler) {
+  mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
+  WGPUBindGroupEntry entry = {
+      .nextInChain = NULL,
+      .binding = binding,
+      .buffer = NULL,
+      .offset = 0u,
+      .size = 0u,
+      .sampler = sampler,
+      .textureView = NULL,
+  };
+  return mbt_wgpu_bind_group_builder_push(b, entry);
+}
+
+bool mbt_wgpu_bind_group_builder_add_texture_view(void *builder, uint32_t binding,
+                                                 WGPUTextureView view) {
+  mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
+  WGPUBindGroupEntry entry = {
+      .nextInChain = NULL,
+      .binding = binding,
+      .buffer = NULL,
+      .offset = 0u,
+      .size = 0u,
+      .sampler = NULL,
+      .textureView = view,
+  };
+  return mbt_wgpu_bind_group_builder_push(b, entry);
+}
+
+WGPUBindGroup mbt_wgpu_bind_group_builder_finish(WGPUDevice device,
+                                                WGPUBindGroupLayout layout,
+                                                void *builder, const uint8_t *label,
+                                                uint64_t label_len) {
+  mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
+  if (!device || !layout || !b || !b->entries || b->len == 0u) {
+    return NULL;
+  }
+  WGPUBindGroupDescriptor desc = {
+      .nextInChain = NULL,
+      .label = mbt_wgpu_string_view(label, label_len),
+      .layout = layout,
+      .entryCount = (size_t)b->len,
+      .entries = b->entries,
+  };
+  return wgpuDeviceCreateBindGroup(device, &desc);
+}

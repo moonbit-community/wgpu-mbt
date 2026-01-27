@@ -35,6 +35,116 @@ pub extern "C" fn null_submission_index_ptr() -> WGPUSubmissionIndexPtr = "mbt_w
 pub extern "C" fn shader_module_is_null(shader_module : ShaderModule) -> Bool = "mbt_wgpu_shader_module_is_null"
 
 ///|
+/// BindGroupLayout / BindGroup builders (for constructing arbitrary entries).
+pub extern "C" fn bind_group_layout_builder_new(
+  max_entries : UInt64,
+) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_bind_group_layout_builder_new"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_layout_builder_free(
+  builder : WGPUTextureViewDescriptorPtr,
+) -> Unit = "mbt_wgpu_bind_group_layout_builder_free"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_layout_builder_add_buffer(
+  builder : WGPUTextureViewDescriptorPtr,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+  has_dynamic_offset : Bool,
+  min_binding_size : UInt64,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_buffer"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_layout_builder_add_sampler(
+  builder : WGPUTextureViewDescriptorPtr,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_sampler"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_layout_builder_add_texture(
+  builder : WGPUTextureViewDescriptorPtr,
+  binding : UInt,
+  visibility : UInt64,
+  sample_type_u32 : UInt,
+  view_dimension_u32 : UInt,
+  multisampled : Bool,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_texture"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_layout_builder_add_storage_texture(
+  builder : WGPUTextureViewDescriptorPtr,
+  binding : UInt,
+  visibility : UInt64,
+  access_u32 : UInt,
+  format_u32 : UInt,
+  view_dimension_u32 : UInt,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_storage_texture"
+
+///|
+#borrow(builder, label)
+pub extern "C" fn bind_group_layout_builder_finish(
+  device : Device,
+  builder : WGPUTextureViewDescriptorPtr,
+  label : Bytes,
+  label_len : UInt64,
+) -> BindGroupLayout = "mbt_wgpu_bind_group_layout_builder_finish"
+
+///|
+pub extern "C" fn bind_group_builder_new(
+  max_entries : UInt64,
+) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_bind_group_builder_new"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_builder_free(
+  builder : WGPUTextureViewDescriptorPtr,
+) -> Unit = "mbt_wgpu_bind_group_builder_free"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_builder_add_buffer(
+  builder : WGPUTextureViewDescriptorPtr,
+  binding : UInt,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Bool = "mbt_wgpu_bind_group_builder_add_buffer"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_builder_add_sampler(
+  builder : WGPUTextureViewDescriptorPtr,
+  binding : UInt,
+  sampler : Sampler,
+) -> Bool = "mbt_wgpu_bind_group_builder_add_sampler"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_builder_add_texture_view(
+  builder : WGPUTextureViewDescriptorPtr,
+  binding : UInt,
+  view : TextureView,
+) -> Bool = "mbt_wgpu_bind_group_builder_add_texture_view"
+
+///|
+#borrow(builder, label)
+pub extern "C" fn bind_group_builder_finish(
+  device : Device,
+  layout : BindGroupLayout,
+  builder : WGPUTextureViewDescriptorPtr,
+  label : Bytes,
+  label_len : UInt64,
+) -> BindGroup = "mbt_wgpu_bind_group_builder_finish"
+
+///|
 pub fn create_instance() -> Instance {
   wgpuCreateInstance(null_instance_descriptor_ptr())
 }

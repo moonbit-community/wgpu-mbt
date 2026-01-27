@@ -68,6 +68,18 @@ pub fn adapter_supported_features_contains_u32(WGPUAdapter, UInt) -> Bool
 
 pub fn adapter_supported_features_count_u64(WGPUAdapter) -> UInt64
 
+pub fn bind_group_builder_add_buffer(WGPUTextureViewDescriptorPtr, UInt, WGPUBuffer, UInt64, UInt64) -> Bool
+
+pub fn bind_group_builder_add_sampler(WGPUTextureViewDescriptorPtr, UInt, WGPUSampler) -> Bool
+
+pub fn bind_group_builder_add_texture_view(WGPUTextureViewDescriptorPtr, UInt, WGPUTextureView) -> Bool
+
+pub fn bind_group_builder_finish(WGPUDevice, WGPUBindGroupLayout, WGPUTextureViewDescriptorPtr, Bytes, UInt64) -> WGPUBindGroup
+
+pub fn bind_group_builder_free(WGPUTextureViewDescriptorPtr) -> Unit
+
+pub fn bind_group_builder_new(UInt64) -> WGPUTextureViewDescriptorPtr
+
 pub fn bind_group_descriptor_free(WGPUBindGroupDescriptorPtr) -> Unit
 
 pub fn bind_group_descriptor_sampler_new(WGPUBindGroupLayout, WGPUSampler) -> WGPUBindGroupDescriptorPtr
@@ -83,6 +95,20 @@ pub fn bind_group_descriptor_texture_2d_new(WGPUBindGroupLayout, WGPUTextureView
 pub fn bind_group_descriptor_uniform_buffer_16_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
 
 pub fn bind_group_descriptor_uniform_buffer_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
+
+pub fn bind_group_layout_builder_add_buffer(WGPUTextureViewDescriptorPtr, UInt, UInt64, UInt, Bool, UInt64) -> Bool
+
+pub fn bind_group_layout_builder_add_sampler(WGPUTextureViewDescriptorPtr, UInt, UInt64, UInt) -> Bool
+
+pub fn bind_group_layout_builder_add_storage_texture(WGPUTextureViewDescriptorPtr, UInt, UInt64, UInt, UInt, UInt) -> Bool
+
+pub fn bind_group_layout_builder_add_texture(WGPUTextureViewDescriptorPtr, UInt, UInt64, UInt, UInt, Bool) -> Bool
+
+pub fn bind_group_layout_builder_finish(WGPUDevice, WGPUTextureViewDescriptorPtr, Bytes, UInt64) -> WGPUBindGroupLayout
+
+pub fn bind_group_layout_builder_free(WGPUTextureViewDescriptorPtr) -> Unit
+
+pub fn bind_group_layout_builder_new(UInt64) -> WGPUTextureViewDescriptorPtr
 
 pub fn bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptorPtr) -> Unit
 
