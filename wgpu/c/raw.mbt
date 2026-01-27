@@ -203,6 +203,23 @@ pub fn device_create_texture_rgba8_2d_with_usage(
 }
 
 ///|
+pub fn device_create_texture_rgba8_2d_array_with_usage(
+  device : Device,
+  width : UInt,
+  height : UInt,
+  layers : UInt,
+  mip_level_count : UInt,
+  usage : UInt64,
+) -> Texture {
+  let desc = texture_descriptor_rgba8_2d_array_with_usage_new(
+    width, height, layers, mip_level_count, usage,
+  )
+  let tex = wgpuDeviceCreateTexture(device, desc)
+  texture_descriptor_free(desc)
+  tex
+}
+
+///|
 pub fn device_create_texture_depth24plus_2d(
   device : Device,
   width : UInt,
@@ -217,6 +234,34 @@ pub fn device_create_texture_depth24plus_2d(
 ///|
 pub fn texture_create_view(texture : Texture) -> TextureView {
   wgpuTextureCreateView(texture, null_texture_view_descriptor_ptr())
+}
+
+///|
+pub fn texture_create_view_2d(
+  texture : Texture,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> TextureView {
+  let desc = texture_view_descriptor_2d_new(base_mip_level, mip_level_count)
+  let view = wgpuTextureCreateView(texture, desc)
+  texture_view_descriptor_free(desc)
+  view
+}
+
+///|
+pub fn texture_create_view_2d_array(
+  texture : Texture,
+  base_array_layer : UInt,
+  array_layer_count : UInt,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> TextureView {
+  let desc = texture_view_descriptor_2d_array_new(
+    base_array_layer, array_layer_count, base_mip_level, mip_level_count,
+  )
+  let view = wgpuTextureCreateView(texture, desc)
+  texture_view_descriptor_free(desc)
+  view
 }
 
 ///|
@@ -753,6 +798,26 @@ pub fn command_encoder_copy_texture_to_buffer_rgba8(
 }
 
 ///|
+pub fn command_encoder_copy_texture_to_buffer_rgba8_mip_layer(
+  encoder : CommandEncoder,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  buffer : Buffer,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * 4U, 256U)
+  let src = texel_copy_texture_info_new(texture, mip_level, 0U, 0U, array_layer)
+  let dst = texel_copy_buffer_info_new(buffer, 0UL, bytes_per_row, height)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuCommandEncoderCopyTextureToBuffer(encoder, src, dst, extent)
+  extent3d_free(extent)
+  texel_copy_buffer_info_free(dst)
+  texel_copy_texture_info_free(src)
+}
+
+///|
 pub fn command_encoder_copy_buffer_to_texture_rgba8(
   encoder : CommandEncoder,
   buffer : Buffer,
@@ -771,6 +836,26 @@ pub fn command_encoder_copy_buffer_to_texture_rgba8(
 }
 
 ///|
+pub fn command_encoder_copy_buffer_to_texture_rgba8_mip_layer(
+  encoder : CommandEncoder,
+  buffer : Buffer,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * 4U, 256U)
+  let src = texel_copy_buffer_info_new(buffer, 0UL, bytes_per_row, height)
+  let dst = texel_copy_texture_info_new(texture, mip_level, 0U, 0U, array_layer)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuCommandEncoderCopyBufferToTexture(encoder, src, dst, extent)
+  extent3d_free(extent)
+  texel_copy_texture_info_free(dst)
+  texel_copy_buffer_info_free(src)
+}
+
+///|
 pub fn command_encoder_copy_texture_to_texture_rgba8(
   encoder : CommandEncoder,
   src : Texture,
@@ -780,6 +865,31 @@ pub fn command_encoder_copy_texture_to_texture_rgba8(
 ) -> Unit {
   let src_info = texel_copy_texture_info_default_new(src)
   let dst_info = texel_copy_texture_info_default_new(dst)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuCommandEncoderCopyTextureToTexture(encoder, src_info, dst_info, extent)
+  extent3d_free(extent)
+  texel_copy_texture_info_free(dst_info)
+  texel_copy_texture_info_free(src_info)
+}
+
+///|
+pub fn command_encoder_copy_texture_to_texture_rgba8_mip_layer(
+  encoder : CommandEncoder,
+  src : Texture,
+  src_mip_level : UInt,
+  src_array_layer : UInt,
+  dst : Texture,
+  dst_mip_level : UInt,
+  dst_array_layer : UInt,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  let src_info = texel_copy_texture_info_new(
+    src, src_mip_level, 0U, 0U, src_array_layer,
+  )
+  let dst_info = texel_copy_texture_info_new(
+    dst, dst_mip_level, 0U, 0U, dst_array_layer,
+  )
   let extent = extent3d_new(width, height, 1U)
   wgpuCommandEncoderCopyTextureToTexture(encoder, src_info, dst_info, extent)
   extent3d_free(extent)
@@ -820,6 +930,27 @@ pub fn queue_write_texture_rgba8_2d(
   let extent = extent3d_new(width, height, 1U)
   // NOTE: We intentionally declare our own binding taking `Bytes` instead of
   // `UnitPtr`, so MoonBit can pass a borrowed data pointer.
+  wgpuQueueWriteTexture_bytes(queue, dst, data, size, layout, extent)
+  extent3d_free(extent)
+  texel_copy_buffer_layout_free(layout)
+  texel_copy_texture_info_free(dst)
+}
+
+///|
+pub fn queue_write_texture_rgba8_2d_mip_layer(
+  queue : Queue,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  width : UInt,
+  height : UInt,
+  data : Bytes,
+  size : UInt64,
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * 4U, 256U)
+  let dst = texel_copy_texture_info_new(texture, mip_level, 0U, 0U, array_layer)
+  let layout = texel_copy_buffer_layout_new(0UL, bytes_per_row, height)
+  let extent = extent3d_new(width, height, 1U)
   wgpuQueueWriteTexture_bytes(queue, dst, data, size, layout, extent)
   extent3d_free(extent)
   texel_copy_buffer_layout_free(layout)

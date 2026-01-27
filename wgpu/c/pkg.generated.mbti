@@ -76,9 +76,15 @@ pub fn command_encoder_copy_buffer_to_buffer(WGPUCommandEncoder, WGPUBuffer, UIn
 
 pub fn command_encoder_copy_buffer_to_texture_rgba8(WGPUCommandEncoder, WGPUBuffer, WGPUTexture, UInt, UInt) -> Unit
 
+pub fn command_encoder_copy_buffer_to_texture_rgba8_mip_layer(WGPUCommandEncoder, WGPUBuffer, WGPUTexture, UInt, UInt, UInt, UInt) -> Unit
+
 pub fn command_encoder_copy_texture_to_buffer_rgba8(WGPUCommandEncoder, WGPUTexture, WGPUBuffer, UInt, UInt) -> Unit
 
+pub fn command_encoder_copy_texture_to_buffer_rgba8_mip_layer(WGPUCommandEncoder, WGPUTexture, UInt, UInt, WGPUBuffer, UInt, UInt) -> Unit
+
 pub fn command_encoder_copy_texture_to_texture_rgba8(WGPUCommandEncoder, WGPUTexture, WGPUTexture, UInt, UInt) -> Unit
+
+pub fn command_encoder_copy_texture_to_texture_rgba8_mip_layer(WGPUCommandEncoder, WGPUTexture, UInt, UInt, WGPUTexture, UInt, UInt, UInt, UInt) -> Unit
 
 pub fn command_encoder_finish(WGPUCommandEncoder) -> WGPUCommandBuffer
 
@@ -188,6 +194,8 @@ pub fn device_create_texture_depth24plus_2d(WGPUDevice, UInt, UInt) -> WGPUTextu
 
 pub fn device_create_texture_rgba8_2d(WGPUDevice, UInt, UInt) -> WGPUTexture
 
+pub fn device_create_texture_rgba8_2d_array_with_usage(WGPUDevice, UInt, UInt, UInt, UInt, UInt64) -> WGPUTexture
+
 pub fn device_create_texture_rgba8_2d_with_usage(WGPUDevice, UInt, UInt, UInt64) -> WGPUTexture
 
 pub fn device_get_queue(WGPUDevice) -> WGPUQueue
@@ -251,6 +259,8 @@ pub fn queue_submit(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> Unit
 pub fn queue_write_buffer(WGPUQueue, WGPUBuffer, UInt64, Bytes, UInt64) -> Unit
 
 pub fn queue_write_texture_rgba8_2d(WGPUQueue, WGPUTexture, UInt, UInt, Bytes, UInt64) -> Unit
+
+pub fn queue_write_texture_rgba8_2d_mip_layer(WGPUQueue, WGPUTexture, UInt, UInt, UInt, UInt, Bytes, UInt64) -> Unit
 
 pub fn render_pass_begin_occlusion_query(WGPURenderPassEncoder, UInt) -> Unit
 
@@ -354,17 +364,31 @@ pub fn texel_copy_texture_info_default_new(WGPUTexture) -> WGPUTexelCopyTextureI
 
 pub fn texel_copy_texture_info_free(WGPUTexelCopyTextureInfoPtr) -> Unit
 
+pub fn texel_copy_texture_info_new(WGPUTexture, UInt, UInt, UInt, UInt) -> WGPUTexelCopyTextureInfoPtr
+
 pub fn texture_create_view(WGPUTexture) -> WGPUTextureView
+
+pub fn texture_create_view_2d(WGPUTexture, UInt, UInt) -> WGPUTextureView
+
+pub fn texture_create_view_2d_array(WGPUTexture, UInt, UInt, UInt, UInt) -> WGPUTextureView
 
 pub fn texture_descriptor_depth24plus_2d_new(UInt, UInt) -> WGPUTextureDescriptorPtr
 
 pub fn texture_descriptor_free(WGPUTextureDescriptorPtr) -> Unit
+
+pub fn texture_descriptor_rgba8_2d_array_with_usage_new(UInt, UInt, UInt, UInt, UInt64) -> WGPUTextureDescriptorPtr
 
 pub fn texture_descriptor_rgba8_2d_default_new(UInt, UInt) -> WGPUTextureDescriptorPtr
 
 pub fn texture_descriptor_rgba8_2d_with_usage_new(UInt, UInt, UInt64) -> WGPUTextureDescriptorPtr
 
 pub fn texture_release(WGPUTexture) -> Unit
+
+pub fn texture_view_descriptor_2d_array_new(UInt, UInt, UInt, UInt) -> WGPUTextureViewDescriptorPtr
+
+pub fn texture_view_descriptor_2d_new(UInt, UInt) -> WGPUTextureViewDescriptorPtr
+
+pub fn texture_view_descriptor_free(WGPUTextureViewDescriptorPtr) -> Unit
 
 pub fn texture_view_release(WGPUTextureView) -> Unit
 

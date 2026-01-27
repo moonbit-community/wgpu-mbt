@@ -347,8 +347,79 @@ pub fn Device::create_texture_rgba8_2d_with_usage(
 }
 
 ///|
+pub fn Device::create_texture_rgba8_2d_array(
+  self : Device,
+  width : UInt,
+  height : UInt,
+  layers : UInt,
+  mip_level_count : UInt,
+) -> Texture {
+  self.create_texture_rgba8_2d_array_with_usage(
+    width,
+    height,
+    layers,
+    mip_level_count,
+    texture_usage_render_attachment |
+    texture_usage_copy_src |
+    texture_usage_copy_dst |
+    texture_usage_texture_binding,
+  )
+}
+
+///|
+pub fn Device::create_texture_rgba8_2d_array_with_usage(
+  self : Device,
+  width : UInt,
+  height : UInt,
+  layers : UInt,
+  mip_level_count : UInt,
+  usage : UInt64,
+) -> Texture {
+  Texture::{
+    raw: @c.device_create_texture_rgba8_2d_array_with_usage(
+      self.raw,
+      width,
+      height,
+      layers,
+      mip_level_count,
+      usage,
+    ),
+  }
+}
+
+///|
 pub fn Texture::create_view(self : Texture) -> TextureView {
   TextureView::{ raw: @c.texture_create_view(self.raw) }
+}
+
+///|
+pub fn Texture::create_view_2d(
+  self : Texture,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> TextureView {
+  TextureView::{
+    raw: @c.texture_create_view_2d(self.raw, base_mip_level, mip_level_count),
+  }
+}
+
+///|
+pub fn Texture::create_view_2d_array(
+  self : Texture,
+  base_array_layer : UInt,
+  array_layer_count : UInt,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> TextureView {
+  TextureView::{
+    raw: @c.texture_create_view_2d_array(
+      self.raw,
+      base_array_layer,
+      array_layer_count,
+      base_mip_level,
+      mip_level_count,
+    ),
+  }
 }
 
 ///|
@@ -611,6 +682,27 @@ pub fn CommandEncoder::copy_texture_to_buffer_rgba8(
 }
 
 ///|
+pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(
+  self : CommandEncoder,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  buffer : Buffer,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  @c.command_encoder_copy_texture_to_buffer_rgba8_mip_layer(
+    self.raw,
+    texture.raw,
+    mip_level,
+    array_layer,
+    buffer.raw,
+    width,
+    height,
+  )
+}
+
+///|
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(
   self : CommandEncoder,
   buffer : Buffer,
@@ -628,6 +720,27 @@ pub fn CommandEncoder::copy_buffer_to_texture_rgba8(
 }
 
 ///|
+pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(
+  self : CommandEncoder,
+  buffer : Buffer,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  @c.command_encoder_copy_buffer_to_texture_rgba8_mip_layer(
+    self.raw,
+    buffer.raw,
+    texture.raw,
+    mip_level,
+    array_layer,
+    width,
+    height,
+  )
+}
+
+///|
 pub fn CommandEncoder::copy_texture_to_texture_rgba8(
   self : CommandEncoder,
   src : Texture,
@@ -639,6 +752,31 @@ pub fn CommandEncoder::copy_texture_to_texture_rgba8(
     self.raw,
     src.raw,
     dst.raw,
+    width,
+    height,
+  )
+}
+
+///|
+pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(
+  self : CommandEncoder,
+  src : Texture,
+  src_mip_level : UInt,
+  src_array_layer : UInt,
+  dst : Texture,
+  dst_mip_level : UInt,
+  dst_array_layer : UInt,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  @c.command_encoder_copy_texture_to_texture_rgba8_mip_layer(
+    self.raw,
+    src.raw,
+    src_mip_level,
+    src_array_layer,
+    dst.raw,
+    dst_mip_level,
+    dst_array_layer,
     width,
     height,
   )
@@ -860,6 +998,47 @@ pub fn Queue::write_texture_rgba8_2d(
   @c.queue_write_texture_rgba8_2d(
     self.raw,
     texture.raw,
+    width,
+    height,
+    payload,
+    payload.length().to_uint64(),
+  )
+}
+
+///|
+pub fn Queue::write_texture_rgba8_2d_mip_layer(
+  self : Queue,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  width : UInt,
+  height : UInt,
+  data : Bytes,
+) -> Unit {
+  let row_bytes = (width * 4U).reinterpret_as_int()
+  let bytes_per_row = align_up_int(row_bytes, 256)
+  let rows = height.reinterpret_as_int()
+  let required_len = bytes_per_row * rows
+  let payload = if data.length() == required_len {
+    data
+  } else {
+    let src_len = data.length()
+    Bytes::makei(required_len, i => {
+      let row = i / bytes_per_row
+      let col = i % bytes_per_row
+      let src_index = row * row_bytes + col
+      if col < row_bytes && src_index < src_len {
+        data[src_index]
+      } else {
+        0
+      }
+    })
+  }
+  @c.queue_write_texture_rgba8_2d_mip_layer(
+    self.raw,
+    texture.raw,
+    mip_level,
+    array_layer,
     width,
     height,
     payload,

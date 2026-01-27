@@ -95,8 +95,11 @@ pub fn CommandEncoder::begin_render_pass_color_occlusion(Self, TextureView, Quer
 pub fn CommandEncoder::clear_buffer(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_buffer(Self, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(Self, Buffer, Texture, UInt, UInt, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8(Self, Texture, Buffer, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(Self, Texture, UInt, UInt, Buffer, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_texture_rgba8(Self, Texture, Texture, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(Self, Texture, UInt, UInt, Texture, UInt, UInt, UInt, UInt) -> Unit
 pub fn CommandEncoder::finish(Self) -> CommandBuffer
 pub fn CommandEncoder::insert_debug_marker(Self, String) -> Unit
 pub fn CommandEncoder::pop_debug_group(Self) -> Unit
@@ -158,6 +161,8 @@ pub fn Device::create_sampler_nearest_repeat(Self) -> Sampler
 pub fn Device::create_shader_module_wgsl(Self, String) -> ShaderModule
 pub fn Device::create_texture_depth24plus_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
+pub fn Device::create_texture_rgba8_2d_array(Self, UInt, UInt, UInt, UInt) -> Texture
+pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, UInt64) -> Texture
 pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
 pub fn Device::queue(Self) -> Queue
 pub fn Device::release(Self) -> Unit
@@ -188,6 +193,7 @@ pub fn Queue::submit(Self, Array[CommandBuffer]) -> Unit
 pub fn Queue::submit_one(Self, CommandBuffer) -> Unit
 pub fn Queue::write_buffer(Self, Buffer, UInt64, Bytes) -> Unit
 pub fn Queue::write_texture_rgba8_2d(Self, Texture, UInt, UInt, Bytes) -> Unit
+pub fn Queue::write_texture_rgba8_2d_mip_layer(Self, Texture, UInt, UInt, UInt, UInt, Bytes) -> Unit
 
 pub struct RenderPass {
   raw : @c.WGPURenderPassEncoder
@@ -234,6 +240,8 @@ pub struct Texture {
   raw : @c.WGPUTexture
 }
 pub fn Texture::create_view(Self) -> TextureView
+pub fn Texture::create_view_2d(Self, UInt, UInt) -> TextureView
+pub fn Texture::create_view_2d_array(Self, UInt, UInt, UInt, UInt) -> TextureView
 pub fn Texture::release(Self) -> Unit
 
 pub struct TextureView {

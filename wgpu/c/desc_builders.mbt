@@ -41,6 +41,26 @@ pub extern "C" fn null_instance_descriptor_ptr() -> WGPUInstanceDescriptorPtr = 
 pub extern "C" fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|
+pub extern "C" fn texture_view_descriptor_2d_new(
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_texture_view_descriptor_2d_new"
+
+///|
+pub extern "C" fn texture_view_descriptor_2d_array_new(
+  base_array_layer : UInt,
+  array_layer_count : UInt,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_texture_view_descriptor_2d_array_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn texture_view_descriptor_free(
+  desc : WGPUTextureViewDescriptorPtr,
+) -> Unit = "mbt_wgpu_texture_view_descriptor_free"
+
+///|
 pub extern "C" fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|
@@ -55,6 +75,15 @@ pub extern "C" fn texture_descriptor_rgba8_2d_with_usage_new(
   height : UInt,
   usage : UInt64,
 ) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_rgba8_2d_with_usage_new"
+
+///|
+pub extern "C" fn texture_descriptor_rgba8_2d_array_with_usage_new(
+  width : UInt,
+  height : UInt,
+  layers : UInt,
+  mip_level_count : UInt,
+  usage : UInt64,
+) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_rgba8_2d_array_with_usage_new"
 
 ///|
 pub extern "C" fn texture_descriptor_depth24plus_2d_new(
@@ -248,6 +277,15 @@ pub extern "C" fn render_pass_descriptor_free(
 pub extern "C" fn texel_copy_texture_info_default_new(
   texture : WGPUTexture,
 ) -> WGPUTexelCopyTextureInfoPtr = "mbt_wgpu_texel_copy_texture_info_default_new"
+
+///|
+pub extern "C" fn texel_copy_texture_info_new(
+  texture : WGPUTexture,
+  mip_level : UInt,
+  origin_x : UInt,
+  origin_y : UInt,
+  origin_z : UInt,
+) -> WGPUTexelCopyTextureInfoPtr = "mbt_wgpu_texel_copy_texture_info_new"
 
 ///|
 #borrow(info)

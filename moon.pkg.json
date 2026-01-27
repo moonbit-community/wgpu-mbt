@@ -114,6 +114,9 @@
     "wgpu_texture_comprehensive_test.mbt": [
       "native"
     ],
+    "wgpu_texture_array_mip_view_test.mbt": [
+      "native"
+    ],
     "wgpu_sampler_comprehensive_test.mbt": [
       "native"
     ],

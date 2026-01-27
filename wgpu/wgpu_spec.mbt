@@ -294,7 +294,54 @@ pub fn Device::create_texture_rgba8_2d_with_usage(
 
 ///|
 #declaration_only
+pub fn Device::create_texture_rgba8_2d_array(
+  self : Device,
+  width : UInt,
+  height : UInt,
+  layers : UInt,
+  mip_level_count : UInt,
+) -> Texture {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_texture_rgba8_2d_array_with_usage(
+  self : Device,
+  width : UInt,
+  height : UInt,
+  layers : UInt,
+  mip_level_count : UInt,
+  usage : UInt64,
+) -> Texture {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Texture::create_view(self : Texture) -> TextureView {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Texture::create_view_2d(
+  self : Texture,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> TextureView {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Texture::create_view_2d_array(
+  self : Texture,
+  base_array_layer : UInt,
+  array_layer_count : UInt,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> TextureView {
   ...
 }
 
@@ -497,6 +544,20 @@ pub fn Queue::write_texture_rgba8_2d(
 
 ///|
 #declaration_only
+pub fn Queue::write_texture_rgba8_2d_mip_layer(
+  self : Queue,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  width : UInt,
+  height : UInt,
+  data : Bytes,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Queue::release(self : Queue) -> Unit {
   ...
 }
@@ -615,6 +676,20 @@ pub fn CommandEncoder::copy_texture_to_buffer_rgba8(
 
 ///|
 #declaration_only
+pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(
+  self : CommandEncoder,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  buffer : Buffer,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(
   self : CommandEncoder,
   buffer : Buffer,
@@ -627,10 +702,40 @@ pub fn CommandEncoder::copy_buffer_to_texture_rgba8(
 
 ///|
 #declaration_only
+pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(
+  self : CommandEncoder,
+  buffer : Buffer,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn CommandEncoder::copy_texture_to_texture_rgba8(
   self : CommandEncoder,
   src : Texture,
   dst : Texture,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(
+  self : CommandEncoder,
+  src : Texture,
+  src_mip_level : UInt,
+  src_array_layer : UInt,
+  dst : Texture,
+  dst_mip_level : UInt,
+  dst_array_layer : UInt,
   width : UInt,
   height : UInt,
 ) -> Unit {

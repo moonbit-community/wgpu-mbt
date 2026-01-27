@@ -136,6 +136,24 @@ mbt_wgpu_texel_copy_texture_info_default_new(WGPUTexture texture) {
   return &out->info;
 }
 
+WGPUTexelCopyTextureInfo *
+mbt_wgpu_texel_copy_texture_info_new(WGPUTexture texture, uint32_t mip_level,
+                                     uint32_t origin_x, uint32_t origin_y,
+                                     uint32_t origin_z) {
+  mbt_texel_copy_texture_info_t *out =
+      (mbt_texel_copy_texture_info_t *)malloc(sizeof(mbt_texel_copy_texture_info_t));
+  if (!out) {
+    return NULL;
+  }
+  out->info = (WGPUTexelCopyTextureInfo){
+      .texture = texture,
+      .mipLevel = mip_level,
+      .origin = (WGPUOrigin3D){.x = origin_x, .y = origin_y, .z = origin_z},
+      .aspect = WGPUTextureAspect_All,
+  };
+  return &out->info;
+}
+
 void mbt_wgpu_texel_copy_texture_info_free(WGPUTexelCopyTextureInfo *info) { free(info); }
 
 typedef struct {
@@ -559,6 +577,91 @@ WGPUTextureDescriptor *mbt_wgpu_texture_descriptor_rgba8_2d_default_new(uint32_t
       width, height,
       (uint64_t)(WGPUTextureUsage_RenderAttachment | WGPUTextureUsage_CopySrc |
                  WGPUTextureUsage_CopyDst | WGPUTextureUsage_TextureBinding));
+}
+
+WGPUTextureDescriptor *
+mbt_wgpu_texture_descriptor_rgba8_2d_array_with_usage_new(uint32_t width,
+                                                          uint32_t height,
+                                                          uint32_t layers,
+                                                          uint32_t mip_level_count,
+                                                          uint64_t usage) {
+  WGPUTextureDescriptor *desc =
+      (WGPUTextureDescriptor *)malloc(sizeof(WGPUTextureDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUTextureDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .usage = (WGPUTextureUsage)usage,
+      .dimension = WGPUTextureDimension_2D,
+      .size =
+          (WGPUExtent3D){
+              .width = width,
+              .height = height,
+              .depthOrArrayLayers = layers,
+          },
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .mipLevelCount = mip_level_count,
+      .sampleCount = 1u,
+      .viewFormatCount = 0u,
+      .viewFormats = NULL,
+  };
+  return desc;
+}
+
+typedef struct {
+  WGPUTextureViewDescriptor desc;
+} mbt_texture_view_desc_t;
+
+WGPUTextureViewDescriptor *
+mbt_wgpu_texture_view_descriptor_2d_new(uint32_t base_mip_level,
+                                       uint32_t mip_level_count) {
+  mbt_texture_view_desc_t *out =
+      (mbt_texture_view_desc_t *)malloc(sizeof(mbt_texture_view_desc_t));
+  if (!out) {
+    return NULL;
+  }
+  out->desc = (WGPUTextureViewDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .dimension = WGPUTextureViewDimension_2D,
+      .baseMipLevel = base_mip_level,
+      .mipLevelCount = mip_level_count,
+      .baseArrayLayer = 0u,
+      .arrayLayerCount = 1u,
+      .aspect = WGPUTextureAspect_All,
+  };
+  return &out->desc;
+}
+
+WGPUTextureViewDescriptor *
+mbt_wgpu_texture_view_descriptor_2d_array_new(uint32_t base_array_layer,
+                                             uint32_t array_layer_count,
+                                             uint32_t base_mip_level,
+                                             uint32_t mip_level_count) {
+  mbt_texture_view_desc_t *out =
+      (mbt_texture_view_desc_t *)malloc(sizeof(mbt_texture_view_desc_t));
+  if (!out) {
+    return NULL;
+  }
+  out->desc = (WGPUTextureViewDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .dimension = WGPUTextureViewDimension_2DArray,
+      .baseMipLevel = base_mip_level,
+      .mipLevelCount = mip_level_count,
+      .baseArrayLayer = base_array_layer,
+      .arrayLayerCount = array_layer_count,
+      .aspect = WGPUTextureAspect_All,
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_texture_view_descriptor_free(WGPUTextureViewDescriptor *desc) {
+  free(desc);
 }
 
 WGPUTextureDescriptor *mbt_wgpu_texture_descriptor_depth24plus_2d_new(uint32_t width,
