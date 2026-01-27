@@ -40,6 +40,12 @@ pub fn create_instance() -> Instance {
 }
 
 ///|
+pub extern "C" fn instance_capabilities_timed_wait_any_enable_u32() -> UInt = "mbt_wgpu_instance_capabilities_timed_wait_any_enable_u32"
+
+///|
+pub extern "C" fn instance_capabilities_timed_wait_any_max_count_u64() -> UInt64 = "mbt_wgpu_instance_capabilities_timed_wait_any_max_count_u64"
+
+///|
 /// macOS/Metal surface helpers (CAMetalLayer + WGPUSurface).
 pub extern "C" fn cametallayer_new() -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_cametallayer_new"
 
@@ -114,6 +120,54 @@ pub extern "C" fn adapter_info_vendor_id_u32(adapter : Adapter) -> UInt = "mbt_w
 
 ///|
 pub extern "C" fn adapter_info_device_id_u32(adapter : Adapter) -> UInt = "mbt_wgpu_adapter_info_device_id_u32"
+
+///|
+pub extern "C" fn adapter_info_vendor_utf8_len(adapter : Adapter) -> UInt64 = "mbt_wgpu_adapter_info_vendor_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn adapter_info_vendor_utf8(
+  adapter : Adapter,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_adapter_info_vendor_utf8"
+
+///|
+pub extern "C" fn adapter_info_architecture_utf8_len(
+  adapter : Adapter,
+) -> UInt64 = "mbt_wgpu_adapter_info_architecture_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn adapter_info_architecture_utf8(
+  adapter : Adapter,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_adapter_info_architecture_utf8"
+
+///|
+pub extern "C" fn adapter_info_device_utf8_len(adapter : Adapter) -> UInt64 = "mbt_wgpu_adapter_info_device_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn adapter_info_device_utf8(
+  adapter : Adapter,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_adapter_info_device_utf8"
+
+///|
+pub extern "C" fn adapter_info_description_utf8_len(
+  adapter : Adapter,
+) -> UInt64 = "mbt_wgpu_adapter_info_description_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn adapter_info_description_utf8(
+  adapter : Adapter,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_adapter_info_description_utf8"
 
 ///|
 pub extern "C" fn adapter_limits_max_texture_dimension_2d_u32(

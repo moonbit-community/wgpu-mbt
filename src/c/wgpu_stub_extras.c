@@ -40,6 +40,24 @@ static WGPUProc mbt_wgpu_get_proc(const char *name) {
       mbt_wgpu_string_view((const uint8_t *)name, (uint64_t)strlen(name)));
 }
 
+uint32_t mbt_wgpu_instance_capabilities_timed_wait_any_enable_u32(void) {
+  WGPUInstanceCapabilities caps = {0};
+  WGPUStatus st = wgpuGetInstanceCapabilities(&caps);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  return caps.timedWaitAnyEnable ? 1u : 0u;
+}
+
+uint64_t mbt_wgpu_instance_capabilities_timed_wait_any_max_count_u64(void) {
+  WGPUInstanceCapabilities caps = {0};
+  WGPUStatus st = wgpuGetInstanceCapabilities(&caps);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  return (uint64_t)caps.timedWaitAnyMaxCount;
+}
+
 // ---------------------------------------------------------------------------
 // wgpu-native extras (wgpu.h)
 // ---------------------------------------------------------------------------
@@ -98,6 +116,126 @@ uint32_t mbt_wgpu_adapter_info_device_id_u32(WGPUAdapter adapter) {
   uint32_t out = info.deviceID;
   wgpuAdapterInfoFreeMembers(info);
   return out;
+}
+
+uint64_t mbt_wgpu_adapter_info_vendor_utf8_len(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint64_t out = (uint64_t)info.vendor.length;
+  wgpuAdapterInfoFreeMembers(info);
+  return out;
+}
+
+bool mbt_wgpu_adapter_info_vendor_utf8(WGPUAdapter adapter, uint8_t *out,
+                                       uint64_t out_len) {
+  if (!adapter || !out) {
+    return false;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint64_t len = (uint64_t)info.vendor.length;
+  if (len > out_len) {
+    wgpuAdapterInfoFreeMembers(info);
+    return false;
+  }
+  if (len != 0 && info.vendor.data) {
+    memcpy(out, info.vendor.data, (size_t)len);
+  }
+  wgpuAdapterInfoFreeMembers(info);
+  return true;
+}
+
+uint64_t mbt_wgpu_adapter_info_architecture_utf8_len(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint64_t out = (uint64_t)info.architecture.length;
+  wgpuAdapterInfoFreeMembers(info);
+  return out;
+}
+
+bool mbt_wgpu_adapter_info_architecture_utf8(WGPUAdapter adapter, uint8_t *out,
+                                             uint64_t out_len) {
+  if (!adapter || !out) {
+    return false;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint64_t len = (uint64_t)info.architecture.length;
+  if (len > out_len) {
+    wgpuAdapterInfoFreeMembers(info);
+    return false;
+  }
+  if (len != 0 && info.architecture.data) {
+    memcpy(out, info.architecture.data, (size_t)len);
+  }
+  wgpuAdapterInfoFreeMembers(info);
+  return true;
+}
+
+uint64_t mbt_wgpu_adapter_info_device_utf8_len(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint64_t out = (uint64_t)info.device.length;
+  wgpuAdapterInfoFreeMembers(info);
+  return out;
+}
+
+bool mbt_wgpu_adapter_info_device_utf8(WGPUAdapter adapter, uint8_t *out,
+                                       uint64_t out_len) {
+  if (!adapter || !out) {
+    return false;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint64_t len = (uint64_t)info.device.length;
+  if (len > out_len) {
+    wgpuAdapterInfoFreeMembers(info);
+    return false;
+  }
+  if (len != 0 && info.device.data) {
+    memcpy(out, info.device.data, (size_t)len);
+  }
+  wgpuAdapterInfoFreeMembers(info);
+  return true;
+}
+
+uint64_t mbt_wgpu_adapter_info_description_utf8_len(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint64_t out = (uint64_t)info.description.length;
+  wgpuAdapterInfoFreeMembers(info);
+  return out;
+}
+
+bool mbt_wgpu_adapter_info_description_utf8(WGPUAdapter adapter, uint8_t *out,
+                                            uint64_t out_len) {
+  if (!adapter || !out) {
+    return false;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint64_t len = (uint64_t)info.description.length;
+  if (len > out_len) {
+    wgpuAdapterInfoFreeMembers(info);
+    return false;
+  }
+  if (len != 0 && info.description.data) {
+    memcpy(out, info.description.data, (size_t)len);
+  }
+  wgpuAdapterInfoFreeMembers(info);
+  return true;
 }
 
 uint32_t mbt_wgpu_adapter_limits_max_texture_dimension_2d_u32(WGPUAdapter adapter) {

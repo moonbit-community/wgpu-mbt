@@ -16,6 +16,10 @@ Known limitation:
   - env var `MBT_WGPU_DEBUG_LABELS=1`
   When enabled, the implementation is best-effort via `wgpuGetProcAddress` and will still no-op if the underlying proc is unavailable.
 
+Useful introspection helpers:
+- Adapter info strings: `Adapter::info_vendor`, `Adapter::info_architecture`, `Adapter::info_device`, `Adapter::info_description`
+- Instance capabilities: `get_instance_capabilities()` (currently exposes timed-wait-any support fields)
+
 ## Quickstart (macOS)
 
 - Init submodules:

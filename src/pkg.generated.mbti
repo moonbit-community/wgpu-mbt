@@ -60,6 +60,8 @@ pub let error_type_unknown : UInt
 
 pub let error_type_validation : UInt
 
+pub fn get_instance_capabilities() -> InstanceCapabilities
+
 pub fn get_version() -> UInt
 
 pub let log_level_debug : UInt
@@ -115,8 +117,12 @@ pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
 pub fn Adapter::has_feature_timestamp_query(Self) -> Bool
 pub fn Adapter::info_adapter_type_u32(Self) -> UInt
+pub fn Adapter::info_architecture(Self) -> String
 pub fn Adapter::info_backend_type_u32(Self) -> UInt
+pub fn Adapter::info_description(Self) -> String
+pub fn Adapter::info_device(Self) -> String
 pub fn Adapter::info_device_id_u32(Self) -> UInt
+pub fn Adapter::info_vendor(Self) -> String
 pub fn Adapter::info_vendor_id_u32(Self) -> UInt
 pub fn Adapter::limits_max_bind_groups_u32(Self) -> UInt
 pub fn Adapter::limits_max_buffer_size_u64(Self) -> UInt64
@@ -295,6 +301,11 @@ pub fn Instance::process_events(Self) -> Unit
 pub fn Instance::release(Self) -> Unit
 pub fn Instance::request_adapter_sync(Self) -> Adapter
 pub fn Instance::wgsl_language_features_count_u64(Self) -> UInt64
+
+pub struct InstanceCapabilities {
+  timed_wait_any_enable : Bool
+  timed_wait_any_max_count : UInt64
+}
 
 pub struct PipelineLayout {
   raw : @c.WGPUPipelineLayout

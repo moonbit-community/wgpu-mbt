@@ -16,11 +16,27 @@ pub fn adapter_has_feature_timestamp_query(WGPUAdapter) -> Bool
 
 pub fn adapter_info_adapter_type_u32(WGPUAdapter) -> UInt
 
+pub fn adapter_info_architecture_utf8(WGPUAdapter, Bytes, UInt64) -> Bool
+
+pub fn adapter_info_architecture_utf8_len(WGPUAdapter) -> UInt64
+
 pub fn adapter_info_backend_type_u32(WGPUAdapter) -> UInt
+
+pub fn adapter_info_description_utf8(WGPUAdapter, Bytes, UInt64) -> Bool
+
+pub fn adapter_info_description_utf8_len(WGPUAdapter) -> UInt64
 
 pub fn adapter_info_device_id_u32(WGPUAdapter) -> UInt
 
+pub fn adapter_info_device_utf8(WGPUAdapter, Bytes, UInt64) -> Bool
+
+pub fn adapter_info_device_utf8_len(WGPUAdapter) -> UInt64
+
 pub fn adapter_info_vendor_id_u32(WGPUAdapter) -> UInt
+
+pub fn adapter_info_vendor_utf8(WGPUAdapter, Bytes, UInt64) -> Bool
+
+pub fn adapter_info_vendor_utf8_len(WGPUAdapter) -> UInt64
 
 pub fn adapter_limits_max_bind_groups_u32(WGPUAdapter) -> UInt
 
@@ -341,6 +357,10 @@ pub fn global_report_surfaces_num_allocated(WGPUGlobalReportPtr) -> UInt64
 pub fn index_format_uint16() -> WGPUIndexFormat
 
 pub fn index_format_uint32() -> WGPUIndexFormat
+
+pub fn instance_capabilities_timed_wait_any_enable_u32() -> UInt
+
+pub fn instance_capabilities_timed_wait_any_max_count_u64() -> UInt64
 
 pub fn instance_create_surface_metal_layer(WGPUInstance, WGPUTextureViewDescriptorPtr) -> WGPUSurface
 

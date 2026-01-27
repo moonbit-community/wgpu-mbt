@@ -118,6 +118,12 @@ pub struct QuerySet {
 }
 
 ///|
+pub struct InstanceCapabilities {
+  timed_wait_any_enable : Bool
+  timed_wait_any_max_count : UInt64
+}
+
+///|
 pub struct ComputePass {
   raw : @c.ComputePassEncoder
 }
@@ -170,6 +176,16 @@ pub fn get_version() -> UInt {
 ///|
 pub fn set_log_level(level : UInt) -> Unit {
   @c.wgpuSetLogLevel(level)
+}
+
+///|
+pub fn get_instance_capabilities() -> InstanceCapabilities {
+  let enable = @c.instance_capabilities_timed_wait_any_enable_u32() != 0U
+  let max_count = @c.instance_capabilities_timed_wait_any_max_count_u64()
+  InstanceCapabilities::{
+    timed_wait_any_enable: enable,
+    timed_wait_any_max_count: max_count,
+  }
 }
 
 ///|
@@ -470,6 +486,70 @@ pub fn Adapter::info_vendor_id_u32(self : Adapter) -> UInt {
 ///|
 pub fn Adapter::info_device_id_u32(self : Adapter) -> UInt {
   @c.adapter_info_device_id_u32(self.raw)
+}
+
+///|
+pub fn Adapter::info_vendor(self : Adapter) -> String {
+  let len = @c.adapter_info_vendor_utf8_len(self.raw)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.adapter_info_vendor_utf8(self.raw, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
+pub fn Adapter::info_architecture(self : Adapter) -> String {
+  let len = @c.adapter_info_architecture_utf8_len(self.raw)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.adapter_info_architecture_utf8(self.raw, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
+pub fn Adapter::info_device(self : Adapter) -> String {
+  let len = @c.adapter_info_device_utf8_len(self.raw)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.adapter_info_device_utf8(self.raw, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
+pub fn Adapter::info_description(self : Adapter) -> String {
+  let len = @c.adapter_info_description_utf8_len(self.raw)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.adapter_info_description_utf8(self.raw, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
 }
 
 ///|

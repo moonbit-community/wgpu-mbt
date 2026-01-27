@@ -116,11 +116,19 @@ pub type QuerySet
 
 ///|
 #declaration_only
+pub type InstanceCapabilities
+
+///|
+#declaration_only
 declare pub fn get_version() -> UInt
 
 ///|
 #declaration_only
 declare pub fn set_log_level(level : UInt) -> Unit
+
+///|
+#declaration_only
+declare pub fn get_instance_capabilities() -> InstanceCapabilities
 
 ///|
 #declaration_only
@@ -368,6 +376,22 @@ declare pub fn Adapter::info_vendor_id_u32(self : Adapter) -> UInt
 ///|
 #declaration_only
 declare pub fn Adapter::info_device_id_u32(self : Adapter) -> UInt
+
+///|
+#declaration_only
+declare pub fn Adapter::info_vendor(self : Adapter) -> String
+
+///|
+#declaration_only
+declare pub fn Adapter::info_architecture(self : Adapter) -> String
+
+///|
+#declaration_only
+declare pub fn Adapter::info_device(self : Adapter) -> String
+
+///|
+#declaration_only
+declare pub fn Adapter::info_description(self : Adapter) -> String
 
 ///|
 #declaration_only
