@@ -168,3 +168,12 @@ pub extern "C" fn render_pipeline_descriptor_rgba8_pos2_new(
 pub extern "C" fn render_pipeline_descriptor_free(
   desc : WGPURenderPipelineDescriptorPtr,
 ) -> Unit = "mbt_wgpu_render_pipeline_descriptor_free"
+
+///|
+pub extern "C" fn compute_pass_descriptor_default_new() -> WGPUComputePassDescriptorPtr = "mbt_wgpu_compute_pass_descriptor_default_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn compute_pass_descriptor_free(
+  desc : WGPUComputePassDescriptorPtr,
+) -> Unit = "mbt_wgpu_compute_pass_descriptor_free"

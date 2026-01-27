@@ -761,6 +761,26 @@ void mbt_wgpu_render_pipeline_descriptor_free(WGPURenderPipelineDescriptor *desc
   free(desc);
 }
 
+typedef struct {
+  WGPUComputePassDescriptor desc;
+} mbt_compute_pass_desc_t;
+
+WGPUComputePassDescriptor *mbt_wgpu_compute_pass_descriptor_default_new(void) {
+  mbt_compute_pass_desc_t *out =
+      (mbt_compute_pass_desc_t *)malloc(sizeof(mbt_compute_pass_desc_t));
+  if (!out) {
+    return NULL;
+  }
+  out->desc = (WGPUComputePassDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .timestampWrites = NULL,
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_compute_pass_descriptor_free(WGPUComputePassDescriptor *desc) { free(desc); }
+
 WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline(
     WGPUDevice device, WGPUShaderModule shader_module) {
   static const char entry[] = "main";

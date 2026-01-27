@@ -70,6 +70,10 @@ pub fn command_encoder_finish(WGPUCommandEncoder) -> WGPUCommandBuffer
 
 pub fn command_encoder_release(WGPUCommandEncoder) -> Unit
 
+pub fn compute_pass_descriptor_default_new() -> WGPUComputePassDescriptorPtr
+
+pub fn compute_pass_descriptor_free(WGPUComputePassDescriptorPtr) -> Unit
+
 pub fn compute_pass_dispatch_workgroups(WGPUComputePassEncoder, UInt, UInt, UInt) -> Unit
 
 pub fn compute_pass_end(WGPUComputePassEncoder) -> Unit

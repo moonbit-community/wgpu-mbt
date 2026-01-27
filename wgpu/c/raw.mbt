@@ -312,9 +312,14 @@ pub fn device_create_compute_pipeline_with_layout(
 }
 
 ///|
-pub extern "C" fn command_encoder_begin_compute_pass(
+pub fn command_encoder_begin_compute_pass(
   encoder : CommandEncoder,
-) -> ComputePassEncoder = "mbt_wgpu_command_encoder_begin_compute_pass"
+) -> ComputePassEncoder {
+  let desc = compute_pass_descriptor_default_new()
+  let pass = wgpuCommandEncoderBeginComputePass(encoder, desc)
+  compute_pass_descriptor_free(desc)
+  pass
+}
 
 ///|
 pub extern "C" fn command_encoder_begin_render_pass_color(
