@@ -93,3 +93,46 @@ pub let log_level_debug : UInt = 4U
 
 ///|
 pub let log_level_trace : UInt = 5U
+
+///|
+/// Adapter types (`WGPUAdapterType`).
+pub let adapter_type_discrete_gpu : UInt = 1U
+
+///|
+pub let adapter_type_integrated_gpu : UInt = 2U
+
+///|
+pub let adapter_type_cpu : UInt = 3U
+
+///|
+pub let adapter_type_unknown : UInt = 4U
+
+///|
+/// Backend types (`WGPUBackendType`).
+pub let backend_type_metal : UInt = 5U
+
+///|
+/// Error scope filters (`WGPUErrorFilter`).
+pub let error_filter_validation : UInt = 1U
+
+///|
+pub let error_filter_out_of_memory : UInt = 2U
+
+///|
+pub let error_filter_internal : UInt = 3U
+
+///|
+/// Error types (`WGPUErrorType`).
+pub let error_type_no_error : UInt = 1U
+
+///|
+pub let error_type_validation : UInt = 2U
+
+///|
+pub let error_type_out_of_memory : UInt = 3U
+
+///|
+pub let error_type_internal : UInt = 4U
+
+///|
+pub let error_type_unknown : UInt = 5U

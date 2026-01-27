@@ -104,6 +104,36 @@ pub extern "C" fn instance_enumerate_adapters_count_metal(
 ) -> UInt64 = "mbt_wgpu_instance_enumerate_adapters_count_metal"
 
 ///|
+pub extern "C" fn adapter_info_backend_type_u32(adapter : Adapter) -> UInt = "mbt_wgpu_adapter_info_backend_type_u32"
+
+///|
+pub extern "C" fn adapter_info_adapter_type_u32(adapter : Adapter) -> UInt = "mbt_wgpu_adapter_info_adapter_type_u32"
+
+///|
+pub extern "C" fn adapter_info_vendor_id_u32(adapter : Adapter) -> UInt = "mbt_wgpu_adapter_info_vendor_id_u32"
+
+///|
+pub extern "C" fn adapter_info_device_id_u32(adapter : Adapter) -> UInt = "mbt_wgpu_adapter_info_device_id_u32"
+
+///|
+pub extern "C" fn adapter_limits_max_texture_dimension_2d_u32(
+  adapter : Adapter,
+) -> UInt = "mbt_wgpu_adapter_limits_max_texture_dimension_2d_u32"
+
+///|
+pub extern "C" fn adapter_limits_max_bind_groups_u32(adapter : Adapter) -> UInt = "mbt_wgpu_adapter_limits_max_bind_groups_u32"
+
+///|
+pub extern "C" fn adapter_limits_max_buffer_size_u64(
+  adapter : Adapter,
+) -> UInt64 = "mbt_wgpu_adapter_limits_max_buffer_size_u64"
+
+///|
+pub extern "C" fn adapter_limits_max_compute_workgroup_size_x_u32(
+  adapter : Adapter,
+) -> UInt = "mbt_wgpu_adapter_limits_max_compute_workgroup_size_x_u32"
+
+///|
 pub extern "C" fn instance_generate_report_new(
   instance : Instance,
 ) -> WGPUGlobalReportPtr = "mbt_wgpu_instance_generate_report_new"
@@ -135,6 +165,18 @@ pub extern "C" fn global_report_hub_devices_num_allocated(
 pub extern "C" fn global_report_hub_devices_element_size(
   report : WGPUGlobalReportPtr,
 ) -> UInt64 = "mbt_wgpu_global_report_hub_devices_element_size"
+
+///|
+pub extern "C" fn device_push_error_scope_u32(
+  device : Device,
+  filter_u32 : UInt,
+) -> Unit = "mbt_wgpu_device_push_error_scope_u32"
+
+///|
+pub extern "C" fn device_pop_error_scope_sync_u32(
+  instance : Instance,
+  device : Device,
+) -> UInt = "mbt_wgpu_device_pop_error_scope_sync"
 
 ///|
 fn align_up_u32(value : UInt, align : UInt) -> UInt {

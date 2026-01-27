@@ -392,6 +392,46 @@ pub fn Adapter::has_feature_native_spirv_shader_passthrough(
 }
 
 ///|
+pub fn Adapter::info_backend_type_u32(self : Adapter) -> UInt {
+  @c.adapter_info_backend_type_u32(self.raw)
+}
+
+///|
+pub fn Adapter::info_adapter_type_u32(self : Adapter) -> UInt {
+  @c.adapter_info_adapter_type_u32(self.raw)
+}
+
+///|
+pub fn Adapter::info_vendor_id_u32(self : Adapter) -> UInt {
+  @c.adapter_info_vendor_id_u32(self.raw)
+}
+
+///|
+pub fn Adapter::info_device_id_u32(self : Adapter) -> UInt {
+  @c.adapter_info_device_id_u32(self.raw)
+}
+
+///|
+pub fn Adapter::limits_max_texture_dimension_2d_u32(self : Adapter) -> UInt {
+  @c.adapter_limits_max_texture_dimension_2d_u32(self.raw)
+}
+
+///|
+pub fn Adapter::limits_max_bind_groups_u32(self : Adapter) -> UInt {
+  @c.adapter_limits_max_bind_groups_u32(self.raw)
+}
+
+///|
+pub fn Adapter::limits_max_buffer_size_u64(self : Adapter) -> UInt64 {
+  @c.adapter_limits_max_buffer_size_u64(self.raw)
+}
+
+///|
+pub fn Adapter::limits_max_compute_workgroup_size_x_u32(self : Adapter) -> UInt {
+  @c.adapter_limits_max_compute_workgroup_size_x_u32(self.raw)
+}
+
+///|
 pub fn Device::queue(self : Device) -> Queue {
   Queue::{ raw: @c.device_get_queue(self.raw) }
 }
@@ -399,6 +439,16 @@ pub fn Device::queue(self : Device) -> Queue {
 ///|
 pub fn Device::create_command_encoder(self : Device) -> CommandEncoder {
   CommandEncoder::{ raw: @c.device_create_command_encoder(self.raw) }
+}
+
+///|
+pub fn Device::push_error_scope(self : Device, filter_u32 : UInt) -> Unit {
+  @c.device_push_error_scope_u32(self.raw, filter_u32)
+}
+
+///|
+pub fn Device::pop_error_scope_sync(self : Device, instance : Instance) -> UInt {
+  @c.device_pop_error_scope_sync_u32(instance.raw, self.raw)
 }
 
 ///|

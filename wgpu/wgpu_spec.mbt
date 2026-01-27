@@ -356,6 +356,54 @@ pub fn Adapter::has_feature_native_spirv_shader_passthrough(
 
 ///|
 #declaration_only
+pub fn Adapter::info_backend_type_u32(self : Adapter) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::info_adapter_type_u32(self : Adapter) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::info_vendor_id_u32(self : Adapter) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::info_device_id_u32(self : Adapter) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::limits_max_texture_dimension_2d_u32(self : Adapter) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::limits_max_bind_groups_u32(self : Adapter) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::limits_max_buffer_size_u64(self : Adapter) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::limits_max_compute_workgroup_size_x_u32(self : Adapter) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Device::queue(self : Device) -> Queue {
   ...
 }
@@ -363,6 +411,18 @@ pub fn Device::queue(self : Device) -> Queue {
 ///|
 #declaration_only
 pub fn Device::create_command_encoder(self : Device) -> CommandEncoder {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::push_error_scope(self : Device, filter_u32 : UInt) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::pop_error_scope_sync(self : Device, instance : Instance) -> UInt {
   ...
 }
 

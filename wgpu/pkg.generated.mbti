@@ -6,6 +6,16 @@ import {
 }
 
 // Values
+pub let adapter_type_cpu : UInt
+
+pub let adapter_type_discrete_gpu : UInt
+
+pub let adapter_type_integrated_gpu : UInt
+
+pub let adapter_type_unknown : UInt
+
+pub let backend_type_metal : UInt
+
 pub fn beads_record(String) -> Unit
 
 pub fn beads_set_enabled(Bool) -> Unit
@@ -31,6 +41,22 @@ pub let buffer_usage_storage : UInt64
 pub let buffer_usage_uniform : UInt64
 
 pub let buffer_usage_vertex : UInt64
+
+pub let error_filter_internal : UInt
+
+pub let error_filter_out_of_memory : UInt
+
+pub let error_filter_validation : UInt
+
+pub let error_type_internal : UInt
+
+pub let error_type_no_error : UInt
+
+pub let error_type_out_of_memory : UInt
+
+pub let error_type_unknown : UInt
+
+pub let error_type_validation : UInt
 
 pub fn get_version() -> UInt
 
@@ -76,6 +102,14 @@ pub fn Adapter::has_feature_native_spirv_shader_passthrough(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
 pub fn Adapter::has_feature_timestamp_query(Self) -> Bool
+pub fn Adapter::info_adapter_type_u32(Self) -> UInt
+pub fn Adapter::info_backend_type_u32(Self) -> UInt
+pub fn Adapter::info_device_id_u32(Self) -> UInt
+pub fn Adapter::info_vendor_id_u32(Self) -> UInt
+pub fn Adapter::limits_max_bind_groups_u32(Self) -> UInt
+pub fn Adapter::limits_max_buffer_size_u64(Self) -> UInt64
+pub fn Adapter::limits_max_compute_workgroup_size_x_u32(Self) -> UInt
+pub fn Adapter::limits_max_texture_dimension_2d_u32(Self) -> UInt
 pub fn Adapter::release(Self) -> Unit
 pub fn Adapter::request_device_sync(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_pipeline_statistics_query(Self, Instance) -> Device
@@ -209,6 +243,8 @@ pub fn Device::create_texture_rgba8_2d_array(Self, UInt, UInt, UInt, UInt) -> Te
 pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, UInt64) -> Texture
 pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
 pub fn Device::poll(Self, wait? : Bool) -> Bool
+pub fn Device::pop_error_scope_sync(Self, Instance) -> UInt
+pub fn Device::push_error_scope(Self, UInt) -> Unit
 pub fn Device::queue(Self) -> Queue
 pub fn Device::release(Self) -> Unit
 

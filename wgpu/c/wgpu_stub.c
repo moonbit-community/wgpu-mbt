@@ -209,6 +209,86 @@ uint64_t mbt_wgpu_instance_enumerate_adapters_count_metal(WGPUInstance instance)
   return (uint64_t)count;
 }
 
+uint32_t mbt_wgpu_adapter_info_backend_type_u32(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint32_t out = (uint32_t)info.backendType;
+  wgpuAdapterInfoFreeMembers(info);
+  return out;
+}
+
+uint32_t mbt_wgpu_adapter_info_adapter_type_u32(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint32_t out = (uint32_t)info.adapterType;
+  wgpuAdapterInfoFreeMembers(info);
+  return out;
+}
+
+uint32_t mbt_wgpu_adapter_info_vendor_id_u32(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint32_t out = info.vendorID;
+  wgpuAdapterInfoFreeMembers(info);
+  return out;
+}
+
+uint32_t mbt_wgpu_adapter_info_device_id_u32(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPUAdapterInfo info = {0};
+  (void)wgpuAdapterGetInfo(adapter, &info);
+  uint32_t out = info.deviceID;
+  wgpuAdapterInfoFreeMembers(info);
+  return out;
+}
+
+uint32_t mbt_wgpu_adapter_limits_max_texture_dimension_2d_u32(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  (void)wgpuAdapterGetLimits(adapter, &limits);
+  return limits.maxTextureDimension2D;
+}
+
+uint32_t mbt_wgpu_adapter_limits_max_bind_groups_u32(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  (void)wgpuAdapterGetLimits(adapter, &limits);
+  return limits.maxBindGroups;
+}
+
+uint64_t mbt_wgpu_adapter_limits_max_buffer_size_u64(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  (void)wgpuAdapterGetLimits(adapter, &limits);
+  return (uint64_t)limits.maxBufferSize;
+}
+
+uint32_t mbt_wgpu_adapter_limits_max_compute_workgroup_size_x_u32(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  (void)wgpuAdapterGetLimits(adapter, &limits);
+  return limits.maxComputeWorkgroupSizeX;
+}
+
 static inline uint64_t mbt_wgpu_u64_from_size_t(size_t v) { return (uint64_t)v; }
 
 WGPUGlobalReport *mbt_wgpu_instance_generate_report_new(WGPUInstance instance) {
@@ -252,6 +332,50 @@ uint64_t mbt_wgpu_global_report_hub_devices_element_size(WGPUGlobalReport *repor
     return 0u;
   }
   return mbt_wgpu_u64_from_size_t(report->hub.devices.elementSize);
+}
+
+void mbt_wgpu_device_push_error_scope_u32(WGPUDevice device, uint32_t filter_u32) {
+  if (!device) {
+    return;
+  }
+  wgpuDevicePushErrorScope(device, (WGPUErrorFilter)filter_u32);
+}
+
+typedef struct {
+  WGPUPopErrorScopeStatus status;
+  WGPUErrorType type;
+} mbt_pop_error_scope_result_t;
+
+static void mbt_pop_error_scope_cb(WGPUPopErrorScopeStatus status, WGPUErrorType type,
+                                   WGPUStringView message, void *userdata1,
+                                   void *userdata2) {
+  (void)message;
+  (void)userdata2;
+  mbt_pop_error_scope_result_t *out = (mbt_pop_error_scope_result_t *)userdata1;
+  out->status = status;
+  out->type = type;
+}
+
+uint32_t mbt_wgpu_device_pop_error_scope_sync(WGPUInstance instance, WGPUDevice device) {
+  if (!instance || !device) {
+    return 0u;
+  }
+  mbt_pop_error_scope_result_t out = {0};
+  WGPUPopErrorScopeCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_pop_error_scope_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+  (void)wgpuDevicePopErrorScope(device, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+  if (out.status != WGPUPopErrorScopeStatus_Success) {
+    return 0u;
+  }
+  return (uint32_t)out.type;
 }
 
 void mbt_wgpu_command_encoder_set_label_utf8(WGPUCommandEncoder encoder,
@@ -571,7 +695,36 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync(WGPUInstance instance,
       .userdata1 = &out,
       .userdata2 = NULL,
   };
-  (void)wgpuAdapterRequestDevice(adapter, NULL, info);
+
+  WGPUDeviceDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .requiredFeatureCount = 0u,
+      .requiredFeatures = NULL,
+      .requiredLimits = NULL,
+      .defaultQueue =
+          (WGPUQueueDescriptor){
+              .nextInChain = NULL,
+              .label = (WGPUStringView){.data = NULL, .length = 0},
+          },
+      .deviceLostCallbackInfo =
+          (WGPUDeviceLostCallbackInfo){
+              .nextInChain = NULL,
+              .mode = WGPUCallbackMode_AllowProcessEvents,
+              .callback = NULL,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+      .uncapturedErrorCallbackInfo =
+          (WGPUUncapturedErrorCallbackInfo){
+              .nextInChain = NULL,
+              .callback = mbt_uncaptured_error_noop_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+  };
+
+  (void)wgpuAdapterRequestDevice(adapter, &desc, info);
   while (out.status == 0) {
     wgpuInstanceProcessEvents(instance);
   }
