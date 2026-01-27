@@ -276,6 +276,36 @@ pub fn Surface::capabilities_alpha_modes_count_u64(
 
 ///|
 #declaration_only
+pub fn Surface::capabilities_format_u32_at(
+  self : Surface,
+  adapter : Adapter,
+  index : UInt64,
+) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::capabilities_present_mode_u32_at(
+  self : Surface,
+  adapter : Adapter,
+  index : UInt64,
+) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::capabilities_alpha_mode_u32_at(
+  self : Surface,
+  adapter : Adapter,
+  index : UInt64,
+) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Adapter::request_device_sync(
   self : Adapter,
   instance : Instance,
@@ -452,6 +482,15 @@ pub fn Adapter::supported_features_contains_u32(
 
 ///|
 #declaration_only
+pub fn Adapter::supported_feature_u32_at(
+  self : Adapter,
+  index : UInt64,
+) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Device::queue(self : Device) -> Queue {
   ...
 }
@@ -486,6 +525,12 @@ pub fn Device::supported_features_contains_u32(
   self : Device,
   feature_u32 : UInt,
 ) -> Bool {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::supported_feature_u32_at(self : Device, index : UInt64) -> UInt {
   ...
 }
 

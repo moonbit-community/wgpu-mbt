@@ -118,6 +118,7 @@ pub fn Adapter::request_device_sync_spirv_shader_passthrough(Self, Instance) -> 
 pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device
+pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64
 
@@ -249,6 +250,7 @@ pub fn Device::pop_error_scope_sync(Self, Instance) -> UInt
 pub fn Device::push_error_scope(Self, UInt) -> Unit
 pub fn Device::queue(Self) -> Queue
 pub fn Device::release(Self) -> Unit
+pub fn Device::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Device::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Device::supported_features_count_u64(Self) -> UInt64
 
@@ -365,8 +367,11 @@ pub struct Surface {
   raw : @c.WGPUSurface
   layer : @c.WGPUTextureViewDescriptorPtr
 }
+pub fn Surface::capabilities_alpha_mode_u32_at(Self, Adapter, UInt64) -> UInt
 pub fn Surface::capabilities_alpha_modes_count_u64(Self, Adapter) -> UInt64
+pub fn Surface::capabilities_format_u32_at(Self, Adapter, UInt64) -> UInt
 pub fn Surface::capabilities_formats_count_u64(Self, Adapter) -> UInt64
+pub fn Surface::capabilities_present_mode_u32_at(Self, Adapter, UInt64) -> UInt
 pub fn Surface::capabilities_present_modes_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, UInt64) -> UInt
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture

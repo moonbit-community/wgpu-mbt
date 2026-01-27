@@ -145,6 +145,12 @@ pub extern "C" fn adapter_supported_features_contains_u32(
 ) -> Bool = "mbt_wgpu_adapter_supported_features_contains"
 
 ///|
+pub extern "C" fn adapter_supported_feature_u32_at(
+  adapter : Adapter,
+  index : UInt64,
+) -> UInt = "mbt_wgpu_adapter_supported_feature_u32_at"
+
+///|
 pub extern "C" fn device_supported_features_count_u64(
   device : Device,
 ) -> UInt64 = "mbt_wgpu_device_supported_features_count"
@@ -154,6 +160,12 @@ pub extern "C" fn device_supported_features_contains_u32(
   device : Device,
   feature_u32 : UInt,
 ) -> Bool = "mbt_wgpu_device_supported_features_contains"
+
+///|
+pub extern "C" fn device_supported_feature_u32_at(
+  device : Device,
+  index : UInt64,
+) -> UInt = "mbt_wgpu_device_supported_feature_u32_at"
 
 ///|
 pub extern "C" fn instance_wgsl_language_features_count_u64(
@@ -177,6 +189,27 @@ pub extern "C" fn surface_capabilities_alpha_modes_count_u64(
   surface : WGPUSurface,
   adapter : Adapter,
 ) -> UInt64 = "mbt_wgpu_surface_capabilities_alpha_modes_count"
+
+///|
+pub extern "C" fn surface_capabilities_format_u32_at(
+  surface : WGPUSurface,
+  adapter : Adapter,
+  index : UInt64,
+) -> UInt = "mbt_wgpu_surface_capabilities_format_u32_at"
+
+///|
+pub extern "C" fn surface_capabilities_present_mode_u32_at(
+  surface : WGPUSurface,
+  adapter : Adapter,
+  index : UInt64,
+) -> UInt = "mbt_wgpu_surface_capabilities_present_mode_u32_at"
+
+///|
+pub extern "C" fn surface_capabilities_alpha_mode_u32_at(
+  surface : WGPUSurface,
+  adapter : Adapter,
+  index : UInt64,
+) -> UInt = "mbt_wgpu_surface_capabilities_alpha_mode_u32_at"
 
 ///|
 pub extern "C" fn instance_generate_report_new(

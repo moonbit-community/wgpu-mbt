@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "wgpu_stub.h"
+
 void *mbt_wgpu_null_ptr(void) { return NULL; }
 void *mbt_wgpu_null_uint_ptr(void) { return NULL; }
 

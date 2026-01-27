@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "wgpu_stub.h"
+
+typedef struct {
+  WGPUMapAsyncStatus status;
+} mbt_map_result2_t;
+
 static void mbt_buffer_map_cb2(WGPUMapAsyncStatus status, WGPUStringView message,
                                void *userdata1, void *userdata2) {
   (void)message;

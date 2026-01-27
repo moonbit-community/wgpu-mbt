@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "wgpu_stub.h"
+
+#include <objc/message.h>
+#include <objc/runtime.h>
+
 // -----------------------------------------------------------------------------
 // macOS/Metal Surface helpers (CAMetalLayer + WGPUSurface)
 // -----------------------------------------------------------------------------
