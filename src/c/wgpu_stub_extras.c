@@ -466,7 +466,8 @@ void mbt_wgpu_render_pass_pop_debug_group(WGPURenderPassEncoder pass) {
 }
 
 // Label helpers.
-// wgpu-native currently panics for some debug-label APIs; keep these as no-ops.
+// wgpu-native currently panics for SetLabel on some platforms/builds, so keep
+// these as no-ops to avoid aborting in tests.
 void mbt_wgpu_bind_group_set_label_utf8(WGPUBindGroup bind_group, const uint8_t *label,
                                         uint64_t label_len) {
   (void)bind_group;
