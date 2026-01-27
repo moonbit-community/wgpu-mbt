@@ -27,6 +27,9 @@ pub extern "C" fn null_instance_descriptor_ptr() -> WGPUInstanceDescriptorPtr = 
 pub extern "C" fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|
+pub extern "C" fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr = "mbt_wgpu_null_ptr"
+
+///|
 pub extern "C" fn texture_descriptor_rgba8_2d_default_new(
   width : UInt,
   height : UInt,

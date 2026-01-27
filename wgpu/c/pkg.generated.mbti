@@ -148,6 +148,8 @@ pub fn instance_release(WGPUInstance) -> Unit
 
 pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
 
+pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
+
 pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr
 
 pub fn null_instance_descriptor_ptr() -> WGPUInstanceDescriptorPtr

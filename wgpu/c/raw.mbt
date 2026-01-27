@@ -469,10 +469,12 @@ pub extern "C" fn compute_pass_dispatch_workgroups(
 ) -> Unit = "wgpuComputePassEncoderDispatchWorkgroups"
 
 ///|
-pub extern "C" fn compute_pass_set_bind_group0(
+pub fn compute_pass_set_bind_group0(
   pass : ComputePassEncoder,
   group : BindGroup,
-) -> Unit = "mbt_wgpu_compute_pass_set_bind_group0"
+) -> Unit {
+  wgpuComputePassEncoderSetBindGroup(pass, 0U, group, 0UL, null_uint_ptr())
+}
 
 ///|
 pub extern "C" fn compute_pass_end(pass : ComputePassEncoder) -> Unit = "wgpuComputePassEncoderEnd"
@@ -481,9 +483,9 @@ pub extern "C" fn compute_pass_end(pass : ComputePassEncoder) -> Unit = "wgpuCom
 pub extern "C" fn compute_pass_release(pass : ComputePassEncoder) -> Unit = "wgpuComputePassEncoderRelease"
 
 ///|
-pub extern "C" fn command_encoder_finish(
-  encoder : CommandEncoder,
-) -> CommandBuffer = "mbt_wgpu_command_encoder_finish"
+pub fn command_encoder_finish(encoder : CommandEncoder) -> CommandBuffer {
+  wgpuCommandEncoderFinish(encoder, null_command_buffer_descriptor_ptr())
+}
 
 ///|
 pub extern "C" fn command_encoder_clear_buffer(
