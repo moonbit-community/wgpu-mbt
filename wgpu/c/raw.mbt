@@ -53,12 +53,16 @@ pub fn device_create_buffer(
 }
 
 ///|
-#borrow(code)
-pub extern "C" fn device_create_shader_module_wgsl(
+pub fn device_create_shader_module_wgsl(
   device : Device,
   code : Bytes,
   code_len : UInt64,
-) -> ShaderModule = "mbt_wgpu_device_create_shader_module_wgsl"
+) -> ShaderModule {
+  let desc = shader_module_descriptor_wgsl_new(code, code_len)
+  let shader_module = wgpuDeviceCreateShaderModule(device, desc)
+  shader_module_descriptor_free(desc)
+  shader_module
+}
 
 ///|
 pub extern "C" fn device_create_compute_pipeline(

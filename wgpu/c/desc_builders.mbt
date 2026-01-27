@@ -62,3 +62,16 @@ pub extern "C" fn sampler_descriptor_linear_clamp_new() -> WGPUSamplerDescriptor
 pub extern "C" fn sampler_descriptor_free(
   desc : WGPUSamplerDescriptorPtr,
 ) -> Unit = "mbt_wgpu_sampler_descriptor_free"
+
+///|
+#borrow(code)
+pub extern "C" fn shader_module_descriptor_wgsl_new(
+  code : Bytes,
+  code_len : UInt64,
+) -> WGPUShaderModuleDescriptorPtr = "mbt_wgpu_shader_module_descriptor_wgsl_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn shader_module_descriptor_free(
+  desc : WGPUShaderModuleDescriptorPtr,
+) -> Unit = "mbt_wgpu_shader_module_descriptor_free"

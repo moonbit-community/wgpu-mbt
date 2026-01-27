@@ -176,6 +176,10 @@ pub fn sampler_descriptor_nearest_clamp_new() -> WGPUSamplerDescriptorPtr
 
 pub fn sampler_release(WGPUSampler) -> Unit
 
+pub fn shader_module_descriptor_free(WGPUShaderModuleDescriptorPtr) -> Unit
+
+pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr
+
 pub fn shader_module_release(WGPUShaderModule) -> Unit
 
 pub fn texture_create_view(WGPUTexture) -> WGPUTextureView

@@ -5,6 +5,7 @@
 // For fixed-width integer ABI compatibility with MoonBit.
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -248,6 +249,53 @@ WGPUShaderModule mbt_wgpu_device_create_shader_module_wgsl(WGPUDevice device,
       .label = (WGPUStringView){.data = NULL, .length = 0},
   };
   return wgpuDeviceCreateShaderModule(device, &desc);
+}
+
+typedef struct {
+  WGPUShaderModuleDescriptor desc;
+  WGPUShaderSourceWGSL wgsl;
+  char *code_copy;
+} mbt_shader_module_desc_wgsl_t;
+
+WGPUShaderModuleDescriptor *mbt_wgpu_shader_module_descriptor_wgsl_new(
+    const uint8_t *code, uint64_t code_len) {
+  mbt_shader_module_desc_wgsl_t *out =
+      (mbt_shader_module_desc_wgsl_t *)malloc(sizeof(mbt_shader_module_desc_wgsl_t));
+  if (!out) {
+    return NULL;
+  }
+  out->code_copy = NULL;
+  if (code_len > 0) {
+    out->code_copy = (char *)malloc((size_t)code_len);
+    if (!out->code_copy) {
+      free(out);
+      return NULL;
+    }
+    memcpy(out->code_copy, code, (size_t)code_len);
+  }
+  out->wgsl = (WGPUShaderSourceWGSL){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_ShaderSourceWGSL,
+          },
+      .code =
+          (WGPUStringView){
+              .data = (const char *)out->code_copy,
+              .length = (size_t)code_len,
+          },
+  };
+  out->desc = (WGPUShaderModuleDescriptor){
+      .nextInChain = &out->wgsl.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_shader_module_descriptor_free(WGPUShaderModuleDescriptor *desc) {
+  mbt_shader_module_desc_wgsl_t *out = (mbt_shader_module_desc_wgsl_t *)desc;
+  free(out->code_copy);
+  free(out);
 }
 
 WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline(
