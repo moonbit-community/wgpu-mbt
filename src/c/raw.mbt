@@ -85,6 +85,19 @@ pub extern "C" fn surface_configure_default(
 ) -> UInt = "mbt_wgpu_surface_configure_default"
 
 ///|
+pub extern "C" fn surface_configure_u32(
+  surface : WGPUSurface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+  format_u32 : UInt,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+) -> Bool = "mbt_wgpu_surface_configure_u32"
+
+///|
 pub extern "C" fn surface_texture_acquire(
   surface : WGPUSurface,
 ) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_surface_texture_acquire"
@@ -1001,6 +1014,26 @@ pub fn device_create_bind_group_layout_sampler_texture_2d(
 }
 
 ///|
+pub fn device_create_bind_group_layout_sampler_filtering(
+  device : Device,
+) -> BindGroupLayout {
+  let desc = bind_group_layout_descriptor_sampler_filtering_new()
+  let bgl = wgpuDeviceCreateBindGroupLayout(device, desc)
+  bind_group_layout_descriptor_free(desc)
+  bgl
+}
+
+///|
+pub fn device_create_bind_group_layout_texture_2d_float(
+  device : Device,
+) -> BindGroupLayout {
+  let desc = bind_group_layout_descriptor_texture_2d_float_new()
+  let bgl = wgpuDeviceCreateBindGroupLayout(device, desc)
+  bind_group_layout_descriptor_free(desc)
+  bgl
+}
+
+///|
 pub fn device_create_bind_group_sampler_texture_2d(
   device : Device,
   bind_group_layout : BindGroupLayout,
@@ -1010,6 +1043,30 @@ pub fn device_create_bind_group_sampler_texture_2d(
   let desc = bind_group_descriptor_sampler_texture_2d_new(
     bind_group_layout, sampler, view,
   )
+  let bg = wgpuDeviceCreateBindGroup(device, desc)
+  bind_group_descriptor_free(desc)
+  bg
+}
+
+///|
+pub fn device_create_bind_group_sampler(
+  device : Device,
+  bind_group_layout : BindGroupLayout,
+  sampler : Sampler,
+) -> BindGroup {
+  let desc = bind_group_descriptor_sampler_new(bind_group_layout, sampler)
+  let bg = wgpuDeviceCreateBindGroup(device, desc)
+  bind_group_descriptor_free(desc)
+  bg
+}
+
+///|
+pub fn device_create_bind_group_texture_2d(
+  device : Device,
+  bind_group_layout : BindGroupLayout,
+  view : TextureView,
+) -> BindGroup {
+  let desc = bind_group_descriptor_texture_2d_new(bind_group_layout, view)
   let bg = wgpuDeviceCreateBindGroup(device, desc)
   bind_group_descriptor_free(desc)
   bg
@@ -1833,6 +1890,32 @@ pub extern "C" fn render_pipeline_release(pipeline : RenderPipeline) -> Unit = "
 
 ///|
 pub extern "C" fn texture_destroy(texture : Texture) -> Unit = "wgpuTextureDestroy"
+
+///|
+pub extern "C" fn texture_get_width_u32(texture : Texture) -> UInt = "wgpuTextureGetWidth"
+
+///|
+pub extern "C" fn texture_get_height_u32(texture : Texture) -> UInt = "wgpuTextureGetHeight"
+
+///|
+pub extern "C" fn texture_get_depth_or_array_layers_u32(
+  texture : Texture,
+) -> UInt = "wgpuTextureGetDepthOrArrayLayers"
+
+///|
+pub extern "C" fn texture_get_mip_level_count_u32(texture : Texture) -> UInt = "wgpuTextureGetMipLevelCount"
+
+///|
+pub extern "C" fn texture_get_sample_count_u32(texture : Texture) -> UInt = "wgpuTextureGetSampleCount"
+
+///|
+pub extern "C" fn texture_get_dimension_u32(texture : Texture) -> UInt = "wgpuTextureGetDimension"
+
+///|
+pub extern "C" fn texture_get_format_u32(texture : Texture) -> UInt = "wgpuTextureGetFormat"
+
+///|
+pub extern "C" fn texture_get_usage_u64(texture : Texture) -> UInt64 = "wgpuTextureGetUsage"
 
 ///|
 pub extern "C" fn texture_release(texture : Texture) -> Unit = "wgpuTextureRelease"

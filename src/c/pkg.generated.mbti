@@ -70,11 +70,15 @@ pub fn adapter_supported_features_count_u64(WGPUAdapter) -> UInt64
 
 pub fn bind_group_descriptor_free(WGPUBindGroupDescriptorPtr) -> Unit
 
+pub fn bind_group_descriptor_sampler_new(WGPUBindGroupLayout, WGPUSampler) -> WGPUBindGroupDescriptorPtr
+
 pub fn bind_group_descriptor_sampler_texture_2d_new(WGPUBindGroupLayout, WGPUSampler, WGPUTextureView) -> WGPUBindGroupDescriptorPtr
 
 pub fn bind_group_descriptor_storage_buffer_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
 
 pub fn bind_group_descriptor_storage_texture_2d_new(WGPUBindGroupLayout, WGPUTextureView) -> WGPUBindGroupDescriptorPtr
+
+pub fn bind_group_descriptor_texture_2d_new(WGPUBindGroupLayout, WGPUTextureView) -> WGPUBindGroupDescriptorPtr
 
 pub fn bind_group_descriptor_uniform_buffer_16_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
 
@@ -82,11 +86,15 @@ pub fn bind_group_descriptor_uniform_buffer_new(WGPUBindGroupLayout, WGPUBuffer)
 
 pub fn bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptorPtr) -> Unit
 
+pub fn bind_group_layout_descriptor_sampler_filtering_new() -> WGPUBindGroupLayoutDescriptorPtr
+
 pub fn bind_group_layout_descriptor_sampler_texture_2d_new() -> WGPUBindGroupLayoutDescriptorPtr
 
 pub fn bind_group_layout_descriptor_storage_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr
 
 pub fn bind_group_layout_descriptor_storage_texture_rgba8_writeonly_new() -> WGPUBindGroupLayoutDescriptorPtr
+
+pub fn bind_group_layout_descriptor_texture_2d_float_new() -> WGPUBindGroupLayoutDescriptorPtr
 
 pub fn bind_group_layout_descriptor_uniform_buffer_dynamic_new() -> WGPUBindGroupLayoutDescriptorPtr
 
@@ -218,21 +226,29 @@ pub fn compute_pipeline_set_label_utf8(WGPUComputePipeline, Bytes, UInt64) -> Un
 
 pub fn create_instance() -> WGPUInstance
 
+pub fn device_create_bind_group_layout_sampler_filtering(WGPUDevice) -> WGPUBindGroupLayout
+
 pub fn device_create_bind_group_layout_sampler_texture_2d(WGPUDevice) -> WGPUBindGroupLayout
 
 pub fn device_create_bind_group_layout_storage_buffer(WGPUDevice) -> WGPUBindGroupLayout
 
 pub fn device_create_bind_group_layout_storage_texture_rgba8_writeonly(WGPUDevice) -> WGPUBindGroupLayout
 
+pub fn device_create_bind_group_layout_texture_2d_float(WGPUDevice) -> WGPUBindGroupLayout
+
 pub fn device_create_bind_group_layout_uniform_buffer(WGPUDevice) -> WGPUBindGroupLayout
 
 pub fn device_create_bind_group_layout_uniform_buffer_dynamic(WGPUDevice) -> WGPUBindGroupLayout
+
+pub fn device_create_bind_group_sampler(WGPUDevice, WGPUBindGroupLayout, WGPUSampler) -> WGPUBindGroup
 
 pub fn device_create_bind_group_sampler_texture_2d(WGPUDevice, WGPUBindGroupLayout, WGPUSampler, WGPUTextureView) -> WGPUBindGroup
 
 pub fn device_create_bind_group_storage_buffer(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
 
 pub fn device_create_bind_group_storage_texture_2d(WGPUDevice, WGPUBindGroupLayout, WGPUTextureView) -> WGPUBindGroup
+
+pub fn device_create_bind_group_texture_2d(WGPUDevice, WGPUBindGroupLayout, WGPUTextureView) -> WGPUBindGroup
 
 pub fn device_create_bind_group_uniform_buffer(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
 
@@ -610,6 +626,8 @@ pub fn surface_capabilities_present_modes_count_u64(WGPUSurface, WGPUAdapter) ->
 
 pub fn surface_configure_default(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64) -> UInt
 
+pub fn surface_configure_u32(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64, UInt, UInt, UInt) -> Bool
+
 pub fn surface_present_u32(WGPUSurface) -> UInt
 
 pub fn surface_release_safe(WGPUSurface) -> Unit
@@ -657,6 +675,22 @@ pub fn texture_descriptor_rgba8_2d_default_new(UInt, UInt) -> WGPUTextureDescrip
 pub fn texture_descriptor_rgba8_2d_with_usage_new(UInt, UInt, UInt64) -> WGPUTextureDescriptorPtr
 
 pub fn texture_destroy(WGPUTexture) -> Unit
+
+pub fn texture_get_depth_or_array_layers_u32(WGPUTexture) -> UInt
+
+pub fn texture_get_dimension_u32(WGPUTexture) -> UInt
+
+pub fn texture_get_format_u32(WGPUTexture) -> UInt
+
+pub fn texture_get_height_u32(WGPUTexture) -> UInt
+
+pub fn texture_get_mip_level_count_u32(WGPUTexture) -> UInt
+
+pub fn texture_get_sample_count_u32(WGPUTexture) -> UInt
+
+pub fn texture_get_usage_u64(WGPUTexture) -> UInt64
+
+pub fn texture_get_width_u32(WGPUTexture) -> UInt
 
 pub fn texture_release(WGPUTexture) -> Unit
 

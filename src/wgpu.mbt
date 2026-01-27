@@ -272,6 +272,31 @@ pub fn Surface::configure_default(
 }
 
 ///|
+pub fn Surface::configure_u32(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+  format_u32 : UInt,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+) -> Bool {
+  @c.surface_configure_u32(
+    self.raw,
+    adapter.raw,
+    device.raw,
+    width,
+    height,
+    usage,
+    format_u32,
+    present_mode_u32,
+    alpha_mode_u32,
+  )
+}
+
+///|
 pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture {
   SurfaceTexture::{ raw: @c.surface_texture_acquire(self.raw) }
 }
@@ -370,6 +395,45 @@ pub fn Surface::capabilities_alpha_mode_u32_at(
   index : UInt64,
 ) -> UInt {
   @c.surface_capabilities_alpha_mode_u32_at(self.raw, adapter.raw, index)
+}
+
+///|
+pub fn Surface::capabilities_formats(
+  self : Surface,
+  adapter : Adapter,
+) -> Array[UInt] {
+  let count = self.capabilities_formats_count_u64(adapter)
+  let out : Ref[Array[UInt]] = @ref.new([])
+  for i = 0; i < count.to_int(); i = i + 1 {
+    out.val.push(self.capabilities_format_u32_at(adapter, i.to_uint64()))
+  }
+  out.val
+}
+
+///|
+pub fn Surface::capabilities_present_modes(
+  self : Surface,
+  adapter : Adapter,
+) -> Array[UInt] {
+  let count = self.capabilities_present_modes_count_u64(adapter)
+  let out : Ref[Array[UInt]] = @ref.new([])
+  for i = 0; i < count.to_int(); i = i + 1 {
+    out.val.push(self.capabilities_present_mode_u32_at(adapter, i.to_uint64()))
+  }
+  out.val
+}
+
+///|
+pub fn Surface::capabilities_alpha_modes(
+  self : Surface,
+  adapter : Adapter,
+) -> Array[UInt] {
+  let count = self.capabilities_alpha_modes_count_u64(adapter)
+  let out : Ref[Array[UInt]] = @ref.new([])
+  for i = 0; i < count.to_int(); i = i + 1 {
+    out.val.push(self.capabilities_alpha_mode_u32_at(adapter, i.to_uint64()))
+  }
+  out.val
 }
 
 ///|
@@ -893,6 +957,46 @@ pub fn Texture::create_view_2d_array(
 }
 
 ///|
+pub fn Texture::width_u32(self : Texture) -> UInt {
+  @c.texture_get_width_u32(self.raw)
+}
+
+///|
+pub fn Texture::height_u32(self : Texture) -> UInt {
+  @c.texture_get_height_u32(self.raw)
+}
+
+///|
+pub fn Texture::depth_or_array_layers_u32(self : Texture) -> UInt {
+  @c.texture_get_depth_or_array_layers_u32(self.raw)
+}
+
+///|
+pub fn Texture::mip_level_count_u32(self : Texture) -> UInt {
+  @c.texture_get_mip_level_count_u32(self.raw)
+}
+
+///|
+pub fn Texture::sample_count_u32(self : Texture) -> UInt {
+  @c.texture_get_sample_count_u32(self.raw)
+}
+
+///|
+pub fn Texture::dimension_u32(self : Texture) -> UInt {
+  @c.texture_get_dimension_u32(self.raw)
+}
+
+///|
+pub fn Texture::format_u32(self : Texture) -> UInt {
+  @c.texture_get_format_u32(self.raw)
+}
+
+///|
+pub fn Texture::usage_u64(self : Texture) -> UInt64 {
+  @c.texture_get_usage_u64(self.raw)
+}
+
+///|
 pub fn Device::create_render_pipeline_rgba8(
   self : Device,
   shader_module : ShaderModule,
@@ -1116,6 +1220,24 @@ pub fn Device::create_bind_group_layout_sampler_texture_2d(
 }
 
 ///|
+pub fn Device::create_bind_group_layout_sampler_filtering(
+  self : Device,
+) -> BindGroupLayout {
+  BindGroupLayout::{
+    raw: @c.device_create_bind_group_layout_sampler_filtering(self.raw),
+  }
+}
+
+///|
+pub fn Device::create_bind_group_layout_texture_2d_float(
+  self : Device,
+) -> BindGroupLayout {
+  BindGroupLayout::{
+    raw: @c.device_create_bind_group_layout_texture_2d_float(self.raw),
+  }
+}
+
+///|
 pub fn Device::create_bind_group_sampler_texture_2d(
   self : Device,
   bind_group_layout : BindGroupLayout,
@@ -1127,6 +1249,36 @@ pub fn Device::create_bind_group_sampler_texture_2d(
       self.raw,
       bind_group_layout.raw,
       sampler.raw,
+      view.raw,
+    ),
+  }
+}
+
+///|
+pub fn Device::create_bind_group_sampler(
+  self : Device,
+  bind_group_layout : BindGroupLayout,
+  sampler : Sampler,
+) -> BindGroup {
+  BindGroup::{
+    raw: @c.device_create_bind_group_sampler(
+      self.raw,
+      bind_group_layout.raw,
+      sampler.raw,
+    ),
+  }
+}
+
+///|
+pub fn Device::create_bind_group_texture_2d(
+  self : Device,
+  bind_group_layout : BindGroupLayout,
+  view : TextureView,
+) -> BindGroup {
+  BindGroup::{
+    raw: @c.device_create_bind_group_texture_2d(
+      self.raw,
+      bind_group_layout.raw,
       view.raw,
     ),
   }

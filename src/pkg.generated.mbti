@@ -235,14 +235,18 @@ pub fn ComputePipeline::set_label(Self, String) -> Unit
 pub struct Device {
   raw : @c.WGPUDevice
 }
+pub fn Device::create_bind_group_layout_sampler_filtering(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_sampler_texture_2d(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_storage_buffer(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_storage_texture_rgba8_writeonly(Self) -> BindGroupLayout
+pub fn Device::create_bind_group_layout_texture_2d_float(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_uniform_buffer(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_uniform_buffer_dynamic(Self) -> BindGroupLayout
+pub fn Device::create_bind_group_sampler(Self, BindGroupLayout, Sampler) -> BindGroup
 pub fn Device::create_bind_group_sampler_texture_2d(Self, BindGroupLayout, Sampler, TextureView) -> BindGroup
 pub fn Device::create_bind_group_storage_buffer(Self, BindGroupLayout, Buffer) -> BindGroup
 pub fn Device::create_bind_group_storage_texture_2d(Self, BindGroupLayout, TextureView) -> BindGroup
+pub fn Device::create_bind_group_texture_2d(Self, BindGroupLayout, TextureView) -> BindGroup
 pub fn Device::create_bind_group_uniform_buffer(Self, BindGroupLayout, Buffer) -> BindGroup
 pub fn Device::create_bind_group_uniform_buffer_16(Self, BindGroupLayout, Buffer) -> BindGroup
 pub fn Device::create_buffer(Self, size~ : UInt64, usage~ : UInt64, mapped_at_creation? : Bool) -> Buffer
@@ -424,12 +428,16 @@ pub struct Surface {
   layer : @c.WGPUTextureViewDescriptorPtr
 }
 pub fn Surface::capabilities_alpha_mode_u32_at(Self, Adapter, UInt64) -> UInt
+pub fn Surface::capabilities_alpha_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_alpha_modes_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::capabilities_format_u32_at(Self, Adapter, UInt64) -> UInt
+pub fn Surface::capabilities_formats(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_formats_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::capabilities_present_mode_u32_at(Self, Adapter, UInt64) -> UInt
+pub fn Surface::capabilities_present_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_present_modes_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, UInt64) -> UInt
+pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt) -> Bool
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture
 pub fn Surface::present(Self) -> UInt
 pub fn Surface::release(Self) -> Unit
@@ -449,9 +457,17 @@ pub struct Texture {
 pub fn Texture::create_view(Self) -> TextureView
 pub fn Texture::create_view_2d(Self, UInt, UInt) -> TextureView
 pub fn Texture::create_view_2d_array(Self, UInt, UInt, UInt, UInt) -> TextureView
+pub fn Texture::depth_or_array_layers_u32(Self) -> UInt
 pub fn Texture::destroy(Self) -> Unit
+pub fn Texture::dimension_u32(Self) -> UInt
+pub fn Texture::format_u32(Self) -> UInt
+pub fn Texture::height_u32(Self) -> UInt
+pub fn Texture::mip_level_count_u32(Self) -> UInt
 pub fn Texture::release(Self) -> Unit
+pub fn Texture::sample_count_u32(Self) -> UInt
 pub fn Texture::set_label(Self, String) -> Unit
+pub fn Texture::usage_u64(Self) -> UInt64
+pub fn Texture::width_u32(Self) -> UInt
 
 pub struct TextureView {
   raw : @c.WGPUTextureView

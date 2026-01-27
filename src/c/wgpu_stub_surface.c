@@ -105,6 +105,70 @@ uint32_t mbt_wgpu_surface_configure_default(WGPUSurface surface, WGPUAdapter ada
   return (uint32_t)format;
 }
 
+bool mbt_wgpu_surface_configure_u32(WGPUSurface surface, WGPUAdapter adapter,
+                                    WGPUDevice device, uint32_t width, uint32_t height,
+                                    uint64_t usage, uint32_t format_u32,
+                                    uint32_t present_mode_u32, uint32_t alpha_mode_u32) {
+  if (!surface || !adapter || !device || width == 0u || height == 0u) {
+    return false;
+  }
+  WGPUSurfaceCapabilities caps = {0};
+  WGPUStatus st = wgpuSurfaceGetCapabilities(surface, adapter, &caps);
+  if (st != WGPUStatus_Success || caps.formatCount == 0 || caps.presentModeCount == 0 ||
+      caps.alphaModeCount == 0) {
+    wgpuSurfaceCapabilitiesFreeMembers(caps);
+    return false;
+  }
+
+  WGPUTextureFormat format = (WGPUTextureFormat)format_u32;
+  WGPUPresentMode present_mode = (WGPUPresentMode)present_mode_u32;
+  WGPUCompositeAlphaMode alpha_mode = (WGPUCompositeAlphaMode)alpha_mode_u32;
+
+  bool format_ok = false;
+  for (size_t i = 0; i < caps.formatCount; i++) {
+    if (caps.formats[i] == format) {
+      format_ok = true;
+      break;
+    }
+  }
+  bool present_mode_ok = false;
+  for (size_t i = 0; i < caps.presentModeCount; i++) {
+    if (caps.presentModes[i] == present_mode) {
+      present_mode_ok = true;
+      break;
+    }
+  }
+  bool alpha_mode_ok = false;
+  for (size_t i = 0; i < caps.alphaModeCount; i++) {
+    if (caps.alphaModes[i] == alpha_mode) {
+      alpha_mode_ok = true;
+      break;
+    }
+  }
+
+  if (!format_ok || !present_mode_ok || !alpha_mode_ok) {
+    wgpuSurfaceCapabilitiesFreeMembers(caps);
+    return false;
+  }
+
+  WGPUSurfaceConfiguration config = {
+      .nextInChain = NULL,
+      .device = device,
+      .format = format,
+      .usage = (WGPUTextureUsage)usage,
+      .width = width,
+      .height = height,
+      .viewFormatCount = 0u,
+      .viewFormats = NULL,
+      .alphaMode = alpha_mode,
+      .presentMode = present_mode,
+  };
+  wgpuSurfaceConfigure(surface, &config);
+
+  wgpuSurfaceCapabilitiesFreeMembers(caps);
+  return true;
+}
+
 typedef struct {
   WGPUSurfaceTexture st;
 } mbt_surface_texture_t;
@@ -169,4 +233,3 @@ void mbt_wgpu_surface_release_safe(WGPUSurface surface) {
   }
   wgpuSurfaceRelease(surface);
 }
-

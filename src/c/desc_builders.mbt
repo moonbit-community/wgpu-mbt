@@ -138,6 +138,12 @@ pub extern "C" fn shader_module_descriptor_free(
 pub extern "C" fn bind_group_layout_descriptor_sampler_texture_2d_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_sampler_texture_2d_new"
 
 ///|
+pub extern "C" fn bind_group_layout_descriptor_sampler_filtering_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_sampler_filtering_new"
+
+///|
+pub extern "C" fn bind_group_layout_descriptor_texture_2d_float_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_texture_2d_float_new"
+
+///|
 pub extern "C" fn bind_group_layout_descriptor_uniform_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_uniform_buffer_new"
 
 ///|
@@ -161,6 +167,18 @@ pub extern "C" fn bind_group_descriptor_sampler_texture_2d_new(
   sampler : WGPUSampler,
   view : WGPUTextureView,
 ) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_sampler_texture_2d_new"
+
+///|
+pub extern "C" fn bind_group_descriptor_sampler_new(
+  layout : WGPUBindGroupLayout,
+  sampler : WGPUSampler,
+) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_sampler_new"
+
+///|
+pub extern "C" fn bind_group_descriptor_texture_2d_new(
+  layout : WGPUBindGroupLayout,
+  view : WGPUTextureView,
+) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_texture_2d_new"
 
 ///|
 pub extern "C" fn bind_group_descriptor_uniform_buffer_new(

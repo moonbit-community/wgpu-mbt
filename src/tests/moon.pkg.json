@@ -75,6 +75,9 @@
     "wgpu_render_texture_sampling_test.mbt": [
       "native"
     ],
+    "wgpu_render_texture_sampling_split_groups_test.mbt": [
+      "native"
+    ],
     "wgpu_render_loadop_test.mbt": [
       "native"
     ],
@@ -138,6 +141,9 @@
     "wgpu_texture_comprehensive_test.mbt": [
       "native"
     ],
+    "wgpu_texture_getters_test.mbt": [
+      "native"
+    ],
     "wgpu_texture_array_mip_view_test.mbt": [
       "native"
     ],
@@ -151,6 +157,9 @@
       "native"
     ],
     "wgpu_surface_present_test.mbt": [
+      "native"
+    ],
+    "wgpu_surface_configure_custom_test.mbt": [
       "native"
     ],
     "wgpu_device_poll_test.mbt": [
@@ -205,6 +214,9 @@
       "native"
     ],
     "wgpu_surface_capabilities_test.mbt": [
+      "native"
+    ],
+    "wgpu_surface_capabilities_arrays_test.mbt": [
       "native"
     ],
     "wgpu_wgsl_language_features_test.mbt": [

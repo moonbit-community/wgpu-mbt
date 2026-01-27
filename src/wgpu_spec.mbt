@@ -195,6 +195,20 @@ declare pub fn Surface::configure_default(
 
 ///|
 #declaration_only
+declare pub fn Surface::configure_u32(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+  format_u32 : UInt,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+) -> Bool
+
+///|
+#declaration_only
 declare pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture
 
 ///|
@@ -285,6 +299,27 @@ declare pub fn Surface::capabilities_alpha_mode_u32_at(
   adapter : Adapter,
   index : UInt64,
 ) -> UInt
+
+///|
+#declaration_only
+declare pub fn Surface::capabilities_formats(
+  self : Surface,
+  adapter : Adapter,
+) -> Array[UInt]
+
+///|
+#declaration_only
+declare pub fn Surface::capabilities_present_modes(
+  self : Surface,
+  adapter : Adapter,
+) -> Array[UInt]
+
+///|
+#declaration_only
+declare pub fn Surface::capabilities_alpha_modes(
+  self : Surface,
+  adapter : Adapter,
+) -> Array[UInt]
 
 ///|
 #declaration_only
@@ -635,6 +670,38 @@ declare pub fn Texture::create_view_2d_array(
 
 ///|
 #declaration_only
+declare pub fn Texture::width_u32(self : Texture) -> UInt
+
+///|
+#declaration_only
+declare pub fn Texture::height_u32(self : Texture) -> UInt
+
+///|
+#declaration_only
+declare pub fn Texture::depth_or_array_layers_u32(self : Texture) -> UInt
+
+///|
+#declaration_only
+declare pub fn Texture::mip_level_count_u32(self : Texture) -> UInt
+
+///|
+#declaration_only
+declare pub fn Texture::sample_count_u32(self : Texture) -> UInt
+
+///|
+#declaration_only
+declare pub fn Texture::dimension_u32(self : Texture) -> UInt
+
+///|
+#declaration_only
+declare pub fn Texture::format_u32(self : Texture) -> UInt
+
+///|
+#declaration_only
+declare pub fn Texture::usage_u64(self : Texture) -> UInt64
+
+///|
+#declaration_only
 declare pub fn Device::create_sampler_nearest_clamp(self : Device) -> Sampler
 
 ///|
@@ -790,10 +857,38 @@ declare pub fn Device::create_bind_group_layout_sampler_texture_2d(
 
 ///|
 #declaration_only
+declare pub fn Device::create_bind_group_layout_sampler_filtering(
+  self : Device,
+) -> BindGroupLayout
+
+///|
+#declaration_only
+declare pub fn Device::create_bind_group_layout_texture_2d_float(
+  self : Device,
+) -> BindGroupLayout
+
+///|
+#declaration_only
 declare pub fn Device::create_bind_group_sampler_texture_2d(
   self : Device,
   bind_group_layout : BindGroupLayout,
   sampler : Sampler,
+  view : TextureView,
+) -> BindGroup
+
+///|
+#declaration_only
+declare pub fn Device::create_bind_group_sampler(
+  self : Device,
+  bind_group_layout : BindGroupLayout,
+  sampler : Sampler,
+) -> BindGroup
+
+///|
+#declaration_only
+declare pub fn Device::create_bind_group_texture_2d(
+  self : Device,
+  bind_group_layout : BindGroupLayout,
   view : TextureView,
 ) -> BindGroup
 
