@@ -82,6 +82,8 @@ pub let queue_work_done_status_success : UInt
 
 pub let queue_work_done_status_unknown : UInt
 
+pub fn set_debug_labels_enabled(Bool) -> Unit
+
 pub fn set_log_level(UInt) -> Unit
 
 pub let shader_stage_compute : UInt64

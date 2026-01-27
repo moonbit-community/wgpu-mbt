@@ -275,6 +275,9 @@ pub extern "C" fn command_encoder_set_label_utf8(
 ) -> Unit = "mbt_wgpu_command_encoder_set_label_utf8"
 
 ///|
+pub extern "C" fn set_debug_labels_enabled(enabled : Bool) -> Unit = "mbt_wgpu_set_debug_labels_enabled"
+
+///|
 #borrow(label)
 pub extern "C" fn bind_group_set_label_utf8(
   bind_group : BindGroup,

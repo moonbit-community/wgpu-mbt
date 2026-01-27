@@ -11,6 +11,10 @@ This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused o
 
 Known limitation:
 - `Instance::wgsl_language_features_count_u64()` is currently a safe stub that returns `0` because `wgpuInstanceGetWGSLLanguageFeatures` panics in some wgpu-native builds.
+- Debug labels / markers (`*.set_label`, `*.insert_debug_marker`, `*.push_debug_group`, `*.pop_debug_group`) are **disabled by default** to avoid `wgpu-native` panics/unimplemented APIs. You can opt in via:
+  - `@wgpu.set_debug_labels_enabled(true)` (recommended for local debugging)
+  - env var `MBT_WGPU_DEBUG_LABELS=1`
+  When enabled, the implementation is best-effort via `wgpuGetProcAddress` and will still no-op if the underlying proc is unavailable.
 
 ## Quickstart (macOS)
 

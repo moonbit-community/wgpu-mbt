@@ -173,6 +173,11 @@ pub fn set_log_level(level : UInt) -> Unit {
 }
 
 ///|
+pub fn set_debug_labels_enabled(enabled : Bool) -> Unit {
+  @c.set_debug_labels_enabled(enabled)
+}
+
+///|
 pub fn Instance::create() -> Instance {
   Instance::{ raw: @c.create_instance() }
 }

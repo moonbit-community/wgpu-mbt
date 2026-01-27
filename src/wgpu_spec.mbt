@@ -124,6 +124,10 @@ declare pub fn set_log_level(level : UInt) -> Unit
 
 ///|
 #declaration_only
+declare pub fn set_debug_labels_enabled(enabled : Bool) -> Unit
+
+///|
+#declaration_only
 declare pub fn Instance::create() -> Instance
 
 ///|

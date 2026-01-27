@@ -554,6 +554,8 @@ pub fn sampler_release(WGPUSampler) -> Unit
 
 pub fn sampler_set_label_utf8(WGPUSampler, Bytes, UInt64) -> Unit
 
+pub fn set_debug_labels_enabled(Bool) -> Unit
+
 pub fn shader_module_descriptor_free(WGPUShaderModuleDescriptorPtr) -> Unit
 
 pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr

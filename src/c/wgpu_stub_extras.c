@@ -15,6 +15,32 @@
 #include "wgpu_stub.h"
 
 // ---------------------------------------------------------------------------
+// Debug labels / markers (best-effort)
+// ---------------------------------------------------------------------------
+
+static bool g_mbt_wgpu_debug_labels_enabled = false;
+static bool g_mbt_wgpu_debug_labels_inited = false;
+
+static bool mbt_wgpu_debug_labels_enabled(void) {
+  if (!g_mbt_wgpu_debug_labels_inited) {
+    const char *v = getenv("MBT_WGPU_DEBUG_LABELS");
+    g_mbt_wgpu_debug_labels_enabled = (v && v[0] && v[0] != '0');
+    g_mbt_wgpu_debug_labels_inited = true;
+  }
+  return g_mbt_wgpu_debug_labels_enabled;
+}
+
+void mbt_wgpu_set_debug_labels_enabled(bool enabled) {
+  g_mbt_wgpu_debug_labels_enabled = enabled;
+  g_mbt_wgpu_debug_labels_inited = true;
+}
+
+static WGPUProc mbt_wgpu_get_proc(const char *name) {
+  return wgpuGetProcAddress(
+      mbt_wgpu_string_view((const uint8_t *)name, (uint64_t)strlen(name)));
+}
+
+// ---------------------------------------------------------------------------
 // wgpu-native extras (wgpu.h)
 // ---------------------------------------------------------------------------
 
@@ -392,189 +418,392 @@ uint32_t mbt_wgpu_device_pop_error_scope_sync(WGPUInstance instance, WGPUDevice 
 void mbt_wgpu_command_encoder_set_label_utf8(WGPUCommandEncoder encoder,
                                              const uint8_t *label,
                                              uint64_t label_len) {
-  // wgpu-native currently panics for some debug-label APIs; keep these as no-ops.
-  (void)encoder;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!encoder || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuCommandEncoderSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcCommandEncoderSetLabel)proc)(encoder,
+                                         mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_command_encoder_insert_debug_marker_utf8(WGPUCommandEncoder encoder,
                                                        const uint8_t *label,
                                                        uint64_t label_len) {
-  (void)encoder;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!encoder || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuCommandEncoderInsertDebugMarker");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcCommandEncoderInsertDebugMarker)proc)(
+      encoder, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_command_encoder_push_debug_group_utf8(WGPUCommandEncoder encoder,
                                                     const uint8_t *label,
                                                     uint64_t label_len) {
-  (void)encoder;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!encoder || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuCommandEncoderPushDebugGroup");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcCommandEncoderPushDebugGroup)proc)(
+      encoder, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_command_encoder_pop_debug_group(WGPUCommandEncoder encoder) {
-  (void)encoder;
+  if (!encoder || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuCommandEncoderPopDebugGroup");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcCommandEncoderPopDebugGroup)proc)(encoder);
 }
 
 void mbt_wgpu_compute_pass_set_label_utf8(WGPUComputePassEncoder pass,
                                           const uint8_t *label,
                                           uint64_t label_len) {
-  (void)pass;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!pass || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuComputePassEncoderSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcComputePassEncoderSetLabel)proc)(
+      pass, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_compute_pass_insert_debug_marker_utf8(WGPUComputePassEncoder pass,
                                                     const uint8_t *label,
                                                     uint64_t label_len) {
-  (void)pass;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!pass || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuComputePassEncoderInsertDebugMarker");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcComputePassEncoderInsertDebugMarker)proc)(
+      pass, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_compute_pass_push_debug_group_utf8(WGPUComputePassEncoder pass,
                                                  const uint8_t *label,
                                                  uint64_t label_len) {
-  (void)pass;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!pass || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuComputePassEncoderPushDebugGroup");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcComputePassEncoderPushDebugGroup)proc)(
+      pass, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_compute_pass_pop_debug_group(WGPUComputePassEncoder pass) {
-  (void)pass;
+  if (!pass || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuComputePassEncoderPopDebugGroup");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcComputePassEncoderPopDebugGroup)proc)(pass);
 }
 
 void mbt_wgpu_render_pass_set_label_utf8(WGPURenderPassEncoder pass,
                                          const uint8_t *label,
                                          uint64_t label_len) {
-  (void)pass;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!pass || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuRenderPassEncoderSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcRenderPassEncoderSetLabel)proc)(
+      pass, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_render_pass_insert_debug_marker_utf8(WGPURenderPassEncoder pass,
                                                    const uint8_t *label,
                                                    uint64_t label_len) {
-  (void)pass;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!pass || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuRenderPassEncoderInsertDebugMarker");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcRenderPassEncoderInsertDebugMarker)proc)(
+      pass, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_render_pass_push_debug_group_utf8(WGPURenderPassEncoder pass,
                                                 const uint8_t *label,
                                                 uint64_t label_len) {
-  (void)pass;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!pass || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuRenderPassEncoderPushDebugGroup");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcRenderPassEncoderPushDebugGroup)proc)(
+      pass, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_render_pass_pop_debug_group(WGPURenderPassEncoder pass) {
-  (void)pass;
+  if (!pass || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuRenderPassEncoderPopDebugGroup");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcRenderPassEncoderPopDebugGroup)proc)(pass);
 }
 
 // Label helpers.
-// wgpu-native currently panics for SetLabel on some platforms/builds, so keep
-// these as no-ops to avoid aborting in tests.
+// Best-effort: only enabled if MBT_WGPU_DEBUG_LABELS=1 or via
+// mbt_wgpu_set_debug_labels_enabled(true). Even then, individual procs may be
+// absent and will no-op.
 void mbt_wgpu_bind_group_set_label_utf8(WGPUBindGroup bind_group, const uint8_t *label,
                                         uint64_t label_len) {
-  (void)bind_group;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!bind_group || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuBindGroupSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcBindGroupSetLabel)proc)(bind_group,
+                                    mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_bind_group_layout_set_label_utf8(WGPUBindGroupLayout bind_group_layout,
                                                const uint8_t *label,
                                                uint64_t label_len) {
-  (void)bind_group_layout;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!bind_group_layout || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuBindGroupLayoutSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcBindGroupLayoutSetLabel)proc)(
+      bind_group_layout, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_buffer_set_label_utf8(WGPUBuffer buffer, const uint8_t *label,
                                     uint64_t label_len) {
-  (void)buffer;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!buffer || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuBufferSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcBufferSetLabel)proc)(buffer,
+                                 mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_command_buffer_set_label_utf8(WGPUCommandBuffer command_buffer,
                                             const uint8_t *label,
                                             uint64_t label_len) {
-  (void)command_buffer;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!command_buffer || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuCommandBufferSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcCommandBufferSetLabel)proc)(
+      command_buffer, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_compute_pipeline_set_label_utf8(WGPUComputePipeline pipeline,
                                               const uint8_t *label,
                                               uint64_t label_len) {
-  (void)pipeline;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!pipeline || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuComputePipelineSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcComputePipelineSetLabel)proc)(
+      pipeline, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_device_set_label_utf8(WGPUDevice device, const uint8_t *label,
                                     uint64_t label_len) {
-  (void)device;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!device || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuDeviceSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcDeviceSetLabel)proc)(device,
+                                 mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_pipeline_layout_set_label_utf8(WGPUPipelineLayout pipeline_layout,
                                              const uint8_t *label,
                                              uint64_t label_len) {
-  (void)pipeline_layout;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!pipeline_layout || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuPipelineLayoutSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcPipelineLayoutSetLabel)proc)(
+      pipeline_layout, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_query_set_set_label_utf8(WGPUQuerySet query_set, const uint8_t *label,
                                        uint64_t label_len) {
-  (void)query_set;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!query_set || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuQuerySetSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcQuerySetSetLabel)proc)(query_set,
+                                   mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_queue_set_label_utf8(WGPUQueue queue, const uint8_t *label,
                                    uint64_t label_len) {
-  (void)queue;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!queue || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuQueueSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcQueueSetLabel)proc)(queue,
+                                mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_render_bundle_set_label_utf8(WGPURenderBundle render_bundle,
                                            const uint8_t *label,
                                            uint64_t label_len) {
-  (void)render_bundle;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!render_bundle || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuRenderBundleSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcRenderBundleSetLabel)proc)(
+      render_bundle, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_render_bundle_encoder_set_label_utf8(
     WGPURenderBundleEncoder render_bundle_encoder, const uint8_t *label,
     uint64_t label_len) {
-  (void)render_bundle_encoder;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!render_bundle_encoder || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuRenderBundleEncoderSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcRenderBundleEncoderSetLabel)proc)(
+      render_bundle_encoder, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_render_pipeline_set_label_utf8(WGPURenderPipeline pipeline,
                                              const uint8_t *label,
                                              uint64_t label_len) {
-  (void)pipeline;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!pipeline || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuRenderPipelineSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcRenderPipelineSetLabel)proc)(
+      pipeline, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_sampler_set_label_utf8(WGPUSampler sampler, const uint8_t *label,
                                      uint64_t label_len) {
-  (void)sampler;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!sampler || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuSamplerSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcSamplerSetLabel)proc)(sampler,
+                                  mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_shader_module_set_label_utf8(WGPUShaderModule shader_module,
                                            const uint8_t *label,
                                            uint64_t label_len) {
-  (void)shader_module;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!shader_module || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuShaderModuleSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcShaderModuleSetLabel)proc)(
+      shader_module, mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_surface_set_label_utf8(WGPUSurface surface, const uint8_t *label,
                                      uint64_t label_len) {
-  (void)surface;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!surface || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuSurfaceSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcSurfaceSetLabel)proc)(surface,
+                                  mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_texture_set_label_utf8(WGPUTexture texture, const uint8_t *label,
                                      uint64_t label_len) {
-  (void)texture;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!texture || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuTextureSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcTextureSetLabel)proc)(texture,
+                                  mbt_wgpu_string_view(label, label_len));
 }
 
 void mbt_wgpu_texture_view_set_label_utf8(WGPUTextureView texture_view,
                                           const uint8_t *label,
                                           uint64_t label_len) {
-  (void)texture_view;
-  (void)mbt_wgpu_string_view(label, label_len);
+  if (!texture_view || !mbt_wgpu_debug_labels_enabled()) {
+    return;
+  }
+  WGPUProc proc = mbt_wgpu_get_proc("wgpuTextureViewSetLabel");
+  if (!proc) {
+    return;
+  }
+  ((WGPUProcTextureViewSetLabel)proc)(
+      texture_view, mbt_wgpu_string_view(label, label_len));
 }
