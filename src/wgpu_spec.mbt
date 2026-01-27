@@ -777,6 +777,17 @@ declare pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool
 
 ///|
 #declaration_only
+declare pub fn Device::take_lost_reason(self : Device) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::wait_lost_reason_sync(
+  self : Device,
+  instance : Instance,
+) -> UInt
+
+///|
+#declaration_only
 declare pub fn Device::destroy(self : Device) -> Unit
 
 ///|

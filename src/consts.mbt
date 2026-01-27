@@ -149,3 +149,16 @@ pub let queue_work_done_status_error : UInt = 3U
 
 ///|
 pub let queue_work_done_status_unknown : UInt = 4U
+
+///|
+/// Device-lost reason (`WGPUDeviceLostReason`).
+pub let device_lost_reason_unknown : UInt = 1U
+
+///|
+pub let device_lost_reason_destroyed : UInt = 2U
+
+///|
+pub let device_lost_reason_instance_dropped : UInt = 3U
+
+///|
+pub let device_lost_reason_failed_creation : UInt = 4U

@@ -278,6 +278,8 @@ pub fn device_create_texture_rgba8_2d_with_usage(WGPUDevice, UInt, UInt, UInt64)
 
 pub fn device_destroy(WGPUDevice) -> Unit
 
+pub fn device_destroy_record_lost(WGPUDevice) -> Unit
+
 pub fn device_get_queue(WGPUDevice) -> WGPUQueue
 
 pub fn device_poll(WGPUDevice, Bool, WGPUSubmissionIndexPtr) -> Bool
@@ -293,6 +295,10 @@ pub fn device_supported_feature_u32_at(WGPUDevice, UInt64) -> UInt
 pub fn device_supported_features_contains_u32(WGPUDevice, UInt) -> Bool
 
 pub fn device_supported_features_count_u64(WGPUDevice) -> UInt64
+
+pub fn device_take_lost_reason_u32(WGPUDevice) -> UInt
+
+pub fn device_wait_lost_reason_sync_u32(WGPUInstance, WGPUDevice) -> UInt
 
 pub fn extent3d_free(WGPUExtent3DPtr) -> Unit
 

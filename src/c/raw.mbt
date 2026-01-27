@@ -350,6 +350,15 @@ pub extern "C" fn queue_on_submitted_work_done_sync(
 ) -> UInt = "mbt_wgpu_queue_on_submitted_work_done_sync"
 
 ///|
+pub extern "C" fn device_take_lost_reason_u32(device : Device) -> UInt = "mbt_wgpu_device_take_lost_reason_u32"
+
+///|
+pub extern "C" fn device_wait_lost_reason_sync_u32(
+  instance : Instance,
+  device : Device,
+) -> UInt = "mbt_wgpu_device_wait_lost_reason_sync_u32"
+
+///|
 pub fn adapter_has_feature_timestamp_query(adapter : Adapter) -> Bool {
   wgpuAdapterHasFeature(adapter, feature_name_timestamp_query())
 }
@@ -1639,6 +1648,9 @@ pub extern "C" fn queue_release(queue : Queue) -> Unit = "wgpuQueueRelease"
 
 ///|
 pub extern "C" fn device_destroy(device : Device) -> Unit = "wgpuDeviceDestroy"
+
+///|
+pub extern "C" fn device_destroy_record_lost(device : Device) -> Unit = "mbt_wgpu_device_destroy_record_lost"
 
 ///|
 pub extern "C" fn device_release(device : Device) -> Unit = "wgpuDeviceRelease"

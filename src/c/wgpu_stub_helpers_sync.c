@@ -14,6 +14,9 @@
 
 #include "wgpu_stub.h"
 
+#include <pthread.h>
+#include <unistd.h>
+
 void mbt_wgpu_render_pass_set_blend_constant_rgba(WGPURenderPassEncoder pass,
                                                   double r, double g, double b,
                                                   double a) {
@@ -213,6 +216,90 @@ static void mbt_uncaptured_error_noop_cb(WGPUDevice const *device, WGPUErrorType
   (void)userdata2;
 }
 
+typedef struct {
+  WGPUDevice device;
+  uint32_t reason;
+} mbt_device_lost_entry_t;
+
+// Tiny fixed-size registry for tests/examples; avoids forcing wrapper type
+// changes to carry userdata pointers.
+static mbt_device_lost_entry_t g_device_lost[16];
+static size_t g_device_lost_len = 0;
+static pthread_mutex_t g_device_lost_mu = PTHREAD_MUTEX_INITIALIZER;
+
+static void mbt_device_lost_upsert(WGPUDevice device, uint32_t reason) {
+  pthread_mutex_lock(&g_device_lost_mu);
+  // Upsert by handle (linear scan is fine for small counts).
+  for (size_t i = 0; i < g_device_lost_len; i++) {
+    if (g_device_lost[i].device == device) {
+      g_device_lost[i].reason = reason;
+      pthread_mutex_unlock(&g_device_lost_mu);
+      return;
+    }
+  }
+  if (g_device_lost_len < (sizeof(g_device_lost) / sizeof(g_device_lost[0]))) {
+    g_device_lost[g_device_lost_len++] =
+        (mbt_device_lost_entry_t){.device = device, .reason = reason};
+  }
+  pthread_mutex_unlock(&g_device_lost_mu);
+}
+
+static void mbt_device_lost_cb(WGPUDevice const *device, WGPUDeviceLostReason reason,
+                               WGPUStringView message, void *userdata1,
+                               void *userdata2) {
+  (void)message;
+  (void)userdata1;
+  (void)userdata2;
+
+  WGPUDevice handle = NULL;
+  if (device) {
+    handle = *device;
+  }
+
+  mbt_device_lost_upsert(handle, (uint32_t)reason);
+}
+
+// Returns the recorded device-lost reason for `device`, and clears the entry.
+// 0 means "no device-lost event observed (yet)".
+uint32_t mbt_wgpu_device_take_lost_reason_u32(WGPUDevice device) {
+  pthread_mutex_lock(&g_device_lost_mu);
+  for (size_t i = 0; i < g_device_lost_len; i++) {
+    if (g_device_lost[i].device == device) {
+      uint32_t reason = g_device_lost[i].reason;
+      // Remove by swapping with the last element.
+      g_device_lost[i] = g_device_lost[g_device_lost_len - 1];
+      g_device_lost_len--;
+      pthread_mutex_unlock(&g_device_lost_mu);
+      return reason;
+    }
+  }
+  pthread_mutex_unlock(&g_device_lost_mu);
+  return 0u;
+}
+
+uint32_t mbt_wgpu_device_wait_lost_reason_sync_u32(WGPUInstance instance,
+                                                   WGPUDevice device) {
+  // Bounded wait: 2s worst-case (2000 * 1ms).
+  const int max_iters = 2000;
+  for (int i = 0; i < max_iters; i++) {
+    uint32_t reason = mbt_wgpu_device_take_lost_reason_u32(device);
+    if (reason != 0u) {
+      return reason;
+    }
+    (void)wgpuDevicePoll(device, false, NULL);
+    wgpuInstanceProcessEvents(instance);
+    usleep(1000);
+  }
+  return 0u;
+}
+
+void mbt_wgpu_device_destroy_record_lost(WGPUDevice device) {
+  wgpuDeviceDestroy(device);
+  // Provide a deterministic signal for "destroyed" even if the backend doesn't
+  // dispatch the device-lost callback.
+  mbt_device_lost_upsert(device, (uint32_t)WGPUDeviceLostReason_Destroyed);
+}
+
 static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice device,
                                   WGPUStringView message, void *userdata1,
                                   void *userdata2) {
@@ -281,8 +368,8 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync(WGPUInstance instance,
       .deviceLostCallbackInfo =
           (WGPUDeviceLostCallbackInfo){
               .nextInChain = NULL,
-              .mode = WGPUCallbackMode_AllowProcessEvents,
-              .callback = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
               .userdata1 = NULL,
               .userdata2 = NULL,
           },
@@ -352,8 +439,8 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(
       .deviceLostCallbackInfo =
           (WGPUDeviceLostCallbackInfo){
               .nextInChain = NULL,
-              .mode = WGPUCallbackMode_AllowProcessEvents,
-              .callback = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
               .userdata1 = NULL,
               .userdata2 = NULL,
           },
@@ -406,8 +493,8 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query(
       .deviceLostCallbackInfo =
           (WGPUDeviceLostCallbackInfo){
               .nextInChain = NULL,
-              .mode = WGPUCallbackMode_AllowProcessEvents,
-              .callback = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
               .userdata1 = NULL,
               .userdata2 = NULL,
           },
@@ -461,8 +548,8 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders(
       .deviceLostCallbackInfo =
           (WGPUDeviceLostCallbackInfo){
               .nextInChain = NULL,
-              .mode = WGPUCallbackMode_AllowProcessEvents,
-              .callback = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
               .userdata1 = NULL,
               .userdata2 = NULL,
           },
@@ -516,8 +603,8 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes(
       .deviceLostCallbackInfo =
           (WGPUDeviceLostCallbackInfo){
               .nextInChain = NULL,
-              .mode = WGPUCallbackMode_AllowProcessEvents,
-              .callback = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
               .userdata1 = NULL,
               .userdata2 = NULL,
           },
@@ -584,8 +671,8 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance inst
       .deviceLostCallbackInfo =
           (WGPUDeviceLostCallbackInfo){
               .nextInChain = NULL,
-              .mode = WGPUCallbackMode_AllowProcessEvents,
-              .callback = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
               .userdata1 = NULL,
               .userdata2 = NULL,
           },
@@ -638,8 +725,8 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
       .deviceLostCallbackInfo =
           (WGPUDeviceLostCallbackInfo){
               .nextInChain = NULL,
-              .mode = WGPUCallbackMode_AllowProcessEvents,
-              .callback = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
               .userdata1 = NULL,
               .userdata2 = NULL,
           },

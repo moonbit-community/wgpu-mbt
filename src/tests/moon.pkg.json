@@ -30,6 +30,9 @@
     "wgpu_destroy_test.mbt": [
       "native"
     ],
+    "wgpu_device_lost_test.mbt": [
+      "native"
+    ],
     "wgpu_render_offscreen_test.mbt": [
       "native"
     ],

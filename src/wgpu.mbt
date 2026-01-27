@@ -2329,8 +2329,21 @@ pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool {
 }
 
 ///|
+pub fn Device::take_lost_reason(self : Device) -> UInt {
+  @c.device_take_lost_reason_u32(self.raw)
+}
+
+///|
+pub fn Device::wait_lost_reason_sync(
+  self : Device,
+  instance : Instance,
+) -> UInt {
+  @c.device_wait_lost_reason_sync_u32(instance.raw, self.raw)
+}
+
+///|
 pub fn Device::destroy(self : Device) -> Unit {
-  @c.device_destroy(self.raw)
+  @c.device_destroy_record_lost(self.raw)
 }
 
 ///|

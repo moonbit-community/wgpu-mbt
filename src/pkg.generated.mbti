@@ -36,6 +36,14 @@ pub let buffer_usage_uniform : UInt64
 
 pub let buffer_usage_vertex : UInt64
 
+pub let device_lost_reason_destroyed : UInt
+
+pub let device_lost_reason_failed_creation : UInt
+
+pub let device_lost_reason_instance_dropped : UInt
+
+pub let device_lost_reason_unknown : UInt
+
 pub let error_filter_internal : UInt
 
 pub let error_filter_out_of_memory : UInt
@@ -256,6 +264,8 @@ pub fn Device::release(Self) -> Unit
 pub fn Device::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Device::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Device::supported_features_count_u64(Self) -> UInt64
+pub fn Device::take_lost_reason(Self) -> UInt
+pub fn Device::wait_lost_reason_sync(Self, Instance) -> UInt
 
 pub struct GlobalReport {
   raw : @c.WGPUGlobalReportPtr
