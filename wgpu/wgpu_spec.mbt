@@ -474,10 +474,28 @@ pub fn Device::create_bind_group_layout_storage_buffer(
 
 ///|
 #declaration_only
+pub fn Device::create_bind_group_layout_storage_texture_rgba8_writeonly(
+  self : Device,
+) -> BindGroupLayout {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Device::create_bind_group_storage_buffer(
   self : Device,
   bind_group_layout : BindGroupLayout,
   buffer : Buffer,
+) -> BindGroup {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_bind_group_storage_texture_2d(
+  self : Device,
+  bind_group_layout : BindGroupLayout,
+  view : TextureView,
 ) -> BindGroup {
   ...
 }

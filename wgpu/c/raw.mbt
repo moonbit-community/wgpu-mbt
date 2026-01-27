@@ -391,6 +391,16 @@ pub fn device_create_bind_group_layout_storage_buffer(
 }
 
 ///|
+pub fn device_create_bind_group_layout_storage_texture_rgba8_writeonly(
+  device : Device,
+) -> BindGroupLayout {
+  let desc = bind_group_layout_descriptor_storage_texture_rgba8_writeonly_new()
+  let bgl = wgpuDeviceCreateBindGroupLayout(device, desc)
+  bind_group_layout_descriptor_free(desc)
+  bgl
+}
+
+///|
 pub fn device_create_sampler_nearest_clamp(device : Device) -> Sampler {
   let desc = sampler_descriptor_nearest_clamp_new()
   let sampler = wgpuDeviceCreateSampler(device, desc)
@@ -481,6 +491,20 @@ pub fn device_create_bind_group_storage_buffer(
   buffer : Buffer,
 ) -> BindGroup {
   let desc = bind_group_descriptor_storage_buffer_new(bind_group_layout, buffer)
+  let bg = wgpuDeviceCreateBindGroup(device, desc)
+  bind_group_descriptor_free(desc)
+  bg
+}
+
+///|
+pub fn device_create_bind_group_storage_texture_2d(
+  device : Device,
+  bind_group_layout : BindGroupLayout,
+  view : TextureView,
+) -> BindGroup {
+  let desc = bind_group_descriptor_storage_texture_2d_new(
+    bind_group_layout, view,
+  )
   let bg = wgpuDeviceCreateBindGroup(device, desc)
   bind_group_descriptor_free(desc)
   bg

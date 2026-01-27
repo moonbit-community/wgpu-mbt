@@ -144,6 +144,9 @@ pub extern "C" fn bind_group_layout_descriptor_uniform_buffer_new() -> WGPUBindG
 pub extern "C" fn bind_group_layout_descriptor_storage_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_storage_buffer_new"
 
 ///|
+pub extern "C" fn bind_group_layout_descriptor_storage_texture_rgba8_writeonly_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_storage_texture_rgba8_writeonly_new"
+
+///|
 #borrow(desc)
 pub extern "C" fn bind_group_layout_descriptor_free(
   desc : WGPUBindGroupLayoutDescriptorPtr,
@@ -167,6 +170,12 @@ pub extern "C" fn bind_group_descriptor_storage_buffer_new(
   layout : WGPUBindGroupLayout,
   buffer : WGPUBuffer,
 ) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_storage_buffer_new"
+
+///|
+pub extern "C" fn bind_group_descriptor_storage_texture_2d_new(
+  layout : WGPUBindGroupLayout,
+  view : WGPUTextureView,
+) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_storage_texture_2d_new"
 
 ///|
 #borrow(desc)

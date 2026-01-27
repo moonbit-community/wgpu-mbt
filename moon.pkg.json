@@ -75,6 +75,9 @@
     "wgpu_render_depth_test.mbt": [
       "native"
     ],
+    "wgpu_storage_texture_test.mbt": [
+      "native"
+    ],
     "wgpu_clear_buffer_test.mbt": [
       "native"
     ],

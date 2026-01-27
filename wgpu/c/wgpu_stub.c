@@ -1013,6 +1013,37 @@ mbt_wgpu_bind_group_layout_descriptor_storage_buffer_new(void) {
   return &out->desc;
 }
 
+WGPUBindGroupLayoutDescriptor *
+mbt_wgpu_bind_group_layout_descriptor_storage_texture_rgba8_writeonly_new(void) {
+  mbt_bind_group_layout_desc_1_t *out =
+      (mbt_bind_group_layout_desc_1_t *)malloc(sizeof(mbt_bind_group_layout_desc_1_t));
+  if (!out) {
+    return NULL;
+  }
+  out->entry = (WGPUBindGroupLayoutEntry){
+      .nextInChain = NULL,
+      .binding = 0u,
+      .visibility = WGPUShaderStage_Compute,
+      .buffer = (WGPUBufferBindingLayout){0},
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture =
+          (WGPUStorageTextureBindingLayout){
+              .nextInChain = NULL,
+              .access = WGPUStorageTextureAccess_WriteOnly,
+              .format = WGPUTextureFormat_RGBA8Unorm,
+              .viewDimension = WGPUTextureViewDimension_2D,
+          },
+  };
+  out->desc = (WGPUBindGroupLayoutDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .entryCount = 1u,
+      .entries = &out->entry,
+  };
+  return &out->desc;
+}
+
 void mbt_wgpu_bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptor *desc) {
   free(desc);
 }
@@ -1105,6 +1136,32 @@ WGPUBindGroupDescriptor *mbt_wgpu_bind_group_descriptor_storage_buffer_new(
       .size = WGPU_WHOLE_SIZE,
       .sampler = NULL,
       .textureView = NULL,
+  };
+  out->desc = (WGPUBindGroupDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .entryCount = 1u,
+      .entries = &out->entry,
+  };
+  return &out->desc;
+}
+
+WGPUBindGroupDescriptor *mbt_wgpu_bind_group_descriptor_storage_texture_2d_new(
+    WGPUBindGroupLayout layout, WGPUTextureView view) {
+  mbt_bind_group_desc_1_t *out =
+      (mbt_bind_group_desc_1_t *)malloc(sizeof(mbt_bind_group_desc_1_t));
+  if (!out) {
+    return NULL;
+  }
+  out->entry = (WGPUBindGroupEntry){
+      .nextInChain = NULL,
+      .binding = 0u,
+      .buffer = NULL,
+      .offset = 0u,
+      .size = 0u,
+      .sampler = NULL,
+      .textureView = view,
   };
   out->desc = (WGPUBindGroupDescriptor){
       .nextInChain = NULL,

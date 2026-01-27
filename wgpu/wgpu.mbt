@@ -548,6 +548,17 @@ pub fn Device::create_bind_group_layout_storage_buffer(
 }
 
 ///|
+pub fn Device::create_bind_group_layout_storage_texture_rgba8_writeonly(
+  self : Device,
+) -> BindGroupLayout {
+  BindGroupLayout::{
+    raw: @c.device_create_bind_group_layout_storage_texture_rgba8_writeonly(
+      self.raw,
+    ),
+  }
+}
+
+///|
 pub fn Device::create_sampler_nearest_clamp(self : Device) -> Sampler {
   Sampler::{ raw: @c.device_create_sampler_nearest_clamp(self.raw) }
 }
@@ -624,6 +635,21 @@ pub fn Device::create_bind_group_storage_buffer(
       self.raw,
       bind_group_layout.raw,
       buffer.raw,
+    ),
+  }
+}
+
+///|
+pub fn Device::create_bind_group_storage_texture_2d(
+  self : Device,
+  bind_group_layout : BindGroupLayout,
+  view : TextureView,
+) -> BindGroup {
+  BindGroup::{
+    raw: @c.device_create_bind_group_storage_texture_2d(
+      self.raw,
+      bind_group_layout.raw,
+      view.raw,
     ),
   }
 }

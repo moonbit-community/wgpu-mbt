@@ -24,6 +24,8 @@ pub fn bind_group_descriptor_sampler_texture_2d_new(WGPUBindGroupLayout, WGPUSam
 
 pub fn bind_group_descriptor_storage_buffer_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
 
+pub fn bind_group_descriptor_storage_texture_2d_new(WGPUBindGroupLayout, WGPUTextureView) -> WGPUBindGroupDescriptorPtr
+
 pub fn bind_group_descriptor_uniform_buffer_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
 
 pub fn bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptorPtr) -> Unit
@@ -31,6 +33,8 @@ pub fn bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptorPtr) -> Un
 pub fn bind_group_layout_descriptor_sampler_texture_2d_new() -> WGPUBindGroupLayoutDescriptorPtr
 
 pub fn bind_group_layout_descriptor_storage_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr
+
+pub fn bind_group_layout_descriptor_storage_texture_rgba8_writeonly_new() -> WGPUBindGroupLayoutDescriptorPtr
 
 pub fn bind_group_layout_descriptor_uniform_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr
 
@@ -142,11 +146,15 @@ pub fn device_create_bind_group_layout_sampler_texture_2d(WGPUDevice) -> WGPUBin
 
 pub fn device_create_bind_group_layout_storage_buffer(WGPUDevice) -> WGPUBindGroupLayout
 
+pub fn device_create_bind_group_layout_storage_texture_rgba8_writeonly(WGPUDevice) -> WGPUBindGroupLayout
+
 pub fn device_create_bind_group_layout_uniform_buffer(WGPUDevice) -> WGPUBindGroupLayout
 
 pub fn device_create_bind_group_sampler_texture_2d(WGPUDevice, WGPUBindGroupLayout, WGPUSampler, WGPUTextureView) -> WGPUBindGroup
 
 pub fn device_create_bind_group_storage_buffer(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
+
+pub fn device_create_bind_group_storage_texture_2d(WGPUDevice, WGPUBindGroupLayout, WGPUTextureView) -> WGPUBindGroup
 
 pub fn device_create_bind_group_uniform_buffer(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
 
