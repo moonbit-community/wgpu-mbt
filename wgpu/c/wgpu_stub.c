@@ -298,6 +298,288 @@ void mbt_wgpu_shader_module_descriptor_free(WGPUShaderModuleDescriptor *desc) {
   free(out);
 }
 
+typedef struct {
+  WGPUBindGroupLayoutDescriptor desc;
+  WGPUBindGroupLayoutEntry entries[2];
+} mbt_bind_group_layout_desc_2_t;
+
+typedef struct {
+  WGPUBindGroupLayoutDescriptor desc;
+  WGPUBindGroupLayoutEntry entry;
+} mbt_bind_group_layout_desc_1_t;
+
+WGPUBindGroupLayoutDescriptor *
+mbt_wgpu_bind_group_layout_descriptor_sampler_texture_2d_new(void) {
+  mbt_bind_group_layout_desc_2_t *out =
+      (mbt_bind_group_layout_desc_2_t *)malloc(sizeof(mbt_bind_group_layout_desc_2_t));
+  if (!out) {
+    return NULL;
+  }
+  out->entries[0] = (WGPUBindGroupLayoutEntry){
+      .nextInChain = NULL,
+      .binding = 0u,
+      .visibility = WGPUShaderStage_Fragment,
+      .buffer = (WGPUBufferBindingLayout){0},
+      .sampler =
+          (WGPUSamplerBindingLayout){
+              .nextInChain = NULL,
+              .type = WGPUSamplerBindingType_Filtering,
+          },
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  out->entries[1] = (WGPUBindGroupLayoutEntry){
+      .nextInChain = NULL,
+      .binding = 1u,
+      .visibility = WGPUShaderStage_Fragment,
+      .buffer = (WGPUBufferBindingLayout){0},
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture =
+          (WGPUTextureBindingLayout){
+              .nextInChain = NULL,
+              .sampleType = WGPUTextureSampleType_Float,
+              .viewDimension = WGPUTextureViewDimension_2D,
+              .multisampled = 0u,
+          },
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  out->desc = (WGPUBindGroupLayoutDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .entryCount = 2u,
+      .entries = out->entries,
+  };
+  return &out->desc;
+}
+
+WGPUBindGroupLayoutDescriptor *
+mbt_wgpu_bind_group_layout_descriptor_uniform_buffer_new(void) {
+  mbt_bind_group_layout_desc_1_t *out =
+      (mbt_bind_group_layout_desc_1_t *)malloc(sizeof(mbt_bind_group_layout_desc_1_t));
+  if (!out) {
+    return NULL;
+  }
+  out->entry = (WGPUBindGroupLayoutEntry){
+      .nextInChain = NULL,
+      .binding = 0u,
+      .visibility = WGPUShaderStage_Fragment,
+      .buffer =
+          (WGPUBufferBindingLayout){
+              .nextInChain = NULL,
+              .type = WGPUBufferBindingType_Uniform,
+              .hasDynamicOffset = 0u,
+              .minBindingSize = 0u,
+          },
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  out->desc = (WGPUBindGroupLayoutDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .entryCount = 1u,
+      .entries = &out->entry,
+  };
+  return &out->desc;
+}
+
+WGPUBindGroupLayoutDescriptor *
+mbt_wgpu_bind_group_layout_descriptor_storage_buffer_new(void) {
+  mbt_bind_group_layout_desc_1_t *out =
+      (mbt_bind_group_layout_desc_1_t *)malloc(sizeof(mbt_bind_group_layout_desc_1_t));
+  if (!out) {
+    return NULL;
+  }
+  out->entry = (WGPUBindGroupLayoutEntry){
+      .nextInChain = NULL,
+      .binding = 0u,
+      .visibility = WGPUShaderStage_Compute,
+      .buffer =
+          (WGPUBufferBindingLayout){
+              .nextInChain = NULL,
+              .type = WGPUBufferBindingType_Storage,
+              .hasDynamicOffset = 0u,
+              .minBindingSize = 0u,
+          },
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  out->desc = (WGPUBindGroupLayoutDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .entryCount = 1u,
+      .entries = &out->entry,
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptor *desc) {
+  free(desc);
+}
+
+typedef struct {
+  WGPUBindGroupDescriptor desc;
+  WGPUBindGroupEntry entries[2];
+} mbt_bind_group_desc_2_t;
+
+typedef struct {
+  WGPUBindGroupDescriptor desc;
+  WGPUBindGroupEntry entry;
+} mbt_bind_group_desc_1_t;
+
+WGPUBindGroupDescriptor *
+mbt_wgpu_bind_group_descriptor_sampler_texture_2d_new(WGPUBindGroupLayout layout,
+                                                     WGPUSampler sampler,
+                                                     WGPUTextureView view) {
+  mbt_bind_group_desc_2_t *out =
+      (mbt_bind_group_desc_2_t *)malloc(sizeof(mbt_bind_group_desc_2_t));
+  if (!out) {
+    return NULL;
+  }
+  out->entries[0] = (WGPUBindGroupEntry){
+      .nextInChain = NULL,
+      .binding = 0u,
+      .buffer = NULL,
+      .offset = 0u,
+      .size = 0u,
+      .sampler = sampler,
+      .textureView = NULL,
+  };
+  out->entries[1] = (WGPUBindGroupEntry){
+      .nextInChain = NULL,
+      .binding = 1u,
+      .buffer = NULL,
+      .offset = 0u,
+      .size = 0u,
+      .sampler = NULL,
+      .textureView = view,
+  };
+  out->desc = (WGPUBindGroupDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .entryCount = 2u,
+      .entries = out->entries,
+  };
+  return &out->desc;
+}
+
+WGPUBindGroupDescriptor *mbt_wgpu_bind_group_descriptor_uniform_buffer_new(
+    WGPUBindGroupLayout layout, WGPUBuffer buffer) {
+  mbt_bind_group_desc_1_t *out =
+      (mbt_bind_group_desc_1_t *)malloc(sizeof(mbt_bind_group_desc_1_t));
+  if (!out) {
+    return NULL;
+  }
+  out->entry = (WGPUBindGroupEntry){
+      .nextInChain = NULL,
+      .binding = 0u,
+      .buffer = buffer,
+      .offset = 0u,
+      .size = WGPU_WHOLE_SIZE,
+      .sampler = NULL,
+      .textureView = NULL,
+  };
+  out->desc = (WGPUBindGroupDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .entryCount = 1u,
+      .entries = &out->entry,
+  };
+  return &out->desc;
+}
+
+WGPUBindGroupDescriptor *mbt_wgpu_bind_group_descriptor_storage_buffer_new(
+    WGPUBindGroupLayout layout, WGPUBuffer buffer) {
+  mbt_bind_group_desc_1_t *out =
+      (mbt_bind_group_desc_1_t *)malloc(sizeof(mbt_bind_group_desc_1_t));
+  if (!out) {
+    return NULL;
+  }
+  out->entry = (WGPUBindGroupEntry){
+      .nextInChain = NULL,
+      .binding = 0u,
+      .buffer = buffer,
+      .offset = 0u,
+      .size = WGPU_WHOLE_SIZE,
+      .sampler = NULL,
+      .textureView = NULL,
+  };
+  out->desc = (WGPUBindGroupDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .entryCount = 1u,
+      .entries = &out->entry,
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_bind_group_descriptor_free(WGPUBindGroupDescriptor *desc) { free(desc); }
+
+typedef struct {
+  WGPUPipelineLayoutDescriptor desc;
+  WGPUBindGroupLayout layouts[1];
+} mbt_pipeline_layout_desc_1_t;
+
+WGPUPipelineLayoutDescriptor *
+mbt_wgpu_pipeline_layout_descriptor_1_new(WGPUBindGroupLayout bind_group_layout) {
+  mbt_pipeline_layout_desc_1_t *out =
+      (mbt_pipeline_layout_desc_1_t *)malloc(sizeof(mbt_pipeline_layout_desc_1_t));
+  if (!out) {
+    return NULL;
+  }
+  out->layouts[0] = bind_group_layout;
+  out->desc = (WGPUPipelineLayoutDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .bindGroupLayoutCount = 1u,
+      .bindGroupLayouts = out->layouts,
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_pipeline_layout_descriptor_free(WGPUPipelineLayoutDescriptor *desc) {
+  free(desc);
+}
+
+typedef struct {
+  WGPUComputePipelineDescriptor desc;
+  WGPUProgrammableStageDescriptor stage;
+  char entry[4];
+} mbt_compute_pipeline_desc_t;
+
+WGPUComputePipelineDescriptor *
+mbt_wgpu_compute_pipeline_descriptor_new(WGPUPipelineLayout layout,
+                                         WGPUShaderModule shader_module) {
+  mbt_compute_pipeline_desc_t *out =
+      (mbt_compute_pipeline_desc_t *)malloc(sizeof(mbt_compute_pipeline_desc_t));
+  if (!out) {
+    return NULL;
+  }
+  memcpy(out->entry, "main", 4);
+  out->stage = (WGPUProgrammableStageDescriptor){
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = out->entry, .length = 4},
+      .constantCount = 0,
+      .constants = NULL,
+  };
+  out->desc = (WGPUComputePipelineDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .compute = out->stage,
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_compute_pipeline_descriptor_free(WGPUComputePipelineDescriptor *desc) {
+  free(desc);
+}
+
 WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline(
     WGPUDevice device, WGPUShaderModule shader_module) {
   static const char entry[] = "main";

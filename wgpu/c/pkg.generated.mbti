@@ -6,6 +6,22 @@ pub fn adapter_release(WGPUAdapter) -> Unit
 
 pub fn adapter_request_device_sync(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
+pub fn bind_group_descriptor_free(WGPUBindGroupDescriptorPtr) -> Unit
+
+pub fn bind_group_descriptor_sampler_texture_2d_new(WGPUBindGroupLayout, WGPUSampler, WGPUTextureView) -> WGPUBindGroupDescriptorPtr
+
+pub fn bind_group_descriptor_storage_buffer_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
+
+pub fn bind_group_descriptor_uniform_buffer_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
+
+pub fn bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptorPtr) -> Unit
+
+pub fn bind_group_layout_descriptor_sampler_texture_2d_new() -> WGPUBindGroupLayoutDescriptorPtr
+
+pub fn bind_group_layout_descriptor_storage_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr
+
+pub fn bind_group_layout_descriptor_uniform_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr
+
 pub fn bind_group_layout_release(WGPUBindGroupLayout) -> Unit
 
 pub fn bind_group_release(WGPUBindGroup) -> Unit
@@ -63,6 +79,10 @@ pub fn compute_pass_release(WGPUComputePassEncoder) -> Unit
 pub fn compute_pass_set_bind_group0(WGPUComputePassEncoder, WGPUBindGroup) -> Unit
 
 pub fn compute_pass_set_pipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
+
+pub fn compute_pipeline_descriptor_free(WGPUComputePipelineDescriptorPtr) -> Unit
+
+pub fn compute_pipeline_descriptor_new(WGPUPipelineLayout, WGPUShaderModule) -> WGPUComputePipelineDescriptorPtr
 
 pub fn compute_pipeline_release(WGPUComputePipeline) -> Unit
 
@@ -128,11 +148,17 @@ pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr
 
 pub fn null_instance_descriptor_ptr() -> WGPUInstanceDescriptorPtr
 
+pub fn null_pipeline_layout() -> WGPUPipelineLayout
+
 pub fn null_ptr() -> UnitPtr
 
 pub fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr
 
 pub fn null_uint_ptr() -> UIntPtr
+
+pub fn pipeline_layout_descriptor_1_new(WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr
+
+pub fn pipeline_layout_descriptor_free(WGPUPipelineLayoutDescriptorPtr) -> Unit
 
 pub fn pipeline_layout_release(WGPUPipelineLayout) -> Unit
 

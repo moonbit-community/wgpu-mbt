@@ -32,6 +32,9 @@ pub extern "C" fn adapter_request_device_sync(
 ) -> Device = "mbt_wgpu_adapter_request_device_sync"
 
 ///|
+pub extern "C" fn null_pipeline_layout() -> PipelineLayout = "mbt_wgpu_null_ptr"
+
+///|
 pub extern "C" fn device_get_queue(device : Device) -> Queue = "wgpuDeviceGetQueue"
 
 ///|
@@ -65,10 +68,18 @@ pub fn device_create_shader_module_wgsl(
 }
 
 ///|
-pub extern "C" fn device_create_compute_pipeline(
+pub fn device_create_compute_pipeline(
   device : Device,
   shader_module : ShaderModule,
-) -> ComputePipeline = "mbt_wgpu_device_create_compute_pipeline"
+) -> ComputePipeline {
+  let desc = compute_pipeline_descriptor_new(
+    null_pipeline_layout(),
+    shader_module,
+  )
+  let pipeline = wgpuDeviceCreateComputePipeline(device, desc)
+  compute_pipeline_descriptor_free(desc)
+  pipeline
+}
 
 ///|
 pub fn device_create_texture_rgba8_2d(
@@ -151,21 +162,36 @@ pub extern "C" fn device_create_render_pipeline_rgba8_pos2_with_layout(
 ) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_pos2_with_layout"
 
 ///|
-pub extern "C" fn device_create_bind_group_layout_uniform_buffer(
+pub fn device_create_bind_group_layout_uniform_buffer(
   device : Device,
-) -> BindGroupLayout = "mbt_wgpu_device_create_bind_group_layout_uniform_buffer"
+) -> BindGroupLayout {
+  let desc = bind_group_layout_descriptor_uniform_buffer_new()
+  let bgl = wgpuDeviceCreateBindGroupLayout(device, desc)
+  bind_group_layout_descriptor_free(desc)
+  bgl
+}
 
 ///|
-pub extern "C" fn device_create_bind_group_uniform_buffer(
+pub fn device_create_bind_group_uniform_buffer(
   device : Device,
   bind_group_layout : BindGroupLayout,
   buffer : Buffer,
-) -> BindGroup = "mbt_wgpu_device_create_bind_group_uniform_buffer"
+) -> BindGroup {
+  let desc = bind_group_descriptor_uniform_buffer_new(bind_group_layout, buffer)
+  let bg = wgpuDeviceCreateBindGroup(device, desc)
+  bind_group_descriptor_free(desc)
+  bg
+}
 
 ///|
-pub extern "C" fn device_create_bind_group_layout_storage_buffer(
+pub fn device_create_bind_group_layout_storage_buffer(
   device : Device,
-) -> BindGroupLayout = "mbt_wgpu_device_create_bind_group_layout_storage_buffer"
+) -> BindGroupLayout {
+  let desc = bind_group_layout_descriptor_storage_buffer_new()
+  let bgl = wgpuDeviceCreateBindGroupLayout(device, desc)
+  bind_group_layout_descriptor_free(desc)
+  bgl
+}
 
 ///|
 pub fn device_create_sampler_nearest_clamp(device : Device) -> Sampler {
@@ -184,37 +210,64 @@ pub fn device_create_sampler_linear_clamp(device : Device) -> Sampler {
 }
 
 ///|
-pub extern "C" fn device_create_bind_group_layout_sampler_texture_2d(
+pub fn device_create_bind_group_layout_sampler_texture_2d(
   device : Device,
-) -> BindGroupLayout = "mbt_wgpu_device_create_bind_group_layout_sampler_texture_2d"
+) -> BindGroupLayout {
+  let desc = bind_group_layout_descriptor_sampler_texture_2d_new()
+  let bgl = wgpuDeviceCreateBindGroupLayout(device, desc)
+  bind_group_layout_descriptor_free(desc)
+  bgl
+}
 
 ///|
-pub extern "C" fn device_create_bind_group_sampler_texture_2d(
+pub fn device_create_bind_group_sampler_texture_2d(
   device : Device,
   bind_group_layout : BindGroupLayout,
   sampler : Sampler,
   view : TextureView,
-) -> BindGroup = "mbt_wgpu_device_create_bind_group_sampler_texture_2d"
+) -> BindGroup {
+  let desc = bind_group_descriptor_sampler_texture_2d_new(
+    bind_group_layout, sampler, view,
+  )
+  let bg = wgpuDeviceCreateBindGroup(device, desc)
+  bind_group_descriptor_free(desc)
+  bg
+}
 
 ///|
-pub extern "C" fn device_create_pipeline_layout_1(
+pub fn device_create_pipeline_layout_1(
   device : Device,
   bind_group_layout : BindGroupLayout,
-) -> PipelineLayout = "mbt_wgpu_device_create_pipeline_layout_1"
+) -> PipelineLayout {
+  let desc = pipeline_layout_descriptor_1_new(bind_group_layout)
+  let layout = wgpuDeviceCreatePipelineLayout(device, desc)
+  pipeline_layout_descriptor_free(desc)
+  layout
+}
 
 ///|
-pub extern "C" fn device_create_bind_group_storage_buffer(
+pub fn device_create_bind_group_storage_buffer(
   device : Device,
   bind_group_layout : BindGroupLayout,
   buffer : Buffer,
-) -> BindGroup = "mbt_wgpu_device_create_bind_group_storage_buffer"
+) -> BindGroup {
+  let desc = bind_group_descriptor_storage_buffer_new(bind_group_layout, buffer)
+  let bg = wgpuDeviceCreateBindGroup(device, desc)
+  bind_group_descriptor_free(desc)
+  bg
+}
 
 ///|
-pub extern "C" fn device_create_compute_pipeline_with_layout(
+pub fn device_create_compute_pipeline_with_layout(
   device : Device,
   layout : PipelineLayout,
   shader_module : ShaderModule,
-) -> ComputePipeline = "mbt_wgpu_device_create_compute_pipeline_with_layout"
+) -> ComputePipeline {
+  let desc = compute_pipeline_descriptor_new(layout, shader_module)
+  let pipeline = wgpuDeviceCreateComputePipeline(device, desc)
+  compute_pipeline_descriptor_free(desc)
+  pipeline
+}
 
 ///|
 pub extern "C" fn command_encoder_begin_compute_pass(
@@ -257,10 +310,12 @@ pub extern "C" fn render_pass_set_pipeline(
 ) -> Unit = "wgpuRenderPassEncoderSetPipeline"
 
 ///|
-pub extern "C" fn render_pass_set_bind_group0(
+pub fn render_pass_set_bind_group0(
   pass : RenderPassEncoder,
   group : BindGroup,
-) -> Unit = "mbt_wgpu_render_pass_set_bind_group0"
+) -> Unit {
+  wgpuRenderPassEncoderSetBindGroup(pass, 0U, group, 0UL, null_uint_ptr())
+}
 
 ///|
 pub extern "C" fn render_pass_set_vertex_buffer(

@@ -75,3 +75,66 @@ pub extern "C" fn shader_module_descriptor_wgsl_new(
 pub extern "C" fn shader_module_descriptor_free(
   desc : WGPUShaderModuleDescriptorPtr,
 ) -> Unit = "mbt_wgpu_shader_module_descriptor_free"
+
+///|
+pub extern "C" fn bind_group_layout_descriptor_sampler_texture_2d_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_sampler_texture_2d_new"
+
+///|
+pub extern "C" fn bind_group_layout_descriptor_uniform_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_uniform_buffer_new"
+
+///|
+pub extern "C" fn bind_group_layout_descriptor_storage_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_storage_buffer_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn bind_group_layout_descriptor_free(
+  desc : WGPUBindGroupLayoutDescriptorPtr,
+) -> Unit = "mbt_wgpu_bind_group_layout_descriptor_free"
+
+///|
+pub extern "C" fn bind_group_descriptor_sampler_texture_2d_new(
+  layout : WGPUBindGroupLayout,
+  sampler : WGPUSampler,
+  view : WGPUTextureView,
+) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_sampler_texture_2d_new"
+
+///|
+pub extern "C" fn bind_group_descriptor_uniform_buffer_new(
+  layout : WGPUBindGroupLayout,
+  buffer : WGPUBuffer,
+) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_uniform_buffer_new"
+
+///|
+pub extern "C" fn bind_group_descriptor_storage_buffer_new(
+  layout : WGPUBindGroupLayout,
+  buffer : WGPUBuffer,
+) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_storage_buffer_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn bind_group_descriptor_free(
+  desc : WGPUBindGroupDescriptorPtr,
+) -> Unit = "mbt_wgpu_bind_group_descriptor_free"
+
+///|
+pub extern "C" fn pipeline_layout_descriptor_1_new(
+  bind_group_layout : WGPUBindGroupLayout,
+) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_1_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn pipeline_layout_descriptor_free(
+  desc : WGPUPipelineLayoutDescriptorPtr,
+) -> Unit = "mbt_wgpu_pipeline_layout_descriptor_free"
+
+///|
+pub extern "C" fn compute_pipeline_descriptor_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+) -> WGPUComputePipelineDescriptorPtr = "mbt_wgpu_compute_pipeline_descriptor_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn compute_pipeline_descriptor_free(
+  desc : WGPUComputePipelineDescriptorPtr,
+) -> Unit = "mbt_wgpu_compute_pipeline_descriptor_free"
