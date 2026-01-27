@@ -322,33 +322,53 @@ pub fn command_encoder_begin_compute_pass(
 }
 
 ///|
-pub extern "C" fn command_encoder_begin_render_pass_color(
+pub fn command_encoder_begin_render_pass_color(
   encoder : CommandEncoder,
   view : TextureView,
-) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color"
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_color_clear_default_new(view)
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
 
 ///|
-pub extern "C" fn command_encoder_begin_render_pass_color_load(
+pub fn command_encoder_begin_render_pass_color_load(
   encoder : CommandEncoder,
   view : TextureView,
-) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color_load"
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_color_load_new(view)
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
 
 ///|
-pub extern "C" fn command_encoder_begin_render_pass_color_clear(
+pub fn command_encoder_begin_render_pass_color_clear(
   encoder : CommandEncoder,
   view : TextureView,
   r : Float,
   g : Float,
   b : Float,
   a : Float,
-) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color_clear"
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_color_clear_new(view, r, g, b, a)
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
 
 ///|
-pub extern "C" fn command_encoder_begin_render_pass_color_depth(
+pub fn command_encoder_begin_render_pass_color_depth(
   encoder : CommandEncoder,
   color_view : TextureView,
   depth_view : TextureView,
-) -> RenderPassEncoder = "mbt_wgpu_command_encoder_begin_render_pass_color_depth"
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_color_depth_new(color_view, depth_view)
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
 
 ///|
 pub extern "C" fn render_pass_set_pipeline(

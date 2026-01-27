@@ -177,3 +177,34 @@ pub extern "C" fn compute_pass_descriptor_default_new() -> WGPUComputePassDescri
 pub extern "C" fn compute_pass_descriptor_free(
   desc : WGPUComputePassDescriptorPtr,
 ) -> Unit = "mbt_wgpu_compute_pass_descriptor_free"
+
+///|
+pub extern "C" fn render_pass_descriptor_color_clear_default_new(
+  view : WGPUTextureView,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_clear_default_new"
+
+///|
+pub extern "C" fn render_pass_descriptor_color_load_new(
+  view : WGPUTextureView,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_load_new"
+
+///|
+pub extern "C" fn render_pass_descriptor_color_clear_new(
+  view : WGPUTextureView,
+  r : Float,
+  g : Float,
+  b : Float,
+  a : Float,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_clear_new"
+
+///|
+pub extern "C" fn render_pass_descriptor_color_depth_new(
+  color_view : WGPUTextureView,
+  depth_view : WGPUTextureView,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_depth_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn render_pass_descriptor_free(
+  desc : WGPURenderPassDescriptorPtr,
+) -> Unit = "mbt_wgpu_render_pass_descriptor_free"

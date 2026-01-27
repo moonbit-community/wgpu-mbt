@@ -781,6 +781,144 @@ WGPUComputePassDescriptor *mbt_wgpu_compute_pass_descriptor_default_new(void) {
 
 void mbt_wgpu_compute_pass_descriptor_free(WGPUComputePassDescriptor *desc) { free(desc); }
 
+typedef struct {
+  WGPURenderPassDescriptor desc;
+  WGPURenderPassColorAttachment color;
+} mbt_render_pass_desc_color_t;
+
+typedef struct {
+  WGPURenderPassDescriptor desc;
+  WGPURenderPassColorAttachment color;
+  WGPURenderPassDepthStencilAttachment depth;
+} mbt_render_pass_desc_color_depth_t;
+
+WGPURenderPassDescriptor *
+mbt_wgpu_render_pass_descriptor_color_clear_default_new(WGPUTextureView view) {
+  mbt_render_pass_desc_color_t *out =
+      (mbt_render_pass_desc_color_t *)malloc(sizeof(mbt_render_pass_desc_color_t));
+  if (!out) {
+    return NULL;
+  }
+  out->color = (WGPURenderPassColorAttachment){
+      .nextInChain = NULL,
+      .view = view,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = WGPULoadOp_Clear,
+      .storeOp = WGPUStoreOp_Store,
+      .clearValue = (WGPUColor){.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+  };
+  out->desc = (WGPURenderPassDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = 1u,
+      .colorAttachments = &out->color,
+      .depthStencilAttachment = NULL,
+      .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+  return &out->desc;
+}
+
+WGPURenderPassDescriptor *
+mbt_wgpu_render_pass_descriptor_color_load_new(WGPUTextureView view) {
+  mbt_render_pass_desc_color_t *out =
+      (mbt_render_pass_desc_color_t *)malloc(sizeof(mbt_render_pass_desc_color_t));
+  if (!out) {
+    return NULL;
+  }
+  out->color = (WGPURenderPassColorAttachment){
+      .nextInChain = NULL,
+      .view = view,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = WGPULoadOp_Load,
+      .storeOp = WGPUStoreOp_Store,
+      .clearValue = (WGPUColor){.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+  };
+  out->desc = (WGPURenderPassDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = 1u,
+      .colorAttachments = &out->color,
+      .depthStencilAttachment = NULL,
+      .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+  return &out->desc;
+}
+
+WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color_clear_new(
+    WGPUTextureView view, float r, float g, float b, float a) {
+  mbt_render_pass_desc_color_t *out =
+      (mbt_render_pass_desc_color_t *)malloc(sizeof(mbt_render_pass_desc_color_t));
+  if (!out) {
+    return NULL;
+  }
+  out->color = (WGPURenderPassColorAttachment){
+      .nextInChain = NULL,
+      .view = view,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = WGPULoadOp_Clear,
+      .storeOp = WGPUStoreOp_Store,
+      .clearValue = (WGPUColor){.r = r, .g = g, .b = b, .a = a},
+  };
+  out->desc = (WGPURenderPassDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = 1u,
+      .colorAttachments = &out->color,
+      .depthStencilAttachment = NULL,
+      .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+  return &out->desc;
+}
+
+WGPURenderPassDescriptor *
+mbt_wgpu_render_pass_descriptor_color_depth_new(WGPUTextureView color_view,
+                                                WGPUTextureView depth_view) {
+  mbt_render_pass_desc_color_depth_t *out =
+      (mbt_render_pass_desc_color_depth_t *)malloc(
+          sizeof(mbt_render_pass_desc_color_depth_t));
+  if (!out) {
+    return NULL;
+  }
+  out->color = (WGPURenderPassColorAttachment){
+      .nextInChain = NULL,
+      .view = color_view,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = WGPULoadOp_Clear,
+      .storeOp = WGPUStoreOp_Store,
+      .clearValue = (WGPUColor){.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+  };
+  out->depth = (WGPURenderPassDepthStencilAttachment){
+      .view = depth_view,
+      .depthLoadOp = WGPULoadOp_Clear,
+      .depthStoreOp = WGPUStoreOp_Store,
+      .depthClearValue = 1.0f,
+      .depthReadOnly = 0u,
+      .stencilLoadOp = WGPULoadOp_Clear,
+      .stencilStoreOp = WGPUStoreOp_Store,
+      .stencilClearValue = 0u,
+      .stencilReadOnly = 1u,
+  };
+  out->desc = (WGPURenderPassDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = 1u,
+      .colorAttachments = &out->color,
+      .depthStencilAttachment = &out->depth,
+      .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_render_pass_descriptor_free(WGPURenderPassDescriptor *desc) { free(desc); }
+
 WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline(
     WGPUDevice device, WGPUShaderModule shader_module) {
   static const char entry[] = "main";
