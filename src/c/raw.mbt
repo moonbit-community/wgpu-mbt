@@ -864,8 +864,72 @@ pub fn device_create_texture_depth24plus_2d(
 }
 
 ///|
+pub fn device_create_texture_u32(
+  device : Device,
+  width : UInt,
+  height : UInt,
+  depth_or_array_layers : UInt,
+  usage : UInt64,
+  dimension_u32 : UInt,
+  format_u32 : UInt,
+  mip_level_count : UInt,
+  sample_count : UInt,
+) -> Texture {
+  let desc = texture_descriptor_u32_new(
+    usage, dimension_u32, width, height, depth_or_array_layers, format_u32, mip_level_count,
+    sample_count,
+  )
+  let tex = wgpuDeviceCreateTexture(device, desc)
+  texture_descriptor_free(desc)
+  tex
+}
+
+///|
+pub fn device_create_texture_view_formats_u32(
+  device : Device,
+  width : UInt,
+  height : UInt,
+  depth_or_array_layers : UInt,
+  usage : UInt64,
+  dimension_u32 : UInt,
+  format_u32 : UInt,
+  mip_level_count : UInt,
+  sample_count : UInt,
+  view_format_count : UInt64,
+  view_formats : FixedArray[UInt],
+) -> Texture {
+  let desc = texture_descriptor_u32_with_view_formats_new(
+    usage, dimension_u32, width, height, depth_or_array_layers, format_u32, mip_level_count,
+    sample_count, view_format_count, view_formats,
+  )
+  let tex = wgpuDeviceCreateTexture(device, desc)
+  texture_descriptor_free(desc)
+  tex
+}
+
+///|
 pub fn texture_create_view(texture : Texture) -> TextureView {
   wgpuTextureCreateView(texture, null_texture_view_descriptor_ptr())
+}
+
+///|
+pub fn texture_create_view_u32(
+  texture : Texture,
+  format_u32 : UInt,
+  view_dimension_u32 : UInt,
+  aspect_u32 : UInt,
+  base_array_layer : UInt,
+  array_layer_count : UInt,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> TextureView {
+  let desc = texture_view_descriptor_u32_new(
+    format_u32, view_dimension_u32, aspect_u32, base_array_layer, array_layer_count,
+    base_mip_level, mip_level_count,
+  )
+  let view = wgpuTextureCreateView(texture, desc)
+  texture_view_descriptor_free(desc)
+  view
 }
 
 ///|

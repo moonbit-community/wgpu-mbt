@@ -94,6 +94,70 @@ mbt_wgpu_texture_descriptor_rgba8_2d_array_with_usage_new(uint32_t width,
   return desc;
 }
 
+WGPUTextureDescriptor *mbt_wgpu_texture_descriptor_u32_new(
+    uint64_t usage, uint32_t dimension_u32, uint32_t width, uint32_t height,
+    uint32_t depth_or_array_layers, uint32_t format_u32, uint32_t mip_level_count,
+    uint32_t sample_count) {
+  WGPUTextureDescriptor *desc =
+      (WGPUTextureDescriptor *)malloc(sizeof(WGPUTextureDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUTextureDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .usage = (WGPUTextureUsage)usage,
+      .dimension = (WGPUTextureDimension)dimension_u32,
+      .size =
+          (WGPUExtent3D){
+              .width = width,
+              .height = height,
+              .depthOrArrayLayers = depth_or_array_layers,
+          },
+      .format = (WGPUTextureFormat)format_u32,
+      .mipLevelCount = mip_level_count,
+      .sampleCount = sample_count,
+      .viewFormatCount = 0u,
+      .viewFormats = NULL,
+  };
+  return desc;
+}
+
+WGPUTextureDescriptor *mbt_wgpu_texture_descriptor_u32_with_view_formats_new(
+    uint64_t usage, uint32_t dimension_u32, uint32_t width, uint32_t height,
+    uint32_t depth_or_array_layers, uint32_t format_u32, uint32_t mip_level_count,
+    uint32_t sample_count, uint64_t view_format_count,
+    const uint32_t *view_formats_u32) {
+  if (view_format_count == 0u) {
+    return mbt_wgpu_texture_descriptor_u32_new(
+        usage, dimension_u32, width, height, depth_or_array_layers, format_u32,
+        mip_level_count, sample_count);
+  }
+  if (!view_formats_u32) {
+    return NULL;
+  }
+
+  WGPUTextureDescriptor *desc = mbt_wgpu_texture_descriptor_u32_new(
+      usage, dimension_u32, width, height, depth_or_array_layers, format_u32,
+      mip_level_count, sample_count);
+  if (!desc) {
+    return NULL;
+  }
+
+  WGPUTextureFormat *view_formats =
+      (WGPUTextureFormat *)calloc((size_t)view_format_count, sizeof(WGPUTextureFormat));
+  if (!view_formats) {
+    free(desc);
+    return NULL;
+  }
+  for (size_t i = 0; i < (size_t)view_format_count; i++) {
+    view_formats[i] = (WGPUTextureFormat)view_formats_u32[i];
+  }
+  desc->viewFormatCount = (size_t)view_format_count;
+  desc->viewFormats = view_formats;
+  return desc;
+}
+
 typedef struct {
   WGPUTextureViewDescriptor desc;
 } mbt_texture_view_desc_t;
@@ -144,6 +208,29 @@ mbt_wgpu_texture_view_descriptor_2d_array_new(uint32_t base_array_layer,
   return &out->desc;
 }
 
+WGPUTextureViewDescriptor *mbt_wgpu_texture_view_descriptor_u32_new(
+    uint32_t format_u32, uint32_t view_dimension_u32, uint32_t aspect_u32,
+    uint32_t base_array_layer, uint32_t array_layer_count, uint32_t base_mip_level,
+    uint32_t mip_level_count) {
+  mbt_texture_view_desc_t *out =
+      (mbt_texture_view_desc_t *)malloc(sizeof(mbt_texture_view_desc_t));
+  if (!out) {
+    return NULL;
+  }
+  out->desc = (WGPUTextureViewDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .format = (WGPUTextureFormat)format_u32,
+      .dimension = (WGPUTextureViewDimension)view_dimension_u32,
+      .baseMipLevel = base_mip_level,
+      .mipLevelCount = mip_level_count,
+      .baseArrayLayer = base_array_layer,
+      .arrayLayerCount = array_layer_count,
+      .aspect = (WGPUTextureAspect)aspect_u32,
+  };
+  return &out->desc;
+}
+
 void mbt_wgpu_texture_view_descriptor_free(WGPUTextureViewDescriptor *desc) {
   free(desc);
 }
@@ -170,7 +257,15 @@ WGPUTextureDescriptor *mbt_wgpu_texture_descriptor_depth24plus_2d_new(uint32_t w
   return desc;
 }
 
-void mbt_wgpu_texture_descriptor_free(WGPUTextureDescriptor *desc) { free(desc); }
+void mbt_wgpu_texture_descriptor_free(WGPUTextureDescriptor *desc) {
+  if (!desc) {
+    return;
+  }
+  if (desc->viewFormats) {
+    free((void *)desc->viewFormats);
+  }
+  free(desc);
+}
 
 WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_nearest_clamp_new(void) {
   WGPUSamplerDescriptor *desc =

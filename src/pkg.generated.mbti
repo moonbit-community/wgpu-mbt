@@ -1339,6 +1339,7 @@ pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array(Self, UInt, UInt, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, UInt64) -> Texture
 pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
+pub fn Device::create_texture_u32(Self, UInt, UInt, UInt, UInt64, UInt, UInt, mip_level_count? : UInt, sample_count? : UInt, view_formats? : Array[UInt]) -> Texture
 pub fn Device::destroy(Self) -> Unit
 pub fn Device::limits_max_bind_groups_u32(Self) -> UInt
 pub fn Device::limits_max_buffer_size_u64(Self) -> UInt64
@@ -1516,6 +1517,7 @@ pub struct Texture {
 pub fn Texture::create_view(Self) -> TextureView
 pub fn Texture::create_view_2d(Self, UInt, UInt) -> TextureView
 pub fn Texture::create_view_2d_array(Self, UInt, UInt, UInt, UInt) -> TextureView
+pub fn Texture::create_view_u32(Self, UInt, UInt, UInt, UInt, UInt, UInt, UInt) -> TextureView
 pub fn Texture::depth_or_array_layers_u32(Self) -> UInt
 pub fn Texture::destroy(Self) -> Unit
 pub fn Texture::dimension_u32(Self) -> UInt

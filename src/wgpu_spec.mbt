@@ -675,7 +675,35 @@ declare pub fn Device::create_texture_rgba8_2d_array_with_usage(
 
 ///|
 #declaration_only
+declare pub fn Device::create_texture_u32(
+  self : Device,
+  width : UInt,
+  height : UInt,
+  depth_or_array_layers : UInt,
+  usage : UInt64,
+  dimension_u32 : UInt,
+  format_u32 : UInt,
+  mip_level_count? : UInt = 1U,
+  sample_count? : UInt = 1U,
+  view_formats? : Array[UInt] = [],
+) -> Texture
+
+///|
+#declaration_only
 declare pub fn Texture::create_view(self : Texture) -> TextureView
+
+///|
+#declaration_only
+declare pub fn Texture::create_view_u32(
+  self : Texture,
+  format_u32 : UInt,
+  view_dimension_u32 : UInt,
+  aspect_u32 : UInt,
+  base_array_layer : UInt,
+  array_layer_count : UInt,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> TextureView
 
 ///|
 #declaration_only

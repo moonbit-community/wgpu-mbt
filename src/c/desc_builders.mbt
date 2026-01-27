@@ -55,6 +55,17 @@ pub extern "C" fn texture_view_descriptor_2d_array_new(
 ) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_texture_view_descriptor_2d_array_new"
 
 ///|
+pub extern "C" fn texture_view_descriptor_u32_new(
+  format_u32 : UInt,
+  view_dimension_u32 : UInt,
+  aspect_u32 : UInt,
+  base_array_layer : UInt,
+  array_layer_count : UInt,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_texture_view_descriptor_u32_new"
+
+///|
 #borrow(desc)
 pub extern "C" fn texture_view_descriptor_free(
   desc : WGPUTextureViewDescriptorPtr,
@@ -84,6 +95,33 @@ pub extern "C" fn texture_descriptor_rgba8_2d_array_with_usage_new(
   mip_level_count : UInt,
   usage : UInt64,
 ) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_rgba8_2d_array_with_usage_new"
+
+///|
+pub extern "C" fn texture_descriptor_u32_new(
+  usage : UInt64,
+  dimension_u32 : UInt,
+  width : UInt,
+  height : UInt,
+  depth_or_array_layers : UInt,
+  format_u32 : UInt,
+  mip_level_count : UInt,
+  sample_count : UInt,
+) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_u32_new"
+
+///|
+#borrow(view_formats)
+pub extern "C" fn texture_descriptor_u32_with_view_formats_new(
+  usage : UInt64,
+  dimension_u32 : UInt,
+  width : UInt,
+  height : UInt,
+  depth_or_array_layers : UInt,
+  format_u32 : UInt,
+  mip_level_count : UInt,
+  sample_count : UInt,
+  view_format_count : UInt64,
+  view_formats : FixedArray[UInt],
+) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_u32_with_view_formats_new"
 
 ///|
 pub extern "C" fn texture_descriptor_depth24plus_2d_new(

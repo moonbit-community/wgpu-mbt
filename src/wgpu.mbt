@@ -975,8 +975,81 @@ pub fn Device::create_texture_rgba8_2d_array_with_usage(
 }
 
 ///|
+pub fn Device::create_texture_u32(
+  self : Device,
+  width : UInt,
+  height : UInt,
+  depth_or_array_layers : UInt,
+  usage : UInt64,
+  dimension_u32 : UInt,
+  format_u32 : UInt,
+  mip_level_count? : UInt = 1U,
+  sample_count? : UInt = 1U,
+  view_formats? : Array[UInt] = [],
+) -> Texture {
+  let count = view_formats.length()
+  if count == 0 {
+    Texture::{
+      raw: @c.device_create_texture_u32(
+        self.raw,
+        width,
+        height,
+        depth_or_array_layers,
+        usage,
+        dimension_u32,
+        format_u32,
+        mip_level_count,
+        sample_count,
+      ),
+    }
+  } else {
+    let fixed = FixedArray::from_array(view_formats[:])
+    Texture::{
+      raw: @c.device_create_texture_view_formats_u32(
+        self.raw,
+        width,
+        height,
+        depth_or_array_layers,
+        usage,
+        dimension_u32,
+        format_u32,
+        mip_level_count,
+        sample_count,
+        count.to_uint64(),
+        fixed,
+      ),
+    }
+  }
+}
+
+///|
 pub fn Texture::create_view(self : Texture) -> TextureView {
   TextureView::{ raw: @c.texture_create_view(self.raw) }
+}
+
+///|
+pub fn Texture::create_view_u32(
+  self : Texture,
+  format_u32 : UInt,
+  view_dimension_u32 : UInt,
+  aspect_u32 : UInt,
+  base_array_layer : UInt,
+  array_layer_count : UInt,
+  base_mip_level : UInt,
+  mip_level_count : UInt,
+) -> TextureView {
+  TextureView::{
+    raw: @c.texture_create_view_u32(
+      self.raw,
+      format_u32,
+      view_dimension_u32,
+      aspect_u32,
+      base_array_layer,
+      array_layer_count,
+      base_mip_level,
+      mip_level_count,
+    ),
+  }
 }
 
 ///|
