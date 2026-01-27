@@ -152,6 +152,12 @@ pub fn Instance::enumerate_adapters_count_metal(self : Instance) -> UInt64 {
 
 ///|
 #declaration_only
+pub fn Instance::wgsl_language_features_count_u64(self : Instance) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Instance::generate_report(self : Instance) -> GlobalReport {
   ...
 }
@@ -238,6 +244,33 @@ pub fn Surface::present(self : Surface) -> UInt {
 ///|
 #declaration_only
 pub fn Surface::unconfigure(self : Surface) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::capabilities_formats_count_u64(
+  self : Surface,
+  adapter : Adapter,
+) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::capabilities_present_modes_count_u64(
+  self : Surface,
+  adapter : Adapter,
+) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::capabilities_alpha_modes_count_u64(
+  self : Surface,
+  adapter : Adapter,
+) -> UInt64 {
   ...
 }
 
@@ -404,6 +437,21 @@ pub fn Adapter::limits_max_compute_workgroup_size_x_u32(self : Adapter) -> UInt 
 
 ///|
 #declaration_only
+pub fn Adapter::supported_features_count_u64(self : Adapter) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::supported_features_contains_u32(
+  self : Adapter,
+  feature_u32 : UInt,
+) -> Bool {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Device::queue(self : Device) -> Queue {
   ...
 }
@@ -423,6 +471,21 @@ pub fn Device::push_error_scope(self : Device, filter_u32 : UInt) -> Unit {
 ///|
 #declaration_only
 pub fn Device::pop_error_scope_sync(self : Device, instance : Instance) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::supported_features_count_u64(self : Device) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::supported_features_contains_u32(
+  self : Device,
+  feature_u32 : UInt,
+) -> Bool {
   ...
 }
 

@@ -46,6 +46,10 @@ pub fn adapter_request_device_sync_timestamp_query_inside_encoders(WGPUInstance,
 
 pub fn adapter_request_device_sync_timestamp_query_inside_passes(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
+pub fn adapter_supported_features_contains_u32(WGPUAdapter, UInt) -> Bool
+
+pub fn adapter_supported_features_count_u64(WGPUAdapter) -> UInt64
+
 pub fn bind_group_descriptor_free(WGPUBindGroupDescriptorPtr) -> Unit
 
 pub fn bind_group_descriptor_sampler_texture_2d_new(WGPUBindGroupLayout, WGPUSampler, WGPUTextureView) -> WGPUBindGroupDescriptorPtr
@@ -280,6 +284,10 @@ pub fn device_push_error_scope_u32(WGPUDevice, UInt) -> Unit
 
 pub fn device_release(WGPUDevice) -> Unit
 
+pub fn device_supported_features_contains_u32(WGPUDevice, UInt) -> Bool
+
+pub fn device_supported_features_count_u64(WGPUDevice) -> UInt64
+
 pub fn extent3d_free(WGPUExtent3DPtr) -> Unit
 
 pub fn extent3d_new(UInt, UInt, UInt) -> WGPUExtent3DPtr
@@ -321,6 +329,8 @@ pub fn instance_process_events(WGPUInstance) -> Unit
 pub fn instance_release(WGPUInstance) -> Unit
 
 pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
+
+pub fn instance_wgsl_language_features_count_u64(WGPUInstance) -> UInt64
 
 pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
 
@@ -511,6 +521,12 @@ pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescr
 pub fn shader_module_is_null(WGPUShaderModule) -> Bool
 
 pub fn shader_module_release(WGPUShaderModule) -> Unit
+
+pub fn surface_capabilities_alpha_modes_count_u64(WGPUSurface, WGPUAdapter) -> UInt64
+
+pub fn surface_capabilities_formats_count_u64(WGPUSurface, WGPUAdapter) -> UInt64
+
+pub fn surface_capabilities_present_modes_count_u64(WGPUSurface, WGPUAdapter) -> UInt64
 
 pub fn surface_configure_default(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64) -> UInt
 

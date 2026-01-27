@@ -193,6 +193,11 @@ pub fn Instance::enumerate_adapters_count_metal(self : Instance) -> UInt64 {
 }
 
 ///|
+pub fn Instance::wgsl_language_features_count_u64(self : Instance) -> UInt64 {
+  @c.instance_wgsl_language_features_count_u64(self.raw)
+}
+
+///|
 pub fn Instance::generate_report(self : Instance) -> GlobalReport {
   GlobalReport::{ raw: @c.instance_generate_report_new(self.raw) }
 }
@@ -271,6 +276,30 @@ pub fn Surface::present(self : Surface) -> UInt {
 ///|
 pub fn Surface::unconfigure(self : Surface) -> Unit {
   @c.surface_unconfigure(self.raw)
+}
+
+///|
+pub fn Surface::capabilities_formats_count_u64(
+  self : Surface,
+  adapter : Adapter,
+) -> UInt64 {
+  @c.surface_capabilities_formats_count_u64(self.raw, adapter.raw)
+}
+
+///|
+pub fn Surface::capabilities_present_modes_count_u64(
+  self : Surface,
+  adapter : Adapter,
+) -> UInt64 {
+  @c.surface_capabilities_present_modes_count_u64(self.raw, adapter.raw)
+}
+
+///|
+pub fn Surface::capabilities_alpha_modes_count_u64(
+  self : Surface,
+  adapter : Adapter,
+) -> UInt64 {
+  @c.surface_capabilities_alpha_modes_count_u64(self.raw, adapter.raw)
 }
 
 ///|
@@ -432,6 +461,19 @@ pub fn Adapter::limits_max_compute_workgroup_size_x_u32(self : Adapter) -> UInt 
 }
 
 ///|
+pub fn Adapter::supported_features_count_u64(self : Adapter) -> UInt64 {
+  @c.adapter_supported_features_count_u64(self.raw)
+}
+
+///|
+pub fn Adapter::supported_features_contains_u32(
+  self : Adapter,
+  feature_u32 : UInt,
+) -> Bool {
+  @c.adapter_supported_features_contains_u32(self.raw, feature_u32)
+}
+
+///|
 pub fn Device::queue(self : Device) -> Queue {
   Queue::{ raw: @c.device_get_queue(self.raw) }
 }
@@ -449,6 +491,19 @@ pub fn Device::push_error_scope(self : Device, filter_u32 : UInt) -> Unit {
 ///|
 pub fn Device::pop_error_scope_sync(self : Device, instance : Instance) -> UInt {
   @c.device_pop_error_scope_sync_u32(instance.raw, self.raw)
+}
+
+///|
+pub fn Device::supported_features_count_u64(self : Device) -> UInt64 {
+  @c.device_supported_features_count_u64(self.raw)
+}
+
+///|
+pub fn Device::supported_features_contains_u32(
+  self : Device,
+  feature_u32 : UInt,
+) -> Bool {
+  @c.device_supported_features_contains_u32(self.raw, feature_u32)
 }
 
 ///|

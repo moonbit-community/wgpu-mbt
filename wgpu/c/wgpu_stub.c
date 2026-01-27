@@ -289,6 +289,114 @@ uint32_t mbt_wgpu_adapter_limits_max_compute_workgroup_size_x_u32(WGPUAdapter ad
   return limits.maxComputeWorkgroupSizeX;
 }
 
+uint64_t mbt_wgpu_adapter_supported_features_count(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPUSupportedFeatures features = {0};
+  wgpuAdapterGetFeatures(adapter, &features);
+  uint64_t out = (uint64_t)features.featureCount;
+  wgpuSupportedFeaturesFreeMembers(features);
+  return out;
+}
+
+bool mbt_wgpu_adapter_supported_features_contains(WGPUAdapter adapter, uint32_t feature_u32) {
+  if (!adapter) {
+    return false;
+  }
+  WGPUSupportedFeatures features = {0};
+  wgpuAdapterGetFeatures(adapter, &features);
+  bool ok = false;
+  for (size_t i = 0; i < features.featureCount; i++) {
+    if ((uint32_t)features.features[i] == feature_u32) {
+      ok = true;
+      break;
+    }
+  }
+  wgpuSupportedFeaturesFreeMembers(features);
+  return ok;
+}
+
+uint64_t mbt_wgpu_device_supported_features_count(WGPUDevice device) {
+  if (!device) {
+    return 0u;
+  }
+  WGPUSupportedFeatures features = {0};
+  wgpuDeviceGetFeatures(device, &features);
+  uint64_t out = (uint64_t)features.featureCount;
+  wgpuSupportedFeaturesFreeMembers(features);
+  return out;
+}
+
+bool mbt_wgpu_device_supported_features_contains(WGPUDevice device, uint32_t feature_u32) {
+  if (!device) {
+    return false;
+  }
+  WGPUSupportedFeatures features = {0};
+  wgpuDeviceGetFeatures(device, &features);
+  bool ok = false;
+  for (size_t i = 0; i < features.featureCount; i++) {
+    if ((uint32_t)features.features[i] == feature_u32) {
+      ok = true;
+      break;
+    }
+  }
+  wgpuSupportedFeaturesFreeMembers(features);
+  return ok;
+}
+
+uint64_t mbt_wgpu_instance_wgsl_language_features_count(WGPUInstance instance) {
+  // wgpu-native currently panics for wgpuInstanceGetWGSLLanguageFeatures in some
+  // builds. Expose a safe, non-crashing placeholder.
+  (void)instance;
+  return 0u;
+}
+
+uint64_t mbt_wgpu_surface_capabilities_formats_count(WGPUSurface surface,
+                                                     WGPUAdapter adapter) {
+  if (!surface || !adapter) {
+    return 0u;
+  }
+  WGPUSurfaceCapabilities caps = {0};
+  WGPUStatus st = wgpuSurfaceGetCapabilities(surface, adapter, &caps);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  uint64_t out = (uint64_t)caps.formatCount;
+  wgpuSurfaceCapabilitiesFreeMembers(caps);
+  return out;
+}
+
+uint64_t mbt_wgpu_surface_capabilities_present_modes_count(WGPUSurface surface,
+                                                           WGPUAdapter adapter) {
+  if (!surface || !adapter) {
+    return 0u;
+  }
+  WGPUSurfaceCapabilities caps = {0};
+  WGPUStatus st = wgpuSurfaceGetCapabilities(surface, adapter, &caps);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  uint64_t out = (uint64_t)caps.presentModeCount;
+  wgpuSurfaceCapabilitiesFreeMembers(caps);
+  return out;
+}
+
+uint64_t mbt_wgpu_surface_capabilities_alpha_modes_count(WGPUSurface surface,
+                                                         WGPUAdapter adapter) {
+  if (!surface || !adapter) {
+    return 0u;
+  }
+  WGPUSurfaceCapabilities caps = {0};
+  WGPUStatus st = wgpuSurfaceGetCapabilities(surface, adapter, &caps);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  uint64_t out = (uint64_t)caps.alphaModeCount;
+  wgpuSurfaceCapabilitiesFreeMembers(caps);
+  return out;
+}
+
 static inline uint64_t mbt_wgpu_u64_from_size_t(size_t v) { return (uint64_t)v; }
 
 WGPUGlobalReport *mbt_wgpu_instance_generate_report_new(WGPUInstance instance) {

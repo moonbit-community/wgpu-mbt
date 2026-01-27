@@ -134,6 +134,51 @@ pub extern "C" fn adapter_limits_max_compute_workgroup_size_x_u32(
 ) -> UInt = "mbt_wgpu_adapter_limits_max_compute_workgroup_size_x_u32"
 
 ///|
+pub extern "C" fn adapter_supported_features_count_u64(
+  adapter : Adapter,
+) -> UInt64 = "mbt_wgpu_adapter_supported_features_count"
+
+///|
+pub extern "C" fn adapter_supported_features_contains_u32(
+  adapter : Adapter,
+  feature_u32 : UInt,
+) -> Bool = "mbt_wgpu_adapter_supported_features_contains"
+
+///|
+pub extern "C" fn device_supported_features_count_u64(
+  device : Device,
+) -> UInt64 = "mbt_wgpu_device_supported_features_count"
+
+///|
+pub extern "C" fn device_supported_features_contains_u32(
+  device : Device,
+  feature_u32 : UInt,
+) -> Bool = "mbt_wgpu_device_supported_features_contains"
+
+///|
+pub extern "C" fn instance_wgsl_language_features_count_u64(
+  instance : Instance,
+) -> UInt64 = "mbt_wgpu_instance_wgsl_language_features_count"
+
+///|
+pub extern "C" fn surface_capabilities_formats_count_u64(
+  surface : WGPUSurface,
+  adapter : Adapter,
+) -> UInt64 = "mbt_wgpu_surface_capabilities_formats_count"
+
+///|
+pub extern "C" fn surface_capabilities_present_modes_count_u64(
+  surface : WGPUSurface,
+  adapter : Adapter,
+) -> UInt64 = "mbt_wgpu_surface_capabilities_present_modes_count"
+
+///|
+pub extern "C" fn surface_capabilities_alpha_modes_count_u64(
+  surface : WGPUSurface,
+  adapter : Adapter,
+) -> UInt64 = "mbt_wgpu_surface_capabilities_alpha_modes_count"
+
+///|
 pub extern "C" fn instance_generate_report_new(
   instance : Instance,
 ) -> WGPUGlobalReportPtr = "mbt_wgpu_instance_generate_report_new"
