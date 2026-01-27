@@ -246,6 +246,13 @@ pub extern "C" fn render_pipeline_descriptor_rgba8_new(
 ) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_rgba8_new"
 
 ///|
+pub extern "C" fn render_pipeline_descriptor_color_format_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+  format : UInt,
+) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_color_format_new"
+
+///|
 pub extern "C" fn render_pipeline_descriptor_rgba8_alpha_blend_new(
   layout : WGPUPipelineLayout,
   shader_module : WGPUShaderModule,

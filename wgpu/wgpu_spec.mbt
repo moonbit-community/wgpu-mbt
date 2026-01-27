@@ -68,6 +68,14 @@ pub type TextureView
 
 ///|
 #declaration_only
+pub type Surface
+
+///|
+#declaration_only
+pub type SurfaceTexture
+
+///|
+#declaration_only
 pub type Sampler
 
 ///|
@@ -122,7 +130,56 @@ pub fn Instance::process_events(self : Instance) -> Unit {
 
 ///|
 #declaration_only
+pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Instance::release(self : Instance) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::configure_default(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture {
+  ...
+}
+
+///|
+#declaration_only
+pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::present(self : Surface) -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::unconfigure(self : Surface) -> Unit {
   ...
 }
 
@@ -394,6 +451,16 @@ pub fn Device::create_sampler_linear_mirror_repeat(self : Device) -> Sampler {
 pub fn Device::create_render_pipeline_rgba8(
   self : Device,
   shader_module : ShaderModule,
+) -> RenderPipeline {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_render_pipeline_color_format(
+  self : Device,
+  shader_module : ShaderModule,
+  format : UInt,
 ) -> RenderPipeline {
   ...
 }
@@ -1283,6 +1350,18 @@ pub fn TextureView::release(self : TextureView) -> Unit {
 ///|
 #declaration_only
 pub fn Texture::release(self : Texture) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn SurfaceTexture::release(self : SurfaceTexture) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Surface::release(self : Surface) -> Unit {
   ...
 }
 

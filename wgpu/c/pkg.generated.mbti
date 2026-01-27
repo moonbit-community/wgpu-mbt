@@ -64,6 +64,10 @@ pub fn buffer_release(WGPUBuffer) -> Unit
 
 pub fn buffer_unmap(WGPUBuffer) -> Unit
 
+pub fn cametallayer_new() -> WGPUTextureViewDescriptorPtr
+
+pub fn cametallayer_release(WGPUTextureViewDescriptorPtr) -> Unit
+
 pub fn command_buffer_release(WGPUCommandBuffer) -> Unit
 
 pub fn command_encoder_begin_compute_pass(WGPUCommandEncoder) -> WGPUComputePassEncoder
@@ -188,6 +192,8 @@ pub fn device_create_query_set_timestamp(WGPUDevice, UInt) -> WGPUQuerySet
 
 pub fn device_create_render_bundle_encoder_rgba8(WGPUDevice) -> WGPURenderBundleEncoder
 
+pub fn device_create_render_pipeline_color_format(WGPUDevice, WGPUShaderModule, UInt) -> WGPURenderPipeline
+
 pub fn device_create_render_pipeline_rgba8(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
 pub fn device_create_render_pipeline_rgba8_alpha_blend(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
@@ -241,6 +247,8 @@ pub fn feature_name_timestamp_query() -> WGPUFeatureName
 pub fn index_format_uint16() -> WGPUIndexFormat
 
 pub fn index_format_uint32() -> WGPUIndexFormat
+
+pub fn instance_create_surface_metal_layer(WGPUInstance, WGPUTextureViewDescriptorPtr) -> WGPUSurface
 
 pub fn instance_process_events(WGPUInstance) -> Unit
 
@@ -370,6 +378,8 @@ pub fn render_pass_set_viewport(WGPURenderPassEncoder, Float, Float, Float, Floa
 
 pub fn render_pass_write_timestamp(WGPURenderPassEncoder, WGPUQuerySet, UInt) -> Unit
 
+pub fn render_pipeline_descriptor_color_format_new(WGPUPipelineLayout, WGPUShaderModule, UInt) -> WGPURenderPipelineDescriptorPtr
+
 pub fn render_pipeline_descriptor_free(WGPURenderPipelineDescriptorPtr) -> Unit
 
 pub fn render_pipeline_descriptor_rgba8_alpha_blend_new(WGPUPipelineLayout, WGPUShaderModule) -> WGPURenderPipelineDescriptorPtr
@@ -405,6 +415,22 @@ pub fn shader_module_descriptor_free(WGPUShaderModuleDescriptorPtr) -> Unit
 pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr
 
 pub fn shader_module_release(WGPUShaderModule) -> Unit
+
+pub fn surface_configure_default(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64) -> UInt
+
+pub fn surface_present_u32(WGPUSurface) -> UInt
+
+pub fn surface_release_safe(WGPUSurface) -> Unit
+
+pub fn surface_texture_acquire(WGPUSurface) -> WGPUTextureViewDescriptorPtr
+
+pub fn surface_texture_free(WGPUTextureViewDescriptorPtr) -> Unit
+
+pub fn surface_texture_status(WGPUTextureViewDescriptorPtr) -> UInt
+
+pub fn surface_texture_take_texture(WGPUTextureViewDescriptorPtr) -> WGPUTexture
+
+pub fn surface_unconfigure(WGPUSurface) -> Unit
 
 pub fn texel_copy_buffer_info_free(WGPUTexelCopyBufferInfoPtr) -> Unit
 

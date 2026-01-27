@@ -62,6 +62,17 @@ pub struct TextureView {
 }
 
 ///|
+pub struct Surface {
+  raw : @c.WGPUSurface
+  layer : @c.WGPUTextureViewDescriptorPtr
+}
+
+///|
+pub struct SurfaceTexture {
+  raw : @c.WGPUTextureViewDescriptorPtr
+}
+
+///|
 pub struct Sampler {
   raw : @c.Sampler
 }
@@ -159,6 +170,57 @@ pub fn Instance::request_adapter_sync(self : Instance) -> Adapter {
 ///|
 pub fn Instance::process_events(self : Instance) -> Unit {
   @c.instance_process_events(self.raw)
+}
+
+///|
+pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
+  let layer = @c.cametallayer_new()
+  let surface = @c.instance_create_surface_metal_layer(self.raw, layer)
+  Surface::{ raw: surface, layer }
+}
+
+///|
+pub fn Surface::configure_default(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+) -> UInt {
+  @c.surface_configure_default(
+    self.raw,
+    adapter.raw,
+    device.raw,
+    width,
+    height,
+    usage,
+  )
+}
+
+///|
+pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture {
+  SurfaceTexture::{ raw: @c.surface_texture_acquire(self.raw) }
+}
+
+///|
+pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt {
+  @c.surface_texture_status(self.raw)
+}
+
+///|
+pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture {
+  Texture::{ raw: @c.surface_texture_take_texture(self.raw) }
+}
+
+///|
+pub fn Surface::present(self : Surface) -> UInt {
+  @c.surface_present_u32(self.raw)
+}
+
+///|
+pub fn Surface::unconfigure(self : Surface) -> Unit {
+  @c.surface_unconfigure(self.raw)
 }
 
 ///|
@@ -439,6 +501,21 @@ pub fn Device::create_render_pipeline_rgba8(
 ) -> RenderPipeline {
   RenderPipeline::{
     raw: @c.device_create_render_pipeline_rgba8(self.raw, shader_module.raw),
+  }
+}
+
+///|
+pub fn Device::create_render_pipeline_color_format(
+  self : Device,
+  shader_module : ShaderModule,
+  format : UInt,
+) -> RenderPipeline {
+  RenderPipeline::{
+    raw: @c.device_create_render_pipeline_color_format(
+      self.raw,
+      shader_module.raw,
+      format,
+    ),
   }
 }
 
@@ -1717,6 +1794,17 @@ pub fn TextureView::release(self : TextureView) -> Unit {
 ///|
 pub fn Texture::release(self : Texture) -> Unit {
   @c.texture_release(self.raw)
+}
+
+///|
+pub fn SurfaceTexture::release(self : SurfaceTexture) -> Unit {
+  @c.surface_texture_free(self.raw)
+}
+
+///|
+pub fn Surface::release(self : Surface) -> Unit {
+  @c.surface_release_safe(self.raw)
+  @c.cametallayer_release(self.layer)
 }
 
 ///|

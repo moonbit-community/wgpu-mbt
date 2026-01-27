@@ -34,6 +34,65 @@ pub fn create_instance() -> Instance {
 }
 
 ///|
+/// macOS/Metal surface helpers (CAMetalLayer + WGPUSurface).
+pub extern "C" fn cametallayer_new() -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_cametallayer_new"
+
+///|
+#borrow(layer)
+pub extern "C" fn cametallayer_release(
+  layer : WGPUTextureViewDescriptorPtr,
+) -> Unit = "mbt_wgpu_cametallayer_release"
+
+///|
+#borrow(layer)
+pub extern "C" fn instance_create_surface_metal_layer(
+  instance : Instance,
+  layer : WGPUTextureViewDescriptorPtr,
+) -> WGPUSurface = "mbt_wgpu_instance_create_surface_metal_layer"
+
+///|
+pub extern "C" fn surface_configure_default(
+  surface : WGPUSurface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+) -> UInt = "mbt_wgpu_surface_configure_default"
+
+///|
+pub extern "C" fn surface_texture_acquire(
+  surface : WGPUSurface,
+) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_surface_texture_acquire"
+
+///|
+#borrow(st)
+pub extern "C" fn surface_texture_status(
+  st : WGPUTextureViewDescriptorPtr,
+) -> UInt = "mbt_wgpu_surface_texture_status"
+
+///|
+#borrow(st)
+pub extern "C" fn surface_texture_take_texture(
+  st : WGPUTextureViewDescriptorPtr,
+) -> Texture = "mbt_wgpu_surface_texture_take_texture"
+
+///|
+#borrow(st)
+pub extern "C" fn surface_texture_free(
+  st : WGPUTextureViewDescriptorPtr,
+) -> Unit = "mbt_wgpu_surface_texture_free"
+
+///|
+pub extern "C" fn surface_present_u32(surface : WGPUSurface) -> UInt = "mbt_wgpu_surface_present_u32"
+
+///|
+pub extern "C" fn surface_unconfigure(surface : WGPUSurface) -> Unit = "mbt_wgpu_surface_unconfigure"
+
+///|
+pub extern "C" fn surface_release_safe(surface : WGPUSurface) -> Unit = "mbt_wgpu_surface_release_safe"
+
+///|
 fn align_up_u32(value : UInt, align : UInt) -> UInt {
   let rem = value % align
   if rem == 0U {
@@ -272,6 +331,22 @@ pub fn device_create_render_pipeline_rgba8(
   let desc = render_pipeline_descriptor_rgba8_new(
     null_pipeline_layout(),
     shader_module,
+  )
+  let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
+  render_pipeline_descriptor_free(desc)
+  pipeline
+}
+
+///|
+pub fn device_create_render_pipeline_color_format(
+  device : Device,
+  shader_module : ShaderModule,
+  format : UInt,
+) -> RenderPipeline {
+  let desc = render_pipeline_descriptor_color_format_new(
+    null_pipeline_layout(),
+    shader_module,
+    format,
   )
   let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
   render_pipeline_descriptor_free(desc)

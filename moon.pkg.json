@@ -138,6 +138,9 @@
     "wgpu_smoke_matrix_test.mbt": [
       "native"
     ],
+    "wgpu_surface_present_test.mbt": [
+      "native"
+    ],
     "wgpu_capi_symbols_test.mbt": [
       "native"
     ]

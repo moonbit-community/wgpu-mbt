@@ -154,6 +154,7 @@ pub fn Device::create_pipeline_layout_2(Self, BindGroupLayout, BindGroupLayout) 
 pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
 pub fn Device::create_query_set_timestamp(Self, UInt) -> QuerySet
 pub fn Device::create_render_bundle_encoder_rgba8(Self) -> RenderBundleEncoder
+pub fn Device::create_render_pipeline_color_format(Self, ShaderModule, UInt) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_alpha_blend(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_depth(Self, ShaderModule) -> RenderPipeline
@@ -180,6 +181,7 @@ pub struct Instance {
   raw : @c.WGPUInstance
 }
 pub fn Instance::create() -> Self
+pub fn Instance::create_surface_metal_layer(Self) -> Surface
 pub fn Instance::process_events(Self) -> Unit
 pub fn Instance::release(Self) -> Unit
 pub fn Instance::request_adapter_sync(Self) -> Adapter
@@ -259,6 +261,23 @@ pub struct ShaderModule {
   raw : @c.WGPUShaderModule
 }
 pub fn ShaderModule::release(Self) -> Unit
+
+pub struct Surface {
+  raw : @c.WGPUSurface
+  layer : @c.WGPUTextureViewDescriptorPtr
+}
+pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, UInt64) -> UInt
+pub fn Surface::get_current_texture(Self) -> SurfaceTexture
+pub fn Surface::present(Self) -> UInt
+pub fn Surface::release(Self) -> Unit
+pub fn Surface::unconfigure(Self) -> Unit
+
+pub struct SurfaceTexture {
+  raw : @c.WGPUTextureViewDescriptorPtr
+}
+pub fn SurfaceTexture::release(Self) -> Unit
+pub fn SurfaceTexture::status(Self) -> UInt
+pub fn SurfaceTexture::take_texture(Self) -> Texture
 
 pub struct Texture {
   raw : @c.WGPUTexture
