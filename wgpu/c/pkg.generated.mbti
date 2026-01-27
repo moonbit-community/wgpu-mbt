@@ -62,6 +62,8 @@ pub fn command_encoder_begin_compute_pass(WGPUCommandEncoder) -> WGPUComputePass
 
 pub fn command_encoder_begin_render_pass_color(WGPUCommandEncoder, WGPUTextureView) -> WGPURenderPassEncoder
 
+pub fn command_encoder_begin_render_pass_color2(WGPUCommandEncoder, WGPUTextureView, WGPUTextureView) -> WGPURenderPassEncoder
+
 pub fn command_encoder_begin_render_pass_color_clear(WGPUCommandEncoder, WGPUTextureView, Float, Float, Float, Float) -> WGPURenderPassEncoder
 
 pub fn command_encoder_begin_render_pass_color_depth(WGPUCommandEncoder, WGPUTextureView, WGPUTextureView) -> WGPURenderPassEncoder
@@ -170,6 +172,8 @@ pub fn device_create_render_pipeline_rgba8_alpha_blend(WGPUDevice, WGPUShaderMod
 
 pub fn device_create_render_pipeline_rgba8_depth(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
+pub fn device_create_render_pipeline_rgba8_mrt2(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
+
 pub fn device_create_render_pipeline_rgba8_pos2(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
 pub fn device_create_render_pipeline_rgba8_pos2_with_layout(WGPUDevice, WGPUPipelineLayout, WGPUShaderModule) -> WGPURenderPipeline
@@ -264,6 +268,8 @@ pub fn queue_write_texture_rgba8_2d_mip_layer(WGPUQueue, WGPUTexture, UInt, UInt
 
 pub fn render_pass_begin_occlusion_query(WGPURenderPassEncoder, UInt) -> Unit
 
+pub fn render_pass_descriptor_color2_clear_default_new(WGPUTextureView, WGPUTextureView) -> WGPURenderPassDescriptorPtr
+
 pub fn render_pass_descriptor_color_clear_default_new(WGPUTextureView) -> WGPURenderPassDescriptorPtr
 
 pub fn render_pass_descriptor_color_clear_default_occlusion_new(WGPUTextureView, WGPUQuerySet) -> WGPURenderPassDescriptorPtr
@@ -323,6 +329,8 @@ pub fn render_pipeline_descriptor_free(WGPURenderPipelineDescriptorPtr) -> Unit
 pub fn render_pipeline_descriptor_rgba8_alpha_blend_new(WGPUPipelineLayout, WGPUShaderModule) -> WGPURenderPipelineDescriptorPtr
 
 pub fn render_pipeline_descriptor_rgba8_depth_new(WGPUPipelineLayout, WGPUShaderModule) -> WGPURenderPipelineDescriptorPtr
+
+pub fn render_pipeline_descriptor_rgba8_mrt2_new(WGPUPipelineLayout, WGPUShaderModule) -> WGPURenderPipelineDescriptorPtr
 
 pub fn render_pipeline_descriptor_rgba8_new(WGPUPipelineLayout, WGPUShaderModule) -> WGPURenderPipelineDescriptorPtr
 

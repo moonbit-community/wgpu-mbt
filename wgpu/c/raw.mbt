@@ -333,6 +333,20 @@ pub fn device_create_render_pipeline_rgba8_pos2(
 }
 
 ///|
+pub fn device_create_render_pipeline_rgba8_mrt2(
+  device : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline {
+  let desc = render_pipeline_descriptor_rgba8_mrt2_new(
+    null_pipeline_layout(),
+    shader_module,
+  )
+  let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
+  render_pipeline_descriptor_free(desc)
+  pipeline
+}
+
+///|
 pub fn device_create_render_pipeline_rgba8_pos2_with_layout(
   device : Device,
   layout : PipelineLayout,
@@ -500,6 +514,18 @@ pub fn command_encoder_begin_render_pass_color(
   view : TextureView,
 ) -> RenderPassEncoder {
   let desc = render_pass_descriptor_color_clear_default_new(view)
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
+
+///|
+pub fn command_encoder_begin_render_pass_color2(
+  encoder : CommandEncoder,
+  view0 : TextureView,
+  view1 : TextureView,
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_color2_clear_default_new(view0, view1)
   let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
   render_pass_descriptor_free(desc)
   pass

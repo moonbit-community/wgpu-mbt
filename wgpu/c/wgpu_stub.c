@@ -1356,6 +1356,93 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_pos2_new(WGPUPipelineLayout layout,
       layout, shader_module, true, false, false);
 }
 
+typedef struct {
+  WGPURenderPipelineDescriptor desc;
+  WGPUVertexState vertex;
+  WGPUFragmentState fragment;
+  WGPUColorTargetState color_targets[2];
+  WGPUPrimitiveState primitive;
+  WGPUMultisampleState multisample;
+
+  char vs_entry[7];
+  char fs_entry[7];
+} mbt_render_pipeline_desc_mrt2_t;
+
+WGPURenderPipelineDescriptor *
+mbt_wgpu_render_pipeline_descriptor_rgba8_mrt2_new(WGPUPipelineLayout layout,
+                                                   WGPUShaderModule shader_module) {
+  mbt_render_pipeline_desc_mrt2_t *out =
+      (mbt_render_pipeline_desc_mrt2_t *)malloc(sizeof(mbt_render_pipeline_desc_mrt2_t));
+  if (!out) {
+    return NULL;
+  }
+
+  memcpy(out->vs_entry, "vs_main", 7);
+  memcpy(out->fs_entry, "fs_main", 7);
+
+  out->vertex = (WGPUVertexState){
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = out->vs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .bufferCount = 0u,
+      .buffers = NULL,
+  };
+
+  out->color_targets[0] = (WGPUColorTargetState){
+      .nextInChain = NULL,
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .blend = NULL,
+      .writeMask = WGPUColorWriteMask_All,
+  };
+  out->color_targets[1] = (WGPUColorTargetState){
+      .nextInChain = NULL,
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .blend = NULL,
+      .writeMask = WGPUColorWriteMask_All,
+  };
+
+  out->fragment = (WGPUFragmentState){
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = out->fs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .targetCount = 2u,
+      .targets = out->color_targets,
+  };
+
+  out->primitive = (WGPUPrimitiveState){
+      .nextInChain = NULL,
+      .topology = WGPUPrimitiveTopology_TriangleList,
+      .stripIndexFormat = WGPUIndexFormat_Undefined,
+      .frontFace = WGPUFrontFace_CCW,
+      .cullMode = WGPUCullMode_None,
+      .unclippedDepth = 0u,
+  };
+
+  out->multisample = (WGPUMultisampleState){
+      .nextInChain = NULL,
+      .count = 1u,
+      .mask = 0xFFFFFFFFu,
+      .alphaToCoverageEnabled = 0u,
+  };
+
+  out->desc = (WGPURenderPipelineDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .vertex = out->vertex,
+      .primitive = out->primitive,
+      .depthStencil = NULL,
+      .multisample = out->multisample,
+      .fragment = &out->fragment,
+  };
+
+  return &out->desc;
+}
+
 void mbt_wgpu_render_pipeline_descriptor_free(WGPURenderPipelineDescriptor *desc) {
   free(desc);
 }
@@ -1387,6 +1474,11 @@ typedef struct {
 
 typedef struct {
   WGPURenderPassDescriptor desc;
+  WGPURenderPassColorAttachment colors[2];
+} mbt_render_pass_desc_color2_t;
+
+typedef struct {
+  WGPURenderPassDescriptor desc;
   WGPURenderPassColorAttachment color;
   WGPURenderPassDepthStencilAttachment depth;
 } mbt_render_pass_desc_color_depth_t;
@@ -1412,6 +1504,44 @@ mbt_wgpu_render_pass_descriptor_color_clear_default_new(WGPUTextureView view) {
       .label = (WGPUStringView){.data = NULL, .length = 0},
       .colorAttachmentCount = 1u,
       .colorAttachments = &out->color,
+      .depthStencilAttachment = NULL,
+      .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+  return &out->desc;
+}
+
+WGPURenderPassDescriptor *
+mbt_wgpu_render_pass_descriptor_color2_clear_default_new(WGPUTextureView view0,
+                                                         WGPUTextureView view1) {
+  mbt_render_pass_desc_color2_t *out =
+      (mbt_render_pass_desc_color2_t *)malloc(sizeof(mbt_render_pass_desc_color2_t));
+  if (!out) {
+    return NULL;
+  }
+  out->colors[0] = (WGPURenderPassColorAttachment){
+      .nextInChain = NULL,
+      .view = view0,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = WGPULoadOp_Clear,
+      .storeOp = WGPUStoreOp_Store,
+      .clearValue = (WGPUColor){.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+  };
+  out->colors[1] = (WGPURenderPassColorAttachment){
+      .nextInChain = NULL,
+      .view = view1,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = WGPULoadOp_Clear,
+      .storeOp = WGPUStoreOp_Store,
+      .clearValue = (WGPUColor){.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+  };
+  out->desc = (WGPURenderPassDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = 2u,
+      .colorAttachments = out->colors,
       .depthStencilAttachment = NULL,
       .occlusionQuerySet = NULL,
       .timestampWrites = NULL,

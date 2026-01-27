@@ -392,6 +392,15 @@ pub fn Device::create_render_pipeline_rgba8(
 
 ///|
 #declaration_only
+pub fn Device::create_render_pipeline_rgba8_mrt2(
+  self : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Device::create_render_pipeline_rgba8_alpha_blend(
   self : Device,
   shader_module : ShaderModule,
@@ -603,6 +612,16 @@ pub fn CommandEncoder::pop_debug_group(self : CommandEncoder) -> Unit {
 pub fn CommandEncoder::begin_render_pass_color(
   self : CommandEncoder,
   view : TextureView,
+) -> RenderPass {
+  ...
+}
+
+///|
+#declaration_only
+pub fn CommandEncoder::begin_render_pass_color2(
+  self : CommandEncoder,
+  view0 : TextureView,
+  view1 : TextureView,
 ) -> RenderPass {
   ...
 }

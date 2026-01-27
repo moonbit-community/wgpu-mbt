@@ -433,6 +433,19 @@ pub fn Device::create_render_pipeline_rgba8(
 }
 
 ///|
+pub fn Device::create_render_pipeline_rgba8_mrt2(
+  self : Device,
+  shader_module : ShaderModule,
+) -> RenderPipeline {
+  RenderPipeline::{
+    raw: @c.device_create_render_pipeline_rgba8_mrt2(
+      self.raw,
+      shader_module.raw,
+    ),
+  }
+}
+
+///|
 pub fn Device::create_render_pipeline_rgba8_alpha_blend(
   self : Device,
   shader_module : ShaderModule,
@@ -859,6 +872,21 @@ pub fn CommandEncoder::begin_render_pass_color(
 ) -> RenderPass {
   RenderPass::{
     raw: @c.command_encoder_begin_render_pass_color(self.raw, view.raw),
+  }
+}
+
+///|
+pub fn CommandEncoder::begin_render_pass_color2(
+  self : CommandEncoder,
+  view0 : TextureView,
+  view1 : TextureView,
+) -> RenderPass {
+  RenderPass::{
+    raw: @c.command_encoder_begin_render_pass_color2(
+      self.raw,
+      view0.raw,
+      view1.raw,
+    ),
   }
 }
 

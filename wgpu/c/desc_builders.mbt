@@ -222,6 +222,12 @@ pub extern "C" fn render_pipeline_descriptor_rgba8_pos2_new(
 ) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_rgba8_pos2_new"
 
 ///|
+pub extern "C" fn render_pipeline_descriptor_rgba8_mrt2_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_rgba8_mrt2_new"
+
+///|
 #borrow(desc)
 pub extern "C" fn render_pipeline_descriptor_free(
   desc : WGPURenderPipelineDescriptorPtr,
@@ -240,6 +246,12 @@ pub extern "C" fn compute_pass_descriptor_free(
 pub extern "C" fn render_pass_descriptor_color_clear_default_new(
   view : WGPUTextureView,
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_clear_default_new"
+
+///|
+pub extern "C" fn render_pass_descriptor_color2_clear_default_new(
+  view0 : WGPUTextureView,
+  view1 : WGPUTextureView,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color2_clear_default_new"
 
 ///|
 pub extern "C" fn render_pass_descriptor_color_clear_default_occlusion_new(
