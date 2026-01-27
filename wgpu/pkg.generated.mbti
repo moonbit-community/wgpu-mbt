@@ -153,6 +153,7 @@ pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_2(Self, BindGroupLayout, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
 pub fn Device::create_query_set_timestamp(Self, UInt) -> QuerySet
+pub fn Device::create_render_bundle_encoder_rgba8(Self) -> RenderBundleEncoder
 pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_alpha_blend(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_depth(Self, ShaderModule) -> RenderPipeline
@@ -203,6 +204,19 @@ pub fn Queue::write_buffer(Self, Buffer, UInt64, Bytes) -> Unit
 pub fn Queue::write_texture_rgba8_2d(Self, Texture, UInt, UInt, Bytes) -> Unit
 pub fn Queue::write_texture_rgba8_2d_mip_layer(Self, Texture, UInt, UInt, UInt, UInt, Bytes) -> Unit
 
+pub struct RenderBundle {
+  raw : @c.WGPURenderBundle
+}
+pub fn RenderBundle::release(Self) -> Unit
+
+pub struct RenderBundleEncoder {
+  raw : @c.WGPURenderBundleEncoder
+}
+pub fn RenderBundleEncoder::draw(Self, UInt, UInt, UInt, UInt) -> Unit
+pub fn RenderBundleEncoder::finish(Self) -> RenderBundle
+pub fn RenderBundleEncoder::release(Self) -> Unit
+pub fn RenderBundleEncoder::set_pipeline(Self, RenderPipeline) -> Unit
+
 pub struct RenderPass {
   raw : @c.WGPURenderPassEncoder
 }
@@ -213,6 +227,7 @@ pub fn RenderPass::draw_indexed_indirect(Self, Buffer, UInt64) -> Unit
 pub fn RenderPass::draw_indirect(Self, Buffer, UInt64) -> Unit
 pub fn RenderPass::end(Self) -> Unit
 pub fn RenderPass::end_occlusion_query(Self) -> Unit
+pub fn RenderPass::execute_bundles(Self, Array[RenderBundle]) -> Unit
 pub fn RenderPass::insert_debug_marker(Self, String) -> Unit
 pub fn RenderPass::pop_debug_group(Self) -> Unit
 pub fn RenderPass::push_debug_group(Self, String) -> Unit

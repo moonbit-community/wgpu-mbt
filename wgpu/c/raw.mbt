@@ -523,6 +523,49 @@ pub fn device_create_pipeline_layout_2(
 }
 
 ///|
+pub fn device_create_render_bundle_encoder_rgba8(
+  device : Device,
+) -> WGPURenderBundleEncoder {
+  let desc = render_bundle_encoder_descriptor_rgba8_new()
+  let encoder = wgpuDeviceCreateRenderBundleEncoder(device, desc)
+  render_bundle_encoder_descriptor_free(desc)
+  encoder
+}
+
+///|
+pub extern "C" fn render_bundle_encoder_set_pipeline(
+  encoder : WGPURenderBundleEncoder,
+  pipeline : RenderPipeline,
+) -> Unit = "wgpuRenderBundleEncoderSetPipeline"
+
+///|
+pub extern "C" fn render_bundle_encoder_draw(
+  encoder : WGPURenderBundleEncoder,
+  vertex_count : UInt,
+  instance_count : UInt,
+  first_vertex : UInt,
+  first_instance : UInt,
+) -> Unit = "wgpuRenderBundleEncoderDraw"
+
+///|
+pub fn render_bundle_encoder_finish(
+  encoder : WGPURenderBundleEncoder,
+) -> WGPURenderBundle {
+  let desc = render_bundle_descriptor_default_new()
+  let bundle = wgpuRenderBundleEncoderFinish(encoder, desc)
+  render_bundle_descriptor_free(desc)
+  bundle
+}
+
+///|
+pub extern "C" fn render_bundle_encoder_release(
+  encoder : WGPURenderBundleEncoder,
+) -> Unit = "wgpuRenderBundleEncoderRelease"
+
+///|
+pub extern "C" fn render_bundle_release(bundle : WGPURenderBundle) -> Unit = "wgpuRenderBundleRelease"
+
+///|
 pub fn device_create_bind_group_storage_buffer(
   device : Device,
   bind_group_layout : BindGroupLayout,
@@ -650,6 +693,30 @@ pub extern "C" fn render_pass_set_pipeline(
   pass : RenderPassEncoder,
   pipeline : RenderPipeline,
 ) -> Unit = "wgpuRenderPassEncoderSetPipeline"
+
+///|
+#borrow(bundles)
+pub extern "C" fn wgpuRenderPassEncoderExecuteBundles_bundles(
+  pass : RenderPassEncoder,
+  bundle_count : UInt64,
+  bundles : FixedArray[WGPURenderBundle],
+) -> Unit = "wgpuRenderPassEncoderExecuteBundles"
+
+///|
+pub fn render_pass_execute_bundles(
+  pass : RenderPassEncoder,
+  bundles : Array[WGPURenderBundle],
+) -> Unit {
+  let n = bundles.length()
+  if n == 0 {
+    return
+  }
+  let raw : FixedArray[WGPURenderBundle] = FixedArray::make(n, bundles[0])
+  for i in 0..<n {
+    raw[i] = bundles[i]
+  }
+  wgpuRenderPassEncoderExecuteBundles_bundles(pass, n.to_uint64(), raw)
+}
 
 ///|
 pub fn render_pass_set_bind_group0(

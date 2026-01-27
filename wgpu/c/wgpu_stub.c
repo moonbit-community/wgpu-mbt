@@ -1283,6 +1283,58 @@ mbt_wgpu_pipeline_layout_descriptor_2_new(WGPUBindGroupLayout bind_group_layout0
 }
 
 typedef struct {
+  WGPURenderBundleEncoderDescriptor desc;
+  WGPUTextureFormat color_formats[1];
+} mbt_render_bundle_encoder_desc_rgba8_t;
+
+WGPURenderBundleEncoderDescriptor *
+mbt_wgpu_render_bundle_encoder_descriptor_rgba8_new(void) {
+  mbt_render_bundle_encoder_desc_rgba8_t *out =
+      (mbt_render_bundle_encoder_desc_rgba8_t *)malloc(sizeof(mbt_render_bundle_encoder_desc_rgba8_t));
+  if (!out) {
+    return NULL;
+  }
+  out->color_formats[0] = WGPUTextureFormat_RGBA8Unorm;
+  out->desc = (WGPURenderBundleEncoderDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorFormatCount = 1u,
+      .colorFormats = out->color_formats,
+      .depthStencilFormat = WGPUTextureFormat_Undefined,
+      .sampleCount = 1u,
+      .depthReadOnly = 0u,
+      .stencilReadOnly = 0u,
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_render_bundle_encoder_descriptor_free(
+    WGPURenderBundleEncoderDescriptor *desc) {
+  free(desc);
+}
+
+typedef struct {
+  WGPURenderBundleDescriptor desc;
+} mbt_render_bundle_desc_t;
+
+WGPURenderBundleDescriptor *mbt_wgpu_render_bundle_descriptor_default_new(void) {
+  mbt_render_bundle_desc_t *out =
+      (mbt_render_bundle_desc_t *)malloc(sizeof(mbt_render_bundle_desc_t));
+  if (!out) {
+    return NULL;
+  }
+  out->desc = (WGPURenderBundleDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+  return &out->desc;
+}
+
+void mbt_wgpu_render_bundle_descriptor_free(WGPURenderBundleDescriptor *desc) {
+  free(desc);
+}
+
+typedef struct {
   WGPUComputePipelineDescriptor desc;
   WGPUProgrammableStageDescriptor stage;
   char entry[4];

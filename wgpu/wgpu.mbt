@@ -72,6 +72,16 @@ pub struct RenderPipeline {
 }
 
 ///|
+pub struct RenderBundleEncoder {
+  raw : @c.WGPURenderBundleEncoder
+}
+
+///|
+pub struct RenderBundle {
+  raw : @c.WGPURenderBundle
+}
+
+///|
 pub struct BindGroupLayout {
   raw : @c.BindGroupLayout
 }
@@ -468,6 +478,15 @@ pub fn Device::create_render_pipeline_rgba8_depth(
       self.raw,
       shader_module.raw,
     ),
+  }
+}
+
+///|
+pub fn Device::create_render_bundle_encoder_rgba8(
+  self : Device,
+) -> RenderBundleEncoder {
+  RenderBundleEncoder::{
+    raw: @c.device_create_render_bundle_encoder_rgba8(self.raw),
   }
 }
 
@@ -1253,6 +1272,15 @@ pub fn RenderPass::set_pipeline(
 }
 
 ///|
+pub fn RenderPass::execute_bundles(
+  self : RenderPass,
+  bundles : Array[RenderBundle],
+) -> Unit {
+  let raw : Array[@c.WGPURenderBundle] = bundles.map(b => b.raw)
+  @c.render_pass_execute_bundles(self.raw, raw)
+}
+
+///|
 pub fn RenderPass::set_bind_group0(
   self : RenderPass,
   group : BindGroup,
@@ -1639,6 +1667,46 @@ pub fn Sampler::release(self : Sampler) -> Unit {
 ///|
 pub fn RenderPipeline::release(self : RenderPipeline) -> Unit {
   @c.render_pipeline_release(self.raw)
+}
+
+///|
+pub fn RenderBundleEncoder::set_pipeline(
+  self : RenderBundleEncoder,
+  pipeline : RenderPipeline,
+) -> Unit {
+  @c.render_bundle_encoder_set_pipeline(self.raw, pipeline.raw)
+}
+
+///|
+pub fn RenderBundleEncoder::draw(
+  self : RenderBundleEncoder,
+  vertex_count : UInt,
+  instance_count : UInt,
+  first_vertex : UInt,
+  first_instance : UInt,
+) -> Unit {
+  @c.render_bundle_encoder_draw(
+    self.raw,
+    vertex_count,
+    instance_count,
+    first_vertex,
+    first_instance,
+  )
+}
+
+///|
+pub fn RenderBundleEncoder::finish(self : RenderBundleEncoder) -> RenderBundle {
+  RenderBundle::{ raw: @c.render_bundle_encoder_finish(self.raw) }
+}
+
+///|
+pub fn RenderBundleEncoder::release(self : RenderBundleEncoder) -> Unit {
+  @c.render_bundle_encoder_release(self.raw)
+}
+
+///|
+pub fn RenderBundle::release(self : RenderBundle) -> Unit {
+  @c.render_bundle_release(self.raw)
 }
 
 ///|

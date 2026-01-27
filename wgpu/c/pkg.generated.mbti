@@ -186,6 +186,8 @@ pub fn device_create_query_set_occlusion(WGPUDevice, UInt) -> WGPUQuerySet
 
 pub fn device_create_query_set_timestamp(WGPUDevice, UInt) -> WGPUQuerySet
 
+pub fn device_create_render_bundle_encoder_rgba8(WGPUDevice) -> WGPURenderBundleEncoder
+
 pub fn device_create_render_pipeline_rgba8(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
 pub fn device_create_render_pipeline_rgba8_alpha_blend(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
@@ -288,6 +290,24 @@ pub fn queue_write_texture_rgba8_2d(WGPUQueue, WGPUTexture, UInt, UInt, Bytes, U
 
 pub fn queue_write_texture_rgba8_2d_mip_layer(WGPUQueue, WGPUTexture, UInt, UInt, UInt, UInt, Bytes, UInt64) -> Unit
 
+pub fn render_bundle_descriptor_default_new() -> WGPURenderBundleDescriptorPtr
+
+pub fn render_bundle_descriptor_free(WGPURenderBundleDescriptorPtr) -> Unit
+
+pub fn render_bundle_encoder_descriptor_free(WGPURenderBundleEncoderDescriptorPtr) -> Unit
+
+pub fn render_bundle_encoder_descriptor_rgba8_new() -> WGPURenderBundleEncoderDescriptorPtr
+
+pub fn render_bundle_encoder_draw(WGPURenderBundleEncoder, UInt, UInt, UInt, UInt) -> Unit
+
+pub fn render_bundle_encoder_finish(WGPURenderBundleEncoder) -> WGPURenderBundle
+
+pub fn render_bundle_encoder_release(WGPURenderBundleEncoder) -> Unit
+
+pub fn render_bundle_encoder_set_pipeline(WGPURenderBundleEncoder, WGPURenderPipeline) -> Unit
+
+pub fn render_bundle_release(WGPURenderBundle) -> Unit
+
 pub fn render_pass_begin_occlusion_query(WGPURenderPassEncoder, UInt) -> Unit
 
 pub fn render_pass_descriptor_color2_clear_default_new(WGPUTextureView, WGPUTextureView) -> WGPURenderPassDescriptorPtr
@@ -315,6 +335,8 @@ pub fn render_pass_draw_indirect(WGPURenderPassEncoder, WGPUBuffer, UInt64) -> U
 pub fn render_pass_end(WGPURenderPassEncoder) -> Unit
 
 pub fn render_pass_end_occlusion_query(WGPURenderPassEncoder) -> Unit
+
+pub fn render_pass_execute_bundles(WGPURenderPassEncoder, Array[WGPURenderBundle]) -> Unit
 
 pub fn render_pass_insert_debug_marker_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
 
@@ -705,6 +727,8 @@ pub fn wgpuRenderPassEncoderEnd(WGPURenderPassEncoder) -> Unit
 pub fn wgpuRenderPassEncoderEndOcclusionQuery(WGPURenderPassEncoder) -> Unit
 
 pub fn wgpuRenderPassEncoderExecuteBundles(WGPURenderPassEncoder, UInt64, WGPURenderBundlePtr) -> Unit
+
+pub fn wgpuRenderPassEncoderExecuteBundles_bundles(WGPURenderPassEncoder, UInt64, FixedArray[WGPURenderBundle]) -> Unit
 
 pub fn wgpuRenderPassEncoderInsertDebugMarker(WGPURenderPassEncoder, WGPUStringView) -> Unit
 

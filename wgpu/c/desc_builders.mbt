@@ -210,6 +210,24 @@ pub extern "C" fn pipeline_layout_descriptor_free(
 ) -> Unit = "mbt_wgpu_pipeline_layout_descriptor_free"
 
 ///|
+pub extern "C" fn render_bundle_encoder_descriptor_rgba8_new() -> WGPURenderBundleEncoderDescriptorPtr = "mbt_wgpu_render_bundle_encoder_descriptor_rgba8_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn render_bundle_encoder_descriptor_free(
+  desc : WGPURenderBundleEncoderDescriptorPtr,
+) -> Unit = "mbt_wgpu_render_bundle_encoder_descriptor_free"
+
+///|
+pub extern "C" fn render_bundle_descriptor_default_new() -> WGPURenderBundleDescriptorPtr = "mbt_wgpu_render_bundle_descriptor_default_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn render_bundle_descriptor_free(
+  desc : WGPURenderBundleDescriptorPtr,
+) -> Unit = "mbt_wgpu_render_bundle_descriptor_free"
+
+///|
 pub extern "C" fn compute_pipeline_descriptor_new(
   layout : WGPUPipelineLayout,
   shader_module : WGPUShaderModule,

@@ -76,6 +76,14 @@ pub type RenderPipeline
 
 ///|
 #declaration_only
+pub type RenderBundleEncoder
+
+///|
+#declaration_only
+pub type RenderBundle
+
+///|
+#declaration_only
 pub type RenderPass
 
 ///|
@@ -414,6 +422,14 @@ pub fn Device::create_render_pipeline_rgba8_depth(
   self : Device,
   shader_module : ShaderModule,
 ) -> RenderPipeline {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_render_bundle_encoder_rgba8(
+  self : Device,
+) -> RenderBundleEncoder {
   ...
 }
 
@@ -972,6 +988,15 @@ pub fn RenderPass::set_pipeline(
 
 ///|
 #declaration_only
+pub fn RenderPass::execute_bundles(
+  self : RenderPass,
+  bundles : Array[RenderBundle],
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn RenderPass::set_bind_group0(
   self : RenderPass,
   group : BindGroup,
@@ -1264,6 +1289,45 @@ pub fn Texture::release(self : Texture) -> Unit {
 ///|
 #declaration_only
 pub fn RenderPipeline::release(self : RenderPipeline) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderBundleEncoder::set_pipeline(
+  self : RenderBundleEncoder,
+  pipeline : RenderPipeline,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderBundleEncoder::draw(
+  self : RenderBundleEncoder,
+  vertex_count : UInt,
+  instance_count : UInt,
+  first_vertex : UInt,
+  first_instance : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderBundleEncoder::finish(self : RenderBundleEncoder) -> RenderBundle {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderBundleEncoder::release(self : RenderBundleEncoder) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderBundle::release(self : RenderBundle) -> Unit {
   ...
 }
 
