@@ -1476,6 +1476,7 @@ pub fn Surface::capabilities_present_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_present_modes_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, UInt64) -> UInt
 pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt) -> Bool
+pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt, Array[UInt]) -> Bool
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture
 pub fn Surface::present(Self) -> UInt
 pub fn Surface::release(Self) -> Unit

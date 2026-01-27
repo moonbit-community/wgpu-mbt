@@ -628,6 +628,8 @@ pub fn surface_configure_default(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UIn
 
 pub fn surface_configure_u32(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64, UInt, UInt, UInt) -> Bool
 
+pub fn surface_configure_view_formats_u32(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64, UInt, UInt, UInt, UInt64, FixedArray[UInt]) -> Bool
+
 pub fn surface_present_u32(WGPUSurface) -> UInt
 
 pub fn surface_release_safe(WGPUSurface) -> Unit

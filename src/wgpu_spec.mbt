@@ -209,6 +209,21 @@ declare pub fn Surface::configure_u32(
 
 ///|
 #declaration_only
+declare pub fn Surface::configure_view_formats_u32(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+  format_u32 : UInt,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+  view_formats : Array[UInt],
+) -> Bool
+
+///|
+#declaration_only
 declare pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture
 
 ///|

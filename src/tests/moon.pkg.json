@@ -162,6 +162,9 @@
     "wgpu_surface_configure_custom_test.mbt": [
       "native"
     ],
+    "wgpu_surface_configure_view_formats_test.mbt": [
+      "native"
+    ],
     "wgpu_device_poll_test.mbt": [
       "native"
     ],

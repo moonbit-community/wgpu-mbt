@@ -304,6 +304,42 @@ pub fn Surface::configure_u32(
 }
 
 ///|
+pub fn Surface::configure_view_formats_u32(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+  format_u32 : UInt,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+  view_formats : Array[UInt],
+) -> Bool {
+  let count = view_formats.length()
+  if count == 0 {
+    self.configure_u32(
+      adapter, device, width, height, usage, format_u32, present_mode_u32, alpha_mode_u32,
+    )
+  } else {
+    let fixed = FixedArray::from_array(view_formats[:])
+    @c.surface_configure_view_formats_u32(
+      self.raw,
+      adapter.raw,
+      device.raw,
+      width,
+      height,
+      usage,
+      format_u32,
+      present_mode_u32,
+      alpha_mode_u32,
+      count.to_uint64(),
+      fixed,
+    )
+  }
+}
+
+///|
 pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture {
   SurfaceTexture::{ raw: @c.surface_texture_acquire(self.raw) }
 }

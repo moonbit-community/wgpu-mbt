@@ -169,6 +169,92 @@ bool mbt_wgpu_surface_configure_u32(WGPUSurface surface, WGPUAdapter adapter,
   return true;
 }
 
+bool mbt_wgpu_surface_configure_view_formats_u32(
+    WGPUSurface surface, WGPUAdapter adapter, WGPUDevice device, uint32_t width,
+    uint32_t height, uint64_t usage, uint32_t format_u32, uint32_t present_mode_u32,
+    uint32_t alpha_mode_u32, uint64_t view_format_count,
+    const uint32_t *view_formats_u32) {
+  if (view_format_count == 0u) {
+    return mbt_wgpu_surface_configure_u32(surface, adapter, device, width, height, usage,
+                                         format_u32, present_mode_u32, alpha_mode_u32);
+  }
+  if (!surface || !adapter || !device || width == 0u || height == 0u || !view_formats_u32) {
+    return false;
+  }
+
+  WGPUSurfaceCapabilities caps = {0};
+  WGPUStatus st = wgpuSurfaceGetCapabilities(surface, adapter, &caps);
+  if (st != WGPUStatus_Success || caps.formatCount == 0 || caps.presentModeCount == 0 ||
+      caps.alphaModeCount == 0) {
+    wgpuSurfaceCapabilitiesFreeMembers(caps);
+    return false;
+  }
+
+  WGPUTextureFormat format = (WGPUTextureFormat)format_u32;
+  WGPUPresentMode present_mode = (WGPUPresentMode)present_mode_u32;
+  WGPUCompositeAlphaMode alpha_mode = (WGPUCompositeAlphaMode)alpha_mode_u32;
+
+  bool format_ok = false;
+  for (size_t i = 0; i < caps.formatCount; i++) {
+    if (caps.formats[i] == format) {
+      format_ok = true;
+      break;
+    }
+  }
+  bool present_mode_ok = false;
+  for (size_t i = 0; i < caps.presentModeCount; i++) {
+    if (caps.presentModes[i] == present_mode) {
+      present_mode_ok = true;
+      break;
+    }
+  }
+  bool alpha_mode_ok = false;
+  for (size_t i = 0; i < caps.alphaModeCount; i++) {
+    if (caps.alphaModes[i] == alpha_mode) {
+      alpha_mode_ok = true;
+      break;
+    }
+  }
+
+  if (!format_ok || !present_mode_ok || !alpha_mode_ok) {
+    wgpuSurfaceCapabilitiesFreeMembers(caps);
+    return false;
+  }
+
+  // Conservative validation: require view formats to be present in `caps.formats`.
+  for (uint64_t i = 0; i < view_format_count; i++) {
+    WGPUTextureFormat vf = (WGPUTextureFormat)view_formats_u32[i];
+    bool vf_ok = false;
+    for (size_t j = 0; j < caps.formatCount; j++) {
+      if (caps.formats[j] == vf) {
+        vf_ok = true;
+        break;
+      }
+    }
+    if (!vf_ok) {
+      wgpuSurfaceCapabilitiesFreeMembers(caps);
+      return false;
+    }
+  }
+
+  WGPUSurfaceConfiguration config = {
+      .nextInChain = NULL,
+      .device = device,
+      .format = format,
+      .usage = (WGPUTextureUsage)usage,
+      .width = width,
+      .height = height,
+      .viewFormatCount = (size_t)view_format_count,
+      .viewFormats = (const WGPUTextureFormat *)view_formats_u32,
+      .alphaMode = alpha_mode,
+      .presentMode = present_mode,
+  };
+  wgpuSurfaceConfigure(surface, &config);
+
+  wgpuSurfaceCapabilitiesFreeMembers(caps);
+  return true;
+}
+
 typedef struct {
   WGPUSurfaceTexture st;
 } mbt_surface_texture_t;

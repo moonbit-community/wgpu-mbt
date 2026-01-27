@@ -98,6 +98,22 @@ pub extern "C" fn surface_configure_u32(
 ) -> Bool = "mbt_wgpu_surface_configure_u32"
 
 ///|
+#borrow(view_formats)
+pub extern "C" fn surface_configure_view_formats_u32(
+  surface : WGPUSurface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+  format_u32 : UInt,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+  view_format_count : UInt64,
+  view_formats : FixedArray[UInt],
+) -> Bool = "mbt_wgpu_surface_configure_view_formats_u32"
+
+///|
 pub extern "C" fn surface_texture_acquire(
   surface : WGPUSurface,
 ) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_surface_texture_acquire"
