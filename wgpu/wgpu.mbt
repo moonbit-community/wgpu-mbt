@@ -160,6 +160,41 @@ pub fn Adapter::request_device_sync(
 }
 
 ///|
+pub fn Adapter::request_device_sync_timestamp_query(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  Device::{
+    raw: @c.adapter_request_device_sync_timestamp_query(instance.raw, self.raw),
+  }
+}
+
+///|
+pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  Device::{
+    raw: @c.adapter_request_device_sync_timestamp_query_inside_encoders(
+      instance.raw,
+      self.raw,
+    ),
+  }
+}
+
+///|
+pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool {
+  @c.adapter_has_feature_timestamp_query(self.raw)
+}
+
+///|
+pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(
+  self : Adapter,
+) -> Bool {
+  @c.adapter_has_feature_native_timestamp_query_inside_encoders(self.raw)
+}
+
+///|
 pub fn Device::queue(self : Device) -> Queue {
   Queue::{ raw: @c.device_get_queue(self.raw) }
 }
@@ -222,6 +257,14 @@ pub fn Device::create_query_set_occlusion(
   count : UInt,
 ) -> QuerySet {
   QuerySet::{ raw: @c.device_create_query_set_occlusion(self.raw, count) }
+}
+
+///|
+pub fn Device::create_query_set_timestamp(
+  self : Device,
+  count : UInt,
+) -> QuerySet {
+  QuerySet::{ raw: @c.device_create_query_set_timestamp(self.raw, count) }
 }
 
 ///|
@@ -578,6 +621,15 @@ pub fn CommandEncoder::resolve_query_set(
     destination.raw,
     destination_offset,
   )
+}
+
+///|
+pub fn CommandEncoder::write_timestamp(
+  self : CommandEncoder,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit {
+  @c.command_encoder_write_timestamp(self.raw, query_set.raw, query_index)
 }
 
 ///|

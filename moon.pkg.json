@@ -51,6 +51,9 @@
     "wgpu_render_occlusion_query_test.mbt": [
       "native"
     ],
+    "wgpu_timestamp_query_test.mbt": [
+      "native"
+    ],
     "wgpu_copy_buffer_to_texture_test.mbt": [
       "native"
     ],

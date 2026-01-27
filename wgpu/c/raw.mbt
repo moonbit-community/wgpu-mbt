@@ -85,6 +85,33 @@ pub extern "C" fn adapter_request_device_sync(
 ) -> Device = "mbt_wgpu_adapter_request_device_sync"
 
 ///|
+pub extern "C" fn adapter_request_device_sync_timestamp_query(
+  instance : Instance,
+  adapter : Adapter,
+) -> Device = "mbt_wgpu_adapter_request_device_sync_timestamp_query"
+
+///|
+pub extern "C" fn adapter_request_device_sync_timestamp_query_inside_encoders(
+  instance : Instance,
+  adapter : Adapter,
+) -> Device = "mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders"
+
+///|
+pub fn adapter_has_feature_timestamp_query(adapter : Adapter) -> Bool {
+  wgpuAdapterHasFeature(adapter, feature_name_timestamp_query())
+}
+
+///|
+pub fn adapter_has_feature_native_timestamp_query_inside_encoders(
+  adapter : Adapter,
+) -> Bool {
+  wgpuAdapterHasFeature(
+    adapter,
+    feature_name_native_timestamp_query_inside_encoders(),
+  )
+}
+
+///|
 pub extern "C" fn null_pipeline_layout() -> PipelineLayout = "mbt_wgpu_null_ptr"
 
 ///|
@@ -877,6 +904,17 @@ pub fn device_create_query_set_occlusion(
 }
 
 ///|
+pub fn device_create_query_set_timestamp(
+  device : Device,
+  count : UInt,
+) -> QuerySet {
+  let desc = query_set_descriptor_new(query_type_timestamp(), count)
+  let qs = device_create_query_set(device, desc)
+  query_set_descriptor_free(desc)
+  qs
+}
+
+///|
 pub extern "C" fn query_set_release(query_set : QuerySet) -> Unit = "wgpuQuerySetRelease"
 
 ///|
@@ -888,6 +926,13 @@ pub extern "C" fn command_encoder_resolve_query_set(
   destination : Buffer,
   destination_offset : UInt64,
 ) -> Unit = "wgpuCommandEncoderResolveQuerySet"
+
+///|
+pub extern "C" fn command_encoder_write_timestamp(
+  encoder : CommandEncoder,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit = "wgpuCommandEncoderWriteTimestamp"
 
 ///|
 pub extern "C" fn render_pass_begin_occlusion_query(

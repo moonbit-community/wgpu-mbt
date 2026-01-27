@@ -285,6 +285,18 @@ pub extern "C" fn extent3d_free(extent : WGPUExtent3DPtr) -> Unit = "mbt_wgpu_ex
 pub extern "C" fn query_type_occlusion() -> WGPUQueryType = "mbt_wgpu_query_type_occlusion"
 
 ///|
+pub extern "C" fn query_type_timestamp() -> WGPUQueryType = "mbt_wgpu_query_type_timestamp"
+
+///|
+pub extern "C" fn feature_name_timestamp_query() -> WGPUFeatureName = "mbt_wgpu_feature_name_timestamp_query"
+
+///|
+pub extern "C" fn feature_name_native_timestamp_query_inside_encoders() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_timestamp_query_inside_encoders"
+
+///|
+pub extern "C" fn feature_name_native_timestamp_query_inside_passes() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_timestamp_query_inside_passes"
+
+///|
 pub extern "C" fn query_set_descriptor_new(
   query_type : WGPUQueryType,
   count : UInt,

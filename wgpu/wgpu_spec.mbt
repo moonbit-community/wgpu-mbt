@@ -129,7 +129,39 @@ pub fn Adapter::request_device_sync(
 
 ///|
 #declaration_only
+pub fn Adapter::request_device_sync_timestamp_query(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Adapter::release(self : Adapter) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(
+  self : Adapter,
+) -> Bool {
   ...
 }
 
@@ -169,6 +201,15 @@ pub fn Device::create_buffer_init(
 ///|
 #declaration_only
 pub fn Device::create_query_set_occlusion(
+  self : Device,
+  count : UInt,
+) -> QuerySet {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_query_set_timestamp(
   self : Device,
   count : UInt,
 ) -> QuerySet {
@@ -564,6 +605,16 @@ pub fn CommandEncoder::resolve_query_set(
   query_count : UInt,
   destination : Buffer,
   destination_offset : UInt64,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn CommandEncoder::write_timestamp(
+  self : CommandEncoder,
+  query_set : QuerySet,
+  query_index : UInt,
 ) -> Unit {
   ...
 }

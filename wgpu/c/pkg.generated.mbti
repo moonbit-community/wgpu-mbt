@@ -2,9 +2,17 @@
 package "username/wgpu_mbt/wgpu/c"
 
 // Values
+pub fn adapter_has_feature_native_timestamp_query_inside_encoders(WGPUAdapter) -> Bool
+
+pub fn adapter_has_feature_timestamp_query(WGPUAdapter) -> Bool
+
 pub fn adapter_release(WGPUAdapter) -> Unit
 
 pub fn adapter_request_device_sync(WGPUInstance, WGPUAdapter) -> WGPUDevice
+
+pub fn adapter_request_device_sync_timestamp_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
+
+pub fn adapter_request_device_sync_timestamp_query_inside_encoders(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn bind_group_descriptor_free(WGPUBindGroupDescriptorPtr) -> Unit
 
@@ -82,6 +90,8 @@ pub fn command_encoder_resolve_query_set(WGPUCommandEncoder, WGPUQuerySet, UInt,
 
 pub fn command_encoder_set_label_utf8(WGPUCommandEncoder, Bytes, UInt64) -> Unit
 
+pub fn command_encoder_write_timestamp(WGPUCommandEncoder, WGPUQuerySet, UInt) -> Unit
+
 pub fn compute_pass_descriptor_default_new() -> WGPUComputePassDescriptorPtr
 
 pub fn compute_pass_descriptor_free(WGPUComputePassDescriptorPtr) -> Unit
@@ -140,6 +150,8 @@ pub fn device_create_query_set(WGPUDevice, WGPUQuerySetDescriptorPtr) -> WGPUQue
 
 pub fn device_create_query_set_occlusion(WGPUDevice, UInt) -> WGPUQuerySet
 
+pub fn device_create_query_set_timestamp(WGPUDevice, UInt) -> WGPUQuerySet
+
 pub fn device_create_render_pipeline_rgba8(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
 pub fn device_create_render_pipeline_rgba8_alpha_blend(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
@@ -171,6 +183,12 @@ pub fn device_release(WGPUDevice) -> Unit
 pub fn extent3d_free(WGPUExtent3DPtr) -> Unit
 
 pub fn extent3d_new(UInt, UInt, UInt) -> WGPUExtent3DPtr
+
+pub fn feature_name_native_timestamp_query_inside_encoders() -> WGPUFeatureName
+
+pub fn feature_name_native_timestamp_query_inside_passes() -> WGPUFeatureName
+
+pub fn feature_name_timestamp_query() -> WGPUFeatureName
 
 pub fn index_format_uint16() -> WGPUIndexFormat
 
@@ -209,6 +227,8 @@ pub fn query_set_descriptor_new(WGPUQueryType, UInt) -> WGPUQuerySetDescriptorPt
 pub fn query_set_release(WGPUQuerySet) -> Unit
 
 pub fn query_type_occlusion() -> WGPUQueryType
+
+pub fn query_type_timestamp() -> WGPUQueryType
 
 pub fn queue_release(WGPUQueue) -> Unit
 

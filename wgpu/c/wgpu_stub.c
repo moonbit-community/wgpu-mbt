@@ -210,6 +210,19 @@ WGPUExtent3D *mbt_wgpu_extent3d_new(uint32_t width, uint32_t height,
 void mbt_wgpu_extent3d_free(WGPUExtent3D *extent) { free(extent); }
 
 WGPUQueryType mbt_wgpu_query_type_occlusion(void) { return WGPUQueryType_Occlusion; }
+WGPUQueryType mbt_wgpu_query_type_timestamp(void) { return WGPUQueryType_Timestamp; }
+
+WGPUFeatureName mbt_wgpu_feature_name_timestamp_query(void) {
+  return WGPUFeatureName_TimestampQuery;
+}
+
+WGPUFeatureName mbt_wgpu_feature_name_native_timestamp_query_inside_encoders(void) {
+  return (WGPUFeatureName)WGPUNativeFeature_TimestampQueryInsideEncoders;
+}
+
+WGPUFeatureName mbt_wgpu_feature_name_native_timestamp_query_inside_passes(void) {
+  return (WGPUFeatureName)WGPUNativeFeature_TimestampQueryInsidePasses;
+}
 
 WGPUQuerySetDescriptor *mbt_wgpu_query_set_descriptor_new(WGPUQueryType type,
                                                           uint32_t count) {
@@ -255,6 +268,16 @@ typedef struct {
   WGPUDevice device;
 } mbt_request_device_result_t;
 
+static void mbt_uncaptured_error_noop_cb(WGPUDevice const *device, WGPUErrorType type,
+                                        WGPUStringView message, void *userdata1,
+                                        void *userdata2) {
+  (void)device;
+  (void)type;
+  (void)message;
+  (void)userdata1;
+  (void)userdata2;
+}
+
 static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice device,
                                   WGPUStringView message, void *userdata1,
                                   void *userdata2) {
@@ -298,6 +321,115 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync(WGPUInstance instance,
       .userdata2 = NULL,
   };
   (void)wgpuAdapterRequestDevice(adapter, NULL, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  if (out.status != WGPURequestDeviceStatus_Success) {
+    return NULL;
+  }
+  return out.device;
+}
+
+WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query(
+    WGPUInstance instance, WGPUAdapter adapter) {
+  mbt_request_device_result_t out = {0};
+  WGPURequestDeviceCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_device_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  static const WGPUFeatureName required_features[1] = {
+      WGPUFeatureName_TimestampQuery,
+  };
+
+  WGPUDeviceDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .requiredFeatureCount = 1u,
+      .requiredFeatures = required_features,
+      .requiredLimits = NULL,
+      .defaultQueue =
+          (WGPUQueueDescriptor){
+              .nextInChain = NULL,
+              .label = (WGPUStringView){.data = NULL, .length = 0},
+          },
+      .deviceLostCallbackInfo =
+          (WGPUDeviceLostCallbackInfo){
+              .nextInChain = NULL,
+              .mode = WGPUCallbackMode_AllowProcessEvents,
+              .callback = NULL,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+      .uncapturedErrorCallbackInfo =
+          (WGPUUncapturedErrorCallbackInfo){
+              .nextInChain = NULL,
+              .callback = mbt_uncaptured_error_noop_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+  };
+
+  (void)wgpuAdapterRequestDevice(adapter, &desc, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  if (out.status != WGPURequestDeviceStatus_Success) {
+    return NULL;
+  }
+  return out.device;
+}
+
+WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders(
+    WGPUInstance instance, WGPUAdapter adapter) {
+  mbt_request_device_result_t out = {0};
+  WGPURequestDeviceCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_device_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  static const WGPUFeatureName required_features[2] = {
+      WGPUFeatureName_TimestampQuery,
+      (WGPUFeatureName)WGPUNativeFeature_TimestampQueryInsideEncoders,
+  };
+
+  WGPUDeviceDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .requiredFeatureCount = 2u,
+      .requiredFeatures = required_features,
+      .requiredLimits = NULL,
+      .defaultQueue =
+          (WGPUQueueDescriptor){
+              .nextInChain = NULL,
+              .label = (WGPUStringView){.data = NULL, .length = 0},
+          },
+      .deviceLostCallbackInfo =
+          (WGPUDeviceLostCallbackInfo){
+              .nextInChain = NULL,
+              .mode = WGPUCallbackMode_AllowProcessEvents,
+              .callback = NULL,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+      .uncapturedErrorCallbackInfo =
+          (WGPUUncapturedErrorCallbackInfo){
+              .nextInChain = NULL,
+              .callback = mbt_uncaptured_error_noop_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+  };
+
+  (void)wgpuAdapterRequestDevice(adapter, &desc, info);
   while (out.status == 0) {
     wgpuInstanceProcessEvents(instance);
   }
