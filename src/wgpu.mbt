@@ -1337,6 +1337,37 @@ pub fn Device::create_sampler_linear_mirror_repeat(self : Device) -> Sampler {
 }
 
 ///|
+pub fn Device::create_sampler_u32(
+  self : Device,
+  address_mode_u_u32 : UInt,
+  address_mode_v_u32 : UInt,
+  address_mode_w_u32 : UInt,
+  mag_filter_u32 : UInt,
+  min_filter_u32 : UInt,
+  mipmap_filter_u32 : UInt,
+  lod_min_clamp_f32? : Float = 0.0,
+  lod_max_clamp_f32? : Float = 32.0,
+  compare_u32? : UInt = compare_function_undefined,
+  max_anisotropy_u32? : UInt = 1U,
+) -> Sampler {
+  Sampler::{
+    raw: @c.device_create_sampler_u32(
+      self.raw,
+      address_mode_u_u32,
+      address_mode_v_u32,
+      address_mode_w_u32,
+      mag_filter_u32,
+      min_filter_u32,
+      mipmap_filter_u32,
+      lod_min_clamp_f32,
+      lod_max_clamp_f32,
+      compare_u32,
+      max_anisotropy_u32,
+    ),
+  }
+}
+
+///|
 pub fn Device::create_bind_group_layout_sampler_texture_2d(
   self : Device,
 ) -> BindGroupLayout {

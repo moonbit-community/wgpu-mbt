@@ -405,6 +405,33 @@ WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_linear_mirror_repeat_new(void
   return desc;
 }
 
+WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_u32_new(
+    uint32_t address_mode_u_u32, uint32_t address_mode_v_u32, uint32_t address_mode_w_u32,
+    uint32_t mag_filter_u32, uint32_t min_filter_u32, uint32_t mipmap_filter_u32,
+    float lod_min_clamp, float lod_max_clamp, uint32_t compare_u32,
+    uint32_t max_anisotropy) {
+  WGPUSamplerDescriptor *desc =
+      (WGPUSamplerDescriptor *)malloc(sizeof(WGPUSamplerDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUSamplerDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .addressModeU = (WGPUAddressMode)address_mode_u_u32,
+      .addressModeV = (WGPUAddressMode)address_mode_v_u32,
+      .addressModeW = (WGPUAddressMode)address_mode_w_u32,
+      .magFilter = (WGPUFilterMode)mag_filter_u32,
+      .minFilter = (WGPUFilterMode)min_filter_u32,
+      .mipmapFilter = (WGPUMipmapFilterMode)mipmap_filter_u32,
+      .lodMinClamp = lod_min_clamp,
+      .lodMaxClamp = lod_max_clamp,
+      .compare = (WGPUCompareFunction)compare_u32,
+      .maxAnisotropy = max_anisotropy,
+  };
+  return desc;
+}
+
 void mbt_wgpu_sampler_descriptor_free(WGPUSamplerDescriptor *desc) { free(desc); }
 
 WGPUShaderModule mbt_wgpu_device_create_shader_module_wgsl(WGPUDevice device,

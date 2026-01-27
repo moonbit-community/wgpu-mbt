@@ -1332,6 +1332,7 @@ pub fn Device::create_sampler_linear_repeat(Self) -> Sampler
 pub fn Device::create_sampler_nearest_clamp(Self) -> Sampler
 pub fn Device::create_sampler_nearest_mirror_repeat(Self) -> Sampler
 pub fn Device::create_sampler_nearest_repeat(Self) -> Sampler
+pub fn Device::create_sampler_u32(Self, UInt, UInt, UInt, UInt, UInt, UInt, lod_min_clamp_f32? : Float, lod_max_clamp_f32? : Float, compare_u32? : UInt, max_anisotropy_u32? : UInt) -> Sampler
 pub fn Device::create_shader_module_spirv(Self, Bytes) -> ShaderModule
 pub fn Device::create_shader_module_wgsl(Self, String) -> ShaderModule
 pub fn Device::create_texture_depth24plus_2d(Self, UInt, UInt) -> Texture

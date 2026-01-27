@@ -785,6 +785,22 @@ declare pub fn Device::create_sampler_linear_mirror_repeat(
 
 ///|
 #declaration_only
+declare pub fn Device::create_sampler_u32(
+  self : Device,
+  address_mode_u_u32 : UInt,
+  address_mode_v_u32 : UInt,
+  address_mode_w_u32 : UInt,
+  mag_filter_u32 : UInt,
+  min_filter_u32 : UInt,
+  mipmap_filter_u32 : UInt,
+  lod_min_clamp_f32? : Float = 0.0,
+  lod_max_clamp_f32? : Float = 32.0,
+  compare_u32? : UInt = compare_function_undefined,
+  max_anisotropy_u32? : UInt = 1U,
+) -> Sampler
+
+///|
+#declaration_only
 declare pub fn Device::create_render_pipeline_rgba8(
   self : Device,
   shader_module : ShaderModule,

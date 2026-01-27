@@ -154,6 +154,20 @@ pub extern "C" fn sampler_descriptor_nearest_mirror_repeat_new() -> WGPUSamplerD
 pub extern "C" fn sampler_descriptor_linear_mirror_repeat_new() -> WGPUSamplerDescriptorPtr = "mbt_wgpu_sampler_descriptor_linear_mirror_repeat_new"
 
 ///|
+pub extern "C" fn sampler_descriptor_u32_new(
+  address_mode_u_u32 : UInt,
+  address_mode_v_u32 : UInt,
+  address_mode_w_u32 : UInt,
+  mag_filter_u32 : UInt,
+  min_filter_u32 : UInt,
+  mipmap_filter_u32 : UInt,
+  lod_min_clamp_f32 : Float,
+  lod_max_clamp_f32 : Float,
+  compare_u32 : UInt,
+  max_anisotropy_u32 : UInt,
+) -> WGPUSamplerDescriptorPtr = "mbt_wgpu_sampler_descriptor_u32_new"
+
+///|
 #borrow(desc)
 pub extern "C" fn sampler_descriptor_free(
   desc : WGPUSamplerDescriptorPtr,

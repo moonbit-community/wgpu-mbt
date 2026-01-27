@@ -1185,6 +1185,29 @@ pub fn device_create_sampler_linear_mirror_repeat(device : Device) -> Sampler {
 }
 
 ///|
+pub fn device_create_sampler_u32(
+  device : Device,
+  address_mode_u_u32 : UInt,
+  address_mode_v_u32 : UInt,
+  address_mode_w_u32 : UInt,
+  mag_filter_u32 : UInt,
+  min_filter_u32 : UInt,
+  mipmap_filter_u32 : UInt,
+  lod_min_clamp_f32 : Float,
+  lod_max_clamp_f32 : Float,
+  compare_u32 : UInt,
+  max_anisotropy_u32 : UInt,
+) -> Sampler {
+  let desc = sampler_descriptor_u32_new(
+    address_mode_u_u32, address_mode_v_u32, address_mode_w_u32, mag_filter_u32, min_filter_u32,
+    mipmap_filter_u32, lod_min_clamp_f32, lod_max_clamp_f32, compare_u32, max_anisotropy_u32,
+  )
+  let sampler = wgpuDeviceCreateSampler(device, desc)
+  sampler_descriptor_free(desc)
+  sampler
+}
+
+///|
 pub fn device_create_bind_group_layout_sampler_texture_2d(
   device : Device,
 ) -> BindGroupLayout {

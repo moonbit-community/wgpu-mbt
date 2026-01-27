@@ -31,7 +31,10 @@ test "wgpu texture view formats (sRGB view)" {
     @wgpu.texture_format_rgba8_unorm_srgb, @wgpu.texture_view_dimension_2d, @wgpu.texture_aspect_all,
     0U, 1U, 0U, 1U,
   )
-  let sampler = device.create_sampler_linear_clamp()
+  let sampler = device.create_sampler_u32(
+    @wgpu.address_mode_clamp_to_edge, @wgpu.address_mode_clamp_to_edge, @wgpu.address_mode_clamp_to_edge,
+    @wgpu.filter_mode_linear, @wgpu.filter_mode_linear, @wgpu.mipmap_filter_mode_linear,
+  )
   let storage_usage = @wgpu.buffer_usage_storage |
     @wgpu.buffer_usage_copy_src |
     @wgpu.buffer_usage_copy_dst

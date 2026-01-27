@@ -332,6 +332,8 @@ pub fn device_create_sampler_nearest_mirror_repeat(WGPUDevice) -> WGPUSampler
 
 pub fn device_create_sampler_nearest_repeat(WGPUDevice) -> WGPUSampler
 
+pub fn device_create_sampler_u32(WGPUDevice, UInt, UInt, UInt, UInt, UInt, UInt, Float, Float, UInt, UInt) -> WGPUSampler
+
 pub fn device_create_shader_module_spirv(WGPUDevice, Bytes, UInt64) -> WGPUShaderModule
 
 pub fn device_create_shader_module_wgsl(WGPUDevice, Bytes, UInt64) -> WGPUShaderModule
@@ -627,6 +629,8 @@ pub fn sampler_descriptor_nearest_clamp_new() -> WGPUSamplerDescriptorPtr
 pub fn sampler_descriptor_nearest_mirror_repeat_new() -> WGPUSamplerDescriptorPtr
 
 pub fn sampler_descriptor_nearest_repeat_new() -> WGPUSamplerDescriptorPtr
+
+pub fn sampler_descriptor_u32_new(UInt, UInt, UInt, UInt, UInt, UInt, Float, Float, UInt, UInt) -> WGPUSamplerDescriptorPtr
 
 pub fn sampler_release(WGPUSampler) -> Unit
 
