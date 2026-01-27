@@ -116,6 +116,99 @@ void mbt_wgpu_render_pass_set_blend_constant_rgba(WGPURenderPassEncoder pass,
   wgpuRenderPassEncoderSetBlendConstant(pass, &color);
 }
 
+typedef struct {
+  WGPUTexelCopyTextureInfo info;
+} mbt_texel_copy_texture_info_t;
+
+WGPUTexelCopyTextureInfo *
+mbt_wgpu_texel_copy_texture_info_default_new(WGPUTexture texture) {
+  mbt_texel_copy_texture_info_t *out =
+      (mbt_texel_copy_texture_info_t *)malloc(sizeof(mbt_texel_copy_texture_info_t));
+  if (!out) {
+    return NULL;
+  }
+  out->info = (WGPUTexelCopyTextureInfo){
+      .texture = texture,
+      .mipLevel = 0u,
+      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
+      .aspect = WGPUTextureAspect_All,
+  };
+  return &out->info;
+}
+
+void mbt_wgpu_texel_copy_texture_info_free(WGPUTexelCopyTextureInfo *info) { free(info); }
+
+typedef struct {
+  WGPUTexelCopyBufferLayout layout;
+} mbt_texel_copy_buffer_layout_t;
+
+WGPUTexelCopyBufferLayout *
+mbt_wgpu_texel_copy_buffer_layout_new(uint64_t offset, uint32_t bytes_per_row,
+                                      uint32_t rows_per_image) {
+  mbt_texel_copy_buffer_layout_t *out =
+      (mbt_texel_copy_buffer_layout_t *)malloc(sizeof(mbt_texel_copy_buffer_layout_t));
+  if (!out) {
+    return NULL;
+  }
+  out->layout = (WGPUTexelCopyBufferLayout){
+      .offset = offset,
+      .bytesPerRow = bytes_per_row,
+      .rowsPerImage = rows_per_image,
+  };
+  return &out->layout;
+}
+
+void mbt_wgpu_texel_copy_buffer_layout_free(WGPUTexelCopyBufferLayout *layout) {
+  free(layout);
+}
+
+typedef struct {
+  WGPUTexelCopyBufferInfo info;
+} mbt_texel_copy_buffer_info_t;
+
+WGPUTexelCopyBufferInfo *
+mbt_wgpu_texel_copy_buffer_info_new(WGPUBuffer buffer, uint64_t offset,
+                                    uint32_t bytes_per_row,
+                                    uint32_t rows_per_image) {
+  mbt_texel_copy_buffer_info_t *out =
+      (mbt_texel_copy_buffer_info_t *)malloc(sizeof(mbt_texel_copy_buffer_info_t));
+  if (!out) {
+    return NULL;
+  }
+  out->info = (WGPUTexelCopyBufferInfo){
+      .layout =
+          (WGPUTexelCopyBufferLayout){
+              .offset = offset,
+              .bytesPerRow = bytes_per_row,
+              .rowsPerImage = rows_per_image,
+          },
+      .buffer = buffer,
+  };
+  return &out->info;
+}
+
+void mbt_wgpu_texel_copy_buffer_info_free(WGPUTexelCopyBufferInfo *info) { free(info); }
+
+typedef struct {
+  WGPUExtent3D extent;
+} mbt_extent3d_t;
+
+WGPUExtent3D *mbt_wgpu_extent3d_new(uint32_t width, uint32_t height,
+                                    uint32_t depth_or_array_layers) {
+  mbt_extent3d_t *out = (mbt_extent3d_t *)malloc(sizeof(mbt_extent3d_t));
+  if (!out) {
+    return NULL;
+  }
+  out->extent = (WGPUExtent3D){
+      .width = width,
+      .height = height,
+      .depthOrArrayLayers = depth_or_array_layers,
+  };
+  return &out->extent;
+}
+
+void mbt_wgpu_extent3d_free(WGPUExtent3D *extent) { free(extent); }
+
 // The C API provides both `wgpuInstanceWaitAny` and `wgpuInstanceProcessEvents`.
 // wgpu-native currently does not implement `wgpuInstanceWaitAny` for all builds,
 // so we use `WGPUCallbackMode_AllowProcessEvents` + `wgpuInstanceProcessEvents`
@@ -1672,104 +1765,6 @@ WGPURenderPassEncoder mbt_wgpu_command_encoder_begin_render_pass_color_depth(
       .timestampWrites = NULL,
   };
   return wgpuCommandEncoderBeginRenderPass(encoder, &desc);
-}
-
-void mbt_wgpu_command_encoder_copy_texture_to_buffer_rgba8(
-    WGPUCommandEncoder encoder, WGPUTexture texture, WGPUBuffer buffer,
-    uint32_t width, uint32_t height) {
-  WGPUTexelCopyTextureInfo src = {
-      .texture = texture,
-      .mipLevel = 0u,
-      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
-      .aspect = WGPUTextureAspect_All,
-  };
-  WGPUTexelCopyBufferInfo dst = {
-      .layout =
-          (WGPUTexelCopyBufferLayout){
-              .offset = 0u,
-              .bytesPerRow = 256u,
-              .rowsPerImage = height,
-          },
-      .buffer = buffer,
-  };
-  WGPUExtent3D copy_size = {
-      .width = width,
-      .height = height,
-      .depthOrArrayLayers = 1u,
-  };
-  wgpuCommandEncoderCopyTextureToBuffer(encoder, &src, &dst, &copy_size);
-}
-
-void mbt_wgpu_command_encoder_copy_buffer_to_texture_rgba8(
-    WGPUCommandEncoder encoder, WGPUBuffer buffer, WGPUTexture texture,
-    uint32_t width, uint32_t height) {
-  WGPUTexelCopyBufferInfo src = {
-      .layout =
-          (WGPUTexelCopyBufferLayout){
-              .offset = 0u,
-              .bytesPerRow = 256u,
-              .rowsPerImage = height,
-          },
-      .buffer = buffer,
-  };
-  WGPUTexelCopyTextureInfo dst = {
-      .texture = texture,
-      .mipLevel = 0u,
-      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
-      .aspect = WGPUTextureAspect_All,
-  };
-  WGPUExtent3D copy_size = {
-      .width = width,
-      .height = height,
-      .depthOrArrayLayers = 1u,
-  };
-  wgpuCommandEncoderCopyBufferToTexture(encoder, &src, &dst, &copy_size);
-}
-
-void mbt_wgpu_command_encoder_copy_texture_to_texture_rgba8(
-    WGPUCommandEncoder encoder, WGPUTexture src_texture, WGPUTexture dst_texture,
-    uint32_t width, uint32_t height) {
-  WGPUTexelCopyTextureInfo src = {
-      .texture = src_texture,
-      .mipLevel = 0u,
-      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
-      .aspect = WGPUTextureAspect_All,
-  };
-  WGPUTexelCopyTextureInfo dst = {
-      .texture = dst_texture,
-      .mipLevel = 0u,
-      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
-      .aspect = WGPUTextureAspect_All,
-  };
-  WGPUExtent3D copy_size = {
-      .width = width,
-      .height = height,
-      .depthOrArrayLayers = 1u,
-  };
-  wgpuCommandEncoderCopyTextureToTexture(encoder, &src, &dst, &copy_size);
-}
-
-void mbt_wgpu_queue_write_texture_rgba8_2d(WGPUQueue queue, WGPUTexture texture,
-                                           uint32_t width, uint32_t height,
-                                           const uint8_t *data,
-                                           uint64_t data_len) {
-  WGPUTexelCopyTextureInfo dst = {
-      .texture = texture,
-      .mipLevel = 0u,
-      .origin = (WGPUOrigin3D){.x = 0u, .y = 0u, .z = 0u},
-      .aspect = WGPUTextureAspect_All,
-  };
-  WGPUTexelCopyBufferLayout layout = {
-      .offset = 0u,
-      .bytesPerRow = 256u,
-      .rowsPerImage = height,
-  };
-  WGPUExtent3D size = {
-      .width = width,
-      .height = height,
-      .depthOrArrayLayers = 1u,
-  };
-  wgpuQueueWriteTexture(queue, &dst, data, (size_t)data_len, &layout, &size);
 }
 
 WGPUBindGroupLayout mbt_wgpu_device_create_bind_group_layout_sampler_texture_2d(

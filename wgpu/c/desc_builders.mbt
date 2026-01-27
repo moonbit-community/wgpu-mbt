@@ -225,3 +225,52 @@ pub extern "C" fn render_pass_descriptor_color_depth_new(
 pub extern "C" fn render_pass_descriptor_free(
   desc : WGPURenderPassDescriptorPtr,
 ) -> Unit = "mbt_wgpu_render_pass_descriptor_free"
+
+///|
+pub extern "C" fn texel_copy_texture_info_default_new(
+  texture : WGPUTexture,
+) -> WGPUTexelCopyTextureInfoPtr = "mbt_wgpu_texel_copy_texture_info_default_new"
+
+///|
+#borrow(info)
+pub extern "C" fn texel_copy_texture_info_free(
+  info : WGPUTexelCopyTextureInfoPtr,
+) -> Unit = "mbt_wgpu_texel_copy_texture_info_free"
+
+///|
+pub extern "C" fn texel_copy_buffer_layout_new(
+  offset : UInt64,
+  bytes_per_row : UInt,
+  rows_per_image : UInt,
+) -> WGPUTexelCopyBufferLayoutPtr = "mbt_wgpu_texel_copy_buffer_layout_new"
+
+///|
+#borrow(layout)
+pub extern "C" fn texel_copy_buffer_layout_free(
+  layout : WGPUTexelCopyBufferLayoutPtr,
+) -> Unit = "mbt_wgpu_texel_copy_buffer_layout_free"
+
+///|
+pub extern "C" fn texel_copy_buffer_info_new(
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  bytes_per_row : UInt,
+  rows_per_image : UInt,
+) -> WGPUTexelCopyBufferInfoPtr = "mbt_wgpu_texel_copy_buffer_info_new"
+
+///|
+#borrow(info)
+pub extern "C" fn texel_copy_buffer_info_free(
+  info : WGPUTexelCopyBufferInfoPtr,
+) -> Unit = "mbt_wgpu_texel_copy_buffer_info_free"
+
+///|
+pub extern "C" fn extent3d_new(
+  width : UInt,
+  height : UInt,
+  depth_or_array_layers : UInt,
+) -> WGPUExtent3DPtr = "mbt_wgpu_extent3d_new"
+
+///|
+#borrow(extent)
+pub extern "C" fn extent3d_free(extent : WGPUExtent3DPtr) -> Unit = "mbt_wgpu_extent3d_free"

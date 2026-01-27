@@ -158,6 +158,10 @@ pub fn device_get_queue(WGPUDevice) -> WGPUQueue
 
 pub fn device_release(WGPUDevice) -> Unit
 
+pub fn extent3d_free(WGPUExtent3DPtr) -> Unit
+
+pub fn extent3d_new(UInt, UInt, UInt) -> WGPUExtent3DPtr
+
 pub fn index_format_uint16() -> WGPUIndexFormat
 
 pub fn index_format_uint32() -> WGPUIndexFormat
@@ -263,6 +267,18 @@ pub fn shader_module_descriptor_free(WGPUShaderModuleDescriptorPtr) -> Unit
 pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr
 
 pub fn shader_module_release(WGPUShaderModule) -> Unit
+
+pub fn texel_copy_buffer_info_free(WGPUTexelCopyBufferInfoPtr) -> Unit
+
+pub fn texel_copy_buffer_info_new(WGPUBuffer, UInt64, UInt, UInt) -> WGPUTexelCopyBufferInfoPtr
+
+pub fn texel_copy_buffer_layout_free(WGPUTexelCopyBufferLayoutPtr) -> Unit
+
+pub fn texel_copy_buffer_layout_new(UInt64, UInt, UInt) -> WGPUTexelCopyBufferLayoutPtr
+
+pub fn texel_copy_texture_info_default_new(WGPUTexture) -> WGPUTexelCopyTextureInfoPtr
+
+pub fn texel_copy_texture_info_free(WGPUTexelCopyTextureInfoPtr) -> Unit
 
 pub fn texture_create_view(WGPUTexture) -> WGPUTextureView
 
@@ -501,6 +517,8 @@ pub fn wgpuQueueSubmit(WGPUQueue, UInt64, WGPUCommandBufferPtr) -> Unit
 pub fn wgpuQueueWriteBuffer(WGPUQueue, WGPUBuffer, UInt64, UnitPtr, UInt64) -> Unit
 
 pub fn wgpuQueueWriteTexture(WGPUQueue, WGPUTexelCopyTextureInfoPtr, UnitPtr, UInt64, WGPUTexelCopyBufferLayoutPtr, WGPUExtent3DPtr) -> Unit
+
+pub fn wgpuQueueWriteTexture_bytes(WGPUQueue, WGPUTexelCopyTextureInfoPtr, Bytes, UInt64, WGPUTexelCopyBufferLayoutPtr, WGPUExtent3DPtr) -> Unit
 
 pub fn wgpuRenderBundleAddRef(WGPURenderBundle) -> Unit
 

@@ -34,6 +34,16 @@ pub fn create_instance() -> Instance {
 }
 
 ///|
+fn align_up_u32(value : UInt, align : UInt) -> UInt {
+  let rem = value % align
+  if rem == 0U {
+    value
+  } else {
+    value + (align - rem)
+  }
+}
+
+///|
 #borrow(label)
 pub extern "C" fn command_encoder_set_label_utf8(
   encoder : CommandEncoder,
@@ -636,31 +646,57 @@ pub extern "C" fn command_encoder_copy_buffer_to_buffer(
 ) -> Unit = "wgpuCommandEncoderCopyBufferToBuffer"
 
 ///|
-pub extern "C" fn command_encoder_copy_texture_to_buffer_rgba8(
+pub fn command_encoder_copy_texture_to_buffer_rgba8(
   encoder : CommandEncoder,
   texture : Texture,
   buffer : Buffer,
   width : UInt,
   height : UInt,
-) -> Unit = "mbt_wgpu_command_encoder_copy_texture_to_buffer_rgba8"
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * 4U, 256U)
+  let src = texel_copy_texture_info_default_new(texture)
+  let dst = texel_copy_buffer_info_new(buffer, 0UL, bytes_per_row, height)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuCommandEncoderCopyTextureToBuffer(encoder, src, dst, extent)
+  extent3d_free(extent)
+  texel_copy_buffer_info_free(dst)
+  texel_copy_texture_info_free(src)
+}
 
 ///|
-pub extern "C" fn command_encoder_copy_buffer_to_texture_rgba8(
+pub fn command_encoder_copy_buffer_to_texture_rgba8(
   encoder : CommandEncoder,
   buffer : Buffer,
   texture : Texture,
   width : UInt,
   height : UInt,
-) -> Unit = "mbt_wgpu_command_encoder_copy_buffer_to_texture_rgba8"
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * 4U, 256U)
+  let src = texel_copy_buffer_info_new(buffer, 0UL, bytes_per_row, height)
+  let dst = texel_copy_texture_info_default_new(texture)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuCommandEncoderCopyBufferToTexture(encoder, src, dst, extent)
+  extent3d_free(extent)
+  texel_copy_texture_info_free(dst)
+  texel_copy_buffer_info_free(src)
+}
 
 ///|
-pub extern "C" fn command_encoder_copy_texture_to_texture_rgba8(
+pub fn command_encoder_copy_texture_to_texture_rgba8(
   encoder : CommandEncoder,
   src : Texture,
   dst : Texture,
   width : UInt,
   height : UInt,
-) -> Unit = "mbt_wgpu_command_encoder_copy_texture_to_texture_rgba8"
+) -> Unit {
+  let src_info = texel_copy_texture_info_default_new(src)
+  let dst_info = texel_copy_texture_info_default_new(dst)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuCommandEncoderCopyTextureToTexture(encoder, src_info, dst_info, extent)
+  extent3d_free(extent)
+  texel_copy_texture_info_free(dst_info)
+  texel_copy_texture_info_free(src_info)
+}
 
 ///|
 #borrow(commands)
@@ -681,15 +717,36 @@ pub extern "C" fn queue_write_buffer(
 ) -> Unit = "wgpuQueueWriteBuffer"
 
 ///|
-#borrow(data)
-pub extern "C" fn queue_write_texture_rgba8_2d(
+pub fn queue_write_texture_rgba8_2d(
   queue : Queue,
   texture : Texture,
   width : UInt,
   height : UInt,
   data : Bytes,
   size : UInt64,
-) -> Unit = "mbt_wgpu_queue_write_texture_rgba8_2d"
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * 4U, 256U)
+  let dst = texel_copy_texture_info_default_new(texture)
+  let layout = texel_copy_buffer_layout_new(0UL, bytes_per_row, height)
+  let extent = extent3d_new(width, height, 1U)
+  // NOTE: We intentionally declare our own binding taking `Bytes` instead of
+  // `UnitPtr`, so MoonBit can pass a borrowed data pointer.
+  wgpuQueueWriteTexture_bytes(queue, dst, data, size, layout, extent)
+  extent3d_free(extent)
+  texel_copy_buffer_layout_free(layout)
+  texel_copy_texture_info_free(dst)
+}
+
+///|
+#borrow(data)
+pub extern "C" fn wgpuQueueWriteTexture_bytes(
+  queue : Queue,
+  destination : WGPUTexelCopyTextureInfoPtr,
+  data : Bytes,
+  data_size : UInt64,
+  data_layout : WGPUTexelCopyBufferLayoutPtr,
+  write_size : WGPUExtent3DPtr,
+) -> Unit = "wgpuQueueWriteTexture"
 
 ///|
 pub extern "C" fn command_buffer_release(
