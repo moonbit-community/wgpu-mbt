@@ -14,14 +14,9 @@
 
 ///|
 test "wgpu instance.enumerate_adapters (Metal)" {
-  @wgpu.beads_record("instance.create")
   let instance = @wgpu.Instance::create()
-  @wgpu.beads_record("instance.enumerate_adapters_count_metal")
   let count = instance.enumerate_adapters_count_metal()
   // On macOS/Metal we expect at least one adapter.
   inspect(count > 0UL, content="true")
   instance.release()
-  let expected =
-    #|["instance.create", "instance.enumerate_adapters_count_metal"]
-  inspect(@wgpu.beads_take(), content=expected)
 }

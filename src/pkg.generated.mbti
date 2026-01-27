@@ -16,12 +16,6 @@ pub let adapter_type_unknown : UInt
 
 pub let backend_type_metal : UInt
 
-pub fn beads_record(String) -> Unit
-
-pub fn beads_set_enabled(Bool) -> Unit
-
-pub fn beads_take() -> Array[String]
-
 pub let buffer_usage_copy_dst : UInt64
 
 pub let buffer_usage_copy_src : UInt64

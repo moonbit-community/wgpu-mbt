@@ -8,9 +8,6 @@
     "moonbitlang/core/encoding/utf8"
   ],
   "targets": {
-    "beads.mbt": [
-      "native"
-    ],
     "consts.mbt": [
       "native"
     ],
