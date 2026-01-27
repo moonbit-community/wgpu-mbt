@@ -64,3 +64,13 @@ pub let texture_usage_storage_binding : UInt64 = 0x00000008UL
 
 ///|
 pub let texture_usage_render_attachment : UInt64 = 0x00000010UL
+
+///|
+/// Shader stage bitflags (`WGPUShaderStage`, via `WGPUFlags` / `uint64_t`).
+pub let shader_stage_vertex : UInt64 = 0x0000000000000001UL
+
+///|
+pub let shader_stage_fragment : UInt64 = 0x0000000000000002UL
+
+///|
+pub let shader_stage_compute : UInt64 = 0x0000000000000004UL

@@ -141,6 +141,18 @@
     "wgpu_surface_present_test.mbt": [
       "native"
     ],
+    "wgpu_device_poll_test.mbt": [
+      "native"
+    ],
+    "wgpu_push_constants_test.mbt": [
+      "native"
+    ],
+    "wgpu_multi_draw_indirect_test.mbt": [
+      "native"
+    ],
+    "wgpu_pipeline_statistics_query_test.mbt": [
+      "native"
+    ],
     "wgpu_capi_symbols_test.mbt": [
       "native"
     ]

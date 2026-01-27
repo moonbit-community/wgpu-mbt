@@ -29,6 +29,9 @@ pub extern "C" fn null_ptr() -> UnitPtr = "mbt_wgpu_null_ptr"
 pub extern "C" fn null_uint_ptr() -> UIntPtr = "mbt_wgpu_null_uint_ptr"
 
 ///|
+pub extern "C" fn null_submission_index_ptr() -> WGPUSubmissionIndexPtr = "mbt_wgpu_null_ptr"
+
+///|
 pub fn create_instance() -> Instance {
   wgpuCreateInstance(null_instance_descriptor_ptr())
 }
@@ -162,6 +165,18 @@ pub extern "C" fn adapter_request_device_sync_timestamp_query_inside_passes(
 ) -> Device = "mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes"
 
 ///|
+pub extern "C" fn adapter_request_device_sync_push_constants(
+  instance : Instance,
+  adapter : Adapter,
+) -> Device = "mbt_wgpu_adapter_request_device_sync_push_constants"
+
+///|
+pub extern "C" fn adapter_request_device_sync_pipeline_statistics_query(
+  instance : Instance,
+  adapter : Adapter,
+) -> Device = "mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query"
+
+///|
 pub fn adapter_has_feature_timestamp_query(adapter : Adapter) -> Bool {
   wgpuAdapterHasFeature(adapter, feature_name_timestamp_query())
 }
@@ -183,6 +198,21 @@ pub fn adapter_has_feature_native_timestamp_query_inside_passes(
   wgpuAdapterHasFeature(
     adapter,
     feature_name_native_timestamp_query_inside_passes(),
+  )
+}
+
+///|
+pub fn adapter_has_feature_native_push_constants(adapter : Adapter) -> Bool {
+  wgpuAdapterHasFeature(adapter, feature_name_native_push_constants())
+}
+
+///|
+pub fn adapter_has_feature_native_pipeline_statistics_query(
+  adapter : Adapter,
+) -> Bool {
+  wgpuAdapterHasFeature(
+    adapter,
+    feature_name_native_pipeline_statistics_query(),
   )
 }
 
@@ -592,6 +622,19 @@ pub fn device_create_pipeline_layout_2(
   let desc = pipeline_layout_descriptor_2_new(
     bind_group_layout0, bind_group_layout1,
   )
+  let layout = wgpuDeviceCreatePipelineLayout(device, desc)
+  pipeline_layout_descriptor_free(desc)
+  layout
+}
+
+///|
+pub fn device_create_pipeline_layout_push_constants(
+  device : Device,
+  stages : UInt64,
+  start : UInt,
+  end : UInt,
+) -> PipelineLayout {
+  let desc = pipeline_layout_descriptor_push_constants_new(stages, start, end)
   let layout = wgpuDeviceCreatePipelineLayout(device, desc)
   pipeline_layout_descriptor_free(desc)
   layout
@@ -1206,6 +1249,53 @@ pub extern "C" fn queue_submit(
 ) -> Unit = "wgpuQueueSubmit"
 
 ///|
+#borrow(commands)
+pub extern "C" fn queue_submit_for_index(
+  queue : Queue,
+  command_count : UInt64,
+  commands : FixedArray[CommandBuffer],
+) -> UInt64 = "wgpuQueueSubmitForIndex"
+
+///|
+pub extern "C" fn queue_get_timestamp_period(queue : Queue) -> Float = "wgpuQueueGetTimestampPeriod"
+
+///|
+pub extern "C" fn device_poll(
+  device : Device,
+  wait : Bool,
+  submission_index : WGPUSubmissionIndexPtr,
+) -> Bool = "wgpuDevicePoll"
+
+///|
+#borrow(data)
+pub extern "C" fn render_pass_set_push_constants_bytes(
+  encoder : RenderPassEncoder,
+  stages : UInt64,
+  offset : UInt,
+  data : Bytes,
+  data_len : UInt64,
+) -> Unit = "mbt_wgpu_render_pass_set_push_constants_bytes"
+
+///|
+#borrow(data)
+pub extern "C" fn compute_pass_set_push_constants_bytes(
+  encoder : ComputePassEncoder,
+  offset : UInt,
+  data : Bytes,
+  data_len : UInt64,
+) -> Unit = "mbt_wgpu_compute_pass_set_push_constants_bytes"
+
+///|
+#borrow(data)
+pub extern "C" fn render_bundle_encoder_set_push_constants_bytes(
+  encoder : WGPURenderBundleEncoder,
+  stages : UInt64,
+  offset : UInt,
+  data : Bytes,
+  data_len : UInt64,
+) -> Unit = "mbt_wgpu_render_bundle_encoder_set_push_constants_bytes"
+
+///|
 #borrow(data)
 pub extern "C" fn queue_write_buffer(
   queue : Queue,
@@ -1394,6 +1484,18 @@ pub fn device_create_query_set_timestamp(
 }
 
 ///|
+pub fn device_create_query_set_pipeline_statistics(
+  device : Device,
+  count : UInt,
+  statistic_name : UInt,
+) -> QuerySet {
+  let desc = query_set_descriptor_pipeline_statistics_new(count, statistic_name)
+  let qs = device_create_query_set(device, desc)
+  query_set_descriptor_free(desc)
+  qs
+}
+
+///|
 pub extern "C" fn query_set_release(query_set : QuerySet) -> Unit = "wgpuQuerySetRelease"
 
 ///|
@@ -1428,6 +1530,30 @@ pub extern "C" fn compute_pass_write_timestamp(
 ) -> Unit = "wgpuComputePassEncoderWriteTimestamp"
 
 ///|
+pub extern "C" fn compute_pass_begin_pipeline_statistics_query(
+  pass : ComputePassEncoder,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit = "wgpuComputePassEncoderBeginPipelineStatisticsQuery"
+
+///|
+pub extern "C" fn compute_pass_end_pipeline_statistics_query(
+  pass : ComputePassEncoder,
+) -> Unit = "wgpuComputePassEncoderEndPipelineStatisticsQuery"
+
+///|
+pub extern "C" fn render_pass_begin_pipeline_statistics_query(
+  pass : RenderPassEncoder,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit = "wgpuRenderPassEncoderBeginPipelineStatisticsQuery"
+
+///|
+pub extern "C" fn render_pass_end_pipeline_statistics_query(
+  pass : RenderPassEncoder,
+) -> Unit = "wgpuRenderPassEncoderEndPipelineStatisticsQuery"
+
+///|
 pub extern "C" fn render_pass_begin_occlusion_query(
   pass : RenderPassEncoder,
   query_index : UInt,
@@ -1457,6 +1583,42 @@ pub extern "C" fn render_pass_draw_indexed_indirect(
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
 ) -> Unit = "wgpuRenderPassEncoderDrawIndexedIndirect"
+
+///|
+pub extern "C" fn render_pass_multi_draw_indirect(
+  pass : RenderPassEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count : UInt,
+) -> Unit = "wgpuRenderPassEncoderMultiDrawIndirect"
+
+///|
+pub extern "C" fn render_pass_multi_draw_indexed_indirect(
+  pass : RenderPassEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count : UInt,
+) -> Unit = "wgpuRenderPassEncoderMultiDrawIndexedIndirect"
+
+///|
+pub extern "C" fn render_pass_multi_draw_indirect_count(
+  pass : RenderPassEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count_buffer : Buffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
+) -> Unit = "wgpuRenderPassEncoderMultiDrawIndirectCount"
+
+///|
+pub extern "C" fn render_pass_multi_draw_indexed_indirect_count(
+  pass : RenderPassEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count_buffer : Buffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
+) -> Unit = "wgpuRenderPassEncoderMultiDrawIndexedIndirectCount"
 
 ///|
 pub extern "C" fn compute_pass_dispatch_workgroups_indirect(

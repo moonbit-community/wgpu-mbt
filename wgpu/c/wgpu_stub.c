@@ -398,6 +398,14 @@ WGPUFeatureName mbt_wgpu_feature_name_native_timestamp_query_inside_passes(void)
   return (WGPUFeatureName)WGPUNativeFeature_TimestampQueryInsidePasses;
 }
 
+WGPUFeatureName mbt_wgpu_feature_name_native_push_constants(void) {
+  return (WGPUFeatureName)WGPUNativeFeature_PushConstants;
+}
+
+WGPUFeatureName mbt_wgpu_feature_name_native_pipeline_statistics_query(void) {
+  return (WGPUFeatureName)WGPUNativeFeature_PipelineStatisticsQuery;
+}
+
 WGPUQuerySetDescriptor *mbt_wgpu_query_set_descriptor_new(WGPUQueryType type,
                                                           uint32_t count) {
   WGPUQuerySetDescriptor *desc =
@@ -667,6 +675,203 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes(
     return NULL;
   }
   return out.device;
+}
+
+WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance instance,
+                                                               WGPUAdapter adapter) {
+  mbt_request_device_result_t out = {0};
+  WGPURequestDeviceCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_device_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  static const WGPUFeatureName required_features[1] = {
+      (WGPUFeatureName)WGPUNativeFeature_PushConstants,
+  };
+
+  WGPUNativeLimits native_limits = {
+      .chain =
+          (WGPUChainedStructOut){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_NativeLimits,
+          },
+      .maxPushConstantSize = 128u,
+      .maxNonSamplerBindings = 0u,
+  };
+
+  WGPULimits limits = {0};
+  (void)wgpuAdapterGetLimits(adapter, &limits);
+  limits.nextInChain = &native_limits.chain;
+
+  WGPUDeviceDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .requiredFeatureCount = 1u,
+      .requiredFeatures = required_features,
+      .requiredLimits = &limits,
+      .defaultQueue =
+          (WGPUQueueDescriptor){
+              .nextInChain = NULL,
+              .label = (WGPUStringView){.data = NULL, .length = 0},
+          },
+      .deviceLostCallbackInfo =
+          (WGPUDeviceLostCallbackInfo){
+              .nextInChain = NULL,
+              .mode = WGPUCallbackMode_AllowProcessEvents,
+              .callback = NULL,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+      .uncapturedErrorCallbackInfo =
+          (WGPUUncapturedErrorCallbackInfo){
+              .nextInChain = NULL,
+              .callback = mbt_uncaptured_error_noop_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+  };
+
+  (void)wgpuAdapterRequestDevice(adapter, &desc, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  if (out.status != WGPURequestDeviceStatus_Success) {
+    return NULL;
+  }
+  return out.device;
+}
+
+WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
+    WGPUInstance instance, WGPUAdapter adapter) {
+  mbt_request_device_result_t out = {0};
+  WGPURequestDeviceCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_device_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  static const WGPUFeatureName required_features[1] = {
+      (WGPUFeatureName)WGPUNativeFeature_PipelineStatisticsQuery,
+  };
+
+  WGPUDeviceDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .requiredFeatureCount = 1u,
+      .requiredFeatures = required_features,
+      .requiredLimits = NULL,
+      .defaultQueue =
+          (WGPUQueueDescriptor){
+              .nextInChain = NULL,
+              .label = (WGPUStringView){.data = NULL, .length = 0},
+          },
+      .deviceLostCallbackInfo =
+          (WGPUDeviceLostCallbackInfo){
+              .nextInChain = NULL,
+              .mode = WGPUCallbackMode_AllowProcessEvents,
+              .callback = NULL,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+      .uncapturedErrorCallbackInfo =
+          (WGPUUncapturedErrorCallbackInfo){
+              .nextInChain = NULL,
+              .callback = mbt_uncaptured_error_noop_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+  };
+
+  (void)wgpuAdapterRequestDevice(adapter, &desc, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  if (out.status != WGPURequestDeviceStatus_Success) {
+    return NULL;
+  }
+  return out.device;
+}
+
+typedef struct {
+  WGPUPipelineLayoutDescriptor desc;
+  WGPUPipelineLayoutExtras extras;
+  WGPUPushConstantRange range;
+} mbt_pipeline_layout_push_constants_desc_t;
+
+WGPUPipelineLayoutDescriptor *
+mbt_wgpu_pipeline_layout_descriptor_push_constants_new(uint64_t stages,
+                                                       uint32_t start,
+                                                       uint32_t end) {
+  mbt_pipeline_layout_push_constants_desc_t *out =
+      (mbt_pipeline_layout_push_constants_desc_t *)malloc(
+          sizeof(mbt_pipeline_layout_push_constants_desc_t));
+  if (!out) {
+    return NULL;
+  }
+
+  out->range = (WGPUPushConstantRange){
+      .stages = (WGPUShaderStage)stages,
+      .start = start,
+      .end = end,
+  };
+
+  out->extras = (WGPUPipelineLayoutExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_PipelineLayoutExtras,
+          },
+      .pushConstantRangeCount = 1u,
+      .pushConstantRanges = &out->range,
+  };
+
+  out->desc = (WGPUPipelineLayoutDescriptor){
+      .nextInChain = &out->extras.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .bindGroupLayoutCount = 0u,
+      .bindGroupLayouts = NULL,
+  };
+
+  return &out->desc;
+}
+
+void mbt_wgpu_render_pass_set_push_constants_bytes(WGPURenderPassEncoder encoder,
+                                                   uint64_t stages,
+                                                   uint32_t offset,
+                                                   const uint8_t *data,
+                                                   uint64_t len) {
+  if (len > UINT32_MAX) {
+    return;
+  }
+  wgpuRenderPassEncoderSetPushConstants(
+      encoder, (WGPUShaderStage)stages, offset, (uint32_t)len, data);
+}
+
+void mbt_wgpu_compute_pass_set_push_constants_bytes(WGPUComputePassEncoder encoder,
+                                                    uint32_t offset,
+                                                    const uint8_t *data,
+                                                    uint64_t len) {
+  if (len > UINT32_MAX) {
+    return;
+  }
+  wgpuComputePassEncoderSetPushConstants(encoder, offset, (uint32_t)len, data);
+}
+
+void mbt_wgpu_render_bundle_encoder_set_push_constants_bytes(
+    WGPURenderBundleEncoder encoder, uint64_t stages, uint32_t offset,
+    const uint8_t *data, uint64_t len) {
+  if (len > UINT32_MAX) {
+    return;
+  }
+  wgpuRenderBundleEncoderSetPushConstants(
+      encoder, (WGPUShaderStage)stages, offset, (uint32_t)len, data);
 }
 
 WGPUCommandEncoder mbt_wgpu_device_create_command_encoder(WGPUDevice device) {
@@ -1495,6 +1700,43 @@ typedef struct {
   WGPUProgrammableStageDescriptor stage;
   char entry[4];
 } mbt_compute_pipeline_desc_t;
+
+WGPUQueryType mbt_wgpu_query_type_pipeline_statistics(void) {
+  return (WGPUQueryType)WGPUNativeQueryType_PipelineStatistics;
+}
+
+typedef struct {
+  WGPUQuerySetDescriptor desc;
+  WGPUQuerySetDescriptorExtras extras;
+  WGPUPipelineStatisticName name;
+} mbt_query_set_desc_pipeline_stats_t;
+
+WGPUQuerySetDescriptor *mbt_wgpu_query_set_descriptor_pipeline_statistics_new(
+    uint32_t count, uint32_t statistic_name) {
+  mbt_query_set_desc_pipeline_stats_t *out =
+      (mbt_query_set_desc_pipeline_stats_t *)malloc(
+          sizeof(mbt_query_set_desc_pipeline_stats_t));
+  if (!out) {
+    return NULL;
+  }
+  out->name = (WGPUPipelineStatisticName)statistic_name;
+  out->extras = (WGPUQuerySetDescriptorExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_QuerySetDescriptorExtras,
+          },
+      .pipelineStatistics = &out->name,
+      .pipelineStatisticCount = 1u,
+  };
+  out->desc = (WGPUQuerySetDescriptor){
+      .nextInChain = &out->extras.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .type = (WGPUQueryType)WGPUNativeQueryType_PipelineStatistics,
+      .count = count,
+  };
+  return &out->desc;
+}
 
 WGPUComputePipelineDescriptor *
 mbt_wgpu_compute_pipeline_descriptor_new(WGPUPipelineLayout layout,

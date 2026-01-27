@@ -268,6 +268,29 @@ pub fn Adapter::request_device_sync_timestamp_query_inside_passes(
 }
 
 ///|
+pub fn Adapter::request_device_sync_push_constants(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  Device::{
+    raw: @c.adapter_request_device_sync_push_constants(instance.raw, self.raw),
+  }
+}
+
+///|
+pub fn Adapter::request_device_sync_pipeline_statistics_query(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  Device::{
+    raw: @c.adapter_request_device_sync_pipeline_statistics_query(
+      instance.raw,
+      self.raw,
+    ),
+  }
+}
+
+///|
 pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool {
   @c.adapter_has_feature_timestamp_query(self.raw)
 }
@@ -284,6 +307,18 @@ pub fn Adapter::has_feature_native_timestamp_query_inside_passes(
   self : Adapter,
 ) -> Bool {
   @c.adapter_has_feature_native_timestamp_query_inside_passes(self.raw)
+}
+
+///|
+pub fn Adapter::has_feature_native_push_constants(self : Adapter) -> Bool {
+  @c.adapter_has_feature_native_push_constants(self.raw)
+}
+
+///|
+pub fn Adapter::has_feature_native_pipeline_statistics_query(
+  self : Adapter,
+) -> Bool {
+  @c.adapter_has_feature_native_pipeline_statistics_query(self.raw)
 }
 
 ///|
@@ -357,6 +392,21 @@ pub fn Device::create_query_set_timestamp(
   count : UInt,
 ) -> QuerySet {
   QuerySet::{ raw: @c.device_create_query_set_timestamp(self.raw, count) }
+}
+
+///|
+pub fn Device::create_query_set_pipeline_statistics(
+  self : Device,
+  count : UInt,
+  statistic_name : UInt,
+) -> QuerySet {
+  QuerySet::{
+    raw: @c.device_create_query_set_pipeline_statistics(
+      self.raw,
+      count,
+      statistic_name,
+    ),
+  }
 }
 
 ///|
@@ -760,6 +810,23 @@ pub fn Device::create_pipeline_layout_2(
 }
 
 ///|
+pub fn Device::create_pipeline_layout_push_constants(
+  self : Device,
+  stages : UInt64,
+  start : UInt,
+  end : UInt,
+) -> PipelineLayout {
+  PipelineLayout::{
+    raw: @c.device_create_pipeline_layout_push_constants(
+      self.raw,
+      stages,
+      start,
+      end,
+    ),
+  }
+}
+
+///|
 pub fn Device::create_bind_group_storage_buffer(
   self : Device,
   bind_group_layout : BindGroupLayout,
@@ -1119,6 +1186,12 @@ pub fn Queue::submit_one(self : Queue, cmd : CommandBuffer) -> Unit {
 }
 
 ///|
+pub fn Queue::submit_one_for_index(self : Queue, cmd : CommandBuffer) -> UInt64 {
+  let cmds : FixedArray[@c.CommandBuffer] = FixedArray::make(1, cmd.raw)
+  @c.queue_submit_for_index(self.raw, 1UL, cmds)
+}
+
+///|
 pub fn Queue::submit(self : Queue, cmds : Array[CommandBuffer]) -> Unit {
   let count = cmds.length()
   if count == 0 {
@@ -1127,6 +1200,25 @@ pub fn Queue::submit(self : Queue, cmds : Array[CommandBuffer]) -> Unit {
   let raw_cmds : Array[@c.CommandBuffer] = cmds.map(cmd => cmd.raw)
   let fixed = FixedArray::from_array(raw_cmds[:])
   @c.queue_submit(self.raw, count.to_uint64(), fixed)
+}
+
+///|
+pub fn Queue::submit_for_index(
+  self : Queue,
+  cmds : Array[CommandBuffer],
+) -> UInt64 {
+  let count = cmds.length()
+  if count == 0 {
+    return 0UL
+  }
+  let raw_cmds : Array[@c.CommandBuffer] = cmds.map(cmd => cmd.raw)
+  let fixed = FixedArray::from_array(raw_cmds[:])
+  @c.queue_submit_for_index(self.raw, count.to_uint64(), fixed)
+}
+
+///|
+pub fn Queue::timestamp_period(self : Queue) -> Float {
+  @c.queue_get_timestamp_period(self.raw)
 }
 
 ///|
@@ -1244,6 +1336,20 @@ pub fn ComputePass::set_pipeline(
 }
 
 ///|
+pub fn ComputePass::set_push_constants(
+  self : ComputePass,
+  offset : UInt,
+  data : Bytes,
+) -> Unit {
+  @c.compute_pass_set_push_constants_bytes(
+    self.raw,
+    offset,
+    data,
+    data.length().to_uint64(),
+  )
+}
+
+///|
 pub fn ComputePass::dispatch_workgroups(
   self : ComputePass,
   x : UInt,
@@ -1273,6 +1379,24 @@ pub fn ComputePass::write_timestamp(
   query_index : UInt,
 ) -> Unit {
   @c.compute_pass_write_timestamp(self.raw, query_set.raw, query_index)
+}
+
+///|
+pub fn ComputePass::begin_pipeline_statistics_query(
+  self : ComputePass,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit {
+  @c.compute_pass_begin_pipeline_statistics_query(
+    self.raw,
+    query_set.raw,
+    query_index,
+  )
+}
+
+///|
+pub fn ComputePass::end_pipeline_statistics_query(self : ComputePass) -> Unit {
+  @c.compute_pass_end_pipeline_statistics_query(self.raw)
 }
 
 ///|
@@ -1346,6 +1470,22 @@ pub fn RenderPass::set_pipeline(
   pipeline : RenderPipeline,
 ) -> Unit {
   @c.render_pass_set_pipeline(self.raw, pipeline.raw)
+}
+
+///|
+pub fn RenderPass::set_push_constants(
+  self : RenderPass,
+  stages : UInt64,
+  offset : UInt,
+  data : Bytes,
+) -> Unit {
+  @c.render_pass_set_push_constants_bytes(
+    self.raw,
+    stages,
+    offset,
+    data,
+    data.length().to_uint64(),
+  )
 }
 
 ///|
@@ -1497,6 +1637,74 @@ pub fn RenderPass::draw_indexed_indirect(
 }
 
 ///|
+pub fn RenderPass::multi_draw_indirect(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count : UInt,
+) -> Unit {
+  @c.render_pass_multi_draw_indirect(
+    self.raw,
+    indirect_buffer.raw,
+    indirect_offset,
+    count,
+  )
+}
+
+///|
+pub fn RenderPass::multi_draw_indexed_indirect(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count : UInt,
+) -> Unit {
+  @c.render_pass_multi_draw_indexed_indirect(
+    self.raw,
+    indirect_buffer.raw,
+    indirect_offset,
+    count,
+  )
+}
+
+///|
+pub fn RenderPass::multi_draw_indirect_count(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count_buffer : Buffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
+) -> Unit {
+  @c.render_pass_multi_draw_indirect_count(
+    self.raw,
+    indirect_buffer.raw,
+    indirect_offset,
+    count_buffer.raw,
+    count_buffer_offset,
+    max_count,
+  )
+}
+
+///|
+pub fn RenderPass::multi_draw_indexed_indirect_count(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count_buffer : Buffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
+) -> Unit {
+  @c.render_pass_multi_draw_indexed_indirect_count(
+    self.raw,
+    indirect_buffer.raw,
+    indirect_offset,
+    count_buffer.raw,
+    count_buffer_offset,
+    max_count,
+  )
+}
+
+///|
 pub fn RenderPass::begin_occlusion_query(
   self : RenderPass,
   query_index : UInt,
@@ -1511,6 +1719,24 @@ pub fn RenderPass::write_timestamp(
   query_index : UInt,
 ) -> Unit {
   @c.render_pass_write_timestamp(self.raw, query_set.raw, query_index)
+}
+
+///|
+pub fn RenderPass::begin_pipeline_statistics_query(
+  self : RenderPass,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit {
+  @c.render_pass_begin_pipeline_statistics_query(
+    self.raw,
+    query_set.raw,
+    query_index,
+  )
+}
+
+///|
+pub fn RenderPass::end_pipeline_statistics_query(self : RenderPass) -> Unit {
+  @c.render_pass_end_pipeline_statistics_query(self.raw)
 }
 
 ///|
@@ -1755,6 +1981,22 @@ pub fn RenderBundleEncoder::set_pipeline(
 }
 
 ///|
+pub fn RenderBundleEncoder::set_push_constants(
+  self : RenderBundleEncoder,
+  stages : UInt64,
+  offset : UInt,
+  data : Bytes,
+) -> Unit {
+  @c.render_bundle_encoder_set_push_constants_bytes(
+    self.raw,
+    stages,
+    offset,
+    data,
+    data.length().to_uint64(),
+  )
+}
+
+///|
 pub fn RenderBundleEncoder::draw(
   self : RenderBundleEncoder,
   vertex_count : UInt,
@@ -1835,6 +2077,11 @@ pub fn QuerySet::release(self : QuerySet) -> Unit {
 ///|
 pub fn Queue::release(self : Queue) -> Unit {
   @c.queue_release(self.raw)
+}
+
+///|
+pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool {
+  @c.device_poll(self.raw, wait, @c.null_submission_index_ptr())
 }
 
 ///|

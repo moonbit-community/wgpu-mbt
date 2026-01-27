@@ -2,6 +2,10 @@
 package "username/wgpu_mbt/wgpu/c"
 
 // Values
+pub fn adapter_has_feature_native_pipeline_statistics_query(WGPUAdapter) -> Bool
+
+pub fn adapter_has_feature_native_push_constants(WGPUAdapter) -> Bool
+
 pub fn adapter_has_feature_native_timestamp_query_inside_encoders(WGPUAdapter) -> Bool
 
 pub fn adapter_has_feature_native_timestamp_query_inside_passes(WGPUAdapter) -> Bool
@@ -11,6 +15,10 @@ pub fn adapter_has_feature_timestamp_query(WGPUAdapter) -> Bool
 pub fn adapter_release(WGPUAdapter) -> Unit
 
 pub fn adapter_request_device_sync(WGPUInstance, WGPUAdapter) -> WGPUDevice
+
+pub fn adapter_request_device_sync_pipeline_statistics_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
+
+pub fn adapter_request_device_sync_push_constants(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_timestamp_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
@@ -116,6 +124,8 @@ pub fn command_encoder_set_label_utf8(WGPUCommandEncoder, Bytes, UInt64) -> Unit
 
 pub fn command_encoder_write_timestamp(WGPUCommandEncoder, WGPUQuerySet, UInt) -> Unit
 
+pub fn compute_pass_begin_pipeline_statistics_query(WGPUComputePassEncoder, WGPUQuerySet, UInt) -> Unit
+
 pub fn compute_pass_descriptor_default_new() -> WGPUComputePassDescriptorPtr
 
 pub fn compute_pass_descriptor_free(WGPUComputePassDescriptorPtr) -> Unit
@@ -125,6 +135,8 @@ pub fn compute_pass_dispatch_workgroups(WGPUComputePassEncoder, UInt, UInt, UInt
 pub fn compute_pass_dispatch_workgroups_indirect(WGPUComputePassEncoder, WGPUBuffer, UInt64) -> Unit
 
 pub fn compute_pass_end(WGPUComputePassEncoder) -> Unit
+
+pub fn compute_pass_end_pipeline_statistics_query(WGPUComputePassEncoder) -> Unit
 
 pub fn compute_pass_insert_debug_marker_utf8(WGPUComputePassEncoder, Bytes, UInt64) -> Unit
 
@@ -141,6 +153,8 @@ pub fn compute_pass_set_bind_group0(WGPUComputePassEncoder, WGPUBindGroup) -> Un
 pub fn compute_pass_set_label_utf8(WGPUComputePassEncoder, Bytes, UInt64) -> Unit
 
 pub fn compute_pass_set_pipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
+
+pub fn compute_pass_set_push_constants_bytes(WGPUComputePassEncoder, UInt, Bytes, UInt64) -> Unit
 
 pub fn compute_pass_write_timestamp(WGPUComputePassEncoder, WGPUQuerySet, UInt) -> Unit
 
@@ -184,9 +198,13 @@ pub fn device_create_pipeline_layout_1(WGPUDevice, WGPUBindGroupLayout) -> WGPUP
 
 pub fn device_create_pipeline_layout_2(WGPUDevice, WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayout
 
+pub fn device_create_pipeline_layout_push_constants(WGPUDevice, UInt64, UInt, UInt) -> WGPUPipelineLayout
+
 pub fn device_create_query_set(WGPUDevice, WGPUQuerySetDescriptorPtr) -> WGPUQuerySet
 
 pub fn device_create_query_set_occlusion(WGPUDevice, UInt) -> WGPUQuerySet
+
+pub fn device_create_query_set_pipeline_statistics(WGPUDevice, UInt, UInt) -> WGPUQuerySet
 
 pub fn device_create_query_set_timestamp(WGPUDevice, UInt) -> WGPUQuerySet
 
@@ -232,11 +250,17 @@ pub fn device_create_texture_rgba8_2d_with_usage(WGPUDevice, UInt, UInt, UInt64)
 
 pub fn device_get_queue(WGPUDevice) -> WGPUQueue
 
+pub fn device_poll(WGPUDevice, Bool, WGPUSubmissionIndexPtr) -> Bool
+
 pub fn device_release(WGPUDevice) -> Unit
 
 pub fn extent3d_free(WGPUExtent3DPtr) -> Unit
 
 pub fn extent3d_new(UInt, UInt, UInt) -> WGPUExtent3DPtr
+
+pub fn feature_name_native_pipeline_statistics_query() -> WGPUFeatureName
+
+pub fn feature_name_native_push_constants() -> WGPUFeatureName
 
 pub fn feature_name_native_timestamp_query_inside_encoders() -> WGPUFeatureName
 
@@ -266,6 +290,8 @@ pub fn null_pipeline_layout() -> WGPUPipelineLayout
 
 pub fn null_ptr() -> UnitPtr
 
+pub fn null_submission_index_ptr() -> WGPUSubmissionIndexPtr
+
 pub fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr
 
 pub fn null_uint_ptr() -> UIntPtr
@@ -276,21 +302,31 @@ pub fn pipeline_layout_descriptor_2_new(WGPUBindGroupLayout, WGPUBindGroupLayout
 
 pub fn pipeline_layout_descriptor_free(WGPUPipelineLayoutDescriptorPtr) -> Unit
 
+pub fn pipeline_layout_descriptor_push_constants_new(UInt64, UInt, UInt) -> WGPUPipelineLayoutDescriptorPtr
+
 pub fn pipeline_layout_release(WGPUPipelineLayout) -> Unit
 
 pub fn query_set_descriptor_free(WGPUQuerySetDescriptorPtr) -> Unit
 
 pub fn query_set_descriptor_new(WGPUQueryType, UInt) -> WGPUQuerySetDescriptorPtr
 
+pub fn query_set_descriptor_pipeline_statistics_new(UInt, UInt) -> WGPUQuerySetDescriptorPtr
+
 pub fn query_set_release(WGPUQuerySet) -> Unit
 
 pub fn query_type_occlusion() -> WGPUQueryType
 
+pub fn query_type_pipeline_statistics() -> WGPUQueryType
+
 pub fn query_type_timestamp() -> WGPUQueryType
+
+pub fn queue_get_timestamp_period(WGPUQueue) -> Float
 
 pub fn queue_release(WGPUQueue) -> Unit
 
 pub fn queue_submit(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> Unit
+
+pub fn queue_submit_for_index(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> UInt64
 
 pub fn queue_write_buffer(WGPUQueue, WGPUBuffer, UInt64, Bytes, UInt64) -> Unit
 
@@ -314,9 +350,13 @@ pub fn render_bundle_encoder_release(WGPURenderBundleEncoder) -> Unit
 
 pub fn render_bundle_encoder_set_pipeline(WGPURenderBundleEncoder, WGPURenderPipeline) -> Unit
 
+pub fn render_bundle_encoder_set_push_constants_bytes(WGPURenderBundleEncoder, UInt64, UInt, Bytes, UInt64) -> Unit
+
 pub fn render_bundle_release(WGPURenderBundle) -> Unit
 
 pub fn render_pass_begin_occlusion_query(WGPURenderPassEncoder, UInt) -> Unit
+
+pub fn render_pass_begin_pipeline_statistics_query(WGPURenderPassEncoder, WGPUQuerySet, UInt) -> Unit
 
 pub fn render_pass_descriptor_color2_clear_default_new(WGPUTextureView, WGPUTextureView) -> WGPURenderPassDescriptorPtr
 
@@ -344,9 +384,19 @@ pub fn render_pass_end(WGPURenderPassEncoder) -> Unit
 
 pub fn render_pass_end_occlusion_query(WGPURenderPassEncoder) -> Unit
 
+pub fn render_pass_end_pipeline_statistics_query(WGPURenderPassEncoder) -> Unit
+
 pub fn render_pass_execute_bundles(WGPURenderPassEncoder, Array[WGPURenderBundle]) -> Unit
 
 pub fn render_pass_insert_debug_marker_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
+
+pub fn render_pass_multi_draw_indexed_indirect(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt) -> Unit
+
+pub fn render_pass_multi_draw_indexed_indirect_count(WGPURenderPassEncoder, WGPUBuffer, UInt64, WGPUBuffer, UInt64, UInt) -> Unit
+
+pub fn render_pass_multi_draw_indirect(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt) -> Unit
+
+pub fn render_pass_multi_draw_indirect_count(WGPURenderPassEncoder, WGPUBuffer, UInt64, WGPUBuffer, UInt64, UInt) -> Unit
 
 pub fn render_pass_pop_debug_group(WGPURenderPassEncoder) -> Unit
 
@@ -367,6 +417,8 @@ pub fn render_pass_set_index_buffer_u32(WGPURenderPassEncoder, WGPUBuffer, UInt6
 pub fn render_pass_set_label_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
 
 pub fn render_pass_set_pipeline(WGPURenderPassEncoder, WGPURenderPipeline) -> Unit
+
+pub fn render_pass_set_push_constants_bytes(WGPURenderPassEncoder, UInt64, UInt, Bytes, UInt64) -> Unit
 
 pub fn render_pass_set_scissor_rect(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
 
@@ -562,11 +614,15 @@ pub fn wgpuCommandEncoderWriteTimestamp(WGPUCommandEncoder, WGPUQuerySet, UInt) 
 
 pub fn wgpuComputePassEncoderAddRef(WGPUComputePassEncoder) -> Unit
 
+pub fn wgpuComputePassEncoderBeginPipelineStatisticsQuery(WGPUComputePassEncoder, WGPUQuerySet, UInt) -> Unit
+
 pub fn wgpuComputePassEncoderDispatchWorkgroups(WGPUComputePassEncoder, UInt, UInt, UInt) -> Unit
 
 pub fn wgpuComputePassEncoderDispatchWorkgroupsIndirect(WGPUComputePassEncoder, WGPUBuffer, UInt64) -> Unit
 
 pub fn wgpuComputePassEncoderEnd(WGPUComputePassEncoder) -> Unit
+
+pub fn wgpuComputePassEncoderEndPipelineStatisticsQuery(WGPUComputePassEncoder) -> Unit
 
 pub fn wgpuComputePassEncoderInsertDebugMarker(WGPUComputePassEncoder, WGPUStringView) -> Unit
 
@@ -583,6 +639,10 @@ pub fn wgpuComputePassEncoderSetBindGroup_offsets(WGPUComputePassEncoder, UInt, 
 pub fn wgpuComputePassEncoderSetLabel(WGPUComputePassEncoder, WGPUStringView) -> Unit
 
 pub fn wgpuComputePassEncoderSetPipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
+
+pub fn wgpuComputePassEncoderSetPushConstants(WGPUComputePassEncoder, UInt, UInt, UnitPtr) -> Unit
+
+pub fn wgpuComputePassEncoderWriteTimestamp(WGPUComputePassEncoder, WGPUQuerySet, UInt) -> Unit
 
 pub fn wgpuComputePipelineAddRef(WGPUComputePipeline) -> Unit
 
@@ -622,6 +682,8 @@ pub fn wgpuDeviceCreateSampler(WGPUDevice, WGPUSamplerDescriptorPtr) -> WGPUSamp
 
 pub fn wgpuDeviceCreateShaderModule(WGPUDevice, WGPUShaderModuleDescriptorPtr) -> WGPUShaderModule
 
+pub fn wgpuDeviceCreateShaderModuleSpirV(WGPUDevice, WGPUShaderModuleDescriptorSpirVPtr) -> WGPUShaderModule
+
 pub fn wgpuDeviceCreateTexture(WGPUDevice, WGPUTextureDescriptorPtr) -> WGPUTexture
 
 pub fn wgpuDeviceDestroy(WGPUDevice) -> Unit
@@ -638,6 +700,8 @@ pub fn wgpuDeviceGetQueue(WGPUDevice) -> WGPUQueue
 
 pub fn wgpuDeviceHasFeature(WGPUDevice, WGPUFeatureName) -> Bool
 
+pub fn wgpuDevicePoll(WGPUDevice, Bool, WGPUSubmissionIndexPtr) -> Bool
+
 pub fn wgpuDevicePopErrorScope(WGPUDevice, WGPUPopErrorScopeCallbackInfo) -> WGPUFuture
 
 pub fn wgpuDevicePushErrorScope(WGPUDevice, WGPUErrorFilter) -> Unit
@@ -646,13 +710,19 @@ pub fn wgpuDeviceRelease(WGPUDevice) -> Unit
 
 pub fn wgpuDeviceSetLabel(WGPUDevice, WGPUStringView) -> Unit
 
+pub fn wgpuGenerateReport(WGPUInstance, WGPUGlobalReportPtr) -> Unit
+
 pub fn wgpuGetInstanceCapabilities(WGPUInstanceCapabilitiesPtr) -> WGPUStatus
 
 pub fn wgpuGetProcAddress(WGPUStringView) -> WGPUProc
 
+pub fn wgpuGetVersion() -> UInt
+
 pub fn wgpuInstanceAddRef(WGPUInstance) -> Unit
 
 pub fn wgpuInstanceCreateSurface(WGPUInstance, WGPUSurfaceDescriptorPtr) -> WGPUSurface
+
+pub fn wgpuInstanceEnumerateAdapters(WGPUInstance, WGPUInstanceEnumerateAdapterOptionsPtr, WGPUAdapterPtr) -> UInt64
 
 pub fn wgpuInstanceGetWGSLLanguageFeatures(WGPUInstance, WGPUSupportedWGSLLanguageFeaturesPtr) -> WGPUStatus
 
@@ -686,6 +756,8 @@ pub fn wgpuQuerySetSetLabel(WGPUQuerySet, WGPUStringView) -> Unit
 
 pub fn wgpuQueueAddRef(WGPUQueue) -> Unit
 
+pub fn wgpuQueueGetTimestampPeriod(WGPUQueue) -> Float
+
 pub fn wgpuQueueOnSubmittedWorkDone(WGPUQueue, WGPUQueueWorkDoneCallbackInfo) -> WGPUFuture
 
 pub fn wgpuQueueRelease(WGPUQueue) -> Unit
@@ -693,6 +765,8 @@ pub fn wgpuQueueRelease(WGPUQueue) -> Unit
 pub fn wgpuQueueSetLabel(WGPUQueue, WGPUStringView) -> Unit
 
 pub fn wgpuQueueSubmit(WGPUQueue, UInt64, WGPUCommandBufferPtr) -> Unit
+
+pub fn wgpuQueueSubmitForIndex(WGPUQueue, UInt64, WGPUCommandBufferPtr) -> UInt64
 
 pub fn wgpuQueueWriteBuffer(WGPUQueue, WGPUBuffer, UInt64, UnitPtr, UInt64) -> Unit
 
@@ -730,6 +804,8 @@ pub fn wgpuRenderBundleEncoderSetLabel(WGPURenderBundleEncoder, WGPUStringView) 
 
 pub fn wgpuRenderBundleEncoderSetPipeline(WGPURenderBundleEncoder, WGPURenderPipeline) -> Unit
 
+pub fn wgpuRenderBundleEncoderSetPushConstants(WGPURenderBundleEncoder, UInt64, UInt, UInt, UnitPtr) -> Unit
+
 pub fn wgpuRenderBundleEncoderSetVertexBuffer(WGPURenderBundleEncoder, UInt, WGPUBuffer, UInt64, UInt64) -> Unit
 
 pub fn wgpuRenderBundleRelease(WGPURenderBundle) -> Unit
@@ -739,6 +815,8 @@ pub fn wgpuRenderBundleSetLabel(WGPURenderBundle, WGPUStringView) -> Unit
 pub fn wgpuRenderPassEncoderAddRef(WGPURenderPassEncoder) -> Unit
 
 pub fn wgpuRenderPassEncoderBeginOcclusionQuery(WGPURenderPassEncoder, UInt) -> Unit
+
+pub fn wgpuRenderPassEncoderBeginPipelineStatisticsQuery(WGPURenderPassEncoder, WGPUQuerySet, UInt) -> Unit
 
 pub fn wgpuRenderPassEncoderDraw(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
 
@@ -752,11 +830,21 @@ pub fn wgpuRenderPassEncoderEnd(WGPURenderPassEncoder) -> Unit
 
 pub fn wgpuRenderPassEncoderEndOcclusionQuery(WGPURenderPassEncoder) -> Unit
 
+pub fn wgpuRenderPassEncoderEndPipelineStatisticsQuery(WGPURenderPassEncoder) -> Unit
+
 pub fn wgpuRenderPassEncoderExecuteBundles(WGPURenderPassEncoder, UInt64, WGPURenderBundlePtr) -> Unit
 
 pub fn wgpuRenderPassEncoderExecuteBundles_bundles(WGPURenderPassEncoder, UInt64, FixedArray[WGPURenderBundle]) -> Unit
 
 pub fn wgpuRenderPassEncoderInsertDebugMarker(WGPURenderPassEncoder, WGPUStringView) -> Unit
+
+pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirect(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt) -> Unit
+
+pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(WGPURenderPassEncoder, WGPUBuffer, UInt64, WGPUBuffer, UInt64, UInt) -> Unit
+
+pub fn wgpuRenderPassEncoderMultiDrawIndirect(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt) -> Unit
+
+pub fn wgpuRenderPassEncoderMultiDrawIndirectCount(WGPURenderPassEncoder, WGPUBuffer, UInt64, WGPUBuffer, UInt64, UInt) -> Unit
 
 pub fn wgpuRenderPassEncoderPopDebugGroup(WGPURenderPassEncoder) -> Unit
 
@@ -776,6 +864,8 @@ pub fn wgpuRenderPassEncoderSetLabel(WGPURenderPassEncoder, WGPUStringView) -> U
 
 pub fn wgpuRenderPassEncoderSetPipeline(WGPURenderPassEncoder, WGPURenderPipeline) -> Unit
 
+pub fn wgpuRenderPassEncoderSetPushConstants(WGPURenderPassEncoder, UInt64, UInt, UInt, UnitPtr) -> Unit
+
 pub fn wgpuRenderPassEncoderSetScissorRect(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
 
 pub fn wgpuRenderPassEncoderSetStencilReference(WGPURenderPassEncoder, UInt) -> Unit
@@ -783,6 +873,8 @@ pub fn wgpuRenderPassEncoderSetStencilReference(WGPURenderPassEncoder, UInt) -> 
 pub fn wgpuRenderPassEncoderSetVertexBuffer(WGPURenderPassEncoder, UInt, WGPUBuffer, UInt64, UInt64) -> Unit
 
 pub fn wgpuRenderPassEncoderSetViewport(WGPURenderPassEncoder, Float, Float, Float, Float, Float, Float) -> Unit
+
+pub fn wgpuRenderPassEncoderWriteTimestamp(WGPURenderPassEncoder, WGPUQuerySet, UInt) -> Unit
 
 pub fn wgpuRenderPipelineAddRef(WGPURenderPipeline) -> Unit
 
@@ -797,6 +889,10 @@ pub fn wgpuSamplerAddRef(WGPUSampler) -> Unit
 pub fn wgpuSamplerRelease(WGPUSampler) -> Unit
 
 pub fn wgpuSamplerSetLabel(WGPUSampler, WGPUStringView) -> Unit
+
+pub fn wgpuSetLogCallback(WGPULogCallback, UnitPtr) -> Unit
+
+pub fn wgpuSetLogLevel(WGPULogLevel) -> Unit
 
 pub fn wgpuShaderModuleAddRef(WGPUShaderModule) -> Unit
 
@@ -879,6 +975,10 @@ pub type WGPUAdapterInfo
 #alias(UnitPtr)
 #external
 pub type WGPUAdapterInfoPtr
+
+#alias(UnitPtr)
+#external
+pub type WGPUAdapterPtr
 
 #alias(BindGroup)
 #external
@@ -984,6 +1084,10 @@ pub type WGPUFuture
 #external
 pub type WGPUFutureWaitInfoPtr
 
+#alias(UnitPtr)
+#external
+pub type WGPUGlobalReportPtr
+
 #external
 pub type WGPUIndexFormat
 
@@ -1001,7 +1105,17 @@ pub type WGPUInstanceDescriptorPtr
 
 #alias(UnitPtr)
 #external
+pub type WGPUInstanceEnumerateAdapterOptionsPtr
+
+#alias(UnitPtr)
+#external
 pub type WGPULimitsPtr
+
+#external
+pub type WGPULogCallback
+
+#external
+pub type WGPULogLevel
 
 #alias(PipelineLayout)
 #external
@@ -1095,11 +1209,19 @@ pub type WGPUShaderModule
 #external
 pub type WGPUShaderModuleDescriptorPtr
 
+#alias(UnitPtr)
+#external
+pub type WGPUShaderModuleDescriptorSpirVPtr
+
 #external
 pub type WGPUStatus
 
 #external
 pub type WGPUStringView
+
+#alias(UnitPtr)
+#external
+pub type WGPUSubmissionIndexPtr
 
 #external
 pub type WGPUSupportedFeatures
@@ -1181,6 +1303,10 @@ pub type WGPUWaitStatus
 pub type WGPUBufferUsage = UInt64
 
 pub type WGPUMapMode = UInt64
+
+pub type WGPUShaderStage = UInt64
+
+pub type WGPUSubmissionIndex = UInt64
 
 pub type WGPUTextureUsage = UInt64
 

@@ -44,6 +44,10 @@ pub type WGPUAdapterInfoPtr
 
 ///|
 #declaration_only
+pub type WGPUAdapterPtr
+
+///|
+#declaration_only
 pub type WGPUBindGroup
 
 ///|
@@ -159,6 +163,10 @@ pub type WGPUFutureWaitInfoPtr
 
 ///|
 #declaration_only
+pub type WGPUGlobalReportPtr
+
+///|
+#declaration_only
 pub type WGPUIndexFormat
 
 ///|
@@ -175,7 +183,19 @@ pub type WGPUInstanceDescriptorPtr
 
 ///|
 #declaration_only
+pub type WGPUInstanceEnumerateAdapterOptionsPtr
+
+///|
+#declaration_only
 pub type WGPULimitsPtr
+
+///|
+#declaration_only
+pub type WGPULogCallback
+
+///|
+#declaration_only
+pub type WGPULogLevel
 
 ///|
 pub type WGPUMapMode = UInt64
@@ -282,11 +302,25 @@ pub type WGPUShaderModuleDescriptorPtr
 
 ///|
 #declaration_only
+pub type WGPUShaderModuleDescriptorSpirVPtr
+
+///|
+pub type WGPUShaderStage = UInt64
+
+///|
+#declaration_only
 pub type WGPUStatus
 
 ///|
 #declaration_only
 pub type WGPUStringView
+
+///|
+pub type WGPUSubmissionIndex = UInt64
+
+///|
+#declaration_only
+pub type WGPUSubmissionIndexPtr
 
 ///|
 #declaration_only
@@ -748,6 +782,16 @@ pub fn wgpuComputePassEncoderAddRef(
 
 ///|
 #declaration_only
+pub fn wgpuComputePassEncoderBeginPipelineStatisticsQuery(
+  computePassEncoder : WGPUComputePassEncoder,
+  querySet : WGPUQuerySet,
+  queryIndex : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn wgpuComputePassEncoderDispatchWorkgroups(
   computePassEncoder : WGPUComputePassEncoder,
   workgroupCountX : UInt,
@@ -770,6 +814,14 @@ pub fn wgpuComputePassEncoderDispatchWorkgroupsIndirect(
 ///|
 #declaration_only
 pub fn wgpuComputePassEncoderEnd(
+  computePassEncoder : WGPUComputePassEncoder,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuComputePassEncoderEndPipelineStatisticsQuery(
   computePassEncoder : WGPUComputePassEncoder,
 ) -> Unit {
   ...
@@ -835,6 +887,27 @@ pub fn wgpuComputePassEncoderSetLabel(
 pub fn wgpuComputePassEncoderSetPipeline(
   computePassEncoder : WGPUComputePassEncoder,
   pipeline : WGPUComputePipeline,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuComputePassEncoderSetPushConstants(
+  encoder : WGPUComputePassEncoder,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuComputePassEncoderWriteTimestamp(
+  computePassEncoder : WGPUComputePassEncoder,
+  querySet : WGPUQuerySet,
+  queryIndex : UInt,
 ) -> Unit {
   ...
 }
@@ -1006,6 +1079,15 @@ pub fn wgpuDeviceCreateShaderModule(
 
 ///|
 #declaration_only
+pub fn wgpuDeviceCreateShaderModuleSpirV(
+  device : WGPUDevice,
+  descriptor : WGPUShaderModuleDescriptorSpirVPtr,
+) -> WGPUShaderModule {
+  ...
+}
+
+///|
+#declaration_only
 pub fn wgpuDeviceCreateTexture(
   device : WGPUDevice,
   descriptor : WGPUTextureDescriptorPtr,
@@ -1066,6 +1148,16 @@ pub fn wgpuDeviceHasFeature(
 
 ///|
 #declaration_only
+pub fn wgpuDevicePoll(
+  device : WGPUDevice,
+  wait : Bool,
+  submissionIndex : WGPUSubmissionIndexPtr,
+) -> Bool {
+  ...
+}
+
+///|
+#declaration_only
 pub fn wgpuDevicePopErrorScope(
   device : WGPUDevice,
   callbackInfo : WGPUPopErrorScopeCallbackInfo,
@@ -1096,6 +1188,15 @@ pub fn wgpuDeviceSetLabel(device : WGPUDevice, label : WGPUStringView) -> Unit {
 
 ///|
 #declaration_only
+pub fn wgpuGenerateReport(
+  instance : WGPUInstance,
+  report : WGPUGlobalReportPtr,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn wgpuGetInstanceCapabilities(
   capabilities : WGPUInstanceCapabilitiesPtr,
 ) -> WGPUStatus {
@@ -1105,6 +1206,12 @@ pub fn wgpuGetInstanceCapabilities(
 ///|
 #declaration_only
 pub fn wgpuGetProcAddress(procName : WGPUStringView) -> WGPUProc {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuGetVersion() -> UInt {
   ...
 }
 
@@ -1120,6 +1227,16 @@ pub fn wgpuInstanceCreateSurface(
   instance : WGPUInstance,
   descriptor : WGPUSurfaceDescriptorPtr,
 ) -> WGPUSurface {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuInstanceEnumerateAdapters(
+  instance : WGPUInstance,
+  options : WGPUInstanceEnumerateAdapterOptionsPtr,
+  adapters : WGPUAdapterPtr,
+) -> UInt64 {
   ...
 }
 
@@ -1242,6 +1359,12 @@ pub fn wgpuQueueAddRef(queue : WGPUQueue) -> Unit {
 
 ///|
 #declaration_only
+pub fn wgpuQueueGetTimestampPeriod(queue : WGPUQueue) -> Float {
+  ...
+}
+
+///|
+#declaration_only
 pub fn wgpuQueueOnSubmittedWorkDone(
   queue : WGPUQueue,
   callbackInfo : WGPUQueueWorkDoneCallbackInfo,
@@ -1268,6 +1391,16 @@ pub fn wgpuQueueSubmit(
   commandCount : UInt64,
   commands : WGPUCommandBufferPtr,
 ) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuQueueSubmitForIndex(
+  queue : WGPUQueue,
+  commandCount : UInt64,
+  commands : WGPUCommandBufferPtr,
+) -> WGPUSubmissionIndex {
   ...
 }
 
@@ -1442,6 +1575,18 @@ pub fn wgpuRenderBundleEncoderSetPipeline(
 
 ///|
 #declaration_only
+pub fn wgpuRenderBundleEncoderSetPushConstants(
+  encoder : WGPURenderBundleEncoder,
+  stages : WGPUShaderStage,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn wgpuRenderBundleEncoderSetVertexBuffer(
   renderBundleEncoder : WGPURenderBundleEncoder,
   slot : UInt,
@@ -1479,6 +1624,16 @@ pub fn wgpuRenderPassEncoderAddRef(
 #declaration_only
 pub fn wgpuRenderPassEncoderBeginOcclusionQuery(
   renderPassEncoder : WGPURenderPassEncoder,
+  queryIndex : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuRenderPassEncoderBeginPipelineStatisticsQuery(
+  renderPassEncoder : WGPURenderPassEncoder,
+  querySet : WGPUQuerySet,
   queryIndex : UInt,
 ) -> Unit {
   ...
@@ -1547,6 +1702,14 @@ pub fn wgpuRenderPassEncoderEndOcclusionQuery(
 
 ///|
 #declaration_only
+pub fn wgpuRenderPassEncoderEndPipelineStatisticsQuery(
+  renderPassEncoder : WGPURenderPassEncoder,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn wgpuRenderPassEncoderExecuteBundles(
   renderPassEncoder : WGPURenderPassEncoder,
   bundleCount : UInt64,
@@ -1560,6 +1723,54 @@ pub fn wgpuRenderPassEncoderExecuteBundles(
 pub fn wgpuRenderPassEncoderInsertDebugMarker(
   renderPassEncoder : WGPURenderPassEncoder,
   markerLabel : WGPUStringView,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirect(
+  encoder : WGPURenderPassEncoder,
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  count : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(
+  encoder : WGPURenderPassEncoder,
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  count_buffer : WGPUBuffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuRenderPassEncoderMultiDrawIndirect(
+  encoder : WGPURenderPassEncoder,
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  count : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuRenderPassEncoderMultiDrawIndirectCount(
+  encoder : WGPURenderPassEncoder,
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  count_buffer : WGPUBuffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
 ) -> Unit {
   ...
 }
@@ -1642,6 +1853,18 @@ pub fn wgpuRenderPassEncoderSetPipeline(
 
 ///|
 #declaration_only
+pub fn wgpuRenderPassEncoderSetPushConstants(
+  encoder : WGPURenderPassEncoder,
+  stages : WGPUShaderStage,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn wgpuRenderPassEncoderSetScissorRect(
   renderPassEncoder : WGPURenderPassEncoder,
   x : UInt,
@@ -1683,6 +1906,16 @@ pub fn wgpuRenderPassEncoderSetViewport(
   height : Float,
   minDepth : Float,
   maxDepth : Float,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuRenderPassEncoderWriteTimestamp(
+  renderPassEncoder : WGPURenderPassEncoder,
+  querySet : WGPUQuerySet,
+  queryIndex : UInt,
 ) -> Unit {
   ...
 }
@@ -1735,6 +1968,21 @@ pub fn wgpuSamplerSetLabel(
   sampler : WGPUSampler,
   label : WGPUStringView,
 ) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuSetLogCallback(
+  callback : WGPULogCallback,
+  userdata : UnitPtr,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn wgpuSetLogLevel(level : WGPULogLevel) -> Unit {
   ...
 }
 

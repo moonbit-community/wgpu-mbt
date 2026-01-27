@@ -21,6 +21,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 WEBGPU_H = REPO / "vendor/wgpu-native/ffi/webgpu-headers/webgpu.h"
+WGPU_H = REPO / "vendor/wgpu-native/ffi/wgpu.h"
 OUT_SPEC = REPO / "wgpu/c/webgpu_capi_spec.mbt"
 OUT_IMPL = REPO / "wgpu/c/webgpu_capi.mbt"
 OUT_TEST = REPO / "wgpu_capi_symbols_test.mbt"
@@ -68,7 +69,7 @@ HANDLE_TYPE_ALIASES: dict[str, str] = {
 
 
 def strip_comments(s: str) -> str:
-    s = re.sub(r"/\\*.*?\\*/", "", s, flags=re.S)
+    s = re.sub(r"/\*.*?\*/", "", s, flags=re.S)
     s = re.sub(r"//.*?$", "", s, flags=re.M)
     return s
 
@@ -260,6 +261,56 @@ def parse_exported_functions(h_text: str) -> list[Func]:
     return out
 
 
+def parse_any_functions(h_text: str) -> list[Func]:
+    """
+    Parse non-WGPU_EXPORT function prototypes (e.g. wgpu-native extras in wgpu.h).
+    """
+    out: list[Func] = []
+    for line in h_text.splitlines():
+        s = norm_ws(line)
+        if not s.endswith(";"):
+            continue
+        if "wgpu" not in s:
+            continue
+        if s.startswith("typedef "):
+            continue
+        mm = re.match(r"(.+?)\s+(wgpu\w+)\s*\((.*?)\)\s*;", s)
+        if not mm:
+            continue
+        ret_c, name, params_c = mm.group(1), mm.group(2), mm.group(3)
+        ret_star_depth = ret_c.count("*")
+        ret_c = ret_c.replace("*", "")
+        ret = mbt_type_for_c(ret_c, ret_star_depth)
+
+        params: list[Param] = []
+        params_c = params_c.strip()
+        if params_c and params_c != "void":
+            parts = [p.strip() for p in params_c.split(",")]
+            for p in parts:
+                p = norm_ws(p)
+                p = re.sub(r"\bconst\b", "", p)
+                p = re.sub(r"\bstruct\b", "", p)
+                p = re.sub(r"\bWGPU_NULLABLE\b", "", p)
+                p = re.sub(r"\bWGPU_NONNULL\b", "", p)
+                p = norm_ws(p)
+
+                p = p.replace("*", " * ")
+                tokens = [t for t in p.split(" ") if t]
+                if not tokens:
+                    continue
+                name_tok = tokens[-1]
+                ty_tokens = tokens[:-1]
+                star_depth = sum(1 for t in ty_tokens if t == "*")
+                base_tokens = [t for t in ty_tokens if t != "*"]
+                ty_tok = " ".join(base_tokens) if base_tokens else "void"
+                mbt_ty = mbt_type_for_c(ty_tok, star_depth)
+                if name_tok in {"type", "let", "pub", "fn", "match"}:
+                    name_tok = f"{name_tok}_"
+                params.append(Param(name=name_tok, mbt_type=mbt_ty))
+        out.append(Func(name=name, ret=ret, params=params))
+    return out
+
+
 def collect_types(funcs: list[Func]) -> set[str]:
     tys: set[str] = set()
     for f in funcs:
@@ -401,13 +452,27 @@ def write_symbol_test(funcs: list[Func]) -> None:
 
 
 def main() -> None:
-    h_text = strip_comments(WEBGPU_H.read_text(encoding="utf-8"))
-    enum_types = parse_enum_type_names(h_text)
-    typedef_aliases = parse_simple_typedef_aliases(h_text)
+    webgpu_text = strip_comments(WEBGPU_H.read_text(encoding="utf-8"))
+    wgpu_text = strip_comments(WGPU_H.read_text(encoding="utf-8"))
+    combined_text = webgpu_text + "\n" + wgpu_text
+
+    enum_types = parse_enum_type_names(combined_text)
+    typedef_aliases = parse_simple_typedef_aliases(combined_text)
     typedef_primitives = resolve_typedef_primitives(typedef_aliases)
-    funcs = parse_exported_functions(h_text)
+
+    funcs: list[Func] = []
+    funcs.extend(parse_exported_functions(webgpu_text))
+    funcs.extend(parse_any_functions(wgpu_text))
     if not funcs:
-        raise SystemExit("No exported functions found; header format changed?")
+        raise SystemExit("No functions found; header format changed?")
+
+    # De-duplicate by name+signature (best-effort).
+    uniq: dict[tuple[str, str, tuple[tuple[str, str], ...]], Func] = {}
+    for f in funcs:
+        sig = (f.name, f.ret, tuple((p.name, p.mbt_type) for p in f.params))
+        uniq[sig] = f
+    funcs = sorted(uniq.values(), key=lambda f: f.name)
+
     types = collect_types(funcs)
     write_spec(funcs, types, enum_types, typedef_primitives)
     write_impl(funcs, types, enum_types, typedef_primitives)

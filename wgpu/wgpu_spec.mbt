@@ -221,6 +221,24 @@ pub fn Adapter::request_device_sync_timestamp_query_inside_passes(
 
 ///|
 #declaration_only
+pub fn Adapter::request_device_sync_push_constants(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::request_device_sync_pipeline_statistics_query(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Adapter::release(self : Adapter) -> Unit {
   ...
 }
@@ -242,6 +260,20 @@ pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(
 ///|
 #declaration_only
 pub fn Adapter::has_feature_native_timestamp_query_inside_passes(
+  self : Adapter,
+) -> Bool {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::has_feature_native_push_constants(self : Adapter) -> Bool {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::has_feature_native_pipeline_statistics_query(
   self : Adapter,
 ) -> Bool {
   ...
@@ -294,6 +326,16 @@ pub fn Device::create_query_set_occlusion(
 pub fn Device::create_query_set_timestamp(
   self : Device,
   count : UInt,
+) -> QuerySet {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_query_set_pipeline_statistics(
+  self : Device,
+  count : UInt,
+  statistic_name : UInt,
 ) -> QuerySet {
   ...
 }
@@ -641,7 +683,24 @@ pub fn Device::create_pipeline_layout_2(
 
 ///|
 #declaration_only
+pub fn Device::create_pipeline_layout_push_constants(
+  self : Device,
+  stages : UInt64,
+  start : UInt,
+  end : UInt,
+) -> PipelineLayout {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Device::release(self : Device) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool {
   ...
 }
 
@@ -653,7 +712,28 @@ pub fn Queue::submit_one(self : Queue, cmd : CommandBuffer) -> Unit {
 
 ///|
 #declaration_only
+pub fn Queue::submit_one_for_index(self : Queue, cmd : CommandBuffer) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Queue::submit(self : Queue, cmds : Array[CommandBuffer]) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Queue::submit_for_index(
+  self : Queue,
+  cmds : Array[CommandBuffer],
+) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Queue::timestamp_period(self : Queue) -> Float {
   ...
 }
 
@@ -953,6 +1033,16 @@ pub fn ComputePass::set_pipeline(
 
 ///|
 #declaration_only
+pub fn ComputePass::set_push_constants(
+  self : ComputePass,
+  offset : UInt,
+  data : Bytes,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn ComputePass::set_bind_group0(
   self : ComputePass,
   group : BindGroup,
@@ -1004,6 +1094,22 @@ pub fn ComputePass::write_timestamp(
 
 ///|
 #declaration_only
+pub fn ComputePass::begin_pipeline_statistics_query(
+  self : ComputePass,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn ComputePass::end_pipeline_statistics_query(self : ComputePass) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn ComputePass::end(self : ComputePass) -> Unit {
   ...
 }
@@ -1049,6 +1155,17 @@ pub fn ComputePass::pop_debug_group(self : ComputePass) -> Unit {
 pub fn RenderPass::set_pipeline(
   self : RenderPass,
   pipeline : RenderPipeline,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::set_push_constants(
+  self : RenderPass,
+  stages : UInt64,
+  offset : UInt,
+  data : Bytes,
 ) -> Unit {
   ...
 }
@@ -1189,6 +1306,54 @@ pub fn RenderPass::draw_indexed_indirect(
 
 ///|
 #declaration_only
+pub fn RenderPass::multi_draw_indirect(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::multi_draw_indexed_indirect(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::multi_draw_indirect_count(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count_buffer : Buffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::multi_draw_indexed_indirect_count(
+  self : RenderPass,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+  count_buffer : Buffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn RenderPass::begin_occlusion_query(
   self : RenderPass,
   query_index : UInt,
@@ -1203,6 +1368,22 @@ pub fn RenderPass::write_timestamp(
   query_set : QuerySet,
   query_index : UInt,
 ) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::begin_pipeline_statistics_query(
+  self : RenderPass,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::end_pipeline_statistics_query(self : RenderPass) -> Unit {
   ...
 }
 
@@ -1376,6 +1557,17 @@ pub fn RenderPipeline::release(self : RenderPipeline) -> Unit {
 pub fn RenderBundleEncoder::set_pipeline(
   self : RenderBundleEncoder,
   pipeline : RenderPipeline,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderBundleEncoder::set_push_constants(
+  self : RenderBundleEncoder,
+  stages : UInt64,
+  offset : UInt,
+  data : Bytes,
 ) -> Unit {
   ...
 }

@@ -32,6 +32,12 @@ pub let buffer_usage_uniform : UInt64
 
 pub let buffer_usage_vertex : UInt64
 
+pub let shader_stage_compute : UInt64
+
+pub let shader_stage_fragment : UInt64
+
+pub let shader_stage_vertex : UInt64
+
 pub let texture_usage_copy_dst : UInt64
 
 pub let texture_usage_copy_src : UInt64
@@ -48,11 +54,15 @@ pub let texture_usage_texture_binding : UInt64
 pub struct Adapter {
   raw : @c.WGPUAdapter
 }
+pub fn Adapter::has_feature_native_pipeline_statistics_query(Self) -> Bool
+pub fn Adapter::has_feature_native_push_constants(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
 pub fn Adapter::has_feature_timestamp_query(Self) -> Bool
 pub fn Adapter::release(Self) -> Unit
 pub fn Adapter::request_device_sync(Self, Instance) -> Device
+pub fn Adapter::request_device_sync_pipeline_statistics_query(Self, Instance) -> Device
+pub fn Adapter::request_device_sync_push_constants(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device
@@ -113,9 +123,11 @@ pub fn CommandEncoder::write_timestamp(Self, QuerySet, UInt) -> Unit
 pub struct ComputePass {
   raw : @c.WGPUComputePassEncoder
 }
+pub fn ComputePass::begin_pipeline_statistics_query(Self, QuerySet, UInt) -> Unit
 pub fn ComputePass::dispatch_workgroups(Self, UInt, UInt, UInt) -> Unit
 pub fn ComputePass::dispatch_workgroups_indirect(Self, Buffer, UInt64) -> Unit
 pub fn ComputePass::end(Self) -> Unit
+pub fn ComputePass::end_pipeline_statistics_query(Self) -> Unit
 pub fn ComputePass::insert_debug_marker(Self, String) -> Unit
 pub fn ComputePass::pop_debug_group(Self) -> Unit
 pub fn ComputePass::push_debug_group(Self, String) -> Unit
@@ -124,6 +136,7 @@ pub fn ComputePass::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn ComputePass::set_bind_group0(Self, BindGroup) -> Unit
 pub fn ComputePass::set_label(Self, String) -> Unit
 pub fn ComputePass::set_pipeline(Self, ComputePipeline) -> Unit
+pub fn ComputePass::set_push_constants(Self, UInt, Bytes) -> Unit
 pub fn ComputePass::write_timestamp(Self, QuerySet, UInt) -> Unit
 
 pub struct ComputePipeline {
@@ -151,7 +164,9 @@ pub fn Device::create_compute_pipeline(Self, ShaderModule) -> ComputePipeline
 pub fn Device::create_compute_pipeline_with_layout(Self, PipelineLayout, ShaderModule) -> ComputePipeline
 pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_2(Self, BindGroupLayout, BindGroupLayout) -> PipelineLayout
+pub fn Device::create_pipeline_layout_push_constants(Self, UInt64, UInt, UInt) -> PipelineLayout
 pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
+pub fn Device::create_query_set_pipeline_statistics(Self, UInt, UInt) -> QuerySet
 pub fn Device::create_query_set_timestamp(Self, UInt) -> QuerySet
 pub fn Device::create_render_bundle_encoder_rgba8(Self) -> RenderBundleEncoder
 pub fn Device::create_render_pipeline_color_format(Self, ShaderModule, UInt) -> RenderPipeline
@@ -174,6 +189,7 @@ pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array(Self, UInt, UInt, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, UInt64) -> Texture
 pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
+pub fn Device::poll(Self, wait? : Bool) -> Bool
 pub fn Device::queue(Self) -> Queue
 pub fn Device::release(Self) -> Unit
 
@@ -201,7 +217,10 @@ pub struct Queue {
 }
 pub fn Queue::release(Self) -> Unit
 pub fn Queue::submit(Self, Array[CommandBuffer]) -> Unit
+pub fn Queue::submit_for_index(Self, Array[CommandBuffer]) -> UInt64
 pub fn Queue::submit_one(Self, CommandBuffer) -> Unit
+pub fn Queue::submit_one_for_index(Self, CommandBuffer) -> UInt64
+pub fn Queue::timestamp_period(Self) -> Float
 pub fn Queue::write_buffer(Self, Buffer, UInt64, Bytes) -> Unit
 pub fn Queue::write_texture_rgba8_2d(Self, Texture, UInt, UInt, Bytes) -> Unit
 pub fn Queue::write_texture_rgba8_2d_mip_layer(Self, Texture, UInt, UInt, UInt, UInt, Bytes) -> Unit
@@ -218,19 +237,26 @@ pub fn RenderBundleEncoder::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderBundleEncoder::finish(Self) -> RenderBundle
 pub fn RenderBundleEncoder::release(Self) -> Unit
 pub fn RenderBundleEncoder::set_pipeline(Self, RenderPipeline) -> Unit
+pub fn RenderBundleEncoder::set_push_constants(Self, UInt64, UInt, Bytes) -> Unit
 
 pub struct RenderPass {
   raw : @c.WGPURenderPassEncoder
 }
 pub fn RenderPass::begin_occlusion_query(Self, UInt) -> Unit
+pub fn RenderPass::begin_pipeline_statistics_query(Self, QuerySet, UInt) -> Unit
 pub fn RenderPass::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::draw_indexed(Self, UInt, UInt, UInt, Int, UInt) -> Unit
 pub fn RenderPass::draw_indexed_indirect(Self, Buffer, UInt64) -> Unit
 pub fn RenderPass::draw_indirect(Self, Buffer, UInt64) -> Unit
 pub fn RenderPass::end(Self) -> Unit
 pub fn RenderPass::end_occlusion_query(Self) -> Unit
+pub fn RenderPass::end_pipeline_statistics_query(Self) -> Unit
 pub fn RenderPass::execute_bundles(Self, Array[RenderBundle]) -> Unit
 pub fn RenderPass::insert_debug_marker(Self, String) -> Unit
+pub fn RenderPass::multi_draw_indexed_indirect(Self, Buffer, UInt64, UInt) -> Unit
+pub fn RenderPass::multi_draw_indexed_indirect_count(Self, Buffer, UInt64, Buffer, UInt64, UInt) -> Unit
+pub fn RenderPass::multi_draw_indirect(Self, Buffer, UInt64, UInt) -> Unit
+pub fn RenderPass::multi_draw_indirect_count(Self, Buffer, UInt64, Buffer, UInt64, UInt) -> Unit
 pub fn RenderPass::pop_debug_group(Self) -> Unit
 pub fn RenderPass::push_debug_group(Self, String) -> Unit
 pub fn RenderPass::release(Self) -> Unit
@@ -241,6 +267,7 @@ pub fn RenderPass::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_label(Self, String) -> Unit
 pub fn RenderPass::set_pipeline(Self, RenderPipeline) -> Unit
+pub fn RenderPass::set_push_constants(Self, UInt64, UInt, Bytes) -> Unit
 pub fn RenderPass::set_scissor_rect(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::set_stencil_reference(Self, UInt) -> Unit
 pub fn RenderPass::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit

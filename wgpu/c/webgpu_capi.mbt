@@ -45,6 +45,11 @@ pub type WGPUAdapterInfoPtr
 
 ///|
 #external
+#alias(UnitPtr)
+pub type WGPUAdapterPtr
+
+///|
+#external
 #alias(BindGroup)
 pub type WGPUBindGroup
 
@@ -177,6 +182,11 @@ pub type WGPUFutureWaitInfoPtr
 
 ///|
 #external
+#alias(UnitPtr)
+pub type WGPUGlobalReportPtr
+
+///|
+#external
 pub type WGPUIndexFormat
 
 ///|
@@ -197,7 +207,20 @@ pub type WGPUInstanceDescriptorPtr
 ///|
 #external
 #alias(UnitPtr)
+pub type WGPUInstanceEnumerateAdapterOptionsPtr
+
+///|
+#external
+#alias(UnitPtr)
 pub type WGPULimitsPtr
+
+///|
+#external
+pub type WGPULogCallback
+
+///|
+#external
+pub type WGPULogLevel
 
 ///|
 #external
@@ -318,11 +341,21 @@ pub type WGPUShaderModuleDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
+pub type WGPUShaderModuleDescriptorSpirVPtr
+
+///|
+#external
 pub type WGPUStatus
 
 ///|
 #external
 pub type WGPUStringView
+
+///|
+#external
+#alias(UnitPtr)
+pub type WGPUSubmissionIndexPtr
 
 ///|
 #external
@@ -685,6 +718,13 @@ pub extern "C" fn wgpuComputePassEncoderAddRef(
 ) -> Unit = "wgpuComputePassEncoderAddRef"
 
 ///|
+pub extern "C" fn wgpuComputePassEncoderBeginPipelineStatisticsQuery(
+  computePassEncoder : WGPUComputePassEncoder,
+  querySet : WGPUQuerySet,
+  queryIndex : UInt,
+) -> Unit = "wgpuComputePassEncoderBeginPipelineStatisticsQuery"
+
+///|
 pub extern "C" fn wgpuComputePassEncoderDispatchWorkgroups(
   computePassEncoder : WGPUComputePassEncoder,
   workgroupCountX : UInt,
@@ -703,6 +743,11 @@ pub extern "C" fn wgpuComputePassEncoderDispatchWorkgroupsIndirect(
 pub extern "C" fn wgpuComputePassEncoderEnd(
   computePassEncoder : WGPUComputePassEncoder,
 ) -> Unit = "wgpuComputePassEncoderEnd"
+
+///|
+pub extern "C" fn wgpuComputePassEncoderEndPipelineStatisticsQuery(
+  computePassEncoder : WGPUComputePassEncoder,
+) -> Unit = "wgpuComputePassEncoderEndPipelineStatisticsQuery"
 
 ///|
 pub extern "C" fn wgpuComputePassEncoderInsertDebugMarker(
@@ -747,6 +792,22 @@ pub extern "C" fn wgpuComputePassEncoderSetPipeline(
   computePassEncoder : WGPUComputePassEncoder,
   pipeline : WGPUComputePipeline,
 ) -> Unit = "wgpuComputePassEncoderSetPipeline"
+
+///|
+#borrow(data)
+pub extern "C" fn wgpuComputePassEncoderSetPushConstants(
+  encoder : WGPUComputePassEncoder,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit = "wgpuComputePassEncoderSetPushConstants"
+
+///|
+pub extern "C" fn wgpuComputePassEncoderWriteTimestamp(
+  computePassEncoder : WGPUComputePassEncoder,
+  querySet : WGPUQuerySet,
+  queryIndex : UInt,
+) -> Unit = "wgpuComputePassEncoderWriteTimestamp"
 
 ///|
 pub extern "C" fn wgpuComputePipelineAddRef(
@@ -874,6 +935,13 @@ pub extern "C" fn wgpuDeviceCreateShaderModule(
 
 ///|
 #borrow(descriptor)
+pub extern "C" fn wgpuDeviceCreateShaderModuleSpirV(
+  device : WGPUDevice,
+  descriptor : WGPUShaderModuleDescriptorSpirVPtr,
+) -> WGPUShaderModule = "wgpuDeviceCreateShaderModuleSpirV"
+
+///|
+#borrow(descriptor)
 pub extern "C" fn wgpuDeviceCreateTexture(
   device : WGPUDevice,
   descriptor : WGPUTextureDescriptorPtr,
@@ -914,6 +982,14 @@ pub extern "C" fn wgpuDeviceHasFeature(
 ) -> Bool = "wgpuDeviceHasFeature"
 
 ///|
+#borrow(submissionIndex)
+pub extern "C" fn wgpuDevicePoll(
+  device : WGPUDevice,
+  wait : Bool,
+  submissionIndex : WGPUSubmissionIndexPtr,
+) -> Bool = "wgpuDevicePoll"
+
+///|
 pub extern "C" fn wgpuDevicePopErrorScope(
   device : WGPUDevice,
   callbackInfo : WGPUPopErrorScopeCallbackInfo,
@@ -935,6 +1011,13 @@ pub extern "C" fn wgpuDeviceSetLabel(
 ) -> Unit = "wgpuDeviceSetLabel"
 
 ///|
+#borrow(report)
+pub extern "C" fn wgpuGenerateReport(
+  instance : WGPUInstance,
+  report : WGPUGlobalReportPtr,
+) -> Unit = "wgpuGenerateReport"
+
+///|
 #borrow(capabilities)
 pub extern "C" fn wgpuGetInstanceCapabilities(
   capabilities : WGPUInstanceCapabilitiesPtr,
@@ -942,6 +1025,9 @@ pub extern "C" fn wgpuGetInstanceCapabilities(
 
 ///|
 pub extern "C" fn wgpuGetProcAddress(procName : WGPUStringView) -> WGPUProc = "wgpuGetProcAddress"
+
+///|
+pub extern "C" fn wgpuGetVersion() -> UInt = "wgpuGetVersion"
 
 ///|
 pub extern "C" fn wgpuInstanceAddRef(instance : WGPUInstance) -> Unit = "wgpuInstanceAddRef"
@@ -952,6 +1038,14 @@ pub extern "C" fn wgpuInstanceCreateSurface(
   instance : WGPUInstance,
   descriptor : WGPUSurfaceDescriptorPtr,
 ) -> WGPUSurface = "wgpuInstanceCreateSurface"
+
+///|
+#borrow(options, adapters)
+pub extern "C" fn wgpuInstanceEnumerateAdapters(
+  instance : WGPUInstance,
+  options : WGPUInstanceEnumerateAdapterOptionsPtr,
+  adapters : WGPUAdapterPtr,
+) -> UInt64 = "wgpuInstanceEnumerateAdapters"
 
 ///|
 #borrow(features)
@@ -1030,6 +1124,9 @@ pub extern "C" fn wgpuQuerySetSetLabel(
 pub extern "C" fn wgpuQueueAddRef(queue : WGPUQueue) -> Unit = "wgpuQueueAddRef"
 
 ///|
+pub extern "C" fn wgpuQueueGetTimestampPeriod(queue : WGPUQueue) -> Float = "wgpuQueueGetTimestampPeriod"
+
+///|
 pub extern "C" fn wgpuQueueOnSubmittedWorkDone(
   queue : WGPUQueue,
   callbackInfo : WGPUQueueWorkDoneCallbackInfo,
@@ -1051,6 +1148,14 @@ pub extern "C" fn wgpuQueueSubmit(
   commandCount : UInt64,
   commands : WGPUCommandBufferPtr,
 ) -> Unit = "wgpuQueueSubmit"
+
+///|
+#borrow(commands)
+pub extern "C" fn wgpuQueueSubmitForIndex(
+  queue : WGPUQueue,
+  commandCount : UInt64,
+  commands : WGPUCommandBufferPtr,
+) -> WGPUSubmissionIndex = "wgpuQueueSubmitForIndex"
 
 ///|
 #borrow(data)
@@ -1177,6 +1282,16 @@ pub extern "C" fn wgpuRenderBundleEncoderSetPipeline(
 ) -> Unit = "wgpuRenderBundleEncoderSetPipeline"
 
 ///|
+#borrow(data)
+pub extern "C" fn wgpuRenderBundleEncoderSetPushConstants(
+  encoder : WGPURenderBundleEncoder,
+  stages : WGPUShaderStage,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit = "wgpuRenderBundleEncoderSetPushConstants"
+
+///|
 pub extern "C" fn wgpuRenderBundleEncoderSetVertexBuffer(
   renderBundleEncoder : WGPURenderBundleEncoder,
   slot : UInt,
@@ -1206,6 +1321,13 @@ pub extern "C" fn wgpuRenderPassEncoderBeginOcclusionQuery(
   renderPassEncoder : WGPURenderPassEncoder,
   queryIndex : UInt,
 ) -> Unit = "wgpuRenderPassEncoderBeginOcclusionQuery"
+
+///|
+pub extern "C" fn wgpuRenderPassEncoderBeginPipelineStatisticsQuery(
+  renderPassEncoder : WGPURenderPassEncoder,
+  querySet : WGPUQuerySet,
+  queryIndex : UInt,
+) -> Unit = "wgpuRenderPassEncoderBeginPipelineStatisticsQuery"
 
 ///|
 pub extern "C" fn wgpuRenderPassEncoderDraw(
@@ -1251,6 +1373,11 @@ pub extern "C" fn wgpuRenderPassEncoderEndOcclusionQuery(
 ) -> Unit = "wgpuRenderPassEncoderEndOcclusionQuery"
 
 ///|
+pub extern "C" fn wgpuRenderPassEncoderEndPipelineStatisticsQuery(
+  renderPassEncoder : WGPURenderPassEncoder,
+) -> Unit = "wgpuRenderPassEncoderEndPipelineStatisticsQuery"
+
+///|
 #borrow(bundles)
 pub extern "C" fn wgpuRenderPassEncoderExecuteBundles(
   renderPassEncoder : WGPURenderPassEncoder,
@@ -1263,6 +1390,42 @@ pub extern "C" fn wgpuRenderPassEncoderInsertDebugMarker(
   renderPassEncoder : WGPURenderPassEncoder,
   markerLabel : WGPUStringView,
 ) -> Unit = "wgpuRenderPassEncoderInsertDebugMarker"
+
+///|
+pub extern "C" fn wgpuRenderPassEncoderMultiDrawIndexedIndirect(
+  encoder : WGPURenderPassEncoder,
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  count : UInt,
+) -> Unit = "wgpuRenderPassEncoderMultiDrawIndexedIndirect"
+
+///|
+pub extern "C" fn wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(
+  encoder : WGPURenderPassEncoder,
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  count_buffer : WGPUBuffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
+) -> Unit = "wgpuRenderPassEncoderMultiDrawIndexedIndirectCount"
+
+///|
+pub extern "C" fn wgpuRenderPassEncoderMultiDrawIndirect(
+  encoder : WGPURenderPassEncoder,
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  count : UInt,
+) -> Unit = "wgpuRenderPassEncoderMultiDrawIndirect"
+
+///|
+pub extern "C" fn wgpuRenderPassEncoderMultiDrawIndirectCount(
+  encoder : WGPURenderPassEncoder,
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  count_buffer : WGPUBuffer,
+  count_buffer_offset : UInt64,
+  max_count : UInt,
+) -> Unit = "wgpuRenderPassEncoderMultiDrawIndirectCount"
 
 ///|
 pub extern "C" fn wgpuRenderPassEncoderPopDebugGroup(
@@ -1319,6 +1482,16 @@ pub extern "C" fn wgpuRenderPassEncoderSetPipeline(
 ) -> Unit = "wgpuRenderPassEncoderSetPipeline"
 
 ///|
+#borrow(data)
+pub extern "C" fn wgpuRenderPassEncoderSetPushConstants(
+  encoder : WGPURenderPassEncoder,
+  stages : WGPUShaderStage,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit = "wgpuRenderPassEncoderSetPushConstants"
+
+///|
 pub extern "C" fn wgpuRenderPassEncoderSetScissorRect(
   renderPassEncoder : WGPURenderPassEncoder,
   x : UInt,
@@ -1354,6 +1527,13 @@ pub extern "C" fn wgpuRenderPassEncoderSetViewport(
 ) -> Unit = "wgpuRenderPassEncoderSetViewport"
 
 ///|
+pub extern "C" fn wgpuRenderPassEncoderWriteTimestamp(
+  renderPassEncoder : WGPURenderPassEncoder,
+  querySet : WGPUQuerySet,
+  queryIndex : UInt,
+) -> Unit = "wgpuRenderPassEncoderWriteTimestamp"
+
+///|
 pub extern "C" fn wgpuRenderPipelineAddRef(
   renderPipeline : WGPURenderPipeline,
 ) -> Unit = "wgpuRenderPipelineAddRef"
@@ -1386,6 +1566,16 @@ pub extern "C" fn wgpuSamplerSetLabel(
   sampler : WGPUSampler,
   label : WGPUStringView,
 ) -> Unit = "wgpuSamplerSetLabel"
+
+///|
+#borrow(userdata)
+pub extern "C" fn wgpuSetLogCallback(
+  callback : WGPULogCallback,
+  userdata : UnitPtr,
+) -> Unit = "wgpuSetLogCallback"
+
+///|
+pub extern "C" fn wgpuSetLogLevel(level : WGPULogLevel) -> Unit = "wgpuSetLogLevel"
 
 ///|
 pub extern "C" fn wgpuShaderModuleAddRef(

@@ -204,6 +204,13 @@ pub extern "C" fn pipeline_layout_descriptor_2_new(
 ) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_2_new"
 
 ///|
+pub extern "C" fn pipeline_layout_descriptor_push_constants_new(
+  stages : UInt64,
+  start : UInt,
+  end : UInt,
+) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_push_constants_new"
+
+///|
 #borrow(desc)
 pub extern "C" fn pipeline_layout_descriptor_free(
   desc : WGPUPipelineLayoutDescriptorPtr,
@@ -399,6 +406,9 @@ pub extern "C" fn query_type_occlusion() -> WGPUQueryType = "mbt_wgpu_query_type
 pub extern "C" fn query_type_timestamp() -> WGPUQueryType = "mbt_wgpu_query_type_timestamp"
 
 ///|
+pub extern "C" fn query_type_pipeline_statistics() -> WGPUQueryType = "mbt_wgpu_query_type_pipeline_statistics"
+
+///|
 pub extern "C" fn feature_name_timestamp_query() -> WGPUFeatureName = "mbt_wgpu_feature_name_timestamp_query"
 
 ///|
@@ -408,10 +418,22 @@ pub extern "C" fn feature_name_native_timestamp_query_inside_encoders() -> WGPUF
 pub extern "C" fn feature_name_native_timestamp_query_inside_passes() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_timestamp_query_inside_passes"
 
 ///|
+pub extern "C" fn feature_name_native_push_constants() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_push_constants"
+
+///|
+pub extern "C" fn feature_name_native_pipeline_statistics_query() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_pipeline_statistics_query"
+
+///|
 pub extern "C" fn query_set_descriptor_new(
   query_type : WGPUQueryType,
   count : UInt,
 ) -> WGPUQuerySetDescriptorPtr = "mbt_wgpu_query_set_descriptor_new"
+
+///|
+pub extern "C" fn query_set_descriptor_pipeline_statistics_new(
+  count : UInt,
+  statistic_name : UInt,
+) -> WGPUQuerySetDescriptorPtr = "mbt_wgpu_query_set_descriptor_pipeline_statistics_new"
 
 ///|
 #borrow(desc)
