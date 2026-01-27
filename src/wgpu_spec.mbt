@@ -120,6 +120,10 @@ pub type InstanceCapabilities
 
 ///|
 #declaration_only
+pub type WaitAnyResult
+
+///|
+#declaration_only
 declare pub fn get_version() -> UInt
 
 ///|
@@ -145,6 +149,14 @@ declare pub fn Instance::request_adapter_sync(self : Instance) -> Adapter
 ///|
 #declaration_only
 declare pub fn Instance::process_events(self : Instance) -> Unit
+
+///|
+#declaration_only
+declare pub fn Instance::wait_any_one(
+  self : Instance,
+  future_id : UInt64,
+  timeout_ns? : UInt64 = 0UL,
+) -> WaitAnyResult
 
 ///|
 #declaration_only
@@ -470,6 +482,20 @@ declare pub fn Device::supported_feature_u32_at(
   self : Device,
   index : UInt64,
 ) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::limits_max_texture_dimension_2d_u32(
+  self : Device,
+) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::limits_max_bind_groups_u32(self : Device) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::limits_max_buffer_size_u64(self : Device) -> UInt64
 
 ///|
 #declaration_only
@@ -846,6 +872,12 @@ declare pub fn Queue::on_submitted_work_done_sync(
   self : Queue,
   instance : Instance,
 ) -> UInt
+
+///|
+#declaration_only
+declare pub fn Queue::on_submitted_work_done_future_id_u64(
+  self : Queue,
+) -> UInt64
 
 ///|
 #declaration_only

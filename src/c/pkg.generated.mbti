@@ -308,6 +308,12 @@ pub fn device_destroy_record_lost(WGPUDevice) -> Unit
 
 pub fn device_get_queue(WGPUDevice) -> WGPUQueue
 
+pub fn device_limits_max_bind_groups_u32(WGPUDevice) -> UInt
+
+pub fn device_limits_max_buffer_size_u64(WGPUDevice) -> UInt64
+
+pub fn device_limits_max_texture_dimension_2d_u32(WGPUDevice) -> UInt
+
 pub fn device_poll(WGPUDevice, Bool, WGPUSubmissionIndexPtr) -> Bool
 
 pub fn device_pop_error_scope_sync_u32(WGPUInstance, WGPUDevice) -> UInt
@@ -374,6 +380,8 @@ pub fn instance_release(WGPUInstance) -> Unit
 
 pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
 
+pub fn instance_wait_any_one_packed_u64(WGPUInstance, UInt64, UInt64) -> UInt64
+
 pub fn instance_wgsl_language_features_count_u64(WGPUInstance) -> UInt64
 
 pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
@@ -421,6 +429,8 @@ pub fn query_type_pipeline_statistics() -> WGPUQueryType
 pub fn query_type_timestamp() -> WGPUQueryType
 
 pub fn queue_get_timestamp_period(WGPUQueue) -> Float
+
+pub fn queue_on_submitted_work_done_future_id_u64(WGPUQueue) -> UInt64
 
 pub fn queue_on_submitted_work_done_sync(WGPUInstance, WGPUQueue) -> UInt
 

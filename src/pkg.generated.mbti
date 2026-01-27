@@ -104,6 +104,16 @@ pub let texture_usage_storage_binding : UInt64
 
 pub let texture_usage_texture_binding : UInt64
 
+pub let wait_status_success : UInt
+
+pub let wait_status_timed_out : UInt
+
+pub let wait_status_unsupported_count : UInt
+
+pub let wait_status_unsupported_mixed_sources : UInt
+
+pub let wait_status_unsupported_timeout : UInt
+
 // Errors
 
 // Types and methods
@@ -269,6 +279,9 @@ pub fn Device::create_texture_rgba8_2d_array(Self, UInt, UInt, UInt, UInt) -> Te
 pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, UInt64) -> Texture
 pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
 pub fn Device::destroy(Self) -> Unit
+pub fn Device::limits_max_bind_groups_u32(Self) -> UInt
+pub fn Device::limits_max_buffer_size_u64(Self) -> UInt64
+pub fn Device::limits_max_texture_dimension_2d_u32(Self) -> UInt
 pub fn Device::poll(Self, wait? : Bool) -> Bool
 pub fn Device::pop_error_scope_sync(Self, Instance) -> UInt
 pub fn Device::push_error_scope(Self, UInt) -> Unit
@@ -300,6 +313,7 @@ pub fn Instance::generate_report(Self) -> GlobalReport
 pub fn Instance::process_events(Self) -> Unit
 pub fn Instance::release(Self) -> Unit
 pub fn Instance::request_adapter_sync(Self) -> Adapter
+pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult
 pub fn Instance::wgsl_language_features_count_u64(Self) -> UInt64
 
 pub struct InstanceCapabilities {
@@ -322,6 +336,7 @@ pub fn QuerySet::set_label(Self, String) -> Unit
 pub struct Queue {
   raw : @c.WGPUQueue
 }
+pub fn Queue::on_submitted_work_done_future_id_u64(Self) -> UInt64
 pub fn Queue::on_submitted_work_done_sync(Self, Instance) -> UInt
 pub fn Queue::release(Self) -> Unit
 pub fn Queue::set_label(Self, String) -> Unit
@@ -443,6 +458,11 @@ pub struct TextureView {
 }
 pub fn TextureView::release(Self) -> Unit
 pub fn TextureView::set_label(Self, String) -> Unit
+
+pub struct WaitAnyResult {
+  status : UInt
+  completed : Bool
+}
 
 // Type aliases
 

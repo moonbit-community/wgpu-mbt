@@ -151,6 +151,22 @@ pub let queue_work_done_status_error : UInt = 3U
 pub let queue_work_done_status_unknown : UInt = 4U
 
 ///|
+/// Wait status (`WGPUWaitStatus`).
+pub let wait_status_success : UInt = 1U
+
+///|
+pub let wait_status_timed_out : UInt = 2U
+
+///|
+pub let wait_status_unsupported_timeout : UInt = 3U
+
+///|
+pub let wait_status_unsupported_count : UInt = 4U
+
+///|
+pub let wait_status_unsupported_mixed_sources : UInt = 5U
+
+///|
 /// Device-lost reason (`WGPUDeviceLostReason`).
 pub let device_lost_reason_unknown : UInt = 1U
 

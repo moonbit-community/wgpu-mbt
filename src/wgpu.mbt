@@ -124,6 +124,12 @@ pub struct InstanceCapabilities {
 }
 
 ///|
+pub struct WaitAnyResult {
+  status : UInt
+  completed : Bool
+}
+
+///|
 pub struct ComputePass {
   raw : @c.ComputePassEncoder
 }
@@ -206,6 +212,22 @@ pub fn Instance::request_adapter_sync(self : Instance) -> Adapter {
 ///|
 pub fn Instance::process_events(self : Instance) -> Unit {
   @c.instance_process_events(self.raw)
+}
+
+///|
+pub fn Instance::wait_any_one(
+  self : Instance,
+  future_id : UInt64,
+  timeout_ns? : UInt64 = 0UL,
+) -> WaitAnyResult {
+  let packed = @c.instance_wait_any_one_packed_u64(
+    self.raw,
+    future_id,
+    timeout_ns,
+  )
+  let status = (packed & 0xFFFF_FFFFUL).to_int().reinterpret_as_uint()
+  let completed = packed >> 32 != 0UL
+  WaitAnyResult::{ status, completed }
 }
 
 ///|
@@ -629,6 +651,21 @@ pub fn Device::supported_features_contains_u32(
 ///|
 pub fn Device::supported_feature_u32_at(self : Device, index : UInt64) -> UInt {
   @c.device_supported_feature_u32_at(self.raw, index)
+}
+
+///|
+pub fn Device::limits_max_texture_dimension_2d_u32(self : Device) -> UInt {
+  @c.device_limits_max_texture_dimension_2d_u32(self.raw)
+}
+
+///|
+pub fn Device::limits_max_bind_groups_u32(self : Device) -> UInt {
+  @c.device_limits_max_bind_groups_u32(self.raw)
+}
+
+///|
+pub fn Device::limits_max_buffer_size_u64(self : Device) -> UInt64 {
+  @c.device_limits_max_buffer_size_u64(self.raw)
 }
 
 ///|
@@ -1533,6 +1570,11 @@ pub fn Queue::on_submitted_work_done_sync(
   instance : Instance,
 ) -> UInt {
   @c.queue_on_submitted_work_done_sync(instance.raw, self.raw)
+}
+
+///|
+pub fn Queue::on_submitted_work_done_future_id_u64(self : Queue) -> UInt64 {
+  @c.queue_on_submitted_work_done_future_id_u64(self.raw)
 }
 
 ///|

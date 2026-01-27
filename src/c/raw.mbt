@@ -46,6 +46,18 @@ pub extern "C" fn instance_capabilities_timed_wait_any_enable_u32() -> UInt = "m
 pub extern "C" fn instance_capabilities_timed_wait_any_max_count_u64() -> UInt64 = "mbt_wgpu_instance_capabilities_timed_wait_any_max_count_u64"
 
 ///|
+pub extern "C" fn instance_wait_any_one_packed_u64(
+  instance : Instance,
+  future_id : UInt64,
+  timeout_ns : UInt64,
+) -> UInt64 = "mbt_wgpu_instance_wait_any_one_packed_u64"
+
+///|
+pub extern "C" fn queue_on_submitted_work_done_future_id_u64(
+  queue : Queue,
+) -> UInt64 = "mbt_wgpu_queue_on_submitted_work_done_future_id_u64"
+
+///|
 /// macOS/Metal surface helpers (CAMetalLayer + WGPUSurface).
 pub extern "C" fn cametallayer_new() -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_cametallayer_new"
 
@@ -181,6 +193,17 @@ pub extern "C" fn adapter_limits_max_bind_groups_u32(adapter : Adapter) -> UInt 
 pub extern "C" fn adapter_limits_max_buffer_size_u64(
   adapter : Adapter,
 ) -> UInt64 = "mbt_wgpu_adapter_limits_max_buffer_size_u64"
+
+///|
+pub extern "C" fn device_limits_max_texture_dimension_2d_u32(
+  device : Device,
+) -> UInt = "mbt_wgpu_device_limits_max_texture_dimension_2d_u32"
+
+///|
+pub extern "C" fn device_limits_max_bind_groups_u32(device : Device) -> UInt = "mbt_wgpu_device_limits_max_bind_groups_u32"
+
+///|
+pub extern "C" fn device_limits_max_buffer_size_u64(device : Device) -> UInt64 = "mbt_wgpu_device_limits_max_buffer_size_u64"
 
 ///|
 pub extern "C" fn adapter_limits_max_compute_workgroup_size_x_u32(

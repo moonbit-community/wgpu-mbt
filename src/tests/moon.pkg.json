@@ -171,6 +171,9 @@
     "wgpu_instance_capabilities_test.mbt": [
       "native"
     ],
+    "wgpu_instance_wait_any_test.mbt": [
+      "native"
+    ],
     "wgpu_enumerate_adapters_test.mbt": [
       "native"
     ],
@@ -190,6 +193,9 @@
       "native"
     ],
     "wgpu_adapter_limits_test.mbt": [
+      "native"
+    ],
+    "wgpu_device_limits_test.mbt": [
       "native"
     ],
     "wgpu_error_scope_test.mbt": [

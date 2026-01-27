@@ -14,6 +14,8 @@
 
 #include "wgpu_stub.h"
 
+#include <pthread.h>
+
 // ---------------------------------------------------------------------------
 // Debug labels / markers (best-effort)
 // ---------------------------------------------------------------------------
@@ -56,6 +58,111 @@ uint64_t mbt_wgpu_instance_capabilities_timed_wait_any_max_count_u64(void) {
     return 0u;
   }
   return (uint64_t)caps.timedWaitAnyMaxCount;
+}
+
+// ---------------------------------------------------------------------------
+// Instance wait_any helpers
+// ---------------------------------------------------------------------------
+
+typedef struct {
+  uint64_t id;
+  bool completed;
+} mbt_wait_any_entry_t;
+
+static mbt_wait_any_entry_t g_wait_any_entries[64];
+static size_t g_wait_any_entries_len = 0;
+static uint64_t g_wait_any_next_id = 1u;
+static pthread_mutex_t g_wait_any_mu = PTHREAD_MUTEX_INITIALIZER;
+
+static uint64_t mbt_wait_any_new_id(void) {
+  pthread_mutex_lock(&g_wait_any_mu);
+  uint64_t id = 0u;
+  if (g_wait_any_entries_len < (sizeof(g_wait_any_entries) / sizeof(g_wait_any_entries[0]))) {
+    id = g_wait_any_next_id++;
+    g_wait_any_entries[g_wait_any_entries_len++] =
+        (mbt_wait_any_entry_t){.id = id, .completed = false};
+  }
+  pthread_mutex_unlock(&g_wait_any_mu);
+  return id;
+}
+
+static void mbt_wait_any_mark_completed(uint64_t id) {
+  pthread_mutex_lock(&g_wait_any_mu);
+  for (size_t i = 0; i < g_wait_any_entries_len; i++) {
+    if (g_wait_any_entries[i].id == id) {
+      g_wait_any_entries[i].completed = true;
+      break;
+    }
+  }
+  pthread_mutex_unlock(&g_wait_any_mu);
+}
+
+static bool mbt_wait_any_take_completed(uint64_t id, bool *completed_out) {
+  pthread_mutex_lock(&g_wait_any_mu);
+  for (size_t i = 0; i < g_wait_any_entries_len; i++) {
+    if (g_wait_any_entries[i].id == id) {
+      bool completed = g_wait_any_entries[i].completed;
+      if (completed) {
+        g_wait_any_entries[i] = g_wait_any_entries[g_wait_any_entries_len - 1];
+        g_wait_any_entries_len--;
+      }
+      pthread_mutex_unlock(&g_wait_any_mu);
+      *completed_out = completed;
+      return true;
+    }
+  }
+  pthread_mutex_unlock(&g_wait_any_mu);
+  return false;
+}
+
+static void mbt_wgpu_queue_work_done_mark_completed_cb(WGPUQueueWorkDoneStatus status,
+                                                      void *userdata1,
+                                                      void *userdata2) {
+  (void)status;
+  (void)userdata2;
+  uint64_t id = (uint64_t)(uintptr_t)userdata1;
+  if (id != 0u) {
+    mbt_wait_any_mark_completed(id);
+  }
+}
+
+uint64_t mbt_wgpu_queue_on_submitted_work_done_future_id_u64(WGPUQueue queue) {
+  if (!queue) {
+    return 0u;
+  }
+  uint64_t id = mbt_wait_any_new_id();
+  if (id == 0u) {
+    return 0u;
+  }
+  WGPUQueueWorkDoneCallbackInfo cb = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_wgpu_queue_work_done_mark_completed_cb,
+      .userdata1 = (void *)(uintptr_t)id,
+      .userdata2 = NULL,
+  };
+  (void)wgpuQueueOnSubmittedWorkDone(queue, cb);
+  return id;
+}
+
+uint64_t mbt_wgpu_instance_wait_any_one_packed_u64(WGPUInstance instance,
+                                                  uint64_t future_id,
+                                                  uint64_t timeout_ns) {
+  if (!instance) {
+    return 0u;
+  }
+  if (timeout_ns != 0u) {
+    return (0ull << 32) | 3ull;  // WGPUWaitStatus_UnsupportedTimeout
+  }
+  wgpuInstanceProcessEvents(instance);
+  bool completed = false;
+  bool found = mbt_wait_any_take_completed(future_id, &completed);
+  uint32_t status_u32 = 0u;
+  if (found) {
+    status_u32 = completed ? 1u : 2u;  // Success / TimedOut
+  }
+  uint32_t completed_u32 = completed ? 1u : 0u;
+  return ((uint64_t)completed_u32 << 32) | (uint64_t)status_u32;
 }
 
 // ---------------------------------------------------------------------------
@@ -247,6 +354,18 @@ uint32_t mbt_wgpu_adapter_limits_max_texture_dimension_2d_u32(WGPUAdapter adapte
   return limits.maxTextureDimension2D;
 }
 
+uint32_t mbt_wgpu_device_limits_max_texture_dimension_2d_u32(WGPUDevice device) {
+  if (!device) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  return limits.maxTextureDimension2D;
+}
+
 uint32_t mbt_wgpu_adapter_limits_max_bind_groups_u32(WGPUAdapter adapter) {
   if (!adapter) {
     return 0u;
@@ -256,12 +375,36 @@ uint32_t mbt_wgpu_adapter_limits_max_bind_groups_u32(WGPUAdapter adapter) {
   return limits.maxBindGroups;
 }
 
+uint32_t mbt_wgpu_device_limits_max_bind_groups_u32(WGPUDevice device) {
+  if (!device) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  return limits.maxBindGroups;
+}
+
 uint64_t mbt_wgpu_adapter_limits_max_buffer_size_u64(WGPUAdapter adapter) {
   if (!adapter) {
     return 0u;
   }
   WGPULimits limits = {0};
   (void)wgpuAdapterGetLimits(adapter, &limits);
+  return (uint64_t)limits.maxBufferSize;
+}
+
+uint64_t mbt_wgpu_device_limits_max_buffer_size_u64(WGPUDevice device) {
+  if (!device) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
   return (uint64_t)limits.maxBufferSize;
 }
 
