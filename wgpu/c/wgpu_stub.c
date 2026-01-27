@@ -15,6 +15,93 @@ void *mbt_wgpu_null_uint_ptr(void) { return NULL; }
 WGPUIndexFormat mbt_wgpu_index_format_uint16(void) { return WGPUIndexFormat_Uint16; }
 WGPUIndexFormat mbt_wgpu_index_format_uint32(void) { return WGPUIndexFormat_Uint32; }
 
+static inline WGPUStringView mbt_wgpu_string_view(const uint8_t *bytes, uint64_t len) {
+  return (WGPUStringView){.data = (const char *)bytes, .length = len};
+}
+
+void mbt_wgpu_command_encoder_set_label_utf8(WGPUCommandEncoder encoder,
+                                             const uint8_t *label,
+                                             uint64_t label_len) {
+  // wgpu-native currently panics for some debug-label APIs; keep these as no-ops.
+  (void)encoder;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_command_encoder_insert_debug_marker_utf8(WGPUCommandEncoder encoder,
+                                                       const uint8_t *label,
+                                                       uint64_t label_len) {
+  (void)encoder;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_command_encoder_push_debug_group_utf8(WGPUCommandEncoder encoder,
+                                                    const uint8_t *label,
+                                                    uint64_t label_len) {
+  (void)encoder;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_command_encoder_pop_debug_group(WGPUCommandEncoder encoder) {
+  (void)encoder;
+}
+
+void mbt_wgpu_compute_pass_set_label_utf8(WGPUComputePassEncoder pass,
+                                          const uint8_t *label,
+                                          uint64_t label_len) {
+  (void)pass;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_compute_pass_insert_debug_marker_utf8(WGPUComputePassEncoder pass,
+                                                    const uint8_t *label,
+                                                    uint64_t label_len) {
+  (void)pass;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_compute_pass_push_debug_group_utf8(WGPUComputePassEncoder pass,
+                                                 const uint8_t *label,
+                                                 uint64_t label_len) {
+  (void)pass;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_compute_pass_pop_debug_group(WGPUComputePassEncoder pass) {
+  (void)pass;
+}
+
+void mbt_wgpu_render_pass_set_label_utf8(WGPURenderPassEncoder pass,
+                                         const uint8_t *label,
+                                         uint64_t label_len) {
+  (void)pass;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_render_pass_insert_debug_marker_utf8(WGPURenderPassEncoder pass,
+                                                   const uint8_t *label,
+                                                   uint64_t label_len) {
+  (void)pass;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_render_pass_push_debug_group_utf8(WGPURenderPassEncoder pass,
+                                                const uint8_t *label,
+                                                uint64_t label_len) {
+  (void)pass;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_render_pass_pop_debug_group(WGPURenderPassEncoder pass) {
+  (void)pass;
+}
+
+void mbt_wgpu_render_pass_set_blend_constant_rgba(WGPURenderPassEncoder pass,
+                                                  double r, double g, double b,
+                                                  double a) {
+  WGPUColor color = {.r = r, .g = g, .b = b, .a = a};
+  wgpuRenderPassEncoderSetBlendConstant(pass, &color);
+}
+
 // The C API provides both `wgpuInstanceWaitAny` and `wgpuInstanceProcessEvents`.
 // wgpu-native currently does not implement `wgpuInstanceWaitAny` for all builds,
 // so we use `WGPUCallbackMode_AllowProcessEvents` + `wgpuInstanceProcessEvents`

@@ -400,6 +400,36 @@ pub fn CommandEncoder::begin_compute_pass(self : CommandEncoder) -> ComputePass 
 
 ///|
 #declaration_only
+pub fn CommandEncoder::set_label(self : CommandEncoder, label : String) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn CommandEncoder::insert_debug_marker(
+  self : CommandEncoder,
+  label : String,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn CommandEncoder::push_debug_group(
+  self : CommandEncoder,
+  label : String,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn CommandEncoder::pop_debug_group(self : CommandEncoder) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn CommandEncoder::begin_render_pass_color(
   self : CommandEncoder,
   view : TextureView,
@@ -560,6 +590,36 @@ pub fn ComputePass::release(self : ComputePass) -> Unit {
 
 ///|
 #declaration_only
+pub fn ComputePass::set_label(self : ComputePass, label : String) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn ComputePass::insert_debug_marker(
+  self : ComputePass,
+  label : String,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn ComputePass::push_debug_group(
+  self : ComputePass,
+  label : String,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn ComputePass::pop_debug_group(self : ComputePass) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn RenderPass::set_pipeline(
   self : RenderPass,
   pipeline : RenderPipeline,
@@ -670,6 +730,45 @@ pub fn RenderPass::end(self : RenderPass) -> Unit {
 ///|
 #declaration_only
 pub fn RenderPass::release(self : RenderPass) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::set_label(self : RenderPass, label : String) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::insert_debug_marker(
+  self : RenderPass,
+  label : String,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::push_debug_group(self : RenderPass, label : String) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::pop_debug_group(self : RenderPass) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::set_blend_constant_rgba(
+  self : RenderPass,
+  r : Double,
+  g : Double,
+  b : Double,
+  a : Double,
+) -> Unit {
   ...
 }
 

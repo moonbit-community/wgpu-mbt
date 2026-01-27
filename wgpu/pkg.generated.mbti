@@ -87,15 +87,23 @@ pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt,
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8(Self, Texture, Buffer, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_texture_rgba8(Self, Texture, Texture, UInt, UInt) -> Unit
 pub fn CommandEncoder::finish(Self) -> CommandBuffer
+pub fn CommandEncoder::insert_debug_marker(Self, String) -> Unit
+pub fn CommandEncoder::pop_debug_group(Self) -> Unit
+pub fn CommandEncoder::push_debug_group(Self, String) -> Unit
 pub fn CommandEncoder::release(Self) -> Unit
+pub fn CommandEncoder::set_label(Self, String) -> Unit
 
 pub struct ComputePass {
   raw : @c.WGPUComputePassEncoder
 }
 pub fn ComputePass::dispatch_workgroups(Self, UInt, UInt, UInt) -> Unit
 pub fn ComputePass::end(Self) -> Unit
+pub fn ComputePass::insert_debug_marker(Self, String) -> Unit
+pub fn ComputePass::pop_debug_group(Self) -> Unit
+pub fn ComputePass::push_debug_group(Self, String) -> Unit
 pub fn ComputePass::release(Self) -> Unit
 pub fn ComputePass::set_bind_group0(Self, BindGroup) -> Unit
+pub fn ComputePass::set_label(Self, String) -> Unit
 pub fn ComputePass::set_pipeline(Self, ComputePipeline) -> Unit
 
 pub struct ComputePipeline {
@@ -161,10 +169,15 @@ pub struct RenderPass {
 pub fn RenderPass::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::draw_indexed(Self, UInt, UInt, UInt, Int, UInt) -> Unit
 pub fn RenderPass::end(Self) -> Unit
+pub fn RenderPass::insert_debug_marker(Self, String) -> Unit
+pub fn RenderPass::pop_debug_group(Self) -> Unit
+pub fn RenderPass::push_debug_group(Self, String) -> Unit
 pub fn RenderPass::release(Self) -> Unit
 pub fn RenderPass::set_bind_group0(Self, BindGroup) -> Unit
+pub fn RenderPass::set_blend_constant_rgba(Self, Double, Double, Double, Double) -> Unit
 pub fn RenderPass::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
+pub fn RenderPass::set_label(Self, String) -> Unit
 pub fn RenderPass::set_pipeline(Self, RenderPipeline) -> Unit
 pub fn RenderPass::set_scissor_rect(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit

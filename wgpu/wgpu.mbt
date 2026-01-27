@@ -93,6 +93,11 @@ pub struct CommandBuffer {
 }
 
 ///|
+fn utf8_bytes(s : String) -> Bytes {
+  @utf8.encode(s[:], bom=false)
+}
+
+///|
 fn align_up(value : UInt64, align : UInt64) -> UInt64 {
   let rem = value % align
   if rem == 0UL {
@@ -197,7 +202,7 @@ pub fn Device::create_shader_module_wgsl(
   self : Device,
   code : String,
 ) -> ShaderModule {
-  let bytes = @utf8.encode(code[:], bom=false)
+  let bytes = utf8_bytes(code)
   let len = bytes.length().to_uint64()
   ShaderModule::{
     raw: @c.device_create_shader_module_wgsl(self.raw, bytes, len),
@@ -535,6 +540,43 @@ pub fn CommandEncoder::begin_compute_pass(self : CommandEncoder) -> ComputePass 
 }
 
 ///|
+pub fn CommandEncoder::set_label(self : CommandEncoder, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.command_encoder_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn CommandEncoder::insert_debug_marker(
+  self : CommandEncoder,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.command_encoder_insert_debug_marker_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn CommandEncoder::push_debug_group(
+  self : CommandEncoder,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.command_encoder_push_debug_group_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn CommandEncoder::pop_debug_group(self : CommandEncoder) -> Unit {
+  @c.command_encoder_pop_debug_group(self.raw)
+}
+
+///|
 pub fn CommandEncoder::begin_render_pass_color(
   self : CommandEncoder,
   view : TextureView,
@@ -709,6 +751,43 @@ pub fn ComputePass::release(self : ComputePass) -> Unit {
 }
 
 ///|
+pub fn ComputePass::set_label(self : ComputePass, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.compute_pass_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn ComputePass::insert_debug_marker(
+  self : ComputePass,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.compute_pass_insert_debug_marker_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn ComputePass::push_debug_group(
+  self : ComputePass,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.compute_pass_push_debug_group_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn ComputePass::pop_debug_group(self : ComputePass) -> Unit {
+  @c.compute_pass_pop_debug_group(self.raw)
+}
+
+///|
 pub fn RenderPass::set_pipeline(
   self : RenderPass,
   pipeline : RenderPipeline,
@@ -831,6 +910,51 @@ pub fn RenderPass::end(self : RenderPass) -> Unit {
 ///|
 pub fn RenderPass::release(self : RenderPass) -> Unit {
   @c.render_pass_release(self.raw)
+}
+
+///|
+pub fn RenderPass::set_label(self : RenderPass, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.render_pass_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn RenderPass::insert_debug_marker(
+  self : RenderPass,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.render_pass_insert_debug_marker_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn RenderPass::push_debug_group(self : RenderPass, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.render_pass_push_debug_group_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn RenderPass::pop_debug_group(self : RenderPass) -> Unit {
+  @c.render_pass_pop_debug_group(self.raw)
+}
+
+///|
+pub fn RenderPass::set_blend_constant_rgba(
+  self : RenderPass,
+  r : Double,
+  g : Double,
+  b : Double,
+  a : Double,
+) -> Unit {
+  @c.render_pass_set_blend_constant_rgba(self.raw, r, g, b, a)
 }
 
 ///|

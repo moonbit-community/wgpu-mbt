@@ -20,6 +20,35 @@ pub fn create_instance() -> Instance {
 }
 
 ///|
+#borrow(label)
+pub extern "C" fn command_encoder_set_label_utf8(
+  encoder : CommandEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_command_encoder_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn command_encoder_insert_debug_marker_utf8(
+  encoder : CommandEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_command_encoder_insert_debug_marker_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn command_encoder_push_debug_group_utf8(
+  encoder : CommandEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_command_encoder_push_debug_group_utf8"
+
+///|
+pub extern "C" fn command_encoder_pop_debug_group(
+  encoder : CommandEncoder,
+) -> Unit = "mbt_wgpu_command_encoder_pop_debug_group"
+
+///|
 pub extern "C" fn instance_request_adapter_sync(instance : Instance) -> Adapter = "mbt_wgpu_instance_request_adapter_sync"
 
 ///|
@@ -503,6 +532,71 @@ pub extern "C" fn compute_pass_end(pass : ComputePassEncoder) -> Unit = "wgpuCom
 
 ///|
 pub extern "C" fn compute_pass_release(pass : ComputePassEncoder) -> Unit = "wgpuComputePassEncoderRelease"
+
+///|
+#borrow(label)
+pub extern "C" fn compute_pass_set_label_utf8(
+  pass : ComputePassEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_compute_pass_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn compute_pass_insert_debug_marker_utf8(
+  pass : ComputePassEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_compute_pass_insert_debug_marker_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn compute_pass_push_debug_group_utf8(
+  pass : ComputePassEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_compute_pass_push_debug_group_utf8"
+
+///|
+pub extern "C" fn compute_pass_pop_debug_group(
+  pass : ComputePassEncoder,
+) -> Unit = "mbt_wgpu_compute_pass_pop_debug_group"
+
+///|
+#borrow(label)
+pub extern "C" fn render_pass_set_label_utf8(
+  pass : RenderPassEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_render_pass_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn render_pass_insert_debug_marker_utf8(
+  pass : RenderPassEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_render_pass_insert_debug_marker_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn render_pass_push_debug_group_utf8(
+  pass : RenderPassEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_render_pass_push_debug_group_utf8"
+
+///|
+pub extern "C" fn render_pass_pop_debug_group(pass : RenderPassEncoder) -> Unit = "mbt_wgpu_render_pass_pop_debug_group"
+
+///|
+pub extern "C" fn render_pass_set_blend_constant_rgba(
+  pass : RenderPassEncoder,
+  r : Double,
+  g : Double,
+  b : Double,
+  a : Double,
+) -> Unit = "mbt_wgpu_render_pass_set_blend_constant_rgba"
 
 ///|
 pub fn command_encoder_finish(encoder : CommandEncoder) -> CommandBuffer {

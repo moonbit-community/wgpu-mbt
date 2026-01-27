@@ -68,7 +68,15 @@ pub fn command_encoder_copy_texture_to_texture_rgba8(WGPUCommandEncoder, WGPUTex
 
 pub fn command_encoder_finish(WGPUCommandEncoder) -> WGPUCommandBuffer
 
+pub fn command_encoder_insert_debug_marker_utf8(WGPUCommandEncoder, Bytes, UInt64) -> Unit
+
+pub fn command_encoder_pop_debug_group(WGPUCommandEncoder) -> Unit
+
+pub fn command_encoder_push_debug_group_utf8(WGPUCommandEncoder, Bytes, UInt64) -> Unit
+
 pub fn command_encoder_release(WGPUCommandEncoder) -> Unit
+
+pub fn command_encoder_set_label_utf8(WGPUCommandEncoder, Bytes, UInt64) -> Unit
 
 pub fn compute_pass_descriptor_default_new() -> WGPUComputePassDescriptorPtr
 
@@ -78,9 +86,17 @@ pub fn compute_pass_dispatch_workgroups(WGPUComputePassEncoder, UInt, UInt, UInt
 
 pub fn compute_pass_end(WGPUComputePassEncoder) -> Unit
 
+pub fn compute_pass_insert_debug_marker_utf8(WGPUComputePassEncoder, Bytes, UInt64) -> Unit
+
+pub fn compute_pass_pop_debug_group(WGPUComputePassEncoder) -> Unit
+
+pub fn compute_pass_push_debug_group_utf8(WGPUComputePassEncoder, Bytes, UInt64) -> Unit
+
 pub fn compute_pass_release(WGPUComputePassEncoder) -> Unit
 
 pub fn compute_pass_set_bind_group0(WGPUComputePassEncoder, WGPUBindGroup) -> Unit
+
+pub fn compute_pass_set_label_utf8(WGPUComputePassEncoder, Bytes, UInt64) -> Unit
 
 pub fn compute_pass_set_pipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
 
@@ -196,13 +212,23 @@ pub fn render_pass_draw_indexed(WGPURenderPassEncoder, UInt, UInt, UInt, Int, UI
 
 pub fn render_pass_end(WGPURenderPassEncoder) -> Unit
 
+pub fn render_pass_insert_debug_marker_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
+
+pub fn render_pass_pop_debug_group(WGPURenderPassEncoder) -> Unit
+
+pub fn render_pass_push_debug_group_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
+
 pub fn render_pass_release(WGPURenderPassEncoder) -> Unit
 
 pub fn render_pass_set_bind_group0(WGPURenderPassEncoder, WGPUBindGroup) -> Unit
 
+pub fn render_pass_set_blend_constant_rgba(WGPURenderPassEncoder, Double, Double, Double, Double) -> Unit
+
 pub fn render_pass_set_index_buffer_u16(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
 
 pub fn render_pass_set_index_buffer_u32(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
+
+pub fn render_pass_set_label_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
 
 pub fn render_pass_set_pipeline(WGPURenderPassEncoder, WGPURenderPipeline) -> Unit
 
