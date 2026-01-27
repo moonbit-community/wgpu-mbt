@@ -10,11 +10,115 @@ pub let adapter_type_cpu : UInt
 
 pub let adapter_type_discrete_gpu : UInt
 
+pub let adapter_type_force32 : UInt
+
 pub let adapter_type_integrated_gpu : UInt
 
 pub let adapter_type_unknown : UInt
 
+pub let address_mode_clamp_to_edge : UInt
+
+pub let address_mode_force32 : UInt
+
+pub let address_mode_mirror_repeat : UInt
+
+pub let address_mode_repeat : UInt
+
+pub let address_mode_undefined : UInt
+
+pub let array_layer_count_undefined : UInt
+
+pub let backend_type_d3_d11 : UInt
+
+pub let backend_type_d3_d12 : UInt
+
+pub let backend_type_force32 : UInt
+
 pub let backend_type_metal : UInt
+
+pub let backend_type_null : UInt
+
+pub let backend_type_open_gl : UInt
+
+pub let backend_type_open_gles : UInt
+
+pub let backend_type_undefined : UInt
+
+pub let backend_type_vulkan : UInt
+
+pub let backend_type_web_gpu : UInt
+
+pub let blend_factor_constant : UInt
+
+pub let blend_factor_dst : UInt
+
+pub let blend_factor_dst_alpha : UInt
+
+pub let blend_factor_force32 : UInt
+
+pub let blend_factor_one : UInt
+
+pub let blend_factor_one_minus_constant : UInt
+
+pub let blend_factor_one_minus_dst : UInt
+
+pub let blend_factor_one_minus_dst_alpha : UInt
+
+pub let blend_factor_one_minus_src : UInt
+
+pub let blend_factor_one_minus_src1 : UInt
+
+pub let blend_factor_one_minus_src1_alpha : UInt
+
+pub let blend_factor_one_minus_src_alpha : UInt
+
+pub let blend_factor_src : UInt
+
+pub let blend_factor_src1 : UInt
+
+pub let blend_factor_src1_alpha : UInt
+
+pub let blend_factor_src_alpha : UInt
+
+pub let blend_factor_src_alpha_saturated : UInt
+
+pub let blend_factor_undefined : UInt
+
+pub let blend_factor_zero : UInt
+
+pub let blend_operation_add : UInt
+
+pub let blend_operation_force32 : UInt
+
+pub let blend_operation_max : UInt
+
+pub let blend_operation_min : UInt
+
+pub let blend_operation_reverse_subtract : UInt
+
+pub let blend_operation_subtract : UInt
+
+pub let blend_operation_undefined : UInt
+
+pub let buffer_binding_type_binding_not_used : UInt
+
+pub let buffer_binding_type_force32 : UInt
+
+pub let buffer_binding_type_read_only_storage : UInt
+
+pub let buffer_binding_type_storage : UInt
+
+pub let buffer_binding_type_undefined : UInt
+
+pub let buffer_binding_type_uniform : UInt
+
+pub let buffer_map_state_force32 : UInt
+
+pub let buffer_map_state_mapped : UInt
+
+pub let buffer_map_state_pending : UInt
+
+pub let buffer_map_state_unmapped : UInt
 
 pub let buffer_usage_copy_dst : UInt64
 
@@ -28,6 +132,8 @@ pub let buffer_usage_map_read : UInt64
 
 pub let buffer_usage_map_write : UInt64
 
+pub let buffer_usage_none : UInt64
+
 pub let buffer_usage_query_resolve : UInt64
 
 pub let buffer_usage_storage : UInt64
@@ -36,19 +142,155 @@ pub let buffer_usage_uniform : UInt64
 
 pub let buffer_usage_vertex : UInt64
 
+pub let callback_mode_allow_process_events : UInt
+
+pub let callback_mode_allow_spontaneous : UInt
+
+pub let callback_mode_force32 : UInt
+
+pub let callback_mode_wait_any_only : UInt
+
+pub let color_write_mask_all : UInt64
+
+pub let color_write_mask_alpha : UInt64
+
+pub let color_write_mask_blue : UInt64
+
+pub let color_write_mask_green : UInt64
+
+pub let color_write_mask_none : UInt64
+
+pub let color_write_mask_red : UInt64
+
+pub let compare_function_always : UInt
+
+pub let compare_function_equal : UInt
+
+pub let compare_function_force32 : UInt
+
+pub let compare_function_greater : UInt
+
+pub let compare_function_greater_equal : UInt
+
+pub let compare_function_less : UInt
+
+pub let compare_function_less_equal : UInt
+
+pub let compare_function_never : UInt
+
+pub let compare_function_not_equal : UInt
+
+pub let compare_function_undefined : UInt
+
+pub let compilation_info_request_status_error : UInt
+
+pub let compilation_info_request_status_force32 : UInt
+
+pub let compilation_info_request_status_instance_dropped : UInt
+
+pub let compilation_info_request_status_success : UInt
+
+pub let compilation_info_request_status_unknown : UInt
+
+pub let compilation_message_type_error : UInt
+
+pub let compilation_message_type_force32 : UInt
+
+pub let compilation_message_type_info : UInt
+
+pub let compilation_message_type_warning : UInt
+
+pub let composite_alpha_mode_auto : UInt
+
+pub let composite_alpha_mode_force32 : UInt
+
+pub let composite_alpha_mode_inherit : UInt
+
+pub let composite_alpha_mode_opaque : UInt
+
+pub let composite_alpha_mode_premultiplied : UInt
+
+pub let composite_alpha_mode_unpremultiplied : UInt
+
+pub let copy_stride_undefined : UInt
+
+pub let create_pipeline_async_status_force32 : UInt
+
+pub let create_pipeline_async_status_instance_dropped : UInt
+
+pub let create_pipeline_async_status_internal_error : UInt
+
+pub let create_pipeline_async_status_success : UInt
+
+pub let create_pipeline_async_status_unknown : UInt
+
+pub let create_pipeline_async_status_validation_error : UInt
+
+pub let cull_mode_back : UInt
+
+pub let cull_mode_force32 : UInt
+
+pub let cull_mode_front : UInt
+
+pub let cull_mode_none : UInt
+
+pub let cull_mode_undefined : UInt
+
+pub let depth_slice_undefined : UInt
+
 pub let device_lost_reason_destroyed : UInt
 
 pub let device_lost_reason_failed_creation : UInt
 
+pub let device_lost_reason_force32 : UInt
+
 pub let device_lost_reason_instance_dropped : UInt
 
 pub let device_lost_reason_unknown : UInt
+
+pub let dx12_compiler_dxc : UInt
+
+pub let dx12_compiler_force32 : UInt
+
+pub let dx12_compiler_fxc : UInt
+
+pub let dx12_compiler_undefined : UInt
+
+pub let dx12_swapchain_kind_dxgi_from_hwnd : UInt
+
+pub let dx12_swapchain_kind_dxgi_from_visual : UInt
+
+pub let dx12_swapchain_kind_force32 : UInt
+
+pub let dx12_swapchain_kind_undefined : UInt
+
+pub let dxc_max_shader_model_force32 : UInt
+
+pub let dxc_max_shader_model_v6_0 : UInt
+
+pub let dxc_max_shader_model_v6_1 : UInt
+
+pub let dxc_max_shader_model_v6_2 : UInt
+
+pub let dxc_max_shader_model_v6_3 : UInt
+
+pub let dxc_max_shader_model_v6_4 : UInt
+
+pub let dxc_max_shader_model_v6_5 : UInt
+
+pub let dxc_max_shader_model_v6_6 : UInt
+
+pub let dxc_max_shader_model_v6_7 : UInt
+
+pub let error_filter_force32 : UInt
 
 pub let error_filter_internal : UInt
 
 pub let error_filter_out_of_memory : UInt
 
 pub let error_filter_validation : UInt
+
+pub let error_type_force32 : UInt
 
 pub let error_type_internal : UInt
 
@@ -60,13 +302,117 @@ pub let error_type_unknown : UInt
 
 pub let error_type_validation : UInt
 
+pub let feature_level_compatibility : UInt
+
+pub let feature_level_core : UInt
+
+pub let feature_level_force32 : UInt
+
+pub let feature_name_bgra8_unorm_storage : UInt
+
+pub let feature_name_clip_distances : UInt
+
+pub let feature_name_depth32_float_stencil8 : UInt
+
+pub let feature_name_depth_clip_control : UInt
+
+pub let feature_name_dual_source_blending : UInt
+
+pub let feature_name_float32_blendable : UInt
+
+pub let feature_name_float32_filterable : UInt
+
+pub let feature_name_force32 : UInt
+
+pub let feature_name_indirect_first_instance : UInt
+
+pub let feature_name_rg11_b10_ufloat_renderable : UInt
+
+pub let feature_name_shader_f16 : UInt
+
+pub let feature_name_texture_compression_astc : UInt
+
+pub let feature_name_texture_compression_astc_sliced3d : UInt
+
+pub let feature_name_texture_compression_bc : UInt
+
+pub let feature_name_texture_compression_bc_sliced3d : UInt
+
+pub let feature_name_texture_compression_etc2 : UInt
+
+pub let feature_name_timestamp_query : UInt
+
+pub let feature_name_undefined : UInt
+
+pub let filter_mode_force32 : UInt
+
+pub let filter_mode_linear : UInt
+
+pub let filter_mode_nearest : UInt
+
+pub let filter_mode_undefined : UInt
+
+pub let front_face_ccw : UInt
+
+pub let front_face_cw : UInt
+
+pub let front_face_force32 : UInt
+
+pub let front_face_undefined : UInt
+
 pub fn get_instance_capabilities() -> InstanceCapabilities
 
 pub fn get_version() -> UInt
 
+pub let gl_fence_behaviour_auto_finish : UInt
+
+pub let gl_fence_behaviour_force32 : UInt
+
+pub let gl_fence_behaviour_normal : UInt
+
+pub let gles3_minor_version_automatic : UInt
+
+pub let gles3_minor_version_force32 : UInt
+
+pub let gles3_minor_version_version0 : UInt
+
+pub let gles3_minor_version_version1 : UInt
+
+pub let gles3_minor_version_version2 : UInt
+
+pub let index_format_force32 : UInt
+
+pub let index_format_uint16 : UInt
+
+pub let index_format_uint32 : UInt
+
+pub let index_format_undefined : UInt
+
+pub let instance_backend_all : UInt64
+
+pub let instance_backend_force32 : UInt64
+
+pub let instance_flag_default : UInt64
+
+pub let instance_flag_force32 : UInt64
+
+pub let limit_u32_undefined : UInt
+
+pub let limit_u64_undefined : UInt64
+
+pub let load_op_clear : UInt
+
+pub let load_op_force32 : UInt
+
+pub let load_op_load : UInt
+
+pub let load_op_undefined : UInt
+
 pub let log_level_debug : UInt
 
 pub let log_level_error : UInt
+
+pub let log_level_force32 : UInt
 
 pub let log_level_info : UInt
 
@@ -76,13 +422,281 @@ pub let log_level_trace : UInt
 
 pub let log_level_warn : UInt
 
+pub let map_async_status_aborted : UInt
+
+pub let map_async_status_error : UInt
+
+pub let map_async_status_force32 : UInt
+
+pub let map_async_status_instance_dropped : UInt
+
+pub let map_async_status_success : UInt
+
+pub let map_async_status_unknown : UInt
+
+pub let map_mode_none : UInt64
+
+pub let map_mode_read : UInt64
+
+pub let map_mode_write : UInt64
+
+pub let mip_level_count_undefined : UInt
+
+pub let mipmap_filter_mode_force32 : UInt
+
+pub let mipmap_filter_mode_linear : UInt
+
+pub let mipmap_filter_mode_nearest : UInt
+
+pub let mipmap_filter_mode_undefined : UInt
+
+pub let native_feature_buffer_binding_array : UInt
+
+pub let native_feature_conservative_rasterization : UInt
+
+pub let native_feature_force32 : UInt
+
+pub let native_feature_mappable_primary_buffers : UInt
+
+pub let native_feature_multi_draw_indirect_count : UInt
+
+pub let native_feature_partially_bound_binding_array : UInt
+
+pub let native_feature_pipeline_statistics_query : UInt
+
+pub let native_feature_polygon_mode_line : UInt
+
+pub let native_feature_polygon_mode_point : UInt
+
+pub let native_feature_push_constants : UInt
+
+pub let native_feature_ray_query : UInt
+
+pub let native_feature_sampled_texture_and_storage_buffer_array_non_uniform_indexing : UInt
+
+pub let native_feature_shader_early_depth_test : UInt
+
+pub let native_feature_shader_f64 : UInt
+
+pub let native_feature_shader_i16 : UInt
+
+pub let native_feature_shader_int64 : UInt
+
+pub let native_feature_shader_primitive_index : UInt
+
+pub let native_feature_spirv_shader_passthrough : UInt
+
+pub let native_feature_storage_resource_binding_array : UInt
+
+pub let native_feature_subgroup : UInt
+
+pub let native_feature_subgroup_barrier : UInt
+
+pub let native_feature_subgroup_vertex : UInt
+
+pub let native_feature_texture_adapter_specific_format_features : UInt
+
+pub let native_feature_texture_binding_array : UInt
+
+pub let native_feature_texture_compression_astc_hdr : UInt
+
+pub let native_feature_texture_format16bit_norm : UInt
+
+pub let native_feature_texture_format_nv12 : UInt
+
+pub let native_feature_timestamp_query_inside_encoders : UInt
+
+pub let native_feature_timestamp_query_inside_passes : UInt
+
+pub let native_feature_uniform_buffer_and_storage_texture_array_non_uniform_indexing : UInt
+
+pub let native_feature_vertex_attribute64bit : UInt
+
+pub let native_feature_vertex_writable_storage : UInt
+
+pub let native_query_type_force32 : UInt
+
+pub let native_query_type_pipeline_statistics : UInt
+
+pub let native_s_type_force32 : UInt
+
+pub let native_texture_format_nv12 : UInt
+
+pub let native_texture_format_p010 : UInt
+
+pub let native_texture_format_r16_snorm : UInt
+
+pub let native_texture_format_r16_unorm : UInt
+
+pub let native_texture_format_rg16_snorm : UInt
+
+pub let native_texture_format_rg16_unorm : UInt
+
+pub let native_texture_format_rgba16_snorm : UInt
+
+pub let native_texture_format_rgba16_unorm : UInt
+
+pub let optional_bool_false : UInt
+
+pub let optional_bool_force32 : UInt
+
+pub let optional_bool_true : UInt
+
+pub let optional_bool_undefined : UInt
+
+pub let pipeline_statistic_name_clipper_invocations : UInt
+
+pub let pipeline_statistic_name_clipper_primitives_out : UInt
+
+pub let pipeline_statistic_name_compute_shader_invocations : UInt
+
+pub let pipeline_statistic_name_force32 : UInt
+
+pub let pipeline_statistic_name_fragment_shader_invocations : UInt
+
+pub let pipeline_statistic_name_vertex_shader_invocations : UInt
+
+pub let polygon_mode_fill : UInt
+
+pub let polygon_mode_line : UInt
+
+pub let polygon_mode_point : UInt
+
+pub let pop_error_scope_status_empty_stack : UInt
+
+pub let pop_error_scope_status_force32 : UInt
+
+pub let pop_error_scope_status_instance_dropped : UInt
+
+pub let pop_error_scope_status_success : UInt
+
+pub let power_preference_force32 : UInt
+
+pub let power_preference_high_performance : UInt
+
+pub let power_preference_low_power : UInt
+
+pub let power_preference_undefined : UInt
+
+pub let present_mode_fifo : UInt
+
+pub let present_mode_fifo_relaxed : UInt
+
+pub let present_mode_force32 : UInt
+
+pub let present_mode_immediate : UInt
+
+pub let present_mode_mailbox : UInt
+
+pub let present_mode_undefined : UInt
+
+pub let primitive_topology_force32 : UInt
+
+pub let primitive_topology_line_list : UInt
+
+pub let primitive_topology_line_strip : UInt
+
+pub let primitive_topology_point_list : UInt
+
+pub let primitive_topology_triangle_list : UInt
+
+pub let primitive_topology_triangle_strip : UInt
+
+pub let primitive_topology_undefined : UInt
+
+pub let query_set_index_undefined : UInt
+
+pub let query_type_force32 : UInt
+
+pub let query_type_occlusion : UInt
+
+pub let query_type_timestamp : UInt
+
 pub let queue_work_done_status_error : UInt
+
+pub let queue_work_done_status_force32 : UInt
 
 pub let queue_work_done_status_instance_dropped : UInt
 
 pub let queue_work_done_status_success : UInt
 
 pub let queue_work_done_status_unknown : UInt
+
+pub let request_adapter_status_error : UInt
+
+pub let request_adapter_status_force32 : UInt
+
+pub let request_adapter_status_instance_dropped : UInt
+
+pub let request_adapter_status_success : UInt
+
+pub let request_adapter_status_unavailable : UInt
+
+pub let request_adapter_status_unknown : UInt
+
+pub let request_device_status_error : UInt
+
+pub let request_device_status_force32 : UInt
+
+pub let request_device_status_instance_dropped : UInt
+
+pub let request_device_status_success : UInt
+
+pub let request_device_status_unknown : UInt
+
+pub let s_type_bind_group_entry_extras : UInt
+
+pub let s_type_bind_group_layout_entry_extras : UInt
+
+pub let s_type_device_extras : UInt
+
+pub let s_type_force32 : UInt
+
+pub let s_type_instance_extras : UInt
+
+pub let s_type_native_limits : UInt
+
+pub let s_type_pipeline_layout_extras : UInt
+
+pub let s_type_primitive_state_extras : UInt
+
+pub let s_type_query_set_descriptor_extras : UInt
+
+pub let s_type_render_pass_max_draw_count : UInt
+
+pub let s_type_shader_source_glsl : UInt
+
+pub let s_type_shader_source_spirv : UInt
+
+pub let s_type_shader_source_wgsl : UInt
+
+pub let s_type_surface_configuration_extras : UInt
+
+pub let s_type_surface_source_android_native_window : UInt
+
+pub let s_type_surface_source_metal_layer : UInt
+
+pub let s_type_surface_source_swap_chain_panel : UInt
+
+pub let s_type_surface_source_wayland_surface : UInt
+
+pub let s_type_surface_source_windows_hwnd : UInt
+
+pub let s_type_surface_source_xcb_window : UInt
+
+pub let s_type_surface_source_xlib_window : UInt
+
+pub let sampler_binding_type_binding_not_used : UInt
+
+pub let sampler_binding_type_comparison : UInt
+
+pub let sampler_binding_type_filtering : UInt
+
+pub let sampler_binding_type_force32 : UInt
+
+pub let sampler_binding_type_non_filtering : UInt
+
+pub let sampler_binding_type_undefined : UInt
 
 pub fn set_debug_labels_enabled(Bool) -> Unit
 
@@ -92,17 +706,427 @@ pub let shader_stage_compute : UInt64
 
 pub let shader_stage_fragment : UInt64
 
+pub let shader_stage_none : UInt64
+
 pub let shader_stage_vertex : UInt64
+
+pub let status_error : UInt
+
+pub let status_force32 : UInt
+
+pub let status_success : UInt
+
+pub let stencil_operation_decrement_clamp : UInt
+
+pub let stencil_operation_decrement_wrap : UInt
+
+pub let stencil_operation_force32 : UInt
+
+pub let stencil_operation_increment_clamp : UInt
+
+pub let stencil_operation_increment_wrap : UInt
+
+pub let stencil_operation_invert : UInt
+
+pub let stencil_operation_keep : UInt
+
+pub let stencil_operation_replace : UInt
+
+pub let stencil_operation_undefined : UInt
+
+pub let stencil_operation_zero : UInt
+
+pub let storage_texture_access_binding_not_used : UInt
+
+pub let storage_texture_access_force32 : UInt
+
+pub let storage_texture_access_read_only : UInt
+
+pub let storage_texture_access_read_write : UInt
+
+pub let storage_texture_access_undefined : UInt
+
+pub let storage_texture_access_write_only : UInt
+
+pub let store_op_discard : UInt
+
+pub let store_op_force32 : UInt
+
+pub let store_op_store : UInt
+
+pub let store_op_undefined : UInt
+
+pub let surface_get_current_texture_status_device_lost : UInt
+
+pub let surface_get_current_texture_status_error : UInt
+
+pub let surface_get_current_texture_status_force32 : UInt
+
+pub let surface_get_current_texture_status_lost : UInt
+
+pub let surface_get_current_texture_status_out_of_memory : UInt
+
+pub let surface_get_current_texture_status_outdated : UInt
+
+pub let surface_get_current_texture_status_success_optimal : UInt
+
+pub let surface_get_current_texture_status_success_suboptimal : UInt
+
+pub let surface_get_current_texture_status_timeout : UInt
+
+pub let texture_aspect_all : UInt
+
+pub let texture_aspect_depth_only : UInt
+
+pub let texture_aspect_force32 : UInt
+
+pub let texture_aspect_stencil_only : UInt
+
+pub let texture_aspect_undefined : UInt
+
+pub let texture_dimension_1d : UInt
+
+pub let texture_dimension_2d : UInt
+
+pub let texture_dimension_3d : UInt
+
+pub let texture_dimension_force32 : UInt
+
+pub let texture_dimension_undefined : UInt
+
+pub let texture_format_astc10x10_unorm : UInt
+
+pub let texture_format_astc10x10_unorm_srgb : UInt
+
+pub let texture_format_astc10x5_unorm : UInt
+
+pub let texture_format_astc10x5_unorm_srgb : UInt
+
+pub let texture_format_astc10x6_unorm : UInt
+
+pub let texture_format_astc10x6_unorm_srgb : UInt
+
+pub let texture_format_astc10x8_unorm : UInt
+
+pub let texture_format_astc10x8_unorm_srgb : UInt
+
+pub let texture_format_astc12x10_unorm : UInt
+
+pub let texture_format_astc12x10_unorm_srgb : UInt
+
+pub let texture_format_astc12x12_unorm : UInt
+
+pub let texture_format_astc12x12_unorm_srgb : UInt
+
+pub let texture_format_astc4x4_unorm : UInt
+
+pub let texture_format_astc4x4_unorm_srgb : UInt
+
+pub let texture_format_astc5x4_unorm : UInt
+
+pub let texture_format_astc5x4_unorm_srgb : UInt
+
+pub let texture_format_astc5x5_unorm : UInt
+
+pub let texture_format_astc5x5_unorm_srgb : UInt
+
+pub let texture_format_astc6x5_unorm : UInt
+
+pub let texture_format_astc6x5_unorm_srgb : UInt
+
+pub let texture_format_astc6x6_unorm : UInt
+
+pub let texture_format_astc6x6_unorm_srgb : UInt
+
+pub let texture_format_astc8x5_unorm : UInt
+
+pub let texture_format_astc8x5_unorm_srgb : UInt
+
+pub let texture_format_astc8x6_unorm : UInt
+
+pub let texture_format_astc8x6_unorm_srgb : UInt
+
+pub let texture_format_astc8x8_unorm : UInt
+
+pub let texture_format_astc8x8_unorm_srgb : UInt
+
+pub let texture_format_bc1_rgba_unorm : UInt
+
+pub let texture_format_bc1_rgba_unorm_srgb : UInt
+
+pub let texture_format_bc2_rgba_unorm : UInt
+
+pub let texture_format_bc2_rgba_unorm_srgb : UInt
+
+pub let texture_format_bc3_rgba_unorm : UInt
+
+pub let texture_format_bc3_rgba_unorm_srgb : UInt
+
+pub let texture_format_bc4r_snorm : UInt
+
+pub let texture_format_bc4r_unorm : UInt
+
+pub let texture_format_bc5_rg_snorm : UInt
+
+pub let texture_format_bc5_rg_unorm : UInt
+
+pub let texture_format_bc6_hrgb_float : UInt
+
+pub let texture_format_bc6_hrgb_ufloat : UInt
+
+pub let texture_format_bc7_rgba_unorm : UInt
+
+pub let texture_format_bc7_rgba_unorm_srgb : UInt
+
+pub let texture_format_bgra8_unorm : UInt
+
+pub let texture_format_bgra8_unorm_srgb : UInt
+
+pub let texture_format_depth16_unorm : UInt
+
+pub let texture_format_depth24_plus : UInt
+
+pub let texture_format_depth24_plus_stencil8 : UInt
+
+pub let texture_format_depth32_float : UInt
+
+pub let texture_format_depth32_float_stencil8 : UInt
+
+pub let texture_format_eacr11_snorm : UInt
+
+pub let texture_format_eacr11_unorm : UInt
+
+pub let texture_format_eacrg11_snorm : UInt
+
+pub let texture_format_eacrg11_unorm : UInt
+
+pub let texture_format_etc2_rgb8_a1_unorm : UInt
+
+pub let texture_format_etc2_rgb8_a1_unorm_srgb : UInt
+
+pub let texture_format_etc2_rgb8_unorm : UInt
+
+pub let texture_format_etc2_rgb8_unorm_srgb : UInt
+
+pub let texture_format_etc2_rgba8_unorm : UInt
+
+pub let texture_format_etc2_rgba8_unorm_srgb : UInt
+
+pub let texture_format_force32 : UInt
+
+pub let texture_format_r16_float : UInt
+
+pub let texture_format_r16_sint : UInt
+
+pub let texture_format_r16_uint : UInt
+
+pub let texture_format_r32_float : UInt
+
+pub let texture_format_r32_sint : UInt
+
+pub let texture_format_r32_uint : UInt
+
+pub let texture_format_r8_sint : UInt
+
+pub let texture_format_r8_snorm : UInt
+
+pub let texture_format_r8_uint : UInt
+
+pub let texture_format_r8_unorm : UInt
+
+pub let texture_format_rg11_b10_ufloat : UInt
+
+pub let texture_format_rg16_float : UInt
+
+pub let texture_format_rg16_sint : UInt
+
+pub let texture_format_rg16_uint : UInt
+
+pub let texture_format_rg32_float : UInt
+
+pub let texture_format_rg32_sint : UInt
+
+pub let texture_format_rg32_uint : UInt
+
+pub let texture_format_rg8_sint : UInt
+
+pub let texture_format_rg8_snorm : UInt
+
+pub let texture_format_rg8_uint : UInt
+
+pub let texture_format_rg8_unorm : UInt
+
+pub let texture_format_rgb10_a2_uint : UInt
+
+pub let texture_format_rgb10_a2_unorm : UInt
+
+pub let texture_format_rgb9_e5_ufloat : UInt
+
+pub let texture_format_rgba16_float : UInt
+
+pub let texture_format_rgba16_sint : UInt
+
+pub let texture_format_rgba16_uint : UInt
+
+pub let texture_format_rgba32_float : UInt
+
+pub let texture_format_rgba32_sint : UInt
+
+pub let texture_format_rgba32_uint : UInt
+
+pub let texture_format_rgba8_sint : UInt
+
+pub let texture_format_rgba8_snorm : UInt
+
+pub let texture_format_rgba8_uint : UInt
+
+pub let texture_format_rgba8_unorm : UInt
+
+pub let texture_format_rgba8_unorm_srgb : UInt
+
+pub let texture_format_stencil8 : UInt
+
+pub let texture_format_undefined : UInt
+
+pub let texture_sample_type_binding_not_used : UInt
+
+pub let texture_sample_type_depth : UInt
+
+pub let texture_sample_type_float : UInt
+
+pub let texture_sample_type_force32 : UInt
+
+pub let texture_sample_type_sint : UInt
+
+pub let texture_sample_type_uint : UInt
+
+pub let texture_sample_type_undefined : UInt
+
+pub let texture_sample_type_unfilterable_float : UInt
 
 pub let texture_usage_copy_dst : UInt64
 
 pub let texture_usage_copy_src : UInt64
+
+pub let texture_usage_none : UInt64
 
 pub let texture_usage_render_attachment : UInt64
 
 pub let texture_usage_storage_binding : UInt64
 
 pub let texture_usage_texture_binding : UInt64
+
+pub let texture_view_dimension_1d : UInt
+
+pub let texture_view_dimension_2d : UInt
+
+pub let texture_view_dimension_2d_array : UInt
+
+pub let texture_view_dimension_3d : UInt
+
+pub let texture_view_dimension_cube : UInt
+
+pub let texture_view_dimension_cube_array : UInt
+
+pub let texture_view_dimension_force32 : UInt
+
+pub let texture_view_dimension_undefined : UInt
+
+pub let vertex_format_float16 : UInt
+
+pub let vertex_format_float16x2 : UInt
+
+pub let vertex_format_float16x4 : UInt
+
+pub let vertex_format_float32 : UInt
+
+pub let vertex_format_float32x2 : UInt
+
+pub let vertex_format_float32x3 : UInt
+
+pub let vertex_format_float32x4 : UInt
+
+pub let vertex_format_force32 : UInt
+
+pub let vertex_format_sint16 : UInt
+
+pub let vertex_format_sint16x2 : UInt
+
+pub let vertex_format_sint16x4 : UInt
+
+pub let vertex_format_sint32 : UInt
+
+pub let vertex_format_sint32x2 : UInt
+
+pub let vertex_format_sint32x3 : UInt
+
+pub let vertex_format_sint32x4 : UInt
+
+pub let vertex_format_sint8 : UInt
+
+pub let vertex_format_sint8x2 : UInt
+
+pub let vertex_format_sint8x4 : UInt
+
+pub let vertex_format_snorm16 : UInt
+
+pub let vertex_format_snorm16x2 : UInt
+
+pub let vertex_format_snorm16x4 : UInt
+
+pub let vertex_format_snorm8 : UInt
+
+pub let vertex_format_snorm8x2 : UInt
+
+pub let vertex_format_snorm8x4 : UInt
+
+pub let vertex_format_uint16 : UInt
+
+pub let vertex_format_uint16x2 : UInt
+
+pub let vertex_format_uint16x4 : UInt
+
+pub let vertex_format_uint32 : UInt
+
+pub let vertex_format_uint32x2 : UInt
+
+pub let vertex_format_uint32x3 : UInt
+
+pub let vertex_format_uint32x4 : UInt
+
+pub let vertex_format_uint8 : UInt
+
+pub let vertex_format_uint8x2 : UInt
+
+pub let vertex_format_uint8x4 : UInt
+
+pub let vertex_format_unorm10_10_10_2 : UInt
+
+pub let vertex_format_unorm16 : UInt
+
+pub let vertex_format_unorm16x2 : UInt
+
+pub let vertex_format_unorm16x4 : UInt
+
+pub let vertex_format_unorm8 : UInt
+
+pub let vertex_format_unorm8x2 : UInt
+
+pub let vertex_format_unorm8x4 : UInt
+
+pub let vertex_format_unorm8x4_bgra : UInt
+
+pub let vertex_step_mode_force32 : UInt
+
+pub let vertex_step_mode_instance : UInt
+
+pub let vertex_step_mode_undefined : UInt
+
+pub let vertex_step_mode_vertex : UInt
+
+pub let vertex_step_mode_vertex_buffer_not_used : UInt
+
+pub let wait_status_force32 : UInt
 
 pub let wait_status_success : UInt
 
@@ -113,6 +1137,20 @@ pub let wait_status_unsupported_count : UInt
 pub let wait_status_unsupported_mixed_sources : UInt
 
 pub let wait_status_unsupported_timeout : UInt
+
+pub let wgsl_language_feature_name_force32 : UInt
+
+pub let wgsl_language_feature_name_packed4x8_integer_dot_product : UInt
+
+pub let wgsl_language_feature_name_pointer_composite_access : UInt
+
+pub let wgsl_language_feature_name_readonly_and_readwrite_storage_textures : UInt
+
+pub let wgsl_language_feature_name_unrestricted_pointer_parameters : UInt
+
+pub let whole_map_size : UInt64
+
+pub let whole_size : UInt64
 
 // Errors
 
@@ -447,6 +1485,7 @@ pub fn Surface::unconfigure(Self) -> Unit
 pub struct SurfaceTexture {
   raw : @c.WGPUTextureViewDescriptorPtr
 }
+pub fn SurfaceTexture::is_success(Self) -> Bool
 pub fn SurfaceTexture::release(Self) -> Unit
 pub fn SurfaceTexture::status(Self) -> UInt
 pub fn SurfaceTexture::take_texture(Self) -> Texture

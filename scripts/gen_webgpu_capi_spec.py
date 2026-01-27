@@ -5,6 +5,7 @@ Generate MoonBit declaration-only spec for the WebGPU C header (webgpu.h).
 Outputs:
   - src/c/webgpu_capi_spec.mbt : #declaration_only types + function stubs
   - src/c/webgpu_capi.mbt      : concrete type decls + extern "C" declarations
+  - src/consts.mbt             : WebGPU constants (enums/bitflags/sentinels)
   - src/tests/wgpu_capi_symbols_test.mbt : symbols smoke test
 
 This generator focuses on completeness and type-checking:
@@ -24,6 +25,7 @@ WEBGPU_H = REPO / "vendor/wgpu-native/ffi/webgpu-headers/webgpu.h"
 WGPU_H = REPO / "vendor/wgpu-native/ffi/wgpu.h"
 OUT_SPEC = REPO / "src/c/webgpu_capi_spec.mbt"
 OUT_IMPL = REPO / "src/c/webgpu_capi.mbt"
+OUT_CONSTS = REPO / "src/consts.mbt"
 OUT_TEST = REPO / "src/tests/wgpu_capi_symbols_test.mbt"
 
 # License header for generated MoonBit files.
@@ -211,6 +213,170 @@ def resolve_typedef_primitives(typedef_aliases: dict[str, str]) -> dict[str, str
     for name in list(typedef_aliases.keys()):
         resolve(name, set())
     return resolved
+
+
+_CAMEL_BOUNDARY_1 = re.compile(r"([a-z0-9])([A-Z])")
+_CAMEL_BOUNDARY_2 = re.compile(r"([A-Z]+)([A-Z][a-z])")
+
+
+def camel_to_snake(s: str) -> str:
+    # Handle acronyms + digit boundaries reasonably well.
+    s = _CAMEL_BOUNDARY_2.sub(r"\1_\2", s)
+    s = _CAMEL_BOUNDARY_1.sub(r"\1_\2", s)
+    s = s.replace("__", "_").lower()
+    # Prefer `2d` over `2_d` when the trailing letter is a whole token
+    # (e.g. `2D`, `3D`, `2DArray`).
+    s = re.sub(r"(\d)_([a-z])(?=\b|_)", r"\1\2", s)
+    return s
+
+
+def c_constant_to_mbt_name(c_name: str) -> str:
+    # Examples:
+    #   WGPUBufferUsage_CopySrc -> buffer_usage_copy_src
+    #   WGPUWaitStatus_Success  -> wait_status_success
+    #   WGPU_WHOLE_SIZE         -> whole_size
+    if c_name.startswith("WGPU_"):
+        rest = c_name[len("WGPU_") :]
+        return rest.lower()
+    if not c_name.startswith("WGPU"):
+        return camel_to_snake(c_name)
+    rest = c_name[len("WGPU") :]
+    if "_" in rest:
+        head, tail = rest.split("_", 1)
+        return f"{camel_to_snake(head)}_{camel_to_snake(tail)}"
+    return camel_to_snake(rest)
+
+
+def mbt_int_literal(value: int, mbt_ty: str) -> str:
+    if mbt_ty == "UInt64":
+        return f"0x{value:016X}UL"
+    # Default to UInt.
+    return f"0x{value:08X}U"
+
+
+def parse_simple_numeric_macros(h_text: str) -> list[tuple[str, str, int]]:
+    """
+    Parse a tiny subset of numeric #defines we want to expose:
+      #define WGPU_WHOLE_SIZE (UINT64_MAX)
+      #define WGPU_ARRAY_LAYER_COUNT_UNDEFINED (UINT32_MAX)
+      #define WGPU_WHOLE_MAP_SIZE (SIZE_MAX)
+    """
+    out: list[tuple[str, str, int]] = []
+    for line in h_text.splitlines():
+        s = line.strip()
+        if not s.startswith("#define "):
+            continue
+        parts = s.split(None, 2)
+        if len(parts) < 3:
+            continue
+        name = parts[1]
+        rhs = parts[2].strip()
+        # Only accept simple paren-wrapped tokens.
+        m = re.fullmatch(r"\(([^()]+)\)", rhs)
+        if not m:
+            continue
+        token = m.group(1).strip()
+        if token == "UINT32_MAX":
+            out.append((name, "UInt", 0xFFFF_FFFF))
+        elif token == "UINT64_MAX":
+            out.append((name, "UInt64", 0xFFFF_FFFF_FFFF_FFFF))
+        elif token == "SIZE_MAX":
+            # We treat size_t as 64-bit in our ABI layer.
+            out.append((name, "UInt64", 0xFFFF_FFFF_FFFF_FFFF))
+    return out
+
+
+def parse_enum_constants(h_text: str) -> list[tuple[str, str, int]]:
+    out: list[tuple[str, str, int]] = []
+    # Match `typedef enum [Name]? { ... } Name;`
+    for m in re.finditer(
+        r"typedef\s+enum(?:\s+\w+)?\s*\{(?P<body>.*?)\}\s*(?P<ty>\w+)\s*;",
+        h_text,
+        flags=re.S,
+    ):
+        body = m.group("body")
+        for line in body.splitlines():
+            s = norm_ws(strip_comments(line))
+            if not s or "=" not in s:
+                continue
+            # trim trailing commas
+            if s.endswith(","):
+                s = s[:-1].strip()
+            name, rhs = [p.strip() for p in s.split("=", 1)]
+            # Only accept numeric assignments.
+            try:
+                val = int(rhs, 0)
+            except ValueError:
+                continue
+            out.append((name, "UInt", val))
+    return out
+
+
+def parse_static_const_numbers(h_text: str, resolved_typedefs: dict[str, str]) -> list[tuple[str, str, int]]:
+    out: list[tuple[str, str, int]] = []
+    for line in h_text.splitlines():
+        s = norm_ws(strip_comments(line))
+        if not s.startswith("static const "):
+            continue
+        if not s.endswith(";"):
+            continue
+        m = re.match(r"static const\s+(\w+)\s+(\w+)\s*=\s*(.+);$", s)
+        if not m:
+            continue
+        c_ty, name, rhs = m.group(1), m.group(2), m.group(3).strip()
+        try:
+            val = int(rhs, 0)
+        except ValueError:
+            continue
+        mbt_ty = resolved_typedefs.get(c_ty, "UInt")
+        # In the header, many consts are enum-typed; treat those as UInt.
+        if mbt_ty not in ("UInt64", "UInt"):
+            mbt_ty = "UInt"
+        out.append((name, mbt_ty, val))
+    return out
+
+
+def write_webgpu_consts() -> None:
+    webgpu_h = strip_comments(WEBGPU_H.read_text("utf-8"))
+    wgpu_h = strip_comments(WGPU_H.read_text("utf-8"))
+    combined = webgpu_h + "\n" + wgpu_h
+    typedef_aliases = parse_simple_typedef_aliases(combined)
+    resolved = resolve_typedef_primitives(typedef_aliases)
+
+    items: list[tuple[str, str, int]] = []
+    items.extend(parse_simple_numeric_macros(combined))
+    items.extend(parse_static_const_numbers(combined, resolved))
+    items.extend(parse_enum_constants(combined))
+
+    # Deduplicate by name (keep first occurrence).
+    seen: set[str] = set()
+    uniq: list[tuple[str, str, int]] = []
+    for name, ty, val in items:
+        if name in seen:
+            continue
+        seen.add(name)
+        uniq.append((name, ty, val))
+
+    uniq.sort(key=lambda t: t[0])
+
+    out_lines: list[str] = []
+    out_lines.append(LICENSE_HEADER.rstrip())
+    out_lines.append("")
+    out_lines.append("///|")
+    out_lines.append("/// WebGPU constants (generated from `webgpu.h`).")
+    out_lines.append("///")
+    out_lines.append("/// This file intentionally exposes the full constant surface (enums,")
+    out_lines.append("/// bitflags, and a small subset of numeric `#define`s) for MoonBit usage.")
+    out_lines.append("")
+
+    for c_name, mbt_ty, val in uniq:
+        mbt_name = c_constant_to_mbt_name(c_name)
+        lit = mbt_int_literal(val, mbt_ty)
+        out_lines.append("///|")
+        out_lines.append(f"pub let {mbt_name} : {mbt_ty} = {lit}")
+        out_lines.append("")
+
+    OUT_CONSTS.write_text("\n".join(out_lines).rstrip() + "\n", "utf-8")
 
 
 def parse_exported_functions(h_text: str) -> list[Func]:
@@ -482,6 +648,7 @@ def main() -> None:
     write_spec(funcs, types, enum_types, typedef_primitives)
     write_impl(funcs, types, enum_types, typedef_primitives)
     write_symbol_test(funcs)
+    write_webgpu_consts()
 
 
 if __name__ == "__main__":

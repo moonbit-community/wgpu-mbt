@@ -28,7 +28,11 @@ test "wgpu surface configure_u32" {
   inspect(ok, content="true")
   let st = surface.get_current_texture()
   let status = st.status()
-  inspect(status == 1U || status == 2U, content="true")
+  inspect(
+    status == @wgpu.surface_get_current_texture_status_success_optimal ||
+    status == @wgpu.surface_get_current_texture_status_success_suboptimal,
+    content="true",
+  )
   st.release()
   surface.unconfigure()
   surface.release()

@@ -25,7 +25,12 @@ test "wgpu surface present (CAMetalLayer)" {
   inspect(format == 0U, content="false")
   let st = surface.get_current_texture()
   let status = st.status()
-  inspect(status == 1U || status == 2U, content="true")
+  inspect(
+    status == @wgpu.surface_get_current_texture_status_success_optimal ||
+    status == @wgpu.surface_get_current_texture_status_success_suboptimal,
+    content="true",
+  )
+  inspect(st.is_success(), content="true")
   let tex = st.take_texture()
   st.release()
   let view = tex.create_view()

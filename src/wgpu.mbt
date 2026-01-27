@@ -73,6 +73,13 @@ pub struct SurfaceTexture {
 }
 
 ///|
+pub fn SurfaceTexture::is_success(self : SurfaceTexture) -> Bool {
+  let st = self.status()
+  st == surface_get_current_texture_status_success_optimal ||
+  st == surface_get_current_texture_status_success_suboptimal
+}
+
+///|
 pub struct GlobalReport {
   raw : @c.WGPUGlobalReportPtr
 }

@@ -221,6 +221,10 @@ declare pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture
 
 ///|
 #declaration_only
+declare pub fn SurfaceTexture::is_success(self : SurfaceTexture) -> Bool
+
+///|
+#declaration_only
 declare pub fn GlobalReport::surfaces_num_allocated(
   self : GlobalReport,
 ) -> UInt64
