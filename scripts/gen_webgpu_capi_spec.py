@@ -25,6 +25,22 @@ OUT_SPEC = REPO / "wgpu/c/webgpu_capi_spec.mbt"
 OUT_IMPL = REPO / "wgpu/c/webgpu_capi.mbt"
 OUT_TEST = REPO / "wgpu_capi_symbols_test.mbt"
 
+# License header for generated MoonBit files.
+LICENSE_HEADER = """// Copyright 2025 International Digital Economy Academy
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+"""
+
 # WGPU handle types already exposed by `wgpu/c/raw.mbt`.
 # We keep those names working by exporting them as aliases to the official
 # WebGPU C API handle types (WGPU*).
@@ -188,6 +204,8 @@ def write_spec(funcs: list[Func], types: set[str]) -> None:
     func_list = sorted(funcs, key=lambda f: f.name)
 
     lines: list[str] = []
+    lines.append(LICENSE_HEADER.rstrip("\n"))
+    lines.append("")
     lines.append("///|")
     lines.append("/// WebGPU C API contract (generated from webgpu.h).")
     lines.append("///")
@@ -223,6 +241,8 @@ def write_impl(funcs: list[Func], types: set[str]) -> None:
     func_list = sorted(funcs, key=lambda f: f.name)
 
     lines: list[str] = []
+    lines.append(LICENSE_HEADER.rstrip("\n"))
+    lines.append("")
     lines.append("///|")
     lines.append("/// WebGPU C API bindings (generated).")
     lines.append("///")
@@ -263,6 +283,8 @@ def write_impl(funcs: list[Func], types: set[str]) -> None:
 def write_symbol_test(funcs: list[Func]) -> None:
     func_list = sorted(funcs, key=lambda f: f.name)
     lines: list[str] = []
+    lines.append(LICENSE_HEADER.rstrip("\n"))
+    lines.append("")
     lines.append("///|")
     lines.append('test "spec: webgpu.h symbol coverage (expected red)" {')
     lines.append("  // This block is never executed; it only forces the compiler to resolve symbols.")
