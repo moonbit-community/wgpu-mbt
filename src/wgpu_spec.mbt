@@ -799,6 +799,13 @@ declare pub fn Queue::submit_for_index(
 
 ///|
 #declaration_only
+declare pub fn Queue::on_submitted_work_done_sync(
+  self : Queue,
+  instance : Instance,
+) -> UInt
+
+///|
+#declaration_only
 declare pub fn Queue::timestamp_period(self : Queue) -> Float
 
 ///|

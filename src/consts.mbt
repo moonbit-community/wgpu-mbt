@@ -136,3 +136,16 @@ pub let error_type_internal : UInt = 4U
 
 ///|
 pub let error_type_unknown : UInt = 5U
+
+///|
+/// Queue work-done status (`WGPUQueueWorkDoneStatus`).
+pub let queue_work_done_status_success : UInt = 1U
+
+///|
+pub let queue_work_done_status_instance_dropped : UInt = 2U
+
+///|
+pub let queue_work_done_status_error : UInt = 3U
+
+///|
+pub let queue_work_done_status_unknown : UInt = 4U

@@ -344,6 +344,12 @@ pub extern "C" fn adapter_request_device_sync_spirv_shader_passthrough(
 ) -> Device = "mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough"
 
 ///|
+pub extern "C" fn queue_on_submitted_work_done_sync(
+  instance : Instance,
+  queue : Queue,
+) -> UInt = "mbt_wgpu_queue_on_submitted_work_done_sync"
+
+///|
 pub fn adapter_has_feature_timestamp_query(adapter : Adapter) -> Bool {
   wgpuAdapterHasFeature(adapter, feature_name_timestamp_query())
 }

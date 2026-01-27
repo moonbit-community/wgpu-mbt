@@ -378,6 +378,8 @@ pub fn query_type_timestamp() -> WGPUQueryType
 
 pub fn queue_get_timestamp_period(WGPUQueue) -> Float
 
+pub fn queue_on_submitted_work_done_sync(WGPUInstance, WGPUQueue) -> UInt
+
 pub fn queue_release(WGPUQueue) -> Unit
 
 pub fn queue_submit(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> Unit

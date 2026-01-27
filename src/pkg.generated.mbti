@@ -66,6 +66,14 @@ pub let log_level_trace : UInt
 
 pub let log_level_warn : UInt
 
+pub let queue_work_done_status_error : UInt
+
+pub let queue_work_done_status_instance_dropped : UInt
+
+pub let queue_work_done_status_success : UInt
+
+pub let queue_work_done_status_unknown : UInt
+
 pub fn set_log_level(UInt) -> Unit
 
 pub let shader_stage_compute : UInt64
@@ -282,6 +290,7 @@ pub fn QuerySet::release(Self) -> Unit
 pub struct Queue {
   raw : @c.WGPUQueue
 }
+pub fn Queue::on_submitted_work_done_sync(Self, Instance) -> UInt
 pub fn Queue::release(Self) -> Unit
 pub fn Queue::submit(Self, Array[CommandBuffer]) -> Unit
 pub fn Queue::submit_for_index(Self, Array[CommandBuffer]) -> UInt64

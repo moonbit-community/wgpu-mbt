@@ -24,6 +24,9 @@
     "wgpu_queue_write_buffer_test.mbt": [
       "native"
     ],
+    "wgpu_queue_work_done_test.mbt": [
+      "native"
+    ],
     "wgpu_render_offscreen_test.mbt": [
       "native"
     ],

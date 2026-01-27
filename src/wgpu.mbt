@@ -1443,6 +1443,14 @@ pub fn Queue::submit_for_index(
 }
 
 ///|
+pub fn Queue::on_submitted_work_done_sync(
+  self : Queue,
+  instance : Instance,
+) -> UInt {
+  @c.queue_on_submitted_work_done_sync(instance.raw, self.raw)
+}
+
+///|
 pub fn Queue::timestamp_period(self : Queue) -> Float {
   @c.queue_get_timestamp_period(self.raw)
 }

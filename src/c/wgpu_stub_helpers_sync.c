@@ -223,6 +223,17 @@ static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice dev
   out->device = device;
 }
 
+typedef struct {
+  WGPUQueueWorkDoneStatus status;
+} mbt_queue_work_done_result_t;
+
+static void mbt_queue_work_done_cb(WGPUQueueWorkDoneStatus status, void *userdata1,
+                                   void *userdata2) {
+  (void)userdata2;
+  mbt_queue_work_done_result_t *out = (mbt_queue_work_done_result_t *)userdata1;
+  out->status = status;
+}
+
 WGPUInstance mbt_wgpu_create_instance(void) { return wgpuCreateInstance(NULL); }
 
 WGPUAdapter mbt_wgpu_instance_request_adapter_sync(WGPUInstance instance) {
@@ -293,6 +304,23 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync(WGPUInstance instance,
     return NULL;
   }
   return out.device;
+}
+
+uint32_t mbt_wgpu_queue_on_submitted_work_done_sync(WGPUInstance instance,
+                                                    WGPUQueue queue) {
+  mbt_queue_work_done_result_t out = {0};
+  WGPUQueueWorkDoneCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_queue_work_done_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+  (void)wgpuQueueOnSubmittedWorkDone(queue, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+  return (uint32_t)out.status;
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(
@@ -726,4 +754,3 @@ WGPUBuffer mbt_wgpu_device_create_buffer(WGPUDevice device, uint64_t size,
   };
   return wgpuDeviceCreateBuffer(device, &desc);
 }
-
