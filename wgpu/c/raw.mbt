@@ -414,20 +414,42 @@ pub extern "C" fn render_pass_set_scissor_rect(
 ) -> Unit = "wgpuRenderPassEncoderSetScissorRect"
 
 ///|
-pub extern "C" fn render_pass_set_index_buffer_u16(
-  pass : RenderPassEncoder,
-  buffer : Buffer,
-  offset : UInt64,
-  size : UInt64,
-) -> Unit = "mbt_wgpu_render_pass_set_index_buffer_u16"
+pub extern "C" fn index_format_uint16() -> WGPUIndexFormat = "mbt_wgpu_index_format_uint16"
 
 ///|
-pub extern "C" fn render_pass_set_index_buffer_u32(
+pub extern "C" fn index_format_uint32() -> WGPUIndexFormat = "mbt_wgpu_index_format_uint32"
+
+///|
+pub fn render_pass_set_index_buffer_u16(
   pass : RenderPassEncoder,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
-) -> Unit = "mbt_wgpu_render_pass_set_index_buffer_u32"
+) -> Unit {
+  wgpuRenderPassEncoderSetIndexBuffer(
+    pass,
+    buffer,
+    index_format_uint16(),
+    offset,
+    size,
+  )
+}
+
+///|
+pub fn render_pass_set_index_buffer_u32(
+  pass : RenderPassEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit {
+  wgpuRenderPassEncoderSetIndexBuffer(
+    pass,
+    buffer,
+    index_format_uint32(),
+    offset,
+    size,
+  )
+}
 
 ///|
 pub extern "C" fn render_pass_draw(

@@ -142,6 +142,10 @@ pub fn device_get_queue(WGPUDevice) -> WGPUQueue
 
 pub fn device_release(WGPUDevice) -> Unit
 
+pub fn index_format_uint16() -> WGPUIndexFormat
+
+pub fn index_format_uint32() -> WGPUIndexFormat
+
 pub fn instance_process_events(WGPUInstance) -> Unit
 
 pub fn instance_release(WGPUInstance) -> Unit

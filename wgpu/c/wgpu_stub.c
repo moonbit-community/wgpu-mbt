@@ -12,6 +12,9 @@
 void *mbt_wgpu_null_ptr(void) { return NULL; }
 void *mbt_wgpu_null_uint_ptr(void) { return NULL; }
 
+WGPUIndexFormat mbt_wgpu_index_format_uint16(void) { return WGPUIndexFormat_Uint16; }
+WGPUIndexFormat mbt_wgpu_index_format_uint32(void) { return WGPUIndexFormat_Uint32; }
+
 // The C API provides both `wgpuInstanceWaitAny` and `wgpuInstanceProcessEvents`.
 // wgpu-native currently does not implement `wgpuInstanceWaitAny` for all builds,
 // so we use `WGPUCallbackMode_AllowProcessEvents` + `wgpuInstanceProcessEvents`
@@ -1643,22 +1646,6 @@ void mbt_wgpu_command_encoder_copy_texture_to_texture_rgba8(
       .depthOrArrayLayers = 1u,
   };
   wgpuCommandEncoderCopyTextureToTexture(encoder, &src, &dst, &copy_size);
-}
-
-void mbt_wgpu_render_pass_set_index_buffer_u16(WGPURenderPassEncoder pass,
-                                               WGPUBuffer buffer,
-                                               uint64_t offset,
-                                               uint64_t size) {
-  wgpuRenderPassEncoderSetIndexBuffer(pass, buffer, WGPUIndexFormat_Uint16, offset,
-                                     size);
-}
-
-void mbt_wgpu_render_pass_set_index_buffer_u32(WGPURenderPassEncoder pass,
-                                               WGPUBuffer buffer,
-                                               uint64_t offset,
-                                               uint64_t size) {
-  wgpuRenderPassEncoderSetIndexBuffer(pass, buffer, WGPUIndexFormat_Uint32, offset,
-                                     size);
 }
 
 void mbt_wgpu_queue_write_texture_rgba8_2d(WGPUQueue queue, WGPUTexture texture,
