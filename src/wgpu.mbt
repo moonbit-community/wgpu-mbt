@@ -2273,6 +2273,11 @@ pub fn TextureView::release(self : TextureView) -> Unit {
 }
 
 ///|
+pub fn Texture::destroy(self : Texture) -> Unit {
+  @c.texture_destroy(self.raw)
+}
+
+///|
 pub fn Texture::release(self : Texture) -> Unit {
   @c.texture_release(self.raw)
 }
@@ -2321,6 +2326,11 @@ pub fn Queue::release(self : Queue) -> Unit {
 ///|
 pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool {
   @c.device_poll(self.raw, wait, @c.null_submission_index_ptr())
+}
+
+///|
+pub fn Device::destroy(self : Device) -> Unit {
+  @c.device_destroy(self.raw)
 }
 
 ///|

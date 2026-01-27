@@ -247,6 +247,7 @@ pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array(Self, UInt, UInt, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, UInt64) -> Texture
 pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
+pub fn Device::destroy(Self) -> Unit
 pub fn Device::poll(Self, wait? : Bool) -> Bool
 pub fn Device::pop_error_scope_sync(Self, Instance) -> UInt
 pub fn Device::push_error_scope(Self, UInt) -> Unit
@@ -395,6 +396,7 @@ pub struct Texture {
 pub fn Texture::create_view(Self) -> TextureView
 pub fn Texture::create_view_2d(Self, UInt, UInt) -> TextureView
 pub fn Texture::create_view_2d_array(Self, UInt, UInt, UInt, UInt) -> TextureView
+pub fn Texture::destroy(Self) -> Unit
 pub fn Texture::release(Self) -> Unit
 
 pub struct TextureView {

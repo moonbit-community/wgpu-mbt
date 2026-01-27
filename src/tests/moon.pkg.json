@@ -27,6 +27,9 @@
     "wgpu_queue_work_done_test.mbt": [
       "native"
     ],
+    "wgpu_destroy_test.mbt": [
+      "native"
+    ],
     "wgpu_render_offscreen_test.mbt": [
       "native"
     ],

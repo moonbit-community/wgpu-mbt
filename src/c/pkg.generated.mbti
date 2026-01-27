@@ -276,6 +276,8 @@ pub fn device_create_texture_rgba8_2d_array_with_usage(WGPUDevice, UInt, UInt, U
 
 pub fn device_create_texture_rgba8_2d_with_usage(WGPUDevice, UInt, UInt, UInt64) -> WGPUTexture
 
+pub fn device_destroy(WGPUDevice) -> Unit
+
 pub fn device_get_queue(WGPUDevice) -> WGPUQueue
 
 pub fn device_poll(WGPUDevice, Bool, WGPUSubmissionIndexPtr) -> Bool
@@ -585,6 +587,8 @@ pub fn texture_descriptor_rgba8_2d_array_with_usage_new(UInt, UInt, UInt, UInt, 
 pub fn texture_descriptor_rgba8_2d_default_new(UInt, UInt) -> WGPUTextureDescriptorPtr
 
 pub fn texture_descriptor_rgba8_2d_with_usage_new(UInt, UInt, UInt64) -> WGPUTextureDescriptorPtr
+
+pub fn texture_destroy(WGPUTexture) -> Unit
 
 pub fn texture_release(WGPUTexture) -> Unit
 

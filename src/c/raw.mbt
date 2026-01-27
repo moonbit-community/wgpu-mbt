@@ -1607,6 +1607,9 @@ pub extern "C" fn shader_module_release(shader_module : ShaderModule) -> Unit = 
 pub extern "C" fn render_pipeline_release(pipeline : RenderPipeline) -> Unit = "wgpuRenderPipelineRelease"
 
 ///|
+pub extern "C" fn texture_destroy(texture : Texture) -> Unit = "wgpuTextureDestroy"
+
+///|
 pub extern "C" fn texture_release(texture : Texture) -> Unit = "wgpuTextureRelease"
 
 ///|
@@ -1633,6 +1636,9 @@ pub extern "C" fn compute_pipeline_release(pipeline : ComputePipeline) -> Unit =
 
 ///|
 pub extern "C" fn queue_release(queue : Queue) -> Unit = "wgpuQueueRelease"
+
+///|
+pub extern "C" fn device_destroy(device : Device) -> Unit = "wgpuDeviceDestroy"
 
 ///|
 pub extern "C" fn device_release(device : Device) -> Unit = "wgpuDeviceRelease"

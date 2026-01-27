@@ -777,6 +777,10 @@ declare pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool
 
 ///|
 #declaration_only
+declare pub fn Device::destroy(self : Device) -> Unit
+
+///|
+#declaration_only
 declare pub fn Queue::submit_one(self : Queue, cmd : CommandBuffer) -> Unit
 
 ///|
@@ -1449,6 +1453,10 @@ declare pub fn Sampler::release(self : Sampler) -> Unit
 ///|
 #declaration_only
 declare pub fn TextureView::release(self : TextureView) -> Unit
+
+///|
+#declaration_only
+declare pub fn Texture::destroy(self : Texture) -> Unit
 
 ///|
 #declaration_only
