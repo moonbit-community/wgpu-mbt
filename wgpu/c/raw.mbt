@@ -124,42 +124,84 @@ pub fn texture_create_view(texture : Texture) -> TextureView {
 }
 
 ///|
-pub extern "C" fn device_create_render_pipeline_rgba8(
+pub fn device_create_render_pipeline_rgba8(
   device : Device,
   shader_module : ShaderModule,
-) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8"
+) -> RenderPipeline {
+  let desc = render_pipeline_descriptor_rgba8_new(
+    null_pipeline_layout(),
+    shader_module,
+  )
+  let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
+  render_pipeline_descriptor_free(desc)
+  pipeline
+}
 
 ///|
-pub extern "C" fn device_create_render_pipeline_rgba8_alpha_blend(
+pub fn device_create_render_pipeline_rgba8_alpha_blend(
   device : Device,
   shader_module : ShaderModule,
-) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_alpha_blend"
+) -> RenderPipeline {
+  let desc = render_pipeline_descriptor_rgba8_alpha_blend_new(
+    null_pipeline_layout(),
+    shader_module,
+  )
+  let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
+  render_pipeline_descriptor_free(desc)
+  pipeline
+}
 
 ///|
-pub extern "C" fn device_create_render_pipeline_rgba8_depth(
+pub fn device_create_render_pipeline_rgba8_depth(
   device : Device,
   shader_module : ShaderModule,
-) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_depth"
+) -> RenderPipeline {
+  let desc = render_pipeline_descriptor_rgba8_depth_new(
+    null_pipeline_layout(),
+    shader_module,
+  )
+  let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
+  render_pipeline_descriptor_free(desc)
+  pipeline
+}
 
 ///|
-pub extern "C" fn device_create_render_pipeline_rgba8_with_layout(
+pub fn device_create_render_pipeline_rgba8_with_layout(
   device : Device,
   layout : PipelineLayout,
   shader_module : ShaderModule,
-) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_with_layout"
+) -> RenderPipeline {
+  let desc = render_pipeline_descriptor_rgba8_new(layout, shader_module)
+  let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
+  render_pipeline_descriptor_free(desc)
+  pipeline
+}
 
 ///|
-pub extern "C" fn device_create_render_pipeline_rgba8_pos2(
+pub fn device_create_render_pipeline_rgba8_pos2(
   device : Device,
   shader_module : ShaderModule,
-) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_pos2"
+) -> RenderPipeline {
+  let desc = render_pipeline_descriptor_rgba8_pos2_new(
+    null_pipeline_layout(),
+    shader_module,
+  )
+  let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
+  render_pipeline_descriptor_free(desc)
+  pipeline
+}
 
 ///|
-pub extern "C" fn device_create_render_pipeline_rgba8_pos2_with_layout(
+pub fn device_create_render_pipeline_rgba8_pos2_with_layout(
   device : Device,
   layout : PipelineLayout,
   shader_module : ShaderModule,
-) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_rgba8_pos2_with_layout"
+) -> RenderPipeline {
+  let desc = render_pipeline_descriptor_rgba8_pos2_new(layout, shader_module)
+  let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
+  render_pipeline_descriptor_free(desc)
+  pipeline
+}
 
 ///|
 pub fn device_create_bind_group_layout_uniform_buffer(

@@ -138,3 +138,33 @@ pub extern "C" fn compute_pipeline_descriptor_new(
 pub extern "C" fn compute_pipeline_descriptor_free(
   desc : WGPUComputePipelineDescriptorPtr,
 ) -> Unit = "mbt_wgpu_compute_pipeline_descriptor_free"
+
+///|
+pub extern "C" fn render_pipeline_descriptor_rgba8_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_rgba8_new"
+
+///|
+pub extern "C" fn render_pipeline_descriptor_rgba8_alpha_blend_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_rgba8_alpha_blend_new"
+
+///|
+pub extern "C" fn render_pipeline_descriptor_rgba8_depth_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_rgba8_depth_new"
+
+///|
+pub extern "C" fn render_pipeline_descriptor_rgba8_pos2_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_rgba8_pos2_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn render_pipeline_descriptor_free(
+  desc : WGPURenderPipelineDescriptorPtr,
+) -> Unit = "mbt_wgpu_render_pipeline_descriptor_free"

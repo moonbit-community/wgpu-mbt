@@ -580,6 +580,187 @@ void mbt_wgpu_compute_pipeline_descriptor_free(WGPUComputePipelineDescriptor *de
   free(desc);
 }
 
+typedef struct {
+  WGPURenderPipelineDescriptor desc;
+  WGPUVertexState vertex;
+  WGPUFragmentState fragment;
+  WGPUColorTargetState color_target;
+  WGPUPrimitiveState primitive;
+  WGPUMultisampleState multisample;
+
+  // Optional: alpha blending.
+  WGPUBlendState blend;
+  WGPUBlendComponent blend_color;
+  WGPUBlendComponent blend_alpha;
+
+  // Optional: depth.
+  WGPUStencilFaceState stencil;
+  WGPUDepthStencilState depth_stencil;
+
+  // Optional: pos2 vertex buffer.
+  WGPUVertexAttribute attr;
+  WGPUVertexBufferLayout vbuf;
+
+  char vs_entry[7];
+  char fs_entry[7];
+} mbt_render_pipeline_desc_t;
+
+static WGPURenderPipelineDescriptor *
+mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
+                                                     WGPUShaderModule shader_module,
+                                                     bool pos2, bool alpha_blend,
+                                                     bool depth) {
+  mbt_render_pipeline_desc_t *out =
+      (mbt_render_pipeline_desc_t *)malloc(sizeof(mbt_render_pipeline_desc_t));
+  if (!out) {
+    return NULL;
+  }
+
+  memcpy(out->vs_entry, "vs_main", 7);
+  memcpy(out->fs_entry, "fs_main", 7);
+
+  if (pos2) {
+    out->attr = (WGPUVertexAttribute){
+        .format = WGPUVertexFormat_Float32x2,
+        .offset = 0u,
+        .shaderLocation = 0u,
+    };
+    out->vbuf = (WGPUVertexBufferLayout){
+        .stepMode = WGPUVertexStepMode_Vertex,
+        .arrayStride = 8u,
+        .attributeCount = 1u,
+        .attributes = &out->attr,
+    };
+  }
+
+  if (alpha_blend) {
+    out->blend_color = (WGPUBlendComponent){
+        .operation = WGPUBlendOperation_Add,
+        .srcFactor = WGPUBlendFactor_SrcAlpha,
+        .dstFactor = WGPUBlendFactor_OneMinusSrcAlpha,
+    };
+    out->blend_alpha = (WGPUBlendComponent){
+        .operation = WGPUBlendOperation_Add,
+        .srcFactor = WGPUBlendFactor_One,
+        .dstFactor = WGPUBlendFactor_OneMinusSrcAlpha,
+    };
+    out->blend = (WGPUBlendState){
+        .color = out->blend_color,
+        .alpha = out->blend_alpha,
+    };
+  }
+
+  if (depth) {
+    out->stencil = (WGPUStencilFaceState){
+        .compare = WGPUCompareFunction_Always,
+        .failOp = WGPUStencilOperation_Keep,
+        .depthFailOp = WGPUStencilOperation_Keep,
+        .passOp = WGPUStencilOperation_Keep,
+    };
+    out->depth_stencil = (WGPUDepthStencilState){
+        .nextInChain = NULL,
+        .format = WGPUTextureFormat_Depth24Plus,
+        .depthWriteEnabled = WGPUOptionalBool_True,
+        .depthCompare = WGPUCompareFunction_Less,
+        .stencilFront = out->stencil,
+        .stencilBack = out->stencil,
+        .stencilReadMask = 0u,
+        .stencilWriteMask = 0u,
+        .depthBias = 0,
+        .depthBiasSlopeScale = 0.0f,
+        .depthBiasClamp = 0.0f,
+    };
+  }
+
+  out->vertex = (WGPUVertexState){
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = out->vs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .bufferCount = pos2 ? 1u : 0u,
+      .buffers = pos2 ? &out->vbuf : NULL,
+  };
+
+  out->color_target = (WGPUColorTargetState){
+      .nextInChain = NULL,
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .blend = alpha_blend ? &out->blend : NULL,
+      .writeMask = WGPUColorWriteMask_All,
+  };
+
+  out->fragment = (WGPUFragmentState){
+      .nextInChain = NULL,
+      .module = shader_module,
+      .entryPoint = (WGPUStringView){.data = out->fs_entry, .length = 7},
+      .constantCount = 0u,
+      .constants = NULL,
+      .targetCount = 1u,
+      .targets = &out->color_target,
+  };
+
+  out->primitive = (WGPUPrimitiveState){
+      .nextInChain = NULL,
+      .topology = WGPUPrimitiveTopology_TriangleList,
+      .stripIndexFormat = WGPUIndexFormat_Undefined,
+      .frontFace = WGPUFrontFace_CCW,
+      .cullMode = WGPUCullMode_None,
+      .unclippedDepth = 0u,
+  };
+
+  out->multisample = (WGPUMultisampleState){
+      .nextInChain = NULL,
+      .count = 1u,
+      .mask = 0xFFFFFFFFu,
+      .alphaToCoverageEnabled = 0u,
+  };
+
+  out->desc = (WGPURenderPipelineDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .layout = layout,
+      .vertex = out->vertex,
+      .primitive = out->primitive,
+      .depthStencil = depth ? &out->depth_stencil : NULL,
+      .multisample = out->multisample,
+      .fragment = &out->fragment,
+  };
+
+  return &out->desc;
+}
+
+WGPURenderPipelineDescriptor *
+mbt_wgpu_render_pipeline_descriptor_rgba8_new(WGPUPipelineLayout layout,
+                                              WGPUShaderModule shader_module) {
+  return mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
+      layout, shader_module, false, false, false);
+}
+
+WGPURenderPipelineDescriptor *
+mbt_wgpu_render_pipeline_descriptor_rgba8_alpha_blend_new(
+    WGPUPipelineLayout layout, WGPUShaderModule shader_module) {
+  return mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
+      layout, shader_module, false, true, false);
+}
+
+WGPURenderPipelineDescriptor *
+mbt_wgpu_render_pipeline_descriptor_rgba8_depth_new(WGPUPipelineLayout layout,
+                                                    WGPUShaderModule shader_module) {
+  return mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
+      layout, shader_module, false, false, true);
+}
+
+WGPURenderPipelineDescriptor *
+mbt_wgpu_render_pipeline_descriptor_rgba8_pos2_new(WGPUPipelineLayout layout,
+                                                   WGPUShaderModule shader_module) {
+  return mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
+      layout, shader_module, true, false, false);
+}
+
+void mbt_wgpu_render_pipeline_descriptor_free(WGPURenderPipelineDescriptor *desc) {
+  free(desc);
+}
+
 WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline(
     WGPUDevice device, WGPUShaderModule shader_module) {
   static const char entry[] = "main";
