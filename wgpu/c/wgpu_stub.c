@@ -125,6 +125,109 @@ WGPUBufferDescriptor *mbt_wgpu_buffer_descriptor_new(uint64_t size, uint64_t usa
 
 void mbt_wgpu_buffer_descriptor_free(WGPUBufferDescriptor *desc) { free(desc); }
 
+WGPUTextureDescriptor *mbt_wgpu_texture_descriptor_rgba8_2d_with_usage_new(uint32_t width,
+                                                                          uint32_t height,
+                                                                          uint64_t usage) {
+  WGPUTextureDescriptor *desc =
+      (WGPUTextureDescriptor *)malloc(sizeof(WGPUTextureDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUTextureDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .usage = (WGPUTextureUsage)usage,
+      .dimension = WGPUTextureDimension_2D,
+      .size = (WGPUExtent3D){.width = width, .height = height, .depthOrArrayLayers = 1u},
+      .format = WGPUTextureFormat_RGBA8Unorm,
+      .mipLevelCount = 1u,
+      .sampleCount = 1u,
+      .viewFormatCount = 0u,
+      .viewFormats = NULL,
+  };
+  return desc;
+}
+
+WGPUTextureDescriptor *mbt_wgpu_texture_descriptor_rgba8_2d_default_new(uint32_t width,
+                                                                       uint32_t height) {
+  return mbt_wgpu_texture_descriptor_rgba8_2d_with_usage_new(
+      width, height,
+      (uint64_t)(WGPUTextureUsage_RenderAttachment | WGPUTextureUsage_CopySrc |
+                 WGPUTextureUsage_CopyDst | WGPUTextureUsage_TextureBinding));
+}
+
+WGPUTextureDescriptor *mbt_wgpu_texture_descriptor_depth24plus_2d_new(uint32_t width,
+                                                                     uint32_t height) {
+  WGPUTextureDescriptor *desc =
+      (WGPUTextureDescriptor *)malloc(sizeof(WGPUTextureDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUTextureDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .usage = WGPUTextureUsage_RenderAttachment,
+      .dimension = WGPUTextureDimension_2D,
+      .size = (WGPUExtent3D){.width = width, .height = height, .depthOrArrayLayers = 1u},
+      .format = WGPUTextureFormat_Depth24Plus,
+      .mipLevelCount = 1u,
+      .sampleCount = 1u,
+      .viewFormatCount = 0u,
+      .viewFormats = NULL,
+  };
+  return desc;
+}
+
+void mbt_wgpu_texture_descriptor_free(WGPUTextureDescriptor *desc) { free(desc); }
+
+WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_nearest_clamp_new(void) {
+  WGPUSamplerDescriptor *desc =
+      (WGPUSamplerDescriptor *)malloc(sizeof(WGPUSamplerDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUSamplerDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .addressModeU = WGPUAddressMode_ClampToEdge,
+      .addressModeV = WGPUAddressMode_ClampToEdge,
+      .addressModeW = WGPUAddressMode_ClampToEdge,
+      .magFilter = WGPUFilterMode_Nearest,
+      .minFilter = WGPUFilterMode_Nearest,
+      .mipmapFilter = WGPUMipmapFilterMode_Nearest,
+      .lodMinClamp = 0.0f,
+      .lodMaxClamp = 32.0f,
+      .compare = WGPUCompareFunction_Undefined,
+      .maxAnisotropy = 1u,
+  };
+  return desc;
+}
+
+WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_linear_clamp_new(void) {
+  WGPUSamplerDescriptor *desc =
+      (WGPUSamplerDescriptor *)malloc(sizeof(WGPUSamplerDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUSamplerDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .addressModeU = WGPUAddressMode_ClampToEdge,
+      .addressModeV = WGPUAddressMode_ClampToEdge,
+      .addressModeW = WGPUAddressMode_ClampToEdge,
+      .magFilter = WGPUFilterMode_Linear,
+      .minFilter = WGPUFilterMode_Linear,
+      .mipmapFilter = WGPUMipmapFilterMode_Linear,
+      .lodMinClamp = 0.0f,
+      .lodMaxClamp = 32.0f,
+      .compare = WGPUCompareFunction_Undefined,
+      .maxAnisotropy = 1u,
+  };
+  return desc;
+}
+
+void mbt_wgpu_sampler_descriptor_free(WGPUSamplerDescriptor *desc) { free(desc); }
+
 WGPUShaderModule mbt_wgpu_device_create_shader_module_wgsl(WGPUDevice device,
                                                           const uint8_t *code,
                                                           uint64_t code_len) {

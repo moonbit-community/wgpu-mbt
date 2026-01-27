@@ -67,26 +67,41 @@ pub extern "C" fn device_create_compute_pipeline(
 ) -> ComputePipeline = "mbt_wgpu_device_create_compute_pipeline"
 
 ///|
-pub extern "C" fn device_create_texture_rgba8_2d(
+pub fn device_create_texture_rgba8_2d(
   device : Device,
   width : UInt,
   height : UInt,
-) -> Texture = "mbt_wgpu_device_create_texture_rgba8_2d"
+) -> Texture {
+  let desc = texture_descriptor_rgba8_2d_default_new(width, height)
+  let tex = wgpuDeviceCreateTexture(device, desc)
+  texture_descriptor_free(desc)
+  tex
+}
 
 ///|
-pub extern "C" fn device_create_texture_rgba8_2d_with_usage(
+pub fn device_create_texture_rgba8_2d_with_usage(
   device : Device,
   width : UInt,
   height : UInt,
   usage : UInt64,
-) -> Texture = "mbt_wgpu_device_create_texture_rgba8_2d_with_usage"
+) -> Texture {
+  let desc = texture_descriptor_rgba8_2d_with_usage_new(width, height, usage)
+  let tex = wgpuDeviceCreateTexture(device, desc)
+  texture_descriptor_free(desc)
+  tex
+}
 
 ///|
-pub extern "C" fn device_create_texture_depth24plus_2d(
+pub fn device_create_texture_depth24plus_2d(
   device : Device,
   width : UInt,
   height : UInt,
-) -> Texture = "mbt_wgpu_device_create_texture_depth24plus_2d"
+) -> Texture {
+  let desc = texture_descriptor_depth24plus_2d_new(width, height)
+  let tex = wgpuDeviceCreateTexture(device, desc)
+  texture_descriptor_free(desc)
+  tex
+}
 
 ///|
 pub fn texture_create_view(texture : Texture) -> TextureView {
@@ -149,14 +164,20 @@ pub extern "C" fn device_create_bind_group_layout_storage_buffer(
 ) -> BindGroupLayout = "mbt_wgpu_device_create_bind_group_layout_storage_buffer"
 
 ///|
-pub extern "C" fn device_create_sampler_nearest_clamp(
-  device : Device,
-) -> Sampler = "mbt_wgpu_device_create_sampler_nearest_clamp"
+pub fn device_create_sampler_nearest_clamp(device : Device) -> Sampler {
+  let desc = sampler_descriptor_nearest_clamp_new()
+  let sampler = wgpuDeviceCreateSampler(device, desc)
+  sampler_descriptor_free(desc)
+  sampler
+}
 
 ///|
-pub extern "C" fn device_create_sampler_linear_clamp(
-  device : Device,
-) -> Sampler = "mbt_wgpu_device_create_sampler_linear_clamp"
+pub fn device_create_sampler_linear_clamp(device : Device) -> Sampler {
+  let desc = sampler_descriptor_linear_clamp_new()
+  let sampler = wgpuDeviceCreateSampler(device, desc)
+  sampler_descriptor_free(desc)
+  sampler
+}
 
 ///|
 pub extern "C" fn device_create_bind_group_layout_sampler_texture_2d(
