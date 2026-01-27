@@ -4,6 +4,8 @@ package "username/wgpu_mbt/wgpu/c"
 // Values
 pub fn adapter_has_feature_native_timestamp_query_inside_encoders(WGPUAdapter) -> Bool
 
+pub fn adapter_has_feature_native_timestamp_query_inside_passes(WGPUAdapter) -> Bool
+
 pub fn adapter_has_feature_timestamp_query(WGPUAdapter) -> Bool
 
 pub fn adapter_release(WGPUAdapter) -> Unit
@@ -13,6 +15,8 @@ pub fn adapter_request_device_sync(WGPUInstance, WGPUAdapter) -> WGPUDevice
 pub fn adapter_request_device_sync_timestamp_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_timestamp_query_inside_encoders(WGPUInstance, WGPUAdapter) -> WGPUDevice
+
+pub fn adapter_request_device_sync_timestamp_query_inside_passes(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn bind_group_descriptor_free(WGPUBindGroupDescriptorPtr) -> Unit
 
@@ -115,6 +119,8 @@ pub fn compute_pass_set_bind_group0(WGPUComputePassEncoder, WGPUBindGroup) -> Un
 pub fn compute_pass_set_label_utf8(WGPUComputePassEncoder, Bytes, UInt64) -> Unit
 
 pub fn compute_pass_set_pipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
+
+pub fn compute_pass_write_timestamp(WGPUComputePassEncoder, WGPUQuerySet, UInt) -> Unit
 
 pub fn compute_pipeline_descriptor_free(WGPUComputePipelineDescriptorPtr) -> Unit
 
@@ -291,6 +297,8 @@ pub fn render_pass_set_stencil_reference(WGPURenderPassEncoder, UInt) -> Unit
 pub fn render_pass_set_vertex_buffer(WGPURenderPassEncoder, UInt, WGPUBuffer, UInt64, UInt64) -> Unit
 
 pub fn render_pass_set_viewport(WGPURenderPassEncoder, Float, Float, Float, Float, Float, Float) -> Unit
+
+pub fn render_pass_write_timestamp(WGPURenderPassEncoder, WGPUQuerySet, UInt) -> Unit
 
 pub fn render_pipeline_descriptor_free(WGPURenderPipelineDescriptorPtr) -> Unit
 

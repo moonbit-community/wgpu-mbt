@@ -49,11 +49,13 @@ pub struct Adapter {
   raw : @c.WGPUAdapter
 }
 pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
+pub fn Adapter::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
 pub fn Adapter::has_feature_timestamp_query(Self) -> Bool
 pub fn Adapter::release(Self) -> Unit
 pub fn Adapter::request_device_sync(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device
+pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device
 
 pub struct BindGroup {
   raw : @c.WGPUBindGroup
@@ -117,6 +119,7 @@ pub fn ComputePass::release(Self) -> Unit
 pub fn ComputePass::set_bind_group0(Self, BindGroup) -> Unit
 pub fn ComputePass::set_label(Self, String) -> Unit
 pub fn ComputePass::set_pipeline(Self, ComputePipeline) -> Unit
+pub fn ComputePass::write_timestamp(Self, QuerySet, UInt) -> Unit
 
 pub struct ComputePipeline {
   raw : @c.WGPUComputePipeline
@@ -206,6 +209,7 @@ pub fn RenderPass::set_scissor_rect(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::set_stencil_reference(Self, UInt) -> Unit
 pub fn RenderPass::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_viewport(Self, Float, Float, Float, Float, Float, Float) -> Unit
+pub fn RenderPass::write_timestamp(Self, QuerySet, UInt) -> Unit
 
 pub struct RenderPipeline {
   raw : @c.WGPURenderPipeline

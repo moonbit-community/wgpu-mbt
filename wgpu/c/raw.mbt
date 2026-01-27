@@ -97,6 +97,12 @@ pub extern "C" fn adapter_request_device_sync_timestamp_query_inside_encoders(
 ) -> Device = "mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders"
 
 ///|
+pub extern "C" fn adapter_request_device_sync_timestamp_query_inside_passes(
+  instance : Instance,
+  adapter : Adapter,
+) -> Device = "mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes"
+
+///|
 pub fn adapter_has_feature_timestamp_query(adapter : Adapter) -> Bool {
   wgpuAdapterHasFeature(adapter, feature_name_timestamp_query())
 }
@@ -108,6 +114,16 @@ pub fn adapter_has_feature_native_timestamp_query_inside_encoders(
   wgpuAdapterHasFeature(
     adapter,
     feature_name_native_timestamp_query_inside_encoders(),
+  )
+}
+
+///|
+pub fn adapter_has_feature_native_timestamp_query_inside_passes(
+  adapter : Adapter,
+) -> Bool {
+  wgpuAdapterHasFeature(
+    adapter,
+    feature_name_native_timestamp_query_inside_passes(),
   )
 }
 
@@ -933,6 +949,20 @@ pub extern "C" fn command_encoder_write_timestamp(
   query_set : QuerySet,
   query_index : UInt,
 ) -> Unit = "wgpuCommandEncoderWriteTimestamp"
+
+///|
+pub extern "C" fn render_pass_write_timestamp(
+  pass : RenderPassEncoder,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit = "wgpuRenderPassEncoderWriteTimestamp"
+
+///|
+pub extern "C" fn compute_pass_write_timestamp(
+  pass : ComputePassEncoder,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit = "wgpuComputePassEncoderWriteTimestamp"
 
 ///|
 pub extern "C" fn render_pass_begin_occlusion_query(

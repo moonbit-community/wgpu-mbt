@@ -147,6 +147,15 @@ pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(
 
 ///|
 #declaration_only
+pub fn Adapter::request_device_sync_timestamp_query_inside_passes(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Adapter::release(self : Adapter) -> Unit {
   ...
 }
@@ -160,6 +169,14 @@ pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool {
 ///|
 #declaration_only
 pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(
+  self : Adapter,
+) -> Bool {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::has_feature_native_timestamp_query_inside_passes(
   self : Adapter,
 ) -> Bool {
   ...
@@ -689,6 +706,16 @@ pub fn ComputePass::dispatch_workgroups_indirect(
 
 ///|
 #declaration_only
+pub fn ComputePass::write_timestamp(
+  self : ComputePass,
+  query_set : QuerySet,
+  query_index : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn ComputePass::end(self : ComputePass) -> Unit {
   ...
 }
@@ -856,6 +883,16 @@ pub fn RenderPass::draw_indexed_indirect(
 #declaration_only
 pub fn RenderPass::begin_occlusion_query(
   self : RenderPass,
+  query_index : UInt,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::write_timestamp(
+  self : RenderPass,
+  query_set : QuerySet,
   query_index : UInt,
 ) -> Unit {
   ...
