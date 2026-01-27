@@ -369,12 +369,36 @@ pub fn device_create_bind_group_layout_uniform_buffer(
 }
 
 ///|
+pub fn device_create_bind_group_layout_uniform_buffer_dynamic(
+  device : Device,
+) -> BindGroupLayout {
+  let desc = bind_group_layout_descriptor_uniform_buffer_dynamic_new()
+  let bgl = wgpuDeviceCreateBindGroupLayout(device, desc)
+  bind_group_layout_descriptor_free(desc)
+  bgl
+}
+
+///|
 pub fn device_create_bind_group_uniform_buffer(
   device : Device,
   bind_group_layout : BindGroupLayout,
   buffer : Buffer,
 ) -> BindGroup {
   let desc = bind_group_descriptor_uniform_buffer_new(bind_group_layout, buffer)
+  let bg = wgpuDeviceCreateBindGroup(device, desc)
+  bind_group_descriptor_free(desc)
+  bg
+}
+
+///|
+pub fn device_create_bind_group_uniform_buffer_16(
+  device : Device,
+  bind_group_layout : BindGroupLayout,
+  buffer : Buffer,
+) -> BindGroup {
+  let desc = bind_group_descriptor_uniform_buffer_16_new(
+    bind_group_layout, buffer,
+  )
   let bg = wgpuDeviceCreateBindGroup(device, desc)
   bind_group_descriptor_free(desc)
   bg
@@ -479,6 +503,20 @@ pub fn device_create_pipeline_layout_1(
   bind_group_layout : BindGroupLayout,
 ) -> PipelineLayout {
   let desc = pipeline_layout_descriptor_1_new(bind_group_layout)
+  let layout = wgpuDeviceCreatePipelineLayout(device, desc)
+  pipeline_layout_descriptor_free(desc)
+  layout
+}
+
+///|
+pub fn device_create_pipeline_layout_2(
+  device : Device,
+  bind_group_layout0 : BindGroupLayout,
+  bind_group_layout1 : BindGroupLayout,
+) -> PipelineLayout {
+  let desc = pipeline_layout_descriptor_2_new(
+    bind_group_layout0, bind_group_layout1,
+  )
   let layout = wgpuDeviceCreatePipelineLayout(device, desc)
   pipeline_layout_descriptor_free(desc)
   layout
@@ -622,6 +660,41 @@ pub fn render_pass_set_bind_group0(
 }
 
 ///|
+#borrow(offsets)
+pub extern "C" fn wgpuRenderPassEncoderSetBindGroup_offsets(
+  pass : RenderPassEncoder,
+  group_index : UInt,
+  group : BindGroup,
+  dynamic_offset_count : UInt64,
+  offsets : FixedArray[UInt],
+) -> Unit = "wgpuRenderPassEncoderSetBindGroup"
+
+///|
+pub fn render_pass_set_bind_group(
+  pass : RenderPassEncoder,
+  index : UInt,
+  group : BindGroup,
+  dynamic_offsets : Array[UInt],
+) -> Unit {
+  let n = dynamic_offsets.length()
+  if n == 0 {
+    wgpuRenderPassEncoderSetBindGroup(pass, index, group, 0UL, null_uint_ptr())
+    return
+  }
+  let offsets : FixedArray[UInt] = FixedArray::make(n, 0U)
+  for i in 0..<n {
+    offsets[i] = dynamic_offsets[i]
+  }
+  wgpuRenderPassEncoderSetBindGroup_offsets(
+    pass,
+    index,
+    group,
+    n.to_uint64(),
+    offsets,
+  )
+}
+
+///|
 pub extern "C" fn render_pass_set_vertex_buffer(
   pass : RenderPassEncoder,
   slot : UInt,
@@ -733,6 +806,41 @@ pub fn compute_pass_set_bind_group0(
   group : BindGroup,
 ) -> Unit {
   wgpuComputePassEncoderSetBindGroup(pass, 0U, group, 0UL, null_uint_ptr())
+}
+
+///|
+#borrow(offsets)
+pub extern "C" fn wgpuComputePassEncoderSetBindGroup_offsets(
+  pass : ComputePassEncoder,
+  group_index : UInt,
+  group : BindGroup,
+  dynamic_offset_count : UInt64,
+  offsets : FixedArray[UInt],
+) -> Unit = "wgpuComputePassEncoderSetBindGroup"
+
+///|
+pub fn compute_pass_set_bind_group(
+  pass : ComputePassEncoder,
+  index : UInt,
+  group : BindGroup,
+  dynamic_offsets : Array[UInt],
+) -> Unit {
+  let n = dynamic_offsets.length()
+  if n == 0 {
+    wgpuComputePassEncoderSetBindGroup(pass, index, group, 0UL, null_uint_ptr())
+    return
+  }
+  let offsets : FixedArray[UInt] = FixedArray::make(n, 0U)
+  for i in 0..<n {
+    offsets[i] = dynamic_offsets[i]
+  }
+  wgpuComputePassEncoderSetBindGroup_offsets(
+    pass,
+    index,
+    group,
+    n.to_uint64(),
+    offsets,
+  )
 }
 
 ///|

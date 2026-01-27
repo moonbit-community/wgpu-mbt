@@ -120,6 +120,7 @@ pub fn ComputePass::insert_debug_marker(Self, String) -> Unit
 pub fn ComputePass::pop_debug_group(Self) -> Unit
 pub fn ComputePass::push_debug_group(Self, String) -> Unit
 pub fn ComputePass::release(Self) -> Unit
+pub fn ComputePass::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn ComputePass::set_bind_group0(Self, BindGroup) -> Unit
 pub fn ComputePass::set_label(Self, String) -> Unit
 pub fn ComputePass::set_pipeline(Self, ComputePipeline) -> Unit
@@ -137,16 +138,19 @@ pub fn Device::create_bind_group_layout_sampler_texture_2d(Self) -> BindGroupLay
 pub fn Device::create_bind_group_layout_storage_buffer(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_storage_texture_rgba8_writeonly(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_uniform_buffer(Self) -> BindGroupLayout
+pub fn Device::create_bind_group_layout_uniform_buffer_dynamic(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_sampler_texture_2d(Self, BindGroupLayout, Sampler, TextureView) -> BindGroup
 pub fn Device::create_bind_group_storage_buffer(Self, BindGroupLayout, Buffer) -> BindGroup
 pub fn Device::create_bind_group_storage_texture_2d(Self, BindGroupLayout, TextureView) -> BindGroup
 pub fn Device::create_bind_group_uniform_buffer(Self, BindGroupLayout, Buffer) -> BindGroup
+pub fn Device::create_bind_group_uniform_buffer_16(Self, BindGroupLayout, Buffer) -> BindGroup
 pub fn Device::create_buffer(Self, size~ : UInt64, usage~ : UInt64, mapped_at_creation? : Bool) -> Buffer
 pub fn Device::create_buffer_init(Self, usage~ : UInt64, Bytes) -> Buffer
 pub fn Device::create_command_encoder(Self) -> CommandEncoder
 pub fn Device::create_compute_pipeline(Self, ShaderModule) -> ComputePipeline
 pub fn Device::create_compute_pipeline_with_layout(Self, PipelineLayout, ShaderModule) -> ComputePipeline
 pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
+pub fn Device::create_pipeline_layout_2(Self, BindGroupLayout, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
 pub fn Device::create_query_set_timestamp(Self, UInt) -> QuerySet
 pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
@@ -213,6 +217,7 @@ pub fn RenderPass::insert_debug_marker(Self, String) -> Unit
 pub fn RenderPass::pop_debug_group(Self) -> Unit
 pub fn RenderPass::push_debug_group(Self, String) -> Unit
 pub fn RenderPass::release(Self) -> Unit
+pub fn RenderPass::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn RenderPass::set_bind_group0(Self, BindGroup) -> Unit
 pub fn RenderPass::set_blend_constant_rgba(Self, Double, Double, Double, Double) -> Unit
 pub fn RenderPass::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit

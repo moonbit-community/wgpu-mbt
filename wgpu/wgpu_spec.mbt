@@ -456,7 +456,25 @@ pub fn Device::create_bind_group_layout_uniform_buffer(
 
 ///|
 #declaration_only
+pub fn Device::create_bind_group_layout_uniform_buffer_dynamic(
+  self : Device,
+) -> BindGroupLayout {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Device::create_bind_group_uniform_buffer(
+  self : Device,
+  bind_group_layout : BindGroupLayout,
+  buffer : Buffer,
+) -> BindGroup {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_bind_group_uniform_buffer_16(
   self : Device,
   bind_group_layout : BindGroupLayout,
   buffer : Buffer,
@@ -524,6 +542,16 @@ pub fn Device::create_bind_group_sampler_texture_2d(
 pub fn Device::create_pipeline_layout_1(
   self : Device,
   bind_group_layout : BindGroupLayout,
+) -> PipelineLayout {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_pipeline_layout_2(
+  self : Device,
+  bind_group_layout0 : BindGroupLayout,
+  bind_group_layout1 : BindGroupLayout,
 ) -> PipelineLayout {
   ...
 }
@@ -851,6 +879,17 @@ pub fn ComputePass::set_bind_group0(
 
 ///|
 #declaration_only
+pub fn ComputePass::set_bind_group(
+  self : ComputePass,
+  index : UInt,
+  group : BindGroup,
+  dynamic_offsets : Array[UInt],
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn ComputePass::dispatch_workgroups(
   self : ComputePass,
   x : UInt,
@@ -936,6 +975,17 @@ pub fn RenderPass::set_pipeline(
 pub fn RenderPass::set_bind_group0(
   self : RenderPass,
   group : BindGroup,
+) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn RenderPass::set_bind_group(
+  self : RenderPass,
+  index : UInt,
+  group : BindGroup,
+  dynamic_offsets : Array[UInt],
 ) -> Unit {
   ...
 }

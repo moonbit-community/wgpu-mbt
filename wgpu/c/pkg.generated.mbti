@@ -26,6 +26,8 @@ pub fn bind_group_descriptor_storage_buffer_new(WGPUBindGroupLayout, WGPUBuffer)
 
 pub fn bind_group_descriptor_storage_texture_2d_new(WGPUBindGroupLayout, WGPUTextureView) -> WGPUBindGroupDescriptorPtr
 
+pub fn bind_group_descriptor_uniform_buffer_16_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
+
 pub fn bind_group_descriptor_uniform_buffer_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
 
 pub fn bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptorPtr) -> Unit
@@ -35,6 +37,8 @@ pub fn bind_group_layout_descriptor_sampler_texture_2d_new() -> WGPUBindGroupLay
 pub fn bind_group_layout_descriptor_storage_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr
 
 pub fn bind_group_layout_descriptor_storage_texture_rgba8_writeonly_new() -> WGPUBindGroupLayoutDescriptorPtr
+
+pub fn bind_group_layout_descriptor_uniform_buffer_dynamic_new() -> WGPUBindGroupLayoutDescriptorPtr
 
 pub fn bind_group_layout_descriptor_uniform_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr
 
@@ -126,6 +130,8 @@ pub fn compute_pass_push_debug_group_utf8(WGPUComputePassEncoder, Bytes, UInt64)
 
 pub fn compute_pass_release(WGPUComputePassEncoder) -> Unit
 
+pub fn compute_pass_set_bind_group(WGPUComputePassEncoder, UInt, WGPUBindGroup, Array[UInt]) -> Unit
+
 pub fn compute_pass_set_bind_group0(WGPUComputePassEncoder, WGPUBindGroup) -> Unit
 
 pub fn compute_pass_set_label_utf8(WGPUComputePassEncoder, Bytes, UInt64) -> Unit
@@ -150,6 +156,8 @@ pub fn device_create_bind_group_layout_storage_texture_rgba8_writeonly(WGPUDevic
 
 pub fn device_create_bind_group_layout_uniform_buffer(WGPUDevice) -> WGPUBindGroupLayout
 
+pub fn device_create_bind_group_layout_uniform_buffer_dynamic(WGPUDevice) -> WGPUBindGroupLayout
+
 pub fn device_create_bind_group_sampler_texture_2d(WGPUDevice, WGPUBindGroupLayout, WGPUSampler, WGPUTextureView) -> WGPUBindGroup
 
 pub fn device_create_bind_group_storage_buffer(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
@@ -157,6 +165,8 @@ pub fn device_create_bind_group_storage_buffer(WGPUDevice, WGPUBindGroupLayout, 
 pub fn device_create_bind_group_storage_texture_2d(WGPUDevice, WGPUBindGroupLayout, WGPUTextureView) -> WGPUBindGroup
 
 pub fn device_create_bind_group_uniform_buffer(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
+
+pub fn device_create_bind_group_uniform_buffer_16(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
 
 pub fn device_create_buffer(WGPUDevice, UInt64, UInt64, Bool) -> WGPUBuffer
 
@@ -167,6 +177,8 @@ pub fn device_create_compute_pipeline(WGPUDevice, WGPUShaderModule) -> WGPUCompu
 pub fn device_create_compute_pipeline_with_layout(WGPUDevice, WGPUPipelineLayout, WGPUShaderModule) -> WGPUComputePipeline
 
 pub fn device_create_pipeline_layout_1(WGPUDevice, WGPUBindGroupLayout) -> WGPUPipelineLayout
+
+pub fn device_create_pipeline_layout_2(WGPUDevice, WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayout
 
 pub fn device_create_query_set(WGPUDevice, WGPUQuerySetDescriptorPtr) -> WGPUQuerySet
 
@@ -250,6 +262,8 @@ pub fn null_uint_ptr() -> UIntPtr
 
 pub fn pipeline_layout_descriptor_1_new(WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr
 
+pub fn pipeline_layout_descriptor_2_new(WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr
+
 pub fn pipeline_layout_descriptor_free(WGPUPipelineLayoutDescriptorPtr) -> Unit
 
 pub fn pipeline_layout_release(WGPUPipelineLayout) -> Unit
@@ -309,6 +323,8 @@ pub fn render_pass_pop_debug_group(WGPURenderPassEncoder) -> Unit
 pub fn render_pass_push_debug_group_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
 
 pub fn render_pass_release(WGPURenderPassEncoder) -> Unit
+
+pub fn render_pass_set_bind_group(WGPURenderPassEncoder, UInt, WGPUBindGroup, Array[UInt]) -> Unit
 
 pub fn render_pass_set_bind_group0(WGPURenderPassEncoder, WGPUBindGroup) -> Unit
 
@@ -514,6 +530,8 @@ pub fn wgpuComputePassEncoderRelease(WGPUComputePassEncoder) -> Unit
 
 pub fn wgpuComputePassEncoderSetBindGroup(WGPUComputePassEncoder, UInt, WGPUBindGroup, UInt64, UIntPtr) -> Unit
 
+pub fn wgpuComputePassEncoderSetBindGroup_offsets(WGPUComputePassEncoder, UInt, WGPUBindGroup, UInt64, FixedArray[UInt]) -> Unit
+
 pub fn wgpuComputePassEncoderSetLabel(WGPUComputePassEncoder, WGPUStringView) -> Unit
 
 pub fn wgpuComputePassEncoderSetPipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
@@ -697,6 +715,8 @@ pub fn wgpuRenderPassEncoderPushDebugGroup(WGPURenderPassEncoder, WGPUStringView
 pub fn wgpuRenderPassEncoderRelease(WGPURenderPassEncoder) -> Unit
 
 pub fn wgpuRenderPassEncoderSetBindGroup(WGPURenderPassEncoder, UInt, WGPUBindGroup, UInt64, UIntPtr) -> Unit
+
+pub fn wgpuRenderPassEncoderSetBindGroup_offsets(WGPURenderPassEncoder, UInt, WGPUBindGroup, UInt64, FixedArray[UInt]) -> Unit
 
 pub fn wgpuRenderPassEncoderSetBlendConstant(WGPURenderPassEncoder, WGPUColorPtr) -> Unit
 

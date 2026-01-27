@@ -141,6 +141,9 @@ pub extern "C" fn bind_group_layout_descriptor_sampler_texture_2d_new() -> WGPUB
 pub extern "C" fn bind_group_layout_descriptor_uniform_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_uniform_buffer_new"
 
 ///|
+pub extern "C" fn bind_group_layout_descriptor_uniform_buffer_dynamic_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_uniform_buffer_dynamic_new"
+
+///|
 pub extern "C" fn bind_group_layout_descriptor_storage_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_storage_buffer_new"
 
 ///|
@@ -166,6 +169,12 @@ pub extern "C" fn bind_group_descriptor_uniform_buffer_new(
 ) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_uniform_buffer_new"
 
 ///|
+pub extern "C" fn bind_group_descriptor_uniform_buffer_16_new(
+  layout : WGPUBindGroupLayout,
+  buffer : WGPUBuffer,
+) -> WGPUBindGroupDescriptorPtr = "mbt_wgpu_bind_group_descriptor_uniform_buffer_16_new"
+
+///|
 pub extern "C" fn bind_group_descriptor_storage_buffer_new(
   layout : WGPUBindGroupLayout,
   buffer : WGPUBuffer,
@@ -187,6 +196,12 @@ pub extern "C" fn bind_group_descriptor_free(
 pub extern "C" fn pipeline_layout_descriptor_1_new(
   bind_group_layout : WGPUBindGroupLayout,
 ) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_1_new"
+
+///|
+pub extern "C" fn pipeline_layout_descriptor_2_new(
+  bind_group_layout0 : WGPUBindGroupLayout,
+  bind_group_layout1 : WGPUBindGroupLayout,
+) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_2_new"
 
 ///|
 #borrow(desc)

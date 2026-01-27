@@ -75,6 +75,9 @@
     "wgpu_render_depth_test.mbt": [
       "native"
     ],
+    "wgpu_bind_group_dynamic_offsets_test.mbt": [
+      "native"
+    ],
     "wgpu_storage_texture_test.mbt": [
       "native"
     ],

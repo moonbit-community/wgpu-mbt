@@ -524,6 +524,15 @@ pub fn Device::create_bind_group_layout_uniform_buffer(
 }
 
 ///|
+pub fn Device::create_bind_group_layout_uniform_buffer_dynamic(
+  self : Device,
+) -> BindGroupLayout {
+  BindGroupLayout::{
+    raw: @c.device_create_bind_group_layout_uniform_buffer_dynamic(self.raw),
+  }
+}
+
+///|
 pub fn Device::create_bind_group_uniform_buffer(
   self : Device,
   bind_group_layout : BindGroupLayout,
@@ -531,6 +540,21 @@ pub fn Device::create_bind_group_uniform_buffer(
 ) -> BindGroup {
   BindGroup::{
     raw: @c.device_create_bind_group_uniform_buffer(
+      self.raw,
+      bind_group_layout.raw,
+      buffer.raw,
+    ),
+  }
+}
+
+///|
+pub fn Device::create_bind_group_uniform_buffer_16(
+  self : Device,
+  bind_group_layout : BindGroupLayout,
+  buffer : Buffer,
+) -> BindGroup {
+  BindGroup::{
+    raw: @c.device_create_bind_group_uniform_buffer_16(
       self.raw,
       bind_group_layout.raw,
       buffer.raw,
@@ -621,6 +645,21 @@ pub fn Device::create_pipeline_layout_1(
 ) -> PipelineLayout {
   PipelineLayout::{
     raw: @c.device_create_pipeline_layout_1(self.raw, bind_group_layout.raw),
+  }
+}
+
+///|
+pub fn Device::create_pipeline_layout_2(
+  self : Device,
+  bind_group_layout0 : BindGroupLayout,
+  bind_group_layout1 : BindGroupLayout,
+) -> PipelineLayout {
+  PipelineLayout::{
+    raw: @c.device_create_pipeline_layout_2(
+      self.raw,
+      bind_group_layout0.raw,
+      bind_group_layout1.raw,
+    ),
   }
 }
 
@@ -1149,6 +1188,16 @@ pub fn ComputePass::set_bind_group0(
 }
 
 ///|
+pub fn ComputePass::set_bind_group(
+  self : ComputePass,
+  index : UInt,
+  group : BindGroup,
+  dynamic_offsets : Array[UInt],
+) -> Unit {
+  @c.compute_pass_set_bind_group(self.raw, index, group.raw, dynamic_offsets)
+}
+
+///|
 pub fn ComputePass::end(self : ComputePass) -> Unit {
   @c.compute_pass_end(self.raw)
 }
@@ -1209,6 +1258,16 @@ pub fn RenderPass::set_bind_group0(
   group : BindGroup,
 ) -> Unit {
   @c.render_pass_set_bind_group0(self.raw, group.raw)
+}
+
+///|
+pub fn RenderPass::set_bind_group(
+  self : RenderPass,
+  index : UInt,
+  group : BindGroup,
+  dynamic_offsets : Array[UInt],
+) -> Unit {
+  @c.render_pass_set_bind_group(self.raw, index, group.raw, dynamic_offsets)
 }
 
 ///|
