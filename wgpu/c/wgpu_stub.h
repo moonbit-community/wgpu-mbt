@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "wgpu_stub.h"
+#pragma once
 
-#include <objc/message.h>
-#include <objc/runtime.h>
+#include "moonbit.h"
 
-#include "wgpu_stub_01_core.inc"
-#include "wgpu_stub_02_surface.inc"
-#include "wgpu_stub_03_extras.inc"
-#include "wgpu_stub_04_helpers_sync.inc"
-#include "wgpu_stub_05_descs.inc"
-#include "wgpu_stub_06_pipelines.inc"
-#include "wgpu_stub_07_map.inc"
+#include "wgpu.h"
+
+// For fixed-width integer ABI compatibility with MoonBit.
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+
+static inline WGPUStringView mbt_wgpu_string_view(const uint8_t *bytes, uint64_t len) {
+  return (WGPUStringView){.data = (const char *)bytes, .length = len};
+}

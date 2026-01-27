@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "wgpu_stub.h"
+void *mbt_wgpu_null_ptr(void) { return NULL; }
+void *mbt_wgpu_null_uint_ptr(void) { return NULL; }
 
-#include <objc/message.h>
-#include <objc/runtime.h>
+bool mbt_wgpu_shader_module_is_null(WGPUShaderModule shader_module) {
+  return shader_module == NULL;
+}
 
-#include "wgpu_stub_01_core.inc"
-#include "wgpu_stub_02_surface.inc"
-#include "wgpu_stub_03_extras.inc"
-#include "wgpu_stub_04_helpers_sync.inc"
-#include "wgpu_stub_05_descs.inc"
-#include "wgpu_stub_06_pipelines.inc"
-#include "wgpu_stub_07_map.inc"
+WGPUIndexFormat mbt_wgpu_index_format_uint16(void) { return WGPUIndexFormat_Uint16; }
+WGPUIndexFormat mbt_wgpu_index_format_uint32(void) { return WGPUIndexFormat_Uint32; }
