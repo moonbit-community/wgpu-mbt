@@ -220,10 +220,6 @@ pub type WGPULogCallback
 
 ///|
 #external
-pub type WGPULogLevel
-
-///|
-#external
 #alias(PipelineLayout)
 pub type WGPUPipelineLayout
 

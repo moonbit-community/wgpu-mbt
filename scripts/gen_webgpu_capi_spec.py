@@ -87,7 +87,7 @@ class Func:
     params: list[Param]
 
 
-_WS = re.compile(r"\\s+")
+_WS = re.compile(r"\s+")
 
 
 def norm_ws(s: str) -> str:
@@ -130,7 +130,9 @@ def mbt_type_for_c(c_ty: str, pointer_depth: int) -> str:
 def parse_enum_type_names(h_text: str) -> set[str]:
     # Match both `typedef enum Name { ... } Name;` and `typedef enum { ... } Name;`.
     out: set[str] = set()
-    for m in re.finditer(r"typedef\\s+enum(?:\\s+\\w+)?\\s*\\{.*?\\}\\s*(\\w+)\\s*;", h_text, flags=re.S):
+    for m in re.finditer(
+        r"typedef\s+enum(?:\s+\w+)?\s*\{.*?\}\s*(\w+)\s*;", h_text, flags=re.S
+    ):
         out.add(m.group(1))
     return out
 

@@ -29,6 +29,10 @@
 void *mbt_wgpu_null_ptr(void) { return NULL; }
 void *mbt_wgpu_null_uint_ptr(void) { return NULL; }
 
+bool mbt_wgpu_shader_module_is_null(WGPUShaderModule shader_module) {
+  return shader_module == NULL;
+}
+
 WGPUIndexFormat mbt_wgpu_index_format_uint16(void) { return WGPUIndexFormat_Uint16; }
 WGPUIndexFormat mbt_wgpu_index_format_uint32(void) { return WGPUIndexFormat_Uint32; }
 
@@ -187,6 +191,67 @@ void mbt_wgpu_surface_release_safe(WGPUSurface surface) {
     return;
   }
   wgpuSurfaceRelease(surface);
+}
+
+// ---------------------------------------------------------------------------
+// wgpu-native extras (wgpu.h)
+// ---------------------------------------------------------------------------
+
+uint64_t mbt_wgpu_instance_enumerate_adapters_count_metal(WGPUInstance instance) {
+  if (!instance) {
+    return 0u;
+  }
+  WGPUInstanceEnumerateAdapterOptions opts = {
+      .nextInChain = NULL,
+      .backends = WGPUInstanceBackend_Metal,
+  };
+  size_t count = wgpuInstanceEnumerateAdapters(instance, &opts, NULL);
+  return (uint64_t)count;
+}
+
+static inline uint64_t mbt_wgpu_u64_from_size_t(size_t v) { return (uint64_t)v; }
+
+WGPUGlobalReport *mbt_wgpu_instance_generate_report_new(WGPUInstance instance) {
+  if (!instance) {
+    return NULL;
+  }
+  WGPUGlobalReport *report = (WGPUGlobalReport *)malloc(sizeof(WGPUGlobalReport));
+  if (!report) {
+    return NULL;
+  }
+  memset(report, 0, sizeof(WGPUGlobalReport));
+  wgpuGenerateReport(instance, report);
+  return report;
+}
+
+void mbt_wgpu_global_report_free(WGPUGlobalReport *report) { free(report); }
+
+uint64_t mbt_wgpu_global_report_surfaces_num_allocated(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->surfaces.numAllocated);
+}
+
+uint64_t mbt_wgpu_global_report_surfaces_element_size(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->surfaces.elementSize);
+}
+
+uint64_t mbt_wgpu_global_report_hub_devices_num_allocated(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.devices.numAllocated);
+}
+
+uint64_t mbt_wgpu_global_report_hub_devices_element_size(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.devices.elementSize);
 }
 
 void mbt_wgpu_command_encoder_set_label_utf8(WGPUCommandEncoder encoder,
@@ -406,6 +471,10 @@ WGPUFeatureName mbt_wgpu_feature_name_native_pipeline_statistics_query(void) {
   return (WGPUFeatureName)WGPUNativeFeature_PipelineStatisticsQuery;
 }
 
+WGPUFeatureName mbt_wgpu_feature_name_native_spirv_shader_passthrough(void) {
+  return (WGPUFeatureName)WGPUNativeFeature_SpirvShaderPassthrough;
+}
+
 WGPUQuerySetDescriptor *mbt_wgpu_query_set_descriptor_new(WGPUQueryType type,
                                                           uint32_t count) {
   WGPUQuerySetDescriptor *desc =
@@ -503,6 +572,60 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync(WGPUInstance instance,
       .userdata2 = NULL,
   };
   (void)wgpuAdapterRequestDevice(adapter, NULL, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  if (out.status != WGPURequestDeviceStatus_Success) {
+    return NULL;
+  }
+  return out.device;
+}
+
+WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(
+    WGPUInstance instance, WGPUAdapter adapter) {
+  mbt_request_device_result_t out = {0};
+  WGPURequestDeviceCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_device_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  static const WGPUFeatureName required_features[1] = {
+      (WGPUFeatureName)WGPUNativeFeature_SpirvShaderPassthrough,
+  };
+
+  WGPUDeviceDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .requiredFeatureCount = 1u,
+      .requiredFeatures = required_features,
+      .requiredLimits = NULL,
+      .defaultQueue =
+          (WGPUQueueDescriptor){
+              .nextInChain = NULL,
+              .label = (WGPUStringView){.data = NULL, .length = 0},
+          },
+      .deviceLostCallbackInfo =
+          (WGPUDeviceLostCallbackInfo){
+              .nextInChain = NULL,
+              .mode = WGPUCallbackMode_AllowProcessEvents,
+              .callback = NULL,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+      .uncapturedErrorCallbackInfo =
+          (WGPUUncapturedErrorCallbackInfo){
+              .nextInChain = NULL,
+              .callback = mbt_uncaptured_error_noop_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+  };
+
+  (void)wgpuAdapterRequestDevice(adapter, &desc, info);
   while (out.status == 0) {
     wgpuInstanceProcessEvents(instance);
   }
@@ -1209,6 +1332,34 @@ WGPUShaderModule mbt_wgpu_device_create_shader_module_wgsl(WGPUDevice device,
       .label = (WGPUStringView){.data = NULL, .length = 0},
   };
   return wgpuDeviceCreateShaderModule(device, &desc);
+}
+
+WGPUShaderModule mbt_wgpu_device_create_shader_module_spirv(WGPUDevice device,
+                                                           const uint8_t *source,
+                                                           uint64_t source_len) {
+  if (!device) {
+    return NULL;
+  }
+  if (source_len == 0 || (source_len % 4u) != 0u) {
+    return NULL;
+  }
+  uint64_t word_count64 = source_len / 4u;
+  if (word_count64 > UINT32_MAX) {
+    return NULL;
+  }
+  uint32_t *words = (uint32_t *)malloc((size_t)source_len);
+  if (!words) {
+    return NULL;
+  }
+  memcpy(words, source, (size_t)source_len);
+  WGPUShaderModuleDescriptorSpirV desc = {
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .sourceSize = (uint32_t)word_count64,
+      .source = (const uint32_t *)words,
+  };
+  WGPUShaderModule out = wgpuDeviceCreateShaderModuleSpirV(device, &desc);
+  free(words);
+  return out;
 }
 
 typedef struct {

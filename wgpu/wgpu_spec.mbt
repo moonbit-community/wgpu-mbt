@@ -76,6 +76,10 @@ pub type SurfaceTexture
 
 ///|
 #declaration_only
+pub type GlobalReport
+
+///|
+#declaration_only
 pub type Sampler
 
 ///|
@@ -112,6 +116,18 @@ pub type QuerySet
 
 ///|
 #declaration_only
+pub fn get_version() -> UInt {
+  ...
+}
+
+///|
+#declaration_only
+pub fn set_log_level(level : UInt) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Instance::create() -> Instance {
   ...
 }
@@ -125,6 +141,18 @@ pub fn Instance::request_adapter_sync(self : Instance) -> Adapter {
 ///|
 #declaration_only
 pub fn Instance::process_events(self : Instance) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Instance::enumerate_adapters_count_metal(self : Instance) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Instance::generate_report(self : Instance) -> GlobalReport {
   ...
 }
 
@@ -168,6 +196,36 @@ pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt {
 ///|
 #declaration_only
 pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture {
+  ...
+}
+
+///|
+#declaration_only
+pub fn GlobalReport::surfaces_num_allocated(self : GlobalReport) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn GlobalReport::surfaces_element_size(self : GlobalReport) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn GlobalReport::hub_devices_num_allocated(self : GlobalReport) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn GlobalReport::hub_devices_element_size(self : GlobalReport) -> UInt64 {
+  ...
+}
+
+///|
+#declaration_only
+pub fn GlobalReport::release(self : GlobalReport) -> Unit {
   ...
 }
 
@@ -239,6 +297,15 @@ pub fn Adapter::request_device_sync_pipeline_statistics_query(
 
 ///|
 #declaration_only
+pub fn Adapter::request_device_sync_spirv_shader_passthrough(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Adapter::release(self : Adapter) -> Unit {
   ...
 }
@@ -274,6 +341,14 @@ pub fn Adapter::has_feature_native_push_constants(self : Adapter) -> Bool {
 ///|
 #declaration_only
 pub fn Adapter::has_feature_native_pipeline_statistics_query(
+  self : Adapter,
+) -> Bool {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Adapter::has_feature_native_spirv_shader_passthrough(
   self : Adapter,
 ) -> Bool {
   ...
@@ -345,6 +420,15 @@ pub fn Device::create_query_set_pipeline_statistics(
 pub fn Device::create_shader_module_wgsl(
   self : Device,
   code : String,
+) -> ShaderModule {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_shader_module_spirv(
+  self : Device,
+  spirv_le_bytes : Bytes,
 ) -> ShaderModule {
   ...
 }
@@ -1507,6 +1591,12 @@ pub fn Buffer::unmap(self : Buffer) -> Unit {
 ///|
 #declaration_only
 pub fn Buffer::release(self : Buffer) -> Unit {
+  ...
+}
+
+///|
+#declaration_only
+pub fn ShaderModule::is_null(self : ShaderModule) -> Bool {
   ...
 }
 

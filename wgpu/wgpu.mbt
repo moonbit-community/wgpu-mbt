@@ -73,6 +73,11 @@ pub struct SurfaceTexture {
 }
 
 ///|
+pub struct GlobalReport {
+  raw : @c.WGPUGlobalReportPtr
+}
+
+///|
 pub struct Sampler {
   raw : @c.Sampler
 }
@@ -158,6 +163,16 @@ fn align_up_int(value : Int, align : Int) -> Int {
 }
 
 ///|
+pub fn get_version() -> UInt {
+  @c.wgpuGetVersion()
+}
+
+///|
+pub fn set_log_level(level : UInt) -> Unit {
+  @c.wgpuSetLogLevel(level)
+}
+
+///|
 pub fn Instance::create() -> Instance {
   Instance::{ raw: @c.create_instance() }
 }
@@ -170,6 +185,16 @@ pub fn Instance::request_adapter_sync(self : Instance) -> Adapter {
 ///|
 pub fn Instance::process_events(self : Instance) -> Unit {
   @c.instance_process_events(self.raw)
+}
+
+///|
+pub fn Instance::enumerate_adapters_count_metal(self : Instance) -> UInt64 {
+  @c.instance_enumerate_adapters_count_metal(self.raw)
+}
+
+///|
+pub fn Instance::generate_report(self : Instance) -> GlobalReport {
+  GlobalReport::{ raw: @c.instance_generate_report_new(self.raw) }
 }
 
 ///|
@@ -211,6 +236,31 @@ pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt {
 ///|
 pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture {
   Texture::{ raw: @c.surface_texture_take_texture(self.raw) }
+}
+
+///|
+pub fn GlobalReport::surfaces_num_allocated(self : GlobalReport) -> UInt64 {
+  @c.global_report_surfaces_num_allocated(self.raw)
+}
+
+///|
+pub fn GlobalReport::surfaces_element_size(self : GlobalReport) -> UInt64 {
+  @c.global_report_surfaces_element_size(self.raw)
+}
+
+///|
+pub fn GlobalReport::hub_devices_num_allocated(self : GlobalReport) -> UInt64 {
+  @c.global_report_hub_devices_num_allocated(self.raw)
+}
+
+///|
+pub fn GlobalReport::hub_devices_element_size(self : GlobalReport) -> UInt64 {
+  @c.global_report_hub_devices_element_size(self.raw)
+}
+
+///|
+pub fn GlobalReport::release(self : GlobalReport) -> Unit {
+  @c.global_report_free(self.raw)
 }
 
 ///|
@@ -291,6 +341,19 @@ pub fn Adapter::request_device_sync_pipeline_statistics_query(
 }
 
 ///|
+pub fn Adapter::request_device_sync_spirv_shader_passthrough(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  Device::{
+    raw: @c.adapter_request_device_sync_spirv_shader_passthrough(
+      instance.raw,
+      self.raw,
+    ),
+  }
+}
+
+///|
 pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool {
   @c.adapter_has_feature_timestamp_query(self.raw)
 }
@@ -319,6 +382,13 @@ pub fn Adapter::has_feature_native_pipeline_statistics_query(
   self : Adapter,
 ) -> Bool {
   @c.adapter_has_feature_native_pipeline_statistics_query(self.raw)
+}
+
+///|
+pub fn Adapter::has_feature_native_spirv_shader_passthrough(
+  self : Adapter,
+) -> Bool {
+  @c.adapter_has_feature_native_spirv_shader_passthrough(self.raw)
 }
 
 ///|
@@ -418,6 +488,17 @@ pub fn Device::create_shader_module_wgsl(
   let len = bytes.length().to_uint64()
   ShaderModule::{
     raw: @c.device_create_shader_module_wgsl(self.raw, bytes, len),
+  }
+}
+
+///|
+pub fn Device::create_shader_module_spirv(
+  self : Device,
+  spirv_le_bytes : Bytes,
+) -> ShaderModule {
+  let len = spirv_le_bytes.length().to_uint64()
+  ShaderModule::{
+    raw: @c.device_create_shader_module_spirv(self.raw, spirv_le_bytes, len),
   }
 }
 
@@ -1955,6 +2036,11 @@ pub fn Buffer::map_write_sync(
 ///|
 pub fn Buffer::unmap(self : Buffer) -> Unit {
   @c.buffer_unmap(self.raw)
+}
+
+///|
+pub fn ShaderModule::is_null(self : ShaderModule) -> Bool {
+  @c.shader_module_is_null(self.raw)
 }
 
 ///|

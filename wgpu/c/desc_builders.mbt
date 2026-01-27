@@ -424,6 +424,9 @@ pub extern "C" fn feature_name_native_push_constants() -> WGPUFeatureName = "mbt
 pub extern "C" fn feature_name_native_pipeline_statistics_query() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_pipeline_statistics_query"
 
 ///|
+pub extern "C" fn feature_name_native_spirv_shader_passthrough() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_spirv_shader_passthrough"
+
+///|
 pub extern "C" fn query_set_descriptor_new(
   query_type : WGPUQueryType,
   count : UInt,

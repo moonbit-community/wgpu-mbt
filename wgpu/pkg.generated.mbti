@@ -32,6 +32,22 @@ pub let buffer_usage_uniform : UInt64
 
 pub let buffer_usage_vertex : UInt64
 
+pub fn get_version() -> UInt
+
+pub let log_level_debug : UInt
+
+pub let log_level_error : UInt
+
+pub let log_level_info : UInt
+
+pub let log_level_off : UInt
+
+pub let log_level_trace : UInt
+
+pub let log_level_warn : UInt
+
+pub fn set_log_level(UInt) -> Unit
+
 pub let shader_stage_compute : UInt64
 
 pub let shader_stage_fragment : UInt64
@@ -56,6 +72,7 @@ pub struct Adapter {
 }
 pub fn Adapter::has_feature_native_pipeline_statistics_query(Self) -> Bool
 pub fn Adapter::has_feature_native_push_constants(Self) -> Bool
+pub fn Adapter::has_feature_native_spirv_shader_passthrough(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
 pub fn Adapter::has_feature_timestamp_query(Self) -> Bool
@@ -63,6 +80,7 @@ pub fn Adapter::release(Self) -> Unit
 pub fn Adapter::request_device_sync(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_pipeline_statistics_query(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_push_constants(Self, Instance) -> Device
+pub fn Adapter::request_device_sync_spirv_shader_passthrough(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device
@@ -183,6 +201,7 @@ pub fn Device::create_sampler_linear_repeat(Self) -> Sampler
 pub fn Device::create_sampler_nearest_clamp(Self) -> Sampler
 pub fn Device::create_sampler_nearest_mirror_repeat(Self) -> Sampler
 pub fn Device::create_sampler_nearest_repeat(Self) -> Sampler
+pub fn Device::create_shader_module_spirv(Self, Bytes) -> ShaderModule
 pub fn Device::create_shader_module_wgsl(Self, String) -> ShaderModule
 pub fn Device::create_texture_depth24plus_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
@@ -193,11 +212,22 @@ pub fn Device::poll(Self, wait? : Bool) -> Bool
 pub fn Device::queue(Self) -> Queue
 pub fn Device::release(Self) -> Unit
 
+pub struct GlobalReport {
+  raw : @c.WGPUGlobalReportPtr
+}
+pub fn GlobalReport::hub_devices_element_size(Self) -> UInt64
+pub fn GlobalReport::hub_devices_num_allocated(Self) -> UInt64
+pub fn GlobalReport::release(Self) -> Unit
+pub fn GlobalReport::surfaces_element_size(Self) -> UInt64
+pub fn GlobalReport::surfaces_num_allocated(Self) -> UInt64
+
 pub struct Instance {
   raw : @c.WGPUInstance
 }
 pub fn Instance::create() -> Self
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
+pub fn Instance::enumerate_adapters_count_metal(Self) -> UInt64
+pub fn Instance::generate_report(Self) -> GlobalReport
 pub fn Instance::process_events(Self) -> Unit
 pub fn Instance::release(Self) -> Unit
 pub fn Instance::request_adapter_sync(Self) -> Adapter
@@ -287,6 +317,7 @@ pub fn Sampler::release(Self) -> Unit
 pub struct ShaderModule {
   raw : @c.WGPUShaderModule
 }
+pub fn ShaderModule::is_null(Self) -> Bool
 pub fn ShaderModule::release(Self) -> Unit
 
 pub struct Surface {

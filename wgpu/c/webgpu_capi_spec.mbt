@@ -194,8 +194,7 @@ pub type WGPULimitsPtr
 pub type WGPULogCallback
 
 ///|
-#declaration_only
-pub type WGPULogLevel
+pub type WGPULogLevel = UInt
 
 ///|
 pub type WGPUMapMode = UInt64

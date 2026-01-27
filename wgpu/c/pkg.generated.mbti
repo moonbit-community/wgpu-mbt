@@ -6,6 +6,8 @@ pub fn adapter_has_feature_native_pipeline_statistics_query(WGPUAdapter) -> Bool
 
 pub fn adapter_has_feature_native_push_constants(WGPUAdapter) -> Bool
 
+pub fn adapter_has_feature_native_spirv_shader_passthrough(WGPUAdapter) -> Bool
+
 pub fn adapter_has_feature_native_timestamp_query_inside_encoders(WGPUAdapter) -> Bool
 
 pub fn adapter_has_feature_native_timestamp_query_inside_passes(WGPUAdapter) -> Bool
@@ -19,6 +21,8 @@ pub fn adapter_request_device_sync(WGPUInstance, WGPUAdapter) -> WGPUDevice
 pub fn adapter_request_device_sync_pipeline_statistics_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_push_constants(WGPUInstance, WGPUAdapter) -> WGPUDevice
+
+pub fn adapter_request_device_sync_spirv_shader_passthrough(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_timestamp_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
@@ -238,6 +242,8 @@ pub fn device_create_sampler_nearest_mirror_repeat(WGPUDevice) -> WGPUSampler
 
 pub fn device_create_sampler_nearest_repeat(WGPUDevice) -> WGPUSampler
 
+pub fn device_create_shader_module_spirv(WGPUDevice, Bytes, UInt64) -> WGPUShaderModule
+
 pub fn device_create_shader_module_wgsl(WGPUDevice, Bytes, UInt64) -> WGPUShaderModule
 
 pub fn device_create_texture_depth24plus_2d(WGPUDevice, UInt, UInt) -> WGPUTexture
@@ -262,17 +268,33 @@ pub fn feature_name_native_pipeline_statistics_query() -> WGPUFeatureName
 
 pub fn feature_name_native_push_constants() -> WGPUFeatureName
 
+pub fn feature_name_native_spirv_shader_passthrough() -> WGPUFeatureName
+
 pub fn feature_name_native_timestamp_query_inside_encoders() -> WGPUFeatureName
 
 pub fn feature_name_native_timestamp_query_inside_passes() -> WGPUFeatureName
 
 pub fn feature_name_timestamp_query() -> WGPUFeatureName
 
+pub fn global_report_free(WGPUGlobalReportPtr) -> Unit
+
+pub fn global_report_hub_devices_element_size(WGPUGlobalReportPtr) -> UInt64
+
+pub fn global_report_hub_devices_num_allocated(WGPUGlobalReportPtr) -> UInt64
+
+pub fn global_report_surfaces_element_size(WGPUGlobalReportPtr) -> UInt64
+
+pub fn global_report_surfaces_num_allocated(WGPUGlobalReportPtr) -> UInt64
+
 pub fn index_format_uint16() -> WGPUIndexFormat
 
 pub fn index_format_uint32() -> WGPUIndexFormat
 
 pub fn instance_create_surface_metal_layer(WGPUInstance, WGPUTextureViewDescriptorPtr) -> WGPUSurface
+
+pub fn instance_enumerate_adapters_count_metal(WGPUInstance) -> UInt64
+
+pub fn instance_generate_report_new(WGPUInstance) -> WGPUGlobalReportPtr
 
 pub fn instance_process_events(WGPUInstance) -> Unit
 
@@ -465,6 +487,8 @@ pub fn sampler_release(WGPUSampler) -> Unit
 pub fn shader_module_descriptor_free(WGPUShaderModuleDescriptorPtr) -> Unit
 
 pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr
+
+pub fn shader_module_is_null(WGPUShaderModule) -> Bool
 
 pub fn shader_module_release(WGPUShaderModule) -> Unit
 
@@ -892,7 +916,7 @@ pub fn wgpuSamplerSetLabel(WGPUSampler, WGPUStringView) -> Unit
 
 pub fn wgpuSetLogCallback(WGPULogCallback, UnitPtr) -> Unit
 
-pub fn wgpuSetLogLevel(WGPULogLevel) -> Unit
+pub fn wgpuSetLogLevel(UInt) -> Unit
 
 pub fn wgpuShaderModuleAddRef(WGPUShaderModule) -> Unit
 
@@ -1114,9 +1138,6 @@ pub type WGPULimitsPtr
 #external
 pub type WGPULogCallback
 
-#external
-pub type WGPULogLevel
-
 #alias(PipelineLayout)
 #external
 pub type WGPUPipelineLayout
@@ -1301,6 +1322,8 @@ pub type WGPUWaitStatus
 
 // Type aliases
 pub type WGPUBufferUsage = UInt64
+
+pub type WGPULogLevel = UInt
 
 pub type WGPUMapMode = UInt64
 

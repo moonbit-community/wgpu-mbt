@@ -32,6 +32,9 @@ pub extern "C" fn null_uint_ptr() -> UIntPtr = "mbt_wgpu_null_uint_ptr"
 pub extern "C" fn null_submission_index_ptr() -> WGPUSubmissionIndexPtr = "mbt_wgpu_null_ptr"
 
 ///|
+pub extern "C" fn shader_module_is_null(shader_module : ShaderModule) -> Bool = "mbt_wgpu_shader_module_is_null"
+
+///|
 pub fn create_instance() -> Instance {
   wgpuCreateInstance(null_instance_descriptor_ptr())
 }
@@ -94,6 +97,44 @@ pub extern "C" fn surface_unconfigure(surface : WGPUSurface) -> Unit = "mbt_wgpu
 
 ///|
 pub extern "C" fn surface_release_safe(surface : WGPUSurface) -> Unit = "mbt_wgpu_surface_release_safe"
+
+///|
+pub extern "C" fn instance_enumerate_adapters_count_metal(
+  instance : Instance,
+) -> UInt64 = "mbt_wgpu_instance_enumerate_adapters_count_metal"
+
+///|
+pub extern "C" fn instance_generate_report_new(
+  instance : Instance,
+) -> WGPUGlobalReportPtr = "mbt_wgpu_instance_generate_report_new"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_free(report : WGPUGlobalReportPtr) -> Unit = "mbt_wgpu_global_report_free"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_surfaces_num_allocated(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_surfaces_num_allocated"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_surfaces_element_size(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_surfaces_element_size"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_devices_num_allocated(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_devices_num_allocated"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_devices_element_size(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_devices_element_size"
 
 ///|
 fn align_up_u32(value : UInt, align : UInt) -> UInt {
@@ -177,6 +218,12 @@ pub extern "C" fn adapter_request_device_sync_pipeline_statistics_query(
 ) -> Device = "mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query"
 
 ///|
+pub extern "C" fn adapter_request_device_sync_spirv_shader_passthrough(
+  instance : Instance,
+  adapter : Adapter,
+) -> Device = "mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough"
+
+///|
 pub fn adapter_has_feature_timestamp_query(adapter : Adapter) -> Bool {
   wgpuAdapterHasFeature(adapter, feature_name_timestamp_query())
 }
@@ -217,6 +264,13 @@ pub fn adapter_has_feature_native_pipeline_statistics_query(
 }
 
 ///|
+pub fn adapter_has_feature_native_spirv_shader_passthrough(
+  adapter : Adapter,
+) -> Bool {
+  wgpuAdapterHasFeature(adapter, feature_name_native_spirv_shader_passthrough())
+}
+
+///|
 pub extern "C" fn null_pipeline_layout() -> PipelineLayout = "mbt_wgpu_null_ptr"
 
 ///|
@@ -251,6 +305,14 @@ pub fn device_create_shader_module_wgsl(
   shader_module_descriptor_free(desc)
   shader_module
 }
+
+///|
+#borrow(source)
+pub extern "C" fn device_create_shader_module_spirv(
+  device : Device,
+  source : Bytes,
+  source_len : UInt64,
+) -> ShaderModule = "mbt_wgpu_device_create_shader_module_spirv"
 
 ///|
 pub fn device_create_compute_pipeline(

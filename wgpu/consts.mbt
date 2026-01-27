@@ -74,3 +74,22 @@ pub let shader_stage_fragment : UInt64 = 0x0000000000000002UL
 
 ///|
 pub let shader_stage_compute : UInt64 = 0x0000000000000004UL
+
+///|
+/// Log levels (`WGPULogLevel`).
+pub let log_level_off : UInt = 0U
+
+///|
+pub let log_level_error : UInt = 1U
+
+///|
+pub let log_level_warn : UInt = 2U
+
+///|
+pub let log_level_info : UInt = 3U
+
+///|
+pub let log_level_debug : UInt = 4U
+
+///|
+pub let log_level_trace : UInt = 5U
