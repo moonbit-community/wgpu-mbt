@@ -25,6 +25,52 @@ Known limitation:
   - `moon info`
   - `moon fmt`
 
+## Using as a library
+
+This repo is usable as a regular MoonBit library (the CLI under `cmd/` / `src/cmd/` is just an example).
+
+- Import the library package in your package `moon.pkg.json`:
+  - `{ "path": "Milky2018/wgpu_mbt", "alias": "wgpu" }`
+- Make sure the vendored `wgpu-native` submodule exists at `vendor/wgpu-native` in your checkout:
+  - `git submodule update --init --recursive`
+  - Note: the build uses a `pre-build` rule to compile `wgpu-native` with Cargo, so missing submodules will fail the build.
+
+Minimal example (same as `src/cmd/main/main.mbt`):
+
+```moonbit
+fn main {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let queue = device.queue()
+  let buf = device.create_buffer(size=4UL, usage=@wgpu.buffer_usage_copy_dst)
+  ignore(buf.size())
+  let wgsl : String =
+    #|@compute @workgroup_size(1)
+    #|fn main() {}
+    #|
+  let sm = device.create_shader_module_wgsl(wgsl)
+  let pipeline = device.create_compute_pipeline(sm)
+  let encoder = device.create_command_encoder()
+  let pass = encoder.begin_compute_pass()
+  pass.set_pipeline(pipeline)
+  pass.dispatch_workgroups(1U, 1U, 1U)
+  pass.end()
+  pass.release()
+  let cmd = encoder.finish()
+  queue.submit_one(cmd)
+  buf.release()
+  cmd.release()
+  encoder.release()
+  pipeline.release()
+  sm.release()
+  queue.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}
+```
+
 ## Build details
 
 - `wgpu-native` is vendored under `vendor/wgpu-native` (git submodule).
