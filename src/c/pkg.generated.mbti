@@ -78,7 +78,11 @@ pub fn bind_group_layout_descriptor_uniform_buffer_new() -> WGPUBindGroupLayoutD
 
 pub fn bind_group_layout_release(WGPUBindGroupLayout) -> Unit
 
+pub fn bind_group_layout_set_label_utf8(WGPUBindGroupLayout, Bytes, UInt64) -> Unit
+
 pub fn bind_group_release(WGPUBindGroup) -> Unit
+
+pub fn bind_group_set_label_utf8(WGPUBindGroup, Bytes, UInt64) -> Unit
 
 pub fn buffer_descriptor_free(WGPUBufferDescriptorPtr) -> Unit
 
@@ -96,6 +100,8 @@ pub fn buffer_readback_sync(WGPUInstance, WGPUBuffer, UInt64, UInt64, Bytes, UIn
 
 pub fn buffer_release(WGPUBuffer) -> Unit
 
+pub fn buffer_set_label_utf8(WGPUBuffer, Bytes, UInt64) -> Unit
+
 pub fn buffer_unmap(WGPUBuffer) -> Unit
 
 pub fn cametallayer_new() -> WGPUTextureViewDescriptorPtr
@@ -103,6 +109,8 @@ pub fn cametallayer_new() -> WGPUTextureViewDescriptorPtr
 pub fn cametallayer_release(WGPUTextureViewDescriptorPtr) -> Unit
 
 pub fn command_buffer_release(WGPUCommandBuffer) -> Unit
+
+pub fn command_buffer_set_label_utf8(WGPUCommandBuffer, Bytes, UInt64) -> Unit
 
 pub fn command_encoder_begin_compute_pass(WGPUCommandEncoder) -> WGPUComputePassEncoder
 
@@ -189,6 +197,8 @@ pub fn compute_pipeline_descriptor_free(WGPUComputePipelineDescriptorPtr) -> Uni
 pub fn compute_pipeline_descriptor_new(WGPUPipelineLayout, WGPUShaderModule) -> WGPUComputePipelineDescriptorPtr
 
 pub fn compute_pipeline_release(WGPUComputePipeline) -> Unit
+
+pub fn compute_pipeline_set_label_utf8(WGPUComputePipeline, Bytes, UInt64) -> Unit
 
 pub fn create_instance() -> WGPUInstance
 
@@ -290,6 +300,8 @@ pub fn device_push_error_scope_u32(WGPUDevice, UInt) -> Unit
 
 pub fn device_release(WGPUDevice) -> Unit
 
+pub fn device_set_label_utf8(WGPUDevice, Bytes, UInt64) -> Unit
+
 pub fn device_supported_feature_u32_at(WGPUDevice, UInt64) -> UInt
 
 pub fn device_supported_features_contains_u32(WGPUDevice, UInt) -> Bool
@@ -370,6 +382,8 @@ pub fn pipeline_layout_descriptor_push_constants_new(UInt64, UInt, UInt) -> WGPU
 
 pub fn pipeline_layout_release(WGPUPipelineLayout) -> Unit
 
+pub fn pipeline_layout_set_label_utf8(WGPUPipelineLayout, Bytes, UInt64) -> Unit
+
 pub fn query_set_descriptor_free(WGPUQuerySetDescriptorPtr) -> Unit
 
 pub fn query_set_descriptor_new(WGPUQueryType, UInt) -> WGPUQuerySetDescriptorPtr
@@ -377,6 +391,8 @@ pub fn query_set_descriptor_new(WGPUQueryType, UInt) -> WGPUQuerySetDescriptorPt
 pub fn query_set_descriptor_pipeline_statistics_new(UInt, UInt) -> WGPUQuerySetDescriptorPtr
 
 pub fn query_set_release(WGPUQuerySet) -> Unit
+
+pub fn query_set_set_label_utf8(WGPUQuerySet, Bytes, UInt64) -> Unit
 
 pub fn query_type_occlusion() -> WGPUQueryType
 
@@ -389,6 +405,8 @@ pub fn queue_get_timestamp_period(WGPUQueue) -> Float
 pub fn queue_on_submitted_work_done_sync(WGPUInstance, WGPUQueue) -> UInt
 
 pub fn queue_release(WGPUQueue) -> Unit
+
+pub fn queue_set_label_utf8(WGPUQueue, Bytes, UInt64) -> Unit
 
 pub fn queue_submit(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> Unit
 
@@ -414,11 +432,15 @@ pub fn render_bundle_encoder_finish(WGPURenderBundleEncoder) -> WGPURenderBundle
 
 pub fn render_bundle_encoder_release(WGPURenderBundleEncoder) -> Unit
 
+pub fn render_bundle_encoder_set_label_utf8(WGPURenderBundleEncoder, Bytes, UInt64) -> Unit
+
 pub fn render_bundle_encoder_set_pipeline(WGPURenderBundleEncoder, WGPURenderPipeline) -> Unit
 
 pub fn render_bundle_encoder_set_push_constants_bytes(WGPURenderBundleEncoder, UInt64, UInt, Bytes, UInt64) -> Unit
 
 pub fn render_bundle_release(WGPURenderBundle) -> Unit
+
+pub fn render_bundle_set_label_utf8(WGPURenderBundle, Bytes, UInt64) -> Unit
 
 pub fn render_pass_begin_occlusion_query(WGPURenderPassEncoder, UInt) -> Unit
 
@@ -512,6 +534,8 @@ pub fn render_pipeline_descriptor_rgba8_pos2_new(WGPUPipelineLayout, WGPUShaderM
 
 pub fn render_pipeline_release(WGPURenderPipeline) -> Unit
 
+pub fn render_pipeline_set_label_utf8(WGPURenderPipeline, Bytes, UInt64) -> Unit
+
 pub fn sampler_descriptor_free(WGPUSamplerDescriptorPtr) -> Unit
 
 pub fn sampler_descriptor_linear_clamp_new() -> WGPUSamplerDescriptorPtr
@@ -528,6 +552,8 @@ pub fn sampler_descriptor_nearest_repeat_new() -> WGPUSamplerDescriptorPtr
 
 pub fn sampler_release(WGPUSampler) -> Unit
 
+pub fn sampler_set_label_utf8(WGPUSampler, Bytes, UInt64) -> Unit
+
 pub fn shader_module_descriptor_free(WGPUShaderModuleDescriptorPtr) -> Unit
 
 pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr
@@ -535,6 +561,8 @@ pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescr
 pub fn shader_module_is_null(WGPUShaderModule) -> Bool
 
 pub fn shader_module_release(WGPUShaderModule) -> Unit
+
+pub fn shader_module_set_label_utf8(WGPUShaderModule, Bytes, UInt64) -> Unit
 
 pub fn surface_capabilities_alpha_mode_u32_at(WGPUSurface, WGPUAdapter, UInt64) -> UInt
 
@@ -553,6 +581,8 @@ pub fn surface_configure_default(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UIn
 pub fn surface_present_u32(WGPUSurface) -> UInt
 
 pub fn surface_release_safe(WGPUSurface) -> Unit
+
+pub fn surface_set_label_utf8(WGPUSurface, Bytes, UInt64) -> Unit
 
 pub fn surface_texture_acquire(WGPUSurface) -> WGPUTextureViewDescriptorPtr
 
@@ -598,6 +628,8 @@ pub fn texture_destroy(WGPUTexture) -> Unit
 
 pub fn texture_release(WGPUTexture) -> Unit
 
+pub fn texture_set_label_utf8(WGPUTexture, Bytes, UInt64) -> Unit
+
 pub fn texture_view_descriptor_2d_array_new(UInt, UInt, UInt, UInt) -> WGPUTextureViewDescriptorPtr
 
 pub fn texture_view_descriptor_2d_new(UInt, UInt) -> WGPUTextureViewDescriptorPtr
@@ -605,6 +637,8 @@ pub fn texture_view_descriptor_2d_new(UInt, UInt) -> WGPUTextureViewDescriptorPt
 pub fn texture_view_descriptor_free(WGPUTextureViewDescriptorPtr) -> Unit
 
 pub fn texture_view_release(WGPUTextureView) -> Unit
+
+pub fn texture_view_set_label_utf8(WGPUTextureView, Bytes, UInt64) -> Unit
 
 pub fn wgpuAdapterAddRef(WGPUAdapter) -> Unit
 

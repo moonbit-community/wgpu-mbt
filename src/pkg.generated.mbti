@@ -136,11 +136,13 @@ pub struct BindGroup {
   raw : @c.WGPUBindGroup
 }
 pub fn BindGroup::release(Self) -> Unit
+pub fn BindGroup::set_label(Self, String) -> Unit
 
 pub struct BindGroupLayout {
   raw : @c.WGPUBindGroupLayout
 }
 pub fn BindGroupLayout::release(Self) -> Unit
+pub fn BindGroupLayout::set_label(Self, String) -> Unit
 
 pub struct Buffer {
   raw : @c.WGPUBuffer
@@ -150,6 +152,7 @@ pub fn Buffer::map_read_sync(Self, Instance, UInt64, UInt64) -> Bytes
 pub fn Buffer::map_write_sync(Self, Instance, UInt64, Bytes) -> Unit
 pub fn Buffer::readback(Self, Instance, UInt64, UInt64) -> Bytes
 pub fn Buffer::release(Self) -> Unit
+pub fn Buffer::set_label(Self, String) -> Unit
 pub fn Buffer::size(Self) -> UInt64
 pub fn Buffer::unmap(Self) -> Unit
 
@@ -157,6 +160,7 @@ pub struct CommandBuffer {
   raw : @c.WGPUCommandBuffer
 }
 pub fn CommandBuffer::release(Self) -> Unit
+pub fn CommandBuffer::set_label(Self, String) -> Unit
 
 pub struct CommandEncoder {
   raw : @c.WGPUCommandEncoder
@@ -208,6 +212,7 @@ pub struct ComputePipeline {
   raw : @c.WGPUComputePipeline
 }
 pub fn ComputePipeline::release(Self) -> Unit
+pub fn ComputePipeline::set_label(Self, String) -> Unit
 
 pub struct Device {
   raw : @c.WGPUDevice
@@ -261,6 +266,7 @@ pub fn Device::pop_error_scope_sync(Self, Instance) -> UInt
 pub fn Device::push_error_scope(Self, UInt) -> Unit
 pub fn Device::queue(Self) -> Queue
 pub fn Device::release(Self) -> Unit
+pub fn Device::set_label(Self, String) -> Unit
 pub fn Device::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Device::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Device::supported_features_count_u64(Self) -> UInt64
@@ -292,17 +298,20 @@ pub struct PipelineLayout {
   raw : @c.WGPUPipelineLayout
 }
 pub fn PipelineLayout::release(Self) -> Unit
+pub fn PipelineLayout::set_label(Self, String) -> Unit
 
 pub struct QuerySet {
   raw : @c.WGPUQuerySet
 }
 pub fn QuerySet::release(Self) -> Unit
+pub fn QuerySet::set_label(Self, String) -> Unit
 
 pub struct Queue {
   raw : @c.WGPUQueue
 }
 pub fn Queue::on_submitted_work_done_sync(Self, Instance) -> UInt
 pub fn Queue::release(Self) -> Unit
+pub fn Queue::set_label(Self, String) -> Unit
 pub fn Queue::submit(Self, Array[CommandBuffer]) -> Unit
 pub fn Queue::submit_for_index(Self, Array[CommandBuffer]) -> UInt64
 pub fn Queue::submit_one(Self, CommandBuffer) -> Unit
@@ -316,6 +325,7 @@ pub struct RenderBundle {
   raw : @c.WGPURenderBundle
 }
 pub fn RenderBundle::release(Self) -> Unit
+pub fn RenderBundle::set_label(Self, String) -> Unit
 
 pub struct RenderBundleEncoder {
   raw : @c.WGPURenderBundleEncoder
@@ -323,6 +333,7 @@ pub struct RenderBundleEncoder {
 pub fn RenderBundleEncoder::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderBundleEncoder::finish(Self) -> RenderBundle
 pub fn RenderBundleEncoder::release(Self) -> Unit
+pub fn RenderBundleEncoder::set_label(Self, String) -> Unit
 pub fn RenderBundleEncoder::set_pipeline(Self, RenderPipeline) -> Unit
 pub fn RenderBundleEncoder::set_push_constants(Self, UInt64, UInt, Bytes) -> Unit
 
@@ -365,17 +376,20 @@ pub struct RenderPipeline {
   raw : @c.WGPURenderPipeline
 }
 pub fn RenderPipeline::release(Self) -> Unit
+pub fn RenderPipeline::set_label(Self, String) -> Unit
 
 pub struct Sampler {
   raw : @c.WGPUSampler
 }
 pub fn Sampler::release(Self) -> Unit
+pub fn Sampler::set_label(Self, String) -> Unit
 
 pub struct ShaderModule {
   raw : @c.WGPUShaderModule
 }
 pub fn ShaderModule::is_null(Self) -> Bool
 pub fn ShaderModule::release(Self) -> Unit
+pub fn ShaderModule::set_label(Self, String) -> Unit
 
 pub struct Surface {
   raw : @c.WGPUSurface
@@ -391,6 +405,7 @@ pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, UInt64) -> 
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture
 pub fn Surface::present(Self) -> UInt
 pub fn Surface::release(Self) -> Unit
+pub fn Surface::set_label(Self, String) -> Unit
 pub fn Surface::unconfigure(Self) -> Unit
 
 pub struct SurfaceTexture {
@@ -408,11 +423,13 @@ pub fn Texture::create_view_2d(Self, UInt, UInt) -> TextureView
 pub fn Texture::create_view_2d_array(Self, UInt, UInt, UInt, UInt) -> TextureView
 pub fn Texture::destroy(Self) -> Unit
 pub fn Texture::release(Self) -> Unit
+pub fn Texture::set_label(Self, String) -> Unit
 
 pub struct TextureView {
   raw : @c.WGPUTextureView
 }
 pub fn TextureView::release(Self) -> Unit
+pub fn TextureView::set_label(Self, String) -> Unit
 
 // Type aliases
 

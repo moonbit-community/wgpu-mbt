@@ -1544,3 +1544,98 @@ declare pub fn PipelineLayout::release(self : PipelineLayout) -> Unit
 ///|
 #declaration_only
 declare pub fn QuerySet::release(self : QuerySet) -> Unit
+
+///|
+#declaration_only
+declare pub fn BindGroupLayout::set_label(
+  self : BindGroupLayout,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn BindGroup::set_label(self : BindGroup, label : String) -> Unit
+
+///|
+#declaration_only
+declare pub fn Buffer::set_label(self : Buffer, label : String) -> Unit
+
+///|
+#declaration_only
+declare pub fn CommandBuffer::set_label(
+  self : CommandBuffer,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn ComputePipeline::set_label(
+  self : ComputePipeline,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn Device::set_label(self : Device, label : String) -> Unit
+
+///|
+#declaration_only
+declare pub fn PipelineLayout::set_label(
+  self : PipelineLayout,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn QuerySet::set_label(self : QuerySet, label : String) -> Unit
+
+///|
+#declaration_only
+declare pub fn Queue::set_label(self : Queue, label : String) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::set_label(
+  self : RenderBundleEncoder,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundle::set_label(
+  self : RenderBundle,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPipeline::set_label(
+  self : RenderPipeline,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn Sampler::set_label(self : Sampler, label : String) -> Unit
+
+///|
+#declaration_only
+declare pub fn ShaderModule::set_label(
+  self : ShaderModule,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn Surface::set_label(self : Surface, label : String) -> Unit
+
+///|
+#declaration_only
+declare pub fn Texture::set_label(self : Texture, label : String) -> Unit
+
+///|
+#declaration_only
+declare pub fn TextureView::set_label(
+  self : TextureView,
+  label : String,
+) -> Unit

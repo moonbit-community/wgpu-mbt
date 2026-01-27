@@ -2319,6 +2319,129 @@ pub fn QuerySet::release(self : QuerySet) -> Unit {
 }
 
 ///|
+pub fn BindGroupLayout::set_label(
+  self : BindGroupLayout,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.bind_group_layout_set_label_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn BindGroup::set_label(self : BindGroup, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.bind_group_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn Buffer::set_label(self : Buffer, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.buffer_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn CommandBuffer::set_label(self : CommandBuffer, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.command_buffer_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn ComputePipeline::set_label(
+  self : ComputePipeline,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.compute_pipeline_set_label_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn Device::set_label(self : Device, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.device_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn PipelineLayout::set_label(self : PipelineLayout, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.pipeline_layout_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn QuerySet::set_label(self : QuerySet, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.query_set_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn Queue::set_label(self : Queue, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.queue_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn RenderBundleEncoder::set_label(
+  self : RenderBundleEncoder,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.render_bundle_encoder_set_label_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn RenderBundle::set_label(self : RenderBundle, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.render_bundle_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn RenderPipeline::set_label(self : RenderPipeline, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.render_pipeline_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn Sampler::set_label(self : Sampler, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.sampler_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn ShaderModule::set_label(self : ShaderModule, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.shader_module_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn Surface::set_label(self : Surface, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.surface_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn Texture::set_label(self : Texture, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.texture_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
+pub fn TextureView::set_label(self : TextureView, label : String) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.texture_view_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
+}
+
+///|
 pub fn Queue::release(self : Queue) -> Unit {
   @c.queue_release(self.raw)
 }

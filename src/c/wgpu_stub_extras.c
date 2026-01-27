@@ -464,3 +464,116 @@ void mbt_wgpu_render_pass_push_debug_group_utf8(WGPURenderPassEncoder pass,
 void mbt_wgpu_render_pass_pop_debug_group(WGPURenderPassEncoder pass) {
   (void)pass;
 }
+
+// Label helpers.
+// wgpu-native currently panics for some debug-label APIs; keep these as no-ops.
+void mbt_wgpu_bind_group_set_label_utf8(WGPUBindGroup bind_group, const uint8_t *label,
+                                        uint64_t label_len) {
+  (void)bind_group;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_bind_group_layout_set_label_utf8(WGPUBindGroupLayout bind_group_layout,
+                                               const uint8_t *label,
+                                               uint64_t label_len) {
+  (void)bind_group_layout;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_buffer_set_label_utf8(WGPUBuffer buffer, const uint8_t *label,
+                                    uint64_t label_len) {
+  (void)buffer;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_command_buffer_set_label_utf8(WGPUCommandBuffer command_buffer,
+                                            const uint8_t *label,
+                                            uint64_t label_len) {
+  (void)command_buffer;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_compute_pipeline_set_label_utf8(WGPUComputePipeline pipeline,
+                                              const uint8_t *label,
+                                              uint64_t label_len) {
+  (void)pipeline;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_device_set_label_utf8(WGPUDevice device, const uint8_t *label,
+                                    uint64_t label_len) {
+  (void)device;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_pipeline_layout_set_label_utf8(WGPUPipelineLayout pipeline_layout,
+                                             const uint8_t *label,
+                                             uint64_t label_len) {
+  (void)pipeline_layout;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_query_set_set_label_utf8(WGPUQuerySet query_set, const uint8_t *label,
+                                       uint64_t label_len) {
+  (void)query_set;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_queue_set_label_utf8(WGPUQueue queue, const uint8_t *label,
+                                   uint64_t label_len) {
+  (void)queue;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_render_bundle_set_label_utf8(WGPURenderBundle render_bundle,
+                                           const uint8_t *label,
+                                           uint64_t label_len) {
+  (void)render_bundle;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_render_bundle_encoder_set_label_utf8(
+    WGPURenderBundleEncoder render_bundle_encoder, const uint8_t *label,
+    uint64_t label_len) {
+  (void)render_bundle_encoder;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_render_pipeline_set_label_utf8(WGPURenderPipeline pipeline,
+                                             const uint8_t *label,
+                                             uint64_t label_len) {
+  (void)pipeline;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_sampler_set_label_utf8(WGPUSampler sampler, const uint8_t *label,
+                                     uint64_t label_len) {
+  (void)sampler;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_shader_module_set_label_utf8(WGPUShaderModule shader_module,
+                                           const uint8_t *label,
+                                           uint64_t label_len) {
+  (void)shader_module;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_surface_set_label_utf8(WGPUSurface surface, const uint8_t *label,
+                                     uint64_t label_len) {
+  (void)surface;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_texture_set_label_utf8(WGPUTexture texture, const uint8_t *label,
+                                     uint64_t label_len) {
+  (void)texture;
+  (void)mbt_wgpu_string_view(label, label_len);
+}
+
+void mbt_wgpu_texture_view_set_label_utf8(WGPUTextureView texture_view,
+                                          const uint8_t *label,
+                                          uint64_t label_len) {
+  (void)texture_view;
+  (void)mbt_wgpu_string_view(label, label_len);
+}

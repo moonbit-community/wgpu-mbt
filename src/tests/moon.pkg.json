@@ -33,6 +33,9 @@
     "wgpu_device_lost_test.mbt": [
       "native"
     ],
+    "wgpu_label_helpers_test.mbt": [
+      "native"
+    ],
     "wgpu_render_offscreen_test.mbt": [
       "native"
     ],

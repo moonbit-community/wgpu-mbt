@@ -276,6 +276,142 @@ pub extern "C" fn command_encoder_set_label_utf8(
 
 ///|
 #borrow(label)
+pub extern "C" fn bind_group_set_label_utf8(
+  bind_group : BindGroup,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_bind_group_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn bind_group_layout_set_label_utf8(
+  bind_group_layout : BindGroupLayout,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_bind_group_layout_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn buffer_set_label_utf8(
+  buffer : Buffer,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_buffer_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn command_buffer_set_label_utf8(
+  command_buffer : CommandBuffer,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_command_buffer_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn compute_pipeline_set_label_utf8(
+  pipeline : ComputePipeline,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_compute_pipeline_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn device_set_label_utf8(
+  device : Device,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_device_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn pipeline_layout_set_label_utf8(
+  pipeline_layout : PipelineLayout,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_pipeline_layout_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn query_set_set_label_utf8(
+  query_set : QuerySet,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_query_set_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn queue_set_label_utf8(
+  queue : Queue,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_queue_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn render_bundle_set_label_utf8(
+  render_bundle : WGPURenderBundle,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_render_bundle_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn render_bundle_encoder_set_label_utf8(
+  render_bundle_encoder : WGPURenderBundleEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_render_bundle_encoder_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn render_pipeline_set_label_utf8(
+  pipeline : RenderPipeline,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_render_pipeline_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn sampler_set_label_utf8(
+  sampler : Sampler,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_sampler_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn shader_module_set_label_utf8(
+  shader_module : ShaderModule,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_shader_module_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn surface_set_label_utf8(
+  surface : WGPUSurface,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_surface_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn texture_set_label_utf8(
+  texture : Texture,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_texture_set_label_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn texture_view_set_label_utf8(
+  texture_view : TextureView,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_texture_view_set_label_utf8"
+
+///|
+#borrow(label)
 pub extern "C" fn command_encoder_insert_debug_marker_utf8(
   encoder : CommandEncoder,
   label : Bytes,
