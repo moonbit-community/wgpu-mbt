@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/wgpu_mbt/c"
+package "Milky2018/wgpu_mbt/c"
 
 // Values
 pub fn adapter_has_feature_native_pipeline_statistics_query(WGPUAdapter) -> Bool

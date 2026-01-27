@@ -2,11 +2,11 @@
   "import": [],
   "test-import": [
     {
-      "path": "username/wgpu_mbt",
+      "path": "Milky2018/wgpu_mbt",
       "alias": "wgpu"
     },
     {
-      "path": "username/wgpu_mbt/c",
+      "path": "Milky2018/wgpu_mbt/c",
       "alias": "wgpu_c"
     },
     "moonbitlang/core/ref"

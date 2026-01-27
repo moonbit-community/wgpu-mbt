@@ -1,4 +1,4 @@
-# username/wgpu_mbt
+# Milky2018/wgpu_mbt
 
 This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused on **native-only** and **macOS/Metal-only**.
 

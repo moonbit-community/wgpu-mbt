@@ -2,7 +2,7 @@
   "is-main": true,
   "import": [
     {
-      "path": "username/wgpu_mbt",
+      "path": "Milky2018/wgpu_mbt",
       "alias": "wgpu"
     }
   ],
