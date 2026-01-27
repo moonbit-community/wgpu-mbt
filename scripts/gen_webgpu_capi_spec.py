@@ -5,7 +5,7 @@ Generate MoonBit declaration-only spec for the WebGPU C header (webgpu.h).
 Outputs:
   - src/c/webgpu_capi_spec.mbt : #declaration_only types + function stubs
   - src/c/webgpu_capi.mbt      : concrete type decls + extern "C" declarations
-  - wgpu_capi_symbols_test.mbt  : root-level test referencing all symbols
+  - src/tests/wgpu_capi_symbols_test.mbt : symbols smoke test
 
 This generator focuses on completeness and type-checking:
 - `moon check` must stay green
@@ -24,7 +24,7 @@ WEBGPU_H = REPO / "vendor/wgpu-native/ffi/webgpu-headers/webgpu.h"
 WGPU_H = REPO / "vendor/wgpu-native/ffi/wgpu.h"
 OUT_SPEC = REPO / "src/c/webgpu_capi_spec.mbt"
 OUT_IMPL = REPO / "src/c/webgpu_capi.mbt"
-OUT_TEST = REPO / "wgpu_capi_symbols_test.mbt"
+OUT_TEST = REPO / "src/tests/wgpu_capi_symbols_test.mbt"
 
 # License header for generated MoonBit files.
 LICENSE_HEADER = """// Copyright 2025 International Digital Economy Academy
@@ -377,7 +377,10 @@ def write_spec(
             params = ", ".join(f"{p.name} : {p.mbt_type}" for p in f.params)
         else:
             params = ""
-        lines.append(f"pub fn {f.name}({params}) -> {f.ret} {{ ... }}")
+        # Use `declare` for declaration-only functions so tooling like
+        # `moon test --enable-coverage` can compile the package without needing
+        # placeholder bodies.
+        lines.append(f"declare pub fn {f.name}({params}) -> {f.ret}")
 
     OUT_SPEC.write_text("\n".join(lines) + "\n", encoding="utf-8")
 

@@ -410,1494 +410,1179 @@ pub type WGPUWaitStatus
 
 ///|
 #declaration_only
-pub fn wgpuAdapterAddRef(adapter : WGPUAdapter) -> Unit {
-  ...
-}
+declare pub fn wgpuAdapterAddRef(adapter : WGPUAdapter) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuAdapterGetFeatures(
+declare pub fn wgpuAdapterGetFeatures(
   adapter : WGPUAdapter,
   features : WGPUSupportedFeaturesPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuAdapterGetInfo(
+declare pub fn wgpuAdapterGetInfo(
   adapter : WGPUAdapter,
   info : WGPUAdapterInfoPtr,
-) -> WGPUStatus {
-  ...
-}
+) -> WGPUStatus
 
 ///|
 #declaration_only
-pub fn wgpuAdapterGetLimits(
+declare pub fn wgpuAdapterGetLimits(
   adapter : WGPUAdapter,
   limits : WGPULimitsPtr,
-) -> WGPUStatus {
-  ...
-}
+) -> WGPUStatus
 
 ///|
 #declaration_only
-pub fn wgpuAdapterHasFeature(
+declare pub fn wgpuAdapterHasFeature(
   adapter : WGPUAdapter,
   feature : WGPUFeatureName,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn wgpuAdapterInfoFreeMembers(adapterInfo : WGPUAdapterInfo) -> Unit {
-  ...
-}
+declare pub fn wgpuAdapterInfoFreeMembers(adapterInfo : WGPUAdapterInfo) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuAdapterRelease(adapter : WGPUAdapter) -> Unit {
-  ...
-}
+declare pub fn wgpuAdapterRelease(adapter : WGPUAdapter) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuAdapterRequestDevice(
+declare pub fn wgpuAdapterRequestDevice(
   adapter : WGPUAdapter,
   descriptor : WGPUDeviceDescriptorPtr,
   callbackInfo : WGPURequestDeviceCallbackInfo,
-) -> WGPUFuture {
-  ...
-}
+) -> WGPUFuture
 
 ///|
 #declaration_only
-pub fn wgpuBindGroupAddRef(bindGroup : WGPUBindGroup) -> Unit {
-  ...
-}
+declare pub fn wgpuBindGroupAddRef(bindGroup : WGPUBindGroup) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuBindGroupLayoutAddRef(bindGroupLayout : WGPUBindGroupLayout) -> Unit {
-  ...
-}
-
-///|
-#declaration_only
-pub fn wgpuBindGroupLayoutRelease(
+declare pub fn wgpuBindGroupLayoutAddRef(
   bindGroupLayout : WGPUBindGroupLayout,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuBindGroupLayoutSetLabel(
+declare pub fn wgpuBindGroupLayoutRelease(
+  bindGroupLayout : WGPUBindGroupLayout,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn wgpuBindGroupLayoutSetLabel(
   bindGroupLayout : WGPUBindGroupLayout,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuBindGroupRelease(bindGroup : WGPUBindGroup) -> Unit {
-  ...
-}
+declare pub fn wgpuBindGroupRelease(bindGroup : WGPUBindGroup) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuBindGroupSetLabel(
+declare pub fn wgpuBindGroupSetLabel(
   bindGroup : WGPUBindGroup,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuBufferAddRef(buffer : WGPUBuffer) -> Unit {
-  ...
-}
+declare pub fn wgpuBufferAddRef(buffer : WGPUBuffer) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuBufferDestroy(buffer : WGPUBuffer) -> Unit {
-  ...
-}
+declare pub fn wgpuBufferDestroy(buffer : WGPUBuffer) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuBufferGetConstMappedRange(
+declare pub fn wgpuBufferGetConstMappedRange(
   buffer : WGPUBuffer,
   offset : UInt64,
   size : UInt64,
-) -> UnitPtr {
-  ...
-}
+) -> UnitPtr
 
 ///|
 #declaration_only
-pub fn wgpuBufferGetMapState(buffer : WGPUBuffer) -> WGPUBufferMapState {
-  ...
-}
+declare pub fn wgpuBufferGetMapState(buffer : WGPUBuffer) -> WGPUBufferMapState
 
 ///|
 #declaration_only
-pub fn wgpuBufferGetMappedRange(
+declare pub fn wgpuBufferGetMappedRange(
   buffer : WGPUBuffer,
   offset : UInt64,
   size : UInt64,
-) -> UnitPtr {
-  ...
-}
+) -> UnitPtr
 
 ///|
 #declaration_only
-pub fn wgpuBufferGetSize(buffer : WGPUBuffer) -> UInt64 {
-  ...
-}
+declare pub fn wgpuBufferGetSize(buffer : WGPUBuffer) -> UInt64
 
 ///|
 #declaration_only
-pub fn wgpuBufferGetUsage(buffer : WGPUBuffer) -> WGPUBufferUsage {
-  ...
-}
+declare pub fn wgpuBufferGetUsage(buffer : WGPUBuffer) -> WGPUBufferUsage
 
 ///|
 #declaration_only
-pub fn wgpuBufferMapAsync(
+declare pub fn wgpuBufferMapAsync(
   buffer : WGPUBuffer,
   mode : WGPUMapMode,
   offset : UInt64,
   size : UInt64,
   callbackInfo : WGPUBufferMapCallbackInfo,
-) -> WGPUFuture {
-  ...
-}
+) -> WGPUFuture
 
 ///|
 #declaration_only
-pub fn wgpuBufferRelease(buffer : WGPUBuffer) -> Unit {
-  ...
-}
+declare pub fn wgpuBufferRelease(buffer : WGPUBuffer) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuBufferSetLabel(buffer : WGPUBuffer, label : WGPUStringView) -> Unit {
-  ...
-}
+declare pub fn wgpuBufferSetLabel(
+  buffer : WGPUBuffer,
+  label : WGPUStringView,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuBufferUnmap(buffer : WGPUBuffer) -> Unit {
-  ...
-}
+declare pub fn wgpuBufferUnmap(buffer : WGPUBuffer) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandBufferAddRef(commandBuffer : WGPUCommandBuffer) -> Unit {
-  ...
-}
+declare pub fn wgpuCommandBufferAddRef(
+  commandBuffer : WGPUCommandBuffer,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandBufferRelease(commandBuffer : WGPUCommandBuffer) -> Unit {
-  ...
-}
+declare pub fn wgpuCommandBufferRelease(
+  commandBuffer : WGPUCommandBuffer,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandBufferSetLabel(
+declare pub fn wgpuCommandBufferSetLabel(
   commandBuffer : WGPUCommandBuffer,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderAddRef(commandEncoder : WGPUCommandEncoder) -> Unit {
-  ...
-}
+declare pub fn wgpuCommandEncoderAddRef(
+  commandEncoder : WGPUCommandEncoder,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderBeginComputePass(
+declare pub fn wgpuCommandEncoderBeginComputePass(
   commandEncoder : WGPUCommandEncoder,
   descriptor : WGPUComputePassDescriptorPtr,
-) -> WGPUComputePassEncoder {
-  ...
-}
+) -> WGPUComputePassEncoder
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderBeginRenderPass(
+declare pub fn wgpuCommandEncoderBeginRenderPass(
   commandEncoder : WGPUCommandEncoder,
   descriptor : WGPURenderPassDescriptorPtr,
-) -> WGPURenderPassEncoder {
-  ...
-}
+) -> WGPURenderPassEncoder
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderClearBuffer(
+declare pub fn wgpuCommandEncoderClearBuffer(
   commandEncoder : WGPUCommandEncoder,
   buffer : WGPUBuffer,
   offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderCopyBufferToBuffer(
+declare pub fn wgpuCommandEncoderCopyBufferToBuffer(
   commandEncoder : WGPUCommandEncoder,
   source : WGPUBuffer,
   sourceOffset : UInt64,
   destination : WGPUBuffer,
   destinationOffset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderCopyBufferToTexture(
+declare pub fn wgpuCommandEncoderCopyBufferToTexture(
   commandEncoder : WGPUCommandEncoder,
   source : WGPUTexelCopyBufferInfoPtr,
   destination : WGPUTexelCopyTextureInfoPtr,
   copySize : WGPUExtent3DPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderCopyTextureToBuffer(
+declare pub fn wgpuCommandEncoderCopyTextureToBuffer(
   commandEncoder : WGPUCommandEncoder,
   source : WGPUTexelCopyTextureInfoPtr,
   destination : WGPUTexelCopyBufferInfoPtr,
   copySize : WGPUExtent3DPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderCopyTextureToTexture(
+declare pub fn wgpuCommandEncoderCopyTextureToTexture(
   commandEncoder : WGPUCommandEncoder,
   source : WGPUTexelCopyTextureInfoPtr,
   destination : WGPUTexelCopyTextureInfoPtr,
   copySize : WGPUExtent3DPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderFinish(
+declare pub fn wgpuCommandEncoderFinish(
   commandEncoder : WGPUCommandEncoder,
   descriptor : WGPUCommandBufferDescriptorPtr,
-) -> WGPUCommandBuffer {
-  ...
-}
+) -> WGPUCommandBuffer
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderInsertDebugMarker(
+declare pub fn wgpuCommandEncoderInsertDebugMarker(
   commandEncoder : WGPUCommandEncoder,
   markerLabel : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderPopDebugGroup(
+declare pub fn wgpuCommandEncoderPopDebugGroup(
   commandEncoder : WGPUCommandEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderPushDebugGroup(
+declare pub fn wgpuCommandEncoderPushDebugGroup(
   commandEncoder : WGPUCommandEncoder,
   groupLabel : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderRelease(commandEncoder : WGPUCommandEncoder) -> Unit {
-  ...
-}
+declare pub fn wgpuCommandEncoderRelease(
+  commandEncoder : WGPUCommandEncoder,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderResolveQuerySet(
+declare pub fn wgpuCommandEncoderResolveQuerySet(
   commandEncoder : WGPUCommandEncoder,
   querySet : WGPUQuerySet,
   firstQuery : UInt,
   queryCount : UInt,
   destination : WGPUBuffer,
   destinationOffset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderSetLabel(
+declare pub fn wgpuCommandEncoderSetLabel(
   commandEncoder : WGPUCommandEncoder,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCommandEncoderWriteTimestamp(
+declare pub fn wgpuCommandEncoderWriteTimestamp(
   commandEncoder : WGPUCommandEncoder,
   querySet : WGPUQuerySet,
   queryIndex : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderAddRef(
+declare pub fn wgpuComputePassEncoderAddRef(
   computePassEncoder : WGPUComputePassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderBeginPipelineStatisticsQuery(
+declare pub fn wgpuComputePassEncoderBeginPipelineStatisticsQuery(
   computePassEncoder : WGPUComputePassEncoder,
   querySet : WGPUQuerySet,
   queryIndex : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderDispatchWorkgroups(
+declare pub fn wgpuComputePassEncoderDispatchWorkgroups(
   computePassEncoder : WGPUComputePassEncoder,
   workgroupCountX : UInt,
   workgroupCountY : UInt,
   workgroupCountZ : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderDispatchWorkgroupsIndirect(
+declare pub fn wgpuComputePassEncoderDispatchWorkgroupsIndirect(
   computePassEncoder : WGPUComputePassEncoder,
   indirectBuffer : WGPUBuffer,
   indirectOffset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderEnd(
+declare pub fn wgpuComputePassEncoderEnd(
   computePassEncoder : WGPUComputePassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderEndPipelineStatisticsQuery(
+declare pub fn wgpuComputePassEncoderEndPipelineStatisticsQuery(
   computePassEncoder : WGPUComputePassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderInsertDebugMarker(
+declare pub fn wgpuComputePassEncoderInsertDebugMarker(
   computePassEncoder : WGPUComputePassEncoder,
   markerLabel : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderPopDebugGroup(
+declare pub fn wgpuComputePassEncoderPopDebugGroup(
   computePassEncoder : WGPUComputePassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderPushDebugGroup(
+declare pub fn wgpuComputePassEncoderPushDebugGroup(
   computePassEncoder : WGPUComputePassEncoder,
   groupLabel : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderRelease(
+declare pub fn wgpuComputePassEncoderRelease(
   computePassEncoder : WGPUComputePassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderSetBindGroup(
+declare pub fn wgpuComputePassEncoderSetBindGroup(
   computePassEncoder : WGPUComputePassEncoder,
   groupIndex : UInt,
   group : WGPUBindGroup,
   dynamicOffsetCount : UInt64,
   dynamicOffsets : UIntPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderSetLabel(
+declare pub fn wgpuComputePassEncoderSetLabel(
   computePassEncoder : WGPUComputePassEncoder,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderSetPipeline(
+declare pub fn wgpuComputePassEncoderSetPipeline(
   computePassEncoder : WGPUComputePassEncoder,
   pipeline : WGPUComputePipeline,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderSetPushConstants(
+declare pub fn wgpuComputePassEncoderSetPushConstants(
   encoder : WGPUComputePassEncoder,
   offset : UInt,
   sizeBytes : UInt,
   data : UnitPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePassEncoderWriteTimestamp(
+declare pub fn wgpuComputePassEncoderWriteTimestamp(
   computePassEncoder : WGPUComputePassEncoder,
   querySet : WGPUQuerySet,
   queryIndex : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePipelineAddRef(computePipeline : WGPUComputePipeline) -> Unit {
-  ...
-}
+declare pub fn wgpuComputePipelineAddRef(
+  computePipeline : WGPUComputePipeline,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePipelineGetBindGroupLayout(
+declare pub fn wgpuComputePipelineGetBindGroupLayout(
   computePipeline : WGPUComputePipeline,
   groupIndex : UInt,
-) -> WGPUBindGroupLayout {
-  ...
-}
+) -> WGPUBindGroupLayout
 
 ///|
 #declaration_only
-pub fn wgpuComputePipelineRelease(
+declare pub fn wgpuComputePipelineRelease(
   computePipeline : WGPUComputePipeline,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuComputePipelineSetLabel(
+declare pub fn wgpuComputePipelineSetLabel(
   computePipeline : WGPUComputePipeline,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuCreateInstance(
+declare pub fn wgpuCreateInstance(
   descriptor : WGPUInstanceDescriptorPtr,
-) -> WGPUInstance {
-  ...
-}
+) -> WGPUInstance
 
 ///|
 #declaration_only
-pub fn wgpuDeviceAddRef(device : WGPUDevice) -> Unit {
-  ...
-}
+declare pub fn wgpuDeviceAddRef(device : WGPUDevice) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateBindGroup(
+declare pub fn wgpuDeviceCreateBindGroup(
   device : WGPUDevice,
   descriptor : WGPUBindGroupDescriptorPtr,
-) -> WGPUBindGroup {
-  ...
-}
+) -> WGPUBindGroup
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateBindGroupLayout(
+declare pub fn wgpuDeviceCreateBindGroupLayout(
   device : WGPUDevice,
   descriptor : WGPUBindGroupLayoutDescriptorPtr,
-) -> WGPUBindGroupLayout {
-  ...
-}
+) -> WGPUBindGroupLayout
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateBuffer(
+declare pub fn wgpuDeviceCreateBuffer(
   device : WGPUDevice,
   descriptor : WGPUBufferDescriptorPtr,
-) -> WGPUBuffer {
-  ...
-}
+) -> WGPUBuffer
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateCommandEncoder(
+declare pub fn wgpuDeviceCreateCommandEncoder(
   device : WGPUDevice,
   descriptor : WGPUCommandEncoderDescriptorPtr,
-) -> WGPUCommandEncoder {
-  ...
-}
+) -> WGPUCommandEncoder
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateComputePipeline(
+declare pub fn wgpuDeviceCreateComputePipeline(
   device : WGPUDevice,
   descriptor : WGPUComputePipelineDescriptorPtr,
-) -> WGPUComputePipeline {
-  ...
-}
+) -> WGPUComputePipeline
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateComputePipelineAsync(
+declare pub fn wgpuDeviceCreateComputePipelineAsync(
   device : WGPUDevice,
   descriptor : WGPUComputePipelineDescriptorPtr,
   callbackInfo : WGPUCreateComputePipelineAsyncCallbackInfo,
-) -> WGPUFuture {
-  ...
-}
+) -> WGPUFuture
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreatePipelineLayout(
+declare pub fn wgpuDeviceCreatePipelineLayout(
   device : WGPUDevice,
   descriptor : WGPUPipelineLayoutDescriptorPtr,
-) -> WGPUPipelineLayout {
-  ...
-}
+) -> WGPUPipelineLayout
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateQuerySet(
+declare pub fn wgpuDeviceCreateQuerySet(
   device : WGPUDevice,
   descriptor : WGPUQuerySetDescriptorPtr,
-) -> WGPUQuerySet {
-  ...
-}
+) -> WGPUQuerySet
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateRenderBundleEncoder(
+declare pub fn wgpuDeviceCreateRenderBundleEncoder(
   device : WGPUDevice,
   descriptor : WGPURenderBundleEncoderDescriptorPtr,
-) -> WGPURenderBundleEncoder {
-  ...
-}
+) -> WGPURenderBundleEncoder
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateRenderPipeline(
+declare pub fn wgpuDeviceCreateRenderPipeline(
   device : WGPUDevice,
   descriptor : WGPURenderPipelineDescriptorPtr,
-) -> WGPURenderPipeline {
-  ...
-}
+) -> WGPURenderPipeline
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateRenderPipelineAsync(
+declare pub fn wgpuDeviceCreateRenderPipelineAsync(
   device : WGPUDevice,
   descriptor : WGPURenderPipelineDescriptorPtr,
   callbackInfo : WGPUCreateRenderPipelineAsyncCallbackInfo,
-) -> WGPUFuture {
-  ...
-}
+) -> WGPUFuture
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateSampler(
+declare pub fn wgpuDeviceCreateSampler(
   device : WGPUDevice,
   descriptor : WGPUSamplerDescriptorPtr,
-) -> WGPUSampler {
-  ...
-}
+) -> WGPUSampler
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateShaderModule(
+declare pub fn wgpuDeviceCreateShaderModule(
   device : WGPUDevice,
   descriptor : WGPUShaderModuleDescriptorPtr,
-) -> WGPUShaderModule {
-  ...
-}
+) -> WGPUShaderModule
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateShaderModuleSpirV(
+declare pub fn wgpuDeviceCreateShaderModuleSpirV(
   device : WGPUDevice,
   descriptor : WGPUShaderModuleDescriptorSpirVPtr,
-) -> WGPUShaderModule {
-  ...
-}
+) -> WGPUShaderModule
 
 ///|
 #declaration_only
-pub fn wgpuDeviceCreateTexture(
+declare pub fn wgpuDeviceCreateTexture(
   device : WGPUDevice,
   descriptor : WGPUTextureDescriptorPtr,
-) -> WGPUTexture {
-  ...
-}
+) -> WGPUTexture
 
 ///|
 #declaration_only
-pub fn wgpuDeviceDestroy(device : WGPUDevice) -> Unit {
-  ...
-}
+declare pub fn wgpuDeviceDestroy(device : WGPUDevice) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuDeviceGetAdapterInfo(device : WGPUDevice) -> WGPUAdapterInfo {
-  ...
-}
+declare pub fn wgpuDeviceGetAdapterInfo(device : WGPUDevice) -> WGPUAdapterInfo
 
 ///|
 #declaration_only
-pub fn wgpuDeviceGetFeatures(
+declare pub fn wgpuDeviceGetFeatures(
   device : WGPUDevice,
   features : WGPUSupportedFeaturesPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuDeviceGetLimits(
+declare pub fn wgpuDeviceGetLimits(
   device : WGPUDevice,
   limits : WGPULimitsPtr,
-) -> WGPUStatus {
-  ...
-}
+) -> WGPUStatus
 
 ///|
 #declaration_only
-pub fn wgpuDeviceGetLostFuture(device : WGPUDevice) -> WGPUFuture {
-  ...
-}
+declare pub fn wgpuDeviceGetLostFuture(device : WGPUDevice) -> WGPUFuture
 
 ///|
 #declaration_only
-pub fn wgpuDeviceGetQueue(device : WGPUDevice) -> WGPUQueue {
-  ...
-}
+declare pub fn wgpuDeviceGetQueue(device : WGPUDevice) -> WGPUQueue
 
 ///|
 #declaration_only
-pub fn wgpuDeviceHasFeature(
+declare pub fn wgpuDeviceHasFeature(
   device : WGPUDevice,
   feature : WGPUFeatureName,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn wgpuDevicePoll(
+declare pub fn wgpuDevicePoll(
   device : WGPUDevice,
   wait : Bool,
   submissionIndex : WGPUSubmissionIndexPtr,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn wgpuDevicePopErrorScope(
+declare pub fn wgpuDevicePopErrorScope(
   device : WGPUDevice,
   callbackInfo : WGPUPopErrorScopeCallbackInfo,
-) -> WGPUFuture {
-  ...
-}
+) -> WGPUFuture
 
 ///|
 #declaration_only
-pub fn wgpuDevicePushErrorScope(
+declare pub fn wgpuDevicePushErrorScope(
   device : WGPUDevice,
   filter : WGPUErrorFilter,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuDeviceRelease(device : WGPUDevice) -> Unit {
-  ...
-}
+declare pub fn wgpuDeviceRelease(device : WGPUDevice) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuDeviceSetLabel(device : WGPUDevice, label : WGPUStringView) -> Unit {
-  ...
-}
+declare pub fn wgpuDeviceSetLabel(
+  device : WGPUDevice,
+  label : WGPUStringView,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuGenerateReport(
+declare pub fn wgpuGenerateReport(
   instance : WGPUInstance,
   report : WGPUGlobalReportPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuGetInstanceCapabilities(
+declare pub fn wgpuGetInstanceCapabilities(
   capabilities : WGPUInstanceCapabilitiesPtr,
-) -> WGPUStatus {
-  ...
-}
+) -> WGPUStatus
 
 ///|
 #declaration_only
-pub fn wgpuGetProcAddress(procName : WGPUStringView) -> WGPUProc {
-  ...
-}
+declare pub fn wgpuGetProcAddress(procName : WGPUStringView) -> WGPUProc
 
 ///|
 #declaration_only
-pub fn wgpuGetVersion() -> UInt {
-  ...
-}
+declare pub fn wgpuGetVersion() -> UInt
 
 ///|
 #declaration_only
-pub fn wgpuInstanceAddRef(instance : WGPUInstance) -> Unit {
-  ...
-}
+declare pub fn wgpuInstanceAddRef(instance : WGPUInstance) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuInstanceCreateSurface(
+declare pub fn wgpuInstanceCreateSurface(
   instance : WGPUInstance,
   descriptor : WGPUSurfaceDescriptorPtr,
-) -> WGPUSurface {
-  ...
-}
+) -> WGPUSurface
 
 ///|
 #declaration_only
-pub fn wgpuInstanceEnumerateAdapters(
+declare pub fn wgpuInstanceEnumerateAdapters(
   instance : WGPUInstance,
   options : WGPUInstanceEnumerateAdapterOptionsPtr,
   adapters : WGPUAdapterPtr,
-) -> UInt64 {
-  ...
-}
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn wgpuInstanceGetWGSLLanguageFeatures(
+declare pub fn wgpuInstanceGetWGSLLanguageFeatures(
   instance : WGPUInstance,
   features : WGPUSupportedWGSLLanguageFeaturesPtr,
-) -> WGPUStatus {
-  ...
-}
+) -> WGPUStatus
 
 ///|
 #declaration_only
-pub fn wgpuInstanceHasWGSLLanguageFeature(
+declare pub fn wgpuInstanceHasWGSLLanguageFeature(
   instance : WGPUInstance,
   feature : WGPUWGSLLanguageFeatureName,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn wgpuInstanceProcessEvents(instance : WGPUInstance) -> Unit {
-  ...
-}
+declare pub fn wgpuInstanceProcessEvents(instance : WGPUInstance) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuInstanceRelease(instance : WGPUInstance) -> Unit {
-  ...
-}
+declare pub fn wgpuInstanceRelease(instance : WGPUInstance) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuInstanceRequestAdapter(
+declare pub fn wgpuInstanceRequestAdapter(
   instance : WGPUInstance,
   options : WGPURequestAdapterOptionsPtr,
   callbackInfo : WGPURequestAdapterCallbackInfo,
-) -> WGPUFuture {
-  ...
-}
+) -> WGPUFuture
 
 ///|
 #declaration_only
-pub fn wgpuInstanceWaitAny(
+declare pub fn wgpuInstanceWaitAny(
   instance : WGPUInstance,
   futureCount : UInt64,
   futures : WGPUFutureWaitInfoPtr,
   timeoutNS : UInt64,
-) -> WGPUWaitStatus {
-  ...
-}
+) -> WGPUWaitStatus
 
 ///|
 #declaration_only
-pub fn wgpuPipelineLayoutAddRef(pipelineLayout : WGPUPipelineLayout) -> Unit {
-  ...
-}
+declare pub fn wgpuPipelineLayoutAddRef(
+  pipelineLayout : WGPUPipelineLayout,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuPipelineLayoutRelease(pipelineLayout : WGPUPipelineLayout) -> Unit {
-  ...
-}
+declare pub fn wgpuPipelineLayoutRelease(
+  pipelineLayout : WGPUPipelineLayout,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuPipelineLayoutSetLabel(
+declare pub fn wgpuPipelineLayoutSetLabel(
   pipelineLayout : WGPUPipelineLayout,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQuerySetAddRef(querySet : WGPUQuerySet) -> Unit {
-  ...
-}
+declare pub fn wgpuQuerySetAddRef(querySet : WGPUQuerySet) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQuerySetDestroy(querySet : WGPUQuerySet) -> Unit {
-  ...
-}
+declare pub fn wgpuQuerySetDestroy(querySet : WGPUQuerySet) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQuerySetGetCount(querySet : WGPUQuerySet) -> UInt {
-  ...
-}
+declare pub fn wgpuQuerySetGetCount(querySet : WGPUQuerySet) -> UInt
 
 ///|
 #declaration_only
-pub fn wgpuQuerySetGetType(querySet : WGPUQuerySet) -> WGPUQueryType {
-  ...
-}
+declare pub fn wgpuQuerySetGetType(querySet : WGPUQuerySet) -> WGPUQueryType
 
 ///|
 #declaration_only
-pub fn wgpuQuerySetRelease(querySet : WGPUQuerySet) -> Unit {
-  ...
-}
+declare pub fn wgpuQuerySetRelease(querySet : WGPUQuerySet) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQuerySetSetLabel(
+declare pub fn wgpuQuerySetSetLabel(
   querySet : WGPUQuerySet,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQueueAddRef(queue : WGPUQueue) -> Unit {
-  ...
-}
+declare pub fn wgpuQueueAddRef(queue : WGPUQueue) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQueueGetTimestampPeriod(queue : WGPUQueue) -> Float {
-  ...
-}
+declare pub fn wgpuQueueGetTimestampPeriod(queue : WGPUQueue) -> Float
 
 ///|
 #declaration_only
-pub fn wgpuQueueOnSubmittedWorkDone(
+declare pub fn wgpuQueueOnSubmittedWorkDone(
   queue : WGPUQueue,
   callbackInfo : WGPUQueueWorkDoneCallbackInfo,
-) -> WGPUFuture {
-  ...
-}
+) -> WGPUFuture
 
 ///|
 #declaration_only
-pub fn wgpuQueueRelease(queue : WGPUQueue) -> Unit {
-  ...
-}
+declare pub fn wgpuQueueRelease(queue : WGPUQueue) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQueueSetLabel(queue : WGPUQueue, label : WGPUStringView) -> Unit {
-  ...
-}
+declare pub fn wgpuQueueSetLabel(
+  queue : WGPUQueue,
+  label : WGPUStringView,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQueueSubmit(
+declare pub fn wgpuQueueSubmit(
   queue : WGPUQueue,
   commandCount : UInt64,
   commands : WGPUCommandBufferPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQueueSubmitForIndex(
+declare pub fn wgpuQueueSubmitForIndex(
   queue : WGPUQueue,
   commandCount : UInt64,
   commands : WGPUCommandBufferPtr,
-) -> WGPUSubmissionIndex {
-  ...
-}
+) -> WGPUSubmissionIndex
 
 ///|
 #declaration_only
-pub fn wgpuQueueWriteBuffer(
+declare pub fn wgpuQueueWriteBuffer(
   queue : WGPUQueue,
   buffer : WGPUBuffer,
   bufferOffset : UInt64,
   data : UnitPtr,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuQueueWriteTexture(
+declare pub fn wgpuQueueWriteTexture(
   queue : WGPUQueue,
   destination : WGPUTexelCopyTextureInfoPtr,
   data : UnitPtr,
   dataSize : UInt64,
   dataLayout : WGPUTexelCopyBufferLayoutPtr,
   writeSize : WGPUExtent3DPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleAddRef(renderBundle : WGPURenderBundle) -> Unit {
-  ...
-}
+declare pub fn wgpuRenderBundleAddRef(renderBundle : WGPURenderBundle) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderAddRef(
+declare pub fn wgpuRenderBundleEncoderAddRef(
   renderBundleEncoder : WGPURenderBundleEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderDraw(
+declare pub fn wgpuRenderBundleEncoderDraw(
   renderBundleEncoder : WGPURenderBundleEncoder,
   vertexCount : UInt,
   instanceCount : UInt,
   firstVertex : UInt,
   firstInstance : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderDrawIndexed(
+declare pub fn wgpuRenderBundleEncoderDrawIndexed(
   renderBundleEncoder : WGPURenderBundleEncoder,
   indexCount : UInt,
   instanceCount : UInt,
   firstIndex : UInt,
   baseVertex : Int,
   firstInstance : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderDrawIndexedIndirect(
+declare pub fn wgpuRenderBundleEncoderDrawIndexedIndirect(
   renderBundleEncoder : WGPURenderBundleEncoder,
   indirectBuffer : WGPUBuffer,
   indirectOffset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderDrawIndirect(
+declare pub fn wgpuRenderBundleEncoderDrawIndirect(
   renderBundleEncoder : WGPURenderBundleEncoder,
   indirectBuffer : WGPUBuffer,
   indirectOffset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderFinish(
+declare pub fn wgpuRenderBundleEncoderFinish(
   renderBundleEncoder : WGPURenderBundleEncoder,
   descriptor : WGPURenderBundleDescriptorPtr,
-) -> WGPURenderBundle {
-  ...
-}
+) -> WGPURenderBundle
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderInsertDebugMarker(
+declare pub fn wgpuRenderBundleEncoderInsertDebugMarker(
   renderBundleEncoder : WGPURenderBundleEncoder,
   markerLabel : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderPopDebugGroup(
+declare pub fn wgpuRenderBundleEncoderPopDebugGroup(
   renderBundleEncoder : WGPURenderBundleEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderPushDebugGroup(
+declare pub fn wgpuRenderBundleEncoderPushDebugGroup(
   renderBundleEncoder : WGPURenderBundleEncoder,
   groupLabel : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderRelease(
+declare pub fn wgpuRenderBundleEncoderRelease(
   renderBundleEncoder : WGPURenderBundleEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderSetBindGroup(
+declare pub fn wgpuRenderBundleEncoderSetBindGroup(
   renderBundleEncoder : WGPURenderBundleEncoder,
   groupIndex : UInt,
   group : WGPUBindGroup,
   dynamicOffsetCount : UInt64,
   dynamicOffsets : UIntPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderSetIndexBuffer(
+declare pub fn wgpuRenderBundleEncoderSetIndexBuffer(
   renderBundleEncoder : WGPURenderBundleEncoder,
   buffer : WGPUBuffer,
   format : WGPUIndexFormat,
   offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderSetLabel(
+declare pub fn wgpuRenderBundleEncoderSetLabel(
   renderBundleEncoder : WGPURenderBundleEncoder,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderSetPipeline(
+declare pub fn wgpuRenderBundleEncoderSetPipeline(
   renderBundleEncoder : WGPURenderBundleEncoder,
   pipeline : WGPURenderPipeline,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderSetPushConstants(
+declare pub fn wgpuRenderBundleEncoderSetPushConstants(
   encoder : WGPURenderBundleEncoder,
   stages : WGPUShaderStage,
   offset : UInt,
   sizeBytes : UInt,
   data : UnitPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleEncoderSetVertexBuffer(
+declare pub fn wgpuRenderBundleEncoderSetVertexBuffer(
   renderBundleEncoder : WGPURenderBundleEncoder,
   slot : UInt,
   buffer : WGPUBuffer,
   offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleRelease(renderBundle : WGPURenderBundle) -> Unit {
-  ...
-}
+declare pub fn wgpuRenderBundleRelease(renderBundle : WGPURenderBundle) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderBundleSetLabel(
+declare pub fn wgpuRenderBundleSetLabel(
   renderBundle : WGPURenderBundle,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderAddRef(
+declare pub fn wgpuRenderPassEncoderAddRef(
   renderPassEncoder : WGPURenderPassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderBeginOcclusionQuery(
+declare pub fn wgpuRenderPassEncoderBeginOcclusionQuery(
   renderPassEncoder : WGPURenderPassEncoder,
   queryIndex : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderBeginPipelineStatisticsQuery(
+declare pub fn wgpuRenderPassEncoderBeginPipelineStatisticsQuery(
   renderPassEncoder : WGPURenderPassEncoder,
   querySet : WGPUQuerySet,
   queryIndex : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderDraw(
+declare pub fn wgpuRenderPassEncoderDraw(
   renderPassEncoder : WGPURenderPassEncoder,
   vertexCount : UInt,
   instanceCount : UInt,
   firstVertex : UInt,
   firstInstance : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderDrawIndexed(
+declare pub fn wgpuRenderPassEncoderDrawIndexed(
   renderPassEncoder : WGPURenderPassEncoder,
   indexCount : UInt,
   instanceCount : UInt,
   firstIndex : UInt,
   baseVertex : Int,
   firstInstance : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderDrawIndexedIndirect(
+declare pub fn wgpuRenderPassEncoderDrawIndexedIndirect(
   renderPassEncoder : WGPURenderPassEncoder,
   indirectBuffer : WGPUBuffer,
   indirectOffset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderDrawIndirect(
+declare pub fn wgpuRenderPassEncoderDrawIndirect(
   renderPassEncoder : WGPURenderPassEncoder,
   indirectBuffer : WGPUBuffer,
   indirectOffset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderEnd(
+declare pub fn wgpuRenderPassEncoderEnd(
   renderPassEncoder : WGPURenderPassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderEndOcclusionQuery(
+declare pub fn wgpuRenderPassEncoderEndOcclusionQuery(
   renderPassEncoder : WGPURenderPassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderEndPipelineStatisticsQuery(
+declare pub fn wgpuRenderPassEncoderEndPipelineStatisticsQuery(
   renderPassEncoder : WGPURenderPassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderExecuteBundles(
+declare pub fn wgpuRenderPassEncoderExecuteBundles(
   renderPassEncoder : WGPURenderPassEncoder,
   bundleCount : UInt64,
   bundles : WGPURenderBundlePtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderInsertDebugMarker(
+declare pub fn wgpuRenderPassEncoderInsertDebugMarker(
   renderPassEncoder : WGPURenderPassEncoder,
   markerLabel : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirect(
+declare pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirect(
   encoder : WGPURenderPassEncoder,
   buffer : WGPUBuffer,
   offset : UInt64,
   count : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(
+declare pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(
   encoder : WGPURenderPassEncoder,
   buffer : WGPUBuffer,
   offset : UInt64,
   count_buffer : WGPUBuffer,
   count_buffer_offset : UInt64,
   max_count : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderMultiDrawIndirect(
+declare pub fn wgpuRenderPassEncoderMultiDrawIndirect(
   encoder : WGPURenderPassEncoder,
   buffer : WGPUBuffer,
   offset : UInt64,
   count : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderMultiDrawIndirectCount(
+declare pub fn wgpuRenderPassEncoderMultiDrawIndirectCount(
   encoder : WGPURenderPassEncoder,
   buffer : WGPUBuffer,
   offset : UInt64,
   count_buffer : WGPUBuffer,
   count_buffer_offset : UInt64,
   max_count : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderPopDebugGroup(
+declare pub fn wgpuRenderPassEncoderPopDebugGroup(
   renderPassEncoder : WGPURenderPassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderPushDebugGroup(
+declare pub fn wgpuRenderPassEncoderPushDebugGroup(
   renderPassEncoder : WGPURenderPassEncoder,
   groupLabel : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderRelease(
+declare pub fn wgpuRenderPassEncoderRelease(
   renderPassEncoder : WGPURenderPassEncoder,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetBindGroup(
+declare pub fn wgpuRenderPassEncoderSetBindGroup(
   renderPassEncoder : WGPURenderPassEncoder,
   groupIndex : UInt,
   group : WGPUBindGroup,
   dynamicOffsetCount : UInt64,
   dynamicOffsets : UIntPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetBlendConstant(
+declare pub fn wgpuRenderPassEncoderSetBlendConstant(
   renderPassEncoder : WGPURenderPassEncoder,
   color : WGPUColorPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetIndexBuffer(
+declare pub fn wgpuRenderPassEncoderSetIndexBuffer(
   renderPassEncoder : WGPURenderPassEncoder,
   buffer : WGPUBuffer,
   format : WGPUIndexFormat,
   offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetLabel(
+declare pub fn wgpuRenderPassEncoderSetLabel(
   renderPassEncoder : WGPURenderPassEncoder,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetPipeline(
+declare pub fn wgpuRenderPassEncoderSetPipeline(
   renderPassEncoder : WGPURenderPassEncoder,
   pipeline : WGPURenderPipeline,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetPushConstants(
+declare pub fn wgpuRenderPassEncoderSetPushConstants(
   encoder : WGPURenderPassEncoder,
   stages : WGPUShaderStage,
   offset : UInt,
   sizeBytes : UInt,
   data : UnitPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetScissorRect(
+declare pub fn wgpuRenderPassEncoderSetScissorRect(
   renderPassEncoder : WGPURenderPassEncoder,
   x : UInt,
   y : UInt,
   width : UInt,
   height : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetStencilReference(
+declare pub fn wgpuRenderPassEncoderSetStencilReference(
   renderPassEncoder : WGPURenderPassEncoder,
   reference : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetVertexBuffer(
+declare pub fn wgpuRenderPassEncoderSetVertexBuffer(
   renderPassEncoder : WGPURenderPassEncoder,
   slot : UInt,
   buffer : WGPUBuffer,
   offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderSetViewport(
+declare pub fn wgpuRenderPassEncoderSetViewport(
   renderPassEncoder : WGPURenderPassEncoder,
   x : Float,
   y : Float,
@@ -1905,302 +1590,224 @@ pub fn wgpuRenderPassEncoderSetViewport(
   height : Float,
   minDepth : Float,
   maxDepth : Float,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPassEncoderWriteTimestamp(
+declare pub fn wgpuRenderPassEncoderWriteTimestamp(
   renderPassEncoder : WGPURenderPassEncoder,
   querySet : WGPUQuerySet,
   queryIndex : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPipelineAddRef(renderPipeline : WGPURenderPipeline) -> Unit {
-  ...
-}
+declare pub fn wgpuRenderPipelineAddRef(
+  renderPipeline : WGPURenderPipeline,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPipelineGetBindGroupLayout(
+declare pub fn wgpuRenderPipelineGetBindGroupLayout(
   renderPipeline : WGPURenderPipeline,
   groupIndex : UInt,
-) -> WGPUBindGroupLayout {
-  ...
-}
+) -> WGPUBindGroupLayout
 
 ///|
 #declaration_only
-pub fn wgpuRenderPipelineRelease(renderPipeline : WGPURenderPipeline) -> Unit {
-  ...
-}
+declare pub fn wgpuRenderPipelineRelease(
+  renderPipeline : WGPURenderPipeline,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuRenderPipelineSetLabel(
+declare pub fn wgpuRenderPipelineSetLabel(
   renderPipeline : WGPURenderPipeline,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSamplerAddRef(sampler : WGPUSampler) -> Unit {
-  ...
-}
+declare pub fn wgpuSamplerAddRef(sampler : WGPUSampler) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSamplerRelease(sampler : WGPUSampler) -> Unit {
-  ...
-}
+declare pub fn wgpuSamplerRelease(sampler : WGPUSampler) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSamplerSetLabel(
+declare pub fn wgpuSamplerSetLabel(
   sampler : WGPUSampler,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSetLogCallback(
+declare pub fn wgpuSetLogCallback(
   callback : WGPULogCallback,
   userdata : UnitPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSetLogLevel(level : WGPULogLevel) -> Unit {
-  ...
-}
+declare pub fn wgpuSetLogLevel(level : WGPULogLevel) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuShaderModuleAddRef(shaderModule : WGPUShaderModule) -> Unit {
-  ...
-}
+declare pub fn wgpuShaderModuleAddRef(shaderModule : WGPUShaderModule) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuShaderModuleGetCompilationInfo(
+declare pub fn wgpuShaderModuleGetCompilationInfo(
   shaderModule : WGPUShaderModule,
   callbackInfo : WGPUCompilationInfoCallbackInfo,
-) -> WGPUFuture {
-  ...
-}
+) -> WGPUFuture
 
 ///|
 #declaration_only
-pub fn wgpuShaderModuleRelease(shaderModule : WGPUShaderModule) -> Unit {
-  ...
-}
+declare pub fn wgpuShaderModuleRelease(shaderModule : WGPUShaderModule) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuShaderModuleSetLabel(
+declare pub fn wgpuShaderModuleSetLabel(
   shaderModule : WGPUShaderModule,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSupportedFeaturesFreeMembers(
+declare pub fn wgpuSupportedFeaturesFreeMembers(
   supportedFeatures : WGPUSupportedFeatures,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSupportedWGSLLanguageFeaturesFreeMembers(
+declare pub fn wgpuSupportedWGSLLanguageFeaturesFreeMembers(
   supportedWGSLLanguageFeatures : WGPUSupportedWGSLLanguageFeatures,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSurfaceAddRef(surface : WGPUSurface) -> Unit {
-  ...
-}
+declare pub fn wgpuSurfaceAddRef(surface : WGPUSurface) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSurfaceCapabilitiesFreeMembers(
+declare pub fn wgpuSurfaceCapabilitiesFreeMembers(
   surfaceCapabilities : WGPUSurfaceCapabilities,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSurfaceConfigure(
+declare pub fn wgpuSurfaceConfigure(
   surface : WGPUSurface,
   config : WGPUSurfaceConfigurationPtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSurfaceGetCapabilities(
+declare pub fn wgpuSurfaceGetCapabilities(
   surface : WGPUSurface,
   adapter : WGPUAdapter,
   capabilities : WGPUSurfaceCapabilitiesPtr,
-) -> WGPUStatus {
-  ...
-}
+) -> WGPUStatus
 
 ///|
 #declaration_only
-pub fn wgpuSurfaceGetCurrentTexture(
+declare pub fn wgpuSurfaceGetCurrentTexture(
   surface : WGPUSurface,
   surfaceTexture : WGPUSurfaceTexturePtr,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSurfacePresent(surface : WGPUSurface) -> WGPUStatus {
-  ...
-}
+declare pub fn wgpuSurfacePresent(surface : WGPUSurface) -> WGPUStatus
 
 ///|
 #declaration_only
-pub fn wgpuSurfaceRelease(surface : WGPUSurface) -> Unit {
-  ...
-}
+declare pub fn wgpuSurfaceRelease(surface : WGPUSurface) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSurfaceSetLabel(
+declare pub fn wgpuSurfaceSetLabel(
   surface : WGPUSurface,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuSurfaceUnconfigure(surface : WGPUSurface) -> Unit {
-  ...
-}
+declare pub fn wgpuSurfaceUnconfigure(surface : WGPUSurface) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuTextureAddRef(texture : WGPUTexture) -> Unit {
-  ...
-}
+declare pub fn wgpuTextureAddRef(texture : WGPUTexture) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuTextureCreateView(
+declare pub fn wgpuTextureCreateView(
   texture : WGPUTexture,
   descriptor : WGPUTextureViewDescriptorPtr,
-) -> WGPUTextureView {
-  ...
-}
+) -> WGPUTextureView
 
 ///|
 #declaration_only
-pub fn wgpuTextureDestroy(texture : WGPUTexture) -> Unit {
-  ...
-}
+declare pub fn wgpuTextureDestroy(texture : WGPUTexture) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuTextureGetDepthOrArrayLayers(texture : WGPUTexture) -> UInt {
-  ...
-}
+declare pub fn wgpuTextureGetDepthOrArrayLayers(texture : WGPUTexture) -> UInt
 
 ///|
 #declaration_only
-pub fn wgpuTextureGetDimension(texture : WGPUTexture) -> WGPUTextureDimension {
-  ...
-}
+declare pub fn wgpuTextureGetDimension(
+  texture : WGPUTexture,
+) -> WGPUTextureDimension
 
 ///|
 #declaration_only
-pub fn wgpuTextureGetFormat(texture : WGPUTexture) -> WGPUTextureFormat {
-  ...
-}
+declare pub fn wgpuTextureGetFormat(texture : WGPUTexture) -> WGPUTextureFormat
 
 ///|
 #declaration_only
-pub fn wgpuTextureGetHeight(texture : WGPUTexture) -> UInt {
-  ...
-}
+declare pub fn wgpuTextureGetHeight(texture : WGPUTexture) -> UInt
 
 ///|
 #declaration_only
-pub fn wgpuTextureGetMipLevelCount(texture : WGPUTexture) -> UInt {
-  ...
-}
+declare pub fn wgpuTextureGetMipLevelCount(texture : WGPUTexture) -> UInt
 
 ///|
 #declaration_only
-pub fn wgpuTextureGetSampleCount(texture : WGPUTexture) -> UInt {
-  ...
-}
+declare pub fn wgpuTextureGetSampleCount(texture : WGPUTexture) -> UInt
 
 ///|
 #declaration_only
-pub fn wgpuTextureGetUsage(texture : WGPUTexture) -> WGPUTextureUsage {
-  ...
-}
+declare pub fn wgpuTextureGetUsage(texture : WGPUTexture) -> WGPUTextureUsage
 
 ///|
 #declaration_only
-pub fn wgpuTextureGetWidth(texture : WGPUTexture) -> UInt {
-  ...
-}
+declare pub fn wgpuTextureGetWidth(texture : WGPUTexture) -> UInt
 
 ///|
 #declaration_only
-pub fn wgpuTextureRelease(texture : WGPUTexture) -> Unit {
-  ...
-}
+declare pub fn wgpuTextureRelease(texture : WGPUTexture) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuTextureSetLabel(
+declare pub fn wgpuTextureSetLabel(
   texture : WGPUTexture,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuTextureViewAddRef(textureView : WGPUTextureView) -> Unit {
-  ...
-}
+declare pub fn wgpuTextureViewAddRef(textureView : WGPUTextureView) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuTextureViewRelease(textureView : WGPUTextureView) -> Unit {
-  ...
-}
+declare pub fn wgpuTextureViewRelease(textureView : WGPUTextureView) -> Unit
 
 ///|
 #declaration_only
-pub fn wgpuTextureViewSetLabel(
+declare pub fn wgpuTextureViewSetLabel(
   textureView : WGPUTextureView,
   label : WGPUStringView,
-) -> Unit {
-  ...
-}
+) -> Unit

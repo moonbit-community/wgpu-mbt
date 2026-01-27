@@ -116,905 +116,713 @@ pub type QuerySet
 
 ///|
 #declaration_only
-pub fn get_version() -> UInt {
-  ...
-}
+declare pub fn get_version() -> UInt
 
 ///|
 #declaration_only
-pub fn set_log_level(level : UInt) -> Unit {
-  ...
-}
+declare pub fn set_log_level(level : UInt) -> Unit
 
 ///|
 #declaration_only
-pub fn Instance::create() -> Instance {
-  ...
-}
+declare pub fn Instance::create() -> Instance
 
 ///|
 #declaration_only
-pub fn Instance::request_adapter_sync(self : Instance) -> Adapter {
-  ...
-}
+declare pub fn Instance::request_adapter_sync(self : Instance) -> Adapter
 
 ///|
 #declaration_only
-pub fn Instance::process_events(self : Instance) -> Unit {
-  ...
-}
+declare pub fn Instance::process_events(self : Instance) -> Unit
 
 ///|
 #declaration_only
-pub fn Instance::enumerate_adapters_count_metal(self : Instance) -> UInt64 {
-  ...
-}
+declare pub fn Instance::enumerate_adapters_count_metal(
+  self : Instance,
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn Instance::wgsl_language_features_count_u64(self : Instance) -> UInt64 {
-  ...
-}
+declare pub fn Instance::wgsl_language_features_count_u64(
+  self : Instance,
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn Instance::generate_report(self : Instance) -> GlobalReport {
-  ...
-}
+declare pub fn Instance::generate_report(self : Instance) -> GlobalReport
 
 ///|
 #declaration_only
-pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
-  ...
-}
+declare pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface
 
 ///|
 #declaration_only
-pub fn Instance::release(self : Instance) -> Unit {
-  ...
-}
+declare pub fn Instance::release(self : Instance) -> Unit
 
 ///|
 #declaration_only
-pub fn Surface::configure_default(
+declare pub fn Surface::configure_default(
   self : Surface,
   adapter : Adapter,
   device : Device,
   width : UInt,
   height : UInt,
   usage : UInt64,
-) -> UInt {
-  ...
-}
+) -> UInt
 
 ///|
 #declaration_only
-pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture {
-  ...
-}
+declare pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture
 
 ///|
 #declaration_only
-pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt {
-  ...
-}
+declare pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt
 
 ///|
 #declaration_only
-pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture {
-  ...
-}
+declare pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture
 
 ///|
 #declaration_only
-pub fn GlobalReport::surfaces_num_allocated(self : GlobalReport) -> UInt64 {
-  ...
-}
+declare pub fn GlobalReport::surfaces_num_allocated(
+  self : GlobalReport,
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn GlobalReport::surfaces_element_size(self : GlobalReport) -> UInt64 {
-  ...
-}
+declare pub fn GlobalReport::surfaces_element_size(
+  self : GlobalReport,
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn GlobalReport::hub_devices_num_allocated(self : GlobalReport) -> UInt64 {
-  ...
-}
+declare pub fn GlobalReport::hub_devices_num_allocated(
+  self : GlobalReport,
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn GlobalReport::hub_devices_element_size(self : GlobalReport) -> UInt64 {
-  ...
-}
+declare pub fn GlobalReport::hub_devices_element_size(
+  self : GlobalReport,
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn GlobalReport::release(self : GlobalReport) -> Unit {
-  ...
-}
+declare pub fn GlobalReport::release(self : GlobalReport) -> Unit
 
 ///|
 #declaration_only
-pub fn Surface::present(self : Surface) -> UInt {
-  ...
-}
+declare pub fn Surface::present(self : Surface) -> UInt
 
 ///|
 #declaration_only
-pub fn Surface::unconfigure(self : Surface) -> Unit {
-  ...
-}
+declare pub fn Surface::unconfigure(self : Surface) -> Unit
 
 ///|
 #declaration_only
-pub fn Surface::capabilities_formats_count_u64(
+declare pub fn Surface::capabilities_formats_count_u64(
   self : Surface,
   adapter : Adapter,
-) -> UInt64 {
-  ...
-}
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn Surface::capabilities_present_modes_count_u64(
+declare pub fn Surface::capabilities_present_modes_count_u64(
   self : Surface,
   adapter : Adapter,
-) -> UInt64 {
-  ...
-}
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn Surface::capabilities_alpha_modes_count_u64(
+declare pub fn Surface::capabilities_alpha_modes_count_u64(
   self : Surface,
   adapter : Adapter,
-) -> UInt64 {
-  ...
-}
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn Surface::capabilities_format_u32_at(
+declare pub fn Surface::capabilities_format_u32_at(
   self : Surface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt {
-  ...
-}
+) -> UInt
 
 ///|
 #declaration_only
-pub fn Surface::capabilities_present_mode_u32_at(
+declare pub fn Surface::capabilities_present_mode_u32_at(
   self : Surface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt {
-  ...
-}
+) -> UInt
 
 ///|
 #declaration_only
-pub fn Surface::capabilities_alpha_mode_u32_at(
+declare pub fn Surface::capabilities_alpha_mode_u32_at(
   self : Surface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt {
-  ...
-}
+) -> UInt
 
 ///|
 #declaration_only
-pub fn Adapter::request_device_sync(
+declare pub fn Adapter::request_device_sync(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  ...
-}
+) -> Device
 
 ///|
 #declaration_only
-pub fn Adapter::request_device_sync_timestamp_query(
+declare pub fn Adapter::request_device_sync_timestamp_query(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  ...
-}
+) -> Device
 
 ///|
 #declaration_only
-pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(
+declare pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  ...
-}
+) -> Device
 
 ///|
 #declaration_only
-pub fn Adapter::request_device_sync_timestamp_query_inside_passes(
+declare pub fn Adapter::request_device_sync_timestamp_query_inside_passes(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  ...
-}
+) -> Device
 
 ///|
 #declaration_only
-pub fn Adapter::request_device_sync_push_constants(
+declare pub fn Adapter::request_device_sync_push_constants(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  ...
-}
+) -> Device
 
 ///|
 #declaration_only
-pub fn Adapter::request_device_sync_pipeline_statistics_query(
+declare pub fn Adapter::request_device_sync_pipeline_statistics_query(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  ...
-}
+) -> Device
 
 ///|
 #declaration_only
-pub fn Adapter::request_device_sync_spirv_shader_passthrough(
+declare pub fn Adapter::request_device_sync_spirv_shader_passthrough(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  ...
-}
+) -> Device
 
 ///|
 #declaration_only
-pub fn Adapter::release(self : Adapter) -> Unit {
-  ...
-}
+declare pub fn Adapter::release(self : Adapter) -> Unit
 
 ///|
 #declaration_only
-pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool {
-  ...
-}
+declare pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool
 
 ///|
 #declaration_only
-pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(
+declare pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(
   self : Adapter,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn Adapter::has_feature_native_timestamp_query_inside_passes(
+declare pub fn Adapter::has_feature_native_timestamp_query_inside_passes(
   self : Adapter,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn Adapter::has_feature_native_push_constants(self : Adapter) -> Bool {
-  ...
-}
-
-///|
-#declaration_only
-pub fn Adapter::has_feature_native_pipeline_statistics_query(
+declare pub fn Adapter::has_feature_native_push_constants(
   self : Adapter,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn Adapter::has_feature_native_spirv_shader_passthrough(
+declare pub fn Adapter::has_feature_native_pipeline_statistics_query(
   self : Adapter,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn Adapter::info_backend_type_u32(self : Adapter) -> UInt {
-  ...
-}
+declare pub fn Adapter::has_feature_native_spirv_shader_passthrough(
+  self : Adapter,
+) -> Bool
 
 ///|
 #declaration_only
-pub fn Adapter::info_adapter_type_u32(self : Adapter) -> UInt {
-  ...
-}
+declare pub fn Adapter::info_backend_type_u32(self : Adapter) -> UInt
 
 ///|
 #declaration_only
-pub fn Adapter::info_vendor_id_u32(self : Adapter) -> UInt {
-  ...
-}
+declare pub fn Adapter::info_adapter_type_u32(self : Adapter) -> UInt
 
 ///|
 #declaration_only
-pub fn Adapter::info_device_id_u32(self : Adapter) -> UInt {
-  ...
-}
+declare pub fn Adapter::info_vendor_id_u32(self : Adapter) -> UInt
 
 ///|
 #declaration_only
-pub fn Adapter::limits_max_texture_dimension_2d_u32(self : Adapter) -> UInt {
-  ...
-}
+declare pub fn Adapter::info_device_id_u32(self : Adapter) -> UInt
 
 ///|
 #declaration_only
-pub fn Adapter::limits_max_bind_groups_u32(self : Adapter) -> UInt {
-  ...
-}
+declare pub fn Adapter::limits_max_texture_dimension_2d_u32(
+  self : Adapter,
+) -> UInt
 
 ///|
 #declaration_only
-pub fn Adapter::limits_max_buffer_size_u64(self : Adapter) -> UInt64 {
-  ...
-}
+declare pub fn Adapter::limits_max_bind_groups_u32(self : Adapter) -> UInt
 
 ///|
 #declaration_only
-pub fn Adapter::limits_max_compute_workgroup_size_x_u32(self : Adapter) -> UInt {
-  ...
-}
+declare pub fn Adapter::limits_max_buffer_size_u64(self : Adapter) -> UInt64
 
 ///|
 #declaration_only
-pub fn Adapter::supported_features_count_u64(self : Adapter) -> UInt64 {
-  ...
-}
+declare pub fn Adapter::limits_max_compute_workgroup_size_x_u32(
+  self : Adapter,
+) -> UInt
 
 ///|
 #declaration_only
-pub fn Adapter::supported_features_contains_u32(
+declare pub fn Adapter::supported_features_count_u64(self : Adapter) -> UInt64
+
+///|
+#declaration_only
+declare pub fn Adapter::supported_features_contains_u32(
   self : Adapter,
   feature_u32 : UInt,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn Adapter::supported_feature_u32_at(
+declare pub fn Adapter::supported_feature_u32_at(
   self : Adapter,
   index : UInt64,
-) -> UInt {
-  ...
-}
+) -> UInt
 
 ///|
 #declaration_only
-pub fn Device::queue(self : Device) -> Queue {
-  ...
-}
+declare pub fn Device::queue(self : Device) -> Queue
 
 ///|
 #declaration_only
-pub fn Device::create_command_encoder(self : Device) -> CommandEncoder {
-  ...
-}
+declare pub fn Device::create_command_encoder(self : Device) -> CommandEncoder
 
 ///|
 #declaration_only
-pub fn Device::push_error_scope(self : Device, filter_u32 : UInt) -> Unit {
-  ...
-}
+declare pub fn Device::push_error_scope(
+  self : Device,
+  filter_u32 : UInt,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn Device::pop_error_scope_sync(self : Device, instance : Instance) -> UInt {
-  ...
-}
+declare pub fn Device::pop_error_scope_sync(
+  self : Device,
+  instance : Instance,
+) -> UInt
 
 ///|
 #declaration_only
-pub fn Device::supported_features_count_u64(self : Device) -> UInt64 {
-  ...
-}
+declare pub fn Device::supported_features_count_u64(self : Device) -> UInt64
 
 ///|
 #declaration_only
-pub fn Device::supported_features_contains_u32(
+declare pub fn Device::supported_features_contains_u32(
   self : Device,
   feature_u32 : UInt,
-) -> Bool {
-  ...
-}
+) -> Bool
 
 ///|
 #declaration_only
-pub fn Device::supported_feature_u32_at(self : Device, index : UInt64) -> UInt {
-  ...
-}
+declare pub fn Device::supported_feature_u32_at(
+  self : Device,
+  index : UInt64,
+) -> UInt
 
 ///|
 #declaration_only
-pub fn Device::create_buffer(
+declare pub fn Device::create_buffer(
   self : Device,
   size~ : UInt64,
   usage~ : UInt64,
   mapped_at_creation? : Bool = false,
-) -> Buffer {
-  ...
-}
+) -> Buffer
 
 ///|
 #declaration_only
-pub fn Device::create_buffer_init(
+declare pub fn Device::create_buffer_init(
   self : Device,
   usage~ : UInt64,
   data : Bytes,
-) -> Buffer {
-  ...
-}
+) -> Buffer
 
 ///|
 #declaration_only
-pub fn Device::create_query_set_occlusion(
+declare pub fn Device::create_query_set_occlusion(
   self : Device,
   count : UInt,
-) -> QuerySet {
-  ...
-}
+) -> QuerySet
 
 ///|
 #declaration_only
-pub fn Device::create_query_set_timestamp(
+declare pub fn Device::create_query_set_timestamp(
   self : Device,
   count : UInt,
-) -> QuerySet {
-  ...
-}
+) -> QuerySet
 
 ///|
 #declaration_only
-pub fn Device::create_query_set_pipeline_statistics(
+declare pub fn Device::create_query_set_pipeline_statistics(
   self : Device,
   count : UInt,
   statistic_name : UInt,
-) -> QuerySet {
-  ...
-}
+) -> QuerySet
 
 ///|
 #declaration_only
-pub fn Device::create_shader_module_wgsl(
+declare pub fn Device::create_shader_module_wgsl(
   self : Device,
   code : String,
-) -> ShaderModule {
-  ...
-}
+) -> ShaderModule
 
 ///|
 #declaration_only
-pub fn Device::create_shader_module_spirv(
+declare pub fn Device::create_shader_module_spirv(
   self : Device,
   spirv_le_bytes : Bytes,
-) -> ShaderModule {
-  ...
-}
+) -> ShaderModule
 
 ///|
 #declaration_only
-pub fn Device::create_compute_pipeline(
+declare pub fn Device::create_compute_pipeline(
   self : Device,
   shader_module : ShaderModule,
-) -> ComputePipeline {
-  ...
-}
+) -> ComputePipeline
 
 ///|
 #declaration_only
-pub fn Device::create_compute_pipeline_with_layout(
+declare pub fn Device::create_compute_pipeline_with_layout(
   self : Device,
   layout : PipelineLayout,
   shader_module : ShaderModule,
-) -> ComputePipeline {
-  ...
-}
+) -> ComputePipeline
 
 ///|
 #declaration_only
-pub fn Device::create_texture_rgba8_2d(
+declare pub fn Device::create_texture_rgba8_2d(
   self : Device,
   width : UInt,
   height : UInt,
-) -> Texture {
-  ...
-}
+) -> Texture
 
 ///|
 #declaration_only
-pub fn Device::create_texture_depth24plus_2d(
+declare pub fn Device::create_texture_depth24plus_2d(
   self : Device,
   width : UInt,
   height : UInt,
-) -> Texture {
-  ...
-}
+) -> Texture
 
 ///|
 #declaration_only
-pub fn Device::create_texture_rgba8_2d_with_usage(
+declare pub fn Device::create_texture_rgba8_2d_with_usage(
   self : Device,
   width : UInt,
   height : UInt,
   usage : UInt64,
-) -> Texture {
-  ...
-}
+) -> Texture
 
 ///|
 #declaration_only
-pub fn Device::create_texture_rgba8_2d_array(
+declare pub fn Device::create_texture_rgba8_2d_array(
   self : Device,
   width : UInt,
   height : UInt,
   layers : UInt,
   mip_level_count : UInt,
-) -> Texture {
-  ...
-}
+) -> Texture
 
 ///|
 #declaration_only
-pub fn Device::create_texture_rgba8_2d_array_with_usage(
+declare pub fn Device::create_texture_rgba8_2d_array_with_usage(
   self : Device,
   width : UInt,
   height : UInt,
   layers : UInt,
   mip_level_count : UInt,
   usage : UInt64,
-) -> Texture {
-  ...
-}
+) -> Texture
 
 ///|
 #declaration_only
-pub fn Texture::create_view(self : Texture) -> TextureView {
-  ...
-}
+declare pub fn Texture::create_view(self : Texture) -> TextureView
 
 ///|
 #declaration_only
-pub fn Texture::create_view_2d(
+declare pub fn Texture::create_view_2d(
   self : Texture,
   base_mip_level : UInt,
   mip_level_count : UInt,
-) -> TextureView {
-  ...
-}
+) -> TextureView
 
 ///|
 #declaration_only
-pub fn Texture::create_view_2d_array(
+declare pub fn Texture::create_view_2d_array(
   self : Texture,
   base_array_layer : UInt,
   array_layer_count : UInt,
   base_mip_level : UInt,
   mip_level_count : UInt,
-) -> TextureView {
-  ...
-}
+) -> TextureView
 
 ///|
 #declaration_only
-pub fn Device::create_sampler_nearest_clamp(self : Device) -> Sampler {
-  ...
-}
+declare pub fn Device::create_sampler_nearest_clamp(self : Device) -> Sampler
 
 ///|
 #declaration_only
-pub fn Device::create_sampler_linear_clamp(self : Device) -> Sampler {
-  ...
-}
+declare pub fn Device::create_sampler_linear_clamp(self : Device) -> Sampler
 
 ///|
 #declaration_only
-pub fn Device::create_sampler_nearest_repeat(self : Device) -> Sampler {
-  ...
-}
+declare pub fn Device::create_sampler_nearest_repeat(self : Device) -> Sampler
 
 ///|
 #declaration_only
-pub fn Device::create_sampler_linear_repeat(self : Device) -> Sampler {
-  ...
-}
+declare pub fn Device::create_sampler_linear_repeat(self : Device) -> Sampler
 
 ///|
 #declaration_only
-pub fn Device::create_sampler_nearest_mirror_repeat(self : Device) -> Sampler {
-  ...
-}
+declare pub fn Device::create_sampler_nearest_mirror_repeat(
+  self : Device,
+) -> Sampler
 
 ///|
 #declaration_only
-pub fn Device::create_sampler_linear_mirror_repeat(self : Device) -> Sampler {
-  ...
-}
+declare pub fn Device::create_sampler_linear_mirror_repeat(
+  self : Device,
+) -> Sampler
 
 ///|
 #declaration_only
-pub fn Device::create_render_pipeline_rgba8(
+declare pub fn Device::create_render_pipeline_rgba8(
   self : Device,
   shader_module : ShaderModule,
-) -> RenderPipeline {
-  ...
-}
+) -> RenderPipeline
 
 ///|
 #declaration_only
-pub fn Device::create_render_pipeline_color_format(
+declare pub fn Device::create_render_pipeline_color_format(
   self : Device,
   shader_module : ShaderModule,
   format : UInt,
-) -> RenderPipeline {
-  ...
-}
+) -> RenderPipeline
 
 ///|
 #declaration_only
-pub fn Device::create_render_pipeline_rgba8_mrt2(
+declare pub fn Device::create_render_pipeline_rgba8_mrt2(
   self : Device,
   shader_module : ShaderModule,
-) -> RenderPipeline {
-  ...
-}
+) -> RenderPipeline
 
 ///|
 #declaration_only
-pub fn Device::create_render_pipeline_rgba8_alpha_blend(
+declare pub fn Device::create_render_pipeline_rgba8_alpha_blend(
   self : Device,
   shader_module : ShaderModule,
-) -> RenderPipeline {
-  ...
-}
+) -> RenderPipeline
 
 ///|
 #declaration_only
-pub fn Device::create_render_pipeline_rgba8_depth(
+declare pub fn Device::create_render_pipeline_rgba8_depth(
   self : Device,
   shader_module : ShaderModule,
-) -> RenderPipeline {
-  ...
-}
+) -> RenderPipeline
 
 ///|
 #declaration_only
-pub fn Device::create_render_bundle_encoder_rgba8(
+declare pub fn Device::create_render_bundle_encoder_rgba8(
   self : Device,
-) -> RenderBundleEncoder {
-  ...
-}
+) -> RenderBundleEncoder
 
 ///|
 #declaration_only
-pub fn Device::create_render_pipeline_rgba8_with_layout(
+declare pub fn Device::create_render_pipeline_rgba8_with_layout(
   self : Device,
   layout : PipelineLayout,
   shader_module : ShaderModule,
-) -> RenderPipeline {
-  ...
-}
+) -> RenderPipeline
 
 ///|
 #declaration_only
-pub fn Device::create_render_pipeline_rgba8_pos2(
+declare pub fn Device::create_render_pipeline_rgba8_pos2(
   self : Device,
   shader_module : ShaderModule,
-) -> RenderPipeline {
-  ...
-}
+) -> RenderPipeline
 
 ///|
 #declaration_only
-pub fn Device::create_render_pipeline_rgba8_pos2_with_layout(
+declare pub fn Device::create_render_pipeline_rgba8_pos2_with_layout(
   self : Device,
   layout : PipelineLayout,
   shader_module : ShaderModule,
-) -> RenderPipeline {
-  ...
-}
+) -> RenderPipeline
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_layout_uniform_buffer(
+declare pub fn Device::create_bind_group_layout_uniform_buffer(
   self : Device,
-) -> BindGroupLayout {
-  ...
-}
+) -> BindGroupLayout
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_layout_uniform_buffer_dynamic(
+declare pub fn Device::create_bind_group_layout_uniform_buffer_dynamic(
   self : Device,
-) -> BindGroupLayout {
-  ...
-}
+) -> BindGroupLayout
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_uniform_buffer(
+declare pub fn Device::create_bind_group_uniform_buffer(
   self : Device,
   bind_group_layout : BindGroupLayout,
   buffer : Buffer,
-) -> BindGroup {
-  ...
-}
+) -> BindGroup
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_uniform_buffer_16(
+declare pub fn Device::create_bind_group_uniform_buffer_16(
   self : Device,
   bind_group_layout : BindGroupLayout,
   buffer : Buffer,
-) -> BindGroup {
-  ...
-}
+) -> BindGroup
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_layout_storage_buffer(
+declare pub fn Device::create_bind_group_layout_storage_buffer(
   self : Device,
-) -> BindGroupLayout {
-  ...
-}
+) -> BindGroupLayout
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_layout_storage_texture_rgba8_writeonly(
+declare pub fn Device::create_bind_group_layout_storage_texture_rgba8_writeonly(
   self : Device,
-) -> BindGroupLayout {
-  ...
-}
+) -> BindGroupLayout
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_storage_buffer(
+declare pub fn Device::create_bind_group_storage_buffer(
   self : Device,
   bind_group_layout : BindGroupLayout,
   buffer : Buffer,
-) -> BindGroup {
-  ...
-}
+) -> BindGroup
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_storage_texture_2d(
+declare pub fn Device::create_bind_group_storage_texture_2d(
   self : Device,
   bind_group_layout : BindGroupLayout,
   view : TextureView,
-) -> BindGroup {
-  ...
-}
+) -> BindGroup
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_layout_sampler_texture_2d(
+declare pub fn Device::create_bind_group_layout_sampler_texture_2d(
   self : Device,
-) -> BindGroupLayout {
-  ...
-}
+) -> BindGroupLayout
 
 ///|
 #declaration_only
-pub fn Device::create_bind_group_sampler_texture_2d(
+declare pub fn Device::create_bind_group_sampler_texture_2d(
   self : Device,
   bind_group_layout : BindGroupLayout,
   sampler : Sampler,
   view : TextureView,
-) -> BindGroup {
-  ...
-}
+) -> BindGroup
 
 ///|
 #declaration_only
-pub fn Device::create_pipeline_layout_1(
+declare pub fn Device::create_pipeline_layout_1(
   self : Device,
   bind_group_layout : BindGroupLayout,
-) -> PipelineLayout {
-  ...
-}
+) -> PipelineLayout
 
 ///|
 #declaration_only
-pub fn Device::create_pipeline_layout_2(
+declare pub fn Device::create_pipeline_layout_2(
   self : Device,
   bind_group_layout0 : BindGroupLayout,
   bind_group_layout1 : BindGroupLayout,
-) -> PipelineLayout {
-  ...
-}
+) -> PipelineLayout
 
 ///|
 #declaration_only
-pub fn Device::create_pipeline_layout_push_constants(
+declare pub fn Device::create_pipeline_layout_push_constants(
   self : Device,
   stages : UInt64,
   start : UInt,
   end : UInt,
-) -> PipelineLayout {
-  ...
-}
+) -> PipelineLayout
 
 ///|
 #declaration_only
-pub fn Device::release(self : Device) -> Unit {
-  ...
-}
+declare pub fn Device::release(self : Device) -> Unit
 
 ///|
 #declaration_only
-pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool {
-  ...
-}
+declare pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool
 
 ///|
 #declaration_only
-pub fn Queue::submit_one(self : Queue, cmd : CommandBuffer) -> Unit {
-  ...
-}
+declare pub fn Queue::submit_one(self : Queue, cmd : CommandBuffer) -> Unit
 
 ///|
 #declaration_only
-pub fn Queue::submit_one_for_index(self : Queue, cmd : CommandBuffer) -> UInt64 {
-  ...
-}
+declare pub fn Queue::submit_one_for_index(
+  self : Queue,
+  cmd : CommandBuffer,
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn Queue::submit(self : Queue, cmds : Array[CommandBuffer]) -> Unit {
-  ...
-}
+declare pub fn Queue::submit(self : Queue, cmds : Array[CommandBuffer]) -> Unit
 
 ///|
 #declaration_only
-pub fn Queue::submit_for_index(
+declare pub fn Queue::submit_for_index(
   self : Queue,
   cmds : Array[CommandBuffer],
-) -> UInt64 {
-  ...
-}
+) -> UInt64
 
 ///|
 #declaration_only
-pub fn Queue::timestamp_period(self : Queue) -> Float {
-  ...
-}
+declare pub fn Queue::timestamp_period(self : Queue) -> Float
 
 ///|
 #declaration_only
-pub fn Queue::write_buffer(
+declare pub fn Queue::write_buffer(
   self : Queue,
   buffer : Buffer,
   buffer_offset : UInt64,
   data : Bytes,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn Queue::write_texture_rgba8_2d(
+declare pub fn Queue::write_texture_rgba8_2d(
   self : Queue,
   texture : Texture,
   width : UInt,
   height : UInt,
   data : Bytes,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn Queue::write_texture_rgba8_2d_mip_layer(
+declare pub fn Queue::write_texture_rgba8_2d_mip_layer(
   self : Queue,
   texture : Texture,
   mip_level : UInt,
@@ -1022,141 +830,116 @@ pub fn Queue::write_texture_rgba8_2d_mip_layer(
   width : UInt,
   height : UInt,
   data : Bytes,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn Queue::release(self : Queue) -> Unit {
-  ...
-}
+declare pub fn Queue::release(self : Queue) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::begin_compute_pass(self : CommandEncoder) -> ComputePass {
-  ...
-}
+declare pub fn CommandEncoder::begin_compute_pass(
+  self : CommandEncoder,
+) -> ComputePass
 
 ///|
 #declaration_only
-pub fn CommandEncoder::set_label(self : CommandEncoder, label : String) -> Unit {
-  ...
-}
-
-///|
-#declaration_only
-pub fn CommandEncoder::insert_debug_marker(
+declare pub fn CommandEncoder::set_label(
   self : CommandEncoder,
   label : String,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::push_debug_group(
+declare pub fn CommandEncoder::insert_debug_marker(
   self : CommandEncoder,
   label : String,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::pop_debug_group(self : CommandEncoder) -> Unit {
-  ...
-}
+declare pub fn CommandEncoder::push_debug_group(
+  self : CommandEncoder,
+  label : String,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::begin_render_pass_color(
+declare pub fn CommandEncoder::pop_debug_group(self : CommandEncoder) -> Unit
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::begin_render_pass_color(
   self : CommandEncoder,
   view : TextureView,
-) -> RenderPass {
-  ...
-}
+) -> RenderPass
 
 ///|
 #declaration_only
-pub fn CommandEncoder::begin_render_pass_color2(
+declare pub fn CommandEncoder::begin_render_pass_color2(
   self : CommandEncoder,
   view0 : TextureView,
   view1 : TextureView,
-) -> RenderPass {
-  ...
-}
+) -> RenderPass
 
 ///|
 #declaration_only
-pub fn CommandEncoder::begin_render_pass_color_occlusion(
+declare pub fn CommandEncoder::begin_render_pass_color_occlusion(
   self : CommandEncoder,
   view : TextureView,
   query_set : QuerySet,
-) -> RenderPass {
-  ...
-}
+) -> RenderPass
 
 ///|
 #declaration_only
-pub fn CommandEncoder::begin_render_pass_color_load(
+declare pub fn CommandEncoder::begin_render_pass_color_load(
   self : CommandEncoder,
   view : TextureView,
-) -> RenderPass {
-  ...
-}
+) -> RenderPass
 
 ///|
 #declaration_only
-pub fn CommandEncoder::begin_render_pass_color_clear(
+declare pub fn CommandEncoder::begin_render_pass_color_clear(
   self : CommandEncoder,
   view : TextureView,
   r : Float,
   g : Float,
   b : Float,
   a : Float,
-) -> RenderPass {
-  ...
-}
+) -> RenderPass
 
 ///|
 #declaration_only
-pub fn CommandEncoder::begin_render_pass_color_depth(
+declare pub fn CommandEncoder::begin_render_pass_color_depth(
   self : CommandEncoder,
   color_view : TextureView,
   depth_view : TextureView,
-) -> RenderPass {
-  ...
-}
+) -> RenderPass
 
 ///|
 #declaration_only
-pub fn CommandEncoder::copy_buffer_to_buffer(
+declare pub fn CommandEncoder::copy_buffer_to_buffer(
   self : CommandEncoder,
   source : Buffer,
   source_offset : UInt64,
   destination : Buffer,
   destination_offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::copy_texture_to_buffer_rgba8(
+declare pub fn CommandEncoder::copy_texture_to_buffer_rgba8(
   self : CommandEncoder,
   texture : Texture,
   buffer : Buffer,
   width : UInt,
   height : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(
+declare pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(
   self : CommandEncoder,
   texture : Texture,
   mip_level : UInt,
@@ -1164,25 +947,21 @@ pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(
   buffer : Buffer,
   width : UInt,
   height : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::copy_buffer_to_texture_rgba8(
+declare pub fn CommandEncoder::copy_buffer_to_texture_rgba8(
   self : CommandEncoder,
   buffer : Buffer,
   texture : Texture,
   width : UInt,
   height : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(
+declare pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(
   self : CommandEncoder,
   buffer : Buffer,
   texture : Texture,
@@ -1190,25 +969,21 @@ pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(
   array_layer : UInt,
   width : UInt,
   height : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::copy_texture_to_texture_rgba8(
+declare pub fn CommandEncoder::copy_texture_to_texture_rgba8(
   self : CommandEncoder,
   src : Texture,
   dst : Texture,
   width : UInt,
   height : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(
+declare pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(
   self : CommandEncoder,
   src : Texture,
   src_mip_level : UInt,
@@ -1218,276 +993,221 @@ pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(
   dst_array_layer : UInt,
   width : UInt,
   height : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::resolve_query_set(
+declare pub fn CommandEncoder::resolve_query_set(
   self : CommandEncoder,
   query_set : QuerySet,
   first_query : UInt,
   query_count : UInt,
   destination : Buffer,
   destination_offset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::write_timestamp(
+declare pub fn CommandEncoder::write_timestamp(
   self : CommandEncoder,
   query_set : QuerySet,
   query_index : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::finish(self : CommandEncoder) -> CommandBuffer {
-  ...
-}
+declare pub fn CommandEncoder::finish(self : CommandEncoder) -> CommandBuffer
 
 ///|
 #declaration_only
-pub fn CommandEncoder::clear_buffer(
+declare pub fn CommandEncoder::clear_buffer(
   self : CommandEncoder,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandEncoder::release(self : CommandEncoder) -> Unit {
-  ...
-}
+declare pub fn CommandEncoder::release(self : CommandEncoder) -> Unit
 
 ///|
 #declaration_only
-pub fn CommandBuffer::release(self : CommandBuffer) -> Unit {
-  ...
-}
+declare pub fn CommandBuffer::release(self : CommandBuffer) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::set_pipeline(
+declare pub fn ComputePass::set_pipeline(
   self : ComputePass,
   pipeline : ComputePipeline,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::set_push_constants(
+declare pub fn ComputePass::set_push_constants(
   self : ComputePass,
   offset : UInt,
   data : Bytes,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::set_bind_group0(
+declare pub fn ComputePass::set_bind_group0(
   self : ComputePass,
   group : BindGroup,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::set_bind_group(
+declare pub fn ComputePass::set_bind_group(
   self : ComputePass,
   index : UInt,
   group : BindGroup,
   dynamic_offsets : Array[UInt],
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::dispatch_workgroups(
+declare pub fn ComputePass::dispatch_workgroups(
   self : ComputePass,
   x : UInt,
   y : UInt,
   z : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::dispatch_workgroups_indirect(
+declare pub fn ComputePass::dispatch_workgroups_indirect(
   self : ComputePass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::write_timestamp(
+declare pub fn ComputePass::write_timestamp(
   self : ComputePass,
   query_set : QuerySet,
   query_index : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::begin_pipeline_statistics_query(
+declare pub fn ComputePass::begin_pipeline_statistics_query(
   self : ComputePass,
   query_set : QuerySet,
   query_index : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::end_pipeline_statistics_query(self : ComputePass) -> Unit {
-  ...
-}
+declare pub fn ComputePass::end_pipeline_statistics_query(
+  self : ComputePass,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::end(self : ComputePass) -> Unit {
-  ...
-}
+declare pub fn ComputePass::end(self : ComputePass) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::release(self : ComputePass) -> Unit {
-  ...
-}
+declare pub fn ComputePass::release(self : ComputePass) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::set_label(self : ComputePass, label : String) -> Unit {
-  ...
-}
-
-///|
-#declaration_only
-pub fn ComputePass::insert_debug_marker(
+declare pub fn ComputePass::set_label(
   self : ComputePass,
   label : String,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::push_debug_group(
+declare pub fn ComputePass::insert_debug_marker(
   self : ComputePass,
   label : String,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePass::pop_debug_group(self : ComputePass) -> Unit {
-  ...
-}
+declare pub fn ComputePass::push_debug_group(
+  self : ComputePass,
+  label : String,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_pipeline(
+declare pub fn ComputePass::pop_debug_group(self : ComputePass) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPass::set_pipeline(
   self : RenderPass,
   pipeline : RenderPipeline,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_push_constants(
+declare pub fn RenderPass::set_push_constants(
   self : RenderPass,
   stages : UInt64,
   offset : UInt,
   data : Bytes,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::execute_bundles(
+declare pub fn RenderPass::execute_bundles(
   self : RenderPass,
   bundles : Array[RenderBundle],
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_bind_group0(
+declare pub fn RenderPass::set_bind_group0(
   self : RenderPass,
   group : BindGroup,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_bind_group(
+declare pub fn RenderPass::set_bind_group(
   self : RenderPass,
   index : UInt,
   group : BindGroup,
   dynamic_offsets : Array[UInt],
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_vertex_buffer(
+declare pub fn RenderPass::set_vertex_buffer(
   self : RenderPass,
   slot : UInt,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_index_buffer_u16(
+declare pub fn RenderPass::set_index_buffer_u16(
   self : RenderPass,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_index_buffer_u32(
+declare pub fn RenderPass::set_index_buffer_u32(
   self : RenderPass,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_viewport(
+declare pub fn RenderPass::set_viewport(
   self : RenderPass,
   x : Float,
   y : Float,
@@ -1495,397 +1215,306 @@ pub fn RenderPass::set_viewport(
   height : Float,
   min_depth : Float,
   max_depth : Float,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_scissor_rect(
+declare pub fn RenderPass::set_scissor_rect(
   self : RenderPass,
   x : UInt,
   y : UInt,
   width : UInt,
   height : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::draw(
+declare pub fn RenderPass::draw(
   self : RenderPass,
   vertex_count : UInt,
   instance_count : UInt,
   first_vertex : UInt,
   first_instance : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::draw_indexed(
+declare pub fn RenderPass::draw_indexed(
   self : RenderPass,
   index_count : UInt,
   instance_count : UInt,
   first_index : UInt,
   base_vertex : Int,
   first_instance : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::draw_indirect(
+declare pub fn RenderPass::draw_indirect(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::draw_indexed_indirect(
+declare pub fn RenderPass::draw_indexed_indirect(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::multi_draw_indirect(
+declare pub fn RenderPass::multi_draw_indirect(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
   count : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::multi_draw_indexed_indirect(
+declare pub fn RenderPass::multi_draw_indexed_indirect(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
   count : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::multi_draw_indirect_count(
+declare pub fn RenderPass::multi_draw_indirect_count(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
   max_count : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::multi_draw_indexed_indirect_count(
+declare pub fn RenderPass::multi_draw_indexed_indirect_count(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
   max_count : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::begin_occlusion_query(
+declare pub fn RenderPass::begin_occlusion_query(
   self : RenderPass,
   query_index : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::write_timestamp(
+declare pub fn RenderPass::write_timestamp(
   self : RenderPass,
   query_set : QuerySet,
   query_index : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::begin_pipeline_statistics_query(
+declare pub fn RenderPass::begin_pipeline_statistics_query(
   self : RenderPass,
   query_set : QuerySet,
   query_index : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::end_pipeline_statistics_query(self : RenderPass) -> Unit {
-  ...
-}
+declare pub fn RenderPass::end_pipeline_statistics_query(
+  self : RenderPass,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::end_occlusion_query(self : RenderPass) -> Unit {
-  ...
-}
+declare pub fn RenderPass::end_occlusion_query(self : RenderPass) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_stencil_reference(
+declare pub fn RenderPass::set_stencil_reference(
   self : RenderPass,
   reference : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::end(self : RenderPass) -> Unit {
-  ...
-}
+declare pub fn RenderPass::end(self : RenderPass) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::release(self : RenderPass) -> Unit {
-  ...
-}
+declare pub fn RenderPass::release(self : RenderPass) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_label(self : RenderPass, label : String) -> Unit {
-  ...
-}
+declare pub fn RenderPass::set_label(self : RenderPass, label : String) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::insert_debug_marker(
+declare pub fn RenderPass::insert_debug_marker(
   self : RenderPass,
   label : String,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::push_debug_group(self : RenderPass, label : String) -> Unit {
-  ...
-}
+declare pub fn RenderPass::push_debug_group(
+  self : RenderPass,
+  label : String,
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::pop_debug_group(self : RenderPass) -> Unit {
-  ...
-}
+declare pub fn RenderPass::pop_debug_group(self : RenderPass) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPass::set_blend_constant_rgba(
+declare pub fn RenderPass::set_blend_constant_rgba(
   self : RenderPass,
   r : Double,
   g : Double,
   b : Double,
   a : Double,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn Buffer::size(self : Buffer) -> UInt64 {
-  ...
-}
+declare pub fn Buffer::size(self : Buffer) -> UInt64
 
 ///|
 #declaration_only
-pub fn Buffer::destroy(self : Buffer) -> Unit {
-  ...
-}
+declare pub fn Buffer::destroy(self : Buffer) -> Unit
 
 ///|
 #declaration_only
-pub fn Buffer::readback(
+declare pub fn Buffer::readback(
   self : Buffer,
   instance : Instance,
   offset : UInt64,
   size : UInt64,
-) -> Bytes {
-  ...
-}
+) -> Bytes
 
 ///|
 #declaration_only
-pub fn Buffer::map_read_sync(
+declare pub fn Buffer::map_read_sync(
   self : Buffer,
   instance : Instance,
   offset : UInt64,
   size : UInt64,
-) -> Bytes {
-  ...
-}
+) -> Bytes
 
 ///|
 #declaration_only
-pub fn Buffer::map_write_sync(
+declare pub fn Buffer::map_write_sync(
   self : Buffer,
   instance : Instance,
   offset : UInt64,
   data : Bytes,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn Buffer::unmap(self : Buffer) -> Unit {
-  ...
-}
+declare pub fn Buffer::unmap(self : Buffer) -> Unit
 
 ///|
 #declaration_only
-pub fn Buffer::release(self : Buffer) -> Unit {
-  ...
-}
+declare pub fn Buffer::release(self : Buffer) -> Unit
 
 ///|
 #declaration_only
-pub fn ShaderModule::is_null(self : ShaderModule) -> Bool {
-  ...
-}
+declare pub fn ShaderModule::is_null(self : ShaderModule) -> Bool
 
 ///|
 #declaration_only
-pub fn ShaderModule::release(self : ShaderModule) -> Unit {
-  ...
-}
+declare pub fn ShaderModule::release(self : ShaderModule) -> Unit
 
 ///|
 #declaration_only
-pub fn Sampler::release(self : Sampler) -> Unit {
-  ...
-}
+declare pub fn Sampler::release(self : Sampler) -> Unit
 
 ///|
 #declaration_only
-pub fn TextureView::release(self : TextureView) -> Unit {
-  ...
-}
+declare pub fn TextureView::release(self : TextureView) -> Unit
 
 ///|
 #declaration_only
-pub fn Texture::release(self : Texture) -> Unit {
-  ...
-}
+declare pub fn Texture::release(self : Texture) -> Unit
 
 ///|
 #declaration_only
-pub fn SurfaceTexture::release(self : SurfaceTexture) -> Unit {
-  ...
-}
+declare pub fn SurfaceTexture::release(self : SurfaceTexture) -> Unit
 
 ///|
 #declaration_only
-pub fn Surface::release(self : Surface) -> Unit {
-  ...
-}
+declare pub fn Surface::release(self : Surface) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderPipeline::release(self : RenderPipeline) -> Unit {
-  ...
-}
+declare pub fn RenderPipeline::release(self : RenderPipeline) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderBundleEncoder::set_pipeline(
+declare pub fn RenderBundleEncoder::set_pipeline(
   self : RenderBundleEncoder,
   pipeline : RenderPipeline,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderBundleEncoder::set_push_constants(
+declare pub fn RenderBundleEncoder::set_push_constants(
   self : RenderBundleEncoder,
   stages : UInt64,
   offset : UInt,
   data : Bytes,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderBundleEncoder::draw(
+declare pub fn RenderBundleEncoder::draw(
   self : RenderBundleEncoder,
   vertex_count : UInt,
   instance_count : UInt,
   first_vertex : UInt,
   first_instance : UInt,
-) -> Unit {
-  ...
-}
+) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderBundleEncoder::finish(self : RenderBundleEncoder) -> RenderBundle {
-  ...
-}
+declare pub fn RenderBundleEncoder::finish(
+  self : RenderBundleEncoder,
+) -> RenderBundle
 
 ///|
 #declaration_only
-pub fn RenderBundleEncoder::release(self : RenderBundleEncoder) -> Unit {
-  ...
-}
+declare pub fn RenderBundleEncoder::release(self : RenderBundleEncoder) -> Unit
 
 ///|
 #declaration_only
-pub fn RenderBundle::release(self : RenderBundle) -> Unit {
-  ...
-}
+declare pub fn RenderBundle::release(self : RenderBundle) -> Unit
 
 ///|
 #declaration_only
-pub fn ComputePipeline::release(self : ComputePipeline) -> Unit {
-  ...
-}
+declare pub fn ComputePipeline::release(self : ComputePipeline) -> Unit
 
 ///|
 #declaration_only
-pub fn BindGroupLayout::release(self : BindGroupLayout) -> Unit {
-  ...
-}
+declare pub fn BindGroupLayout::release(self : BindGroupLayout) -> Unit
 
 ///|
 #declaration_only
-pub fn BindGroup::release(self : BindGroup) -> Unit {
-  ...
-}
+declare pub fn BindGroup::release(self : BindGroup) -> Unit
 
 ///|
 #declaration_only
-pub fn PipelineLayout::release(self : PipelineLayout) -> Unit {
-  ...
-}
+declare pub fn PipelineLayout::release(self : PipelineLayout) -> Unit
 
 ///|
 #declaration_only
-pub fn QuerySet::release(self : QuerySet) -> Unit {
-  ...
-}
+declare pub fn QuerySet::release(self : QuerySet) -> Unit

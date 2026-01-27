@@ -165,6 +165,9 @@
     "wgpu_shader_module_spirv_test.mbt": [
       "native"
     ],
+    "wgpu_coverage_uncovered_test.mbt": [
+      "native"
+    ],
     "wgpu_adapter_info_test.mbt": [
       "native"
     ],

@@ -13,8 +13,13 @@
 # instead of SQLite database
 # no-db: false
 
-# Disable daemon for RPC communication (forces direct database access)
-# no-daemon: false
+# Disable daemon for RPC communication (forces direct database access).
+#
+# This repo lives under a path that can be accessed with different casing on
+# macOS (e.g. `.../Documents/...` vs `.../documents/...`). The bd daemon keys
+# workspaces by path string, so mismatched casing can produce "wrong daemon
+# connection" errors. Running in direct mode avoids the socket lookup entirely.
+no-daemon: true
 
 # Disable auto-flush of database to JSONL after mutations
 # no-auto-flush: false
@@ -32,7 +37,7 @@
 # db: ""
 
 # Auto-start daemon if not running (can also use BEADS_AUTO_START_DAEMON)
-# auto-start-daemon: true
+auto-start-daemon: false
 
 # Debounce interval for auto-flush (can also use BEADS_FLUSH_DEBOUNCE)
 # flush-debounce: "5s"
