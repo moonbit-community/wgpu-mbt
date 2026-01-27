@@ -20,7 +20,7 @@
 ///|
 /// Handle types (`Instance`, `Device`, `Buffer`, ...) are aliases to the
 /// corresponding WebGPU C API `WGPU*` handle types declared in
-/// `wgpu/c/webgpu_capi.mbt`.
+/// `src/c/webgpu_capi.mbt`.
 
 ///|
 pub extern "C" fn null_ptr() -> UnitPtr = "mbt_wgpu_null_ptr"

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-/// Public API contract for the `username/wgpu_mbt/wgpu` package.
+/// Public API contract for the `username/wgpu_mbt` package.
 ///
 /// This file is declaration-only on purpose: tests can be written first and
 /// type-checked (`moon check`) even when the implementation is incomplete.

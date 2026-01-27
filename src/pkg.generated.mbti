@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/wgpu_mbt/wgpu"
+package "username/wgpu_mbt"
 
 import {
-  "username/wgpu_mbt/wgpu/c",
+  "username/wgpu_mbt/c",
 }
 
 // Values
