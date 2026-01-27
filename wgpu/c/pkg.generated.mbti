@@ -512,9 +512,9 @@ pub fn wgpuBufferGetMappedRange(WGPUBuffer, UInt64, UInt64) -> UnitPtr
 
 pub fn wgpuBufferGetSize(WGPUBuffer) -> UInt64
 
-pub fn wgpuBufferGetUsage(WGPUBuffer) -> WGPUBufferUsage
+pub fn wgpuBufferGetUsage(WGPUBuffer) -> UInt64
 
-pub fn wgpuBufferMapAsync(WGPUBuffer, WGPUMapMode, UInt64, UInt64, WGPUBufferMapCallbackInfo) -> WGPUFuture
+pub fn wgpuBufferMapAsync(WGPUBuffer, UInt64, UInt64, UInt64, WGPUBufferMapCallbackInfo) -> WGPUFuture
 
 pub fn wgpuBufferRelease(WGPUBuffer) -> Unit
 
@@ -846,7 +846,7 @@ pub fn wgpuTextureGetMipLevelCount(WGPUTexture) -> UInt
 
 pub fn wgpuTextureGetSampleCount(WGPUTexture) -> UInt
 
-pub fn wgpuTextureGetUsage(WGPUTexture) -> WGPUTextureUsage
+pub fn wgpuTextureGetUsage(WGPUTexture) -> UInt64
 
 pub fn wgpuTextureGetWidth(WGPUTexture) -> UInt
 
@@ -909,9 +909,6 @@ pub type WGPUBufferMapCallbackInfo
 
 #external
 pub type WGPUBufferMapState
-
-#external
-pub type WGPUBufferUsage
 
 #alias(UnitPtr)
 #external
@@ -1005,9 +1002,6 @@ pub type WGPUInstanceDescriptorPtr
 #alias(UnitPtr)
 #external
 pub type WGPULimitsPtr
-
-#external
-pub type WGPUMapMode
 
 #alias(PipelineLayout)
 #external
@@ -1169,9 +1163,6 @@ pub type WGPUTextureDimension
 #external
 pub type WGPUTextureFormat
 
-#external
-pub type WGPUTextureUsage
-
 #alias(TextureView)
 #external
 pub type WGPUTextureView
@@ -1187,6 +1178,11 @@ pub type WGPUWGSLLanguageFeatureName
 pub type WGPUWaitStatus
 
 // Type aliases
+pub type WGPUBufferUsage = UInt64
+
+pub type WGPUMapMode = UInt64
+
+pub type WGPUTextureUsage = UInt64
 
 // Traits
 

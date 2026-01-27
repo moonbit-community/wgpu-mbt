@@ -83,10 +83,6 @@ pub type WGPUBufferMapState
 
 ///|
 #external
-pub type WGPUBufferUsage
-
-///|
-#external
 #alias(UnitPtr)
 pub type WGPUColorPtr
 
@@ -202,10 +198,6 @@ pub type WGPUInstanceDescriptorPtr
 #external
 #alias(UnitPtr)
 pub type WGPULimitsPtr
-
-///|
-#external
-pub type WGPUMapMode
 
 ///|
 #external
@@ -410,10 +402,6 @@ pub type WGPUTextureDimension
 ///|
 #external
 pub type WGPUTextureFormat
-
-///|
-#external
-pub type WGPUTextureUsage
 
 ///|
 #external

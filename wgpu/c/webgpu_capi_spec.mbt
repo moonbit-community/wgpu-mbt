@@ -75,8 +75,7 @@ pub type WGPUBufferMapCallbackInfo
 pub type WGPUBufferMapState
 
 ///|
-#declaration_only
-pub type WGPUBufferUsage
+pub type WGPUBufferUsage = UInt64
 
 ///|
 #declaration_only
@@ -179,8 +178,7 @@ pub type WGPUInstanceDescriptorPtr
 pub type WGPULimitsPtr
 
 ///|
-#declaration_only
-pub type WGPUMapMode
+pub type WGPUMapMode = UInt64
 
 ///|
 #declaration_only
@@ -359,8 +357,7 @@ pub type WGPUTextureDimension
 pub type WGPUTextureFormat
 
 ///|
-#declaration_only
-pub type WGPUTextureUsage
+pub type WGPUTextureUsage = UInt64
 
 ///|
 #declaration_only
