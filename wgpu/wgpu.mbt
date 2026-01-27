@@ -474,6 +474,26 @@ pub fn Device::create_sampler_linear_clamp(self : Device) -> Sampler {
 }
 
 ///|
+pub fn Device::create_sampler_nearest_repeat(self : Device) -> Sampler {
+  Sampler::{ raw: @c.device_create_sampler_nearest_repeat(self.raw) }
+}
+
+///|
+pub fn Device::create_sampler_linear_repeat(self : Device) -> Sampler {
+  Sampler::{ raw: @c.device_create_sampler_linear_repeat(self.raw) }
+}
+
+///|
+pub fn Device::create_sampler_nearest_mirror_repeat(self : Device) -> Sampler {
+  Sampler::{ raw: @c.device_create_sampler_nearest_mirror_repeat(self.raw) }
+}
+
+///|
+pub fn Device::create_sampler_linear_mirror_repeat(self : Device) -> Sampler {
+  Sampler::{ raw: @c.device_create_sampler_linear_mirror_repeat(self.raw) }
+}
+
+///|
 pub fn Device::create_bind_group_layout_sampler_texture_2d(
   self : Device,
 ) -> BindGroupLayout {

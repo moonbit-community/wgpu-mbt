@@ -172,7 +172,15 @@ pub fn device_create_render_pipeline_rgba8_with_layout(WGPUDevice, WGPUPipelineL
 
 pub fn device_create_sampler_linear_clamp(WGPUDevice) -> WGPUSampler
 
+pub fn device_create_sampler_linear_mirror_repeat(WGPUDevice) -> WGPUSampler
+
+pub fn device_create_sampler_linear_repeat(WGPUDevice) -> WGPUSampler
+
 pub fn device_create_sampler_nearest_clamp(WGPUDevice) -> WGPUSampler
+
+pub fn device_create_sampler_nearest_mirror_repeat(WGPUDevice) -> WGPUSampler
+
+pub fn device_create_sampler_nearest_repeat(WGPUDevice) -> WGPUSampler
 
 pub fn device_create_shader_module_wgsl(WGPUDevice, Bytes, UInt64) -> WGPUShaderModule
 
@@ -316,7 +324,15 @@ pub fn sampler_descriptor_free(WGPUSamplerDescriptorPtr) -> Unit
 
 pub fn sampler_descriptor_linear_clamp_new() -> WGPUSamplerDescriptorPtr
 
+pub fn sampler_descriptor_linear_mirror_repeat_new() -> WGPUSamplerDescriptorPtr
+
+pub fn sampler_descriptor_linear_repeat_new() -> WGPUSamplerDescriptorPtr
+
 pub fn sampler_descriptor_nearest_clamp_new() -> WGPUSamplerDescriptorPtr
+
+pub fn sampler_descriptor_nearest_mirror_repeat_new() -> WGPUSamplerDescriptorPtr
+
+pub fn sampler_descriptor_nearest_repeat_new() -> WGPUSamplerDescriptorPtr
 
 pub fn sampler_release(WGPUSampler) -> Unit
 

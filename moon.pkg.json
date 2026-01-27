@@ -117,6 +117,9 @@
     "wgpu_sampler_comprehensive_test.mbt": [
       "native"
     ],
+    "wgpu_sampler_address_modes_test.mbt": [
+      "native"
+    ],
     "wgpu_smoke_matrix_test.mbt": [
       "native"
     ],

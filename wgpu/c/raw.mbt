@@ -348,6 +348,38 @@ pub fn device_create_sampler_linear_clamp(device : Device) -> Sampler {
 }
 
 ///|
+pub fn device_create_sampler_nearest_repeat(device : Device) -> Sampler {
+  let desc = sampler_descriptor_nearest_repeat_new()
+  let sampler = wgpuDeviceCreateSampler(device, desc)
+  sampler_descriptor_free(desc)
+  sampler
+}
+
+///|
+pub fn device_create_sampler_linear_repeat(device : Device) -> Sampler {
+  let desc = sampler_descriptor_linear_repeat_new()
+  let sampler = wgpuDeviceCreateSampler(device, desc)
+  sampler_descriptor_free(desc)
+  sampler
+}
+
+///|
+pub fn device_create_sampler_nearest_mirror_repeat(device : Device) -> Sampler {
+  let desc = sampler_descriptor_nearest_mirror_repeat_new()
+  let sampler = wgpuDeviceCreateSampler(device, desc)
+  sampler_descriptor_free(desc)
+  sampler
+}
+
+///|
+pub fn device_create_sampler_linear_mirror_repeat(device : Device) -> Sampler {
+  let desc = sampler_descriptor_linear_mirror_repeat_new()
+  let sampler = wgpuDeviceCreateSampler(device, desc)
+  sampler_descriptor_free(desc)
+  sampler
+}
+
+///|
 pub fn device_create_bind_group_layout_sampler_texture_2d(
   device : Device,
 ) -> BindGroupLayout {

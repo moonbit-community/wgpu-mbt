@@ -631,6 +631,98 @@ WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_linear_clamp_new(void) {
   return desc;
 }
 
+WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_nearest_repeat_new(void) {
+  WGPUSamplerDescriptor *desc =
+      (WGPUSamplerDescriptor *)malloc(sizeof(WGPUSamplerDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUSamplerDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .addressModeU = WGPUAddressMode_Repeat,
+      .addressModeV = WGPUAddressMode_Repeat,
+      .addressModeW = WGPUAddressMode_Repeat,
+      .magFilter = WGPUFilterMode_Nearest,
+      .minFilter = WGPUFilterMode_Nearest,
+      .mipmapFilter = WGPUMipmapFilterMode_Nearest,
+      .lodMinClamp = 0.0f,
+      .lodMaxClamp = 32.0f,
+      .compare = WGPUCompareFunction_Undefined,
+      .maxAnisotropy = 1u,
+  };
+  return desc;
+}
+
+WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_linear_repeat_new(void) {
+  WGPUSamplerDescriptor *desc =
+      (WGPUSamplerDescriptor *)malloc(sizeof(WGPUSamplerDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUSamplerDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .addressModeU = WGPUAddressMode_Repeat,
+      .addressModeV = WGPUAddressMode_Repeat,
+      .addressModeW = WGPUAddressMode_Repeat,
+      .magFilter = WGPUFilterMode_Linear,
+      .minFilter = WGPUFilterMode_Linear,
+      .mipmapFilter = WGPUMipmapFilterMode_Linear,
+      .lodMinClamp = 0.0f,
+      .lodMaxClamp = 32.0f,
+      .compare = WGPUCompareFunction_Undefined,
+      .maxAnisotropy = 1u,
+  };
+  return desc;
+}
+
+WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_nearest_mirror_repeat_new(void) {
+  WGPUSamplerDescriptor *desc =
+      (WGPUSamplerDescriptor *)malloc(sizeof(WGPUSamplerDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUSamplerDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .addressModeU = WGPUAddressMode_MirrorRepeat,
+      .addressModeV = WGPUAddressMode_MirrorRepeat,
+      .addressModeW = WGPUAddressMode_MirrorRepeat,
+      .magFilter = WGPUFilterMode_Nearest,
+      .minFilter = WGPUFilterMode_Nearest,
+      .mipmapFilter = WGPUMipmapFilterMode_Nearest,
+      .lodMinClamp = 0.0f,
+      .lodMaxClamp = 32.0f,
+      .compare = WGPUCompareFunction_Undefined,
+      .maxAnisotropy = 1u,
+  };
+  return desc;
+}
+
+WGPUSamplerDescriptor *mbt_wgpu_sampler_descriptor_linear_mirror_repeat_new(void) {
+  WGPUSamplerDescriptor *desc =
+      (WGPUSamplerDescriptor *)malloc(sizeof(WGPUSamplerDescriptor));
+  if (!desc) {
+    return NULL;
+  }
+  *desc = (WGPUSamplerDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .addressModeU = WGPUAddressMode_MirrorRepeat,
+      .addressModeV = WGPUAddressMode_MirrorRepeat,
+      .addressModeW = WGPUAddressMode_MirrorRepeat,
+      .magFilter = WGPUFilterMode_Linear,
+      .minFilter = WGPUFilterMode_Linear,
+      .mipmapFilter = WGPUMipmapFilterMode_Linear,
+      .lodMinClamp = 0.0f,
+      .lodMaxClamp = 32.0f,
+      .compare = WGPUCompareFunction_Undefined,
+      .maxAnisotropy = 1u,
+  };
+  return desc;
+}
+
 void mbt_wgpu_sampler_descriptor_free(WGPUSamplerDescriptor *desc) { free(desc); }
 
 WGPUShaderModule mbt_wgpu_device_create_shader_module_wgsl(WGPUDevice device,

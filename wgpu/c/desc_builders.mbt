@@ -75,6 +75,18 @@ pub extern "C" fn sampler_descriptor_nearest_clamp_new() -> WGPUSamplerDescripto
 pub extern "C" fn sampler_descriptor_linear_clamp_new() -> WGPUSamplerDescriptorPtr = "mbt_wgpu_sampler_descriptor_linear_clamp_new"
 
 ///|
+pub extern "C" fn sampler_descriptor_nearest_repeat_new() -> WGPUSamplerDescriptorPtr = "mbt_wgpu_sampler_descriptor_nearest_repeat_new"
+
+///|
+pub extern "C" fn sampler_descriptor_linear_repeat_new() -> WGPUSamplerDescriptorPtr = "mbt_wgpu_sampler_descriptor_linear_repeat_new"
+
+///|
+pub extern "C" fn sampler_descriptor_nearest_mirror_repeat_new() -> WGPUSamplerDescriptorPtr = "mbt_wgpu_sampler_descriptor_nearest_mirror_repeat_new"
+
+///|
+pub extern "C" fn sampler_descriptor_linear_mirror_repeat_new() -> WGPUSamplerDescriptorPtr = "mbt_wgpu_sampler_descriptor_linear_mirror_repeat_new"
+
+///|
 #borrow(desc)
 pub extern "C" fn sampler_descriptor_free(
   desc : WGPUSamplerDescriptorPtr,

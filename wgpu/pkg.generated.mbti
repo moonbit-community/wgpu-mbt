@@ -150,7 +150,11 @@ pub fn Device::create_render_pipeline_rgba8_pos2(Self, ShaderModule) -> RenderPi
 pub fn Device::create_render_pipeline_rgba8_pos2_with_layout(Self, PipelineLayout, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_with_layout(Self, PipelineLayout, ShaderModule) -> RenderPipeline
 pub fn Device::create_sampler_linear_clamp(Self) -> Sampler
+pub fn Device::create_sampler_linear_mirror_repeat(Self) -> Sampler
+pub fn Device::create_sampler_linear_repeat(Self) -> Sampler
 pub fn Device::create_sampler_nearest_clamp(Self) -> Sampler
+pub fn Device::create_sampler_nearest_mirror_repeat(Self) -> Sampler
+pub fn Device::create_sampler_nearest_repeat(Self) -> Sampler
 pub fn Device::create_shader_module_wgsl(Self, String) -> ShaderModule
 pub fn Device::create_texture_depth24plus_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture

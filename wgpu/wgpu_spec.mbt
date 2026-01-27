@@ -312,6 +312,30 @@ pub fn Device::create_sampler_linear_clamp(self : Device) -> Sampler {
 
 ///|
 #declaration_only
+pub fn Device::create_sampler_nearest_repeat(self : Device) -> Sampler {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_sampler_linear_repeat(self : Device) -> Sampler {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_sampler_nearest_mirror_repeat(self : Device) -> Sampler {
+  ...
+}
+
+///|
+#declaration_only
+pub fn Device::create_sampler_linear_mirror_repeat(self : Device) -> Sampler {
+  ...
+}
+
+///|
+#declaration_only
 pub fn Device::create_render_pipeline_rgba8(
   self : Device,
   shader_module : ShaderModule,
