@@ -68,17 +68,17 @@ pub fn adapter_supported_features_contains_u32(WGPUAdapter, UInt) -> Bool
 
 pub fn adapter_supported_features_count_u64(WGPUAdapter) -> UInt64
 
-pub fn bind_group_builder_add_buffer(WGPUTextureViewDescriptorPtr, UInt, WGPUBuffer, UInt64, UInt64) -> Bool
+pub fn bind_group_builder_add_buffer(OpaquePtr, UInt, WGPUBuffer, UInt64, UInt64) -> Bool
 
-pub fn bind_group_builder_add_sampler(WGPUTextureViewDescriptorPtr, UInt, WGPUSampler) -> Bool
+pub fn bind_group_builder_add_sampler(OpaquePtr, UInt, WGPUSampler) -> Bool
 
-pub fn bind_group_builder_add_texture_view(WGPUTextureViewDescriptorPtr, UInt, WGPUTextureView) -> Bool
+pub fn bind_group_builder_add_texture_view(OpaquePtr, UInt, WGPUTextureView) -> Bool
 
-pub fn bind_group_builder_finish(WGPUDevice, WGPUBindGroupLayout, WGPUTextureViewDescriptorPtr, Bytes, UInt64) -> WGPUBindGroup
+pub fn bind_group_builder_finish(WGPUDevice, WGPUBindGroupLayout, OpaquePtr, Bytes, UInt64) -> WGPUBindGroup
 
-pub fn bind_group_builder_free(WGPUTextureViewDescriptorPtr) -> Unit
+pub fn bind_group_builder_free(OpaquePtr) -> Unit
 
-pub fn bind_group_builder_new(UInt64) -> WGPUTextureViewDescriptorPtr
+pub fn bind_group_builder_new(UInt64) -> OpaquePtr
 
 pub fn bind_group_descriptor_free(WGPUBindGroupDescriptorPtr) -> Unit
 
@@ -96,19 +96,19 @@ pub fn bind_group_descriptor_uniform_buffer_16_new(WGPUBindGroupLayout, WGPUBuff
 
 pub fn bind_group_descriptor_uniform_buffer_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
 
-pub fn bind_group_layout_builder_add_buffer(WGPUTextureViewDescriptorPtr, UInt, UInt64, UInt, Bool, UInt64) -> Bool
+pub fn bind_group_layout_builder_add_buffer(OpaquePtr, UInt, UInt64, UInt, Bool, UInt64) -> Bool
 
-pub fn bind_group_layout_builder_add_sampler(WGPUTextureViewDescriptorPtr, UInt, UInt64, UInt) -> Bool
+pub fn bind_group_layout_builder_add_sampler(OpaquePtr, UInt, UInt64, UInt) -> Bool
 
-pub fn bind_group_layout_builder_add_storage_texture(WGPUTextureViewDescriptorPtr, UInt, UInt64, UInt, UInt, UInt) -> Bool
+pub fn bind_group_layout_builder_add_storage_texture(OpaquePtr, UInt, UInt64, UInt, UInt, UInt) -> Bool
 
-pub fn bind_group_layout_builder_add_texture(WGPUTextureViewDescriptorPtr, UInt, UInt64, UInt, UInt, Bool) -> Bool
+pub fn bind_group_layout_builder_add_texture(OpaquePtr, UInt, UInt64, UInt, UInt, Bool) -> Bool
 
-pub fn bind_group_layout_builder_finish(WGPUDevice, WGPUTextureViewDescriptorPtr, Bytes, UInt64) -> WGPUBindGroupLayout
+pub fn bind_group_layout_builder_finish(WGPUDevice, OpaquePtr, Bytes, UInt64) -> WGPUBindGroupLayout
 
-pub fn bind_group_layout_builder_free(WGPUTextureViewDescriptorPtr) -> Unit
+pub fn bind_group_layout_builder_free(OpaquePtr) -> Unit
 
-pub fn bind_group_layout_builder_new(UInt64) -> WGPUTextureViewDescriptorPtr
+pub fn bind_group_layout_builder_new(UInt64) -> OpaquePtr
 
 pub fn bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptorPtr) -> Unit
 
@@ -154,9 +154,9 @@ pub fn buffer_set_label_utf8(WGPUBuffer, Bytes, UInt64) -> Unit
 
 pub fn buffer_unmap(WGPUBuffer) -> Unit
 
-pub fn cametallayer_new() -> WGPUTextureViewDescriptorPtr
+pub fn cametallayer_new() -> OpaquePtr
 
-pub fn cametallayer_release(WGPUTextureViewDescriptorPtr) -> Unit
+pub fn cametallayer_release(OpaquePtr) -> Unit
 
 pub fn command_buffer_release(WGPUCommandBuffer) -> Unit
 
@@ -410,7 +410,7 @@ pub fn instance_capabilities_timed_wait_any_enable_u32() -> UInt
 
 pub fn instance_capabilities_timed_wait_any_max_count_u64() -> UInt64
 
-pub fn instance_create_surface_metal_layer(WGPUInstance, WGPUTextureViewDescriptorPtr) -> WGPUSurface
+pub fn instance_create_surface_metal_layer(WGPUInstance, OpaquePtr) -> WGPUSurface
 
 pub fn instance_enumerate_adapters_count_metal(WGPUInstance) -> UInt64
 
@@ -431,6 +431,8 @@ pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
 pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr
 
 pub fn null_instance_descriptor_ptr() -> WGPUInstanceDescriptorPtr
+
+pub fn null_opaque_ptr() -> OpaquePtr
 
 pub fn null_pipeline_layout() -> WGPUPipelineLayout
 
@@ -662,13 +664,13 @@ pub fn surface_release_safe(WGPUSurface) -> Unit
 
 pub fn surface_set_label_utf8(WGPUSurface, Bytes, UInt64) -> Unit
 
-pub fn surface_texture_acquire(WGPUSurface) -> WGPUTextureViewDescriptorPtr
+pub fn surface_texture_acquire(WGPUSurface) -> OpaquePtr
 
-pub fn surface_texture_free(WGPUTextureViewDescriptorPtr) -> Unit
+pub fn surface_texture_free(OpaquePtr) -> Unit
 
-pub fn surface_texture_status(WGPUTextureViewDescriptorPtr) -> UInt
+pub fn surface_texture_status(OpaquePtr) -> UInt
 
-pub fn surface_texture_take_texture(WGPUTextureViewDescriptorPtr) -> WGPUTexture
+pub fn surface_texture_take_texture(OpaquePtr) -> WGPUTexture
 
 pub fn surface_unconfigure(WGPUSurface) -> Unit
 
@@ -1169,6 +1171,9 @@ pub fn wgpuTextureViewSetLabel(WGPUTextureView, WGPUStringView) -> Unit
 // Errors
 
 // Types and methods
+#external
+pub type OpaquePtr
+
 #external
 pub type UIntPtr
 

@@ -64,12 +64,12 @@ pub struct TextureView {
 ///|
 pub struct Surface {
   raw : @c.WGPUSurface
-  layer : @c.WGPUTextureViewDescriptorPtr
+  layer : @c.OpaquePtr
 }
 
 ///|
 pub struct SurfaceTexture {
-  raw : @c.WGPUTextureViewDescriptorPtr
+  raw : @c.OpaquePtr
 }
 
 ///|
@@ -116,12 +116,12 @@ pub struct BindGroup {
 
 ///|
 pub struct BindGroupLayoutBuilder {
-  raw : @c.WGPUTextureViewDescriptorPtr
+  raw : @c.OpaquePtr
 }
 
 ///|
 pub struct BindGroupBuilder {
-  raw : @c.WGPUTextureViewDescriptorPtr
+  raw : @c.OpaquePtr
 }
 
 ///|

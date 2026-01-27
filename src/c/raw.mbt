@@ -23,7 +23,14 @@
 /// `src/c/webgpu_capi.mbt`.
 
 ///|
+#external
+pub type OpaquePtr
+
+///|
 pub extern "C" fn null_ptr() -> UnitPtr = "mbt_wgpu_null_ptr"
+
+///|
+pub extern "C" fn null_opaque_ptr() -> OpaquePtr = "mbt_wgpu_null_ptr"
 
 ///|
 pub extern "C" fn null_uint_ptr() -> UIntPtr = "mbt_wgpu_null_uint_ptr"
@@ -38,18 +45,16 @@ pub extern "C" fn shader_module_is_null(shader_module : ShaderModule) -> Bool = 
 /// BindGroupLayout / BindGroup builders (for constructing arbitrary entries).
 pub extern "C" fn bind_group_layout_builder_new(
   max_entries : UInt64,
-) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_bind_group_layout_builder_new"
+) -> OpaquePtr = "mbt_wgpu_bind_group_layout_builder_new"
 
 ///|
 #borrow(builder)
-pub extern "C" fn bind_group_layout_builder_free(
-  builder : WGPUTextureViewDescriptorPtr,
-) -> Unit = "mbt_wgpu_bind_group_layout_builder_free"
+pub extern "C" fn bind_group_layout_builder_free(builder : OpaquePtr) -> Unit = "mbt_wgpu_bind_group_layout_builder_free"
 
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_buffer(
-  builder : WGPUTextureViewDescriptorPtr,
+  builder : OpaquePtr,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
@@ -60,7 +65,7 @@ pub extern "C" fn bind_group_layout_builder_add_buffer(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_sampler(
-  builder : WGPUTextureViewDescriptorPtr,
+  builder : OpaquePtr,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
@@ -69,7 +74,7 @@ pub extern "C" fn bind_group_layout_builder_add_sampler(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_texture(
-  builder : WGPUTextureViewDescriptorPtr,
+  builder : OpaquePtr,
   binding : UInt,
   visibility : UInt64,
   sample_type_u32 : UInt,
@@ -80,7 +85,7 @@ pub extern "C" fn bind_group_layout_builder_add_texture(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_storage_texture(
-  builder : WGPUTextureViewDescriptorPtr,
+  builder : OpaquePtr,
   binding : UInt,
   visibility : UInt64,
   access_u32 : UInt,
@@ -92,26 +97,22 @@ pub extern "C" fn bind_group_layout_builder_add_storage_texture(
 #borrow(builder, label)
 pub extern "C" fn bind_group_layout_builder_finish(
   device : Device,
-  builder : WGPUTextureViewDescriptorPtr,
+  builder : OpaquePtr,
   label : Bytes,
   label_len : UInt64,
 ) -> BindGroupLayout = "mbt_wgpu_bind_group_layout_builder_finish"
 
 ///|
-pub extern "C" fn bind_group_builder_new(
-  max_entries : UInt64,
-) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_bind_group_builder_new"
+pub extern "C" fn bind_group_builder_new(max_entries : UInt64) -> OpaquePtr = "mbt_wgpu_bind_group_builder_new"
 
 ///|
 #borrow(builder)
-pub extern "C" fn bind_group_builder_free(
-  builder : WGPUTextureViewDescriptorPtr,
-) -> Unit = "mbt_wgpu_bind_group_builder_free"
+pub extern "C" fn bind_group_builder_free(builder : OpaquePtr) -> Unit = "mbt_wgpu_bind_group_builder_free"
 
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_builder_add_buffer(
-  builder : WGPUTextureViewDescriptorPtr,
+  builder : OpaquePtr,
   binding : UInt,
   buffer : Buffer,
   offset : UInt64,
@@ -121,7 +122,7 @@ pub extern "C" fn bind_group_builder_add_buffer(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_builder_add_sampler(
-  builder : WGPUTextureViewDescriptorPtr,
+  builder : OpaquePtr,
   binding : UInt,
   sampler : Sampler,
 ) -> Bool = "mbt_wgpu_bind_group_builder_add_sampler"
@@ -129,7 +130,7 @@ pub extern "C" fn bind_group_builder_add_sampler(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_builder_add_texture_view(
-  builder : WGPUTextureViewDescriptorPtr,
+  builder : OpaquePtr,
   binding : UInt,
   view : TextureView,
 ) -> Bool = "mbt_wgpu_bind_group_builder_add_texture_view"
@@ -139,7 +140,7 @@ pub extern "C" fn bind_group_builder_add_texture_view(
 pub extern "C" fn bind_group_builder_finish(
   device : Device,
   layout : BindGroupLayout,
-  builder : WGPUTextureViewDescriptorPtr,
+  builder : OpaquePtr,
   label : Bytes,
   label_len : UInt64,
 ) -> BindGroup = "mbt_wgpu_bind_group_builder_finish"
@@ -169,19 +170,17 @@ pub extern "C" fn queue_on_submitted_work_done_future_id_u64(
 
 ///|
 /// macOS/Metal surface helpers (CAMetalLayer + WGPUSurface).
-pub extern "C" fn cametallayer_new() -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_cametallayer_new"
+pub extern "C" fn cametallayer_new() -> OpaquePtr = "mbt_wgpu_cametallayer_new"
 
 ///|
 #borrow(layer)
-pub extern "C" fn cametallayer_release(
-  layer : WGPUTextureViewDescriptorPtr,
-) -> Unit = "mbt_wgpu_cametallayer_release"
+pub extern "C" fn cametallayer_release(layer : OpaquePtr) -> Unit = "mbt_wgpu_cametallayer_release"
 
 ///|
 #borrow(layer)
 pub extern "C" fn instance_create_surface_metal_layer(
   instance : Instance,
-  layer : WGPUTextureViewDescriptorPtr,
+  layer : OpaquePtr,
 ) -> WGPUSurface = "mbt_wgpu_instance_create_surface_metal_layer"
 
 ///|
@@ -224,27 +223,19 @@ pub extern "C" fn surface_configure_view_formats_u32(
 ) -> Bool = "mbt_wgpu_surface_configure_view_formats_u32"
 
 ///|
-pub extern "C" fn surface_texture_acquire(
-  surface : WGPUSurface,
-) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_surface_texture_acquire"
+pub extern "C" fn surface_texture_acquire(surface : WGPUSurface) -> OpaquePtr = "mbt_wgpu_surface_texture_acquire"
 
 ///|
 #borrow(st)
-pub extern "C" fn surface_texture_status(
-  st : WGPUTextureViewDescriptorPtr,
-) -> UInt = "mbt_wgpu_surface_texture_status"
+pub extern "C" fn surface_texture_status(st : OpaquePtr) -> UInt = "mbt_wgpu_surface_texture_status"
 
 ///|
 #borrow(st)
-pub extern "C" fn surface_texture_take_texture(
-  st : WGPUTextureViewDescriptorPtr,
-) -> Texture = "mbt_wgpu_surface_texture_take_texture"
+pub extern "C" fn surface_texture_take_texture(st : OpaquePtr) -> Texture = "mbt_wgpu_surface_texture_take_texture"
 
 ///|
 #borrow(st)
-pub extern "C" fn surface_texture_free(
-  st : WGPUTextureViewDescriptorPtr,
-) -> Unit = "mbt_wgpu_surface_texture_free"
+pub extern "C" fn surface_texture_free(st : OpaquePtr) -> Unit = "mbt_wgpu_surface_texture_free"
 
 ///|
 pub extern "C" fn surface_present_u32(surface : WGPUSurface) -> UInt = "mbt_wgpu_surface_present_u32"
