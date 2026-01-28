@@ -21,7 +21,7 @@
       "output": [
         "../../vendor/wgpu-native/target/release/libwgpu_native.a"
       ],
-      "command": "cargo build --manifest-path $input --release --no-default-features --features metal,wgsl"
+      "command": "case \"$PWD\" in\n  */.mooncakes/*)\n    ROOT=\"${PWD%%/.mooncakes/*}\"\n    mkdir -p \"$ROOT/vendor\"\n    if [ ! -e \"$ROOT/vendor/wgpu-native\" ]; then\n      ln -s \".mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native\" \"$ROOT/vendor/wgpu-native\"\n    fi\n    ;;\nesac\ncargo build --manifest-path $input --release --no-default-features --features metal,wgsl"
     }
   ],
   "link": {
