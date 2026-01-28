@@ -14,25 +14,70 @@
 
 #include "wgpu_stub.h"
 
-#include <objc/message.h>
-#include <objc/runtime.h>
+#include <dlfcn.h>
 
 // -----------------------------------------------------------------------------
 // macOS/Metal Surface helpers (CAMetalLayer + WGPUSurface)
 // -----------------------------------------------------------------------------
 
+typedef void *mbt_objc_id;
+typedef void *mbt_objc_sel;
+typedef void *mbt_objc_class;
+
+static void *mbt_objc_dylib = NULL;
+static void *mbt_quartzcore = NULL;
+static void *mbt_objc_get_class_sym = NULL;
+static void *mbt_sel_register_name_sym = NULL;
+static void *mbt_objc_msg_send_sym = NULL;
+
+static bool mbt_objc_init(void) {
+  if (mbt_objc_get_class_sym && mbt_sel_register_name_sym && mbt_objc_msg_send_sym) {
+    return true;
+  }
+
+  // Best-effort: ensure QuartzCore is loaded so `CAMetalLayer` exists.
+  if (!mbt_quartzcore) {
+    mbt_quartzcore = dlopen("/System/Library/Frameworks/QuartzCore.framework/QuartzCore",
+                            RTLD_LAZY | RTLD_LOCAL);
+  }
+
+  if (!mbt_objc_dylib) {
+    mbt_objc_dylib = dlopen("/usr/lib/libobjc.A.dylib", RTLD_LAZY | RTLD_LOCAL);
+    if (!mbt_objc_dylib) {
+      mbt_objc_dylib = dlopen("libobjc.A.dylib", RTLD_LAZY | RTLD_LOCAL);
+    }
+  }
+  if (!mbt_objc_dylib) {
+    return false;
+  }
+
+  mbt_objc_get_class_sym = dlsym(mbt_objc_dylib, "objc_getClass");
+  mbt_sel_register_name_sym = dlsym(mbt_objc_dylib, "sel_registerName");
+  mbt_objc_msg_send_sym = dlsym(mbt_objc_dylib, "objc_msgSend");
+
+  return (mbt_objc_get_class_sym && mbt_sel_register_name_sym && mbt_objc_msg_send_sym);
+}
+
 void *mbt_wgpu_cametallayer_new(void) {
-  Class cls = (Class)objc_getClass("CAMetalLayer");
+  if (!mbt_objc_init()) {
+    return NULL;
+  }
+  mbt_objc_class cls =
+      ((mbt_objc_class(*)(const char *))mbt_objc_get_class_sym)("CAMetalLayer");
   if (!cls) {
     return NULL;
   }
-  SEL sel = sel_registerName("layer");
-  id layer = ((id (*)(id, SEL))objc_msgSend)((id)cls, sel);
+
+  mbt_objc_sel sel = ((mbt_objc_sel(*)(const char *))mbt_sel_register_name_sym)("layer");
+  mbt_objc_id layer = ((mbt_objc_id(*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(
+      (mbt_objc_id)cls, sel);
   if (!layer) {
     return NULL;
   }
-  SEL retain_sel = sel_registerName("retain");
-  id retained = ((id (*)(id, SEL))objc_msgSend)(layer, retain_sel);
+  mbt_objc_sel retain_sel =
+      ((mbt_objc_sel(*)(const char *))mbt_sel_register_name_sym)("retain");
+  mbt_objc_id retained =
+      ((mbt_objc_id(*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(layer, retain_sel);
   return (void *)retained;
 }
 
@@ -40,16 +85,25 @@ void mbt_wgpu_cametallayer_release(void *layer) {
   if (!layer) {
     return;
   }
-  SEL release_sel = sel_registerName("release");
-  ((void (*)(id, SEL))objc_msgSend)((id)layer, release_sel);
+  if (!mbt_objc_init()) {
+    return;
+  }
+  mbt_objc_sel release_sel =
+      ((mbt_objc_sel(*)(const char *))mbt_sel_register_name_sym)("release");
+  ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)((mbt_objc_id)layer, release_sel);
 }
 
 void mbt_wgpu_cametallayer_retain(void *layer) {
   if (!layer) {
     return;
   }
-  SEL retain_sel = sel_registerName("retain");
-  ((id (*)(id, SEL))objc_msgSend)((id)layer, retain_sel);
+  if (!mbt_objc_init()) {
+    return;
+  }
+  mbt_objc_sel retain_sel =
+      ((mbt_objc_sel(*)(const char *))mbt_sel_register_name_sym)("retain");
+  ((mbt_objc_id(*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)((mbt_objc_id)layer,
+                                                                     retain_sel);
 }
 
 WGPUSurface mbt_wgpu_instance_create_surface_metal_layer(WGPUInstance instance,

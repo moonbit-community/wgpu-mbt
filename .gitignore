@@ -6,4 +6,3 @@ target
 .moonagent/
 __pycache__/
 src/c/target/
-src/c/wgpu_native_prebuild.c
