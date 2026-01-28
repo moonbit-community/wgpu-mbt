@@ -16,17 +16,18 @@
   "pre-build": [
     {
       "input": [
-        "../../vendor/wgpu-native/Cargo.toml"
+        "wgpu_stub.h"
       ],
       "output": [
-        "../../vendor/wgpu-native/target/release/libwgpu_native.a"
+        "target/wgpu-native/release/libwgpu_native.a"
       ],
-      "command": "ROOT=\"$PWD\"\ncase \"$PWD\" in\n  */.mooncakes/*)\n    ROOT=\"${PWD%%/.mooncakes/*}\"\n    ;;\nesac\n\nPKG_WGPU=\"$ROOT/.mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native\"\nif [ -d \"$PKG_WGPU\" ]; then\n  mkdir -p \"$ROOT/vendor\"\n  if [ ! -e \"$ROOT/vendor/wgpu-native\" ]; then\n    ln -s \"$PKG_WGPU\" \"$ROOT/vendor/wgpu-native\"\n  fi\nfi\n\nMANIFEST=\"$input\"\nif [ ! -f \"$MANIFEST\" ]; then\n  if [ -f \"$PKG_WGPU/Cargo.toml\" ]; then\n    MANIFEST=\"$PKG_WGPU/Cargo.toml\"\n  elif [ -f \"$ROOT/vendor/wgpu-native/Cargo.toml\" ]; then\n    MANIFEST=\"$ROOT/vendor/wgpu-native/Cargo.toml\"\n  fi\nfi\n\ncargo build --manifest-path \"$MANIFEST\" --release --no-default-features --features metal,wgsl"
+      "command": "ROOT=\"$PWD\"\ncase \"$PWD\" in\n  */.mooncakes/*)\n    ROOT=\"${PWD%%/.mooncakes/*}\"\n    ;;\nesac\n\nMANIFEST=\"\"\n\n# 1) Dependency installed under consumer root `.mooncakes/`.\nif [ -f \"$ROOT/.mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native/Cargo.toml\" ]; then\n  MANIFEST=\"$ROOT/.mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native/Cargo.toml\"\nfi\n\n# 2) Dependency staged under consumer `_build/**/.mooncakes/`.\nif [ -z \"$MANIFEST\" ] && [ -d \"$ROOT/_build\" ]; then\n  FOUND=$(find \"$ROOT/_build\" -path '*/.mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native/Cargo.toml' -print -quit 2>/dev/null || true)\n  if [ -n \"$FOUND\" ] && [ -f \"$FOUND\" ]; then\n    MANIFEST=\"$FOUND\"\n  fi\nfi\n\n# 3) Running from inside the wgpu-mbt repo (e.g. `$PWD` is `src/c`).\nif [ -z \"$MANIFEST\" ] && [ -f \"$PWD/../../vendor/wgpu-native/Cargo.toml\" ]; then\n  MANIFEST=\"$PWD/../../vendor/wgpu-native/Cargo.toml\"\nfi\n\n# 4) Running from repo root.\nif [ -z \"$MANIFEST\" ] && [ -f \"$PWD/vendor/wgpu-native/Cargo.toml\" ]; then\n  MANIFEST=\"$PWD/vendor/wgpu-native/Cargo.toml\"\nfi\n\nif [ -z \"$MANIFEST\" ]; then\n  echo \"wgpu-mbt: failed to locate vendored wgpu-native Cargo.toml\" >&2\n  exit 1\nfi\n\nCARGO_TARGET_DIR=\"$ROOT/target/wgpu-native\" \\\n  cargo build --manifest-path \"$MANIFEST\" --release --no-default-features --features metal,wgsl"
     }
   ],
   "link": {
     "native": {
-      "stub-cc-flags": "-Ivendor/wgpu-native/ffi -Ivendor/wgpu-native/ffi/webgpu-headers"
+      "stub-cc-flags": "-Ivendor/wgpu-native/ffi -Ivendor/wgpu-native/ffi/webgpu-headers",
+      "cc-link-flags": "-Ltarget/wgpu-native/release -lwgpu_native -framework Metal -framework Foundation -framework QuartzCore -framework CoreGraphics -framework CoreFoundation -framework IOSurface -framework IOKit"
     }
   }
 }

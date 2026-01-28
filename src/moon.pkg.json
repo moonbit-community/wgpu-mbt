@@ -14,10 +14,5 @@
     "wgpu.mbt": [
       "native"
     ]
-  },
-  "link": {
-    "native": {
-      "cc-link-flags": "-Lvendor/wgpu-native/target/release -L.mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native/target/release -lwgpu_native -framework Metal -framework Foundation -framework QuartzCore -framework CoreGraphics -framework CoreFoundation -framework IOSurface -framework IOKit"
-    }
   }
 }

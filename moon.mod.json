@@ -7,5 +7,10 @@
   "keywords": ["WebGPU", "wgpu"],
   "description": "This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU)",
   "source": "src",
-  "preferred-target": "native"
+  "preferred-target": "native",
+  "link": {
+    "native": {
+      "cc-link-flags": "-Ltarget/wgpu-native/release -lwgpu_native -framework Metal -framework Foundation -framework QuartzCore -framework CoreGraphics -framework CoreFoundation -framework IOSurface -framework IOKit"
+    }
+  }
 }
