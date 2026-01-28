@@ -2,7 +2,6 @@
 // This file exists only to ensure the pre-build runs when wgpu-mbt is a dependency.
 
 #include "wgpu_stub.h"
-#include "wgpu_native_stamp.h"
 
 // Keep translation unit non-empty.
 int mbt_wgpu_native_prebuild_ok(void) { return 1; }

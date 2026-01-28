@@ -163,7 +163,6 @@ def main() -> None:
 // library, e.g. `/path/to/libwgpu_native.dylib`.
 
 #include "wgpu_native_shim.h"
-#include "wgpu_native_stamp.h"
 
 #include <dlfcn.h>
 #include <pthread.h>
@@ -202,15 +201,6 @@ static void mbt_wgpu_init(void) {{
     }}
     return;
   }}
-
-#ifdef MBT_WGPU_NATIVE_LIB_ABSPATH
-  if (MBT_WGPU_NATIVE_LIB_ABSPATH[0]) {{
-    g_mbt_wgpu_lib = dlopen(MBT_WGPU_NATIVE_LIB_ABSPATH, RTLD_LAZY | RTLD_LOCAL);
-    if (g_mbt_wgpu_lib) {{
-      return;
-    }}
-  }}
-#endif
 
   const char *lib = mbt_wgpu_lib_filename();
   // Best-effort: try next to the dependency source tree, using `__FILE__`
