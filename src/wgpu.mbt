@@ -771,6 +771,16 @@ pub fn Device::create_command_encoder(self : Device) -> CommandEncoder {
 }
 
 ///|
+pub fn Device::create_command_encoder_ptr(
+  self : Device,
+  descriptor : @c.WGPUCommandEncoderDescriptorPtr,
+) -> CommandEncoder {
+  CommandEncoder::{
+    raw: @c.wgpuDeviceCreateCommandEncoder(self.raw, descriptor),
+  }
+}
+
+///|
 pub fn Device::push_error_scope(self : Device, filter_u32 : UInt) -> Unit {
   @c.device_push_error_scope_u32(self.raw, filter_u32)
 }
@@ -823,6 +833,14 @@ pub fn Device::create_buffer(
   Buffer::{
     raw: @c.device_create_buffer(self.raw, size, usage, mapped_at_creation),
   }
+}
+
+///|
+pub fn Device::create_buffer_ptr(
+  self : Device,
+  descriptor : @c.WGPUBufferDescriptorPtr,
+) -> Buffer {
+  Buffer::{ raw: @c.wgpuDeviceCreateBuffer(self.raw, descriptor) }
 }
 
 ///|
@@ -892,6 +910,14 @@ pub fn Device::create_query_set_pipeline_statistics(
 }
 
 ///|
+pub fn Device::create_query_set_ptr(
+  self : Device,
+  descriptor : @c.WGPUQuerySetDescriptorPtr,
+) -> QuerySet {
+  QuerySet::{ raw: @c.wgpuDeviceCreateQuerySet(self.raw, descriptor) }
+}
+
+///|
 pub fn Device::create_shader_module_wgsl(
   self : Device,
   code : String,
@@ -915,12 +941,30 @@ pub fn Device::create_shader_module_spirv(
 }
 
 ///|
+pub fn Device::create_shader_module_ptr(
+  self : Device,
+  descriptor : @c.WGPUShaderModuleDescriptorPtr,
+) -> ShaderModule {
+  ShaderModule::{ raw: @c.wgpuDeviceCreateShaderModule(self.raw, descriptor) }
+}
+
+///|
 pub fn Device::create_compute_pipeline(
   self : Device,
   shader_module : ShaderModule,
 ) -> ComputePipeline {
   ComputePipeline::{
     raw: @c.device_create_compute_pipeline(self.raw, shader_module.raw),
+  }
+}
+
+///|
+pub fn Device::create_compute_pipeline_ptr(
+  self : Device,
+  descriptor : @c.WGPUComputePipelineDescriptorPtr,
+) -> ComputePipeline {
+  ComputePipeline::{
+    raw: @c.wgpuDeviceCreateComputePipeline(self.raw, descriptor),
   }
 }
 
@@ -1177,6 +1221,16 @@ pub fn Device::create_render_pipeline_rgba8(
 }
 
 ///|
+pub fn Device::create_render_pipeline_ptr(
+  self : Device,
+  descriptor : @c.WGPURenderPipelineDescriptorPtr,
+) -> RenderPipeline {
+  RenderPipeline::{
+    raw: @c.wgpuDeviceCreateRenderPipeline(self.raw, descriptor),
+  }
+}
+
+///|
 pub fn Device::create_render_pipeline_color_format(
   self : Device,
   shader_module : ShaderModule,
@@ -1236,6 +1290,16 @@ pub fn Device::create_render_bundle_encoder_rgba8(
 ) -> RenderBundleEncoder {
   RenderBundleEncoder::{
     raw: @c.device_create_render_bundle_encoder_rgba8(self.raw),
+  }
+}
+
+///|
+pub fn Device::create_render_bundle_encoder_ptr(
+  self : Device,
+  descriptor : @c.WGPURenderBundleEncoderDescriptorPtr,
+) -> RenderBundleEncoder {
+  RenderBundleEncoder::{
+    raw: @c.wgpuDeviceCreateRenderBundleEncoder(self.raw, descriptor),
   }
 }
 
@@ -1396,6 +1460,14 @@ pub fn Device::create_sampler_nearest_mirror_repeat(self : Device) -> Sampler {
 ///|
 pub fn Device::create_sampler_linear_mirror_repeat(self : Device) -> Sampler {
   Sampler::{ raw: @c.device_create_sampler_linear_mirror_repeat(self.raw) }
+}
+
+///|
+pub fn Device::create_sampler_ptr(
+  self : Device,
+  descriptor : @c.WGPUSamplerDescriptorPtr,
+) -> Sampler {
+  Sampler::{ raw: @c.wgpuDeviceCreateSampler(self.raw, descriptor) }
 }
 
 ///|
@@ -1776,6 +1848,16 @@ pub fn BindGroupBuilder::finish(
   )
   @c.bind_group_builder_free(self.raw)
   BindGroup::{ raw: out }
+}
+
+///|
+pub fn Device::create_pipeline_layout_ptr(
+  self : Device,
+  descriptor : @c.WGPUPipelineLayoutDescriptorPtr,
+) -> PipelineLayout {
+  PipelineLayout::{
+    raw: @c.wgpuDeviceCreatePipelineLayout(self.raw, descriptor),
+  }
 }
 
 ///|
@@ -3383,4 +3465,145 @@ pub fn ComputePass::add_ref(self : ComputePass) -> ComputePass {
 pub fn RenderPass::add_ref(self : RenderPass) -> RenderPass {
   @c.wgpuRenderPassEncoderAddRef(self.raw)
   RenderPass::{ raw: self.raw }
+}
+
+///|
+pub fn ComputePipeline::get_bind_group_layout(
+  self : ComputePipeline,
+  index : UInt,
+) -> BindGroupLayout {
+  BindGroupLayout::{
+    raw: @c.wgpuComputePipelineGetBindGroupLayout(self.raw, index),
+  }
+}
+
+///|
+pub fn RenderPipeline::get_bind_group_layout(
+  self : RenderPipeline,
+  index : UInt,
+) -> BindGroupLayout {
+  BindGroupLayout::{
+    raw: @c.wgpuRenderPipelineGetBindGroupLayout(self.raw, index),
+  }
+}
+
+///|
+pub fn Instance::raw_handle(self : Instance) -> @c.Instance {
+  self.raw
+}
+
+///|
+pub fn Adapter::raw_handle(self : Adapter) -> @c.Adapter {
+  self.raw
+}
+
+///|
+pub fn Device::raw_handle(self : Device) -> @c.Device {
+  self.raw
+}
+
+///|
+pub fn Queue::raw_handle(self : Queue) -> @c.Queue {
+  self.raw
+}
+
+///|
+pub fn Surface::raw_handle(self : Surface) -> @c.WGPUSurface {
+  self.raw
+}
+
+///|
+pub fn Surface::metal_layer_handle(self : Surface) -> @c.OpaquePtr {
+  self.layer
+}
+
+///|
+pub fn Buffer::raw_handle(self : Buffer) -> @c.Buffer {
+  self.raw
+}
+
+///|
+pub fn Texture::raw_handle(self : Texture) -> @c.Texture {
+  self.raw
+}
+
+///|
+pub fn TextureView::raw_handle(self : TextureView) -> @c.TextureView {
+  self.raw
+}
+
+///|
+pub fn Sampler::raw_handle(self : Sampler) -> @c.Sampler {
+  self.raw
+}
+
+///|
+pub fn ShaderModule::raw_handle(self : ShaderModule) -> @c.ShaderModule {
+  self.raw
+}
+
+///|
+pub fn BindGroupLayout::raw_handle(
+  self : BindGroupLayout,
+) -> @c.BindGroupLayout {
+  self.raw
+}
+
+///|
+pub fn BindGroup::raw_handle(self : BindGroup) -> @c.BindGroup {
+  self.raw
+}
+
+///|
+pub fn PipelineLayout::raw_handle(self : PipelineLayout) -> @c.PipelineLayout {
+  self.raw
+}
+
+///|
+pub fn QuerySet::raw_handle(self : QuerySet) -> @c.QuerySet {
+  self.raw
+}
+
+///|
+pub fn ComputePipeline::raw_handle(
+  self : ComputePipeline,
+) -> @c.ComputePipeline {
+  self.raw
+}
+
+///|
+pub fn RenderPipeline::raw_handle(self : RenderPipeline) -> @c.RenderPipeline {
+  self.raw
+}
+
+///|
+pub fn RenderBundleEncoder::raw_handle(
+  self : RenderBundleEncoder,
+) -> @c.WGPURenderBundleEncoder {
+  self.raw
+}
+
+///|
+pub fn RenderBundle::raw_handle(self : RenderBundle) -> @c.WGPURenderBundle {
+  self.raw
+}
+
+///|
+pub fn CommandEncoder::raw_handle(self : CommandEncoder) -> @c.CommandEncoder {
+  self.raw
+}
+
+///|
+pub fn CommandBuffer::raw_handle(self : CommandBuffer) -> @c.CommandBuffer {
+  self.raw
+}
+
+///|
+pub fn ComputePass::raw_handle(self : ComputePass) -> @c.ComputePassEncoder {
+  self.raw
+}
+
+///|
+pub fn RenderPass::raw_handle(self : RenderPass) -> @c.RenderPassEncoder {
+  self.raw
 }

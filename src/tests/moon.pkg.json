@@ -9,7 +9,8 @@
       "path": "Milky2018/wgpu_mbt/c",
       "alias": "wgpu_c"
     },
-    "moonbitlang/core/ref"
+    "moonbitlang/core/ref",
+    "moonbitlang/core/encoding/utf8"
   ],
   "targets": {
     "wgpu_smoke_test.mbt": [
@@ -226,6 +227,9 @@
       "native"
     ],
     "wgpu_surface_texture_bind_group_api_test.mbt": [
+      "native"
+    ],
+    "wgpu_ptr_constructors_test.mbt": [
       "native"
     ],
     "wgpu_wgsl_language_features_test.mbt": [
