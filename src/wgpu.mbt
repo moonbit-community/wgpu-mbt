@@ -3280,3 +3280,107 @@ pub fn Adapter::release(self : Adapter) -> Unit {
 pub fn Instance::release(self : Instance) -> Unit {
   @c.instance_release(self.raw)
 }
+
+///|
+pub fn Instance::add_ref(self : Instance) -> Instance {
+  @c.wgpuInstanceAddRef(self.raw)
+  Instance::{ raw: self.raw }
+}
+
+///|
+pub fn Adapter::add_ref(self : Adapter) -> Adapter {
+  @c.wgpuAdapterAddRef(self.raw)
+  Adapter::{ raw: self.raw }
+}
+
+///|
+pub fn Device::add_ref(self : Device) -> Device {
+  @c.wgpuDeviceAddRef(self.raw)
+  Device::{ raw: self.raw }
+}
+
+///|
+pub fn Queue::add_ref(self : Queue) -> Queue {
+  @c.wgpuQueueAddRef(self.raw)
+  Queue::{ raw: self.raw }
+}
+
+///|
+pub fn Buffer::add_ref(self : Buffer) -> Buffer {
+  @c.wgpuBufferAddRef(self.raw)
+  Buffer::{ raw: self.raw }
+}
+
+///|
+pub fn ShaderModule::add_ref(self : ShaderModule) -> ShaderModule {
+  @c.wgpuShaderModuleAddRef(self.raw)
+  ShaderModule::{ raw: self.raw }
+}
+
+///|
+pub fn Sampler::add_ref(self : Sampler) -> Sampler {
+  @c.wgpuSamplerAddRef(self.raw)
+  Sampler::{ raw: self.raw }
+}
+
+///|
+pub fn PipelineLayout::add_ref(self : PipelineLayout) -> PipelineLayout {
+  @c.wgpuPipelineLayoutAddRef(self.raw)
+  PipelineLayout::{ raw: self.raw }
+}
+
+///|
+pub fn ComputePipeline::add_ref(self : ComputePipeline) -> ComputePipeline {
+  @c.wgpuComputePipelineAddRef(self.raw)
+  ComputePipeline::{ raw: self.raw }
+}
+
+///|
+pub fn RenderPipeline::add_ref(self : RenderPipeline) -> RenderPipeline {
+  @c.wgpuRenderPipelineAddRef(self.raw)
+  RenderPipeline::{ raw: self.raw }
+}
+
+///|
+pub fn RenderBundleEncoder::add_ref(
+  self : RenderBundleEncoder,
+) -> RenderBundleEncoder {
+  @c.wgpuRenderBundleEncoderAddRef(self.raw)
+  RenderBundleEncoder::{ raw: self.raw }
+}
+
+///|
+pub fn RenderBundle::add_ref(self : RenderBundle) -> RenderBundle {
+  @c.wgpuRenderBundleAddRef(self.raw)
+  RenderBundle::{ raw: self.raw }
+}
+
+///|
+pub fn QuerySet::add_ref(self : QuerySet) -> QuerySet {
+  @c.wgpuQuerySetAddRef(self.raw)
+  QuerySet::{ raw: self.raw }
+}
+
+///|
+pub fn CommandEncoder::add_ref(self : CommandEncoder) -> CommandEncoder {
+  @c.wgpuCommandEncoderAddRef(self.raw)
+  CommandEncoder::{ raw: self.raw }
+}
+
+///|
+pub fn CommandBuffer::add_ref(self : CommandBuffer) -> CommandBuffer {
+  @c.wgpuCommandBufferAddRef(self.raw)
+  CommandBuffer::{ raw: self.raw }
+}
+
+///|
+pub fn ComputePass::add_ref(self : ComputePass) -> ComputePass {
+  @c.wgpuComputePassEncoderAddRef(self.raw)
+  ComputePass::{ raw: self.raw }
+}
+
+///|
+pub fn RenderPass::add_ref(self : RenderPass) -> RenderPass {
+  @c.wgpuRenderPassEncoderAddRef(self.raw)
+  RenderPass::{ raw: self.raw }
+}

@@ -1158,6 +1158,7 @@ pub let whole_size : UInt64
 pub struct Adapter {
   raw : @c.WGPUAdapter
 }
+pub fn Adapter::add_ref(Self) -> Self
 pub fn Adapter::has_feature_native_pipeline_statistics_query(Self) -> Bool
 pub fn Adapter::has_feature_native_push_constants(Self) -> Bool
 pub fn Adapter::has_feature_native_spirv_shader_passthrough(Self) -> Bool
@@ -1228,6 +1229,7 @@ pub fn BindGroupLayoutBuilder::new(max_entries~ : UInt64) -> Self
 pub struct Buffer {
   raw : @c.WGPUBuffer
 }
+pub fn Buffer::add_ref(Self) -> Self
 pub fn Buffer::destroy(Self) -> Unit
 pub fn Buffer::map_read_sync(Self, Instance, UInt64, UInt64) -> Bytes
 pub fn Buffer::map_write_sync(Self, Instance, UInt64, Bytes) -> Unit
@@ -1240,12 +1242,14 @@ pub fn Buffer::unmap(Self) -> Unit
 pub struct CommandBuffer {
   raw : @c.WGPUCommandBuffer
 }
+pub fn CommandBuffer::add_ref(Self) -> Self
 pub fn CommandBuffer::release(Self) -> Unit
 pub fn CommandBuffer::set_label(Self, String) -> Unit
 
 pub struct CommandEncoder {
   raw : @c.WGPUCommandEncoder
 }
+pub fn CommandEncoder::add_ref(Self) -> Self
 pub fn CommandEncoder::begin_compute_pass(Self) -> ComputePass
 pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color2(Self, TextureView, TextureView) -> RenderPass
@@ -1273,6 +1277,7 @@ pub fn CommandEncoder::write_timestamp(Self, QuerySet, UInt) -> Unit
 pub struct ComputePass {
   raw : @c.WGPUComputePassEncoder
 }
+pub fn ComputePass::add_ref(Self) -> Self
 pub fn ComputePass::begin_pipeline_statistics_query(Self, QuerySet, UInt) -> Unit
 pub fn ComputePass::dispatch_workgroups(Self, UInt, UInt, UInt) -> Unit
 pub fn ComputePass::dispatch_workgroups_indirect(Self, Buffer, UInt64) -> Unit
@@ -1292,12 +1297,14 @@ pub fn ComputePass::write_timestamp(Self, QuerySet, UInt) -> Unit
 pub struct ComputePipeline {
   raw : @c.WGPUComputePipeline
 }
+pub fn ComputePipeline::add_ref(Self) -> Self
 pub fn ComputePipeline::release(Self) -> Unit
 pub fn ComputePipeline::set_label(Self, String) -> Unit
 
 pub struct Device {
   raw : @c.WGPUDevice
 }
+pub fn Device::add_ref(Self) -> Self
 pub fn Device::create_bind_group_layout_ptr(Self, @c.WGPUBindGroupLayoutDescriptorPtr) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_sampler_filtering(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_sampler_texture_2d(Self) -> BindGroupLayout
@@ -1378,6 +1385,7 @@ pub fn GlobalReport::surfaces_num_allocated(Self) -> UInt64
 pub struct Instance {
   raw : @c.WGPUInstance
 }
+pub fn Instance::add_ref(Self) -> Self
 pub fn Instance::create() -> Self
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
 pub fn Instance::enumerate_adapters_count_metal(Self) -> UInt64
@@ -1396,18 +1404,21 @@ pub struct InstanceCapabilities {
 pub struct PipelineLayout {
   raw : @c.WGPUPipelineLayout
 }
+pub fn PipelineLayout::add_ref(Self) -> Self
 pub fn PipelineLayout::release(Self) -> Unit
 pub fn PipelineLayout::set_label(Self, String) -> Unit
 
 pub struct QuerySet {
   raw : @c.WGPUQuerySet
 }
+pub fn QuerySet::add_ref(Self) -> Self
 pub fn QuerySet::release(Self) -> Unit
 pub fn QuerySet::set_label(Self, String) -> Unit
 
 pub struct Queue {
   raw : @c.WGPUQueue
 }
+pub fn Queue::add_ref(Self) -> Self
 pub fn Queue::on_submitted_work_done_future_id_u64(Self) -> UInt64
 pub fn Queue::on_submitted_work_done_sync(Self, Instance) -> UInt
 pub fn Queue::release(Self) -> Unit
@@ -1424,12 +1435,14 @@ pub fn Queue::write_texture_rgba8_2d_mip_layer(Self, Texture, UInt, UInt, UInt, 
 pub struct RenderBundle {
   raw : @c.WGPURenderBundle
 }
+pub fn RenderBundle::add_ref(Self) -> Self
 pub fn RenderBundle::release(Self) -> Unit
 pub fn RenderBundle::set_label(Self, String) -> Unit
 
 pub struct RenderBundleEncoder {
   raw : @c.WGPURenderBundleEncoder
 }
+pub fn RenderBundleEncoder::add_ref(Self) -> Self
 pub fn RenderBundleEncoder::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderBundleEncoder::finish(Self) -> RenderBundle
 pub fn RenderBundleEncoder::release(Self) -> Unit
@@ -1440,6 +1453,7 @@ pub fn RenderBundleEncoder::set_push_constants(Self, UInt64, UInt, Bytes) -> Uni
 pub struct RenderPass {
   raw : @c.WGPURenderPassEncoder
 }
+pub fn RenderPass::add_ref(Self) -> Self
 pub fn RenderPass::begin_occlusion_query(Self, UInt) -> Unit
 pub fn RenderPass::begin_pipeline_statistics_query(Self, QuerySet, UInt) -> Unit
 pub fn RenderPass::draw(Self, UInt, UInt, UInt, UInt) -> Unit
@@ -1475,18 +1489,21 @@ pub fn RenderPass::write_timestamp(Self, QuerySet, UInt) -> Unit
 pub struct RenderPipeline {
   raw : @c.WGPURenderPipeline
 }
+pub fn RenderPipeline::add_ref(Self) -> Self
 pub fn RenderPipeline::release(Self) -> Unit
 pub fn RenderPipeline::set_label(Self, String) -> Unit
 
 pub struct Sampler {
   raw : @c.WGPUSampler
 }
+pub fn Sampler::add_ref(Self) -> Self
 pub fn Sampler::release(Self) -> Unit
 pub fn Sampler::set_label(Self, String) -> Unit
 
 pub struct ShaderModule {
   raw : @c.WGPUShaderModule
 }
+pub fn ShaderModule::add_ref(Self) -> Self
 pub fn ShaderModule::is_null(Self) -> Bool
 pub fn ShaderModule::release(Self) -> Unit
 pub fn ShaderModule::set_label(Self, String) -> Unit
