@@ -1953,6 +1953,14 @@ pub fn CommandEncoder::finish(self : CommandEncoder) -> CommandBuffer {
 }
 
 ///|
+pub fn CommandEncoder::finish_ptr(
+  self : CommandEncoder,
+  descriptor : @c.WGPUCommandBufferDescriptorPtr,
+) -> CommandBuffer {
+  CommandBuffer::{ raw: @c.wgpuCommandEncoderFinish(self.raw, descriptor) }
+}
+
+///|
 pub fn CommandEncoder::clear_buffer(
   self : CommandEncoder,
   buffer : Buffer,
@@ -2133,6 +2141,16 @@ pub fn CommandEncoder::begin_compute_pass(self : CommandEncoder) -> ComputePass 
 }
 
 ///|
+pub fn CommandEncoder::begin_compute_pass_ptr(
+  self : CommandEncoder,
+  descriptor : @c.WGPUComputePassDescriptorPtr,
+) -> ComputePass {
+  ComputePass::{
+    raw: @c.wgpuCommandEncoderBeginComputePass(self.raw, descriptor),
+  }
+}
+
+///|
 pub fn CommandEncoder::set_label(self : CommandEncoder, label : String) -> Unit {
   let bytes = utf8_bytes(label)
   @c.command_encoder_set_label_utf8(self.raw, bytes, bytes.length().to_uint64())
@@ -2167,6 +2185,16 @@ pub fn CommandEncoder::push_debug_group(
 ///|
 pub fn CommandEncoder::pop_debug_group(self : CommandEncoder) -> Unit {
   @c.command_encoder_pop_debug_group(self.raw)
+}
+
+///|
+pub fn CommandEncoder::begin_render_pass_ptr(
+  self : CommandEncoder,
+  descriptor : @c.WGPURenderPassDescriptorPtr,
+) -> RenderPass {
+  RenderPass::{
+    raw: @c.wgpuCommandEncoderBeginRenderPass(self.raw, descriptor),
+  }
 }
 
 ///|

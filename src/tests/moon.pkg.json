@@ -232,6 +232,9 @@
     "wgpu_ptr_constructors_test.mbt": [
       "native"
     ],
+    "wgpu_pass_ptr_test.mbt": [
+      "native"
+    ],
     "wgpu_wgsl_language_features_test.mbt": [
       "native"
     ],

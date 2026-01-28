@@ -1256,12 +1256,14 @@ pub struct CommandEncoder {
 }
 pub fn CommandEncoder::add_ref(Self) -> Self
 pub fn CommandEncoder::begin_compute_pass(Self) -> ComputePass
+pub fn CommandEncoder::begin_compute_pass_ptr(Self, @c.WGPUComputePassDescriptorPtr) -> ComputePass
 pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color2(Self, TextureView, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_clear(Self, TextureView, Float, Float, Float, Float) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_depth(Self, TextureView, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_load(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_occlusion(Self, TextureView, QuerySet) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_ptr(Self, @c.WGPURenderPassDescriptorPtr) -> RenderPass
 pub fn CommandEncoder::clear_buffer(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_buffer(Self, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt, UInt) -> Unit
@@ -1271,6 +1273,7 @@ pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(Self, Texture, UIn
 pub fn CommandEncoder::copy_texture_to_texture_rgba8(Self, Texture, Texture, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(Self, Texture, UInt, UInt, Texture, UInt, UInt, UInt, UInt) -> Unit
 pub fn CommandEncoder::finish(Self) -> CommandBuffer
+pub fn CommandEncoder::finish_ptr(Self, @c.WGPUCommandBufferDescriptorPtr) -> CommandBuffer
 pub fn CommandEncoder::insert_debug_marker(Self, String) -> Unit
 pub fn CommandEncoder::pop_debug_group(Self) -> Unit
 pub fn CommandEncoder::push_debug_group(Self, String) -> Unit
