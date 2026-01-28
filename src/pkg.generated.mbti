@@ -1479,8 +1479,12 @@ pub fn RenderBundleEncoder::draw_indexed_indirect(Self, Buffer, UInt64) -> Unit
 pub fn RenderBundleEncoder::draw_indirect(Self, Buffer, UInt64) -> Unit
 pub fn RenderBundleEncoder::finish(Self) -> RenderBundle
 pub fn RenderBundleEncoder::finish_ptr(Self, @c.WGPURenderBundleDescriptorPtr) -> RenderBundle
+pub fn RenderBundleEncoder::insert_debug_marker(Self, String) -> Unit
+pub fn RenderBundleEncoder::pop_debug_group(Self) -> Unit
+pub fn RenderBundleEncoder::push_debug_group(Self, String) -> Unit
 pub fn RenderBundleEncoder::raw_handle(Self) -> @c.WGPURenderBundleEncoder
 pub fn RenderBundleEncoder::release(Self) -> Unit
+pub fn RenderBundleEncoder::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn RenderBundleEncoder::set_bind_group0(Self, BindGroup) -> Unit
 pub fn RenderBundleEncoder::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderBundleEncoder::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit

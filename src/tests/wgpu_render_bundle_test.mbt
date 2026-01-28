@@ -45,11 +45,24 @@ test "wgpu render bundle: executeBundles renders pixel" {
     #|}
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
-  let pipeline = device.create_render_pipeline_rgba8(sm)
+  let bgl = device.create_bind_group_layout_uniform_buffer()
+  let ub = device.create_buffer_init(
+    usage=@wgpu.buffer_usage_uniform,
+    Bytes::makei(16, _ => 0),
+  )
+  let bg = device.create_bind_group_uniform_buffer_16(bgl, ub)
+  let pipeline_layout = device.create_pipeline_layout_1(bgl)
+  let pipeline = device.create_render_pipeline_rgba8_with_layout(
+    pipeline_layout, sm,
+  )
   let idx = Bytes::makei(6, i => if i == 2 { 1 } else if i == 4 { 2 } else { 0 })
   let ib = device.create_buffer_init(usage=@wgpu.buffer_usage_index, idx)
   let bundle_encoder = device.create_render_bundle_encoder_rgba8()
   bundle_encoder.set_pipeline(pipeline)
+  bundle_encoder.insert_debug_marker("marker")
+  bundle_encoder.push_debug_group("group")
+  bundle_encoder.set_bind_group0(bg)
+  bundle_encoder.pop_debug_group()
   bundle_encoder.draw(3U, 1U, 0U, 0U)
   bundle_encoder.set_index_buffer_u16(ib, 0UL, @wgpu.whole_size)
   bundle_encoder.draw_indexed(3U, 1U, 0U, 0, 0U)
@@ -71,9 +84,13 @@ test "wgpu render bundle: executeBundles renders pixel" {
   cmd.release()
   encoder.release()
   bundle.release()
+  bg.release()
+  pipeline_layout.release()
+  bgl.release()
   pipeline.release()
   sm.release()
   ib.release()
+  ub.release()
   readback.release()
   view.release()
   tex.release()

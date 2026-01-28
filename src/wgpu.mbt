@@ -3211,12 +3211,21 @@ pub fn RenderBundleEncoder::set_bind_group0(
   self : RenderBundleEncoder,
   group : BindGroup,
 ) -> Unit {
-  @c.wgpuRenderBundleEncoderSetBindGroup(
+  @c.render_bundle_encoder_set_bind_group0(self.raw, group.raw)
+}
+
+///|
+pub fn RenderBundleEncoder::set_bind_group(
+  self : RenderBundleEncoder,
+  index : UInt,
+  group : BindGroup,
+  dynamic_offsets : Array[UInt],
+) -> Unit {
+  @c.render_bundle_encoder_set_bind_group(
     self.raw,
-    0U,
+    index,
     group.raw,
-    0UL,
-    @c.null_uint_ptr(),
+    dynamic_offsets,
   )
 }
 
@@ -3267,6 +3276,37 @@ pub fn RenderBundleEncoder::set_index_buffer_u32(
     offset,
     size,
   )
+}
+
+///|
+pub fn RenderBundleEncoder::insert_debug_marker(
+  self : RenderBundleEncoder,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.render_bundle_encoder_insert_debug_marker_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn RenderBundleEncoder::push_debug_group(
+  self : RenderBundleEncoder,
+  label : String,
+) -> Unit {
+  let bytes = utf8_bytes(label)
+  @c.render_bundle_encoder_push_debug_group_utf8(
+    self.raw,
+    bytes,
+    bytes.length().to_uint64(),
+  )
+}
+
+///|
+pub fn RenderBundleEncoder::pop_debug_group(self : RenderBundleEncoder) -> Unit {
+  @c.render_bundle_encoder_pop_debug_group(self.raw)
 }
 
 ///|

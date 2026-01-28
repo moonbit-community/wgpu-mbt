@@ -540,7 +540,17 @@ pub fn render_bundle_encoder_draw(WGPURenderBundleEncoder, UInt, UInt, UInt, UIn
 
 pub fn render_bundle_encoder_finish(WGPURenderBundleEncoder) -> WGPURenderBundle
 
+pub fn render_bundle_encoder_insert_debug_marker_utf8(WGPURenderBundleEncoder, Bytes, UInt64) -> Unit
+
+pub fn render_bundle_encoder_pop_debug_group(WGPURenderBundleEncoder) -> Unit
+
+pub fn render_bundle_encoder_push_debug_group_utf8(WGPURenderBundleEncoder, Bytes, UInt64) -> Unit
+
 pub fn render_bundle_encoder_release(WGPURenderBundleEncoder) -> Unit
+
+pub fn render_bundle_encoder_set_bind_group(WGPURenderBundleEncoder, UInt, WGPUBindGroup, Array[UInt]) -> Unit
+
+pub fn render_bundle_encoder_set_bind_group0(WGPURenderBundleEncoder, WGPUBindGroup) -> Unit
 
 pub fn render_bundle_encoder_set_label_utf8(WGPURenderBundleEncoder, Bytes, UInt64) -> Unit
 
@@ -1063,6 +1073,8 @@ pub fn wgpuRenderBundleEncoderPushDebugGroup(WGPURenderBundleEncoder, WGPUString
 pub fn wgpuRenderBundleEncoderRelease(WGPURenderBundleEncoder) -> Unit
 
 pub fn wgpuRenderBundleEncoderSetBindGroup(WGPURenderBundleEncoder, UInt, WGPUBindGroup, UInt64, UIntPtr) -> Unit
+
+pub fn wgpuRenderBundleEncoderSetBindGroup_offsets(WGPURenderBundleEncoder, UInt, WGPUBindGroup, UInt64, FixedArray[UInt]) -> Unit
 
 pub fn wgpuRenderBundleEncoderSetIndexBuffer(WGPURenderBundleEncoder, WGPUBuffer, WGPUIndexFormat, UInt64, UInt64) -> Unit
 

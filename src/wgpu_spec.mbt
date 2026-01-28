@@ -1926,6 +1926,15 @@ declare pub fn RenderBundleEncoder::set_bind_group0(
 
 ///|
 #declaration_only
+declare pub fn RenderBundleEncoder::set_bind_group(
+  self : RenderBundleEncoder,
+  index : UInt,
+  group : BindGroup,
+  dynamic_offsets : Array[UInt],
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn RenderBundleEncoder::set_vertex_buffer(
   self : RenderBundleEncoder,
   slot : UInt,
@@ -1950,6 +1959,26 @@ declare pub fn RenderBundleEncoder::set_index_buffer_u32(
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::insert_debug_marker(
+  self : RenderBundleEncoder,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::push_debug_group(
+  self : RenderBundleEncoder,
+  label : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::pop_debug_group(
+  self : RenderBundleEncoder,
 ) -> Unit
 
 ///|

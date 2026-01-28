@@ -658,6 +658,27 @@ pub extern "C" fn render_bundle_encoder_set_label_utf8(
 
 ///|
 #borrow(label)
+pub extern "C" fn render_bundle_encoder_insert_debug_marker_utf8(
+  render_bundle_encoder : WGPURenderBundleEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_render_bundle_encoder_insert_debug_marker_utf8"
+
+///|
+#borrow(label)
+pub extern "C" fn render_bundle_encoder_push_debug_group_utf8(
+  render_bundle_encoder : WGPURenderBundleEncoder,
+  label : Bytes,
+  label_len : UInt64,
+) -> Unit = "mbt_wgpu_render_bundle_encoder_push_debug_group_utf8"
+
+///|
+pub extern "C" fn render_bundle_encoder_pop_debug_group(
+  render_bundle_encoder : WGPURenderBundleEncoder,
+) -> Unit = "mbt_wgpu_render_bundle_encoder_pop_debug_group"
+
+///|
+#borrow(label)
 pub extern "C" fn render_pipeline_set_label_utf8(
   pipeline : RenderPipeline,
   label : Bytes,
@@ -1441,6 +1462,55 @@ pub extern "C" fn render_bundle_encoder_draw(
   first_vertex : UInt,
   first_instance : UInt,
 ) -> Unit = "wgpuRenderBundleEncoderDraw"
+
+///|
+pub fn render_bundle_encoder_set_bind_group0(
+  encoder : WGPURenderBundleEncoder,
+  group : BindGroup,
+) -> Unit {
+  wgpuRenderBundleEncoderSetBindGroup(encoder, 0U, group, 0UL, null_uint_ptr())
+}
+
+///|
+#borrow(offsets)
+pub extern "C" fn wgpuRenderBundleEncoderSetBindGroup_offsets(
+  encoder : WGPURenderBundleEncoder,
+  group_index : UInt,
+  group : BindGroup,
+  dynamic_offset_count : UInt64,
+  offsets : FixedArray[UInt],
+) -> Unit = "wgpuRenderBundleEncoderSetBindGroup"
+
+///|
+pub fn render_bundle_encoder_set_bind_group(
+  encoder : WGPURenderBundleEncoder,
+  index : UInt,
+  group : BindGroup,
+  dynamic_offsets : Array[UInt],
+) -> Unit {
+  let n = dynamic_offsets.length()
+  if n == 0 {
+    wgpuRenderBundleEncoderSetBindGroup(
+      encoder,
+      index,
+      group,
+      0UL,
+      null_uint_ptr(),
+    )
+    return
+  }
+  let offsets : FixedArray[UInt] = FixedArray::make(n, 0U)
+  for i in 0..<n {
+    offsets[i] = dynamic_offsets[i]
+  }
+  wgpuRenderBundleEncoderSetBindGroup_offsets(
+    encoder,
+    index,
+    group,
+    n.to_uint64(),
+    offsets,
+  )
+}
 
 ///|
 pub fn render_bundle_encoder_finish(

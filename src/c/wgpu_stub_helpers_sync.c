@@ -24,6 +24,22 @@ void mbt_wgpu_render_pass_set_blend_constant_rgba(WGPURenderPassEncoder pass,
   wgpuRenderPassEncoderSetBlendConstant(pass, &color);
 }
 
+void mbt_wgpu_render_bundle_encoder_insert_debug_marker_utf8(
+    WGPURenderBundleEncoder encoder, const uint8_t *label, uint64_t label_len) {
+  WGPUStringView sv = {.data = (const char *)label, .length = (size_t)label_len};
+  wgpuRenderBundleEncoderInsertDebugMarker(encoder, sv);
+}
+
+void mbt_wgpu_render_bundle_encoder_push_debug_group_utf8(
+    WGPURenderBundleEncoder encoder, const uint8_t *label, uint64_t label_len) {
+  WGPUStringView sv = {.data = (const char *)label, .length = (size_t)label_len};
+  wgpuRenderBundleEncoderPushDebugGroup(encoder, sv);
+}
+
+void mbt_wgpu_render_bundle_encoder_pop_debug_group(WGPURenderBundleEncoder encoder) {
+  wgpuRenderBundleEncoderPopDebugGroup(encoder);
+}
+
 typedef struct {
   WGPUTexelCopyTextureInfo info;
 } mbt_texel_copy_texture_info_t;
