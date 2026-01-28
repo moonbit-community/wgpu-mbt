@@ -16,7 +16,7 @@
 
 #include "moonbit.h"
 
-#include "wgpu.h"
+#include "wgpu_native_shim.h"
 
 // For fixed-width integer ABI compatibility with MoonBit.
 #include <stdbool.h>
