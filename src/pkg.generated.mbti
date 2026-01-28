@@ -1409,6 +1409,7 @@ pub struct Instance {
 }
 pub fn Instance::add_ref(Self) -> Self
 pub fn Instance::create() -> Self
+pub fn Instance::create_ptr(@c.WGPUInstanceDescriptorPtr) -> Self
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
 pub fn Instance::enumerate_adapters_count_metal(Self) -> UInt64
 pub fn Instance::generate_report(Self) -> GlobalReport
@@ -1472,6 +1473,7 @@ pub struct RenderBundleEncoder {
 pub fn RenderBundleEncoder::add_ref(Self) -> Self
 pub fn RenderBundleEncoder::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderBundleEncoder::finish(Self) -> RenderBundle
+pub fn RenderBundleEncoder::finish_ptr(Self, @c.WGPURenderBundleDescriptorPtr) -> RenderBundle
 pub fn RenderBundleEncoder::raw_handle(Self) -> @c.WGPURenderBundleEncoder
 pub fn RenderBundleEncoder::release(Self) -> Unit
 pub fn RenderBundleEncoder::set_label(Self, String) -> Unit

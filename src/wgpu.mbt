@@ -222,6 +222,13 @@ pub fn Instance::create() -> Instance {
 }
 
 ///|
+pub fn Instance::create_ptr(
+  descriptor : @c.WGPUInstanceDescriptorPtr,
+) -> Instance {
+  Instance::{ raw: @c.wgpuCreateInstance(descriptor) }
+}
+
+///|
 pub fn Instance::request_adapter_sync(self : Instance) -> Adapter {
   Adapter::{ raw: @c.instance_request_adapter_sync(self.raw) }
 }
@@ -3138,6 +3145,14 @@ pub fn RenderBundleEncoder::draw(
 ///|
 pub fn RenderBundleEncoder::finish(self : RenderBundleEncoder) -> RenderBundle {
   RenderBundle::{ raw: @c.render_bundle_encoder_finish(self.raw) }
+}
+
+///|
+pub fn RenderBundleEncoder::finish_ptr(
+  self : RenderBundleEncoder,
+  descriptor : @c.WGPURenderBundleDescriptorPtr,
+) -> RenderBundle {
+  RenderBundle::{ raw: @c.wgpuRenderBundleEncoderFinish(self.raw, descriptor) }
 }
 
 ///|

@@ -14,7 +14,9 @@
 
 ///|
 test "wgpu ptr-based constructors + raw handles" {
-  let instance = @wgpu.Instance::create()
+  let instance = @wgpu.Instance::create_ptr(
+    @wgpu_c.null_instance_descriptor_ptr(),
+  )
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
@@ -65,6 +67,10 @@ test "wgpu ptr-based constructors + raw handles" {
   let rbe_desc = @wgpu_c.render_bundle_encoder_descriptor_rgba8_new()
   let rbe = device.create_render_bundle_encoder_ptr(rbe_desc)
   @wgpu_c.render_bundle_encoder_descriptor_free(rbe_desc)
+  let rb_desc = @wgpu_c.render_bundle_descriptor_default_new()
+  let rb = rbe.finish_ptr(rb_desc)
+  @wgpu_c.render_bundle_descriptor_free(rb_desc)
+  rb.release()
   rbe.release()
   let ce_desc = @wgpu_c.null_command_encoder_descriptor_ptr()
   let encoder = device.create_command_encoder_ptr(ce_desc)
