@@ -1159,6 +1159,11 @@ pub struct Adapter {
   raw : @c.WGPUAdapter
 }
 pub fn Adapter::add_ref(Self) -> Self
+pub fn Adapter::add_ref_raw(Self) -> Unit
+pub fn Adapter::get_features(Self, @c.WGPUSupportedFeaturesPtr) -> Unit
+pub fn Adapter::get_info(Self, @c.WGPUAdapterInfoPtr) -> @c.WGPUStatus
+pub fn Adapter::get_limits(Self, @c.WGPULimitsPtr) -> @c.WGPUStatus
+pub fn Adapter::has_feature(Self, @c.WGPUFeatureName) -> Bool
 pub fn Adapter::has_feature_native_pipeline_statistics_query(Self) -> Bool
 pub fn Adapter::has_feature_native_push_constants(Self) -> Bool
 pub fn Adapter::has_feature_native_spirv_shader_passthrough(Self) -> Bool
@@ -1179,6 +1184,7 @@ pub fn Adapter::limits_max_compute_workgroup_size_x_u32(Self) -> UInt
 pub fn Adapter::limits_max_texture_dimension_2d_u32(Self) -> UInt
 pub fn Adapter::raw_handle(Self) -> @c.WGPUAdapter
 pub fn Adapter::release(Self) -> Unit
+pub fn Adapter::release_raw(Self) -> Unit
 pub fn Adapter::request_device_sync(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_pipeline_statistics_query(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_ptr(Self, Instance, @c.WGPUDeviceDescriptorPtr) -> Device
@@ -1196,8 +1202,10 @@ pub struct BindGroup {
   raw : @c.WGPUBindGroup
 }
 pub fn BindGroup::add_ref(Self) -> Self
+pub fn BindGroup::add_ref_raw(Self) -> Unit
 pub fn BindGroup::raw_handle(Self) -> @c.WGPUBindGroup
 pub fn BindGroup::release(Self) -> Unit
+pub fn BindGroup::release_raw(Self) -> Unit
 pub fn BindGroup::set_label(Self, String) -> Unit
 
 pub struct BindGroupBuilder {
@@ -1217,8 +1225,10 @@ pub struct BindGroupLayout {
   raw : @c.WGPUBindGroupLayout
 }
 pub fn BindGroupLayout::add_ref(Self) -> Self
+pub fn BindGroupLayout::add_ref_raw(Self) -> Unit
 pub fn BindGroupLayout::raw_handle(Self) -> @c.WGPUBindGroupLayout
 pub fn BindGroupLayout::release(Self) -> Unit
+pub fn BindGroupLayout::release_raw(Self) -> Unit
 pub fn BindGroupLayout::set_label(Self, String) -> Unit
 
 pub struct BindGroupLayoutBuilder {
@@ -1236,31 +1246,43 @@ pub struct Buffer {
   raw : @c.WGPUBuffer
 }
 pub fn Buffer::add_ref(Self) -> Self
+pub fn Buffer::add_ref_raw(Self) -> Unit
 pub fn Buffer::destroy(Self) -> Unit
+pub fn Buffer::destroy_raw(Self) -> Unit
+pub fn Buffer::get_map_state(Self) -> @c.WGPUBufferMapState
+pub fn Buffer::get_size(Self) -> UInt64
+pub fn Buffer::get_usage(Self) -> UInt64
 pub fn Buffer::map_read_sync(Self, Instance, UInt64, UInt64) -> Bytes
 pub fn Buffer::map_write_sync(Self, Instance, UInt64, Bytes) -> Unit
 pub fn Buffer::raw_handle(Self) -> @c.WGPUBuffer
 pub fn Buffer::readback(Self, Instance, UInt64, UInt64) -> Bytes
 pub fn Buffer::release(Self) -> Unit
+pub fn Buffer::release_raw(Self) -> Unit
 pub fn Buffer::set_label(Self, String) -> Unit
 pub fn Buffer::size(Self) -> UInt64
 pub fn Buffer::unmap(Self) -> Unit
+pub fn Buffer::unmap_raw(Self) -> Unit
 pub fn Buffer::usage_u64(Self) -> UInt64
 
 pub struct CommandBuffer {
   raw : @c.WGPUCommandBuffer
 }
 pub fn CommandBuffer::add_ref(Self) -> Self
+pub fn CommandBuffer::add_ref_raw(Self) -> Unit
 pub fn CommandBuffer::raw_handle(Self) -> @c.WGPUCommandBuffer
 pub fn CommandBuffer::release(Self) -> Unit
+pub fn CommandBuffer::release_raw(Self) -> Unit
 pub fn CommandBuffer::set_label(Self, String) -> Unit
 
 pub struct CommandEncoder {
   raw : @c.WGPUCommandEncoder
 }
 pub fn CommandEncoder::add_ref(Self) -> Self
+pub fn CommandEncoder::add_ref_raw(Self) -> Unit
 pub fn CommandEncoder::begin_compute_pass(Self) -> ComputePass
 pub fn CommandEncoder::begin_compute_pass_ptr(Self, @c.WGPUComputePassDescriptorPtr) -> ComputePass
+pub fn CommandEncoder::begin_compute_pass_raw(Self, @c.WGPUComputePassDescriptorPtr) -> ComputePass
+pub fn CommandEncoder::begin_render_pass(Self, @c.WGPURenderPassDescriptorPtr) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color2(Self, TextureView, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_clear(Self, TextureView, Float, Float, Float, Float) -> RenderPass
@@ -1269,61 +1291,87 @@ pub fn CommandEncoder::begin_render_pass_color_load(Self, TextureView) -> Render
 pub fn CommandEncoder::begin_render_pass_color_occlusion(Self, TextureView, QuerySet) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_ptr(Self, @c.WGPURenderPassDescriptorPtr) -> RenderPass
 pub fn CommandEncoder::clear_buffer(Self, Buffer, UInt64, UInt64) -> Unit
+pub fn CommandEncoder::clear_buffer_raw(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_buffer(Self, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
+pub fn CommandEncoder::copy_buffer_to_buffer_raw(Self, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
+pub fn CommandEncoder::copy_buffer_to_texture(Self, @c.WGPUTexelCopyBufferInfoPtr, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_ptr(Self, @c.WGPUTexelCopyBufferInfoPtr, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(Self, Buffer, Texture, UInt, UInt, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_texture_to_buffer(Self, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUTexelCopyBufferInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_ptr(Self, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUTexelCopyBufferInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8(Self, Texture, Buffer, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(Self, Texture, UInt, UInt, Buffer, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_texture_to_texture(Self, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_texture_to_texture_ptr(Self, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_texture_to_texture_rgba8(Self, Texture, Texture, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(Self, Texture, UInt, UInt, Texture, UInt, UInt, UInt, UInt) -> Unit
 pub fn CommandEncoder::finish(Self) -> CommandBuffer
 pub fn CommandEncoder::finish_ptr(Self, @c.WGPUCommandBufferDescriptorPtr) -> CommandBuffer
+pub fn CommandEncoder::finish_raw(Self, @c.WGPUCommandBufferDescriptorPtr) -> CommandBuffer
 pub fn CommandEncoder::insert_debug_marker(Self, String) -> Unit
 pub fn CommandEncoder::pop_debug_group(Self) -> Unit
+pub fn CommandEncoder::pop_debug_group_raw(Self) -> Unit
 pub fn CommandEncoder::push_debug_group(Self, String) -> Unit
 pub fn CommandEncoder::raw_handle(Self) -> @c.WGPUCommandEncoder
 pub fn CommandEncoder::release(Self) -> Unit
+pub fn CommandEncoder::release_raw(Self) -> Unit
 pub fn CommandEncoder::resolve_query_set(Self, QuerySet, UInt, UInt, Buffer, UInt64) -> Unit
+pub fn CommandEncoder::resolve_query_set_raw(Self, QuerySet, UInt, UInt, Buffer, UInt64) -> Unit
 pub fn CommandEncoder::set_label(Self, String) -> Unit
 pub fn CommandEncoder::write_timestamp(Self, QuerySet, UInt) -> Unit
+pub fn CommandEncoder::write_timestamp_raw(Self, QuerySet, UInt) -> Unit
 
 pub struct ComputePass {
   raw : @c.WGPUComputePassEncoder
 }
 pub fn ComputePass::add_ref(Self) -> Self
+pub fn ComputePass::add_ref_raw(Self) -> Unit
 pub fn ComputePass::begin_pipeline_statistics_query(Self, QuerySet, UInt) -> Unit
+pub fn ComputePass::begin_pipeline_statistics_query_raw(Self, QuerySet, UInt) -> Unit
 pub fn ComputePass::dispatch_workgroups(Self, UInt, UInt, UInt) -> Unit
 pub fn ComputePass::dispatch_workgroups_indirect(Self, Buffer, UInt64) -> Unit
+pub fn ComputePass::dispatch_workgroups_indirect_raw(Self, Buffer, UInt64) -> Unit
+pub fn ComputePass::dispatch_workgroups_raw(Self, UInt, UInt, UInt) -> Unit
 pub fn ComputePass::end(Self) -> Unit
 pub fn ComputePass::end_pipeline_statistics_query(Self) -> Unit
+pub fn ComputePass::end_pipeline_statistics_query_raw(Self) -> Unit
+pub fn ComputePass::end_raw(Self) -> Unit
 pub fn ComputePass::insert_debug_marker(Self, String) -> Unit
 pub fn ComputePass::pop_debug_group(Self) -> Unit
+pub fn ComputePass::pop_debug_group_raw(Self) -> Unit
 pub fn ComputePass::push_debug_group(Self, String) -> Unit
 pub fn ComputePass::raw_handle(Self) -> @c.WGPUComputePassEncoder
 pub fn ComputePass::release(Self) -> Unit
+pub fn ComputePass::release_raw(Self) -> Unit
 pub fn ComputePass::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn ComputePass::set_bind_group0(Self, BindGroup) -> Unit
 pub fn ComputePass::set_label(Self, String) -> Unit
 pub fn ComputePass::set_pipeline(Self, ComputePipeline) -> Unit
+pub fn ComputePass::set_pipeline_raw(Self, ComputePipeline) -> Unit
 pub fn ComputePass::set_push_constants(Self, UInt, Bytes) -> Unit
 pub fn ComputePass::write_timestamp(Self, QuerySet, UInt) -> Unit
+pub fn ComputePass::write_timestamp_raw(Self, QuerySet, UInt) -> Unit
 
 pub struct ComputePipeline {
   raw : @c.WGPUComputePipeline
 }
 pub fn ComputePipeline::add_ref(Self) -> Self
+pub fn ComputePipeline::add_ref_raw(Self) -> Unit
 pub fn ComputePipeline::get_bind_group_layout(Self, UInt) -> BindGroupLayout
+pub fn ComputePipeline::get_bind_group_layout_raw(Self, UInt) -> BindGroupLayout
 pub fn ComputePipeline::raw_handle(Self) -> @c.WGPUComputePipeline
 pub fn ComputePipeline::release(Self) -> Unit
+pub fn ComputePipeline::release_raw(Self) -> Unit
 pub fn ComputePipeline::set_label(Self, String) -> Unit
 
 pub struct Device {
   raw : @c.WGPUDevice
 }
 pub fn Device::add_ref(Self) -> Self
+pub fn Device::add_ref_raw(Self) -> Unit
+pub fn Device::create_bind_group(Self, @c.WGPUBindGroupDescriptorPtr) -> BindGroup
+pub fn Device::create_bind_group_layout(Self, @c.WGPUBindGroupLayoutDescriptorPtr) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_ptr(Self, @c.WGPUBindGroupLayoutDescriptorPtr) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_sampler_filtering(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_sampler_texture_2d(Self) -> BindGroupLayout
@@ -1343,21 +1391,28 @@ pub fn Device::create_bind_group_uniform_buffer_16(Self, BindGroupLayout, Buffer
 pub fn Device::create_buffer(Self, size~ : UInt64, usage~ : UInt64, mapped_at_creation? : Bool) -> Buffer
 pub fn Device::create_buffer_init(Self, usage~ : UInt64, Bytes) -> Buffer
 pub fn Device::create_buffer_ptr(Self, @c.WGPUBufferDescriptorPtr) -> Buffer
+pub fn Device::create_buffer_raw(Self, @c.WGPUBufferDescriptorPtr) -> Buffer
 pub fn Device::create_command_encoder(Self) -> CommandEncoder
 pub fn Device::create_command_encoder_ptr(Self, @c.WGPUCommandEncoderDescriptorPtr) -> CommandEncoder
+pub fn Device::create_command_encoder_raw(Self, @c.WGPUCommandEncoderDescriptorPtr) -> CommandEncoder
 pub fn Device::create_compute_pipeline(Self, ShaderModule) -> ComputePipeline
 pub fn Device::create_compute_pipeline_ptr(Self, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline
+pub fn Device::create_compute_pipeline_raw(Self, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline
 pub fn Device::create_compute_pipeline_with_layout(Self, PipelineLayout, ShaderModule) -> ComputePipeline
+pub fn Device::create_pipeline_layout(Self, @c.WGPUPipelineLayoutDescriptorPtr) -> PipelineLayout
 pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_2(Self, BindGroupLayout, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_ptr(Self, @c.WGPUPipelineLayoutDescriptorPtr) -> PipelineLayout
 pub fn Device::create_pipeline_layout_push_constants(Self, UInt64, UInt, UInt) -> PipelineLayout
+pub fn Device::create_query_set(Self, @c.WGPUQuerySetDescriptorPtr) -> QuerySet
 pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
 pub fn Device::create_query_set_pipeline_statistics(Self, UInt, UInt) -> QuerySet
 pub fn Device::create_query_set_ptr(Self, @c.WGPUQuerySetDescriptorPtr) -> QuerySet
 pub fn Device::create_query_set_timestamp(Self, UInt) -> QuerySet
+pub fn Device::create_render_bundle_encoder(Self, @c.WGPURenderBundleEncoderDescriptorPtr) -> RenderBundleEncoder
 pub fn Device::create_render_bundle_encoder_ptr(Self, @c.WGPURenderBundleEncoderDescriptorPtr) -> RenderBundleEncoder
 pub fn Device::create_render_bundle_encoder_rgba8(Self) -> RenderBundleEncoder
+pub fn Device::create_render_pipeline(Self, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
 pub fn Device::create_render_pipeline_color_format(Self, ShaderModule, UInt) -> RenderPipeline
 pub fn Device::create_render_pipeline_ptr(Self, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
@@ -1367,6 +1422,7 @@ pub fn Device::create_render_pipeline_rgba8_mrt2(Self, ShaderModule) -> RenderPi
 pub fn Device::create_render_pipeline_rgba8_pos2(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_pos2_with_layout(Self, PipelineLayout, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_with_layout(Self, PipelineLayout, ShaderModule) -> RenderPipeline
+pub fn Device::create_sampler(Self, @c.WGPUSamplerDescriptorPtr) -> Sampler
 pub fn Device::create_sampler_linear_clamp(Self) -> Sampler
 pub fn Device::create_sampler_linear_mirror_repeat(Self) -> Sampler
 pub fn Device::create_sampler_linear_repeat(Self) -> Sampler
@@ -1375,9 +1431,12 @@ pub fn Device::create_sampler_nearest_mirror_repeat(Self) -> Sampler
 pub fn Device::create_sampler_nearest_repeat(Self) -> Sampler
 pub fn Device::create_sampler_ptr(Self, @c.WGPUSamplerDescriptorPtr) -> Sampler
 pub fn Device::create_sampler_u32(Self, UInt, UInt, UInt, UInt, UInt, UInt, lod_min_clamp_f32? : Float, lod_max_clamp_f32? : Float, compare_u32? : UInt, max_anisotropy_u32? : UInt) -> Sampler
+pub fn Device::create_shader_module(Self, @c.WGPUShaderModuleDescriptorPtr) -> ShaderModule
 pub fn Device::create_shader_module_ptr(Self, @c.WGPUShaderModuleDescriptorPtr) -> ShaderModule
+pub fn Device::create_shader_module_spir_v(Self, @c.WGPUShaderModuleDescriptorSpirVPtr) -> ShaderModule
 pub fn Device::create_shader_module_spirv(Self, Bytes) -> ShaderModule
 pub fn Device::create_shader_module_wgsl(Self, String) -> ShaderModule
+pub fn Device::create_texture(Self, @c.WGPUTextureDescriptorPtr) -> Texture
 pub fn Device::create_texture_depth24plus_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_ptr(Self, @c.WGPUTextureDescriptorPtr) -> Texture
 pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
@@ -1386,15 +1445,25 @@ pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, 
 pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
 pub fn Device::create_texture_u32(Self, UInt, UInt, UInt, UInt64, UInt, UInt, mip_level_count? : UInt, sample_count? : UInt, view_formats? : Array[UInt]) -> Texture
 pub fn Device::destroy(Self) -> Unit
+pub fn Device::destroy_raw(Self) -> Unit
+pub fn Device::get_adapter_info(Self) -> @c.WGPUAdapterInfo
+pub fn Device::get_features(Self, @c.WGPUSupportedFeaturesPtr) -> Unit
+pub fn Device::get_limits(Self, @c.WGPULimitsPtr) -> @c.WGPUStatus
+pub fn Device::get_lost_future(Self) -> @c.WGPUFuture
+pub fn Device::get_queue(Self) -> Queue
+pub fn Device::has_feature(Self, @c.WGPUFeatureName) -> Bool
 pub fn Device::limits_max_bind_groups_u32(Self) -> UInt
 pub fn Device::limits_max_buffer_size_u64(Self) -> UInt64
 pub fn Device::limits_max_texture_dimension_2d_u32(Self) -> UInt
 pub fn Device::poll(Self, wait? : Bool) -> Bool
+pub fn Device::poll_raw(Self, Bool, @c.WGPUSubmissionIndexPtr) -> Bool
 pub fn Device::pop_error_scope_sync(Self, Instance) -> UInt
 pub fn Device::push_error_scope(Self, UInt) -> Unit
+pub fn Device::push_error_scope_raw(Self, @c.WGPUErrorFilter) -> Unit
 pub fn Device::queue(Self) -> Queue
 pub fn Device::raw_handle(Self) -> @c.WGPUDevice
 pub fn Device::release(Self) -> Unit
+pub fn Device::release_raw(Self) -> Unit
 pub fn Device::set_label(Self, String) -> Unit
 pub fn Device::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Device::supported_features_contains_u32(Self, UInt) -> Bool
@@ -1415,17 +1484,26 @@ pub struct Instance {
   raw : @c.WGPUInstance
 }
 pub fn Instance::add_ref(Self) -> Self
+pub fn Instance::add_ref_raw(Self) -> Unit
 pub fn Instance::create() -> Self
 pub fn Instance::create_ptr(@c.WGPUInstanceDescriptorPtr) -> Self
+pub fn Instance::create_surface(Self, @c.WGPUSurfaceDescriptorPtr) -> Surface
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
+pub fn Instance::enumerate_adapters(Self, @c.WGPUInstanceEnumerateAdapterOptionsPtr, @c.WGPUAdapterPtr) -> UInt64
 pub fn Instance::enumerate_adapters_count_metal(Self) -> UInt64
 pub fn Instance::generate_report(Self) -> GlobalReport
+pub fn Instance::get_wgsl_language_features(Self, @c.WGPUSupportedWGSLLanguageFeaturesPtr) -> @c.WGPUStatus
+pub fn Instance::has_wgsl_language_feature(Self, @c.WGPUWGSLLanguageFeatureName) -> Bool
 pub fn Instance::process_events(Self) -> Unit
+pub fn Instance::process_events_raw(Self) -> Unit
 pub fn Instance::raw_handle(Self) -> @c.WGPUInstance
 pub fn Instance::release(Self) -> Unit
+pub fn Instance::release_raw(Self) -> Unit
 pub fn Instance::request_adapter_sync(Self) -> Adapter
 pub fn Instance::request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Adapter
+pub fn Instance::wait_any(Self, UInt64, @c.WGPUFutureWaitInfoPtr, UInt64) -> @c.WGPUWaitStatus
 pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult
+pub fn Instance::wgpu_generate_report(Self, @c.WGPUGlobalReportPtr) -> Unit
 pub fn Instance::wgsl_language_features_count_u64(Self) -> UInt64
 
 pub struct InstanceCapabilities {
@@ -1437,31 +1515,43 @@ pub struct PipelineLayout {
   raw : @c.WGPUPipelineLayout
 }
 pub fn PipelineLayout::add_ref(Self) -> Self
+pub fn PipelineLayout::add_ref_raw(Self) -> Unit
 pub fn PipelineLayout::raw_handle(Self) -> @c.WGPUPipelineLayout
 pub fn PipelineLayout::release(Self) -> Unit
+pub fn PipelineLayout::release_raw(Self) -> Unit
 pub fn PipelineLayout::set_label(Self, String) -> Unit
 
 pub struct QuerySet {
   raw : @c.WGPUQuerySet
 }
 pub fn QuerySet::add_ref(Self) -> Self
+pub fn QuerySet::add_ref_raw(Self) -> Unit
+pub fn QuerySet::destroy(Self) -> Unit
+pub fn QuerySet::get_count(Self) -> UInt
+pub fn QuerySet::get_type(Self) -> @c.WGPUQueryType
 pub fn QuerySet::raw_handle(Self) -> @c.WGPUQuerySet
 pub fn QuerySet::release(Self) -> Unit
+pub fn QuerySet::release_raw(Self) -> Unit
 pub fn QuerySet::set_label(Self, String) -> Unit
 
 pub struct Queue {
   raw : @c.WGPUQueue
 }
 pub fn Queue::add_ref(Self) -> Self
+pub fn Queue::add_ref_raw(Self) -> Unit
+pub fn Queue::get_timestamp_period(Self) -> Float
 pub fn Queue::on_submitted_work_done_future_id_u64(Self) -> UInt64
 pub fn Queue::on_submitted_work_done_sync(Self, Instance) -> UInt
 pub fn Queue::raw_handle(Self) -> @c.WGPUQueue
 pub fn Queue::release(Self) -> Unit
+pub fn Queue::release_raw(Self) -> Unit
 pub fn Queue::set_label(Self, String) -> Unit
 pub fn Queue::submit(Self, Array[CommandBuffer]) -> Unit
 pub fn Queue::submit_for_index(Self, Array[CommandBuffer]) -> UInt64
+pub fn Queue::submit_for_index_raw(Self, UInt64, @c.WGPUCommandBufferPtr) -> UInt64
 pub fn Queue::submit_one(Self, CommandBuffer) -> Unit
 pub fn Queue::submit_one_for_index(Self, CommandBuffer) -> UInt64
+pub fn Queue::submit_raw(Self, UInt64, @c.WGPUCommandBufferPtr) -> Unit
 pub fn Queue::timestamp_period(Self) -> Float
 pub fn Queue::write_buffer(Self, Buffer, UInt64, Bytes) -> Unit
 pub fn Queue::write_texture_ptr(Self, @c.WGPUTexelCopyTextureInfoPtr, Bytes, @c.WGPUTexelCopyBufferLayoutPtr, @c.WGPUExtent3DPtr, data_size? : UInt64) -> Unit
@@ -1472,95 +1562,140 @@ pub struct RenderBundle {
   raw : @c.WGPURenderBundle
 }
 pub fn RenderBundle::add_ref(Self) -> Self
+pub fn RenderBundle::add_ref_raw(Self) -> Unit
 pub fn RenderBundle::raw_handle(Self) -> @c.WGPURenderBundle
 pub fn RenderBundle::release(Self) -> Unit
+pub fn RenderBundle::release_raw(Self) -> Unit
 pub fn RenderBundle::set_label(Self, String) -> Unit
 
 pub struct RenderBundleEncoder {
   raw : @c.WGPURenderBundleEncoder
 }
 pub fn RenderBundleEncoder::add_ref(Self) -> Self
+pub fn RenderBundleEncoder::add_ref_raw(Self) -> Unit
 pub fn RenderBundleEncoder::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderBundleEncoder::draw_indexed(Self, UInt, UInt, UInt, Int, UInt) -> Unit
 pub fn RenderBundleEncoder::draw_indexed_indirect(Self, Buffer, UInt64) -> Unit
+pub fn RenderBundleEncoder::draw_indexed_indirect_raw(Self, Buffer, UInt64) -> Unit
+pub fn RenderBundleEncoder::draw_indexed_raw(Self, UInt, UInt, UInt, Int, UInt) -> Unit
 pub fn RenderBundleEncoder::draw_indirect(Self, Buffer, UInt64) -> Unit
+pub fn RenderBundleEncoder::draw_indirect_raw(Self, Buffer, UInt64) -> Unit
+pub fn RenderBundleEncoder::draw_raw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderBundleEncoder::finish(Self) -> RenderBundle
 pub fn RenderBundleEncoder::finish_ptr(Self, @c.WGPURenderBundleDescriptorPtr) -> RenderBundle
+pub fn RenderBundleEncoder::finish_raw(Self, @c.WGPURenderBundleDescriptorPtr) -> RenderBundle
 pub fn RenderBundleEncoder::insert_debug_marker(Self, String) -> Unit
 pub fn RenderBundleEncoder::pop_debug_group(Self) -> Unit
+pub fn RenderBundleEncoder::pop_debug_group_raw(Self) -> Unit
 pub fn RenderBundleEncoder::push_debug_group(Self, String) -> Unit
 pub fn RenderBundleEncoder::raw_handle(Self) -> @c.WGPURenderBundleEncoder
 pub fn RenderBundleEncoder::release(Self) -> Unit
+pub fn RenderBundleEncoder::release_raw(Self) -> Unit
 pub fn RenderBundleEncoder::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn RenderBundleEncoder::set_bind_group0(Self, BindGroup) -> Unit
+pub fn RenderBundleEncoder::set_index_buffer(Self, Buffer, @c.WGPUIndexFormat, UInt64, UInt64) -> Unit
 pub fn RenderBundleEncoder::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderBundleEncoder::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderBundleEncoder::set_label(Self, String) -> Unit
 pub fn RenderBundleEncoder::set_pipeline(Self, RenderPipeline) -> Unit
+pub fn RenderBundleEncoder::set_pipeline_raw(Self, RenderPipeline) -> Unit
 pub fn RenderBundleEncoder::set_push_constants(Self, UInt64, UInt, Bytes) -> Unit
 pub fn RenderBundleEncoder::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit
+pub fn RenderBundleEncoder::set_vertex_buffer_raw(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 
 pub struct RenderPass {
   raw : @c.WGPURenderPassEncoder
 }
 pub fn RenderPass::add_ref(Self) -> Self
+pub fn RenderPass::add_ref_raw(Self) -> Unit
 pub fn RenderPass::begin_occlusion_query(Self, UInt) -> Unit
+pub fn RenderPass::begin_occlusion_query_raw(Self, UInt) -> Unit
 pub fn RenderPass::begin_pipeline_statistics_query(Self, QuerySet, UInt) -> Unit
+pub fn RenderPass::begin_pipeline_statistics_query_raw(Self, QuerySet, UInt) -> Unit
 pub fn RenderPass::draw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::draw_indexed(Self, UInt, UInt, UInt, Int, UInt) -> Unit
 pub fn RenderPass::draw_indexed_indirect(Self, Buffer, UInt64) -> Unit
+pub fn RenderPass::draw_indexed_indirect_raw(Self, Buffer, UInt64) -> Unit
+pub fn RenderPass::draw_indexed_raw(Self, UInt, UInt, UInt, Int, UInt) -> Unit
 pub fn RenderPass::draw_indirect(Self, Buffer, UInt64) -> Unit
+pub fn RenderPass::draw_indirect_raw(Self, Buffer, UInt64) -> Unit
+pub fn RenderPass::draw_raw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::end(Self) -> Unit
 pub fn RenderPass::end_occlusion_query(Self) -> Unit
+pub fn RenderPass::end_occlusion_query_raw(Self) -> Unit
 pub fn RenderPass::end_pipeline_statistics_query(Self) -> Unit
+pub fn RenderPass::end_pipeline_statistics_query_raw(Self) -> Unit
+pub fn RenderPass::end_raw(Self) -> Unit
 pub fn RenderPass::execute_bundles(Self, Array[RenderBundle]) -> Unit
+pub fn RenderPass::execute_bundles_raw(Self, UInt64, @c.WGPURenderBundlePtr) -> Unit
 pub fn RenderPass::insert_debug_marker(Self, String) -> Unit
 pub fn RenderPass::multi_draw_indexed_indirect(Self, Buffer, UInt64, UInt) -> Unit
 pub fn RenderPass::multi_draw_indexed_indirect_count(Self, Buffer, UInt64, Buffer, UInt64, UInt) -> Unit
+pub fn RenderPass::multi_draw_indexed_indirect_count_raw(Self, Buffer, UInt64, Buffer, UInt64, UInt) -> Unit
+pub fn RenderPass::multi_draw_indexed_indirect_raw(Self, Buffer, UInt64, UInt) -> Unit
 pub fn RenderPass::multi_draw_indirect(Self, Buffer, UInt64, UInt) -> Unit
 pub fn RenderPass::multi_draw_indirect_count(Self, Buffer, UInt64, Buffer, UInt64, UInt) -> Unit
+pub fn RenderPass::multi_draw_indirect_count_raw(Self, Buffer, UInt64, Buffer, UInt64, UInt) -> Unit
+pub fn RenderPass::multi_draw_indirect_raw(Self, Buffer, UInt64, UInt) -> Unit
 pub fn RenderPass::pop_debug_group(Self) -> Unit
+pub fn RenderPass::pop_debug_group_raw(Self) -> Unit
 pub fn RenderPass::push_debug_group(Self, String) -> Unit
 pub fn RenderPass::raw_handle(Self) -> @c.WGPURenderPassEncoder
 pub fn RenderPass::release(Self) -> Unit
+pub fn RenderPass::release_raw(Self) -> Unit
 pub fn RenderPass::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn RenderPass::set_bind_group0(Self, BindGroup) -> Unit
+pub fn RenderPass::set_blend_constant(Self, @c.WGPUColorPtr) -> Unit
 pub fn RenderPass::set_blend_constant_rgba(Self, Double, Double, Double, Double) -> Unit
+pub fn RenderPass::set_index_buffer(Self, Buffer, @c.WGPUIndexFormat, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_label(Self, String) -> Unit
 pub fn RenderPass::set_pipeline(Self, RenderPipeline) -> Unit
+pub fn RenderPass::set_pipeline_raw(Self, RenderPipeline) -> Unit
 pub fn RenderPass::set_push_constants(Self, UInt64, UInt, Bytes) -> Unit
 pub fn RenderPass::set_scissor_rect(Self, UInt, UInt, UInt, UInt) -> Unit
+pub fn RenderPass::set_scissor_rect_raw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::set_stencil_reference(Self, UInt) -> Unit
+pub fn RenderPass::set_stencil_reference_raw(Self, UInt) -> Unit
 pub fn RenderPass::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit
+pub fn RenderPass::set_vertex_buffer_raw(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_viewport(Self, Float, Float, Float, Float, Float, Float) -> Unit
+pub fn RenderPass::set_viewport_raw(Self, Float, Float, Float, Float, Float, Float) -> Unit
 pub fn RenderPass::write_timestamp(Self, QuerySet, UInt) -> Unit
+pub fn RenderPass::write_timestamp_raw(Self, QuerySet, UInt) -> Unit
 
 pub struct RenderPipeline {
   raw : @c.WGPURenderPipeline
 }
 pub fn RenderPipeline::add_ref(Self) -> Self
+pub fn RenderPipeline::add_ref_raw(Self) -> Unit
 pub fn RenderPipeline::get_bind_group_layout(Self, UInt) -> BindGroupLayout
+pub fn RenderPipeline::get_bind_group_layout_raw(Self, UInt) -> BindGroupLayout
 pub fn RenderPipeline::raw_handle(Self) -> @c.WGPURenderPipeline
 pub fn RenderPipeline::release(Self) -> Unit
+pub fn RenderPipeline::release_raw(Self) -> Unit
 pub fn RenderPipeline::set_label(Self, String) -> Unit
 
 pub struct Sampler {
   raw : @c.WGPUSampler
 }
 pub fn Sampler::add_ref(Self) -> Self
+pub fn Sampler::add_ref_raw(Self) -> Unit
 pub fn Sampler::raw_handle(Self) -> @c.WGPUSampler
 pub fn Sampler::release(Self) -> Unit
+pub fn Sampler::release_raw(Self) -> Unit
 pub fn Sampler::set_label(Self, String) -> Unit
 
 pub struct ShaderModule {
   raw : @c.WGPUShaderModule
 }
 pub fn ShaderModule::add_ref(Self) -> Self
+pub fn ShaderModule::add_ref_raw(Self) -> Unit
 pub fn ShaderModule::is_null(Self) -> Bool
 pub fn ShaderModule::raw_handle(Self) -> @c.WGPUShaderModule
 pub fn ShaderModule::release(Self) -> Unit
+pub fn ShaderModule::release_raw(Self) -> Unit
 pub fn ShaderModule::set_label(Self, String) -> Unit
 
 pub struct Surface {
@@ -1568,6 +1703,7 @@ pub struct Surface {
   layer : @c.OpaquePtr
 }
 pub fn Surface::add_ref(Self) -> Self
+pub fn Surface::add_ref_raw(Self) -> Unit
 pub fn Surface::capabilities_alpha_mode_u32_at(Self, Adapter, UInt64) -> UInt
 pub fn Surface::capabilities_alpha_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_alpha_modes_count_u64(Self, Adapter) -> UInt64
@@ -1578,16 +1714,22 @@ pub fn Surface::capabilities_present_mode_u32_at(Self, Adapter, UInt64) -> UInt
 pub fn Surface::capabilities_present_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_present_modes_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::capabilities_usages_u64(Self, Adapter) -> UInt64
+pub fn Surface::configure(Self, @c.WGPUSurfaceConfigurationPtr) -> Unit
 pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, UInt64) -> UInt
 pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt) -> Bool
 pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt, Array[UInt]) -> Bool
+pub fn Surface::get_capabilities(Self, Adapter, @c.WGPUSurfaceCapabilitiesPtr) -> @c.WGPUStatus
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture
+pub fn Surface::get_current_texture_raw(Self, @c.WGPUSurfaceTexturePtr) -> Unit
 pub fn Surface::metal_layer_handle(Self) -> @c.OpaquePtr
 pub fn Surface::present(Self) -> UInt
+pub fn Surface::present_raw(Self) -> @c.WGPUStatus
 pub fn Surface::raw_handle(Self) -> @c.WGPUSurface
 pub fn Surface::release(Self) -> Unit
+pub fn Surface::release_raw(Self) -> Unit
 pub fn Surface::set_label(Self, String) -> Unit
 pub fn Surface::unconfigure(Self) -> Unit
+pub fn Surface::unconfigure_raw(Self) -> Unit
 
 pub struct SurfaceTexture {
   raw : @c.OpaquePtr
@@ -1601,19 +1743,31 @@ pub struct Texture {
   raw : @c.WGPUTexture
 }
 pub fn Texture::add_ref(Self) -> Self
+pub fn Texture::add_ref_raw(Self) -> Unit
 pub fn Texture::create_view(Self) -> TextureView
 pub fn Texture::create_view_2d(Self, UInt, UInt) -> TextureView
 pub fn Texture::create_view_2d_array(Self, UInt, UInt, UInt, UInt) -> TextureView
 pub fn Texture::create_view_ptr(Self, @c.WGPUTextureViewDescriptorPtr) -> TextureView
+pub fn Texture::create_view_raw(Self, @c.WGPUTextureViewDescriptorPtr) -> TextureView
 pub fn Texture::create_view_u32(Self, UInt, UInt, UInt, UInt, UInt, UInt, UInt) -> TextureView
 pub fn Texture::depth_or_array_layers_u32(Self) -> UInt
 pub fn Texture::destroy(Self) -> Unit
+pub fn Texture::destroy_raw(Self) -> Unit
 pub fn Texture::dimension_u32(Self) -> UInt
 pub fn Texture::format_u32(Self) -> UInt
+pub fn Texture::get_depth_or_array_layers(Self) -> UInt
+pub fn Texture::get_dimension(Self) -> @c.WGPUTextureDimension
+pub fn Texture::get_format(Self) -> @c.WGPUTextureFormat
+pub fn Texture::get_height(Self) -> UInt
+pub fn Texture::get_mip_level_count(Self) -> UInt
+pub fn Texture::get_sample_count(Self) -> UInt
+pub fn Texture::get_usage(Self) -> UInt64
+pub fn Texture::get_width(Self) -> UInt
 pub fn Texture::height_u32(Self) -> UInt
 pub fn Texture::mip_level_count_u32(Self) -> UInt
 pub fn Texture::raw_handle(Self) -> @c.WGPUTexture
 pub fn Texture::release(Self) -> Unit
+pub fn Texture::release_raw(Self) -> Unit
 pub fn Texture::sample_count_u32(Self) -> UInt
 pub fn Texture::set_label(Self, String) -> Unit
 pub fn Texture::usage_u64(Self) -> UInt64
@@ -1623,8 +1777,10 @@ pub struct TextureView {
   raw : @c.WGPUTextureView
 }
 pub fn TextureView::add_ref(Self) -> Self
+pub fn TextureView::add_ref_raw(Self) -> Unit
 pub fn TextureView::raw_handle(Self) -> @c.WGPUTextureView
 pub fn TextureView::release(Self) -> Unit
+pub fn TextureView::release_raw(Self) -> Unit
 pub fn TextureView::set_label(Self, String) -> Unit
 
 pub struct WaitAnyResult {
