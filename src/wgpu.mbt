@@ -544,6 +544,19 @@ pub fn Adapter::request_device_sync_push_constants(
 }
 
 ///|
+pub fn Adapter::request_device_sync_texture_binding_array(
+  self : Adapter,
+  instance : Instance,
+) -> Device {
+  Device::{
+    raw: @c.adapter_request_device_sync_texture_binding_array(
+      instance.raw,
+      self.raw,
+    ),
+  }
+}
+
+///|
 pub fn Adapter::request_device_sync_pipeline_statistics_query(
   self : Adapter,
   instance : Instance,
@@ -1456,15 +1469,28 @@ pub fn BindGroupLayoutBuilder::add_buffer(
   type_u32 : UInt,
   has_dynamic_offset? : Bool = false,
   min_binding_size? : UInt64 = 0UL,
+  count? : UInt = 1U,
 ) -> Bool {
-  @c.bind_group_layout_builder_add_buffer(
-    self.raw,
-    binding,
-    visibility,
-    type_u32,
-    has_dynamic_offset,
-    min_binding_size,
-  )
+  if count <= 1U {
+    @c.bind_group_layout_builder_add_buffer(
+      self.raw,
+      binding,
+      visibility,
+      type_u32,
+      has_dynamic_offset,
+      min_binding_size,
+    )
+  } else {
+    @c.bind_group_layout_builder_add_buffer_array(
+      self.raw,
+      binding,
+      visibility,
+      type_u32,
+      has_dynamic_offset,
+      min_binding_size,
+      count,
+    )
+  }
 }
 
 ///|
@@ -1473,13 +1499,24 @@ pub fn BindGroupLayoutBuilder::add_sampler(
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
+  count? : UInt = 1U,
 ) -> Bool {
-  @c.bind_group_layout_builder_add_sampler(
-    self.raw,
-    binding,
-    visibility,
-    type_u32,
-  )
+  if count <= 1U {
+    @c.bind_group_layout_builder_add_sampler(
+      self.raw,
+      binding,
+      visibility,
+      type_u32,
+    )
+  } else {
+    @c.bind_group_layout_builder_add_sampler_array(
+      self.raw,
+      binding,
+      visibility,
+      type_u32,
+      count,
+    )
+  }
 }
 
 ///|
@@ -1490,15 +1527,28 @@ pub fn BindGroupLayoutBuilder::add_texture(
   sample_type_u32 : UInt,
   view_dimension_u32 : UInt,
   multisampled? : Bool = false,
+  count? : UInt = 1U,
 ) -> Bool {
-  @c.bind_group_layout_builder_add_texture(
-    self.raw,
-    binding,
-    visibility,
-    sample_type_u32,
-    view_dimension_u32,
-    multisampled,
-  )
+  if count <= 1U {
+    @c.bind_group_layout_builder_add_texture(
+      self.raw,
+      binding,
+      visibility,
+      sample_type_u32,
+      view_dimension_u32,
+      multisampled,
+    )
+  } else {
+    @c.bind_group_layout_builder_add_texture_array(
+      self.raw,
+      binding,
+      visibility,
+      sample_type_u32,
+      view_dimension_u32,
+      multisampled,
+      count,
+    )
+  }
 }
 
 ///|
@@ -1509,15 +1559,28 @@ pub fn BindGroupLayoutBuilder::add_storage_texture(
   access_u32 : UInt,
   format_u32 : UInt,
   view_dimension_u32 : UInt,
+  count? : UInt = 1U,
 ) -> Bool {
-  @c.bind_group_layout_builder_add_storage_texture(
-    self.raw,
-    binding,
-    visibility,
-    access_u32,
-    format_u32,
-    view_dimension_u32,
-  )
+  if count <= 1U {
+    @c.bind_group_layout_builder_add_storage_texture(
+      self.raw,
+      binding,
+      visibility,
+      access_u32,
+      format_u32,
+      view_dimension_u32,
+    )
+  } else {
+    @c.bind_group_layout_builder_add_storage_texture_array(
+      self.raw,
+      binding,
+      visibility,
+      access_u32,
+      format_u32,
+      view_dimension_u32,
+      count,
+    )
+  }
 }
 
 ///|
@@ -1554,6 +1617,34 @@ pub fn BindGroupBuilder::add_buffer(
 }
 
 ///|
+pub fn BindGroupBuilder::add_buffer_array(
+  self : BindGroupBuilder,
+  binding : UInt,
+  buffers : Array[Buffer],
+  offset? : UInt64 = 0UL,
+  size? : UInt64 = whole_size,
+) -> Bool {
+  let count = buffers.length()
+  if count == 0 {
+    return false
+  }
+  if count == 1 {
+    self.add_buffer(binding, buffers[0], offset~, size~)
+  } else {
+    let raw_buffers : Array[@c.Buffer] = buffers.map(b => b.raw)
+    let fixed = FixedArray::from_array(raw_buffers[:])
+    @c.bind_group_builder_add_buffer_array(
+      self.raw,
+      binding,
+      count.to_uint64(),
+      fixed,
+      offset,
+      size,
+    )
+  }
+}
+
+///|
 pub fn BindGroupBuilder::add_sampler(
   self : BindGroupBuilder,
   binding : UInt,
@@ -1563,12 +1654,60 @@ pub fn BindGroupBuilder::add_sampler(
 }
 
 ///|
+pub fn BindGroupBuilder::add_sampler_array(
+  self : BindGroupBuilder,
+  binding : UInt,
+  samplers : Array[Sampler],
+) -> Bool {
+  let count = samplers.length()
+  if count == 0 {
+    return false
+  }
+  if count == 1 {
+    self.add_sampler(binding, samplers[0])
+  } else {
+    let raw_samplers : Array[@c.Sampler] = samplers.map(s => s.raw)
+    let fixed = FixedArray::from_array(raw_samplers[:])
+    @c.bind_group_builder_add_sampler_array(
+      self.raw,
+      binding,
+      count.to_uint64(),
+      fixed,
+    )
+  }
+}
+
+///|
 pub fn BindGroupBuilder::add_texture_view(
   self : BindGroupBuilder,
   binding : UInt,
   view : TextureView,
 ) -> Bool {
   @c.bind_group_builder_add_texture_view(self.raw, binding, view.raw)
+}
+
+///|
+pub fn BindGroupBuilder::add_texture_view_array(
+  self : BindGroupBuilder,
+  binding : UInt,
+  views : Array[TextureView],
+) -> Bool {
+  let count = views.length()
+  if count == 0 {
+    return false
+  }
+  if count == 1 {
+    self.add_texture_view(binding, views[0])
+  } else {
+    let raw_views : Array[@c.TextureView] = views.map(v => v.raw)
+    let fixed = FixedArray::from_array(raw_views[:])
+    @c.bind_group_builder_add_texture_view_array(
+      self.raw,
+      binding,
+      count.to_uint64(),
+      fixed,
+    )
+  }
 }
 
 ///|

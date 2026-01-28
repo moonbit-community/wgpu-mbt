@@ -1181,6 +1181,7 @@ pub fn Adapter::request_device_sync(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_pipeline_statistics_query(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_push_constants(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_spirv_shader_passthrough(Self, Instance) -> Device
+pub fn Adapter::request_device_sync_texture_binding_array(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device
@@ -1198,8 +1199,11 @@ pub struct BindGroupBuilder {
   raw : @c.OpaquePtr
 }
 pub fn BindGroupBuilder::add_buffer(Self, UInt, Buffer, offset? : UInt64, size? : UInt64) -> Bool
+pub fn BindGroupBuilder::add_buffer_array(Self, UInt, Array[Buffer], offset? : UInt64, size? : UInt64) -> Bool
 pub fn BindGroupBuilder::add_sampler(Self, UInt, Sampler) -> Bool
+pub fn BindGroupBuilder::add_sampler_array(Self, UInt, Array[Sampler]) -> Bool
 pub fn BindGroupBuilder::add_texture_view(Self, UInt, TextureView) -> Bool
+pub fn BindGroupBuilder::add_texture_view_array(Self, UInt, Array[TextureView]) -> Bool
 pub fn BindGroupBuilder::finish(Self, Device, BindGroupLayout, label? : String) -> BindGroup
 pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> Self
 
@@ -1212,10 +1216,10 @@ pub fn BindGroupLayout::set_label(Self, String) -> Unit
 pub struct BindGroupLayoutBuilder {
   raw : @c.OpaquePtr
 }
-pub fn BindGroupLayoutBuilder::add_buffer(Self, UInt, UInt64, UInt, has_dynamic_offset? : Bool, min_binding_size? : UInt64) -> Bool
-pub fn BindGroupLayoutBuilder::add_sampler(Self, UInt, UInt64, UInt) -> Bool
-pub fn BindGroupLayoutBuilder::add_storage_texture(Self, UInt, UInt64, UInt, UInt, UInt) -> Bool
-pub fn BindGroupLayoutBuilder::add_texture(Self, UInt, UInt64, UInt, UInt, multisampled? : Bool) -> Bool
+pub fn BindGroupLayoutBuilder::add_buffer(Self, UInt, UInt64, UInt, has_dynamic_offset? : Bool, min_binding_size? : UInt64, count? : UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_sampler(Self, UInt, UInt64, UInt, count? : UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_storage_texture(Self, UInt, UInt64, UInt, UInt, UInt, count? : UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_texture(Self, UInt, UInt64, UInt, UInt, multisampled? : Bool, count? : UInt) -> Bool
 pub fn BindGroupLayoutBuilder::finish(Self, Device, label? : String) -> BindGroupLayout
 pub fn BindGroupLayoutBuilder::new(max_entries~ : UInt64) -> Self
 

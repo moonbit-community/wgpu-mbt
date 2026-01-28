@@ -56,6 +56,8 @@ pub fn adapter_request_device_sync_push_constants(WGPUInstance, WGPUAdapter) -> 
 
 pub fn adapter_request_device_sync_spirv_shader_passthrough(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
+pub fn adapter_request_device_sync_texture_binding_array(WGPUInstance, WGPUAdapter) -> WGPUDevice
+
 pub fn adapter_request_device_sync_timestamp_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_timestamp_query_inside_encoders(WGPUInstance, WGPUAdapter) -> WGPUDevice
@@ -70,9 +72,15 @@ pub fn adapter_supported_features_count_u64(WGPUAdapter) -> UInt64
 
 pub fn bind_group_builder_add_buffer(OpaquePtr, UInt, WGPUBuffer, UInt64, UInt64) -> Bool
 
+pub fn bind_group_builder_add_buffer_array(OpaquePtr, UInt, UInt64, FixedArray[WGPUBuffer], UInt64, UInt64) -> Bool
+
 pub fn bind_group_builder_add_sampler(OpaquePtr, UInt, WGPUSampler) -> Bool
 
+pub fn bind_group_builder_add_sampler_array(OpaquePtr, UInt, UInt64, FixedArray[WGPUSampler]) -> Bool
+
 pub fn bind_group_builder_add_texture_view(OpaquePtr, UInt, WGPUTextureView) -> Bool
+
+pub fn bind_group_builder_add_texture_view_array(OpaquePtr, UInt, UInt64, FixedArray[WGPUTextureView]) -> Bool
 
 pub fn bind_group_builder_finish(WGPUDevice, WGPUBindGroupLayout, OpaquePtr, Bytes, UInt64) -> WGPUBindGroup
 
@@ -98,11 +106,19 @@ pub fn bind_group_descriptor_uniform_buffer_new(WGPUBindGroupLayout, WGPUBuffer)
 
 pub fn bind_group_layout_builder_add_buffer(OpaquePtr, UInt, UInt64, UInt, Bool, UInt64) -> Bool
 
+pub fn bind_group_layout_builder_add_buffer_array(OpaquePtr, UInt, UInt64, UInt, Bool, UInt64, UInt) -> Bool
+
 pub fn bind_group_layout_builder_add_sampler(OpaquePtr, UInt, UInt64, UInt) -> Bool
+
+pub fn bind_group_layout_builder_add_sampler_array(OpaquePtr, UInt, UInt64, UInt, UInt) -> Bool
 
 pub fn bind_group_layout_builder_add_storage_texture(OpaquePtr, UInt, UInt64, UInt, UInt, UInt) -> Bool
 
+pub fn bind_group_layout_builder_add_storage_texture_array(OpaquePtr, UInt, UInt64, UInt, UInt, UInt, UInt) -> Bool
+
 pub fn bind_group_layout_builder_add_texture(OpaquePtr, UInt, UInt64, UInt, UInt, Bool) -> Bool
+
+pub fn bind_group_layout_builder_add_texture_array(OpaquePtr, UInt, UInt64, UInt, UInt, Bool, UInt) -> Bool
 
 pub fn bind_group_layout_builder_finish(WGPUDevice, OpaquePtr, Bytes, UInt64) -> WGPUBindGroupLayout
 

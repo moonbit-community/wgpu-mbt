@@ -385,6 +385,13 @@ declare pub fn Adapter::request_device_sync_push_constants(
 
 ///|
 #declaration_only
+declare pub fn Adapter::request_device_sync_texture_binding_array(
+  self : Adapter,
+  instance : Instance,
+) -> Device
+
+///|
+#declaration_only
 declare pub fn Adapter::request_device_sync_pipeline_statistics_query(
   self : Adapter,
   instance : Instance,
@@ -978,6 +985,7 @@ declare pub fn BindGroupLayoutBuilder::add_buffer(
   type_u32 : UInt,
   has_dynamic_offset? : Bool = false,
   min_binding_size? : UInt64 = 0UL,
+  count? : UInt = 1U,
 ) -> Bool
 
 ///|
@@ -987,6 +995,7 @@ declare pub fn BindGroupLayoutBuilder::add_sampler(
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
+  count? : UInt = 1U,
 ) -> Bool
 
 ///|
@@ -998,6 +1007,7 @@ declare pub fn BindGroupLayoutBuilder::add_texture(
   sample_type_u32 : UInt,
   view_dimension_u32 : UInt,
   multisampled? : Bool = false,
+  count? : UInt = 1U,
 ) -> Bool
 
 ///|
@@ -1009,6 +1019,7 @@ declare pub fn BindGroupLayoutBuilder::add_storage_texture(
   access_u32 : UInt,
   format_u32 : UInt,
   view_dimension_u32 : UInt,
+  count? : UInt = 1U,
 ) -> Bool
 
 ///|
@@ -1035,6 +1046,16 @@ declare pub fn BindGroupBuilder::add_buffer(
 
 ///|
 #declaration_only
+declare pub fn BindGroupBuilder::add_buffer_array(
+  self : BindGroupBuilder,
+  binding : UInt,
+  buffers : Array[Buffer],
+  offset? : UInt64 = 0UL,
+  size? : UInt64 = whole_size,
+) -> Bool
+
+///|
+#declaration_only
 declare pub fn BindGroupBuilder::add_sampler(
   self : BindGroupBuilder,
   binding : UInt,
@@ -1043,10 +1064,26 @@ declare pub fn BindGroupBuilder::add_sampler(
 
 ///|
 #declaration_only
+declare pub fn BindGroupBuilder::add_sampler_array(
+  self : BindGroupBuilder,
+  binding : UInt,
+  samplers : Array[Sampler],
+) -> Bool
+
+///|
+#declaration_only
 declare pub fn BindGroupBuilder::add_texture_view(
   self : BindGroupBuilder,
   binding : UInt,
   view : TextureView,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn BindGroupBuilder::add_texture_view_array(
+  self : BindGroupBuilder,
+  binding : UInt,
+  views : Array[TextureView],
 ) -> Bool
 
 ///|

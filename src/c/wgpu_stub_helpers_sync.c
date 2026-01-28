@@ -696,6 +696,60 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance inst
   return out.device;
 }
 
+WGPUDevice mbt_wgpu_adapter_request_device_sync_texture_binding_array(
+    WGPUInstance instance, WGPUAdapter adapter) {
+  mbt_request_device_result_t out = {0};
+  WGPURequestDeviceCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_device_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  static const WGPUFeatureName required_features[1] = {
+      (WGPUFeatureName)WGPUNativeFeature_TextureBindingArray,
+  };
+
+  WGPUDeviceDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .requiredFeatureCount = 1u,
+      .requiredFeatures = required_features,
+      .requiredLimits = NULL,
+      .defaultQueue =
+          (WGPUQueueDescriptor){
+              .nextInChain = NULL,
+              .label = (WGPUStringView){.data = NULL, .length = 0},
+          },
+      .deviceLostCallbackInfo =
+          (WGPUDeviceLostCallbackInfo){
+              .nextInChain = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+      .uncapturedErrorCallbackInfo =
+          (WGPUUncapturedErrorCallbackInfo){
+              .nextInChain = NULL,
+              .callback = mbt_uncaptured_error_noop_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+  };
+
+  (void)wgpuAdapterRequestDevice(adapter, &desc, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  if (out.status != WGPURequestDeviceStatus_Success) {
+    return NULL;
+  }
+  return out.device;
+}
+
 WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
     WGPUInstance instance, WGPUAdapter adapter) {
   mbt_request_device_result_t out = {0};

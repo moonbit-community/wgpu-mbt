@@ -64,12 +64,34 @@ pub extern "C" fn bind_group_layout_builder_add_buffer(
 
 ///|
 #borrow(builder)
+pub extern "C" fn bind_group_layout_builder_add_buffer_array(
+  builder : OpaquePtr,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+  has_dynamic_offset : Bool,
+  min_binding_size : UInt64,
+  count_u32 : UInt,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_buffer_array"
+
+///|
+#borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_sampler(
   builder : OpaquePtr,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
 ) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_sampler"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_layout_builder_add_sampler_array(
+  builder : OpaquePtr,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+  count_u32 : UInt,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_sampler_array"
 
 ///|
 #borrow(builder)
@@ -84,6 +106,18 @@ pub extern "C" fn bind_group_layout_builder_add_texture(
 
 ///|
 #borrow(builder)
+pub extern "C" fn bind_group_layout_builder_add_texture_array(
+  builder : OpaquePtr,
+  binding : UInt,
+  visibility : UInt64,
+  sample_type_u32 : UInt,
+  view_dimension_u32 : UInt,
+  multisampled : Bool,
+  count_u32 : UInt,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_texture_array"
+
+///|
+#borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_storage_texture(
   builder : OpaquePtr,
   binding : UInt,
@@ -92,6 +126,18 @@ pub extern "C" fn bind_group_layout_builder_add_storage_texture(
   format_u32 : UInt,
   view_dimension_u32 : UInt,
 ) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_storage_texture"
+
+///|
+#borrow(builder)
+pub extern "C" fn bind_group_layout_builder_add_storage_texture_array(
+  builder : OpaquePtr,
+  binding : UInt,
+  visibility : UInt64,
+  access_u32 : UInt,
+  format_u32 : UInt,
+  view_dimension_u32 : UInt,
+  count_u32 : UInt,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_storage_texture_array"
 
 ///|
 #borrow(builder, label)
@@ -120,6 +166,17 @@ pub extern "C" fn bind_group_builder_add_buffer(
 ) -> Bool = "mbt_wgpu_bind_group_builder_add_buffer"
 
 ///|
+#borrow(builder, buffers)
+pub extern "C" fn bind_group_builder_add_buffer_array(
+  builder : OpaquePtr,
+  binding : UInt,
+  buffer_count : UInt64,
+  buffers : FixedArray[Buffer],
+  offset : UInt64,
+  size : UInt64,
+) -> Bool = "mbt_wgpu_bind_group_builder_add_buffer_array"
+
+///|
 #borrow(builder)
 pub extern "C" fn bind_group_builder_add_sampler(
   builder : OpaquePtr,
@@ -128,12 +185,30 @@ pub extern "C" fn bind_group_builder_add_sampler(
 ) -> Bool = "mbt_wgpu_bind_group_builder_add_sampler"
 
 ///|
+#borrow(builder, samplers)
+pub extern "C" fn bind_group_builder_add_sampler_array(
+  builder : OpaquePtr,
+  binding : UInt,
+  sampler_count : UInt64,
+  samplers : FixedArray[Sampler],
+) -> Bool = "mbt_wgpu_bind_group_builder_add_sampler_array"
+
+///|
 #borrow(builder)
 pub extern "C" fn bind_group_builder_add_texture_view(
   builder : OpaquePtr,
   binding : UInt,
   view : TextureView,
 ) -> Bool = "mbt_wgpu_bind_group_builder_add_texture_view"
+
+///|
+#borrow(builder, views)
+pub extern "C" fn bind_group_builder_add_texture_view_array(
+  builder : OpaquePtr,
+  binding : UInt,
+  view_count : UInt64,
+  views : FixedArray[TextureView],
+) -> Bool = "mbt_wgpu_bind_group_builder_add_texture_view_array"
 
 ///|
 #borrow(builder, label)
@@ -676,6 +751,12 @@ pub extern "C" fn adapter_request_device_sync_push_constants(
   instance : Instance,
   adapter : Adapter,
 ) -> Device = "mbt_wgpu_adapter_request_device_sync_push_constants"
+
+///|
+pub extern "C" fn adapter_request_device_sync_texture_binding_array(
+  instance : Instance,
+  adapter : Adapter,
+) -> Device = "mbt_wgpu_adapter_request_device_sync_texture_binding_array"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_pipeline_statistics_query(

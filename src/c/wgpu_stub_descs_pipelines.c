@@ -2450,6 +2450,7 @@ typedef struct {
   uint64_t capacity;
   uint64_t len;
   WGPUBindGroupLayoutEntry *entries;
+  WGPUBindGroupLayoutEntryExtras **extras;
 } mbt_bind_group_layout_builder_t;
 
 void *mbt_wgpu_bind_group_layout_builder_new(uint64_t max_entries) {
@@ -2467,6 +2468,13 @@ void *mbt_wgpu_bind_group_layout_builder_new(uint64_t max_entries) {
     free(b);
     return NULL;
   }
+  b->extras = (WGPUBindGroupLayoutEntryExtras **)calloc(
+      (size_t)max_entries, sizeof(WGPUBindGroupLayoutEntryExtras *));
+  if (!b->extras) {
+    free(b->entries);
+    free(b);
+    return NULL;
+  }
   b->capacity = max_entries;
   b->len = 0u;
   return (void *)b;
@@ -2477,19 +2485,28 @@ void mbt_wgpu_bind_group_layout_builder_free(void *builder) {
     return;
   }
   mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  if (b->extras) {
+    for (uint64_t i = 0; i < b->len; i++) {
+      free(b->extras[i]);
+    }
+  }
   free(b->entries);
+  free(b->extras);
   free(b);
 }
 
 static bool mbt_wgpu_bind_group_layout_builder_push(mbt_bind_group_layout_builder_t *b,
-                                                   WGPUBindGroupLayoutEntry entry) {
+                                                   WGPUBindGroupLayoutEntry entry,
+                                                   WGPUBindGroupLayoutEntryExtras *extras) {
   if (!b || !b->entries) {
     return false;
   }
   if (b->len >= b->capacity) {
     return false;
   }
-  b->entries[b->len++] = entry;
+  b->extras[b->len] = extras;
+  b->entries[b->len] = entry;
+  b->len++;
   return true;
 }
 
@@ -2513,7 +2530,7 @@ bool mbt_wgpu_bind_group_layout_builder_add_buffer(void *builder, uint32_t bindi
       .texture = (WGPUTextureBindingLayout){0},
       .storageTexture = (WGPUStorageTextureBindingLayout){0},
   };
-  return mbt_wgpu_bind_group_layout_builder_push(b, entry);
+  return mbt_wgpu_bind_group_layout_builder_push(b, entry, NULL);
 }
 
 bool mbt_wgpu_bind_group_layout_builder_add_sampler(void *builder, uint32_t binding,
@@ -2533,7 +2550,7 @@ bool mbt_wgpu_bind_group_layout_builder_add_sampler(void *builder, uint32_t bind
       .texture = (WGPUTextureBindingLayout){0},
       .storageTexture = (WGPUStorageTextureBindingLayout){0},
   };
-  return mbt_wgpu_bind_group_layout_builder_push(b, entry);
+  return mbt_wgpu_bind_group_layout_builder_push(b, entry, NULL);
 }
 
 bool mbt_wgpu_bind_group_layout_builder_add_texture(void *builder, uint32_t binding,
@@ -2557,7 +2574,7 @@ bool mbt_wgpu_bind_group_layout_builder_add_texture(void *builder, uint32_t bind
           },
       .storageTexture = (WGPUStorageTextureBindingLayout){0},
   };
-  return mbt_wgpu_bind_group_layout_builder_push(b, entry);
+  return mbt_wgpu_bind_group_layout_builder_push(b, entry, NULL);
 }
 
 bool mbt_wgpu_bind_group_layout_builder_add_storage_texture(void *builder,
@@ -2582,7 +2599,166 @@ bool mbt_wgpu_bind_group_layout_builder_add_storage_texture(void *builder,
               .viewDimension = (WGPUTextureViewDimension)view_dimension_u32,
           },
   };
-  return mbt_wgpu_bind_group_layout_builder_push(b, entry);
+  return mbt_wgpu_bind_group_layout_builder_push(b, entry, NULL);
+}
+
+static WGPUBindGroupLayoutEntryExtras *mbt_wgpu_bind_group_layout_entry_extras_new(
+    uint32_t count) {
+  if (count <= 1u) {
+    return NULL;
+  }
+  WGPUBindGroupLayoutEntryExtras *extras =
+      (WGPUBindGroupLayoutEntryExtras *)malloc(sizeof(WGPUBindGroupLayoutEntryExtras));
+  if (!extras) {
+    return NULL;
+  }
+  *extras = (WGPUBindGroupLayoutEntryExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_BindGroupLayoutEntryExtras,
+          },
+      .count = count,
+  };
+  return extras;
+}
+
+bool mbt_wgpu_bind_group_layout_builder_add_buffer_array(
+    void *builder, uint32_t binding, uint64_t visibility, uint32_t type_u32,
+    bool has_dynamic_offset, uint64_t min_binding_size, uint32_t count) {
+  if (count <= 1u) {
+    return mbt_wgpu_bind_group_layout_builder_add_buffer(
+        builder, binding, visibility, type_u32, has_dynamic_offset, min_binding_size);
+  }
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  WGPUBindGroupLayoutEntryExtras *extras = mbt_wgpu_bind_group_layout_entry_extras_new(count);
+  if (!extras) {
+    return false;
+  }
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = (const WGPUChainedStruct *)&extras->chain,
+      .binding = binding,
+      .visibility = (WGPUShaderStage)visibility,
+      .buffer =
+          (WGPUBufferBindingLayout){
+              .nextInChain = NULL,
+              .type = (WGPUBufferBindingType)type_u32,
+              .hasDynamicOffset = has_dynamic_offset ? 1u : 0u,
+              .minBindingSize = min_binding_size,
+          },
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  if (!mbt_wgpu_bind_group_layout_builder_push(b, entry, extras)) {
+    free(extras);
+    return false;
+  }
+  return true;
+}
+
+bool mbt_wgpu_bind_group_layout_builder_add_sampler_array(void *builder, uint32_t binding,
+                                                          uint64_t visibility,
+                                                          uint32_t type_u32,
+                                                          uint32_t count) {
+  if (count <= 1u) {
+    return mbt_wgpu_bind_group_layout_builder_add_sampler(builder, binding, visibility,
+                                                          type_u32);
+  }
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  WGPUBindGroupLayoutEntryExtras *extras = mbt_wgpu_bind_group_layout_entry_extras_new(count);
+  if (!extras) {
+    return false;
+  }
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = (const WGPUChainedStruct *)&extras->chain,
+      .binding = binding,
+      .visibility = (WGPUShaderStage)visibility,
+      .buffer = (WGPUBufferBindingLayout){0},
+      .sampler =
+          (WGPUSamplerBindingLayout){
+              .nextInChain = NULL,
+              .type = (WGPUSamplerBindingType)type_u32,
+          },
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  if (!mbt_wgpu_bind_group_layout_builder_push(b, entry, extras)) {
+    free(extras);
+    return false;
+  }
+  return true;
+}
+
+bool mbt_wgpu_bind_group_layout_builder_add_texture_array(void *builder, uint32_t binding,
+                                                          uint64_t visibility,
+                                                          uint32_t sample_type_u32,
+                                                          uint32_t view_dimension_u32,
+                                                          bool multisampled,
+                                                          uint32_t count) {
+  if (count <= 1u) {
+    return mbt_wgpu_bind_group_layout_builder_add_texture(
+        builder, binding, visibility, sample_type_u32, view_dimension_u32, multisampled);
+  }
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  WGPUBindGroupLayoutEntryExtras *extras = mbt_wgpu_bind_group_layout_entry_extras_new(count);
+  if (!extras) {
+    return false;
+  }
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = (const WGPUChainedStruct *)&extras->chain,
+      .binding = binding,
+      .visibility = (WGPUShaderStage)visibility,
+      .buffer = (WGPUBufferBindingLayout){0},
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture =
+          (WGPUTextureBindingLayout){
+              .nextInChain = NULL,
+              .sampleType = (WGPUTextureSampleType)sample_type_u32,
+              .viewDimension = (WGPUTextureViewDimension)view_dimension_u32,
+              .multisampled = multisampled ? 1u : 0u,
+          },
+      .storageTexture = (WGPUStorageTextureBindingLayout){0},
+  };
+  if (!mbt_wgpu_bind_group_layout_builder_push(b, entry, extras)) {
+    free(extras);
+    return false;
+  }
+  return true;
+}
+
+bool mbt_wgpu_bind_group_layout_builder_add_storage_texture_array(
+    void *builder, uint32_t binding, uint64_t visibility, uint32_t access_u32,
+    uint32_t format_u32, uint32_t view_dimension_u32, uint32_t count) {
+  if (count <= 1u) {
+    return mbt_wgpu_bind_group_layout_builder_add_storage_texture(
+        builder, binding, visibility, access_u32, format_u32, view_dimension_u32);
+  }
+  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
+  WGPUBindGroupLayoutEntryExtras *extras = mbt_wgpu_bind_group_layout_entry_extras_new(count);
+  if (!extras) {
+    return false;
+  }
+  WGPUBindGroupLayoutEntry entry = {
+      .nextInChain = (const WGPUChainedStruct *)&extras->chain,
+      .binding = binding,
+      .visibility = (WGPUShaderStage)visibility,
+      .buffer = (WGPUBufferBindingLayout){0},
+      .sampler = (WGPUSamplerBindingLayout){0},
+      .texture = (WGPUTextureBindingLayout){0},
+      .storageTexture =
+          (WGPUStorageTextureBindingLayout){
+              .nextInChain = NULL,
+              .access = (WGPUStorageTextureAccess)access_u32,
+              .format = (WGPUTextureFormat)format_u32,
+              .viewDimension = (WGPUTextureViewDimension)view_dimension_u32,
+          },
+  };
+  if (!mbt_wgpu_bind_group_layout_builder_push(b, entry, extras)) {
+    free(extras);
+    return false;
+  }
+  return true;
 }
 
 WGPUBindGroupLayout mbt_wgpu_bind_group_layout_builder_finish(WGPUDevice device,
@@ -2606,6 +2782,7 @@ typedef struct {
   uint64_t capacity;
   uint64_t len;
   WGPUBindGroupEntry *entries;
+  WGPUBindGroupEntryExtras **extras;
 } mbt_bind_group_builder_t;
 
 void *mbt_wgpu_bind_group_builder_new(uint64_t max_entries) {
@@ -2623,6 +2800,13 @@ void *mbt_wgpu_bind_group_builder_new(uint64_t max_entries) {
     free(b);
     return NULL;
   }
+  b->extras = (WGPUBindGroupEntryExtras **)calloc((size_t)max_entries,
+                                                 sizeof(WGPUBindGroupEntryExtras *));
+  if (!b->extras) {
+    free(b->entries);
+    free(b);
+    return NULL;
+  }
   b->capacity = max_entries;
   b->len = 0u;
   return (void *)b;
@@ -2633,19 +2817,35 @@ void mbt_wgpu_bind_group_builder_free(void *builder) {
     return;
   }
   mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
+  if (b->extras) {
+    for (uint64_t i = 0; i < b->len; i++) {
+      WGPUBindGroupEntryExtras *ex = b->extras[i];
+      if (!ex) {
+        continue;
+      }
+      free((void *)ex->buffers);
+      free((void *)ex->samplers);
+      free((void *)ex->textureViews);
+      free(ex);
+    }
+  }
   free(b->entries);
+  free(b->extras);
   free(b);
 }
 
 static bool mbt_wgpu_bind_group_builder_push(mbt_bind_group_builder_t *b,
-                                            WGPUBindGroupEntry entry) {
+                                            WGPUBindGroupEntry entry,
+                                            WGPUBindGroupEntryExtras *extras) {
   if (!b || !b->entries) {
     return false;
   }
   if (b->len >= b->capacity) {
     return false;
   }
-  b->entries[b->len++] = entry;
+  b->extras[b->len] = extras;
+  b->entries[b->len] = entry;
+  b->len++;
   return true;
 }
 
@@ -2662,7 +2862,7 @@ bool mbt_wgpu_bind_group_builder_add_buffer(void *builder, uint32_t binding,
       .sampler = NULL,
       .textureView = NULL,
   };
-  return mbt_wgpu_bind_group_builder_push(b, entry);
+  return mbt_wgpu_bind_group_builder_push(b, entry, NULL);
 }
 
 bool mbt_wgpu_bind_group_builder_add_sampler(void *builder, uint32_t binding,
@@ -2677,7 +2877,7 @@ bool mbt_wgpu_bind_group_builder_add_sampler(void *builder, uint32_t binding,
       .sampler = sampler,
       .textureView = NULL,
   };
-  return mbt_wgpu_bind_group_builder_push(b, entry);
+  return mbt_wgpu_bind_group_builder_push(b, entry, NULL);
 }
 
 bool mbt_wgpu_bind_group_builder_add_texture_view(void *builder, uint32_t binding,
@@ -2692,7 +2892,151 @@ bool mbt_wgpu_bind_group_builder_add_texture_view(void *builder, uint32_t bindin
       .sampler = NULL,
       .textureView = view,
   };
-  return mbt_wgpu_bind_group_builder_push(b, entry);
+  return mbt_wgpu_bind_group_builder_push(b, entry, NULL);
+}
+
+static WGPUBindGroupEntryExtras *mbt_wgpu_bind_group_entry_extras_new(void) {
+  WGPUBindGroupEntryExtras *ex =
+      (WGPUBindGroupEntryExtras *)malloc(sizeof(WGPUBindGroupEntryExtras));
+  if (!ex) {
+    return NULL;
+  }
+  *ex = (WGPUBindGroupEntryExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_BindGroupEntryExtras,
+          },
+      .buffers = NULL,
+      .bufferCount = 0u,
+      .samplers = NULL,
+      .samplerCount = 0u,
+      .textureViews = NULL,
+      .textureViewCount = 0u,
+  };
+  return ex;
+}
+
+bool mbt_wgpu_bind_group_builder_add_texture_view_array(void *builder, uint32_t binding,
+                                                       uint64_t view_count,
+                                                       const WGPUTextureView *views) {
+  if (view_count == 0u || !views) {
+    return false;
+  }
+  if (view_count == 1u) {
+    return mbt_wgpu_bind_group_builder_add_texture_view(builder, binding, views[0]);
+  }
+  mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
+  WGPUBindGroupEntryExtras *ex = mbt_wgpu_bind_group_entry_extras_new();
+  if (!ex) {
+    return false;
+  }
+  WGPUTextureView *copy =
+      (WGPUTextureView *)calloc((size_t)view_count, sizeof(WGPUTextureView));
+  if (!copy) {
+    free(ex);
+    return false;
+  }
+  memcpy(copy, views, (size_t)view_count * sizeof(WGPUTextureView));
+  ex->textureViews = copy;
+  ex->textureViewCount = (size_t)view_count;
+
+  WGPUBindGroupEntry entry = {
+      .nextInChain = (const WGPUChainedStruct *)&ex->chain,
+      .binding = binding,
+      .buffer = NULL,
+      .offset = 0u,
+      .size = 0u,
+      .sampler = NULL,
+      .textureView = NULL,
+  };
+  if (!mbt_wgpu_bind_group_builder_push(b, entry, ex)) {
+    free(copy);
+    free(ex);
+    return false;
+  }
+  return true;
+}
+
+bool mbt_wgpu_bind_group_builder_add_sampler_array(void *builder, uint32_t binding,
+                                                   uint64_t sampler_count,
+                                                   const WGPUSampler *samplers) {
+  if (sampler_count == 0u || !samplers) {
+    return false;
+  }
+  if (sampler_count == 1u) {
+    return mbt_wgpu_bind_group_builder_add_sampler(builder, binding, samplers[0]);
+  }
+  mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
+  WGPUBindGroupEntryExtras *ex = mbt_wgpu_bind_group_entry_extras_new();
+  if (!ex) {
+    return false;
+  }
+  WGPUSampler *copy = (WGPUSampler *)calloc((size_t)sampler_count, sizeof(WGPUSampler));
+  if (!copy) {
+    free(ex);
+    return false;
+  }
+  memcpy(copy, samplers, (size_t)sampler_count * sizeof(WGPUSampler));
+  ex->samplers = copy;
+  ex->samplerCount = (size_t)sampler_count;
+
+  WGPUBindGroupEntry entry = {
+      .nextInChain = (const WGPUChainedStruct *)&ex->chain,
+      .binding = binding,
+      .buffer = NULL,
+      .offset = 0u,
+      .size = 0u,
+      .sampler = NULL,
+      .textureView = NULL,
+  };
+  if (!mbt_wgpu_bind_group_builder_push(b, entry, ex)) {
+    free(copy);
+    free(ex);
+    return false;
+  }
+  return true;
+}
+
+bool mbt_wgpu_bind_group_builder_add_buffer_array(void *builder, uint32_t binding,
+                                                  uint64_t buffer_count,
+                                                  const WGPUBuffer *buffers,
+                                                  uint64_t offset, uint64_t size) {
+  if (buffer_count == 0u || !buffers) {
+    return false;
+  }
+  if (buffer_count == 1u) {
+    return mbt_wgpu_bind_group_builder_add_buffer(builder, binding, buffers[0], offset, size);
+  }
+  mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
+  WGPUBindGroupEntryExtras *ex = mbt_wgpu_bind_group_entry_extras_new();
+  if (!ex) {
+    return false;
+  }
+  WGPUBuffer *copy = (WGPUBuffer *)calloc((size_t)buffer_count, sizeof(WGPUBuffer));
+  if (!copy) {
+    free(ex);
+    return false;
+  }
+  memcpy(copy, buffers, (size_t)buffer_count * sizeof(WGPUBuffer));
+  ex->buffers = copy;
+  ex->bufferCount = (size_t)buffer_count;
+
+  WGPUBindGroupEntry entry = {
+      .nextInChain = (const WGPUChainedStruct *)&ex->chain,
+      .binding = binding,
+      .buffer = NULL,
+      .offset = offset,
+      .size = size,
+      .sampler = NULL,
+      .textureView = NULL,
+  };
+  if (!mbt_wgpu_bind_group_builder_push(b, entry, ex)) {
+    free(copy);
+    free(ex);
+    return false;
+  }
+  return true;
 }
 
 WGPUBindGroup mbt_wgpu_bind_group_builder_finish(WGPUDevice device,
