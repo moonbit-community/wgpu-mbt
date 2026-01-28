@@ -1892,6 +1892,68 @@ declare pub fn RenderBundleEncoder::draw(
 
 ///|
 #declaration_only
+declare pub fn RenderBundleEncoder::draw_indexed(
+  self : RenderBundleEncoder,
+  index_count : UInt,
+  instance_count : UInt,
+  first_index : UInt,
+  base_vertex : Int,
+  first_instance : UInt,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::draw_indirect(
+  self : RenderBundleEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::draw_indexed_indirect(
+  self : RenderBundleEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::set_bind_group0(
+  self : RenderBundleEncoder,
+  group : BindGroup,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::set_vertex_buffer(
+  self : RenderBundleEncoder,
+  slot : UInt,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::set_index_buffer_u16(
+  self : RenderBundleEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::set_index_buffer_u32(
+  self : RenderBundleEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn RenderBundleEncoder::finish(
   self : RenderBundleEncoder,
 ) -> RenderBundle

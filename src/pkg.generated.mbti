@@ -1474,13 +1474,20 @@ pub struct RenderBundleEncoder {
 }
 pub fn RenderBundleEncoder::add_ref(Self) -> Self
 pub fn RenderBundleEncoder::draw(Self, UInt, UInt, UInt, UInt) -> Unit
+pub fn RenderBundleEncoder::draw_indexed(Self, UInt, UInt, UInt, Int, UInt) -> Unit
+pub fn RenderBundleEncoder::draw_indexed_indirect(Self, Buffer, UInt64) -> Unit
+pub fn RenderBundleEncoder::draw_indirect(Self, Buffer, UInt64) -> Unit
 pub fn RenderBundleEncoder::finish(Self) -> RenderBundle
 pub fn RenderBundleEncoder::finish_ptr(Self, @c.WGPURenderBundleDescriptorPtr) -> RenderBundle
 pub fn RenderBundleEncoder::raw_handle(Self) -> @c.WGPURenderBundleEncoder
 pub fn RenderBundleEncoder::release(Self) -> Unit
+pub fn RenderBundleEncoder::set_bind_group0(Self, BindGroup) -> Unit
+pub fn RenderBundleEncoder::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
+pub fn RenderBundleEncoder::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderBundleEncoder::set_label(Self, String) -> Unit
 pub fn RenderBundleEncoder::set_pipeline(Self, RenderPipeline) -> Unit
 pub fn RenderBundleEncoder::set_push_constants(Self, UInt64, UInt, Bytes) -> Unit
+pub fn RenderBundleEncoder::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 
 pub struct RenderPass {
   raw : @c.WGPURenderPassEncoder

@@ -3162,6 +3162,114 @@ pub fn RenderBundleEncoder::draw(
 }
 
 ///|
+pub fn RenderBundleEncoder::draw_indexed(
+  self : RenderBundleEncoder,
+  index_count : UInt,
+  instance_count : UInt,
+  first_index : UInt,
+  base_vertex : Int,
+  first_instance : UInt,
+) -> Unit {
+  @c.wgpuRenderBundleEncoderDrawIndexed(
+    self.raw,
+    index_count,
+    instance_count,
+    first_index,
+    base_vertex,
+    first_instance,
+  )
+}
+
+///|
+pub fn RenderBundleEncoder::draw_indirect(
+  self : RenderBundleEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit {
+  @c.wgpuRenderBundleEncoderDrawIndirect(
+    self.raw,
+    indirect_buffer.raw,
+    indirect_offset,
+  )
+}
+
+///|
+pub fn RenderBundleEncoder::draw_indexed_indirect(
+  self : RenderBundleEncoder,
+  indirect_buffer : Buffer,
+  indirect_offset : UInt64,
+) -> Unit {
+  @c.wgpuRenderBundleEncoderDrawIndexedIndirect(
+    self.raw,
+    indirect_buffer.raw,
+    indirect_offset,
+  )
+}
+
+///|
+pub fn RenderBundleEncoder::set_bind_group0(
+  self : RenderBundleEncoder,
+  group : BindGroup,
+) -> Unit {
+  @c.wgpuRenderBundleEncoderSetBindGroup(
+    self.raw,
+    0U,
+    group.raw,
+    0UL,
+    @c.null_uint_ptr(),
+  )
+}
+
+///|
+pub fn RenderBundleEncoder::set_vertex_buffer(
+  self : RenderBundleEncoder,
+  slot : UInt,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit {
+  @c.wgpuRenderBundleEncoderSetVertexBuffer(
+    self.raw,
+    slot,
+    buffer.raw,
+    offset,
+    size,
+  )
+}
+
+///|
+pub fn RenderBundleEncoder::set_index_buffer_u16(
+  self : RenderBundleEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit {
+  @c.wgpuRenderBundleEncoderSetIndexBuffer(
+    self.raw,
+    buffer.raw,
+    @c.index_format_uint16(),
+    offset,
+    size,
+  )
+}
+
+///|
+pub fn RenderBundleEncoder::set_index_buffer_u32(
+  self : RenderBundleEncoder,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> Unit {
+  @c.wgpuRenderBundleEncoderSetIndexBuffer(
+    self.raw,
+    buffer.raw,
+    @c.index_format_uint32(),
+    offset,
+    size,
+  )
+}
+
+///|
 pub fn RenderBundleEncoder::finish(self : RenderBundleEncoder) -> RenderBundle {
   RenderBundle::{ raw: @c.render_bundle_encoder_finish(self.raw) }
 }
