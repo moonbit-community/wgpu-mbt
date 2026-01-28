@@ -270,6 +270,13 @@ pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
 }
 
 ///|
+pub fn Surface::add_ref(self : Surface) -> Surface {
+  @c.surface_add_ref(self.raw)
+  @c.cametallayer_retain(self.layer)
+  Surface::{ raw: self.raw, layer: self.layer }
+}
+
+///|
 pub fn Surface::configure_default(
   self : Surface,
   adapter : Adapter,
@@ -421,6 +428,14 @@ pub fn Surface::capabilities_alpha_modes_count_u64(
   adapter : Adapter,
 ) -> UInt64 {
   @c.surface_capabilities_alpha_modes_count_u64(self.raw, adapter.raw)
+}
+
+///|
+pub fn Surface::capabilities_usages_u64(
+  self : Surface,
+  adapter : Adapter,
+) -> UInt64 {
+  @c.surface_capabilities_usages_u64(self.raw, adapter.raw)
 }
 
 ///|
@@ -910,6 +925,14 @@ pub fn Device::create_compute_pipeline(
 }
 
 ///|
+pub fn Device::create_texture_ptr(
+  self : Device,
+  descriptor : @c.WGPUTextureDescriptorPtr,
+) -> Texture {
+  Texture::{ raw: @c.wgpuDeviceCreateTexture(self.raw, descriptor) }
+}
+
+///|
 pub fn Device::create_texture_rgba8_2d(
   self : Device,
   width : UInt,
@@ -1038,6 +1061,14 @@ pub fn Device::create_texture_u32(
 ///|
 pub fn Texture::create_view(self : Texture) -> TextureView {
   TextureView::{ raw: @c.texture_create_view(self.raw) }
+}
+
+///|
+pub fn Texture::create_view_ptr(
+  self : Texture,
+  descriptor : @c.WGPUTextureViewDescriptorPtr,
+) -> TextureView {
+  TextureView::{ raw: @c.wgpuTextureCreateView(self.raw, descriptor) }
 }
 
 ///|
@@ -1249,6 +1280,24 @@ pub fn Device::create_render_pipeline_rgba8_pos2_with_layout(
       shader_module.raw,
     ),
   }
+}
+
+///|
+pub fn Device::create_bind_group_layout_ptr(
+  self : Device,
+  descriptor : @c.WGPUBindGroupLayoutDescriptorPtr,
+) -> BindGroupLayout {
+  BindGroupLayout::{
+    raw: @c.wgpuDeviceCreateBindGroupLayout(self.raw, descriptor),
+  }
+}
+
+///|
+pub fn Device::create_bind_group_ptr(
+  self : Device,
+  descriptor : @c.WGPUBindGroupDescriptorPtr,
+) -> BindGroup {
+  BindGroup::{ raw: @c.wgpuDeviceCreateBindGroup(self.raw, descriptor) }
 }
 
 ///|
@@ -2997,6 +3046,12 @@ pub fn TextureView::release(self : TextureView) -> Unit {
 }
 
 ///|
+pub fn TextureView::add_ref(self : TextureView) -> TextureView {
+  @c.texture_view_add_ref(self.raw)
+  TextureView::{ raw: self.raw }
+}
+
+///|
 pub fn Texture::destroy(self : Texture) -> Unit {
   @c.texture_destroy(self.raw)
 }
@@ -3004,6 +3059,12 @@ pub fn Texture::destroy(self : Texture) -> Unit {
 ///|
 pub fn Texture::release(self : Texture) -> Unit {
   @c.texture_release(self.raw)
+}
+
+///|
+pub fn Texture::add_ref(self : Texture) -> Texture {
+  @c.texture_add_ref(self.raw)
+  Texture::{ raw: self.raw }
 }
 
 ///|
@@ -3023,8 +3084,20 @@ pub fn BindGroupLayout::release(self : BindGroupLayout) -> Unit {
 }
 
 ///|
+pub fn BindGroupLayout::add_ref(self : BindGroupLayout) -> BindGroupLayout {
+  @c.bind_group_layout_add_ref(self.raw)
+  BindGroupLayout::{ raw: self.raw }
+}
+
+///|
 pub fn BindGroup::release(self : BindGroup) -> Unit {
   @c.bind_group_release(self.raw)
+}
+
+///|
+pub fn BindGroup::add_ref(self : BindGroup) -> BindGroup {
+  @c.bind_group_add_ref(self.raw)
+  BindGroup::{ raw: self.raw }
 }
 
 ///|

@@ -44,6 +44,14 @@ void mbt_wgpu_cametallayer_release(void *layer) {
   ((void (*)(id, SEL))objc_msgSend)((id)layer, release_sel);
 }
 
+void mbt_wgpu_cametallayer_retain(void *layer) {
+  if (!layer) {
+    return;
+  }
+  SEL retain_sel = sel_registerName("retain");
+  ((id (*)(id, SEL))objc_msgSend)((id)layer, retain_sel);
+}
+
 WGPUSurface mbt_wgpu_instance_create_surface_metal_layer(WGPUInstance instance,
                                                          void *layer) {
   if (!layer) {

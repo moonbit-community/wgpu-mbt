@@ -70,6 +70,8 @@ pub fn adapter_supported_features_contains_u32(WGPUAdapter, UInt) -> Bool
 
 pub fn adapter_supported_features_count_u64(WGPUAdapter) -> UInt64
 
+pub fn bind_group_add_ref(WGPUBindGroup) -> Unit
+
 pub fn bind_group_builder_add_buffer(OpaquePtr, UInt, WGPUBuffer, UInt64, UInt64) -> Bool
 
 pub fn bind_group_builder_add_buffer_array(OpaquePtr, UInt, UInt64, FixedArray[WGPUBuffer], UInt64, UInt64) -> Bool
@@ -103,6 +105,8 @@ pub fn bind_group_descriptor_texture_2d_new(WGPUBindGroupLayout, WGPUTextureView
 pub fn bind_group_descriptor_uniform_buffer_16_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
 
 pub fn bind_group_descriptor_uniform_buffer_new(WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroupDescriptorPtr
+
+pub fn bind_group_layout_add_ref(WGPUBindGroupLayout) -> Unit
 
 pub fn bind_group_layout_builder_add_buffer(OpaquePtr, UInt, UInt64, UInt, Bool, UInt64) -> Bool
 
@@ -173,6 +177,8 @@ pub fn buffer_unmap(WGPUBuffer) -> Unit
 pub fn cametallayer_new() -> OpaquePtr
 
 pub fn cametallayer_release(OpaquePtr) -> Unit
+
+pub fn cametallayer_retain(OpaquePtr) -> Unit
 
 pub fn command_buffer_release(WGPUCommandBuffer) -> Unit
 
@@ -664,6 +670,8 @@ pub fn shader_module_release(WGPUShaderModule) -> Unit
 
 pub fn shader_module_set_label_utf8(WGPUShaderModule, Bytes, UInt64) -> Unit
 
+pub fn surface_add_ref(WGPUSurface) -> Unit
+
 pub fn surface_capabilities_alpha_mode_u32_at(WGPUSurface, WGPUAdapter, UInt64) -> UInt
 
 pub fn surface_capabilities_alpha_modes_count_u64(WGPUSurface, WGPUAdapter) -> UInt64
@@ -675,6 +683,8 @@ pub fn surface_capabilities_formats_count_u64(WGPUSurface, WGPUAdapter) -> UInt6
 pub fn surface_capabilities_present_mode_u32_at(WGPUSurface, WGPUAdapter, UInt64) -> UInt
 
 pub fn surface_capabilities_present_modes_count_u64(WGPUSurface, WGPUAdapter) -> UInt64
+
+pub fn surface_capabilities_usages_u64(WGPUSurface, WGPUAdapter) -> UInt64
 
 pub fn surface_configure_default(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64) -> UInt
 
@@ -711,6 +721,8 @@ pub fn texel_copy_texture_info_default_new(WGPUTexture) -> WGPUTexelCopyTextureI
 pub fn texel_copy_texture_info_free(WGPUTexelCopyTextureInfoPtr) -> Unit
 
 pub fn texel_copy_texture_info_new(WGPUTexture, UInt, UInt, UInt, UInt) -> WGPUTexelCopyTextureInfoPtr
+
+pub fn texture_add_ref(WGPUTexture) -> Unit
 
 pub fn texture_create_view(WGPUTexture) -> WGPUTextureView
 
@@ -755,6 +767,8 @@ pub fn texture_get_width_u32(WGPUTexture) -> UInt
 pub fn texture_release(WGPUTexture) -> Unit
 
 pub fn texture_set_label_utf8(WGPUTexture, Bytes, UInt64) -> Unit
+
+pub fn texture_view_add_ref(WGPUTextureView) -> Unit
 
 pub fn texture_view_descriptor_2d_array_new(UInt, UInt, UInt, UInt) -> WGPUTextureViewDescriptorPtr
 

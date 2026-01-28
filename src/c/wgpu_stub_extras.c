@@ -553,6 +553,20 @@ uint64_t mbt_wgpu_surface_capabilities_alpha_modes_count(WGPUSurface surface,
   return out;
 }
 
+uint64_t mbt_wgpu_surface_capabilities_usages_u64(WGPUSurface surface, WGPUAdapter adapter) {
+  if (!surface || !adapter) {
+    return 0u;
+  }
+  WGPUSurfaceCapabilities caps = {0};
+  WGPUStatus st = wgpuSurfaceGetCapabilities(surface, adapter, &caps);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  uint64_t out = (uint64_t)caps.usages;
+  wgpuSurfaceCapabilitiesFreeMembers(caps);
+  return out;
+}
+
 uint32_t mbt_wgpu_surface_capabilities_format_u32_at(WGPUSurface surface, WGPUAdapter adapter,
                                                      uint64_t index) {
   if (!surface || !adapter) {

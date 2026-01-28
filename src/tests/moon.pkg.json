@@ -225,6 +225,9 @@
     "wgpu_surface_capabilities_arrays_test.mbt": [
       "native"
     ],
+    "wgpu_surface_texture_bind_group_api_test.mbt": [
+      "native"
+    ],
     "wgpu_wgsl_language_features_test.mbt": [
       "native"
     ],

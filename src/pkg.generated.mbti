@@ -1192,6 +1192,7 @@ pub fn Adapter::supported_features_count_u64(Self) -> UInt64
 pub struct BindGroup {
   raw : @c.WGPUBindGroup
 }
+pub fn BindGroup::add_ref(Self) -> Self
 pub fn BindGroup::release(Self) -> Unit
 pub fn BindGroup::set_label(Self, String) -> Unit
 
@@ -1210,6 +1211,7 @@ pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> Self
 pub struct BindGroupLayout {
   raw : @c.WGPUBindGroupLayout
 }
+pub fn BindGroupLayout::add_ref(Self) -> Self
 pub fn BindGroupLayout::release(Self) -> Unit
 pub fn BindGroupLayout::set_label(Self, String) -> Unit
 
@@ -1296,6 +1298,7 @@ pub fn ComputePipeline::set_label(Self, String) -> Unit
 pub struct Device {
   raw : @c.WGPUDevice
 }
+pub fn Device::create_bind_group_layout_ptr(Self, @c.WGPUBindGroupLayoutDescriptorPtr) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_sampler_filtering(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_sampler_texture_2d(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_storage_buffer(Self) -> BindGroupLayout
@@ -1303,6 +1306,7 @@ pub fn Device::create_bind_group_layout_storage_texture_rgba8_writeonly(Self) ->
 pub fn Device::create_bind_group_layout_texture_2d_float(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_uniform_buffer(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_uniform_buffer_dynamic(Self) -> BindGroupLayout
+pub fn Device::create_bind_group_ptr(Self, @c.WGPUBindGroupDescriptorPtr) -> BindGroup
 pub fn Device::create_bind_group_sampler(Self, BindGroupLayout, Sampler) -> BindGroup
 pub fn Device::create_bind_group_sampler_texture_2d(Self, BindGroupLayout, Sampler, TextureView) -> BindGroup
 pub fn Device::create_bind_group_storage_buffer(Self, BindGroupLayout, Buffer) -> BindGroup
@@ -1340,6 +1344,7 @@ pub fn Device::create_sampler_u32(Self, UInt, UInt, UInt, UInt, UInt, UInt, lod_
 pub fn Device::create_shader_module_spirv(Self, Bytes) -> ShaderModule
 pub fn Device::create_shader_module_wgsl(Self, String) -> ShaderModule
 pub fn Device::create_texture_depth24plus_2d(Self, UInt, UInt) -> Texture
+pub fn Device::create_texture_ptr(Self, @c.WGPUTextureDescriptorPtr) -> Texture
 pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array(Self, UInt, UInt, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, UInt64) -> Texture
@@ -1490,6 +1495,7 @@ pub struct Surface {
   raw : @c.WGPUSurface
   layer : @c.OpaquePtr
 }
+pub fn Surface::add_ref(Self) -> Self
 pub fn Surface::capabilities_alpha_mode_u32_at(Self, Adapter, UInt64) -> UInt
 pub fn Surface::capabilities_alpha_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_alpha_modes_count_u64(Self, Adapter) -> UInt64
@@ -1499,6 +1505,7 @@ pub fn Surface::capabilities_formats_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::capabilities_present_mode_u32_at(Self, Adapter, UInt64) -> UInt
 pub fn Surface::capabilities_present_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_present_modes_count_u64(Self, Adapter) -> UInt64
+pub fn Surface::capabilities_usages_u64(Self, Adapter) -> UInt64
 pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, UInt64) -> UInt
 pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt) -> Bool
 pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt, Array[UInt]) -> Bool
@@ -1519,9 +1526,11 @@ pub fn SurfaceTexture::take_texture(Self) -> Texture
 pub struct Texture {
   raw : @c.WGPUTexture
 }
+pub fn Texture::add_ref(Self) -> Self
 pub fn Texture::create_view(Self) -> TextureView
 pub fn Texture::create_view_2d(Self, UInt, UInt) -> TextureView
 pub fn Texture::create_view_2d_array(Self, UInt, UInt, UInt, UInt) -> TextureView
+pub fn Texture::create_view_ptr(Self, @c.WGPUTextureViewDescriptorPtr) -> TextureView
 pub fn Texture::create_view_u32(Self, UInt, UInt, UInt, UInt, UInt, UInt, UInt) -> TextureView
 pub fn Texture::depth_or_array_layers_u32(Self) -> UInt
 pub fn Texture::destroy(Self) -> Unit
@@ -1538,6 +1547,7 @@ pub fn Texture::width_u32(Self) -> UInt
 pub struct TextureView {
   raw : @c.WGPUTextureView
 }
+pub fn TextureView::add_ref(Self) -> Self
 pub fn TextureView::release(Self) -> Unit
 pub fn TextureView::set_label(Self, String) -> Unit
 

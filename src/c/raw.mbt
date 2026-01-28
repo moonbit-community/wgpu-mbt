@@ -252,6 +252,9 @@ pub extern "C" fn cametallayer_new() -> OpaquePtr = "mbt_wgpu_cametallayer_new"
 pub extern "C" fn cametallayer_release(layer : OpaquePtr) -> Unit = "mbt_wgpu_cametallayer_release"
 
 ///|
+pub extern "C" fn cametallayer_retain(layer : OpaquePtr) -> Unit = "mbt_wgpu_cametallayer_retain"
+
+///|
 #borrow(layer)
 pub extern "C" fn instance_create_surface_metal_layer(
   instance : Instance,
@@ -471,6 +474,12 @@ pub extern "C" fn surface_capabilities_alpha_modes_count_u64(
   surface : WGPUSurface,
   adapter : Adapter,
 ) -> UInt64 = "mbt_wgpu_surface_capabilities_alpha_modes_count"
+
+///|
+pub extern "C" fn surface_capabilities_usages_u64(
+  surface : WGPUSurface,
+  adapter : Adapter,
+) -> UInt64 = "mbt_wgpu_surface_capabilities_usages_u64"
 
 ///|
 pub extern "C" fn surface_capabilities_format_u32_at(
@@ -2203,10 +2212,27 @@ pub extern "C" fn texture_get_format_u32(texture : Texture) -> UInt = "wgpuTextu
 pub extern "C" fn texture_get_usage_u64(texture : Texture) -> UInt64 = "wgpuTextureGetUsage"
 
 ///|
+pub extern "C" fn texture_add_ref(texture : Texture) -> Unit = "wgpuTextureAddRef"
+
+///|
 pub extern "C" fn texture_release(texture : Texture) -> Unit = "wgpuTextureRelease"
 
 ///|
+pub extern "C" fn texture_view_add_ref(view : TextureView) -> Unit = "wgpuTextureViewAddRef"
+
+///|
 pub extern "C" fn texture_view_release(view : TextureView) -> Unit = "wgpuTextureViewRelease"
+
+///|
+pub extern "C" fn surface_add_ref(surface : WGPUSurface) -> Unit = "wgpuSurfaceAddRef"
+
+///|
+pub extern "C" fn bind_group_layout_add_ref(
+  bind_group_layout : BindGroupLayout,
+) -> Unit = "wgpuBindGroupLayoutAddRef"
+
+///|
+pub extern "C" fn bind_group_add_ref(bind_group : BindGroup) -> Unit = "wgpuBindGroupAddRef"
 
 ///|
 pub extern "C" fn bind_group_layout_release(
