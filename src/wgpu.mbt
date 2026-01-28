@@ -234,6 +234,14 @@ pub fn Instance::request_adapter_sync(self : Instance) -> Adapter {
 }
 
 ///|
+pub fn Instance::request_adapter_sync_ptr(
+  self : Instance,
+  options : @c.WGPURequestAdapterOptionsPtr,
+) -> Adapter {
+  Adapter::{ raw: @c.instance_request_adapter_sync_ptr(self.raw, options) }
+}
+
+///|
 pub fn Instance::process_events(self : Instance) -> Unit {
   @c.instance_process_events(self.raw)
 }
@@ -517,6 +525,17 @@ pub fn Adapter::request_device_sync(
   instance : Instance,
 ) -> Device {
   Device::{ raw: @c.adapter_request_device_sync(instance.raw, self.raw) }
+}
+
+///|
+pub fn Adapter::request_device_sync_ptr(
+  self : Adapter,
+  instance : Instance,
+  descriptor : @c.WGPUDeviceDescriptorPtr,
+) -> Device {
+  Device::{
+    raw: @c.adapter_request_device_sync_ptr(instance.raw, self.raw, descriptor),
+  }
 }
 
 ///|

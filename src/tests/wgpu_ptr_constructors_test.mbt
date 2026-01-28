@@ -17,8 +17,13 @@ test "wgpu ptr-based constructors + raw handles" {
   let instance = @wgpu.Instance::create_ptr(
     @wgpu_c.null_instance_descriptor_ptr(),
   )
-  let adapter = instance.request_adapter_sync()
-  let device = adapter.request_device_sync(instance)
+  let adapter = instance.request_adapter_sync_ptr(
+    @wgpu_c.null_request_adapter_options_ptr(),
+  )
+  let device = adapter.request_device_sync_ptr(
+    instance,
+    @wgpu_c.null_device_descriptor_ptr(),
+  )
   let queue = device.queue()
   let buf_desc = @wgpu_c.buffer_descriptor_new(
     4UL, @wgpu.buffer_usage_copy_dst, false,

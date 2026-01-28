@@ -1181,6 +1181,7 @@ pub fn Adapter::raw_handle(Self) -> @c.WGPUAdapter
 pub fn Adapter::release(Self) -> Unit
 pub fn Adapter::request_device_sync(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_pipeline_statistics_query(Self, Instance) -> Device
+pub fn Adapter::request_device_sync_ptr(Self, Instance, @c.WGPUDeviceDescriptorPtr) -> Device
 pub fn Adapter::request_device_sync_push_constants(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_spirv_shader_passthrough(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_texture_binding_array(Self, Instance) -> Device
@@ -1417,6 +1418,7 @@ pub fn Instance::process_events(Self) -> Unit
 pub fn Instance::raw_handle(Self) -> @c.WGPUInstance
 pub fn Instance::release(Self) -> Unit
 pub fn Instance::request_adapter_sync(Self) -> Adapter
+pub fn Instance::request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Adapter
 pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult
 pub fn Instance::wgsl_language_features_count_u64(Self) -> UInt64
 

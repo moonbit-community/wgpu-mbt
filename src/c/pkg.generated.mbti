@@ -52,6 +52,8 @@ pub fn adapter_request_device_sync(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_pipeline_statistics_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
+pub fn adapter_request_device_sync_ptr(WGPUInstance, WGPUAdapter, WGPUDeviceDescriptorPtr) -> WGPUDevice
+
 pub fn adapter_request_device_sync_push_constants(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_spirv_shader_passthrough(WGPUInstance, WGPUAdapter) -> WGPUDevice
@@ -450,6 +452,8 @@ pub fn instance_release(WGPUInstance) -> Unit
 
 pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
 
+pub fn instance_request_adapter_sync_ptr(WGPUInstance, WGPURequestAdapterOptionsPtr) -> WGPUAdapter
+
 pub fn instance_wait_any_one_packed_u64(WGPUInstance, UInt64, UInt64) -> UInt64
 
 pub fn instance_wgsl_language_features_count_u64(WGPUInstance) -> UInt64
@@ -458,6 +462,8 @@ pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
 
 pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr
 
+pub fn null_device_descriptor_ptr() -> WGPUDeviceDescriptorPtr
+
 pub fn null_instance_descriptor_ptr() -> WGPUInstanceDescriptorPtr
 
 pub fn null_opaque_ptr() -> OpaquePtr
@@ -465,6 +471,8 @@ pub fn null_opaque_ptr() -> OpaquePtr
 pub fn null_pipeline_layout() -> WGPUPipelineLayout
 
 pub fn null_ptr() -> UnitPtr
+
+pub fn null_request_adapter_options_ptr() -> WGPURequestAdapterOptionsPtr
 
 pub fn null_submission_index_ptr() -> WGPUSubmissionIndexPtr
 

@@ -729,6 +729,12 @@ pub extern "C" fn command_encoder_pop_debug_group(
 pub extern "C" fn instance_request_adapter_sync(instance : Instance) -> Adapter = "mbt_wgpu_instance_request_adapter_sync"
 
 ///|
+pub extern "C" fn instance_request_adapter_sync_ptr(
+  instance : Instance,
+  options : WGPURequestAdapterOptionsPtr,
+) -> Adapter = "mbt_wgpu_instance_request_adapter_sync_ptr"
+
+///|
 pub extern "C" fn instance_process_events(instance : Instance) -> Unit = "wgpuInstanceProcessEvents"
 
 ///|
@@ -736,6 +742,13 @@ pub extern "C" fn adapter_request_device_sync(
   instance : Instance,
   adapter : Adapter,
 ) -> Device = "mbt_wgpu_adapter_request_device_sync"
+
+///|
+pub extern "C" fn adapter_request_device_sync_ptr(
+  instance : Instance,
+  adapter : Adapter,
+  descriptor : WGPUDeviceDescriptorPtr,
+) -> Device = "mbt_wgpu_adapter_request_device_sync_ptr"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_timestamp_query(

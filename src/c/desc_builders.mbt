@@ -38,6 +38,12 @@ pub extern "C" fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDes
 pub extern "C" fn null_instance_descriptor_ptr() -> WGPUInstanceDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|
+pub extern "C" fn null_request_adapter_options_ptr() -> WGPURequestAdapterOptionsPtr = "mbt_wgpu_null_ptr"
+
+///|
+pub extern "C" fn null_device_descriptor_ptr() -> WGPUDeviceDescriptorPtr = "mbt_wgpu_null_ptr"
+
+///|
 pub extern "C" fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|

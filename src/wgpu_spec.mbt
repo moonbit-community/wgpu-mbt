@@ -152,7 +152,20 @@ declare pub fn Instance::create() -> Instance
 
 ///|
 #declaration_only
+declare pub fn Instance::create_ptr(
+  descriptor : @c.WGPUInstanceDescriptorPtr,
+) -> Instance
+
+///|
+#declaration_only
 declare pub fn Instance::request_adapter_sync(self : Instance) -> Adapter
+
+///|
+#declaration_only
+declare pub fn Instance::request_adapter_sync_ptr(
+  self : Instance,
+  options : @c.WGPURequestAdapterOptionsPtr,
+) -> Adapter
 
 ///|
 #declaration_only
@@ -353,6 +366,14 @@ declare pub fn Surface::capabilities_alpha_modes(
 declare pub fn Adapter::request_device_sync(
   self : Adapter,
   instance : Instance,
+) -> Device
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_ptr(
+  self : Adapter,
+  instance : Instance,
+  descriptor : @c.WGPUDeviceDescriptorPtr,
 ) -> Device
 
 ///|
