@@ -461,6 +461,33 @@ uint32_t mbt_wgpu_queue_on_submitted_work_done_sync(WGPUInstance instance,
   return (uint32_t)out.status;
 }
 
+WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline_async_sync_ptr(
+    WGPUInstance instance, WGPUDevice device,
+    const WGPUComputePipelineDescriptor *descriptor) {
+  (void)instance;
+  // wgpu-native currently may not implement the async pipeline creation entry
+  // points in all builds, so we conservatively fall back to the synchronous API.
+  return wgpuDeviceCreateComputePipeline(device, descriptor);
+}
+
+WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_async_sync_ptr(
+    WGPUInstance instance, WGPUDevice device,
+    const WGPURenderPipelineDescriptor *descriptor) {
+  (void)instance;
+  // See comment above: prefer the synchronous API to avoid hitting unimplemented
+  // async entry points.
+  return wgpuDeviceCreateRenderPipeline(device, descriptor);
+}
+
+uint32_t mbt_wgpu_shader_module_get_compilation_info_sync_status_u32(
+    WGPUInstance instance, WGPUShaderModule shader_module) {
+  (void)instance;
+  (void)shader_module;
+  // wgpu-native may not implement compilation-info callbacks in all builds.
+  // Returning 0 (Unknown/Unavailable) avoids aborting via the unimplemented entry point.
+  return 0u;
+}
+
 WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(
     WGPUInstance instance, WGPUAdapter adapter) {
   mbt_request_device_result_t out = {0};

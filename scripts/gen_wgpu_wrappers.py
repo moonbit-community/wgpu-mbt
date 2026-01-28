@@ -255,6 +255,305 @@ def _gen_methods(
         if w not in SKIP_GENERATED_STRUCTS:
             existing_wrapper_names.add(w)
 
+    def _alloc_method_name(recv_wrapper: str, desired: str) -> str:
+        used = existing_methods.get(recv_wrapper, set())
+        mname = desired
+        while mname in used:
+            mname = mname + "_raw"
+        used = set(used)
+        used.add(mname)
+        existing_methods[recv_wrapper] = used
+        return mname
+
+    def _special_case(
+        f: ExternFn,
+        recv_wrapper: str,
+        op_camel: str,
+    ) -> str | None:
+        """
+        Return a full method block string if we should generate a replacement
+        method for an otherwise-unsupported C signature. Return None to fall
+        back to the default generator. If the API is already covered by an
+        existing MoonBit method (possibly under a different name), return the
+        empty string "" to indicate "covered, do not skip and do not generate".
+        """
+        used = existing_methods.get(recv_wrapper, set())
+
+        # WGPUStringView: route label/debug-marker APIs through existing *_utf8 helpers.
+        if op_camel in {"SetLabel", "InsertDebugMarker", "PushDebugGroup"}:
+            desired = {
+                "SetLabel": "set_label",
+                "InsertDebugMarker": "insert_debug_marker",
+                "PushDebugGroup": "push_debug_group",
+            }[op_camel]
+            if desired in used:
+                return ""
+
+            helper_suffix = {
+                "SetLabel": "set_label_utf8",
+                "InsertDebugMarker": "insert_debug_marker_utf8",
+                "PushDebugGroup": "push_debug_group_utf8",
+            }[op_camel]
+            helper = f"{_snake_case(recv_wrapper)}_{helper_suffix}"
+            mname = _alloc_method_name(recv_wrapper, desired)
+            return "\n".join(
+                [
+                    "///|",
+                    f"pub fn {recv_wrapper}::{mname}(",
+                    f"  self : {recv_wrapper},",
+                    "  label : String,",
+                    ") -> Unit {",
+                    "  let bytes = label.to_bytes()",
+                    f"  @c.{helper}(self.raw, bytes, bytes.length().to_uint64())",
+                    "}",
+                ]
+            )
+
+        # Dynamic bind-group offsets: use Array[UInt] helpers in @c.
+        if op_camel == "SetBindGroup":
+            desired = "set_bind_group"
+            if desired in used:
+                return ""
+            helper = f"{_snake_case(recv_wrapper)}_set_bind_group"
+            mname = _alloc_method_name(recv_wrapper, desired)
+            return "\n".join(
+                [
+                    "///|",
+                    f"pub fn {recv_wrapper}::{mname}(",
+                    f"  self : {recv_wrapper},",
+                    "  index : UInt,",
+                    "  group : BindGroup,",
+                    "  dynamic_offsets : Array[UInt],",
+                    ") -> Unit {",
+                    f"  @c.{helper}(self.raw, index, group.raw, dynamic_offsets)",
+                    "}",
+                ]
+            )
+
+        # Push-constants: route UnitPtr+size to borrowed Bytes helpers.
+        if op_camel == "SetPushConstants":
+            desired = "set_push_constants"
+            if desired in used:
+                return ""
+
+            if recv_wrapper == "ComputePass":
+                mname = _alloc_method_name(recv_wrapper, desired)
+                return "\n".join(
+                    [
+                        "///|",
+                        f"pub fn {recv_wrapper}::{mname}(",
+                        f"  self : {recv_wrapper},",
+                        "  offset : UInt,",
+                        "  data : Bytes,",
+                        ") -> Unit {",
+                        "  @c.compute_pass_set_push_constants_bytes(",
+                        "    self.raw,",
+                        "    offset,",
+                        "    data,",
+                        "    data.length().to_uint64(),",
+                        "  )",
+                        "}",
+                    ]
+                )
+            if recv_wrapper == "RenderPass":
+                mname = _alloc_method_name(recv_wrapper, desired)
+                return "\n".join(
+                    [
+                        "///|",
+                        f"pub fn {recv_wrapper}::{mname}(",
+                        f"  self : {recv_wrapper},",
+                        "  stages : UInt64,",
+                        "  offset : UInt,",
+                        "  data : Bytes,",
+                        ") -> Unit {",
+                        "  @c.render_pass_set_push_constants_bytes(",
+                        "    self.raw,",
+                        "    stages,",
+                        "    offset,",
+                        "    data,",
+                        "    data.length().to_uint64(),",
+                        "  )",
+                        "}",
+                    ]
+                )
+            if recv_wrapper == "RenderBundleEncoder":
+                mname = _alloc_method_name(recv_wrapper, desired)
+                return "\n".join(
+                    [
+                        "///|",
+                        f"pub fn {recv_wrapper}::{mname}(",
+                        f"  self : {recv_wrapper},",
+                        "  stages : UInt64,",
+                        "  offset : UInt,",
+                        "  data : Bytes,",
+                        ") -> Unit {",
+                        "  @c.render_bundle_encoder_set_push_constants_bytes(",
+                        "    self.raw,",
+                        "    stages,",
+                        "    offset,",
+                        "    data,",
+                        "    data.length().to_uint64(),",
+                        "  )",
+                        "}",
+                    ]
+                )
+
+        # Queue writes: our public API already exposes Bytes-based wrappers.
+        if f.name == "wgpuQueueWriteBuffer":
+            if "write_buffer" in used:
+                return ""
+        if f.name == "wgpuQueueWriteTexture":
+            if "write_texture_ptr" in used:
+                return ""
+
+        # CallbackInfo/Future-style APIs: treat as covered by existing sync helpers,
+        # or generate minimal sync variants when missing.
+        if f.name == "wgpuInstanceRequestAdapter":
+            desired = "request_adapter_sync_ptr"
+            if desired in used:
+                return ""
+            mname = _alloc_method_name(recv_wrapper, desired)
+            return "\n".join(
+                [
+                    "///|",
+                    f"pub fn {recv_wrapper}::{mname}(",
+                    f"  self : {recv_wrapper},",
+                    "  options : @c.WGPURequestAdapterOptionsPtr,",
+                    ") -> Adapter {",
+                    "  Adapter::{ raw: @c.instance_request_adapter_sync_ptr(self.raw, options) }",
+                    "}",
+                ]
+            )
+
+        if f.name == "wgpuAdapterRequestDevice":
+            desired = "request_device_sync_ptr"
+            if desired in used:
+                return ""
+            mname = _alloc_method_name(recv_wrapper, desired)
+            return "\n".join(
+                [
+                    "///|",
+                    f"pub fn {recv_wrapper}::{mname}(",
+                    f"  self : {recv_wrapper},",
+                    "  instance : Instance,",
+                    "  descriptor : @c.WGPUDeviceDescriptorPtr,",
+                    ") -> Device {",
+                    "  Device::{ raw: @c.adapter_request_device_sync_ptr(instance.raw, self.raw, descriptor) }",
+                    "}",
+                ]
+            )
+
+        if f.name == "wgpuQueueOnSubmittedWorkDone":
+            desired = "on_submitted_work_done_sync"
+            if desired in used:
+                return ""
+            mname = _alloc_method_name(recv_wrapper, desired)
+            return "\n".join(
+                [
+                    "///|",
+                    f"pub fn {recv_wrapper}::{mname}(",
+                    f"  self : {recv_wrapper},",
+                    "  instance : Instance,",
+                    ") -> UInt {",
+                    "  @c.queue_on_submitted_work_done_sync(instance.raw, self.raw)",
+                    "}",
+                ]
+            )
+
+        if f.name == "wgpuDevicePopErrorScope":
+            desired = "pop_error_scope_sync"
+            if desired in used:
+                return ""
+            mname = _alloc_method_name(recv_wrapper, desired)
+            return "\n".join(
+                [
+                    "///|",
+                    f"pub fn {recv_wrapper}::{mname}(",
+                    f"  self : {recv_wrapper},",
+                    "  instance : Instance,",
+                    ") -> UInt {",
+                    "  @c.device_pop_error_scope_sync_u32(instance.raw, self.raw)",
+                    "}",
+                ]
+            )
+
+        if f.name == "wgpuDeviceCreateComputePipelineAsync":
+            desired = "create_compute_pipeline_async_sync_ptr"
+            if desired in used:
+                return ""
+            mname = _alloc_method_name(recv_wrapper, desired)
+            return "\n".join(
+                [
+                    "///|",
+                    f"pub fn {recv_wrapper}::{mname}(",
+                    f"  self : {recv_wrapper},",
+                    "  instance : Instance,",
+                    "  descriptor : @c.WGPUComputePipelineDescriptorPtr,",
+                    ") -> ComputePipeline {",
+                    "  ComputePipeline::{",
+                    "    raw: @c.device_create_compute_pipeline_async_sync_ptr(",
+                    "      instance.raw,",
+                    "      self.raw,",
+                    "      descriptor,",
+                    "    ),",
+                    "  }",
+                    "}",
+                ]
+            )
+
+        if f.name == "wgpuDeviceCreateRenderPipelineAsync":
+            desired = "create_render_pipeline_async_sync_ptr"
+            if desired in used:
+                return ""
+            mname = _alloc_method_name(recv_wrapper, desired)
+            return "\n".join(
+                [
+                    "///|",
+                    f"pub fn {recv_wrapper}::{mname}(",
+                    f"  self : {recv_wrapper},",
+                    "  instance : Instance,",
+                    "  descriptor : @c.WGPURenderPipelineDescriptorPtr,",
+                    ") -> RenderPipeline {",
+                    "  RenderPipeline::{",
+                    "    raw: @c.device_create_render_pipeline_async_sync_ptr(",
+                    "      instance.raw,",
+                    "      self.raw,",
+                    "      descriptor,",
+                    "    ),",
+                    "  }",
+                    "}",
+                ]
+            )
+
+        if f.name == "wgpuShaderModuleGetCompilationInfo":
+            desired = "get_compilation_info_sync_status_u32"
+            if desired in used:
+                return ""
+            mname = _alloc_method_name(recv_wrapper, desired)
+            return "\n".join(
+                [
+                    "///|",
+                    f"pub fn {recv_wrapper}::{mname}(",
+                    f"  self : {recv_wrapper},",
+                    "  instance : Instance,",
+                    ") -> UInt {",
+                    "  @c.shader_module_get_compilation_info_sync_status_u32(instance.raw, self.raw)",
+                    "}",
+                ]
+            )
+
+        # Buffer mapping and mapped-range access are already covered by our
+        # safe sync helpers (map_{read,write}_sync + unmap).
+        if f.name in {
+            "wgpuBufferMapAsync",
+            "wgpuBufferGetConstMappedRange",
+            "wgpuBufferGetMappedRange",
+        }:
+            if "map_read_sync" in used and "map_write_sync" in used:
+                return ""
+
+        return None
+
     for f in fns:
         if not f.name.startswith("wgpu"):
             continue
@@ -262,11 +561,6 @@ def _gen_methods(
             continue
         recv_ty = f.params[0].ty
         if recv_ty not in handle_types:
-            continue
-
-        # Skip signatures that mention by-value struct types.
-        if _is_unsupported_type(f.ret) or any(_is_unsupported_type(p.ty) for p in f.params):
-            skipped.append(f.name)
             continue
 
         recv_wrapper = _wrapper_name_for_handle_type(recv_ty)
@@ -281,14 +575,19 @@ def _gen_methods(
             continue
         method = _snake_case(op_camel)
 
+        special = _special_case(f, recv_wrapper, op_camel)
+        if special is not None:
+            if special != "":
+                blocks.append(special)
+            continue
+
+        # Skip signatures that mention by-value struct types.
+        if _is_unsupported_type(f.ret) or any(_is_unsupported_type(p.ty) for p in f.params):
+            skipped.append(f.name)
+            continue
+
         # Make sure we don't collide with hand-written APIs.
-        used = existing_methods.get(recv_wrapper, set())
-        mname = method
-        while mname in used:
-            mname = mname + "_raw"
-        used = set(used)
-        used.add(mname)
-        existing_methods[recv_wrapper] = used
+        mname = _alloc_method_name(recv_wrapper, method)
 
         # Params (skip receiver)
         sig_params: list[str] = [f"self : {recv_wrapper}"]

@@ -444,6 +444,14 @@ declare pub fn Device::create_compute_pipeline_raw(
 
 ///|
 #declaration_only
+declare pub fn Device::create_compute_pipeline_async_sync_ptr(
+  self : Device,
+  instance : Instance,
+  descriptor : @c.WGPUComputePipelineDescriptorPtr,
+) -> ComputePipeline
+
+///|
+#declaration_only
 declare pub fn Device::create_pipeline_layout(
   self : Device,
   descriptor : @c.WGPUPipelineLayoutDescriptorPtr,
@@ -467,6 +475,14 @@ declare pub fn Device::create_render_bundle_encoder(
 #declaration_only
 declare pub fn Device::create_render_pipeline(
   self : Device,
+  descriptor : @c.WGPURenderPipelineDescriptorPtr,
+) -> RenderPipeline
+
+///|
+#declaration_only
+declare pub fn Device::create_render_pipeline_async_sync_ptr(
+  self : Device,
+  instance : Instance,
   descriptor : @c.WGPURenderPipelineDescriptorPtr,
 ) -> RenderPipeline
 
@@ -987,6 +1003,13 @@ declare pub fn Sampler::release_raw(self : Sampler) -> Unit
 ///|
 #declaration_only
 declare pub fn ShaderModule::add_ref_raw(self : ShaderModule) -> Unit
+
+///|
+#declaration_only
+declare pub fn ShaderModule::get_compilation_info_sync_status_u32(
+  self : ShaderModule,
+  instance : Instance,
+) -> UInt
 
 ///|
 #declaration_only

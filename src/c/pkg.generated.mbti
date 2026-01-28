@@ -310,6 +310,8 @@ pub fn device_create_command_encoder(WGPUDevice) -> WGPUCommandEncoder
 
 pub fn device_create_compute_pipeline(WGPUDevice, WGPUShaderModule) -> WGPUComputePipeline
 
+pub fn device_create_compute_pipeline_async_sync_ptr(WGPUInstance, WGPUDevice, WGPUComputePipelineDescriptorPtr) -> WGPUComputePipeline
+
 pub fn device_create_compute_pipeline_with_layout(WGPUDevice, WGPUPipelineLayout, WGPUShaderModule) -> WGPUComputePipeline
 
 pub fn device_create_pipeline_layout_1(WGPUDevice, WGPUBindGroupLayout) -> WGPUPipelineLayout
@@ -327,6 +329,8 @@ pub fn device_create_query_set_pipeline_statistics(WGPUDevice, UInt, UInt) -> WG
 pub fn device_create_query_set_timestamp(WGPUDevice, UInt) -> WGPUQuerySet
 
 pub fn device_create_render_bundle_encoder_rgba8(WGPUDevice) -> WGPURenderBundleEncoder
+
+pub fn device_create_render_pipeline_async_sync_ptr(WGPUInstance, WGPUDevice, WGPURenderPipelineDescriptorPtr) -> WGPURenderPipeline
 
 pub fn device_create_render_pipeline_color_format(WGPUDevice, WGPUShaderModule, UInt) -> WGPURenderPipeline
 
@@ -681,6 +685,8 @@ pub fn set_debug_labels_enabled(Bool) -> Unit
 pub fn shader_module_descriptor_free(WGPUShaderModuleDescriptorPtr) -> Unit
 
 pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr
+
+pub fn shader_module_get_compilation_info_sync_status_u32(WGPUInstance, WGPUShaderModule) -> UInt
 
 pub fn shader_module_is_null(WGPUShaderModule) -> Bool
 

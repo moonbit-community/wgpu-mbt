@@ -582,6 +582,21 @@ pub fn Device::create_compute_pipeline_raw(
 }
 
 ///|
+pub fn Device::create_compute_pipeline_async_sync_ptr(
+  self : Device,
+  instance : Instance,
+  descriptor : @c.WGPUComputePipelineDescriptorPtr,
+) -> ComputePipeline {
+  ComputePipeline::{
+    raw: @c.device_create_compute_pipeline_async_sync_ptr(
+      instance.raw,
+      self.raw,
+      descriptor,
+    ),
+  }
+}
+
+///|
 pub fn Device::create_pipeline_layout(
   self : Device,
   descriptor : @c.WGPUPipelineLayoutDescriptorPtr,
@@ -616,6 +631,21 @@ pub fn Device::create_render_pipeline(
 ) -> RenderPipeline {
   RenderPipeline::{
     raw: @c.wgpuDeviceCreateRenderPipeline(self.raw, descriptor),
+  }
+}
+
+///|
+pub fn Device::create_render_pipeline_async_sync_ptr(
+  self : Device,
+  instance : Instance,
+  descriptor : @c.WGPURenderPipelineDescriptorPtr,
+) -> RenderPipeline {
+  RenderPipeline::{
+    raw: @c.device_create_render_pipeline_async_sync_ptr(
+      instance.raw,
+      self.raw,
+      descriptor,
+    ),
   }
 }
 
@@ -1309,6 +1339,14 @@ pub fn Sampler::release_raw(self : Sampler) -> Unit {
 ///|
 pub fn ShaderModule::add_ref_raw(self : ShaderModule) -> Unit {
   @c.wgpuShaderModuleAddRef(self.raw)
+}
+
+///|
+pub fn ShaderModule::get_compilation_info_sync_status_u32(
+  self : ShaderModule,
+  instance : Instance,
+) -> UInt {
+  @c.shader_module_get_compilation_info_sync_status_u32(instance.raw, self.raw)
 }
 
 ///|
