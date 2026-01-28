@@ -1245,6 +1245,7 @@ pub fn Buffer::release(Self) -> Unit
 pub fn Buffer::set_label(Self, String) -> Unit
 pub fn Buffer::size(Self) -> UInt64
 pub fn Buffer::unmap(Self) -> Unit
+pub fn Buffer::usage_u64(Self) -> UInt64
 
 pub struct CommandBuffer {
   raw : @c.WGPUCommandBuffer

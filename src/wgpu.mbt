@@ -3045,6 +3045,11 @@ pub fn Buffer::size(self : Buffer) -> UInt64 {
 }
 
 ///|
+pub fn Buffer::usage_u64(self : Buffer) -> UInt64 {
+  @c.wgpuBufferGetUsage(self.raw)
+}
+
+///|
 pub fn Buffer::destroy(self : Buffer) -> Unit {
   @c.buffer_destroy(self.raw)
 }

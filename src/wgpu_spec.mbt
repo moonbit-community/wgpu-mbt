@@ -1839,6 +1839,10 @@ declare pub fn Buffer::size(self : Buffer) -> UInt64
 
 ///|
 #declaration_only
+declare pub fn Buffer::usage_u64(self : Buffer) -> UInt64
+
+///|
+#declaration_only
 declare pub fn Buffer::destroy(self : Buffer) -> Unit
 
 ///|
