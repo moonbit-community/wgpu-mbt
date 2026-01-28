@@ -1210,6 +1210,7 @@ pub fn BindGroupBuilder::add_sampler_array(Self, UInt, Array[Sampler]) -> Bool
 pub fn BindGroupBuilder::add_texture_view(Self, UInt, TextureView) -> Bool
 pub fn BindGroupBuilder::add_texture_view_array(Self, UInt, Array[TextureView]) -> Bool
 pub fn BindGroupBuilder::finish(Self, Device, BindGroupLayout, label? : String) -> BindGroup
+pub fn BindGroupBuilder::free(Self) -> Unit
 pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> Self
 
 pub struct BindGroupLayout {
@@ -1228,6 +1229,7 @@ pub fn BindGroupLayoutBuilder::add_sampler(Self, UInt, UInt64, UInt, count? : UI
 pub fn BindGroupLayoutBuilder::add_storage_texture(Self, UInt, UInt64, UInt, UInt, UInt, count? : UInt) -> Bool
 pub fn BindGroupLayoutBuilder::add_texture(Self, UInt, UInt64, UInt, UInt, multisampled? : Bool, count? : UInt) -> Bool
 pub fn BindGroupLayoutBuilder::finish(Self, Device, label? : String) -> BindGroupLayout
+pub fn BindGroupLayoutBuilder::free(Self) -> Unit
 pub fn BindGroupLayoutBuilder::new(max_entries~ : UInt64) -> Self
 
 pub struct Buffer {
@@ -1267,10 +1269,13 @@ pub fn CommandEncoder::begin_render_pass_color_occlusion(Self, TextureView, Quer
 pub fn CommandEncoder::begin_render_pass_ptr(Self, @c.WGPURenderPassDescriptorPtr) -> RenderPass
 pub fn CommandEncoder::clear_buffer(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::copy_buffer_to_buffer(Self, Buffer, UInt64, Buffer, UInt64, UInt64) -> Unit
+pub fn CommandEncoder::copy_buffer_to_texture_ptr(Self, @c.WGPUTexelCopyBufferInfoPtr, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(Self, Buffer, Texture, UInt, UInt, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_texture_to_buffer_ptr(Self, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUTexelCopyBufferInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8(Self, Texture, Buffer, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(Self, Texture, UInt, UInt, Buffer, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_texture_to_texture_ptr(Self, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_texture_to_texture_rgba8(Self, Texture, Texture, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(Self, Texture, UInt, UInt, Texture, UInt, UInt, UInt, UInt) -> Unit
 pub fn CommandEncoder::finish(Self) -> CommandBuffer
@@ -1458,6 +1463,7 @@ pub fn Queue::submit_one(Self, CommandBuffer) -> Unit
 pub fn Queue::submit_one_for_index(Self, CommandBuffer) -> UInt64
 pub fn Queue::timestamp_period(Self) -> Float
 pub fn Queue::write_buffer(Self, Buffer, UInt64, Bytes) -> Unit
+pub fn Queue::write_texture_ptr(Self, @c.WGPUTexelCopyTextureInfoPtr, Bytes, @c.WGPUTexelCopyBufferLayoutPtr, @c.WGPUExtent3DPtr, data_size? : UInt64) -> Unit
 pub fn Queue::write_texture_rgba8_2d(Self, Texture, UInt, UInt, Bytes) -> Unit
 pub fn Queue::write_texture_rgba8_2d_mip_layer(Self, Texture, UInt, UInt, UInt, UInt, Bytes) -> Unit
 

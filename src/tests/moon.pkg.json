@@ -244,6 +244,15 @@
     "wgpu_supported_features_items_test.mbt": [
       "native"
     ],
+    "wgpu_builder_free_test.mbt": [
+      "native"
+    ],
+    "wgpu_copy_ptr_test.mbt": [
+      "native"
+    ],
+    "wgpu_queue_write_texture_ptr_test.mbt": [
+      "native"
+    ],
     "wgpu_capi_symbols_test.mbt": [
       "native"
     ]

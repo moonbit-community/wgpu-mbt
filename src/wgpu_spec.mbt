@@ -1053,6 +1053,12 @@ declare pub fn BindGroupLayoutBuilder::finish(
 
 ///|
 #declaration_only
+declare pub fn BindGroupLayoutBuilder::free(
+  self : BindGroupLayoutBuilder,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> BindGroupBuilder
 
 ///|
@@ -1115,6 +1121,10 @@ declare pub fn BindGroupBuilder::finish(
   layout : BindGroupLayout,
   label? : String = "",
 ) -> BindGroup
+
+///|
+#declaration_only
+declare pub fn BindGroupBuilder::free(self : BindGroupBuilder) -> Unit
 
 ///|
 #declaration_only
@@ -1235,6 +1245,17 @@ declare pub fn Queue::write_texture_rgba8_2d_mip_layer(
 
 ///|
 #declaration_only
+declare pub fn Queue::write_texture_ptr(
+  self : Queue,
+  destination : @c.WGPUTexelCopyTextureInfoPtr,
+  data : Bytes,
+  data_layout : @c.WGPUTexelCopyBufferLayoutPtr,
+  write_size : @c.WGPUExtent3DPtr,
+  data_size? : UInt64 = 0UL,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn Queue::release(self : Queue) -> Unit
 
 ///|
@@ -1326,6 +1347,33 @@ declare pub fn CommandEncoder::copy_buffer_to_buffer(
   destination : Buffer,
   destination_offset : UInt64,
   size : UInt64,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::copy_buffer_to_texture_ptr(
+  self : CommandEncoder,
+  source : @c.WGPUTexelCopyBufferInfoPtr,
+  destination : @c.WGPUTexelCopyTextureInfoPtr,
+  copy_size : @c.WGPUExtent3DPtr,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::copy_texture_to_buffer_ptr(
+  self : CommandEncoder,
+  source : @c.WGPUTexelCopyTextureInfoPtr,
+  destination : @c.WGPUTexelCopyBufferInfoPtr,
+  copy_size : @c.WGPUExtent3DPtr,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::copy_texture_to_texture_ptr(
+  self : CommandEncoder,
+  source : @c.WGPUTexelCopyTextureInfoPtr,
+  destination : @c.WGPUTexelCopyTextureInfoPtr,
+  copy_size : @c.WGPUExtent3DPtr,
 ) -> Unit
 
 ///|

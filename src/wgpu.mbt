@@ -1748,6 +1748,11 @@ pub fn BindGroupLayoutBuilder::finish(
 }
 
 ///|
+pub fn BindGroupLayoutBuilder::free(self : BindGroupLayoutBuilder) -> Unit {
+  @c.bind_group_layout_builder_free(self.raw)
+}
+
+///|
 pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> BindGroupBuilder {
   BindGroupBuilder::{ raw: @c.bind_group_builder_new(max_entries) }
 }
@@ -1874,6 +1879,11 @@ pub fn BindGroupBuilder::finish(
   )
   @c.bind_group_builder_free(self.raw)
   BindGroup::{ raw: out }
+}
+
+///|
+pub fn BindGroupBuilder::free(self : BindGroupBuilder) -> Unit {
+  @c.bind_group_builder_free(self.raw)
 }
 
 ///|
@@ -2012,6 +2022,51 @@ pub fn CommandEncoder::copy_buffer_to_buffer(
     destination.raw,
     destination_offset,
     size,
+  )
+}
+
+///|
+pub fn CommandEncoder::copy_buffer_to_texture_ptr(
+  self : CommandEncoder,
+  source : @c.WGPUTexelCopyBufferInfoPtr,
+  destination : @c.WGPUTexelCopyTextureInfoPtr,
+  copy_size : @c.WGPUExtent3DPtr,
+) -> Unit {
+  @c.wgpuCommandEncoderCopyBufferToTexture(
+    self.raw,
+    source,
+    destination,
+    copy_size,
+  )
+}
+
+///|
+pub fn CommandEncoder::copy_texture_to_buffer_ptr(
+  self : CommandEncoder,
+  source : @c.WGPUTexelCopyTextureInfoPtr,
+  destination : @c.WGPUTexelCopyBufferInfoPtr,
+  copy_size : @c.WGPUExtent3DPtr,
+) -> Unit {
+  @c.wgpuCommandEncoderCopyTextureToBuffer(
+    self.raw,
+    source,
+    destination,
+    copy_size,
+  )
+}
+
+///|
+pub fn CommandEncoder::copy_texture_to_texture_ptr(
+  self : CommandEncoder,
+  source : @c.WGPUTexelCopyTextureInfoPtr,
+  destination : @c.WGPUTexelCopyTextureInfoPtr,
+  copy_size : @c.WGPUExtent3DPtr,
+) -> Unit {
+  @c.wgpuCommandEncoderCopyTextureToTexture(
+    self.raw,
+    source,
+    destination,
+    copy_size,
   )
 }
 
@@ -2467,6 +2522,30 @@ pub fn Queue::write_texture_rgba8_2d_mip_layer(
     height,
     payload,
     payload.length().to_uint64(),
+  )
+}
+
+///|
+pub fn Queue::write_texture_ptr(
+  self : Queue,
+  destination : @c.WGPUTexelCopyTextureInfoPtr,
+  data : Bytes,
+  data_layout : @c.WGPUTexelCopyBufferLayoutPtr,
+  write_size : @c.WGPUExtent3DPtr,
+  data_size? : UInt64 = 0UL,
+) -> Unit {
+  let size = if data_size == 0UL {
+    data.length().to_uint64()
+  } else {
+    data_size
+  }
+  @c.wgpuQueueWriteTexture_bytes(
+    self.raw,
+    destination,
+    data,
+    size,
+    data_layout,
+    write_size,
   )
 }
 
