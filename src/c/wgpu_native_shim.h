@@ -15,14 +15,15 @@
 #pragma once
 
 // NOTE: Moon currently resolves relative `stub-cc-flags` / `cc-link-flags` from the
-// consumer workspace root, so depending on `-Ivendor/...` is not reliable when
-// this repo is used as a dependency.
+// consumer workspace root, so depending on external `-I...` paths is not reliable
+// when this repo is used as a dependency.
 //
-// This header is a local, self-contained copy of wgpu-native's `wgpu.h` with the
-// `webgpu.h` include redirected to our vendored header path so stub compilation
-// does not depend on `-Ivendor/...`.
+// This header is a local, self-contained copy of wgpu-native's `wgpu.h`.
+// It includes a vendored-in `webgpu.h` (BSD-3-Clause) checked into this repo at
+// `src/c/webgpu.h`, so stub compilation does not depend on `vendor/` or any
+// workspace-specific include flags.
 
-#include "../../vendor/wgpu-native/ffi/webgpu-headers/webgpu.h"
+#include "webgpu.h"
 
 typedef enum WGPUNativeSType {
   // Start at 0003 since that's allocated range for wgpu-native

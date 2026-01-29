@@ -21,8 +21,10 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parents[1]
-WEBGPU_H = REPO / "vendor/wgpu-native/ffi/webgpu-headers/webgpu.h"
-WGPU_H = REPO / "vendor/wgpu-native/ffi/wgpu.h"
+# Parse the checked-in headers under src/c/ so this repo does not depend on an
+# in-tree `vendor/` checkout.
+WEBGPU_H = REPO / "src/c/webgpu.h"
+WGPU_H = REPO / "src/c/wgpu_native_shim.h"
 OUT_SPEC = REPO / "src/c/webgpu_capi_spec.mbt"
 OUT_IMPL = REPO / "src/c/webgpu_capi.mbt"
 OUT_CONSTS = REPO / "src/consts.mbt"

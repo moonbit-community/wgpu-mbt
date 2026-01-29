@@ -66,8 +66,8 @@ def main(argv: list[str]) -> int:
 
     root: Path = args.repo_root.resolve()
     headers = [
-        root / "vendor/wgpu-native/ffi/webgpu-headers/webgpu.h",
-        root / "vendor/wgpu-native/ffi/wgpu.h",
+        root / "src/c/webgpu.h",
+        root / "src/c/wgpu_native_shim.h",
     ]
     mbt = [
         root / "src/c/webgpu_capi.mbt",
@@ -102,4 +102,3 @@ def main(argv: list[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
-

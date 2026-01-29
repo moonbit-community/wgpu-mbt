@@ -44,63 +44,21 @@ static void mbt_wgpu_die(const char *what) {
 
 static void mbt_wgpu_init(void) {
   const char *override = getenv("MBT_WGPU_NATIVE_LIB");
-  if (override && override[0]) {
-    g_mbt_wgpu_lib = dlopen(override, RTLD_LAZY | RTLD_LOCAL);
-    if (!g_mbt_wgpu_lib) {
-      mbt_wgpu_die("failed to dlopen MBT_WGPU_NATIVE_LIB");
-    }
-    return;
+  if (!override || !override[0]) {
+    const char *lib = mbt_wgpu_lib_filename();
+    char msg[256];
+    (void)snprintf(
+        msg,
+        sizeof(msg),
+        "MBT_WGPU_NATIVE_LIB is not set (set it to a path to %s)",
+        lib);
+    mbt_wgpu_die(msg);
   }
 
-  const char *lib = mbt_wgpu_lib_filename();
-  // Best-effort: try next to the dependency source tree, using `__FILE__`
-  // (works for both `.mooncakes/...` dependencies and local path deps).
-  {
-    const char *file = __FILE__;
-    const char *slash = strrchr(file, '/');
-    if (slash) {
-      size_t dir_len = (size_t)(slash - file);
-      char dir[1024];
-      if (dir_len < sizeof(dir)) {
-        memcpy(dir, file, dir_len);
-        dir[dir_len] = '\0';
-        char path[1024];
-        int n = snprintf(path, sizeof(path), "%s/target/wgpu-native/release/%s", dir, lib);
-        if (n > 0 && (size_t)n < sizeof(path)) {
-          g_mbt_wgpu_lib = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
-          if (g_mbt_wgpu_lib) {
-            return;
-          }
-        }
-      }
-    }
+  g_mbt_wgpu_lib = dlopen(override, RTLD_LAZY | RTLD_LOCAL);
+  if (!g_mbt_wgpu_lib) {
+    mbt_wgpu_die("failed to dlopen MBT_WGPU_NATIVE_LIB");
   }
-
-  const char *candidates[] = {
-      "target/wgpu-native/release/",
-      "src/c/target/wgpu-native/release/",
-      "_build/native/release/build/.mooncakes/Milky2018/wgpu_mbt/src/c/target/wgpu-native/release/",
-      "vendor/wgpu-native/target/release/",
-      ".mooncakes/Milky2018/wgpu_mbt/target/wgpu-native/release/",
-      ".mooncakes/Milky2018/wgpu_mbt/src/c/target/wgpu-native/release/",
-      ".mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native/target/release/",
-      "_build/native/release/build/.mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native/target/release/",
-      NULL,
-  };
-
-  char path[1024];
-  for (size_t i = 0; candidates[i]; i++) {
-    int n = snprintf(path, sizeof(path), "%s%s", candidates[i], lib);
-    if (n <= 0 || (size_t)n >= sizeof(path)) {
-      continue;
-    }
-    g_mbt_wgpu_lib = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
-    if (g_mbt_wgpu_lib) {
-      return;
-    }
-  }
-
-  mbt_wgpu_die("failed to dlopen libwgpu_native from known locations (set MBT_WGPU_NATIVE_LIB to override)");
 }
 
 static void *mbt_wgpu_sym(const char *name) {
@@ -1636,25 +1594,25 @@ void wgpuTextureViewRelease(WGPUTextureView textureView) {
   }
   mbt_real_wgpuTextureViewRelease(textureView);
 }
-typedef void (*mbt_pfn_wgpuGenerateReport)(WGPUInstance instance, WGPUGlobalReport * report);
+typedef void (*mbt_pfn_wgpuGenerateReport)(WGPUInstance instance, WGPUGlobalReport *report);
 static mbt_pfn_wgpuGenerateReport mbt_real_wgpuGenerateReport = NULL;
-void wgpuGenerateReport(WGPUInstance instance, WGPUGlobalReport * report) {
+void wgpuGenerateReport(WGPUInstance instance, WGPUGlobalReport *report) {
   if (!mbt_real_wgpuGenerateReport) {
     mbt_real_wgpuGenerateReport = (mbt_pfn_wgpuGenerateReport)mbt_wgpu_sym("wgpuGenerateReport");
   }
   mbt_real_wgpuGenerateReport(instance, report);
 }
-typedef size_t (*mbt_pfn_wgpuInstanceEnumerateAdapters)(WGPUInstance instance, WGPU_NULLABLE WGPUInstanceEnumerateAdapterOptions const * options, WGPUAdapter * adapters);
+typedef size_t (*mbt_pfn_wgpuInstanceEnumerateAdapters)(WGPUInstance instance, WGPU_NULLABLE WGPUInstanceEnumerateAdapterOptions const *options, WGPUAdapter *adapters);
 static mbt_pfn_wgpuInstanceEnumerateAdapters mbt_real_wgpuInstanceEnumerateAdapters = NULL;
-size_t wgpuInstanceEnumerateAdapters(WGPUInstance instance, WGPU_NULLABLE WGPUInstanceEnumerateAdapterOptions const * options, WGPUAdapter * adapters) {
+size_t wgpuInstanceEnumerateAdapters(WGPUInstance instance, WGPU_NULLABLE WGPUInstanceEnumerateAdapterOptions const *options, WGPUAdapter *adapters) {
   if (!mbt_real_wgpuInstanceEnumerateAdapters) {
     mbt_real_wgpuInstanceEnumerateAdapters = (mbt_pfn_wgpuInstanceEnumerateAdapters)mbt_wgpu_sym("wgpuInstanceEnumerateAdapters");
   }
   return mbt_real_wgpuInstanceEnumerateAdapters(instance, options, adapters);
 }
-typedef WGPUSubmissionIndex (*mbt_pfn_wgpuQueueSubmitForIndex)(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const * commands);
+typedef WGPUSubmissionIndex (*mbt_pfn_wgpuQueueSubmitForIndex)(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const *commands);
 static mbt_pfn_wgpuQueueSubmitForIndex mbt_real_wgpuQueueSubmitForIndex = NULL;
-WGPUSubmissionIndex wgpuQueueSubmitForIndex(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const * commands) {
+WGPUSubmissionIndex wgpuQueueSubmitForIndex(WGPUQueue queue, size_t commandCount, WGPUCommandBuffer const *commands) {
   if (!mbt_real_wgpuQueueSubmitForIndex) {
     mbt_real_wgpuQueueSubmitForIndex = (mbt_pfn_wgpuQueueSubmitForIndex)mbt_wgpu_sym("wgpuQueueSubmitForIndex");
   }
@@ -1668,25 +1626,25 @@ float wgpuQueueGetTimestampPeriod(WGPUQueue queue) {
   }
   return mbt_real_wgpuQueueGetTimestampPeriod(queue);
 }
-typedef WGPUBool (*mbt_pfn_wgpuDevicePoll)(WGPUDevice device, WGPUBool wait, WGPU_NULLABLE WGPUSubmissionIndex const * submissionIndex);
+typedef WGPUBool (*mbt_pfn_wgpuDevicePoll)(WGPUDevice device, WGPUBool wait, WGPU_NULLABLE WGPUSubmissionIndex const *submissionIndex);
 static mbt_pfn_wgpuDevicePoll mbt_real_wgpuDevicePoll = NULL;
-WGPUBool wgpuDevicePoll(WGPUDevice device, WGPUBool wait, WGPU_NULLABLE WGPUSubmissionIndex const * submissionIndex) {
+WGPUBool wgpuDevicePoll(WGPUDevice device, WGPUBool wait, WGPU_NULLABLE WGPUSubmissionIndex const *submissionIndex) {
   if (!mbt_real_wgpuDevicePoll) {
     mbt_real_wgpuDevicePoll = (mbt_pfn_wgpuDevicePoll)mbt_wgpu_sym("wgpuDevicePoll");
   }
   return mbt_real_wgpuDevicePoll(device, wait, submissionIndex);
 }
-typedef WGPUShaderModule (*mbt_pfn_wgpuDeviceCreateShaderModuleSpirV)(WGPUDevice device, WGPUShaderModuleDescriptorSpirV const * descriptor);
+typedef WGPUShaderModule (*mbt_pfn_wgpuDeviceCreateShaderModuleSpirV)(WGPUDevice device, WGPUShaderModuleDescriptorSpirV const *descriptor);
 static mbt_pfn_wgpuDeviceCreateShaderModuleSpirV mbt_real_wgpuDeviceCreateShaderModuleSpirV = NULL;
-WGPUShaderModule wgpuDeviceCreateShaderModuleSpirV(WGPUDevice device, WGPUShaderModuleDescriptorSpirV const * descriptor) {
+WGPUShaderModule wgpuDeviceCreateShaderModuleSpirV(WGPUDevice device, WGPUShaderModuleDescriptorSpirV const *descriptor) {
   if (!mbt_real_wgpuDeviceCreateShaderModuleSpirV) {
     mbt_real_wgpuDeviceCreateShaderModuleSpirV = (mbt_pfn_wgpuDeviceCreateShaderModuleSpirV)mbt_wgpu_sym("wgpuDeviceCreateShaderModuleSpirV");
   }
   return mbt_real_wgpuDeviceCreateShaderModuleSpirV(device, descriptor);
 }
-typedef void (*mbt_pfn_wgpuSetLogCallback)(WGPULogCallback callback, void * userdata);
+typedef void (*mbt_pfn_wgpuSetLogCallback)(WGPULogCallback callback, void *userdata);
 static mbt_pfn_wgpuSetLogCallback mbt_real_wgpuSetLogCallback = NULL;
-void wgpuSetLogCallback(WGPULogCallback callback, void * userdata) {
+void wgpuSetLogCallback(WGPULogCallback callback, void *userdata) {
   if (!mbt_real_wgpuSetLogCallback) {
     mbt_real_wgpuSetLogCallback = (mbt_pfn_wgpuSetLogCallback)mbt_wgpu_sym("wgpuSetLogCallback");
   }
@@ -1708,25 +1666,25 @@ uint32_t wgpuGetVersion(void) {
   }
   return mbt_real_wgpuGetVersion();
 }
-typedef void (*mbt_pfn_wgpuRenderPassEncoderSetPushConstants)(WGPURenderPassEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const * data);
+typedef void (*mbt_pfn_wgpuRenderPassEncoderSetPushConstants)(WGPURenderPassEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const *data);
 static mbt_pfn_wgpuRenderPassEncoderSetPushConstants mbt_real_wgpuRenderPassEncoderSetPushConstants = NULL;
-void wgpuRenderPassEncoderSetPushConstants(WGPURenderPassEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const * data) {
+void wgpuRenderPassEncoderSetPushConstants(WGPURenderPassEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const *data) {
   if (!mbt_real_wgpuRenderPassEncoderSetPushConstants) {
     mbt_real_wgpuRenderPassEncoderSetPushConstants = (mbt_pfn_wgpuRenderPassEncoderSetPushConstants)mbt_wgpu_sym("wgpuRenderPassEncoderSetPushConstants");
   }
   mbt_real_wgpuRenderPassEncoderSetPushConstants(encoder, stages, offset, sizeBytes, data);
 }
-typedef void (*mbt_pfn_wgpuComputePassEncoderSetPushConstants)(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const * data);
+typedef void (*mbt_pfn_wgpuComputePassEncoderSetPushConstants)(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data);
 static mbt_pfn_wgpuComputePassEncoderSetPushConstants mbt_real_wgpuComputePassEncoderSetPushConstants = NULL;
-void wgpuComputePassEncoderSetPushConstants(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const * data) {
+void wgpuComputePassEncoderSetPushConstants(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data) {
   if (!mbt_real_wgpuComputePassEncoderSetPushConstants) {
     mbt_real_wgpuComputePassEncoderSetPushConstants = (mbt_pfn_wgpuComputePassEncoderSetPushConstants)mbt_wgpu_sym("wgpuComputePassEncoderSetPushConstants");
   }
   mbt_real_wgpuComputePassEncoderSetPushConstants(encoder, offset, sizeBytes, data);
 }
-typedef void (*mbt_pfn_wgpuRenderBundleEncoderSetPushConstants)(WGPURenderBundleEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const * data);
+typedef void (*mbt_pfn_wgpuRenderBundleEncoderSetPushConstants)(WGPURenderBundleEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const *data);
 static mbt_pfn_wgpuRenderBundleEncoderSetPushConstants mbt_real_wgpuRenderBundleEncoderSetPushConstants = NULL;
-void wgpuRenderBundleEncoderSetPushConstants(WGPURenderBundleEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const * data) {
+void wgpuRenderBundleEncoderSetPushConstants(WGPURenderBundleEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const *data) {
   if (!mbt_real_wgpuRenderBundleEncoderSetPushConstants) {
     mbt_real_wgpuRenderBundleEncoderSetPushConstants = (mbt_pfn_wgpuRenderBundleEncoderSetPushConstants)mbt_wgpu_sym("wgpuRenderBundleEncoderSetPushConstants");
   }

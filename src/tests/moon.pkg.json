@@ -260,9 +260,5 @@
       "native"
     ]
   },
-  "link": {
-    "native": {
-      "cc-link-flags": "vendor/wgpu-native/target/release/libwgpu_native.a -framework Metal -framework Foundation -framework QuartzCore -framework CoreGraphics -framework CoreFoundation -framework IOSurface -framework IOKit"
-    }
-  }
+  "link": {}
 }

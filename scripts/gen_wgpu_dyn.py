@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 RE_EXPORT_START = re.compile(r"^WGPU_EXPORT\b")
+RE_WGPU_START = re.compile(r"^\s*[A-Za-z_].*\bwgpu[A-Za-z0-9_]+\s*\(.*$")
 
 
 def _collect_multiline_protos(lines: list[str], is_start) -> list[str]:
@@ -120,8 +121,10 @@ def _emit_wrapper(ret: str, name: str, args: str) -> str:
 
 def main() -> None:
   repo = Path(__file__).resolve().parents[1]
-  webgpu_h = repo / "vendor/wgpu-native/ffi/webgpu-headers/webgpu.h"
-  wgpu_h = repo / "vendor/wgpu-native/ffi/wgpu.h"
+  # Keep this generator dependency-free: we parse the checked-in headers under
+  # src/c/ rather than reaching into an optional `vendor/` checkout.
+  webgpu_h = repo / "src/c/webgpu.h"
+  wgpu_h = repo / "src/c/wgpu_native_shim.h"
   out_c = repo / "src/c/wgpu_dyn.c"
 
   webgpu_lines = webgpu_h.read_text().splitlines()
@@ -130,10 +133,7 @@ def main() -> None:
 
   # wgpu-native extras are declared in wgpu.h (no WGPU_EXPORT).
   wgpu_lines = wgpu_h.read_text().splitlines()
-  wgpu_protos = _collect_multiline_protos(
-    wgpu_lines,
-    lambda l: bool(re.match(r"^\s*[A-Za-z_].*\bwgpu[A-Za-z0-9_]+\s*\(.*$", l)) and l.strip().endswith(";"),
-  )
+  wgpu_protos = _collect_multiline_protos(wgpu_lines, lambda l: RE_WGPU_START.match(l) is not None)
   wgpu_protos = [" ".join(p.strip().split()) for p in wgpu_protos]
 
   seen: set[str] = set()
@@ -194,63 +194,21 @@ static void mbt_wgpu_die(const char *what) {{
 
 static void mbt_wgpu_init(void) {{
   const char *override = getenv("MBT_WGPU_NATIVE_LIB");
-  if (override && override[0]) {{
-    g_mbt_wgpu_lib = dlopen(override, RTLD_LAZY | RTLD_LOCAL);
-    if (!g_mbt_wgpu_lib) {{
-      mbt_wgpu_die("failed to dlopen MBT_WGPU_NATIVE_LIB");
-    }}
-    return;
+  if (!override || !override[0]) {{
+    const char *lib = mbt_wgpu_lib_filename();
+    char msg[256];
+    (void)snprintf(
+        msg,
+        sizeof(msg),
+        "MBT_WGPU_NATIVE_LIB is not set (set it to a path to %s)",
+        lib);
+    mbt_wgpu_die(msg);
   }}
 
-  const char *lib = mbt_wgpu_lib_filename();
-  // Best-effort: try next to the dependency source tree, using `__FILE__`
-  // (works for both `.mooncakes/...` dependencies and local path deps).
-  {{
-    const char *file = __FILE__;
-    const char *slash = strrchr(file, '/');
-    if (slash) {{
-      size_t dir_len = (size_t)(slash - file);
-      char dir[1024];
-      if (dir_len < sizeof(dir)) {{
-        memcpy(dir, file, dir_len);
-        dir[dir_len] = '\\0';
-        char path[1024];
-        int n = snprintf(path, sizeof(path), "%s/target/wgpu-native/release/%s", dir, lib);
-        if (n > 0 && (size_t)n < sizeof(path)) {{
-          g_mbt_wgpu_lib = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
-          if (g_mbt_wgpu_lib) {{
-            return;
-          }}
-        }}
-      }}
-    }}
+  g_mbt_wgpu_lib = dlopen(override, RTLD_LAZY | RTLD_LOCAL);
+  if (!g_mbt_wgpu_lib) {{
+    mbt_wgpu_die("failed to dlopen MBT_WGPU_NATIVE_LIB");
   }}
-
-  const char *candidates[] = {{
-      "target/wgpu-native/release/",
-      "src/c/target/wgpu-native/release/",
-      "_build/native/release/build/.mooncakes/Milky2018/wgpu_mbt/src/c/target/wgpu-native/release/",
-      "vendor/wgpu-native/target/release/",
-      ".mooncakes/Milky2018/wgpu_mbt/target/wgpu-native/release/",
-      ".mooncakes/Milky2018/wgpu_mbt/src/c/target/wgpu-native/release/",
-      ".mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native/target/release/",
-      "_build/native/release/build/.mooncakes/Milky2018/wgpu_mbt/vendor/wgpu-native/target/release/",
-      NULL,
-  }};
-
-  char path[1024];
-  for (size_t i = 0; candidates[i]; i++) {{
-    int n = snprintf(path, sizeof(path), "%s%s", candidates[i], lib);
-    if (n <= 0 || (size_t)n >= sizeof(path)) {{
-      continue;
-    }}
-    g_mbt_wgpu_lib = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
-    if (g_mbt_wgpu_lib) {{
-      return;
-    }}
-  }}
-
-  mbt_wgpu_die("failed to dlopen libwgpu_native from known locations (set MBT_WGPU_NATIVE_LIB to override)");
 }}
 
 static void *mbt_wgpu_sym(const char *name) {{

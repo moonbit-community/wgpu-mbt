@@ -35,7 +35,8 @@ test executables):
 }
 ```
 
-In this repo, we build and statically link `wgpu-native`:
+In this repo, we intentionally avoid link-time dependency on wgpu-native.
 
-- `vendor/wgpu-native/target/release/libwgpu_native.a`
-- plus required macOS frameworks (Metal + friends) via `cc-link-flags`
+`src/c/wgpu_dyn.c` exports `wgpu*` symbols from our stub archive and forwards
+calls to `libwgpu_native` loaded at runtime (dlopen+dlsym). The runtime library
+path is controlled by `MBT_WGPU_NATIVE_LIB`.

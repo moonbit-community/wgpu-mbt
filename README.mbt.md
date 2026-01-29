@@ -6,7 +6,7 @@ This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused o
 
 - Target: **native** (see `moon.mod.json` `"preferred-target": "native"`)
 - Platform: **macOS + Metal** only
-- Linking: **static** `libwgpu_native.a` + Apple frameworks (no `@loader_path` / rpath tricks)
+- Native dependency: **runtime** dynamic library `libwgpu_native` loaded via `dlopen` (see `MBT_WGPU_NATIVE_LIB` below)
 - Tests: all tests live under `src/tests/` and are listed in `src/tests/moon.pkg.json` `targets`
 
 Known limitation:
@@ -22,8 +22,11 @@ Useful introspection helpers:
 
 ## Quickstart (macOS)
 
-- Init submodules:
-  - `git submodule update --init --recursive`
+- Build `wgpu-native` and point `MBT_WGPU_NATIVE_LIB` at the resulting dylib:
+  - `git clone https://github.com/gfx-rs/wgpu-native`
+  - `cd wgpu-native`
+  - `cargo build --release --no-default-features --features metal,wgsl`
+  - `export MBT_WGPU_NATIVE_LIB=\"$PWD/target/release/libwgpu_native.dylib\"`
 - Build & run the smoke executable:
   - `moon run cmd/main`
 - Run tests:
@@ -33,15 +36,26 @@ Useful introspection helpers:
   - `moon info`
   - `moon fmt`
 
+## Native runtime dependency (required)
+
+This module does **not** bundle wgpu-native artifacts. Users are responsible for:
+
+- Installing/building a compatible `libwgpu_native` dynamic library for their platform.
+- Setting `MBT_WGPU_NATIVE_LIB` to a path to that library before running.
+- Ensuring the file exists and is readable in the deployment environment.
+
+If `MBT_WGPU_NATIVE_LIB` is unset (or points to a bad path), the process will abort
+when the first WebGPU symbol is used (because we `dlopen` the library lazily).
+
 ## Using as a library
 
 This repo is usable as a regular MoonBit library (the CLI under `cmd/` / `src/cmd/` is just an example).
 
 - Import the library package in your package `moon.pkg.json`:
   - `{ "path": "Milky2018/wgpu_mbt", "alias": "wgpu" }`
-- Make sure the vendored `wgpu-native` submodule exists at `vendor/wgpu-native` in your checkout:
-  - `git submodule update --init --recursive`
-  - Note: the build uses a `pre-build` rule to compile `wgpu-native` with Cargo, so missing submodules will fail the build.
+- Provide the native runtime library yourself (this module does **not** bundle it):
+  - set `MBT_WGPU_NATIVE_LIB` to a path to `libwgpu_native.dylib` before running anything that touches WebGPU
+  - this module does not search for the dylib via CWD; the env var is the single source of truth
 
 Minimal example (same as `src/cmd/main/main.mbt`):
 
@@ -81,11 +95,10 @@ fn main {
 
 ## Build details
 
-- `wgpu-native` is vendored under `vendor/wgpu-native` (git submodule).
-- `src/c/moon.pkg.json` has a `pre-build` rule that builds `wgpu-native` via Cargo:
-  - `cargo build --manifest-path vendor/wgpu-native/Cargo.toml --release --no-default-features --features metal,wgsl`
-  - output: `vendor/wgpu-native/target/release/libwgpu_native.a`
-- Packages that build executables/tests (for example `src/tests/moon.pkg.json` and `src/cmd/main/moon.pkg.json`) add the `.a` and required frameworks via `link.native.cc-link-flags`.
+- `src/c/wgpu_dyn.c` exports `wgpu*` symbols from our native-stub archive and forwards them to `libwgpu_native` loaded at runtime (dlopen+dlsym).
+- The runtime library location is controlled by the env var:
+  - `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.dylib`
+- Headers used for stub compilation are checked into this repo (see `src/c/webgpu.h` and `src/c/wgpu_native_shim.h`) so the build does not depend on a `vendor/` checkout.
 
 ## Repo layout
 
