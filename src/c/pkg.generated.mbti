@@ -334,6 +334,8 @@ pub fn device_create_render_pipeline_async_sync_ptr(WGPUInstance, WGPUDevice, WG
 
 pub fn device_create_render_pipeline_color_format(WGPUDevice, WGPUShaderModule, UInt) -> WGPURenderPipeline
 
+pub fn device_create_render_pipeline_color_format_alpha_blend(WGPUDevice, WGPUShaderModule, UInt) -> WGPURenderPipeline
+
 pub fn device_create_render_pipeline_rgba8(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
 
 pub fn device_create_render_pipeline_rgba8_alpha_blend(WGPUDevice, WGPUShaderModule) -> WGPURenderPipeline
@@ -647,6 +649,8 @@ pub fn render_pass_set_vertex_buffer(WGPURenderPassEncoder, UInt, WGPUBuffer, UI
 pub fn render_pass_set_viewport(WGPURenderPassEncoder, Float, Float, Float, Float, Float, Float) -> Unit
 
 pub fn render_pass_write_timestamp(WGPURenderPassEncoder, WGPUQuerySet, UInt) -> Unit
+
+pub fn render_pipeline_descriptor_color_format_alpha_blend_new(WGPUPipelineLayout, WGPUShaderModule, UInt) -> WGPURenderPipelineDescriptorPtr
 
 pub fn render_pipeline_descriptor_color_format_new(WGPUPipelineLayout, WGPUShaderModule, UInt) -> WGPURenderPipelineDescriptorPtr
 

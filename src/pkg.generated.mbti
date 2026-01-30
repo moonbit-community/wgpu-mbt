@@ -1418,6 +1418,7 @@ pub fn Device::create_render_bundle_encoder_rgba8(Self) -> RenderBundleEncoder
 pub fn Device::create_render_pipeline(Self, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
 pub fn Device::create_render_pipeline_async_sync_ptr(Self, Instance, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
 pub fn Device::create_render_pipeline_color_format(Self, ShaderModule, UInt) -> RenderPipeline
+pub fn Device::create_render_pipeline_color_format_alpha_blend(Self, ShaderModule, UInt) -> RenderPipeline
 pub fn Device::create_render_pipeline_ptr(Self, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_alpha_blend(Self, ShaderModule) -> RenderPipeline

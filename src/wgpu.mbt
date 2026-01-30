@@ -2616,6 +2616,21 @@ pub fn Device::create_render_pipeline_color_format(
 }
 
 ///|
+pub fn Device::create_render_pipeline_color_format_alpha_blend(
+  self : Device,
+  shader_module : ShaderModule,
+  format : UInt,
+) -> RenderPipeline {
+  RenderPipeline::{
+    raw: @c.device_create_render_pipeline_color_format_alpha_blend(
+      self.raw,
+      shader_module.raw,
+      format,
+    ),
+  }
+}
+
+///|
 pub fn Device::create_render_pipeline_rgba8_mrt2(
   self : Device,
   shader_module : ShaderModule,

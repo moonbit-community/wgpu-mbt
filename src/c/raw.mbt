@@ -1161,6 +1161,22 @@ pub fn device_create_render_pipeline_color_format(
 }
 
 ///|
+pub fn device_create_render_pipeline_color_format_alpha_blend(
+  device : Device,
+  shader_module : ShaderModule,
+  format : UInt,
+) -> RenderPipeline {
+  let desc = render_pipeline_descriptor_color_format_alpha_blend_new(
+    null_pipeline_layout(),
+    shader_module,
+    format,
+  )
+  let pipeline = wgpuDeviceCreateRenderPipeline(device, desc)
+  render_pipeline_descriptor_free(desc)
+  pipeline
+}
+
+///|
 pub fn device_create_render_pipeline_rgba8_alpha_blend(
   device : Device,
   shader_module : ShaderModule,

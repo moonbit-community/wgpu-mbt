@@ -1316,6 +1316,19 @@ mbt_wgpu_render_pipeline_descriptor_color_format_new(WGPUPipelineLayout layout,
 }
 
 WGPURenderPipelineDescriptor *
+mbt_wgpu_render_pipeline_descriptor_color_format_alpha_blend_new(
+    WGPUPipelineLayout layout, WGPUShaderModule shader_module, uint32_t format) {
+  mbt_render_pipeline_desc_t *out =
+      (mbt_render_pipeline_desc_t *)mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
+          layout, shader_module, false, true, false);
+  if (!out) {
+    return NULL;
+  }
+  out->color_target.format = (WGPUTextureFormat)format;
+  return &out->desc;
+}
+
+WGPURenderPipelineDescriptor *
 mbt_wgpu_render_pipeline_descriptor_rgba8_new(WGPUPipelineLayout layout,
                                               WGPUShaderModule shader_module) {
   return mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
