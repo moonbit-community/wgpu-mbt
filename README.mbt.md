@@ -46,7 +46,10 @@ Useful introspection helpers:
   - `cd wgpu-native`
   - `cargo build --release --no-default-features --features vulkan,wgsl`
   - `export MBT_WGPU_NATIVE_LIB=\"$PWD/target/release/libwgpu_native.so\"`
-- Run any headless example/test that does not require a window surface.
+- Window surfaces: Wayland-only for now.
+  - For Wayland, use `Instance::create_surface_wayland(wl_display_ptr, wl_surface_ptr)` from the host application.
+  - X11 (XCB/Xlib) is intentionally not supported in this module at the moment.
+- Run any headless example/test that does not require a window surface (recommended to start).
   - Note: current `src/tests/` includes several macOS Metal surface tests.
 
 ## Native runtime dependency (required)

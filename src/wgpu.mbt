@@ -1613,32 +1613,6 @@ pub fn Instance::create_surface_wayland(
 }
 
 ///|
-/// Create a surface from XCB handles (`xcb_connection_t*`, `xcb_window_t`).
-pub fn Instance::create_surface_xcb(
-  self : Instance,
-  connection : @c.OpaquePtr,
-  window : UInt,
-) -> Surface {
-  Surface::{
-    raw: @c.instance_create_surface_xcb(self.raw, connection, window),
-    layer: @c.null_opaque_ptr(),
-  }
-}
-
-///|
-/// Create a surface from Xlib handles (`Display*`, `Window`).
-pub fn Instance::create_surface_xlib(
-  self : Instance,
-  display : @c.OpaquePtr,
-  window : UInt64,
-) -> Surface {
-  Surface::{
-    raw: @c.instance_create_surface_xlib(self.raw, display, window),
-    layer: @c.null_opaque_ptr(),
-  }
-}
-
-///|
 pub fn Surface::add_ref(self : Surface) -> Surface {
   @c.surface_add_ref(self.raw)
   @c.cametallayer_retain(self.layer)

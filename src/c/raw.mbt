@@ -273,20 +273,6 @@ pub extern "C" fn instance_create_surface_wayland(
 ) -> WGPUSurface = "mbt_wgpu_instance_create_surface_wayland"
 
 ///|
-pub extern "C" fn instance_create_surface_xcb(
-  instance : Instance,
-  connection : OpaquePtr,
-  window : UInt,
-) -> WGPUSurface = "mbt_wgpu_instance_create_surface_xcb"
-
-///|
-pub extern "C" fn instance_create_surface_xlib(
-  instance : Instance,
-  display : OpaquePtr,
-  window : UInt64,
-) -> WGPUSurface = "mbt_wgpu_instance_create_surface_xlib"
-
-///|
 pub extern "C" fn surface_configure_default(
   surface : WGPUSurface,
   adapter : Adapter,

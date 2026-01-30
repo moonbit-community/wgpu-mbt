@@ -1494,8 +1494,6 @@ pub fn Instance::create_ptr(@c.WGPUInstanceDescriptorPtr) -> Self
 pub fn Instance::create_surface(Self, @c.WGPUSurfaceDescriptorPtr) -> Surface
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
 pub fn Instance::create_surface_wayland(Self, @c.OpaquePtr, @c.OpaquePtr) -> Surface
-pub fn Instance::create_surface_xcb(Self, @c.OpaquePtr, UInt) -> Surface
-pub fn Instance::create_surface_xlib(Self, @c.OpaquePtr, UInt64) -> Surface
 pub fn Instance::enumerate_adapters(Self, @c.WGPUInstanceEnumerateAdapterOptionsPtr, @c.WGPUAdapterPtr) -> UInt64
 pub fn Instance::enumerate_adapters_count_metal(Self) -> UInt64
 pub fn Instance::enumerate_adapters_count_vulkan(Self) -> UInt64
