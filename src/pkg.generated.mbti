@@ -1493,8 +1493,12 @@ pub fn Instance::create() -> Self
 pub fn Instance::create_ptr(@c.WGPUInstanceDescriptorPtr) -> Self
 pub fn Instance::create_surface(Self, @c.WGPUSurfaceDescriptorPtr) -> Surface
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
+pub fn Instance::create_surface_wayland(Self, @c.OpaquePtr, @c.OpaquePtr) -> Surface
+pub fn Instance::create_surface_xcb(Self, @c.OpaquePtr, UInt) -> Surface
+pub fn Instance::create_surface_xlib(Self, @c.OpaquePtr, UInt64) -> Surface
 pub fn Instance::enumerate_adapters(Self, @c.WGPUInstanceEnumerateAdapterOptionsPtr, @c.WGPUAdapterPtr) -> UInt64
 pub fn Instance::enumerate_adapters_count_metal(Self) -> UInt64
+pub fn Instance::enumerate_adapters_count_vulkan(Self) -> UInt64
 pub fn Instance::generate_report(Self) -> GlobalReport
 pub fn Instance::get_wgsl_language_features(Self, @c.WGPUSupportedWGSLLanguageFeaturesPtr) -> @c.WGPUStatus
 pub fn Instance::has_wgsl_language_feature(Self, @c.WGPUWGSLLanguageFeatureName) -> Bool

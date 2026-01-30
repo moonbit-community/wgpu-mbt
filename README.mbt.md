@@ -1,11 +1,13 @@
 # Milky2018/wgpu_mbt
 
-This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused on **native-only** and **macOS/Metal-only**.
+This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused on **native-only** with macOS/Metal as the primary target and Linux/Vulkan as an experimental target.
 
 ## Status / Scope
 
 - Target: **native** (see `moon.mod.json` `"preferred-target": "native"`)
-- Platform: **macOS + Metal** only
+- Platform:
+  - macOS + Metal (primary)
+  - Linux + Vulkan (experimental, core API works; window surfaces depend on host integration)
 - Native dependency: **runtime** dynamic library `libwgpu_native` loaded via `dlopen` (see `MBT_WGPU_NATIVE_LIB` below)
 - Constants: exported as `pub const` in `SCREAMING_SNAKE_CASE` (e.g. `BUFFER_USAGE_COPY_DST`)
 - Tests: all tests live under `src/tests/` and are listed in `src/tests/moon.pkg.json` `targets`
@@ -36,6 +38,16 @@ Useful introspection helpers:
   - `moon check`
   - `moon info`
   - `moon fmt`
+
+## Quickstart (Linux + Vulkan) (experimental)
+
+- Build `wgpu-native` (Vulkan) and point `MBT_WGPU_NATIVE_LIB` at the resulting `.so`:
+  - `git clone https://github.com/gfx-rs/wgpu-native`
+  - `cd wgpu-native`
+  - `cargo build --release --no-default-features --features vulkan,wgsl`
+  - `export MBT_WGPU_NATIVE_LIB=\"$PWD/target/release/libwgpu_native.so\"`
+- Run any headless example/test that does not require a window surface.
+  - Note: current `src/tests/` includes several macOS Metal surface tests.
 
 ## Native runtime dependency (required)
 

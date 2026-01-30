@@ -262,6 +262,31 @@ pub extern "C" fn instance_create_surface_metal_layer(
 ) -> WGPUSurface = "mbt_wgpu_instance_create_surface_metal_layer"
 
 ///|
+/// Cross-platform surface helpers for Linux window systems.
+///
+/// These create a `WGPUSurface` using the corresponding `WGPUSurfaceSource*`
+/// chained struct. Pointers are passed through as opaque handles.
+pub extern "C" fn instance_create_surface_wayland(
+  instance : Instance,
+  display : OpaquePtr,
+  surface : OpaquePtr,
+) -> WGPUSurface = "mbt_wgpu_instance_create_surface_wayland"
+
+///|
+pub extern "C" fn instance_create_surface_xcb(
+  instance : Instance,
+  connection : OpaquePtr,
+  window : UInt,
+) -> WGPUSurface = "mbt_wgpu_instance_create_surface_xcb"
+
+///|
+pub extern "C" fn instance_create_surface_xlib(
+  instance : Instance,
+  display : OpaquePtr,
+  window : UInt64,
+) -> WGPUSurface = "mbt_wgpu_instance_create_surface_xlib"
+
+///|
 pub extern "C" fn surface_configure_default(
   surface : WGPUSurface,
   adapter : Adapter,
@@ -328,6 +353,11 @@ pub extern "C" fn surface_release_safe(surface : WGPUSurface) -> Unit = "mbt_wgp
 pub extern "C" fn instance_enumerate_adapters_count_metal(
   instance : Instance,
 ) -> UInt64 = "mbt_wgpu_instance_enumerate_adapters_count_metal"
+
+///|
+pub extern "C" fn instance_enumerate_adapters_count_vulkan(
+  instance : Instance,
+) -> UInt64 = "mbt_wgpu_instance_enumerate_adapters_count_vulkan"
 
 ///|
 pub extern "C" fn adapter_info_backend_type_u32(adapter : Adapter) -> UInt = "mbt_wgpu_adapter_info_backend_type_u32"

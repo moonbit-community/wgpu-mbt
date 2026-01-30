@@ -446,7 +446,15 @@ pub fn instance_capabilities_timed_wait_any_max_count_u64() -> UInt64
 
 pub fn instance_create_surface_metal_layer(WGPUInstance, OpaquePtr) -> WGPUSurface
 
+pub fn instance_create_surface_wayland(WGPUInstance, OpaquePtr, OpaquePtr) -> WGPUSurface
+
+pub fn instance_create_surface_xcb(WGPUInstance, OpaquePtr, UInt) -> WGPUSurface
+
+pub fn instance_create_surface_xlib(WGPUInstance, OpaquePtr, UInt64) -> WGPUSurface
+
 pub fn instance_enumerate_adapters_count_metal(WGPUInstance) -> UInt64
+
+pub fn instance_enumerate_adapters_count_vulkan(WGPUInstance) -> UInt64
 
 pub fn instance_generate_report_new(WGPUInstance) -> WGPUGlobalReportPtr
 

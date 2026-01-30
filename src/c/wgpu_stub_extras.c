@@ -181,6 +181,18 @@ uint64_t mbt_wgpu_instance_enumerate_adapters_count_metal(WGPUInstance instance)
   return (uint64_t)count;
 }
 
+uint64_t mbt_wgpu_instance_enumerate_adapters_count_vulkan(WGPUInstance instance) {
+  if (!instance) {
+    return 0u;
+  }
+  WGPUInstanceEnumerateAdapterOptions opts = {
+      .nextInChain = NULL,
+      .backends = WGPUInstanceBackend_Vulkan,
+  };
+  size_t count = wgpuInstanceEnumerateAdapters(instance, &opts, NULL);
+  return (uint64_t)count;
+}
+
 uint32_t mbt_wgpu_adapter_info_backend_type_u32(WGPUAdapter adapter) {
   if (!adapter) {
     return 0u;

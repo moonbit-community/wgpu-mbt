@@ -1575,6 +1575,11 @@ pub fn Instance::enumerate_adapters_count_metal(self : Instance) -> UInt64 {
 }
 
 ///|
+pub fn Instance::enumerate_adapters_count_vulkan(self : Instance) -> UInt64 {
+  @c.instance_enumerate_adapters_count_vulkan(self.raw)
+}
+
+///|
 pub fn Instance::wgsl_language_features_count_u64(self : Instance) -> UInt64 {
   @c.instance_wgsl_language_features_count_u64(self.raw)
 }
@@ -1589,6 +1594,48 @@ pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
   let layer = @c.cametallayer_new()
   let surface = @c.instance_create_surface_metal_layer(self.raw, layer)
   Surface::{ raw: surface, layer }
+}
+
+///|
+/// Create a surface from Wayland handles (`wl_display*`, `wl_surface*`).
+///
+/// This is intended for Linux + Vulkan setups. The pointers are passed through
+/// as opaque handles (you manage their lifetime on the host side).
+pub fn Instance::create_surface_wayland(
+  self : Instance,
+  display : @c.OpaquePtr,
+  surface : @c.OpaquePtr,
+) -> Surface {
+  Surface::{
+    raw: @c.instance_create_surface_wayland(self.raw, display, surface),
+    layer: @c.null_opaque_ptr(),
+  }
+}
+
+///|
+/// Create a surface from XCB handles (`xcb_connection_t*`, `xcb_window_t`).
+pub fn Instance::create_surface_xcb(
+  self : Instance,
+  connection : @c.OpaquePtr,
+  window : UInt,
+) -> Surface {
+  Surface::{
+    raw: @c.instance_create_surface_xcb(self.raw, connection, window),
+    layer: @c.null_opaque_ptr(),
+  }
+}
+
+///|
+/// Create a surface from Xlib handles (`Display*`, `Window`).
+pub fn Instance::create_surface_xlib(
+  self : Instance,
+  display : @c.OpaquePtr,
+  window : UInt64,
+) -> Surface {
+  Surface::{
+    raw: @c.instance_create_surface_xlib(self.raw, display, window),
+    layer: @c.null_opaque_ptr(),
+  }
 }
 
 ///|
