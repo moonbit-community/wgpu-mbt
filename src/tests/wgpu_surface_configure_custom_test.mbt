@@ -21,16 +21,16 @@ test "wgpu surface configure_u32" {
   let fmt0 = surface.capabilities_format_u32_at(adapter, 0UL)
   let pm0 = surface.capabilities_present_mode_u32_at(adapter, 0UL)
   let am0 = surface.capabilities_alpha_mode_u32_at(adapter, 0UL)
-  let usage = @wgpu.texture_usage_render_attachment |
-    @wgpu.texture_usage_copy_src |
-    @wgpu.texture_usage_copy_dst
+  let usage = @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
+    @wgpu.TEXTURE_USAGE_COPY_SRC |
+    @wgpu.TEXTURE_USAGE_COPY_DST
   let ok = surface.configure_u32(adapter, device, 1U, 1U, usage, fmt0, pm0, am0)
   inspect(ok, content="true")
   let st = surface.get_current_texture()
   let status = st.status()
   inspect(
-    status == @wgpu.surface_get_current_texture_status_success_optimal ||
-    status == @wgpu.surface_get_current_texture_status_success_suboptimal,
+    status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
+    status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL,
     content="true",
   )
   st.release()

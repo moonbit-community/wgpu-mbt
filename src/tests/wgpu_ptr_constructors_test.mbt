@@ -26,7 +26,9 @@ test "wgpu ptr-based constructors + raw handles" {
   )
   let queue = device.queue()
   let buf_desc = @wgpu_c.buffer_descriptor_new(
-    4UL, @wgpu.buffer_usage_copy_dst, false,
+    4UL,
+    @wgpu.BUFFER_USAGE_COPY_DST,
+    false,
   )
   let buf = device.create_buffer_ptr(buf_desc)
   @wgpu_c.buffer_descriptor_free(buf_desc)

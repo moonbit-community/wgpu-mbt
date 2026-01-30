@@ -17,12 +17,12 @@ test "wgpu adapter info (numeric)" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let backend = adapter.info_backend_type_u32()
-  inspect(backend == @wgpu.backend_type_metal, content="true")
+  inspect(backend == @wgpu.BACKEND_TYPE_METAL, content="true")
   let ty = adapter.info_adapter_type_u32()
-  let ty_ok = ty == @wgpu.adapter_type_discrete_gpu ||
-    ty == @wgpu.adapter_type_integrated_gpu ||
-    ty == @wgpu.adapter_type_cpu ||
-    ty == @wgpu.adapter_type_unknown
+  let ty_ok = ty == @wgpu.ADAPTER_TYPE_DISCRETE_GPU ||
+    ty == @wgpu.ADAPTER_TYPE_INTEGRATED_GPU ||
+    ty == @wgpu.ADAPTER_TYPE_CPU ||
+    ty == @wgpu.ADAPTER_TYPE_UNKNOWN
   inspect(ty_ok, content="true")
 
   // IDs may vary by machine; just ensure the calls succeed.

@@ -21,7 +21,7 @@ test "wgpu device lost callback (destroyed)" {
   // Deterministically trigger device-lost via explicit destruction.
   device.destroy()
   let reason = device.wait_lost_reason_sync(instance)
-  inspect(reason == @wgpu.device_lost_reason_destroyed, content="true")
+  inspect(reason == @wgpu.DEVICE_LOST_REASON_DESTROYED, content="true")
   device.release()
   adapter.release()
   instance.release()

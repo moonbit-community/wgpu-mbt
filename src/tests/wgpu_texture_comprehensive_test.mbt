@@ -22,7 +22,7 @@ test "wgpu texture: render 2x2 quadrant colors -> copy_texture_to_buffer layout"
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=512UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -96,7 +96,7 @@ test "wgpu texture: queue.write_texture_rgba8_2d pads rows to 256" {
   let tex = device.create_texture_rgba8_2d(2U, 2U)
   let readback = device.create_buffer(
     size=512UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
 
   // Row-major 2x2 pixels: (red, green) / (blue, white)
@@ -156,12 +156,12 @@ test "wgpu texture: copy_buffer_to_texture_rgba8 2x2 upload layout" {
   let queue = device.queue()
   let upload = device.create_buffer(
     size=512UL,
-    usage=@wgpu.buffer_usage_copy_src | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let tex = device.create_texture_rgba8_2d(2U, 2U)
   let readback = device.create_buffer(
     size=512UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
 
   // Build a 512-byte upload buffer matching bytesPerRow=256, with 2x2 pixels:
@@ -243,7 +243,7 @@ test "wgpu texture: copy_texture_to_texture_rgba8 2x2" {
   let dst = device.create_texture_rgba8_2d(2U, 2U)
   let readback = device.create_buffer(
     size=512UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let pixels = Bytes::from_array([
     (255).to_byte(),
@@ -304,7 +304,7 @@ test "wgpu texture: queue.write_texture_rgba8_2d preserves rows (1x2)" {
   let tex = device.create_texture_rgba8_2d(1U, 2U)
   let readback = device.create_buffer(
     size=512UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
 
   // (red) / (green)
@@ -350,15 +350,15 @@ test "wgpu texture: create_texture_rgba8_2d_with_usage can render+copy" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let usage = @wgpu.texture_usage_render_attachment |
-    @wgpu.texture_usage_copy_src |
-    @wgpu.texture_usage_copy_dst |
-    @wgpu.texture_usage_texture_binding
+  let usage = @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
+    @wgpu.TEXTURE_USAGE_COPY_SRC |
+    @wgpu.TEXTURE_USAGE_COPY_DST |
+    @wgpu.TEXTURE_USAGE_TEXTURE_BINDING
   let tex = device.create_texture_rgba8_2d_with_usage(1U, 1U, usage)
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };

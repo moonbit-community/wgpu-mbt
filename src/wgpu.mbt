@@ -75,8 +75,8 @@ pub struct SurfaceTexture {
 ///|
 pub fn SurfaceTexture::is_success(self : SurfaceTexture) -> Bool {
   let st = self.status()
-  st == surface_get_current_texture_status_success_optimal ||
-  st == surface_get_current_texture_status_success_suboptimal
+  st == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
+  st == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL
 }
 
 ///|
@@ -2186,7 +2186,7 @@ pub fn Device::create_buffer_init(
   let padded_size = align_up(size, 4UL)
   let buffer = self.create_buffer(
     size=padded_size,
-    usage=usage | buffer_usage_copy_dst,
+    usage=usage | BUFFER_USAGE_COPY_DST,
   )
   if padded_size != 0UL {
     let queue = self.queue()
@@ -2359,10 +2359,10 @@ pub fn Device::create_texture_rgba8_2d_array(
     height,
     layers,
     mip_level_count,
-    texture_usage_render_attachment |
-    texture_usage_copy_src |
-    texture_usage_copy_dst |
-    texture_usage_texture_binding,
+    TEXTURE_USAGE_RENDER_ATTACHMENT |
+    TEXTURE_USAGE_COPY_SRC |
+    TEXTURE_USAGE_COPY_DST |
+    TEXTURE_USAGE_TEXTURE_BINDING,
   )
 }
 
@@ -2814,7 +2814,7 @@ pub fn Device::create_sampler_u32(
   mipmap_filter_u32 : UInt,
   lod_min_clamp_f32? : Float = 0.0,
   lod_max_clamp_f32? : Float = 32.0,
-  compare_u32? : UInt = compare_function_undefined,
+  compare_u32? : UInt = COMPARE_FUNCTION_UNDEFINED,
   max_anisotropy_u32? : UInt = 1U,
 ) -> Sampler {
   Sampler::{
@@ -3070,7 +3070,7 @@ pub fn BindGroupBuilder::add_buffer(
   binding : UInt,
   buffer : Buffer,
   offset? : UInt64 = 0UL,
-  size? : UInt64 = whole_size,
+  size? : UInt64 = WHOLE_SIZE,
 ) -> Bool {
   @c.bind_group_builder_add_buffer(self.raw, binding, buffer.raw, offset, size)
 }
@@ -3081,7 +3081,7 @@ pub fn BindGroupBuilder::add_buffer_array(
   binding : UInt,
   buffers : Array[Buffer],
   offset? : UInt64 = 0UL,
-  size? : UInt64 = whole_size,
+  size? : UInt64 = WHOLE_SIZE,
 ) -> Bool {
   let count = buffers.length()
   if count == 0 {

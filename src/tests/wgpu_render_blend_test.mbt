@@ -35,7 +35,7 @@ test "wgpu render: alpha blending over loaded color" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let wgsl_green : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };

@@ -21,7 +21,7 @@ test "wgpu storage texture: compute textureStore writes pixel" {
   let tex = device.create_texture_rgba8_2d_with_usage(
     1U,
     1U,
-    @wgpu.texture_usage_storage_binding | @wgpu.texture_usage_copy_src,
+    @wgpu.TEXTURE_USAGE_STORAGE_BINDING | @wgpu.TEXTURE_USAGE_COPY_SRC,
   )
   let view = tex.create_view()
   let bgl = device.create_bind_group_layout_storage_texture_rgba8_writeonly()
@@ -40,7 +40,7 @@ test "wgpu storage texture: compute textureStore writes pixel" {
   let pipeline = device.create_compute_pipeline_with_layout(pl, sm)
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_compute_pass()

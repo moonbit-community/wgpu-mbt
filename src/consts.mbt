@@ -19,1708 +19,1711 @@
 /// bitflags, and a small subset of numeric `#define`s) for MoonBit usage.
 
 ///|
-pub let adapter_type_cpu : UInt = 0x00000003U
+pub const ADAPTER_TYPE_CPU : UInt = 0x00000003U
 
 ///|
-pub let adapter_type_discrete_gpu : UInt = 0x00000001U
+pub const ADAPTER_TYPE_DISCRETE_GPU : UInt = 0x00000001U
 
 ///|
-pub let adapter_type_force32 : UInt = 0x7FFFFFFFU
+pub const ADAPTER_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let adapter_type_integrated_gpu : UInt = 0x00000002U
+pub const ADAPTER_TYPE_INTEGRATED_GPU : UInt = 0x00000002U
 
 ///|
-pub let adapter_type_unknown : UInt = 0x00000004U
+pub const ADAPTER_TYPE_UNKNOWN : UInt = 0x00000004U
 
 ///|
-pub let address_mode_clamp_to_edge : UInt = 0x00000001U
+pub const ADDRESS_MODE_CLAMP_TO_EDGE : UInt = 0x00000001U
 
 ///|
-pub let address_mode_force32 : UInt = 0x7FFFFFFFU
+pub const ADDRESS_MODE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let address_mode_mirror_repeat : UInt = 0x00000003U
+pub const ADDRESS_MODE_MIRROR_REPEAT : UInt = 0x00000003U
 
 ///|
-pub let address_mode_repeat : UInt = 0x00000002U
+pub const ADDRESS_MODE_REPEAT : UInt = 0x00000002U
 
 ///|
-pub let address_mode_undefined : UInt = 0x00000000U
+pub const ADDRESS_MODE_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let backend_type_d3_d11 : UInt = 0x00000003U
+pub const BACKEND_TYPE_D3_D11 : UInt = 0x00000003U
 
 ///|
-pub let backend_type_d3_d12 : UInt = 0x00000004U
+pub const BACKEND_TYPE_D3_D12 : UInt = 0x00000004U
 
 ///|
-pub let backend_type_force32 : UInt = 0x7FFFFFFFU
+pub const BACKEND_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let backend_type_metal : UInt = 0x00000005U
+pub const BACKEND_TYPE_METAL : UInt = 0x00000005U
 
 ///|
-pub let backend_type_null : UInt = 0x00000001U
+pub const BACKEND_TYPE_NULL : UInt = 0x00000001U
 
 ///|
-pub let backend_type_open_gl : UInt = 0x00000007U
+pub const BACKEND_TYPE_OPEN_GL : UInt = 0x00000007U
 
 ///|
-pub let backend_type_open_gles : UInt = 0x00000008U
+pub const BACKEND_TYPE_OPEN_GLES : UInt = 0x00000008U
 
 ///|
-pub let backend_type_undefined : UInt = 0x00000000U
+pub const BACKEND_TYPE_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let backend_type_vulkan : UInt = 0x00000006U
+pub const BACKEND_TYPE_VULKAN : UInt = 0x00000006U
 
 ///|
-pub let backend_type_web_gpu : UInt = 0x00000002U
+pub const BACKEND_TYPE_WEB_GPU : UInt = 0x00000002U
 
 ///|
-pub let blend_factor_constant : UInt = 0x0000000CU
+pub const BLEND_FACTOR_CONSTANT : UInt = 0x0000000CU
 
 ///|
-pub let blend_factor_dst : UInt = 0x00000007U
+pub const BLEND_FACTOR_DST : UInt = 0x00000007U
 
 ///|
-pub let blend_factor_dst_alpha : UInt = 0x00000009U
+pub const BLEND_FACTOR_DST_ALPHA : UInt = 0x00000009U
 
 ///|
-pub let blend_factor_force32 : UInt = 0x7FFFFFFFU
+pub const BLEND_FACTOR_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let blend_factor_one : UInt = 0x00000002U
+pub const BLEND_FACTOR_ONE : UInt = 0x00000002U
 
 ///|
-pub let blend_factor_one_minus_constant : UInt = 0x0000000DU
+pub const BLEND_FACTOR_ONE_MINUS_CONSTANT : UInt = 0x0000000DU
 
 ///|
-pub let blend_factor_one_minus_dst : UInt = 0x00000008U
+pub const BLEND_FACTOR_ONE_MINUS_DST : UInt = 0x00000008U
 
 ///|
-pub let blend_factor_one_minus_dst_alpha : UInt = 0x0000000AU
+pub const BLEND_FACTOR_ONE_MINUS_DST_ALPHA : UInt = 0x0000000AU
 
 ///|
-pub let blend_factor_one_minus_src : UInt = 0x00000004U
+pub const BLEND_FACTOR_ONE_MINUS_SRC : UInt = 0x00000004U
 
 ///|
-pub let blend_factor_one_minus_src1 : UInt = 0x0000000FU
+pub const BLEND_FACTOR_ONE_MINUS_SRC1 : UInt = 0x0000000FU
 
 ///|
-pub let blend_factor_one_minus_src1_alpha : UInt = 0x00000011U
+pub const BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA : UInt = 0x00000011U
 
 ///|
-pub let blend_factor_one_minus_src_alpha : UInt = 0x00000006U
+pub const BLEND_FACTOR_ONE_MINUS_SRC_ALPHA : UInt = 0x00000006U
 
 ///|
-pub let blend_factor_src : UInt = 0x00000003U
+pub const BLEND_FACTOR_SRC : UInt = 0x00000003U
 
 ///|
-pub let blend_factor_src1 : UInt = 0x0000000EU
+pub const BLEND_FACTOR_SRC1 : UInt = 0x0000000EU
 
 ///|
-pub let blend_factor_src1_alpha : UInt = 0x00000010U
+pub const BLEND_FACTOR_SRC1_ALPHA : UInt = 0x00000010U
 
 ///|
-pub let blend_factor_src_alpha : UInt = 0x00000005U
+pub const BLEND_FACTOR_SRC_ALPHA : UInt = 0x00000005U
 
 ///|
-pub let blend_factor_src_alpha_saturated : UInt = 0x0000000BU
+pub const BLEND_FACTOR_SRC_ALPHA_SATURATED : UInt = 0x0000000BU
 
 ///|
-pub let blend_factor_undefined : UInt = 0x00000000U
+pub const BLEND_FACTOR_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let blend_factor_zero : UInt = 0x00000001U
+pub const BLEND_FACTOR_ZERO : UInt = 0x00000001U
 
 ///|
-pub let blend_operation_add : UInt = 0x00000001U
+pub const BLEND_OPERATION_ADD : UInt = 0x00000001U
 
 ///|
-pub let blend_operation_force32 : UInt = 0x7FFFFFFFU
+pub const BLEND_OPERATION_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let blend_operation_max : UInt = 0x00000005U
+pub const BLEND_OPERATION_MAX : UInt = 0x00000005U
 
 ///|
-pub let blend_operation_min : UInt = 0x00000004U
+pub const BLEND_OPERATION_MIN : UInt = 0x00000004U
 
 ///|
-pub let blend_operation_reverse_subtract : UInt = 0x00000003U
+pub const BLEND_OPERATION_REVERSE_SUBTRACT : UInt = 0x00000003U
 
 ///|
-pub let blend_operation_subtract : UInt = 0x00000002U
+pub const BLEND_OPERATION_SUBTRACT : UInt = 0x00000002U
 
 ///|
-pub let blend_operation_undefined : UInt = 0x00000000U
+pub const BLEND_OPERATION_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let buffer_binding_type_binding_not_used : UInt = 0x00000000U
+pub const BUFFER_BINDING_TYPE_BINDING_NOT_USED : UInt = 0x00000000U
 
 ///|
-pub let buffer_binding_type_force32 : UInt = 0x7FFFFFFFU
+pub const BUFFER_BINDING_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let buffer_binding_type_read_only_storage : UInt = 0x00000004U
+pub const BUFFER_BINDING_TYPE_READ_ONLY_STORAGE : UInt = 0x00000004U
 
 ///|
-pub let buffer_binding_type_storage : UInt = 0x00000003U
+pub const BUFFER_BINDING_TYPE_STORAGE : UInt = 0x00000003U
 
 ///|
-pub let buffer_binding_type_undefined : UInt = 0x00000001U
+pub const BUFFER_BINDING_TYPE_UNDEFINED : UInt = 0x00000001U
 
 ///|
-pub let buffer_binding_type_uniform : UInt = 0x00000002U
+pub const BUFFER_BINDING_TYPE_UNIFORM : UInt = 0x00000002U
 
 ///|
-pub let buffer_map_state_force32 : UInt = 0x7FFFFFFFU
+pub const BUFFER_MAP_STATE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let buffer_map_state_mapped : UInt = 0x00000003U
+pub const BUFFER_MAP_STATE_MAPPED : UInt = 0x00000003U
 
 ///|
-pub let buffer_map_state_pending : UInt = 0x00000002U
+pub const BUFFER_MAP_STATE_PENDING : UInt = 0x00000002U
 
 ///|
-pub let buffer_map_state_unmapped : UInt = 0x00000001U
+pub const BUFFER_MAP_STATE_UNMAPPED : UInt = 0x00000001U
 
 ///|
-pub let buffer_usage_copy_dst : UInt64 = 0x0000000000000008UL
+pub const BUFFER_USAGE_COPY_DST : UInt64 = 0x0000000000000008UL
 
 ///|
-pub let buffer_usage_copy_src : UInt64 = 0x0000000000000004UL
+pub const BUFFER_USAGE_COPY_SRC : UInt64 = 0x0000000000000004UL
 
 ///|
-pub let buffer_usage_index : UInt64 = 0x0000000000000010UL
+pub const BUFFER_USAGE_INDEX : UInt64 = 0x0000000000000010UL
 
 ///|
-pub let buffer_usage_indirect : UInt64 = 0x0000000000000100UL
+pub const BUFFER_USAGE_INDIRECT : UInt64 = 0x0000000000000100UL
 
 ///|
-pub let buffer_usage_map_read : UInt64 = 0x0000000000000001UL
+pub const BUFFER_USAGE_MAP_READ : UInt64 = 0x0000000000000001UL
 
 ///|
-pub let buffer_usage_map_write : UInt64 = 0x0000000000000002UL
+pub const BUFFER_USAGE_MAP_WRITE : UInt64 = 0x0000000000000002UL
 
 ///|
-pub let buffer_usage_none : UInt64 = 0x0000000000000000UL
+pub const BUFFER_USAGE_NONE : UInt64 = 0x0000000000000000UL
 
 ///|
-pub let buffer_usage_query_resolve : UInt64 = 0x0000000000000200UL
+pub const BUFFER_USAGE_QUERY_RESOLVE : UInt64 = 0x0000000000000200UL
 
 ///|
-pub let buffer_usage_storage : UInt64 = 0x0000000000000080UL
+pub const BUFFER_USAGE_STORAGE : UInt64 = 0x0000000000000080UL
 
 ///|
-pub let buffer_usage_uniform : UInt64 = 0x0000000000000040UL
+pub const BUFFER_USAGE_UNIFORM : UInt64 = 0x0000000000000040UL
 
 ///|
-pub let buffer_usage_vertex : UInt64 = 0x0000000000000020UL
+pub const BUFFER_USAGE_VERTEX : UInt64 = 0x0000000000000020UL
 
 ///|
-pub let callback_mode_allow_process_events : UInt = 0x00000002U
+pub const CALLBACK_MODE_ALLOW_PROCESS_EVENTS : UInt = 0x00000002U
 
 ///|
-pub let callback_mode_allow_spontaneous : UInt = 0x00000003U
+pub const CALLBACK_MODE_ALLOW_SPONTANEOUS : UInt = 0x00000003U
 
 ///|
-pub let callback_mode_force32 : UInt = 0x7FFFFFFFU
+pub const CALLBACK_MODE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let callback_mode_wait_any_only : UInt = 0x00000001U
+pub const CALLBACK_MODE_WAIT_ANY_ONLY : UInt = 0x00000001U
 
 ///|
-pub let color_write_mask_all : UInt64 = 0x000000000000000FUL
+pub const COLOR_WRITE_MASK_ALL : UInt64 = 0x000000000000000FUL
 
 ///|
-pub let color_write_mask_alpha : UInt64 = 0x0000000000000008UL
+pub const COLOR_WRITE_MASK_ALPHA : UInt64 = 0x0000000000000008UL
 
 ///|
-pub let color_write_mask_blue : UInt64 = 0x0000000000000004UL
+pub const COLOR_WRITE_MASK_BLUE : UInt64 = 0x0000000000000004UL
 
 ///|
-pub let color_write_mask_green : UInt64 = 0x0000000000000002UL
+pub const COLOR_WRITE_MASK_GREEN : UInt64 = 0x0000000000000002UL
 
 ///|
-pub let color_write_mask_none : UInt64 = 0x0000000000000000UL
+pub const COLOR_WRITE_MASK_NONE : UInt64 = 0x0000000000000000UL
 
 ///|
-pub let color_write_mask_red : UInt64 = 0x0000000000000001UL
+pub const COLOR_WRITE_MASK_RED : UInt64 = 0x0000000000000001UL
 
 ///|
-pub let compare_function_always : UInt = 0x00000008U
+pub const COMPARE_FUNCTION_ALWAYS : UInt = 0x00000008U
 
 ///|
-pub let compare_function_equal : UInt = 0x00000003U
+pub const COMPARE_FUNCTION_EQUAL : UInt = 0x00000003U
 
 ///|
-pub let compare_function_force32 : UInt = 0x7FFFFFFFU
+pub const COMPARE_FUNCTION_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let compare_function_greater : UInt = 0x00000005U
+pub const COMPARE_FUNCTION_GREATER : UInt = 0x00000005U
 
 ///|
-pub let compare_function_greater_equal : UInt = 0x00000007U
+pub const COMPARE_FUNCTION_GREATER_EQUAL : UInt = 0x00000007U
 
 ///|
-pub let compare_function_less : UInt = 0x00000002U
+pub const COMPARE_FUNCTION_LESS : UInt = 0x00000002U
 
 ///|
-pub let compare_function_less_equal : UInt = 0x00000004U
+pub const COMPARE_FUNCTION_LESS_EQUAL : UInt = 0x00000004U
 
 ///|
-pub let compare_function_never : UInt = 0x00000001U
+pub const COMPARE_FUNCTION_NEVER : UInt = 0x00000001U
 
 ///|
-pub let compare_function_not_equal : UInt = 0x00000006U
+pub const COMPARE_FUNCTION_NOT_EQUAL : UInt = 0x00000006U
 
 ///|
-pub let compare_function_undefined : UInt = 0x00000000U
+pub const COMPARE_FUNCTION_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let compilation_info_request_status_error : UInt = 0x00000003U
+pub const COMPILATION_INFO_REQUEST_STATUS_ERROR : UInt = 0x00000003U
 
 ///|
-pub let compilation_info_request_status_force32 : UInt = 0x7FFFFFFFU
+pub const COMPILATION_INFO_REQUEST_STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let compilation_info_request_status_instance_dropped : UInt = 0x00000002U
+pub const COMPILATION_INFO_REQUEST_STATUS_INSTANCE_DROPPED : UInt = 0x00000002U
 
 ///|
-pub let compilation_info_request_status_success : UInt = 0x00000001U
+pub const COMPILATION_INFO_REQUEST_STATUS_SUCCESS : UInt = 0x00000001U
 
 ///|
-pub let compilation_info_request_status_unknown : UInt = 0x00000004U
+pub const COMPILATION_INFO_REQUEST_STATUS_UNKNOWN : UInt = 0x00000004U
 
 ///|
-pub let compilation_message_type_error : UInt = 0x00000001U
+pub const COMPILATION_MESSAGE_TYPE_ERROR : UInt = 0x00000001U
 
 ///|
-pub let compilation_message_type_force32 : UInt = 0x7FFFFFFFU
+pub const COMPILATION_MESSAGE_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let compilation_message_type_info : UInt = 0x00000003U
+pub const COMPILATION_MESSAGE_TYPE_INFO : UInt = 0x00000003U
 
 ///|
-pub let compilation_message_type_warning : UInt = 0x00000002U
+pub const COMPILATION_MESSAGE_TYPE_WARNING : UInt = 0x00000002U
 
 ///|
-pub let composite_alpha_mode_auto : UInt = 0x00000000U
+pub const COMPOSITE_ALPHA_MODE_AUTO : UInt = 0x00000000U
 
 ///|
-pub let composite_alpha_mode_force32 : UInt = 0x7FFFFFFFU
+pub const COMPOSITE_ALPHA_MODE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let composite_alpha_mode_inherit : UInt = 0x00000004U
+pub const COMPOSITE_ALPHA_MODE_INHERIT : UInt = 0x00000004U
 
 ///|
-pub let composite_alpha_mode_opaque : UInt = 0x00000001U
+pub const COMPOSITE_ALPHA_MODE_OPAQUE : UInt = 0x00000001U
 
 ///|
-pub let composite_alpha_mode_premultiplied : UInt = 0x00000002U
+pub const COMPOSITE_ALPHA_MODE_PREMULTIPLIED : UInt = 0x00000002U
 
 ///|
-pub let composite_alpha_mode_unpremultiplied : UInt = 0x00000003U
+pub const COMPOSITE_ALPHA_MODE_UNPREMULTIPLIED : UInt = 0x00000003U
 
 ///|
-pub let create_pipeline_async_status_force32 : UInt = 0x7FFFFFFFU
+pub const CREATE_PIPELINE_ASYNC_STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let create_pipeline_async_status_instance_dropped : UInt = 0x00000002U
+pub const CREATE_PIPELINE_ASYNC_STATUS_INSTANCE_DROPPED : UInt = 0x00000002U
 
 ///|
-pub let create_pipeline_async_status_internal_error : UInt = 0x00000004U
+pub const CREATE_PIPELINE_ASYNC_STATUS_INTERNAL_ERROR : UInt = 0x00000004U
 
 ///|
-pub let create_pipeline_async_status_success : UInt = 0x00000001U
+pub const CREATE_PIPELINE_ASYNC_STATUS_SUCCESS : UInt = 0x00000001U
 
 ///|
-pub let create_pipeline_async_status_unknown : UInt = 0x00000005U
+pub const CREATE_PIPELINE_ASYNC_STATUS_UNKNOWN : UInt = 0x00000005U
 
 ///|
-pub let create_pipeline_async_status_validation_error : UInt = 0x00000003U
+pub const CREATE_PIPELINE_ASYNC_STATUS_VALIDATION_ERROR : UInt = 0x00000003U
 
 ///|
-pub let cull_mode_back : UInt = 0x00000003U
+pub const CULL_MODE_BACK : UInt = 0x00000003U
 
 ///|
-pub let cull_mode_force32 : UInt = 0x7FFFFFFFU
+pub const CULL_MODE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let cull_mode_front : UInt = 0x00000002U
+pub const CULL_MODE_FRONT : UInt = 0x00000002U
 
 ///|
-pub let cull_mode_none : UInt = 0x00000001U
+pub const CULL_MODE_NONE : UInt = 0x00000001U
 
 ///|
-pub let cull_mode_undefined : UInt = 0x00000000U
+pub const CULL_MODE_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let device_lost_reason_destroyed : UInt = 0x00000002U
+pub const DEVICE_LOST_REASON_DESTROYED : UInt = 0x00000002U
 
 ///|
-pub let device_lost_reason_failed_creation : UInt = 0x00000004U
+pub const DEVICE_LOST_REASON_FAILED_CREATION : UInt = 0x00000004U
 
 ///|
-pub let device_lost_reason_force32 : UInt = 0x7FFFFFFFU
+pub const DEVICE_LOST_REASON_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let device_lost_reason_instance_dropped : UInt = 0x00000003U
+pub const DEVICE_LOST_REASON_INSTANCE_DROPPED : UInt = 0x00000003U
 
 ///|
-pub let device_lost_reason_unknown : UInt = 0x00000001U
+pub const DEVICE_LOST_REASON_UNKNOWN : UInt = 0x00000001U
 
 ///|
-pub let dx12_compiler_dxc : UInt = 0x00000002U
+pub const DX12_COMPILER_DXC : UInt = 0x00000002U
 
 ///|
-pub let dx12_compiler_force32 : UInt = 0x7FFFFFFFU
+pub const DX12_COMPILER_FXC : UInt = 0x00000001U
 
 ///|
-pub let dx12_compiler_fxc : UInt = 0x00000001U
+pub const DX12_COMPILER_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let dx12_compiler_undefined : UInt = 0x00000000U
+pub const DX12_SWAPCHAIN_KIND_DXGI_FROM_HWND : UInt = 0x00000001U
 
 ///|
-pub let dx12_swapchain_kind_dxgi_from_hwnd : UInt = 0x00000001U
+pub const DX12_SWAPCHAIN_KIND_DXGI_FROM_VISUAL : UInt = 0x00000002U
 
 ///|
-pub let dx12_swapchain_kind_dxgi_from_visual : UInt = 0x00000002U
+pub const DX12_SWAPCHAIN_KIND_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let dx12_swapchain_kind_force32 : UInt = 0x7FFFFFFFU
+pub const DX12_SWAPCHAIN_KIND_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let dx12_swapchain_kind_undefined : UInt = 0x00000000U
+pub const DXC_MAX_SHADER_MODEL_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let dxc_max_shader_model_force32 : UInt = 0x7FFFFFFFU
+pub const DXC_MAX_SHADER_MODEL_V6_0 : UInt = 0x00000000U
 
 ///|
-pub let dxc_max_shader_model_v6_0 : UInt = 0x00000000U
+pub const DXC_MAX_SHADER_MODEL_V6_1 : UInt = 0x00000001U
 
 ///|
-pub let dxc_max_shader_model_v6_1 : UInt = 0x00000001U
+pub const DXC_MAX_SHADER_MODEL_V6_2 : UInt = 0x00000002U
 
 ///|
-pub let dxc_max_shader_model_v6_2 : UInt = 0x00000002U
+pub const DXC_MAX_SHADER_MODEL_V6_3 : UInt = 0x00000003U
 
 ///|
-pub let dxc_max_shader_model_v6_3 : UInt = 0x00000003U
+pub const DXC_MAX_SHADER_MODEL_V6_4 : UInt = 0x00000004U
 
 ///|
-pub let dxc_max_shader_model_v6_4 : UInt = 0x00000004U
+pub const DXC_MAX_SHADER_MODEL_V6_5 : UInt = 0x00000005U
 
 ///|
-pub let dxc_max_shader_model_v6_5 : UInt = 0x00000005U
+pub const DXC_MAX_SHADER_MODEL_V6_6 : UInt = 0x00000006U
 
 ///|
-pub let dxc_max_shader_model_v6_6 : UInt = 0x00000006U
+pub const DXC_MAX_SHADER_MODEL_V6_7 : UInt = 0x00000007U
 
 ///|
-pub let dxc_max_shader_model_v6_7 : UInt = 0x00000007U
+pub const ERROR_FILTER_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let error_filter_force32 : UInt = 0x7FFFFFFFU
+pub const ERROR_FILTER_INTERNAL : UInt = 0x00000003U
 
 ///|
-pub let error_filter_internal : UInt = 0x00000003U
+pub const ERROR_FILTER_OUT_OF_MEMORY : UInt = 0x00000002U
 
 ///|
-pub let error_filter_out_of_memory : UInt = 0x00000002U
+pub const ERROR_FILTER_VALIDATION : UInt = 0x00000001U
 
 ///|
-pub let error_filter_validation : UInt = 0x00000001U
+pub const ERROR_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let error_type_force32 : UInt = 0x7FFFFFFFU
+pub const ERROR_TYPE_INTERNAL : UInt = 0x00000004U
 
 ///|
-pub let error_type_internal : UInt = 0x00000004U
+pub const ERROR_TYPE_NO_ERROR : UInt = 0x00000001U
 
 ///|
-pub let error_type_no_error : UInt = 0x00000001U
+pub const ERROR_TYPE_OUT_OF_MEMORY : UInt = 0x00000003U
 
 ///|
-pub let error_type_out_of_memory : UInt = 0x00000003U
+pub const ERROR_TYPE_UNKNOWN : UInt = 0x00000005U
 
 ///|
-pub let error_type_unknown : UInt = 0x00000005U
+pub const ERROR_TYPE_VALIDATION : UInt = 0x00000002U
 
 ///|
-pub let error_type_validation : UInt = 0x00000002U
+pub const FEATURE_LEVEL_COMPATIBILITY : UInt = 0x00000001U
 
 ///|
-pub let feature_level_compatibility : UInt = 0x00000001U
+pub const FEATURE_LEVEL_CORE : UInt = 0x00000002U
 
 ///|
-pub let feature_level_core : UInt = 0x00000002U
+pub const FEATURE_LEVEL_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let feature_level_force32 : UInt = 0x7FFFFFFFU
+pub const FEATURE_NAME_BGRA8_UNORM_STORAGE : UInt = 0x0000000CU
 
 ///|
-pub let feature_name_bgra8_unorm_storage : UInt = 0x0000000CU
+pub const FEATURE_NAME_CLIP_DISTANCES : UInt = 0x0000000FU
 
 ///|
-pub let feature_name_clip_distances : UInt = 0x0000000FU
+pub const FEATURE_NAME_DEPTH32_FLOAT_STENCIL8 : UInt = 0x00000002U
 
 ///|
-pub let feature_name_depth32_float_stencil8 : UInt = 0x00000002U
+pub const FEATURE_NAME_DEPTH_CLIP_CONTROL : UInt = 0x00000001U
 
 ///|
-pub let feature_name_depth_clip_control : UInt = 0x00000001U
+pub const FEATURE_NAME_DUAL_SOURCE_BLENDING : UInt = 0x00000010U
 
 ///|
-pub let feature_name_dual_source_blending : UInt = 0x00000010U
+pub const FEATURE_NAME_FLOAT32_BLENDABLE : UInt = 0x0000000EU
 
 ///|
-pub let feature_name_float32_blendable : UInt = 0x0000000EU
+pub const FEATURE_NAME_FLOAT32_FILTERABLE : UInt = 0x0000000DU
 
 ///|
-pub let feature_name_float32_filterable : UInt = 0x0000000DU
+pub const FEATURE_NAME_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let feature_name_force32 : UInt = 0x7FFFFFFFU
+pub const FEATURE_NAME_INDIRECT_FIRST_INSTANCE : UInt = 0x00000009U
 
 ///|
-pub let feature_name_indirect_first_instance : UInt = 0x00000009U
+pub const FEATURE_NAME_RG11_B10_UFLOAT_RENDERABLE : UInt = 0x0000000BU
 
 ///|
-pub let feature_name_rg11_b10_ufloat_renderable : UInt = 0x0000000BU
+pub const FEATURE_NAME_SHADER_F16 : UInt = 0x0000000AU
 
 ///|
-pub let feature_name_shader_f16 : UInt = 0x0000000AU
+pub const FEATURE_NAME_TEXTURE_COMPRESSION_ASTC : UInt = 0x00000007U
 
 ///|
-pub let feature_name_texture_compression_astc : UInt = 0x00000007U
+pub const FEATURE_NAME_TEXTURE_COMPRESSION_ASTC_SLICED3D : UInt = 0x00000008U
 
 ///|
-pub let feature_name_texture_compression_astc_sliced3d : UInt = 0x00000008U
+pub const FEATURE_NAME_TEXTURE_COMPRESSION_BC : UInt = 0x00000004U
 
 ///|
-pub let feature_name_texture_compression_bc : UInt = 0x00000004U
+pub const FEATURE_NAME_TEXTURE_COMPRESSION_BC_SLICED3D : UInt = 0x00000005U
 
 ///|
-pub let feature_name_texture_compression_bc_sliced3d : UInt = 0x00000005U
+pub const FEATURE_NAME_TEXTURE_COMPRESSION_ETC2 : UInt = 0x00000006U
 
 ///|
-pub let feature_name_texture_compression_etc2 : UInt = 0x00000006U
+pub const FEATURE_NAME_TIMESTAMP_QUERY : UInt = 0x00000003U
 
 ///|
-pub let feature_name_timestamp_query : UInt = 0x00000003U
+pub const FEATURE_NAME_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let feature_name_undefined : UInt = 0x00000000U
+pub const FILTER_MODE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let filter_mode_force32 : UInt = 0x7FFFFFFFU
+pub const FILTER_MODE_LINEAR : UInt = 0x00000002U
 
 ///|
-pub let filter_mode_linear : UInt = 0x00000002U
+pub const FILTER_MODE_NEAREST : UInt = 0x00000001U
 
 ///|
-pub let filter_mode_nearest : UInt = 0x00000001U
+pub const FILTER_MODE_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let filter_mode_undefined : UInt = 0x00000000U
+pub const FRONT_FACE_CCW : UInt = 0x00000001U
 
 ///|
-pub let front_face_ccw : UInt = 0x00000001U
+pub const FRONT_FACE_CW : UInt = 0x00000002U
 
 ///|
-pub let front_face_cw : UInt = 0x00000002U
+pub const FRONT_FACE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let front_face_force32 : UInt = 0x7FFFFFFFU
+pub const FRONT_FACE_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let front_face_undefined : UInt = 0x00000000U
+pub const GL_FENCE_BEHAVIOUR_AUTO_FINISH : UInt = 0x00000001U
 
 ///|
-pub let gl_fence_behaviour_auto_finish : UInt = 0x00000001U
+pub const GL_FENCE_BEHAVIOUR_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let gl_fence_behaviour_force32 : UInt = 0x7FFFFFFFU
+pub const GL_FENCE_BEHAVIOUR_NORMAL : UInt = 0x00000000U
 
 ///|
-pub let gl_fence_behaviour_normal : UInt = 0x00000000U
+pub const GLES3_MINOR_VERSION_AUTOMATIC : UInt = 0x00000000U
 
 ///|
-pub let gles3_minor_version_automatic : UInt = 0x00000000U
+pub const GLES3_MINOR_VERSION_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let gles3_minor_version_force32 : UInt = 0x7FFFFFFFU
+pub const GLES3_MINOR_VERSION_VERSION0 : UInt = 0x00000001U
 
 ///|
-pub let gles3_minor_version_version0 : UInt = 0x00000001U
+pub const GLES3_MINOR_VERSION_VERSION1 : UInt = 0x00000002U
 
 ///|
-pub let gles3_minor_version_version1 : UInt = 0x00000002U
+pub const GLES3_MINOR_VERSION_VERSION2 : UInt = 0x00000003U
 
 ///|
-pub let gles3_minor_version_version2 : UInt = 0x00000003U
+pub const INDEX_FORMAT_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let index_format_force32 : UInt = 0x7FFFFFFFU
+pub const INDEX_FORMAT_UINT16 : UInt = 0x00000001U
 
 ///|
-pub let index_format_uint16 : UInt = 0x00000001U
+pub const INDEX_FORMAT_UINT32 : UInt = 0x00000002U
 
 ///|
-pub let index_format_uint32 : UInt = 0x00000002U
+pub const INDEX_FORMAT_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let index_format_undefined : UInt = 0x00000000U
+pub const INSTANCE_BACKEND_ALL : UInt64 = 0x0000000000000000UL
 
 ///|
-pub let instance_backend_all : UInt64 = 0x0000000000000000UL
+pub const INSTANCE_BACKEND_FORCE32 : UInt64 = 0x000000007FFFFFFFUL
 
 ///|
-pub let instance_backend_force32 : UInt64 = 0x000000007FFFFFFFUL
+pub const INSTANCE_FLAG_DEBUG : UInt = 0x00000001U
 
 ///|
-pub let instance_flag_default : UInt64 = 0x0000000000000000UL
+pub const INSTANCE_FLAG_DEFAULT : UInt = 0x00000000U
 
 ///|
-pub let instance_flag_force32 : UInt64 = 0x000000007FFFFFFFUL
+pub const INSTANCE_FLAG_DISCARD_HAL_LABELS : UInt = 0x00000004U
 
 ///|
-pub let load_op_clear : UInt = 0x00000002U
+pub const INSTANCE_FLAG_VALIDATION : UInt = 0x00000002U
 
 ///|
-pub let load_op_force32 : UInt = 0x7FFFFFFFU
+pub const LOAD_OP_CLEAR : UInt = 0x00000002U
 
 ///|
-pub let load_op_load : UInt = 0x00000001U
+pub const LOAD_OP_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let load_op_undefined : UInt = 0x00000000U
+pub const LOAD_OP_LOAD : UInt = 0x00000001U
 
 ///|
-pub let log_level_debug : UInt = 0x00000004U
+pub const LOAD_OP_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let log_level_error : UInt = 0x00000001U
+pub const LOG_LEVEL_DEBUG : UInt = 0x00000004U
 
 ///|
-pub let log_level_force32 : UInt = 0x7FFFFFFFU
+pub const LOG_LEVEL_ERROR : UInt = 0x00000001U
 
 ///|
-pub let log_level_info : UInt = 0x00000003U
+pub const LOG_LEVEL_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let log_level_off : UInt = 0x00000000U
+pub const LOG_LEVEL_INFO : UInt = 0x00000003U
 
 ///|
-pub let log_level_trace : UInt = 0x00000005U
+pub const LOG_LEVEL_OFF : UInt = 0x00000000U
 
 ///|
-pub let log_level_warn : UInt = 0x00000002U
+pub const LOG_LEVEL_TRACE : UInt = 0x00000005U
 
 ///|
-pub let map_async_status_aborted : UInt = 0x00000004U
+pub const LOG_LEVEL_WARN : UInt = 0x00000002U
 
 ///|
-pub let map_async_status_error : UInt = 0x00000003U
+pub const MAP_ASYNC_STATUS_ABORTED : UInt = 0x00000004U
 
 ///|
-pub let map_async_status_force32 : UInt = 0x7FFFFFFFU
+pub const MAP_ASYNC_STATUS_ERROR : UInt = 0x00000003U
 
 ///|
-pub let map_async_status_instance_dropped : UInt = 0x00000002U
+pub const MAP_ASYNC_STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let map_async_status_success : UInt = 0x00000001U
+pub const MAP_ASYNC_STATUS_INSTANCE_DROPPED : UInt = 0x00000002U
 
 ///|
-pub let map_async_status_unknown : UInt = 0x00000005U
+pub const MAP_ASYNC_STATUS_SUCCESS : UInt = 0x00000001U
 
 ///|
-pub let map_mode_none : UInt64 = 0x0000000000000000UL
+pub const MAP_ASYNC_STATUS_UNKNOWN : UInt = 0x00000005U
 
 ///|
-pub let map_mode_read : UInt64 = 0x0000000000000001UL
+pub const MAP_MODE_NONE : UInt64 = 0x0000000000000000UL
 
 ///|
-pub let map_mode_write : UInt64 = 0x0000000000000002UL
+pub const MAP_MODE_READ : UInt64 = 0x0000000000000001UL
 
 ///|
-pub let mipmap_filter_mode_force32 : UInt = 0x7FFFFFFFU
+pub const MAP_MODE_WRITE : UInt64 = 0x0000000000000002UL
 
 ///|
-pub let mipmap_filter_mode_linear : UInt = 0x00000002U
+pub const MIPMAP_FILTER_MODE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let mipmap_filter_mode_nearest : UInt = 0x00000001U
+pub const MIPMAP_FILTER_MODE_LINEAR : UInt = 0x00000002U
 
 ///|
-pub let mipmap_filter_mode_undefined : UInt = 0x00000000U
+pub const MIPMAP_FILTER_MODE_NEAREST : UInt = 0x00000001U
 
 ///|
-pub let native_feature_buffer_binding_array : UInt = 0x0003000FU
+pub const MIPMAP_FILTER_MODE_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let native_feature_conservative_rasterization : UInt = 0x00030015U
+pub const NATIVE_FEATURE_BUFFER_BINDING_ARRAY : UInt = 0x0003000FU
 
 ///|
-pub let native_feature_force32 : UInt = 0x7FFFFFFFU
+pub const NATIVE_FEATURE_CONSERVATIVE_RASTERIZATION : UInt = 0x00030015U
 
 ///|
-pub let native_feature_mappable_primary_buffers : UInt = 0x0003000EU
+pub const NATIVE_FEATURE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let native_feature_multi_draw_indirect_count : UInt = 0x00030004U
+pub const NATIVE_FEATURE_MAPPABLE_PRIMARY_BUFFERS : UInt = 0x0003000EU
 
 ///|
-pub let native_feature_partially_bound_binding_array : UInt = 0x0003000AU
+pub const NATIVE_FEATURE_MULTI_DRAW_INDIRECT_COUNT : UInt = 0x00030004U
 
 ///|
-pub let native_feature_pipeline_statistics_query : UInt = 0x00030008U
+pub const NATIVE_FEATURE_PARTIALLY_BOUND_BINDING_ARRAY : UInt = 0x0003000AU
 
 ///|
-pub let native_feature_polygon_mode_line : UInt = 0x00030013U
+pub const NATIVE_FEATURE_PIPELINE_STATISTICS_QUERY : UInt = 0x00030008U
 
 ///|
-pub let native_feature_polygon_mode_point : UInt = 0x00030014U
+pub const NATIVE_FEATURE_POLYGON_MODE_LINE : UInt = 0x00030013U
 
 ///|
-pub let native_feature_push_constants : UInt = 0x00030001U
+pub const NATIVE_FEATURE_POLYGON_MODE_POINT : UInt = 0x00030014U
 
 ///|
-pub let native_feature_ray_query : UInt = 0x0003001CU
+pub const NATIVE_FEATURE_PUSH_CONSTANTS : UInt = 0x00030001U
 
 ///|
-pub let native_feature_sampled_texture_and_storage_buffer_array_non_uniform_indexing : UInt = 0x00030007U
+pub const NATIVE_FEATURE_RAY_QUERY : UInt = 0x0003001CU
 
 ///|
-pub let native_feature_shader_early_depth_test : UInt = 0x00030020U
+pub const NATIVE_FEATURE_SAMPLED_TEXTURE_AND_STORAGE_BUFFER_ARRAY_NON_UNIFORM_INDEXING : UInt = 0x00030007U
 
 ///|
-pub let native_feature_shader_f64 : UInt = 0x0003001DU
+pub const NATIVE_FEATURE_SHADER_EARLY_DEPTH_TEST : UInt = 0x00030020U
 
 ///|
-pub let native_feature_shader_i16 : UInt = 0x0003001EU
+pub const NATIVE_FEATURE_SHADER_F64 : UInt = 0x0003001DU
 
 ///|
-pub let native_feature_shader_int64 : UInt = 0x00030026U
+pub const NATIVE_FEATURE_SHADER_I16 : UInt = 0x0003001EU
 
 ///|
-pub let native_feature_shader_primitive_index : UInt = 0x0003001FU
+pub const NATIVE_FEATURE_SHADER_INT64 : UInt = 0x00030026U
 
 ///|
-pub let native_feature_spirv_shader_passthrough : UInt = 0x00030017U
+pub const NATIVE_FEATURE_SHADER_PRIMITIVE_INDEX : UInt = 0x0003001FU
 
 ///|
-pub let native_feature_storage_resource_binding_array : UInt = 0x00030009U
+pub const NATIVE_FEATURE_SPIRV_SHADER_PASSTHROUGH : UInt = 0x00030017U
 
 ///|
-pub let native_feature_subgroup : UInt = 0x00030021U
+pub const NATIVE_FEATURE_STORAGE_RESOURCE_BINDING_ARRAY : UInt = 0x00030009U
 
 ///|
-pub let native_feature_subgroup_barrier : UInt = 0x00030023U
+pub const NATIVE_FEATURE_SUBGROUP : UInt = 0x00030021U
 
 ///|
-pub let native_feature_subgroup_vertex : UInt = 0x00030022U
+pub const NATIVE_FEATURE_SUBGROUP_BARRIER : UInt = 0x00030023U
 
 ///|
-pub let native_feature_texture_adapter_specific_format_features : UInt = 0x00030002U
+pub const NATIVE_FEATURE_SUBGROUP_VERTEX : UInt = 0x00030022U
 
 ///|
-pub let native_feature_texture_binding_array : UInt = 0x00030006U
+pub const NATIVE_FEATURE_TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES : UInt = 0x00030002U
 
 ///|
-pub let native_feature_texture_compression_astc_hdr : UInt = 0x0003000CU
+pub const NATIVE_FEATURE_TEXTURE_BINDING_ARRAY : UInt = 0x00030006U
 
 ///|
-pub let native_feature_texture_format16bit_norm : UInt = 0x0003000BU
+pub const NATIVE_FEATURE_TEXTURE_COMPRESSION_ASTC_HDR : UInt = 0x0003000CU
 
 ///|
-pub let native_feature_texture_format_nv12 : UInt = 0x0003001AU
+pub const NATIVE_FEATURE_TEXTURE_FORMAT16BIT_NORM : UInt = 0x0003000BU
 
 ///|
-pub let native_feature_timestamp_query_inside_encoders : UInt = 0x00030024U
+pub const NATIVE_FEATURE_TEXTURE_FORMAT_NV12 : UInt = 0x0003001AU
 
 ///|
-pub let native_feature_timestamp_query_inside_passes : UInt = 0x00030025U
+pub const NATIVE_FEATURE_TIMESTAMP_QUERY_INSIDE_ENCODERS : UInt = 0x00030024U
 
 ///|
-pub let native_feature_uniform_buffer_and_storage_texture_array_non_uniform_indexing : UInt = 0x00030010U
+pub const NATIVE_FEATURE_TIMESTAMP_QUERY_INSIDE_PASSES : UInt = 0x00030025U
 
 ///|
-pub let native_feature_vertex_attribute64bit : UInt = 0x00030019U
+pub const NATIVE_FEATURE_UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING : UInt = 0x00030010U
 
 ///|
-pub let native_feature_vertex_writable_storage : UInt = 0x00030005U
+pub const NATIVE_FEATURE_VERTEX_ATTRIBUTE64BIT : UInt = 0x00030019U
 
 ///|
-pub let native_query_type_force32 : UInt = 0x7FFFFFFFU
+pub const NATIVE_FEATURE_VERTEX_WRITABLE_STORAGE : UInt = 0x00030005U
 
 ///|
-pub let native_query_type_pipeline_statistics : UInt = 0x00030000U
+pub const NATIVE_QUERY_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let native_s_type_force32 : UInt = 0x7FFFFFFFU
+pub const NATIVE_QUERY_TYPE_PIPELINE_STATISTICS : UInt = 0x00030000U
 
 ///|
-pub let native_texture_format_nv12 : UInt = 0x00030007U
+pub const NATIVE_S_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let native_texture_format_p010 : UInt = 0x00030008U
+pub const NATIVE_TEXTURE_FORMAT_NV12 : UInt = 0x00030007U
 
 ///|
-pub let native_texture_format_r16_snorm : UInt = 0x00030002U
+pub const NATIVE_TEXTURE_FORMAT_P010 : UInt = 0x00030008U
 
 ///|
-pub let native_texture_format_r16_unorm : UInt = 0x00030001U
+pub const NATIVE_TEXTURE_FORMAT_R16_SNORM : UInt = 0x00030002U
 
 ///|
-pub let native_texture_format_rg16_snorm : UInt = 0x00030004U
+pub const NATIVE_TEXTURE_FORMAT_R16_UNORM : UInt = 0x00030001U
 
 ///|
-pub let native_texture_format_rg16_unorm : UInt = 0x00030003U
+pub const NATIVE_TEXTURE_FORMAT_RG16_SNORM : UInt = 0x00030004U
 
 ///|
-pub let native_texture_format_rgba16_snorm : UInt = 0x00030006U
+pub const NATIVE_TEXTURE_FORMAT_RG16_UNORM : UInt = 0x00030003U
 
 ///|
-pub let native_texture_format_rgba16_unorm : UInt = 0x00030005U
+pub const NATIVE_TEXTURE_FORMAT_RGBA16_SNORM : UInt = 0x00030006U
 
 ///|
-pub let optional_bool_false : UInt = 0x00000000U
+pub const NATIVE_TEXTURE_FORMAT_RGBA16_UNORM : UInt = 0x00030005U
 
 ///|
-pub let optional_bool_force32 : UInt = 0x7FFFFFFFU
+pub const OPTIONAL_BOOL_FALSE : UInt = 0x00000000U
 
 ///|
-pub let optional_bool_true : UInt = 0x00000001U
+pub const OPTIONAL_BOOL_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let optional_bool_undefined : UInt = 0x00000002U
+pub const OPTIONAL_BOOL_TRUE : UInt = 0x00000001U
 
 ///|
-pub let pipeline_statistic_name_clipper_invocations : UInt = 0x00000001U
+pub const OPTIONAL_BOOL_UNDEFINED : UInt = 0x00000002U
 
 ///|
-pub let pipeline_statistic_name_clipper_primitives_out : UInt = 0x00000002U
+pub const PIPELINE_STATISTIC_NAME_CLIPPER_INVOCATIONS : UInt = 0x00000001U
 
 ///|
-pub let pipeline_statistic_name_compute_shader_invocations : UInt = 0x00000004U
+pub const PIPELINE_STATISTIC_NAME_CLIPPER_PRIMITIVES_OUT : UInt = 0x00000002U
 
 ///|
-pub let pipeline_statistic_name_force32 : UInt = 0x7FFFFFFFU
+pub const PIPELINE_STATISTIC_NAME_COMPUTE_SHADER_INVOCATIONS : UInt = 0x00000004U
 
 ///|
-pub let pipeline_statistic_name_fragment_shader_invocations : UInt = 0x00000003U
+pub const PIPELINE_STATISTIC_NAME_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let pipeline_statistic_name_vertex_shader_invocations : UInt = 0x00000000U
+pub const PIPELINE_STATISTIC_NAME_FRAGMENT_SHADER_INVOCATIONS : UInt = 0x00000003U
 
 ///|
-pub let polygon_mode_fill : UInt = 0x00000000U
+pub const PIPELINE_STATISTIC_NAME_VERTEX_SHADER_INVOCATIONS : UInt = 0x00000000U
 
 ///|
-pub let polygon_mode_line : UInt = 0x00000001U
+pub const POLYGON_MODE_FILL : UInt = 0x00000000U
 
 ///|
-pub let polygon_mode_point : UInt = 0x00000002U
+pub const POLYGON_MODE_LINE : UInt = 0x00000001U
 
 ///|
-pub let pop_error_scope_status_empty_stack : UInt = 0x00000003U
+pub const POLYGON_MODE_POINT : UInt = 0x00000002U
 
 ///|
-pub let pop_error_scope_status_force32 : UInt = 0x7FFFFFFFU
+pub const POP_ERROR_SCOPE_STATUS_EMPTY_STACK : UInt = 0x00000003U
 
 ///|
-pub let pop_error_scope_status_instance_dropped : UInt = 0x00000002U
+pub const POP_ERROR_SCOPE_STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let pop_error_scope_status_success : UInt = 0x00000001U
+pub const POP_ERROR_SCOPE_STATUS_INSTANCE_DROPPED : UInt = 0x00000002U
 
 ///|
-pub let power_preference_force32 : UInt = 0x7FFFFFFFU
+pub const POP_ERROR_SCOPE_STATUS_SUCCESS : UInt = 0x00000001U
 
 ///|
-pub let power_preference_high_performance : UInt = 0x00000002U
+pub const POWER_PREFERENCE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let power_preference_low_power : UInt = 0x00000001U
+pub const POWER_PREFERENCE_HIGH_PERFORMANCE : UInt = 0x00000002U
 
 ///|
-pub let power_preference_undefined : UInt = 0x00000000U
+pub const POWER_PREFERENCE_LOW_POWER : UInt = 0x00000001U
 
 ///|
-pub let present_mode_fifo : UInt = 0x00000001U
+pub const POWER_PREFERENCE_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let present_mode_fifo_relaxed : UInt = 0x00000002U
+pub const PRESENT_MODE_FIFO : UInt = 0x00000001U
 
 ///|
-pub let present_mode_force32 : UInt = 0x7FFFFFFFU
+pub const PRESENT_MODE_FIFO_RELAXED : UInt = 0x00000002U
 
 ///|
-pub let present_mode_immediate : UInt = 0x00000003U
+pub const PRESENT_MODE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let present_mode_mailbox : UInt = 0x00000004U
+pub const PRESENT_MODE_IMMEDIATE : UInt = 0x00000003U
 
 ///|
-pub let present_mode_undefined : UInt = 0x00000000U
+pub const PRESENT_MODE_MAILBOX : UInt = 0x00000004U
 
 ///|
-pub let primitive_topology_force32 : UInt = 0x7FFFFFFFU
+pub const PRESENT_MODE_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let primitive_topology_line_list : UInt = 0x00000002U
+pub const PRIMITIVE_TOPOLOGY_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let primitive_topology_line_strip : UInt = 0x00000003U
+pub const PRIMITIVE_TOPOLOGY_LINE_LIST : UInt = 0x00000002U
 
 ///|
-pub let primitive_topology_point_list : UInt = 0x00000001U
+pub const PRIMITIVE_TOPOLOGY_LINE_STRIP : UInt = 0x00000003U
 
 ///|
-pub let primitive_topology_triangle_list : UInt = 0x00000004U
+pub const PRIMITIVE_TOPOLOGY_POINT_LIST : UInt = 0x00000001U
 
 ///|
-pub let primitive_topology_triangle_strip : UInt = 0x00000005U
+pub const PRIMITIVE_TOPOLOGY_TRIANGLE_LIST : UInt = 0x00000004U
 
 ///|
-pub let primitive_topology_undefined : UInt = 0x00000000U
+pub const PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP : UInt = 0x00000005U
 
 ///|
-pub let query_type_force32 : UInt = 0x7FFFFFFFU
+pub const PRIMITIVE_TOPOLOGY_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let query_type_occlusion : UInt = 0x00000001U
+pub const QUERY_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let query_type_timestamp : UInt = 0x00000002U
+pub const QUERY_TYPE_OCCLUSION : UInt = 0x00000001U
 
 ///|
-pub let queue_work_done_status_error : UInt = 0x00000003U
+pub const QUERY_TYPE_TIMESTAMP : UInt = 0x00000002U
 
 ///|
-pub let queue_work_done_status_force32 : UInt = 0x7FFFFFFFU
+pub const QUEUE_WORK_DONE_STATUS_ERROR : UInt = 0x00000003U
 
 ///|
-pub let queue_work_done_status_instance_dropped : UInt = 0x00000002U
+pub const QUEUE_WORK_DONE_STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let queue_work_done_status_success : UInt = 0x00000001U
+pub const QUEUE_WORK_DONE_STATUS_INSTANCE_DROPPED : UInt = 0x00000002U
 
 ///|
-pub let queue_work_done_status_unknown : UInt = 0x00000004U
+pub const QUEUE_WORK_DONE_STATUS_SUCCESS : UInt = 0x00000001U
 
 ///|
-pub let request_adapter_status_error : UInt = 0x00000004U
+pub const QUEUE_WORK_DONE_STATUS_UNKNOWN : UInt = 0x00000004U
 
 ///|
-pub let request_adapter_status_force32 : UInt = 0x7FFFFFFFU
+pub const REQUEST_ADAPTER_STATUS_ERROR : UInt = 0x00000004U
 
 ///|
-pub let request_adapter_status_instance_dropped : UInt = 0x00000002U
+pub const REQUEST_ADAPTER_STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let request_adapter_status_success : UInt = 0x00000001U
+pub const REQUEST_ADAPTER_STATUS_INSTANCE_DROPPED : UInt = 0x00000002U
 
 ///|
-pub let request_adapter_status_unavailable : UInt = 0x00000003U
+pub const REQUEST_ADAPTER_STATUS_SUCCESS : UInt = 0x00000001U
 
 ///|
-pub let request_adapter_status_unknown : UInt = 0x00000005U
+pub const REQUEST_ADAPTER_STATUS_UNAVAILABLE : UInt = 0x00000003U
 
 ///|
-pub let request_device_status_error : UInt = 0x00000003U
+pub const REQUEST_ADAPTER_STATUS_UNKNOWN : UInt = 0x00000005U
 
 ///|
-pub let request_device_status_force32 : UInt = 0x7FFFFFFFU
+pub const REQUEST_DEVICE_STATUS_ERROR : UInt = 0x00000003U
 
 ///|
-pub let request_device_status_instance_dropped : UInt = 0x00000002U
+pub const REQUEST_DEVICE_STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let request_device_status_success : UInt = 0x00000001U
+pub const REQUEST_DEVICE_STATUS_INSTANCE_DROPPED : UInt = 0x00000002U
 
 ///|
-pub let request_device_status_unknown : UInt = 0x00000004U
+pub const REQUEST_DEVICE_STATUS_SUCCESS : UInt = 0x00000001U
 
 ///|
-pub let s_type_bind_group_entry_extras : UInt = 0x00030007U
+pub const REQUEST_DEVICE_STATUS_UNKNOWN : UInt = 0x00000004U
 
 ///|
-pub let s_type_bind_group_layout_entry_extras : UInt = 0x00030008U
+pub const S_TYPE_BIND_GROUP_ENTRY_EXTRAS : UInt = 0x00030007U
 
 ///|
-pub let s_type_device_extras : UInt = 0x00030001U
+pub const S_TYPE_BIND_GROUP_LAYOUT_ENTRY_EXTRAS : UInt = 0x00030008U
 
 ///|
-pub let s_type_force32 : UInt = 0x7FFFFFFFU
+pub const S_TYPE_DEVICE_EXTRAS : UInt = 0x00030001U
 
 ///|
-pub let s_type_instance_extras : UInt = 0x00030006U
+pub const S_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let s_type_native_limits : UInt = 0x00030002U
+pub const S_TYPE_INSTANCE_EXTRAS : UInt = 0x00030006U
 
 ///|
-pub let s_type_pipeline_layout_extras : UInt = 0x00030003U
+pub const S_TYPE_NATIVE_LIMITS : UInt = 0x00030002U
 
 ///|
-pub let s_type_primitive_state_extras : UInt = 0x0003000CU
+pub const S_TYPE_PIPELINE_LAYOUT_EXTRAS : UInt = 0x00030003U
 
 ///|
-pub let s_type_query_set_descriptor_extras : UInt = 0x00030009U
+pub const S_TYPE_PRIMITIVE_STATE_EXTRAS : UInt = 0x0003000CU
 
 ///|
-pub let s_type_render_pass_max_draw_count : UInt = 0x00000003U
+pub const S_TYPE_QUERY_SET_DESCRIPTOR_EXTRAS : UInt = 0x00030009U
 
 ///|
-pub let s_type_shader_source_glsl : UInt = 0x00030004U
+pub const S_TYPE_RENDER_PASS_MAX_DRAW_COUNT : UInt = 0x00000003U
 
 ///|
-pub let s_type_shader_source_spirv : UInt = 0x00000001U
+pub const S_TYPE_SHADER_SOURCE_GLSL : UInt = 0x00030004U
 
 ///|
-pub let s_type_shader_source_wgsl : UInt = 0x00000002U
+pub const S_TYPE_SHADER_SOURCE_SPIRV : UInt = 0x00000001U
 
 ///|
-pub let s_type_surface_configuration_extras : UInt = 0x0003000AU
+pub const S_TYPE_SHADER_SOURCE_WGSL : UInt = 0x00000002U
 
 ///|
-pub let s_type_surface_source_android_native_window : UInt = 0x00000008U
+pub const S_TYPE_SURFACE_CONFIGURATION_EXTRAS : UInt = 0x0003000AU
 
 ///|
-pub let s_type_surface_source_metal_layer : UInt = 0x00000004U
+pub const S_TYPE_SURFACE_SOURCE_ANDROID_NATIVE_WINDOW : UInt = 0x00000008U
 
 ///|
-pub let s_type_surface_source_swap_chain_panel : UInt = 0x0003000BU
+pub const S_TYPE_SURFACE_SOURCE_METAL_LAYER : UInt = 0x00000004U
 
 ///|
-pub let s_type_surface_source_wayland_surface : UInt = 0x00000007U
+pub const S_TYPE_SURFACE_SOURCE_SWAP_CHAIN_PANEL : UInt = 0x0003000BU
 
 ///|
-pub let s_type_surface_source_windows_hwnd : UInt = 0x00000005U
+pub const S_TYPE_SURFACE_SOURCE_WAYLAND_SURFACE : UInt = 0x00000007U
 
 ///|
-pub let s_type_surface_source_xcb_window : UInt = 0x00000009U
+pub const S_TYPE_SURFACE_SOURCE_WINDOWS_HWND : UInt = 0x00000005U
 
 ///|
-pub let s_type_surface_source_xlib_window : UInt = 0x00000006U
+pub const S_TYPE_SURFACE_SOURCE_XCB_WINDOW : UInt = 0x00000009U
 
 ///|
-pub let sampler_binding_type_binding_not_used : UInt = 0x00000000U
+pub const S_TYPE_SURFACE_SOURCE_XLIB_WINDOW : UInt = 0x00000006U
 
 ///|
-pub let sampler_binding_type_comparison : UInt = 0x00000004U
+pub const SAMPLER_BINDING_TYPE_BINDING_NOT_USED : UInt = 0x00000000U
 
 ///|
-pub let sampler_binding_type_filtering : UInt = 0x00000002U
+pub const SAMPLER_BINDING_TYPE_COMPARISON : UInt = 0x00000004U
 
 ///|
-pub let sampler_binding_type_force32 : UInt = 0x7FFFFFFFU
+pub const SAMPLER_BINDING_TYPE_FILTERING : UInt = 0x00000002U
 
 ///|
-pub let sampler_binding_type_non_filtering : UInt = 0x00000003U
+pub const SAMPLER_BINDING_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let sampler_binding_type_undefined : UInt = 0x00000001U
+pub const SAMPLER_BINDING_TYPE_NON_FILTERING : UInt = 0x00000003U
 
 ///|
-pub let shader_stage_compute : UInt64 = 0x0000000000000004UL
+pub const SAMPLER_BINDING_TYPE_UNDEFINED : UInt = 0x00000001U
 
 ///|
-pub let shader_stage_fragment : UInt64 = 0x0000000000000002UL
+pub const SHADER_STAGE_COMPUTE : UInt64 = 0x0000000000000004UL
 
 ///|
-pub let shader_stage_none : UInt64 = 0x0000000000000000UL
+pub const SHADER_STAGE_FRAGMENT : UInt64 = 0x0000000000000002UL
 
 ///|
-pub let shader_stage_vertex : UInt64 = 0x0000000000000001UL
+pub const SHADER_STAGE_NONE : UInt64 = 0x0000000000000000UL
 
 ///|
-pub let status_error : UInt = 0x00000002U
+pub const SHADER_STAGE_VERTEX : UInt64 = 0x0000000000000001UL
 
 ///|
-pub let status_force32 : UInt = 0x7FFFFFFFU
+pub const STATUS_ERROR : UInt = 0x00000002U
 
 ///|
-pub let status_success : UInt = 0x00000001U
+pub const STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let stencil_operation_decrement_clamp : UInt = 0x00000006U
+pub const STATUS_SUCCESS : UInt = 0x00000001U
 
 ///|
-pub let stencil_operation_decrement_wrap : UInt = 0x00000008U
+pub const STENCIL_OPERATION_DECREMENT_CLAMP : UInt = 0x00000006U
 
 ///|
-pub let stencil_operation_force32 : UInt = 0x7FFFFFFFU
+pub const STENCIL_OPERATION_DECREMENT_WRAP : UInt = 0x00000008U
 
 ///|
-pub let stencil_operation_increment_clamp : UInt = 0x00000005U
+pub const STENCIL_OPERATION_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let stencil_operation_increment_wrap : UInt = 0x00000007U
+pub const STENCIL_OPERATION_INCREMENT_CLAMP : UInt = 0x00000005U
 
 ///|
-pub let stencil_operation_invert : UInt = 0x00000004U
+pub const STENCIL_OPERATION_INCREMENT_WRAP : UInt = 0x00000007U
 
 ///|
-pub let stencil_operation_keep : UInt = 0x00000001U
+pub const STENCIL_OPERATION_INVERT : UInt = 0x00000004U
 
 ///|
-pub let stencil_operation_replace : UInt = 0x00000003U
+pub const STENCIL_OPERATION_KEEP : UInt = 0x00000001U
 
 ///|
-pub let stencil_operation_undefined : UInt = 0x00000000U
+pub const STENCIL_OPERATION_REPLACE : UInt = 0x00000003U
 
 ///|
-pub let stencil_operation_zero : UInt = 0x00000002U
+pub const STENCIL_OPERATION_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let storage_texture_access_binding_not_used : UInt = 0x00000000U
+pub const STENCIL_OPERATION_ZERO : UInt = 0x00000002U
 
 ///|
-pub let storage_texture_access_force32 : UInt = 0x7FFFFFFFU
+pub const STORAGE_TEXTURE_ACCESS_BINDING_NOT_USED : UInt = 0x00000000U
 
 ///|
-pub let storage_texture_access_read_only : UInt = 0x00000003U
+pub const STORAGE_TEXTURE_ACCESS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let storage_texture_access_read_write : UInt = 0x00000004U
+pub const STORAGE_TEXTURE_ACCESS_READ_ONLY : UInt = 0x00000003U
 
 ///|
-pub let storage_texture_access_undefined : UInt = 0x00000001U
+pub const STORAGE_TEXTURE_ACCESS_READ_WRITE : UInt = 0x00000004U
 
 ///|
-pub let storage_texture_access_write_only : UInt = 0x00000002U
+pub const STORAGE_TEXTURE_ACCESS_UNDEFINED : UInt = 0x00000001U
 
 ///|
-pub let store_op_discard : UInt = 0x00000002U
+pub const STORAGE_TEXTURE_ACCESS_WRITE_ONLY : UInt = 0x00000002U
 
 ///|
-pub let store_op_force32 : UInt = 0x7FFFFFFFU
+pub const STORE_OP_DISCARD : UInt = 0x00000002U
 
 ///|
-pub let store_op_store : UInt = 0x00000001U
+pub const STORE_OP_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let store_op_undefined : UInt = 0x00000000U
+pub const STORE_OP_STORE : UInt = 0x00000001U
 
 ///|
-pub let surface_get_current_texture_status_device_lost : UInt = 0x00000007U
+pub const STORE_OP_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let surface_get_current_texture_status_error : UInt = 0x00000008U
+pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_DEVICE_LOST : UInt = 0x00000007U
 
 ///|
-pub let surface_get_current_texture_status_force32 : UInt = 0x7FFFFFFFU
+pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_ERROR : UInt = 0x00000008U
 
 ///|
-pub let surface_get_current_texture_status_lost : UInt = 0x00000005U
+pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let surface_get_current_texture_status_out_of_memory : UInt = 0x00000006U
+pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_LOST : UInt = 0x00000005U
 
 ///|
-pub let surface_get_current_texture_status_outdated : UInt = 0x00000004U
+pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_OUT_OF_MEMORY : UInt = 0x00000006U
 
 ///|
-pub let surface_get_current_texture_status_success_optimal : UInt = 0x00000001U
+pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_OUTDATED : UInt = 0x00000004U
 
 ///|
-pub let surface_get_current_texture_status_success_suboptimal : UInt = 0x00000002U
+pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL : UInt = 0x00000001U
 
 ///|
-pub let surface_get_current_texture_status_timeout : UInt = 0x00000003U
+pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL : UInt = 0x00000002U
 
 ///|
-pub let texture_aspect_all : UInt = 0x00000001U
+pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_TIMEOUT : UInt = 0x00000003U
 
 ///|
-pub let texture_aspect_depth_only : UInt = 0x00000003U
+pub const TEXTURE_ASPECT_ALL : UInt = 0x00000001U
 
 ///|
-pub let texture_aspect_force32 : UInt = 0x7FFFFFFFU
+pub const TEXTURE_ASPECT_DEPTH_ONLY : UInt = 0x00000003U
 
 ///|
-pub let texture_aspect_stencil_only : UInt = 0x00000002U
+pub const TEXTURE_ASPECT_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let texture_aspect_undefined : UInt = 0x00000000U
+pub const TEXTURE_ASPECT_STENCIL_ONLY : UInt = 0x00000002U
 
 ///|
-pub let texture_dimension_1d : UInt = 0x00000001U
+pub const TEXTURE_ASPECT_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let texture_dimension_2d : UInt = 0x00000002U
+pub const TEXTURE_DIMENSION_1D : UInt = 0x00000001U
 
 ///|
-pub let texture_dimension_3d : UInt = 0x00000003U
+pub const TEXTURE_DIMENSION_2D : UInt = 0x00000002U
 
 ///|
-pub let texture_dimension_force32 : UInt = 0x7FFFFFFFU
+pub const TEXTURE_DIMENSION_3D : UInt = 0x00000003U
 
 ///|
-pub let texture_dimension_undefined : UInt = 0x00000000U
+pub const TEXTURE_DIMENSION_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let texture_format_astc10x10_unorm : UInt = 0x0000005AU
+pub const TEXTURE_DIMENSION_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let texture_format_astc10x10_unorm_srgb : UInt = 0x0000005BU
+pub const TEXTURE_FORMAT_ASTC10X10_UNORM : UInt = 0x0000005AU
 
 ///|
-pub let texture_format_astc10x5_unorm : UInt = 0x00000054U
+pub const TEXTURE_FORMAT_ASTC10X10_UNORM_SRGB : UInt = 0x0000005BU
 
 ///|
-pub let texture_format_astc10x5_unorm_srgb : UInt = 0x00000055U
+pub const TEXTURE_FORMAT_ASTC10X5_UNORM : UInt = 0x00000054U
 
 ///|
-pub let texture_format_astc10x6_unorm : UInt = 0x00000056U
+pub const TEXTURE_FORMAT_ASTC10X5_UNORM_SRGB : UInt = 0x00000055U
 
 ///|
-pub let texture_format_astc10x6_unorm_srgb : UInt = 0x00000057U
+pub const TEXTURE_FORMAT_ASTC10X6_UNORM : UInt = 0x00000056U
 
 ///|
-pub let texture_format_astc10x8_unorm : UInt = 0x00000058U
+pub const TEXTURE_FORMAT_ASTC10X6_UNORM_SRGB : UInt = 0x00000057U
 
 ///|
-pub let texture_format_astc10x8_unorm_srgb : UInt = 0x00000059U
+pub const TEXTURE_FORMAT_ASTC10X8_UNORM : UInt = 0x00000058U
 
 ///|
-pub let texture_format_astc12x10_unorm : UInt = 0x0000005CU
+pub const TEXTURE_FORMAT_ASTC10X8_UNORM_SRGB : UInt = 0x00000059U
 
 ///|
-pub let texture_format_astc12x10_unorm_srgb : UInt = 0x0000005DU
+pub const TEXTURE_FORMAT_ASTC12X10_UNORM : UInt = 0x0000005CU
 
 ///|
-pub let texture_format_astc12x12_unorm : UInt = 0x0000005EU
+pub const TEXTURE_FORMAT_ASTC12X10_UNORM_SRGB : UInt = 0x0000005DU
 
 ///|
-pub let texture_format_astc12x12_unorm_srgb : UInt = 0x0000005FU
+pub const TEXTURE_FORMAT_ASTC12X12_UNORM : UInt = 0x0000005EU
 
 ///|
-pub let texture_format_astc4x4_unorm : UInt = 0x00000044U
+pub const TEXTURE_FORMAT_ASTC12X12_UNORM_SRGB : UInt = 0x0000005FU
 
 ///|
-pub let texture_format_astc4x4_unorm_srgb : UInt = 0x00000045U
+pub const TEXTURE_FORMAT_ASTC4X4_UNORM : UInt = 0x00000044U
 
 ///|
-pub let texture_format_astc5x4_unorm : UInt = 0x00000046U
+pub const TEXTURE_FORMAT_ASTC4X4_UNORM_SRGB : UInt = 0x00000045U
 
 ///|
-pub let texture_format_astc5x4_unorm_srgb : UInt = 0x00000047U
+pub const TEXTURE_FORMAT_ASTC5X4_UNORM : UInt = 0x00000046U
 
 ///|
-pub let texture_format_astc5x5_unorm : UInt = 0x00000048U
+pub const TEXTURE_FORMAT_ASTC5X4_UNORM_SRGB : UInt = 0x00000047U
 
 ///|
-pub let texture_format_astc5x5_unorm_srgb : UInt = 0x00000049U
+pub const TEXTURE_FORMAT_ASTC5X5_UNORM : UInt = 0x00000048U
 
 ///|
-pub let texture_format_astc6x5_unorm : UInt = 0x0000004AU
+pub const TEXTURE_FORMAT_ASTC5X5_UNORM_SRGB : UInt = 0x00000049U
 
 ///|
-pub let texture_format_astc6x5_unorm_srgb : UInt = 0x0000004BU
+pub const TEXTURE_FORMAT_ASTC6X5_UNORM : UInt = 0x0000004AU
 
 ///|
-pub let texture_format_astc6x6_unorm : UInt = 0x0000004CU
+pub const TEXTURE_FORMAT_ASTC6X5_UNORM_SRGB : UInt = 0x0000004BU
 
 ///|
-pub let texture_format_astc6x6_unorm_srgb : UInt = 0x0000004DU
+pub const TEXTURE_FORMAT_ASTC6X6_UNORM : UInt = 0x0000004CU
 
 ///|
-pub let texture_format_astc8x5_unorm : UInt = 0x0000004EU
+pub const TEXTURE_FORMAT_ASTC6X6_UNORM_SRGB : UInt = 0x0000004DU
 
 ///|
-pub let texture_format_astc8x5_unorm_srgb : UInt = 0x0000004FU
+pub const TEXTURE_FORMAT_ASTC8X5_UNORM : UInt = 0x0000004EU
 
 ///|
-pub let texture_format_astc8x6_unorm : UInt = 0x00000050U
+pub const TEXTURE_FORMAT_ASTC8X5_UNORM_SRGB : UInt = 0x0000004FU
 
 ///|
-pub let texture_format_astc8x6_unorm_srgb : UInt = 0x00000051U
+pub const TEXTURE_FORMAT_ASTC8X6_UNORM : UInt = 0x00000050U
 
 ///|
-pub let texture_format_astc8x8_unorm : UInt = 0x00000052U
+pub const TEXTURE_FORMAT_ASTC8X6_UNORM_SRGB : UInt = 0x00000051U
 
 ///|
-pub let texture_format_astc8x8_unorm_srgb : UInt = 0x00000053U
+pub const TEXTURE_FORMAT_ASTC8X8_UNORM : UInt = 0x00000052U
 
 ///|
-pub let texture_format_bc1_rgba_unorm : UInt = 0x0000002CU
+pub const TEXTURE_FORMAT_ASTC8X8_UNORM_SRGB : UInt = 0x00000053U
 
 ///|
-pub let texture_format_bc1_rgba_unorm_srgb : UInt = 0x0000002DU
+pub const TEXTURE_FORMAT_BC1_RGBA_UNORM : UInt = 0x0000002CU
 
 ///|
-pub let texture_format_bc2_rgba_unorm : UInt = 0x0000002EU
+pub const TEXTURE_FORMAT_BC1_RGBA_UNORM_SRGB : UInt = 0x0000002DU
 
 ///|
-pub let texture_format_bc2_rgba_unorm_srgb : UInt = 0x0000002FU
+pub const TEXTURE_FORMAT_BC2_RGBA_UNORM : UInt = 0x0000002EU
 
 ///|
-pub let texture_format_bc3_rgba_unorm : UInt = 0x00000030U
+pub const TEXTURE_FORMAT_BC2_RGBA_UNORM_SRGB : UInt = 0x0000002FU
 
 ///|
-pub let texture_format_bc3_rgba_unorm_srgb : UInt = 0x00000031U
+pub const TEXTURE_FORMAT_BC3_RGBA_UNORM : UInt = 0x00000030U
 
 ///|
-pub let texture_format_bc4r_snorm : UInt = 0x00000033U
+pub const TEXTURE_FORMAT_BC3_RGBA_UNORM_SRGB : UInt = 0x00000031U
 
 ///|
-pub let texture_format_bc4r_unorm : UInt = 0x00000032U
+pub const TEXTURE_FORMAT_BC4R_SNORM : UInt = 0x00000033U
 
 ///|
-pub let texture_format_bc5_rg_snorm : UInt = 0x00000035U
+pub const TEXTURE_FORMAT_BC4R_UNORM : UInt = 0x00000032U
 
 ///|
-pub let texture_format_bc5_rg_unorm : UInt = 0x00000034U
+pub const TEXTURE_FORMAT_BC5_RG_SNORM : UInt = 0x00000035U
 
 ///|
-pub let texture_format_bc6_hrgb_float : UInt = 0x00000037U
+pub const TEXTURE_FORMAT_BC5_RG_UNORM : UInt = 0x00000034U
 
 ///|
-pub let texture_format_bc6_hrgb_ufloat : UInt = 0x00000036U
+pub const TEXTURE_FORMAT_BC6_HRGB_FLOAT : UInt = 0x00000037U
 
 ///|
-pub let texture_format_bc7_rgba_unorm : UInt = 0x00000038U
+pub const TEXTURE_FORMAT_BC6_HRGB_UFLOAT : UInt = 0x00000036U
 
 ///|
-pub let texture_format_bc7_rgba_unorm_srgb : UInt = 0x00000039U
+pub const TEXTURE_FORMAT_BC7_RGBA_UNORM : UInt = 0x00000038U
 
 ///|
-pub let texture_format_bgra8_unorm : UInt = 0x00000017U
+pub const TEXTURE_FORMAT_BC7_RGBA_UNORM_SRGB : UInt = 0x00000039U
 
 ///|
-pub let texture_format_bgra8_unorm_srgb : UInt = 0x00000018U
+pub const TEXTURE_FORMAT_BGRA8_UNORM : UInt = 0x00000017U
 
 ///|
-pub let texture_format_depth16_unorm : UInt = 0x00000027U
+pub const TEXTURE_FORMAT_BGRA8_UNORM_SRGB : UInt = 0x00000018U
 
 ///|
-pub let texture_format_depth24_plus : UInt = 0x00000028U
+pub const TEXTURE_FORMAT_DEPTH16_UNORM : UInt = 0x00000027U
 
 ///|
-pub let texture_format_depth24_plus_stencil8 : UInt = 0x00000029U
+pub const TEXTURE_FORMAT_DEPTH24_PLUS : UInt = 0x00000028U
 
 ///|
-pub let texture_format_depth32_float : UInt = 0x0000002AU
+pub const TEXTURE_FORMAT_DEPTH24_PLUS_STENCIL8 : UInt = 0x00000029U
 
 ///|
-pub let texture_format_depth32_float_stencil8 : UInt = 0x0000002BU
+pub const TEXTURE_FORMAT_DEPTH32_FLOAT : UInt = 0x0000002AU
 
 ///|
-pub let texture_format_eacr11_snorm : UInt = 0x00000041U
+pub const TEXTURE_FORMAT_DEPTH32_FLOAT_STENCIL8 : UInt = 0x0000002BU
 
 ///|
-pub let texture_format_eacr11_unorm : UInt = 0x00000040U
+pub const TEXTURE_FORMAT_EACR11_SNORM : UInt = 0x00000041U
 
 ///|
-pub let texture_format_eacrg11_snorm : UInt = 0x00000043U
+pub const TEXTURE_FORMAT_EACR11_UNORM : UInt = 0x00000040U
 
 ///|
-pub let texture_format_eacrg11_unorm : UInt = 0x00000042U
+pub const TEXTURE_FORMAT_EACRG11_SNORM : UInt = 0x00000043U
 
 ///|
-pub let texture_format_etc2_rgb8_a1_unorm : UInt = 0x0000003CU
+pub const TEXTURE_FORMAT_EACRG11_UNORM : UInt = 0x00000042U
 
 ///|
-pub let texture_format_etc2_rgb8_a1_unorm_srgb : UInt = 0x0000003DU
+pub const TEXTURE_FORMAT_ETC2_RGB8_A1_UNORM : UInt = 0x0000003CU
 
 ///|
-pub let texture_format_etc2_rgb8_unorm : UInt = 0x0000003AU
+pub const TEXTURE_FORMAT_ETC2_RGB8_A1_UNORM_SRGB : UInt = 0x0000003DU
 
 ///|
-pub let texture_format_etc2_rgb8_unorm_srgb : UInt = 0x0000003BU
+pub const TEXTURE_FORMAT_ETC2_RGB8_UNORM : UInt = 0x0000003AU
 
 ///|
-pub let texture_format_etc2_rgba8_unorm : UInt = 0x0000003EU
+pub const TEXTURE_FORMAT_ETC2_RGB8_UNORM_SRGB : UInt = 0x0000003BU
 
 ///|
-pub let texture_format_etc2_rgba8_unorm_srgb : UInt = 0x0000003FU
+pub const TEXTURE_FORMAT_ETC2_RGBA8_UNORM : UInt = 0x0000003EU
 
 ///|
-pub let texture_format_force32 : UInt = 0x7FFFFFFFU
+pub const TEXTURE_FORMAT_ETC2_RGBA8_UNORM_SRGB : UInt = 0x0000003FU
 
 ///|
-pub let texture_format_r16_float : UInt = 0x00000007U
+pub const TEXTURE_FORMAT_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let texture_format_r16_sint : UInt = 0x00000006U
+pub const TEXTURE_FORMAT_R16_FLOAT : UInt = 0x00000007U
 
 ///|
-pub let texture_format_r16_uint : UInt = 0x00000005U
+pub const TEXTURE_FORMAT_R16_SINT : UInt = 0x00000006U
 
 ///|
-pub let texture_format_r32_float : UInt = 0x0000000CU
+pub const TEXTURE_FORMAT_R16_UINT : UInt = 0x00000005U
 
 ///|
-pub let texture_format_r32_sint : UInt = 0x0000000EU
+pub const TEXTURE_FORMAT_R32_FLOAT : UInt = 0x0000000CU
 
 ///|
-pub let texture_format_r32_uint : UInt = 0x0000000DU
+pub const TEXTURE_FORMAT_R32_SINT : UInt = 0x0000000EU
 
 ///|
-pub let texture_format_r8_sint : UInt = 0x00000004U
+pub const TEXTURE_FORMAT_R32_UINT : UInt = 0x0000000DU
 
 ///|
-pub let texture_format_r8_snorm : UInt = 0x00000002U
+pub const TEXTURE_FORMAT_R8_SINT : UInt = 0x00000004U
 
 ///|
-pub let texture_format_r8_uint : UInt = 0x00000003U
+pub const TEXTURE_FORMAT_R8_SNORM : UInt = 0x00000002U
 
 ///|
-pub let texture_format_r8_unorm : UInt = 0x00000001U
+pub const TEXTURE_FORMAT_R8_UINT : UInt = 0x00000003U
 
 ///|
-pub let texture_format_rg11_b10_ufloat : UInt = 0x0000001BU
+pub const TEXTURE_FORMAT_R8_UNORM : UInt = 0x00000001U
 
 ///|
-pub let texture_format_rg16_float : UInt = 0x00000011U
+pub const TEXTURE_FORMAT_RG11_B10_UFLOAT : UInt = 0x0000001BU
 
 ///|
-pub let texture_format_rg16_sint : UInt = 0x00000010U
+pub const TEXTURE_FORMAT_RG16_FLOAT : UInt = 0x00000011U
 
 ///|
-pub let texture_format_rg16_uint : UInt = 0x0000000FU
+pub const TEXTURE_FORMAT_RG16_SINT : UInt = 0x00000010U
 
 ///|
-pub let texture_format_rg32_float : UInt = 0x0000001DU
+pub const TEXTURE_FORMAT_RG16_UINT : UInt = 0x0000000FU
 
 ///|
-pub let texture_format_rg32_sint : UInt = 0x0000001FU
+pub const TEXTURE_FORMAT_RG32_FLOAT : UInt = 0x0000001DU
 
 ///|
-pub let texture_format_rg32_uint : UInt = 0x0000001EU
+pub const TEXTURE_FORMAT_RG32_SINT : UInt = 0x0000001FU
 
 ///|
-pub let texture_format_rg8_sint : UInt = 0x0000000BU
+pub const TEXTURE_FORMAT_RG32_UINT : UInt = 0x0000001EU
 
 ///|
-pub let texture_format_rg8_snorm : UInt = 0x00000009U
+pub const TEXTURE_FORMAT_RG8_SINT : UInt = 0x0000000BU
 
 ///|
-pub let texture_format_rg8_uint : UInt = 0x0000000AU
+pub const TEXTURE_FORMAT_RG8_SNORM : UInt = 0x00000009U
 
 ///|
-pub let texture_format_rg8_unorm : UInt = 0x00000008U
+pub const TEXTURE_FORMAT_RG8_UINT : UInt = 0x0000000AU
 
 ///|
-pub let texture_format_rgb10_a2_uint : UInt = 0x00000019U
+pub const TEXTURE_FORMAT_RG8_UNORM : UInt = 0x00000008U
 
 ///|
-pub let texture_format_rgb10_a2_unorm : UInt = 0x0000001AU
+pub const TEXTURE_FORMAT_RGB10_A2_UINT : UInt = 0x00000019U
 
 ///|
-pub let texture_format_rgb9_e5_ufloat : UInt = 0x0000001CU
+pub const TEXTURE_FORMAT_RGB10_A2_UNORM : UInt = 0x0000001AU
 
 ///|
-pub let texture_format_rgba16_float : UInt = 0x00000022U
+pub const TEXTURE_FORMAT_RGB9_E5_UFLOAT : UInt = 0x0000001CU
 
 ///|
-pub let texture_format_rgba16_sint : UInt = 0x00000021U
+pub const TEXTURE_FORMAT_RGBA16_FLOAT : UInt = 0x00000022U
 
 ///|
-pub let texture_format_rgba16_uint : UInt = 0x00000020U
+pub const TEXTURE_FORMAT_RGBA16_SINT : UInt = 0x00000021U
 
 ///|
-pub let texture_format_rgba32_float : UInt = 0x00000023U
+pub const TEXTURE_FORMAT_RGBA16_UINT : UInt = 0x00000020U
 
 ///|
-pub let texture_format_rgba32_sint : UInt = 0x00000025U
+pub const TEXTURE_FORMAT_RGBA32_FLOAT : UInt = 0x00000023U
 
 ///|
-pub let texture_format_rgba32_uint : UInt = 0x00000024U
+pub const TEXTURE_FORMAT_RGBA32_SINT : UInt = 0x00000025U
 
 ///|
-pub let texture_format_rgba8_sint : UInt = 0x00000016U
+pub const TEXTURE_FORMAT_RGBA32_UINT : UInt = 0x00000024U
 
 ///|
-pub let texture_format_rgba8_snorm : UInt = 0x00000014U
+pub const TEXTURE_FORMAT_RGBA8_SINT : UInt = 0x00000016U
 
 ///|
-pub let texture_format_rgba8_uint : UInt = 0x00000015U
+pub const TEXTURE_FORMAT_RGBA8_SNORM : UInt = 0x00000014U
 
 ///|
-pub let texture_format_rgba8_unorm : UInt = 0x00000012U
+pub const TEXTURE_FORMAT_RGBA8_UINT : UInt = 0x00000015U
 
 ///|
-pub let texture_format_rgba8_unorm_srgb : UInt = 0x00000013U
+pub const TEXTURE_FORMAT_RGBA8_UNORM : UInt = 0x00000012U
 
 ///|
-pub let texture_format_stencil8 : UInt = 0x00000026U
+pub const TEXTURE_FORMAT_RGBA8_UNORM_SRGB : UInt = 0x00000013U
 
 ///|
-pub let texture_format_undefined : UInt = 0x00000000U
+pub const TEXTURE_FORMAT_STENCIL8 : UInt = 0x00000026U
 
 ///|
-pub let texture_sample_type_binding_not_used : UInt = 0x00000000U
+pub const TEXTURE_FORMAT_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let texture_sample_type_depth : UInt = 0x00000004U
+pub const TEXTURE_SAMPLE_TYPE_BINDING_NOT_USED : UInt = 0x00000000U
 
 ///|
-pub let texture_sample_type_float : UInt = 0x00000002U
+pub const TEXTURE_SAMPLE_TYPE_DEPTH : UInt = 0x00000004U
 
 ///|
-pub let texture_sample_type_force32 : UInt = 0x7FFFFFFFU
+pub const TEXTURE_SAMPLE_TYPE_FLOAT : UInt = 0x00000002U
 
 ///|
-pub let texture_sample_type_sint : UInt = 0x00000005U
+pub const TEXTURE_SAMPLE_TYPE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let texture_sample_type_uint : UInt = 0x00000006U
+pub const TEXTURE_SAMPLE_TYPE_SINT : UInt = 0x00000005U
 
 ///|
-pub let texture_sample_type_undefined : UInt = 0x00000001U
+pub const TEXTURE_SAMPLE_TYPE_UINT : UInt = 0x00000006U
 
 ///|
-pub let texture_sample_type_unfilterable_float : UInt = 0x00000003U
+pub const TEXTURE_SAMPLE_TYPE_UNDEFINED : UInt = 0x00000001U
 
 ///|
-pub let texture_usage_copy_dst : UInt64 = 0x0000000000000002UL
+pub const TEXTURE_SAMPLE_TYPE_UNFILTERABLE_FLOAT : UInt = 0x00000003U
 
 ///|
-pub let texture_usage_copy_src : UInt64 = 0x0000000000000001UL
+pub const TEXTURE_USAGE_COPY_DST : UInt64 = 0x0000000000000002UL
 
 ///|
-pub let texture_usage_none : UInt64 = 0x0000000000000000UL
+pub const TEXTURE_USAGE_COPY_SRC : UInt64 = 0x0000000000000001UL
 
 ///|
-pub let texture_usage_render_attachment : UInt64 = 0x0000000000000010UL
+pub const TEXTURE_USAGE_NONE : UInt64 = 0x0000000000000000UL
 
 ///|
-pub let texture_usage_storage_binding : UInt64 = 0x0000000000000008UL
+pub const TEXTURE_USAGE_RENDER_ATTACHMENT : UInt64 = 0x0000000000000010UL
 
 ///|
-pub let texture_usage_texture_binding : UInt64 = 0x0000000000000004UL
+pub const TEXTURE_USAGE_STORAGE_BINDING : UInt64 = 0x0000000000000008UL
 
 ///|
-pub let texture_view_dimension_1d : UInt = 0x00000001U
+pub const TEXTURE_USAGE_TEXTURE_BINDING : UInt64 = 0x0000000000000004UL
 
 ///|
-pub let texture_view_dimension_2d : UInt = 0x00000002U
+pub const TEXTURE_VIEW_DIMENSION_1D : UInt = 0x00000001U
 
 ///|
-pub let texture_view_dimension_2d_array : UInt = 0x00000003U
+pub const TEXTURE_VIEW_DIMENSION_2D : UInt = 0x00000002U
 
 ///|
-pub let texture_view_dimension_3d : UInt = 0x00000006U
+pub const TEXTURE_VIEW_DIMENSION_2D_ARRAY : UInt = 0x00000003U
 
 ///|
-pub let texture_view_dimension_cube : UInt = 0x00000004U
+pub const TEXTURE_VIEW_DIMENSION_3D : UInt = 0x00000006U
 
 ///|
-pub let texture_view_dimension_cube_array : UInt = 0x00000005U
+pub const TEXTURE_VIEW_DIMENSION_CUBE : UInt = 0x00000004U
 
 ///|
-pub let texture_view_dimension_force32 : UInt = 0x7FFFFFFFU
+pub const TEXTURE_VIEW_DIMENSION_CUBE_ARRAY : UInt = 0x00000005U
 
 ///|
-pub let texture_view_dimension_undefined : UInt = 0x00000000U
+pub const TEXTURE_VIEW_DIMENSION_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let vertex_format_float16 : UInt = 0x00000019U
+pub const TEXTURE_VIEW_DIMENSION_UNDEFINED : UInt = 0x00000000U
 
 ///|
-pub let vertex_format_float16x2 : UInt = 0x0000001AU
+pub const VERTEX_FORMAT_FLOAT16 : UInt = 0x00000019U
 
 ///|
-pub let vertex_format_float16x4 : UInt = 0x0000001BU
+pub const VERTEX_FORMAT_FLOAT16X2 : UInt = 0x0000001AU
 
 ///|
-pub let vertex_format_float32 : UInt = 0x0000001CU
+pub const VERTEX_FORMAT_FLOAT16X4 : UInt = 0x0000001BU
 
 ///|
-pub let vertex_format_float32x2 : UInt = 0x0000001DU
+pub const VERTEX_FORMAT_FLOAT32 : UInt = 0x0000001CU
 
 ///|
-pub let vertex_format_float32x3 : UInt = 0x0000001EU
+pub const VERTEX_FORMAT_FLOAT32X2 : UInt = 0x0000001DU
 
 ///|
-pub let vertex_format_float32x4 : UInt = 0x0000001FU
+pub const VERTEX_FORMAT_FLOAT32X3 : UInt = 0x0000001EU
 
 ///|
-pub let vertex_format_force32 : UInt = 0x7FFFFFFFU
+pub const VERTEX_FORMAT_FLOAT32X4 : UInt = 0x0000001FU
 
 ///|
-pub let vertex_format_sint16 : UInt = 0x00000010U
+pub const VERTEX_FORMAT_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let vertex_format_sint16x2 : UInt = 0x00000011U
+pub const VERTEX_FORMAT_SINT16 : UInt = 0x00000010U
 
 ///|
-pub let vertex_format_sint16x4 : UInt = 0x00000012U
+pub const VERTEX_FORMAT_SINT16X2 : UInt = 0x00000011U
 
 ///|
-pub let vertex_format_sint32 : UInt = 0x00000024U
+pub const VERTEX_FORMAT_SINT16X4 : UInt = 0x00000012U
 
 ///|
-pub let vertex_format_sint32x2 : UInt = 0x00000025U
+pub const VERTEX_FORMAT_SINT32 : UInt = 0x00000024U
 
 ///|
-pub let vertex_format_sint32x3 : UInt = 0x00000026U
+pub const VERTEX_FORMAT_SINT32X2 : UInt = 0x00000025U
 
 ///|
-pub let vertex_format_sint32x4 : UInt = 0x00000027U
+pub const VERTEX_FORMAT_SINT32X3 : UInt = 0x00000026U
 
 ///|
-pub let vertex_format_sint8 : UInt = 0x00000004U
+pub const VERTEX_FORMAT_SINT32X4 : UInt = 0x00000027U
 
 ///|
-pub let vertex_format_sint8x2 : UInt = 0x00000005U
+pub const VERTEX_FORMAT_SINT8 : UInt = 0x00000004U
 
 ///|
-pub let vertex_format_sint8x4 : UInt = 0x00000006U
+pub const VERTEX_FORMAT_SINT8X2 : UInt = 0x00000005U
 
 ///|
-pub let vertex_format_snorm16 : UInt = 0x00000016U
+pub const VERTEX_FORMAT_SINT8X4 : UInt = 0x00000006U
 
 ///|
-pub let vertex_format_snorm16x2 : UInt = 0x00000017U
+pub const VERTEX_FORMAT_SNORM16 : UInt = 0x00000016U
 
 ///|
-pub let vertex_format_snorm16x4 : UInt = 0x00000018U
+pub const VERTEX_FORMAT_SNORM16X2 : UInt = 0x00000017U
 
 ///|
-pub let vertex_format_snorm8 : UInt = 0x0000000AU
+pub const VERTEX_FORMAT_SNORM16X4 : UInt = 0x00000018U
 
 ///|
-pub let vertex_format_snorm8x2 : UInt = 0x0000000BU
+pub const VERTEX_FORMAT_SNORM8 : UInt = 0x0000000AU
 
 ///|
-pub let vertex_format_snorm8x4 : UInt = 0x0000000CU
+pub const VERTEX_FORMAT_SNORM8X2 : UInt = 0x0000000BU
 
 ///|
-pub let vertex_format_uint16 : UInt = 0x0000000DU
+pub const VERTEX_FORMAT_SNORM8X4 : UInt = 0x0000000CU
 
 ///|
-pub let vertex_format_uint16x2 : UInt = 0x0000000EU
+pub const VERTEX_FORMAT_UINT16 : UInt = 0x0000000DU
 
 ///|
-pub let vertex_format_uint16x4 : UInt = 0x0000000FU
+pub const VERTEX_FORMAT_UINT16X2 : UInt = 0x0000000EU
 
 ///|
-pub let vertex_format_uint32 : UInt = 0x00000020U
+pub const VERTEX_FORMAT_UINT16X4 : UInt = 0x0000000FU
 
 ///|
-pub let vertex_format_uint32x2 : UInt = 0x00000021U
+pub const VERTEX_FORMAT_UINT32 : UInt = 0x00000020U
 
 ///|
-pub let vertex_format_uint32x3 : UInt = 0x00000022U
+pub const VERTEX_FORMAT_UINT32X2 : UInt = 0x00000021U
 
 ///|
-pub let vertex_format_uint32x4 : UInt = 0x00000023U
+pub const VERTEX_FORMAT_UINT32X3 : UInt = 0x00000022U
 
 ///|
-pub let vertex_format_uint8 : UInt = 0x00000001U
+pub const VERTEX_FORMAT_UINT32X4 : UInt = 0x00000023U
 
 ///|
-pub let vertex_format_uint8x2 : UInt = 0x00000002U
+pub const VERTEX_FORMAT_UINT8 : UInt = 0x00000001U
 
 ///|
-pub let vertex_format_uint8x4 : UInt = 0x00000003U
+pub const VERTEX_FORMAT_UINT8X2 : UInt = 0x00000002U
 
 ///|
-pub let vertex_format_unorm10_10_10_2 : UInt = 0x00000028U
+pub const VERTEX_FORMAT_UINT8X4 : UInt = 0x00000003U
 
 ///|
-pub let vertex_format_unorm16 : UInt = 0x00000013U
+pub const VERTEX_FORMAT_UNORM10_10_10_2 : UInt = 0x00000028U
 
 ///|
-pub let vertex_format_unorm16x2 : UInt = 0x00000014U
+pub const VERTEX_FORMAT_UNORM16 : UInt = 0x00000013U
 
 ///|
-pub let vertex_format_unorm16x4 : UInt = 0x00000015U
+pub const VERTEX_FORMAT_UNORM16X2 : UInt = 0x00000014U
 
 ///|
-pub let vertex_format_unorm8 : UInt = 0x00000007U
+pub const VERTEX_FORMAT_UNORM16X4 : UInt = 0x00000015U
 
 ///|
-pub let vertex_format_unorm8x2 : UInt = 0x00000008U
+pub const VERTEX_FORMAT_UNORM8 : UInt = 0x00000007U
 
 ///|
-pub let vertex_format_unorm8x4 : UInt = 0x00000009U
+pub const VERTEX_FORMAT_UNORM8X2 : UInt = 0x00000008U
 
 ///|
-pub let vertex_format_unorm8x4_bgra : UInt = 0x00000029U
+pub const VERTEX_FORMAT_UNORM8X4 : UInt = 0x00000009U
 
 ///|
-pub let vertex_step_mode_force32 : UInt = 0x7FFFFFFFU
+pub const VERTEX_FORMAT_UNORM8X4_BGRA : UInt = 0x00000029U
 
 ///|
-pub let vertex_step_mode_instance : UInt = 0x00000003U
+pub const VERTEX_STEP_MODE_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let vertex_step_mode_undefined : UInt = 0x00000001U
+pub const VERTEX_STEP_MODE_INSTANCE : UInt = 0x00000003U
 
 ///|
-pub let vertex_step_mode_vertex : UInt = 0x00000002U
+pub const VERTEX_STEP_MODE_UNDEFINED : UInt = 0x00000001U
 
 ///|
-pub let vertex_step_mode_vertex_buffer_not_used : UInt = 0x00000000U
+pub const VERTEX_STEP_MODE_VERTEX : UInt = 0x00000002U
 
 ///|
-pub let wgsl_language_feature_name_force32 : UInt = 0x7FFFFFFFU
+pub const VERTEX_STEP_MODE_VERTEX_BUFFER_NOT_USED : UInt = 0x00000000U
 
 ///|
-pub let wgsl_language_feature_name_packed4x8_integer_dot_product : UInt = 0x00000002U
+pub const WGSL_LANGUAGE_FEATURE_NAME_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let wgsl_language_feature_name_pointer_composite_access : UInt = 0x00000004U
+pub const WGSL_LANGUAGE_FEATURE_NAME_PACKED4X8_INTEGER_DOT_PRODUCT : UInt = 0x00000002U
 
 ///|
-pub let wgsl_language_feature_name_readonly_and_readwrite_storage_textures : UInt = 0x00000001U
+pub const WGSL_LANGUAGE_FEATURE_NAME_POINTER_COMPOSITE_ACCESS : UInt = 0x00000004U
 
 ///|
-pub let wgsl_language_feature_name_unrestricted_pointer_parameters : UInt = 0x00000003U
+pub const WGSL_LANGUAGE_FEATURE_NAME_READONLY_AND_READWRITE_STORAGE_TEXTURES : UInt = 0x00000001U
 
 ///|
-pub let wait_status_force32 : UInt = 0x7FFFFFFFU
+pub const WGSL_LANGUAGE_FEATURE_NAME_UNRESTRICTED_POINTER_PARAMETERS : UInt = 0x00000003U
 
 ///|
-pub let wait_status_success : UInt = 0x00000001U
+pub const WAIT_STATUS_FORCE32 : UInt = 0x7FFFFFFFU
 
 ///|
-pub let wait_status_timed_out : UInt = 0x00000002U
+pub const WAIT_STATUS_SUCCESS : UInt = 0x00000001U
 
 ///|
-pub let wait_status_unsupported_count : UInt = 0x00000004U
+pub const WAIT_STATUS_TIMED_OUT : UInt = 0x00000002U
 
 ///|
-pub let wait_status_unsupported_mixed_sources : UInt = 0x00000005U
+pub const WAIT_STATUS_UNSUPPORTED_COUNT : UInt = 0x00000004U
 
 ///|
-pub let wait_status_unsupported_timeout : UInt = 0x00000003U
+pub const WAIT_STATUS_UNSUPPORTED_MIXED_SOURCES : UInt = 0x00000005U
 
 ///|
-pub let array_layer_count_undefined : UInt = 0xFFFFFFFFU
+pub const WAIT_STATUS_UNSUPPORTED_TIMEOUT : UInt = 0x00000003U
 
 ///|
-pub let copy_stride_undefined : UInt = 0xFFFFFFFFU
+pub const ARRAY_LAYER_COUNT_UNDEFINED : UInt = 0xFFFFFFFFU
 
 ///|
-pub let depth_slice_undefined : UInt = 0xFFFFFFFFU
+pub const COPY_STRIDE_UNDEFINED : UInt = 0xFFFFFFFFU
 
 ///|
-pub let limit_u32_undefined : UInt = 0xFFFFFFFFU
+pub const DEPTH_SLICE_UNDEFINED : UInt = 0xFFFFFFFFU
 
 ///|
-pub let limit_u64_undefined : UInt64 = 0xFFFFFFFFFFFFFFFFUL
+pub const LIMIT_U32_UNDEFINED : UInt = 0xFFFFFFFFU
 
 ///|
-pub let mip_level_count_undefined : UInt = 0xFFFFFFFFU
+pub const LIMIT_U64_UNDEFINED : UInt64 = 0xFFFFFFFFFFFFFFFFUL
 
 ///|
-pub let query_set_index_undefined : UInt = 0xFFFFFFFFU
+pub const MIP_LEVEL_COUNT_UNDEFINED : UInt = 0xFFFFFFFFU
 
 ///|
-pub let whole_map_size : UInt64 = 0xFFFFFFFFFFFFFFFFUL
+pub const QUERY_SET_INDEX_UNDEFINED : UInt = 0xFFFFFFFFU
 
 ///|
-pub let whole_size : UInt64 = 0xFFFFFFFFFFFFFFFFUL
+pub const WHOLE_MAP_SIZE : UInt64 = 0xFFFFFFFFFFFFFFFFUL
+
+///|
+pub const WHOLE_SIZE : UInt64 = 0xFFFFFFFFFFFFFFFFUL

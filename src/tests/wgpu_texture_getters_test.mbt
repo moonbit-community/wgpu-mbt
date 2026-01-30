@@ -17,9 +17,9 @@ test "wgpu texture getters" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
-  let req_usage = @wgpu.texture_usage_texture_binding |
-    @wgpu.texture_usage_copy_dst |
-    @wgpu.texture_usage_copy_src
+  let req_usage = @wgpu.TEXTURE_USAGE_TEXTURE_BINDING |
+    @wgpu.TEXTURE_USAGE_COPY_DST |
+    @wgpu.TEXTURE_USAGE_COPY_SRC
   let tex = device.create_texture_rgba8_2d_with_usage(4U, 2U, req_usage)
   let ok = tex.width_u32() == 4U &&
     tex.height_u32() == 2U &&

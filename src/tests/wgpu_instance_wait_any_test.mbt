@@ -25,9 +25,9 @@ test "wgpu instance.wait_any_one (queue work done)" {
   // Drive completion via process_events (AllowProcessEvents callback mode),
   // then observe it via wait_any.
   let status = queue.on_submitted_work_done_sync(instance)
-  inspect(status == @wgpu.queue_work_done_status_success, content="true")
+  inspect(status == @wgpu.QUEUE_WORK_DONE_STATUS_SUCCESS, content="true")
   let res = instance.wait_any_one(future_id)
-  let ok = res.completed && res.status == @wgpu.wait_status_success
+  let ok = res.completed && res.status == @wgpu.WAIT_STATUS_SUCCESS
   inspect(ok, content="true")
   cmd.release()
   encoder.release()

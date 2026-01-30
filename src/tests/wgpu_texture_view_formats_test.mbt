@@ -22,34 +22,50 @@ test "wgpu texture view formats (sRGB view)" {
     16U,
     8U,
     1U,
-    @wgpu.texture_usage_texture_binding,
-    @wgpu.texture_dimension_2d,
-    @wgpu.texture_format_rgba8_unorm,
-    view_formats=[@wgpu.texture_format_rgba8_unorm_srgb],
+    @wgpu.TEXTURE_USAGE_TEXTURE_BINDING,
+    @wgpu.TEXTURE_DIMENSION_2D,
+    @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
+    view_formats=[@wgpu.TEXTURE_FORMAT_RGBA8_UNORM_SRGB],
   )
   let view = tex.create_view_u32(
-    @wgpu.texture_format_rgba8_unorm_srgb, @wgpu.texture_view_dimension_2d, @wgpu.texture_aspect_all,
-    0U, 1U, 0U, 1U,
+    @wgpu.TEXTURE_FORMAT_RGBA8_UNORM_SRGB,
+    @wgpu.TEXTURE_VIEW_DIMENSION_2D,
+    @wgpu.TEXTURE_ASPECT_ALL,
+    0U,
+    1U,
+    0U,
+    1U,
   )
   let sampler = device.create_sampler_u32(
-    @wgpu.address_mode_clamp_to_edge, @wgpu.address_mode_clamp_to_edge, @wgpu.address_mode_clamp_to_edge,
-    @wgpu.filter_mode_linear, @wgpu.filter_mode_linear, @wgpu.mipmap_filter_mode_linear,
+    @wgpu.ADDRESS_MODE_CLAMP_TO_EDGE,
+    @wgpu.ADDRESS_MODE_CLAMP_TO_EDGE,
+    @wgpu.ADDRESS_MODE_CLAMP_TO_EDGE,
+    @wgpu.FILTER_MODE_LINEAR,
+    @wgpu.FILTER_MODE_LINEAR,
+    @wgpu.MIPMAP_FILTER_MODE_LINEAR,
   )
-  let storage_usage = @wgpu.buffer_usage_storage |
-    @wgpu.buffer_usage_copy_src |
-    @wgpu.buffer_usage_copy_dst
-  let readback_usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let storage_usage = @wgpu.BUFFER_USAGE_STORAGE |
+    @wgpu.BUFFER_USAGE_COPY_SRC |
+    @wgpu.BUFFER_USAGE_COPY_DST
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
   let storage = device.create_buffer(size=8UL, usage=storage_usage)
   let readback = device.create_buffer(size=256UL, usage=readback_usage)
   let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=3UL)
   let bgl_ok0 = bglb.add_sampler(
-    0U, @wgpu.shader_stage_compute, @wgpu.sampler_binding_type_filtering,
+    0U,
+    @wgpu.SHADER_STAGE_COMPUTE,
+    @wgpu.SAMPLER_BINDING_TYPE_FILTERING,
   )
   let bgl_ok1 = bglb.add_texture(
-    1U, @wgpu.shader_stage_compute, @wgpu.texture_sample_type_float, @wgpu.texture_view_dimension_2d,
+    1U,
+    @wgpu.SHADER_STAGE_COMPUTE,
+    @wgpu.TEXTURE_SAMPLE_TYPE_FLOAT,
+    @wgpu.TEXTURE_VIEW_DIMENSION_2D,
   )
   let bgl_ok2 = bglb.add_buffer(
-    2U, @wgpu.shader_stage_compute, @wgpu.buffer_binding_type_storage,
+    2U,
+    @wgpu.SHADER_STAGE_COMPUTE,
+    @wgpu.BUFFER_BINDING_TYPE_STORAGE,
   )
   inspect([bgl_ok0, bgl_ok1, bgl_ok2], content="[true, true, true]")
   let bgl = bglb.finish(device)

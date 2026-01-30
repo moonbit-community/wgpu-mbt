@@ -18,7 +18,7 @@ test "wgpu command encoder clear_buffer" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
   let buf = device.create_buffer(size=16UL, usage~)
   let data = Bytes::makei(16, i => (i + 1).to_byte())
   queue.write_buffer(buf, 0UL, data)

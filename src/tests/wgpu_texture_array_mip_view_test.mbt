@@ -61,11 +61,11 @@ test "wgpu texture view: 2d array layer selection" {
   let pipeline = device.create_render_pipeline_rgba8(sm)
   let readback0 = device.create_buffer(
     size=256UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let readback1 = device.create_buffer(
     size=256UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(view_layer1)
@@ -142,7 +142,7 @@ test "wgpu texture view: mip level selection" {
   let pipeline = device.create_render_pipeline_rgba8(sm)
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(view_mip1)

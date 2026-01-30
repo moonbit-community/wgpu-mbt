@@ -23,7 +23,7 @@ test "spec: queue.write_texture_rgba8_2d" {
   let view = tex.create_view()
   let out_tex = device.create_texture_rgba8_2d(1U, 1U)
   let out_view = out_tex.create_view()
-  let readback_usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
   let readback_buf = device.create_buffer(size=256UL, usage=readback_usage)
   let sampler = device.create_sampler_nearest_clamp()
   let bgl = device.create_bind_group_layout_sampler_texture_2d()

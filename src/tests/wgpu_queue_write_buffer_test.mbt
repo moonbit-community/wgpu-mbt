@@ -38,10 +38,10 @@ test "wgpu queue.write_buffer + compute" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let storage_usage = @wgpu.buffer_usage_storage |
-    @wgpu.buffer_usage_copy_src |
-    @wgpu.buffer_usage_copy_dst
-  let readback_usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let storage_usage = @wgpu.BUFFER_USAGE_STORAGE |
+    @wgpu.BUFFER_USAGE_COPY_SRC |
+    @wgpu.BUFFER_USAGE_COPY_DST
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
   let storage_buf = device.create_buffer(size=4UL, usage=storage_usage)
   let readback_buf = device.create_buffer(size=4UL, usage=readback_usage)
   queue.write_buffer(storage_buf, 0UL, write_u32_to_le_bytes(1U))

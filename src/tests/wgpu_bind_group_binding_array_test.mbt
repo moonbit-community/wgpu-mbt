@@ -17,7 +17,7 @@ test "wgpu bind group builder (binding arrays via extras)" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let has_arrays = adapter.supported_features_contains_u32(
-    @wgpu.native_feature_texture_binding_array,
+    @wgpu.NATIVE_FEATURE_TEXTURE_BINDING_ARRAY,
   )
   if !has_arrays {
     adapter.release()
@@ -25,36 +25,46 @@ test "wgpu bind group builder (binding arrays via extras)" {
     return
   }
   let device = adapter.request_device_sync_texture_binding_array(instance)
-  device.push_error_scope(@wgpu.error_filter_validation)
+  device.push_error_scope(@wgpu.ERROR_FILTER_VALIDATION)
   let tex0 = device.create_texture_u32(
-    16U, 8U, 1U, @wgpu.texture_usage_texture_binding, @wgpu.texture_dimension_2d,
-    @wgpu.texture_format_rgba8_unorm,
+    16U,
+    8U,
+    1U,
+    @wgpu.TEXTURE_USAGE_TEXTURE_BINDING,
+    @wgpu.TEXTURE_DIMENSION_2D,
+    @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
   )
   let tex1 = device.create_texture_u32(
-    4U, 2U, 1U, @wgpu.texture_usage_texture_binding, @wgpu.texture_dimension_2d,
-    @wgpu.texture_format_rgba8_unorm,
+    4U,
+    2U,
+    1U,
+    @wgpu.TEXTURE_USAGE_TEXTURE_BINDING,
+    @wgpu.TEXTURE_DIMENSION_2D,
+    @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
   )
   let view0 = tex0.create_view()
   let view1 = tex1.create_view()
   let sampler = device.create_sampler_linear_clamp()
-  let storage_usage = @wgpu.buffer_usage_storage
+  let storage_usage = @wgpu.BUFFER_USAGE_STORAGE
   let storage = device.create_buffer(size=16UL, usage=storage_usage)
   let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=3UL)
   let bgl_ok0 = bglb.add_texture(
     0U,
-    @wgpu.shader_stage_compute,
-    @wgpu.texture_sample_type_float,
-    @wgpu.texture_view_dimension_2d,
+    @wgpu.SHADER_STAGE_COMPUTE,
+    @wgpu.TEXTURE_SAMPLE_TYPE_FLOAT,
+    @wgpu.TEXTURE_VIEW_DIMENSION_2D,
     count=2U,
   )
   let bgl_ok1 = bglb.add_sampler(
     1U,
-    @wgpu.shader_stage_compute,
-    @wgpu.sampler_binding_type_filtering,
+    @wgpu.SHADER_STAGE_COMPUTE,
+    @wgpu.SAMPLER_BINDING_TYPE_FILTERING,
     count=2U,
   )
   let bgl_ok2 = bglb.add_buffer(
-    2U, @wgpu.shader_stage_compute, @wgpu.buffer_binding_type_storage,
+    2U,
+    @wgpu.SHADER_STAGE_COMPUTE,
+    @wgpu.BUFFER_BINDING_TYPE_STORAGE,
   )
   inspect([bgl_ok0, bgl_ok1, bgl_ok2], content="[true, true, true]")
   let bgl = bglb.finish(device)
@@ -65,7 +75,7 @@ test "wgpu bind group builder (binding arrays via extras)" {
   inspect([bg_ok0, bg_ok1, bg_ok2], content="[true, true, true]")
   let bg = bgb.finish(device, bgl)
   let err = device.pop_error_scope_sync(instance)
-  if err != @wgpu.error_type_no_error {
+  if err != @wgpu.ERROR_TYPE_NO_ERROR {
     bg.release()
     bgl.release()
     storage.release()

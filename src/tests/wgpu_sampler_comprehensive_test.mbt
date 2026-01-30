@@ -54,7 +54,7 @@ test "wgpu sampler: linear vs nearest produces different mid-sample" {
   let out_linear_view = out_linear.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let bgl = device.create_bind_group_layout_sampler_texture_2d()
   let pl = device.create_pipeline_layout_1(bgl)
@@ -162,7 +162,7 @@ test "wgpu sampler: clamp-to-edge clamps out-of-range UVs" {
   let out_view = out_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let bgl = device.create_bind_group_layout_sampler_texture_2d()
   let pl = device.create_pipeline_layout_1(bgl)
@@ -242,7 +242,7 @@ test "wgpu sampler: linear clamp-to-edge clamps out-of-range UVs" {
   let out_view = out_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let bgl = device.create_bind_group_layout_sampler_texture_2d()
   let pl = device.create_pipeline_layout_1(bgl)

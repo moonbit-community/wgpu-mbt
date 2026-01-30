@@ -237,16 +237,18 @@ def c_constant_to_mbt_name(c_name: str) -> str:
     #   WGPUBufferUsage_CopySrc -> buffer_usage_copy_src
     #   WGPUWaitStatus_Success  -> wait_status_success
     #   WGPU_WHOLE_SIZE         -> whole_size
+    # MoonBit `const` requires an upper-case identifier, so we generate constants
+    # in SCREAMING_SNAKE_CASE.
     if c_name.startswith("WGPU_"):
         rest = c_name[len("WGPU_") :]
-        return rest.lower()
+        return rest.upper()
     if not c_name.startswith("WGPU"):
-        return camel_to_snake(c_name)
+        return camel_to_snake(c_name).upper()
     rest = c_name[len("WGPU") :]
     if "_" in rest:
         head, tail = rest.split("_", 1)
-        return f"{camel_to_snake(head)}_{camel_to_snake(tail)}"
-    return camel_to_snake(rest)
+        return f"{camel_to_snake(head)}_{camel_to_snake(tail)}".upper()
+    return camel_to_snake(rest).upper()
 
 
 def mbt_int_literal(value: int, mbt_ty: str) -> str:
@@ -375,7 +377,7 @@ def write_webgpu_consts() -> None:
         mbt_name = c_constant_to_mbt_name(c_name)
         lit = mbt_int_literal(val, mbt_ty)
         out_lines.append("///|")
-        out_lines.append(f"pub let {mbt_name} : {mbt_ty} = {lit}")
+        out_lines.append(f"pub const {mbt_name} : {mbt_ty} = {lit}")
         out_lines.append("")
 
     OUT_CONSTS.write_text("\n".join(out_lines).rstrip() + "\n", "utf-8")
@@ -436,15 +438,37 @@ def parse_any_functions(h_text: str) -> list[Func]:
     Parse non-WGPU_EXPORT function prototypes (e.g. wgpu-native extras in wgpu.h).
     """
     out: list[Func] = []
+    # wgpu-native extras often span multiple lines in our checked-in shim header,
+    # so we collect prototypes until the terminating ';'.
+    cur: list[str] | None = None
     for line in h_text.splitlines():
-        s = norm_ws(line)
-        if not s.endswith(";"):
+        s = line.strip()
+        if cur is None:
+            if "wgpu" not in s:
+                continue
+            if s.startswith("typedef "):
+                continue
+            if "(" not in s:
+                continue
+            # Start collecting a candidate prototype.
+            cur = [s]
+            if ";" in s:
+                proto = norm_ws(" ".join(cur))
+                cur = None
+            else:
+                continue
+        else:
+            cur.append(s)
+            if ";" not in s:
+                continue
+            proto = norm_ws(" ".join(cur))
+            cur = None
+
+        if proto.startswith("typedef "):
             continue
-        if "wgpu" not in s:
+        if "wgpu" not in proto:
             continue
-        if s.startswith("typedef "):
-            continue
-        mm = re.match(r"(.+?)\s+(wgpu\w+)\s*\((.*?)\)\s*;", s)
+        mm = re.match(r"(.+?)\s+(wgpu\w+)\s*\((.*?)\)\s*;", proto)
         if not mm:
             continue
         ret_c, name, params_c = mm.group(1), mm.group(2), mm.group(3)

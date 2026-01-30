@@ -20,10 +20,10 @@ test "wgpu device.poll + queue extras" {
   let queue = device.queue()
   let period = queue.timestamp_period()
   inspect(period > 0.0, content="true")
-  let storage_usage = @wgpu.buffer_usage_storage |
-    @wgpu.buffer_usage_copy_src |
-    @wgpu.buffer_usage_copy_dst
-  let readback_usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let storage_usage = @wgpu.BUFFER_USAGE_STORAGE |
+    @wgpu.BUFFER_USAGE_COPY_SRC |
+    @wgpu.BUFFER_USAGE_COPY_DST
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
   let storage = device.create_buffer(size=4UL, usage=storage_usage)
   let readback = device.create_buffer(size=256UL, usage=readback_usage)
   let wgsl : String =

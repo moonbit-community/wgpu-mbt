@@ -19,22 +19,22 @@ test "wgpu surface present (CAMetalLayer)" {
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
   let surface = instance.create_surface_metal_layer()
-  let usage = @wgpu.texture_usage_render_attachment |
-    @wgpu.texture_usage_copy_src
+  let usage = @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
+    @wgpu.TEXTURE_USAGE_COPY_SRC
   let format = surface.configure_default(adapter, device, 1U, 1U, usage)
   inspect(format == 0U, content="false")
   let st = surface.get_current_texture()
   let status = st.status()
   inspect(
-    status == @wgpu.surface_get_current_texture_status_success_optimal ||
-    status == @wgpu.surface_get_current_texture_status_success_suboptimal,
+    status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
+    status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL,
     content="true",
   )
   inspect(st.is_success(), content="true")
   let tex = st.take_texture()
   st.release()
   let view = tex.create_view()
-  let readback_usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
   let readback_buf = device.create_buffer(size=256UL, usage=readback_usage)
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };

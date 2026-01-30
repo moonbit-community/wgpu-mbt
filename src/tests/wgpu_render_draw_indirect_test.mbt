@@ -20,9 +20,9 @@ test "wgpu render: draw_indirect" {
   let queue = device.queue()
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
-  let readback_usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
   let readback = device.create_buffer(size=256UL, usage=readback_usage)
-  let indirect_usage = @wgpu.buffer_usage_indirect | @wgpu.buffer_usage_copy_dst
+  let indirect_usage = @wgpu.BUFFER_USAGE_INDIRECT | @wgpu.BUFFER_USAGE_COPY_DST
   let indirect = device.create_buffer(size=16UL, usage=indirect_usage)
   let args = u32le_pack([3U, 1U, 0U, 0U])
   queue.write_buffer(indirect, 0UL, args)

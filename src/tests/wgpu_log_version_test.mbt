@@ -16,7 +16,7 @@
 test "wgpu: get_version + set_log_level" {
   let v = @wgpu.get_version()
   inspect(v, content="0")
-  @wgpu.set_log_level(@wgpu.log_level_error)
-  @wgpu.set_log_level(@wgpu.log_level_off)
+  @wgpu.set_log_level(@wgpu.LOG_LEVEL_ERROR)
+  @wgpu.set_log_level(@wgpu.LOG_LEVEL_OFF)
   inspect("ok", content="ok")
 }

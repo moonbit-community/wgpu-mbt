@@ -7,6 +7,7 @@ This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused o
 - Target: **native** (see `moon.mod.json` `"preferred-target": "native"`)
 - Platform: **macOS + Metal** only
 - Native dependency: **runtime** dynamic library `libwgpu_native` loaded via `dlopen` (see `MBT_WGPU_NATIVE_LIB` below)
+- Constants: exported as `pub const` in `SCREAMING_SNAKE_CASE` (e.g. `BUFFER_USAGE_COPY_DST`)
 - Tests: all tests live under `src/tests/` and are listed in `src/tests/moon.pkg.json` `targets`
 
 Known limitation:
@@ -65,7 +66,7 @@ fn main {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let buf = device.create_buffer(size=4UL, usage=@wgpu.buffer_usage_copy_dst)
+  let buf = device.create_buffer(size=4UL, usage=@wgpu.BUFFER_USAGE_COPY_DST)
   ignore(buf.size())
   let wgsl : String =
     #|@compute @workgroup_size(1)

@@ -18,8 +18,8 @@ test "wgpu copy ptr helpers: buffer<->texture" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let upload_usage = @wgpu.buffer_usage_copy_src | @wgpu.buffer_usage_copy_dst
-  let readback_usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let upload_usage = @wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
   let upload_buf = device.create_buffer(size=256UL, usage=upload_usage)
   let readback_buf = device.create_buffer(size=256UL, usage=readback_usage)
   queue.write_buffer(upload_buf, 0UL, rgba_bytes(255U, 0U, 0U, 255U))

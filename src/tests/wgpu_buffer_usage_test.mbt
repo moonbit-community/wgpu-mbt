@@ -19,7 +19,7 @@ test "wgpu Buffer getter: usage" {
   let device = adapter.request_device_sync(instance)
   let buf = device.create_buffer(
     size=4UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   inspect(buf.usage_u64(), content="9")
   buf.release()

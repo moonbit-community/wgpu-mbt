@@ -29,13 +29,13 @@ test "wgpu pipeline statistics query (feature-gated)" {
   let qs = device.create_query_set_pipeline_statistics(1U, 4U)
   let resolve = device.create_buffer(
     size=8UL,
-    usage=@wgpu.buffer_usage_copy_src |
-      @wgpu.buffer_usage_copy_dst |
-      @wgpu.buffer_usage_query_resolve,
+    usage=@wgpu.BUFFER_USAGE_COPY_SRC |
+      @wgpu.BUFFER_USAGE_COPY_DST |
+      @wgpu.BUFFER_USAGE_QUERY_RESOLVE,
   )
   let readback = device.create_buffer(
     size=8UL,
-    usage=@wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let wgsl : String =
     #|@compute @workgroup_size(1)

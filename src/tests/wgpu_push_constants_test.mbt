@@ -26,7 +26,7 @@ test "wgpu push constants (feature-gated)" {
   let queue = device.queue()
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
-  let readback_usage = @wgpu.buffer_usage_map_read | @wgpu.buffer_usage_copy_dst
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
   let readback = device.create_buffer(size=256UL, usage=readback_usage)
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -50,14 +50,16 @@ test "wgpu push constants (feature-gated)" {
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
   let layout = device.create_pipeline_layout_push_constants(
-    @wgpu.shader_stage_fragment, 0U, 4U,
+    @wgpu.SHADER_STAGE_FRAGMENT,
+    0U,
+    4U,
   )
   let pipeline = device.create_render_pipeline_rgba8_with_layout(layout, sm)
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color_clear(view, 0.0, 0.0, 0.0, 1.0)
   pass.set_pipeline(pipeline)
   pass.set_push_constants(
-    @wgpu.shader_stage_fragment,
+    @wgpu.SHADER_STAGE_FRAGMENT,
     0U,
     rgba_bytes(1U, 2U, 3U, 4U),
   )

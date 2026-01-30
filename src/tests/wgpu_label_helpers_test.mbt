@@ -23,7 +23,7 @@ test "wgpu label helpers smoke" {
   @wgpu.set_debug_labels_enabled(false)
   device.set_label("device")
   queue.set_label("queue")
-  let buf = device.create_buffer(size=4UL, usage=@wgpu.buffer_usage_copy_dst)
+  let buf = device.create_buffer(size=4UL, usage=@wgpu.BUFFER_USAGE_COPY_DST)
   buf.set_label("buffer")
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   tex.set_label("texture")
@@ -43,7 +43,7 @@ test "wgpu label helpers smoke" {
   bgl.set_label("bgl")
   let ubo = device.create_buffer(
     size=16UL,
-    usage=@wgpu.buffer_usage_uniform | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let bg = device.create_bind_group_uniform_buffer_16(bgl, ubo)
   bg.set_label("bg")

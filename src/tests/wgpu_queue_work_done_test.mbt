@@ -24,7 +24,7 @@ test "wgpu queue.on_submitted_work_done_sync" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let status = queue.on_submitted_work_done_sync(instance)
-  inspect(status == @wgpu.queue_work_done_status_success, content="true")
+  inspect(status == @wgpu.QUEUE_WORK_DONE_STATUS_SUCCESS, content="true")
   cmd.release()
   encoder.release()
   queue.release()

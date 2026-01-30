@@ -23,8 +23,8 @@ test "wgpu Surface/Texture/BindGroup API extensions" {
   surface0.release()
   let usages = surface1.capabilities_usages_u64(adapter)
   inspect(usages != 0UL, content="true")
-  let surface_usage = @wgpu.texture_usage_render_attachment |
-    @wgpu.texture_usage_copy_src
+  let surface_usage = @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
+    @wgpu.TEXTURE_USAGE_COPY_SRC
   let format = surface1.configure_default(
     adapter, device, 1U, 1U, surface_usage,
   )
@@ -51,7 +51,7 @@ test "wgpu Surface/Texture/BindGroup API extensions" {
   bgl1.release()
   let buf = device.create_buffer(
     size=16UL,
-    usage=@wgpu.buffer_usage_uniform | @wgpu.buffer_usage_copy_dst,
+    usage=@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST,
   )
   let layout = device.create_bind_group_layout_uniform_buffer()
   let bg0 = device.create_bind_group_uniform_buffer(layout, buf)

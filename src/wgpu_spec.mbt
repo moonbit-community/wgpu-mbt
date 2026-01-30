@@ -1806,7 +1806,7 @@ declare pub fn Device::create_sampler_u32(
   mipmap_filter_u32 : UInt,
   lod_min_clamp_f32? : Float = 0.0,
   lod_max_clamp_f32? : Float = 32.0,
-  compare_u32? : UInt = compare_function_undefined,
+  compare_u32? : UInt = COMPARE_FUNCTION_UNDEFINED,
   max_anisotropy_u32? : UInt = 1U,
 ) -> Sampler
 
@@ -2051,7 +2051,7 @@ declare pub fn BindGroupBuilder::add_buffer(
   binding : UInt,
   buffer : Buffer,
   offset? : UInt64 = 0UL,
-  size? : UInt64 = whole_size,
+  size? : UInt64 = WHOLE_SIZE,
 ) -> Bool
 
 ///|
@@ -2061,7 +2061,7 @@ declare pub fn BindGroupBuilder::add_buffer_array(
   binding : UInt,
   buffers : Array[Buffer],
   offset? : UInt64 = 0UL,
-  size? : UInt64 = whole_size,
+  size? : UInt64 = WHOLE_SIZE,
 ) -> Bool
 
 ///|

@@ -18,7 +18,7 @@ fn main {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let buf = device.create_buffer(size=4UL, usage=@wgpu.buffer_usage_copy_dst)
+  let buf = device.create_buffer(size=4UL, usage=@wgpu.BUFFER_USAGE_COPY_DST)
   ignore(buf.size())
   let wgsl : String =
     #|@compute @workgroup_size(1)
