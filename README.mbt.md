@@ -1,6 +1,6 @@
 # Milky2018/wgpu_mbt
 
-This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused on **native-only** with macOS/Metal as the primary target and Linux/Vulkan as an experimental target.
+This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused on **native-only** with macOS/Metal as the primary target and Linux/Vulkan + Windows (experimental) as additional targets.
 
 ## Status / Scope
 
@@ -8,6 +8,7 @@ This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused o
 - Platform:
   - macOS + Metal (primary)
   - Linux + Vulkan (experimental, core API works; window surfaces depend on host integration)
+  - Windows (experimental, Vulkan/DX12 via wgpu-native; window surfaces via HWND)
 - Native dependency: **runtime** dynamic library `libwgpu_native` loaded via `dlopen` (see `MBT_WGPU_NATIVE_LIB` below)
 - Constants: exported as `pub const` in `SCREAMING_SNAKE_CASE` (e.g. `BUFFER_USAGE_COPY_DST`)
 - Tests: all tests live under `src/tests/` and are listed in `src/tests/moon.pkg.json` `targets`
@@ -52,6 +53,16 @@ Useful introspection helpers:
 - Run any headless example/test that does not require a window surface (recommended to start).
   - Note: current `src/tests/` includes several macOS Metal surface tests.
 
+## Quickstart (Windows) (experimental)
+
+- Build `wgpu-native` and point `MBT_WGPU_NATIVE_LIB` at the resulting `.dll`:
+  - `git clone https://github.com/gfx-rs/wgpu-native`
+  - `cd wgpu-native`
+  - `cargo build --release --no-default-features --features dx12,wgsl`
+  - `set MBT_WGPU_NATIVE_LIB=%CD%\\target\\release\\wgpu_native.dll`
+- Window surfaces:
+  - use `Instance::create_surface_windows_hwnd(hinstance, hwnd)` from the host application
+
 ## Native runtime dependency (required)
 
 This module does **not** bundle wgpu-native artifacts. Users are responsible for:
@@ -70,7 +81,7 @@ This repo is usable as a regular MoonBit library (the CLI under `cmd/` / `src/cm
 - Import the library package in your package `moon.pkg.json`:
   - `{ "path": "Milky2018/wgpu_mbt", "alias": "wgpu" }`
 - Provide the native runtime library yourself (this module does **not** bundle it):
-  - set `MBT_WGPU_NATIVE_LIB` to a path to `libwgpu_native.dylib` before running anything that touches WebGPU
+  - set `MBT_WGPU_NATIVE_LIB` to a path to `libwgpu_native.(dylib|so|dll)` before running anything that touches WebGPU
   - this module does not search for the dylib via CWD; the env var is the single source of truth
 
 Minimal example (same as `src/cmd/main/main.mbt`):

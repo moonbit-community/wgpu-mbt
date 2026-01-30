@@ -164,14 +164,23 @@ def main() -> None:
 
 #include "wgpu_native_shim.h"
 
+#if defined(_WIN32)
+#include <windows.h>
+#else
 #include <dlfcn.h>
 #include <pthread.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(_WIN32)
+static HMODULE g_mbt_wgpu_lib = NULL;
+static INIT_ONCE g_mbt_wgpu_once = INIT_ONCE_STATIC_INIT;
+#else
 static void *g_mbt_wgpu_lib = NULL;
 static pthread_once_t g_mbt_wgpu_once = PTHREAD_ONCE_INIT;
+#endif
 
 static const char *mbt_wgpu_lib_filename(void) {{
 #if defined(__APPLE__)
@@ -184,11 +193,16 @@ static const char *mbt_wgpu_lib_filename(void) {{
 }}
 
 static void mbt_wgpu_die(const char *what) {{
+  fprintf(stderr, "wgpu-mbt: %s", what);
+#if defined(_WIN32)
+  fprintf(stderr, " (GetLastError=%lu)\\n", (unsigned long)GetLastError());
+#else
+  fprintf(stderr, "\\n");
   const char *err = dlerror();
-  fprintf(stderr, "wgpu-mbt: %s\\n", what);
   if (err && err[0]) {{
     fprintf(stderr, "wgpu-mbt: dlerror: %s\\n", err);
   }}
+#endif
   abort();
 }}
 
@@ -205,23 +219,54 @@ static void mbt_wgpu_init(void) {{
     mbt_wgpu_die(msg);
   }}
 
+  // Platform-specific dynamic loader.
+#if defined(_WIN32)
+  g_mbt_wgpu_lib = LoadLibraryA(override);
+  if (!g_mbt_wgpu_lib) {{
+    mbt_wgpu_die("failed to LoadLibraryA MBT_WGPU_NATIVE_LIB");
+  }}
+#else
   g_mbt_wgpu_lib = dlopen(override, RTLD_LAZY | RTLD_LOCAL);
   if (!g_mbt_wgpu_lib) {{
     mbt_wgpu_die("failed to dlopen MBT_WGPU_NATIVE_LIB");
   }}
+#endif
 }}
 
+#if defined(_WIN32)
+static BOOL CALLBACK mbt_wgpu_init_once(PINIT_ONCE once, PVOID param, PVOID *ctx) {{
+  (void)once;
+  (void)param;
+  (void)ctx;
+  mbt_wgpu_init();
+  return TRUE;
+}}
+#endif
+
 static void *mbt_wgpu_sym(const char *name) {{
+#if defined(_WIN32)
+  InitOnceExecuteOnce(&g_mbt_wgpu_once, mbt_wgpu_init_once, NULL, NULL);
+#else
   pthread_once(&g_mbt_wgpu_once, mbt_wgpu_init);
+#endif
   if (!g_mbt_wgpu_lib) {{
     mbt_wgpu_die("wgpu native library handle is NULL");
   }}
+#if defined(_WIN32)
+  SetLastError(0);
+  FARPROC sym = GetProcAddress(g_mbt_wgpu_lib, name);
+  if (!sym) {{
+    mbt_wgpu_die("failed to GetProcAddress required wgpu symbol");
+  }}
+  return (void *)sym;
+#else
   dlerror();  // clear
   void *sym = dlsym(g_mbt_wgpu_lib, name);
   if (!sym) {{
     mbt_wgpu_die("failed to dlsym required wgpu symbol");
   }}
   return sym;
+#endif
 }}
 
 """

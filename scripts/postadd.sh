@@ -21,5 +21,11 @@ Linux example (Vulkan):
   cargo build --release --no-default-features --features vulkan,wgsl
   export MBT_WGPU_NATIVE_LIB="$PWD/target/release/libwgpu_native.so"
 
+Windows example (DX12):
+  git clone https://github.com/gfx-rs/wgpu-native
+  cd wgpu-native
+  cargo build --release --no-default-features --features dx12,wgsl
+  set MBT_WGPU_NATIVE_LIB=%CD%\\target\\release\\wgpu_native.dll
+
 Tip: if you want to disable postadd scripts, set MOON_IGNORE_POSTADD=1.
 EOF

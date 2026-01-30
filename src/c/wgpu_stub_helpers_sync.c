@@ -14,8 +14,31 @@
 
 #include "wgpu_stub.h"
 
+#if defined(_WIN32)
+#include <windows.h>
+static CRITICAL_SECTION g_device_lost_mu;
+static INIT_ONCE g_device_lost_mu_once = INIT_ONCE_STATIC_INIT;
+static BOOL CALLBACK mbt_wgpu_init_device_lost_mu(PINIT_ONCE once, PVOID param, PVOID *ctx) {
+  (void)once;
+  (void)param;
+  (void)ctx;
+  InitializeCriticalSection(&g_device_lost_mu);
+  return TRUE;
+}
+static void mbt_wgpu_device_lost_mu_lock(void) {
+  InitOnceExecuteOnce(&g_device_lost_mu_once, mbt_wgpu_init_device_lost_mu, NULL, NULL);
+  EnterCriticalSection(&g_device_lost_mu);
+}
+static void mbt_wgpu_device_lost_mu_unlock(void) { LeaveCriticalSection(&g_device_lost_mu); }
+static void mbt_wgpu_sleep_1ms(void) { Sleep(1); }
+#else
 #include <pthread.h>
 #include <unistd.h>
+static pthread_mutex_t g_device_lost_mu = PTHREAD_MUTEX_INITIALIZER;
+static void mbt_wgpu_device_lost_mu_lock(void) { pthread_mutex_lock(&g_device_lost_mu); }
+static void mbt_wgpu_device_lost_mu_unlock(void) { pthread_mutex_unlock(&g_device_lost_mu); }
+static void mbt_wgpu_sleep_1ms(void) { usleep(1000); }
+#endif
 
 void mbt_wgpu_render_pass_set_blend_constant_rgba(WGPURenderPassEncoder pass,
                                                   double r, double g, double b,
@@ -241,15 +264,15 @@ typedef struct {
 // changes to carry userdata pointers.
 static mbt_device_lost_entry_t g_device_lost[16];
 static size_t g_device_lost_len = 0;
-static pthread_mutex_t g_device_lost_mu = PTHREAD_MUTEX_INITIALIZER;
+// g_device_lost_mu is defined in the platform-specific section above.
 
 static void mbt_device_lost_upsert(WGPUDevice device, uint32_t reason) {
-  pthread_mutex_lock(&g_device_lost_mu);
+  mbt_wgpu_device_lost_mu_lock();
   // Upsert by handle (linear scan is fine for small counts).
   for (size_t i = 0; i < g_device_lost_len; i++) {
     if (g_device_lost[i].device == device) {
       g_device_lost[i].reason = reason;
-      pthread_mutex_unlock(&g_device_lost_mu);
+      mbt_wgpu_device_lost_mu_unlock();
       return;
     }
   }
@@ -257,7 +280,7 @@ static void mbt_device_lost_upsert(WGPUDevice device, uint32_t reason) {
     g_device_lost[g_device_lost_len++] =
         (mbt_device_lost_entry_t){.device = device, .reason = reason};
   }
-  pthread_mutex_unlock(&g_device_lost_mu);
+  mbt_wgpu_device_lost_mu_unlock();
 }
 
 static void mbt_device_lost_cb(WGPUDevice const *device, WGPUDeviceLostReason reason,
@@ -278,18 +301,18 @@ static void mbt_device_lost_cb(WGPUDevice const *device, WGPUDeviceLostReason re
 // Returns the recorded device-lost reason for `device`, and clears the entry.
 // 0 means "no device-lost event observed (yet)".
 uint32_t mbt_wgpu_device_take_lost_reason_u32(WGPUDevice device) {
-  pthread_mutex_lock(&g_device_lost_mu);
+  mbt_wgpu_device_lost_mu_lock();
   for (size_t i = 0; i < g_device_lost_len; i++) {
     if (g_device_lost[i].device == device) {
       uint32_t reason = g_device_lost[i].reason;
       // Remove by swapping with the last element.
       g_device_lost[i] = g_device_lost[g_device_lost_len - 1];
       g_device_lost_len--;
-      pthread_mutex_unlock(&g_device_lost_mu);
+      mbt_wgpu_device_lost_mu_unlock();
       return reason;
     }
   }
-  pthread_mutex_unlock(&g_device_lost_mu);
+  mbt_wgpu_device_lost_mu_unlock();
   return 0u;
 }
 
@@ -304,7 +327,7 @@ uint32_t mbt_wgpu_device_wait_lost_reason_sync_u32(WGPUInstance instance,
     }
     (void)wgpuDevicePoll(device, false, NULL);
     wgpuInstanceProcessEvents(instance);
-    usleep(1000);
+    mbt_wgpu_sleep_1ms();
   }
   return 0u;
 }

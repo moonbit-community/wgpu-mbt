@@ -273,6 +273,14 @@ pub extern "C" fn instance_create_surface_wayland(
 ) -> WGPUSurface = "mbt_wgpu_instance_create_surface_wayland"
 
 ///|
+/// Windows HWND surface helper (`HINSTANCE`, `HWND`).
+pub extern "C" fn instance_create_surface_windows_hwnd(
+  instance : Instance,
+  hinstance : OpaquePtr,
+  hwnd : OpaquePtr,
+) -> WGPUSurface = "mbt_wgpu_instance_create_surface_windows_hwnd"
+
+///|
 pub extern "C" fn surface_configure_default(
   surface : WGPUSurface,
   adapter : Adapter,

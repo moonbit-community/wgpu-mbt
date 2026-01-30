@@ -448,6 +448,8 @@ pub fn instance_create_surface_metal_layer(WGPUInstance, OpaquePtr) -> WGPUSurfa
 
 pub fn instance_create_surface_wayland(WGPUInstance, OpaquePtr, OpaquePtr) -> WGPUSurface
 
+pub fn instance_create_surface_windows_hwnd(WGPUInstance, OpaquePtr, OpaquePtr) -> WGPUSurface
+
 pub fn instance_enumerate_adapters_count_metal(WGPUInstance) -> UInt64
 
 pub fn instance_enumerate_adapters_count_vulkan(WGPUInstance) -> UInt64

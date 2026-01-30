@@ -1613,6 +1613,22 @@ pub fn Instance::create_surface_wayland(
 }
 
 ///|
+/// Create a surface from Windows handles (`HINSTANCE`, `HWND`).
+///
+/// The pointers are passed through as opaque handles (you manage their lifetime
+/// on the host side).
+pub fn Instance::create_surface_windows_hwnd(
+  self : Instance,
+  hinstance : @c.OpaquePtr,
+  hwnd : @c.OpaquePtr,
+) -> Surface {
+  Surface::{
+    raw: @c.instance_create_surface_windows_hwnd(self.raw, hinstance, hwnd),
+    layer: @c.null_opaque_ptr(),
+  }
+}
+
+///|
 pub fn Surface::add_ref(self : Surface) -> Surface {
   @c.surface_add_ref(self.raw)
   @c.cametallayer_retain(self.layer)

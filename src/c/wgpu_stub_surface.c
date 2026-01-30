@@ -14,11 +14,13 @@
 
 #include "wgpu_stub.h"
 
-#include <dlfcn.h>
-
 // -----------------------------------------------------------------------------
 // macOS/Metal Surface helpers (CAMetalLayer + WGPUSurface)
 // -----------------------------------------------------------------------------
+
+#if defined(__APPLE__)
+
+#include <dlfcn.h>
 
 typedef void *mbt_objc_id;
 typedef void *mbt_objc_sel;
@@ -131,6 +133,20 @@ WGPUSurface mbt_wgpu_instance_create_surface_metal_layer(WGPUInstance instance,
   return wgpuInstanceCreateSurface(instance, &desc);
 }
 
+#else
+
+void *mbt_wgpu_cametallayer_new(void) { return NULL; }
+void mbt_wgpu_cametallayer_release(void *layer) { (void)layer; }
+void mbt_wgpu_cametallayer_retain(void *layer) { (void)layer; }
+WGPUSurface mbt_wgpu_instance_create_surface_metal_layer(WGPUInstance instance,
+                                                         void *layer) {
+  (void)instance;
+  (void)layer;
+  return NULL;
+}
+
+#endif
+
 // -----------------------------------------------------------------------------
 // Cross-platform Surface helpers (Wayland/XCB/Xlib)
 //
@@ -162,6 +178,50 @@ WGPUSurface mbt_wgpu_instance_create_surface_wayland(WGPUInstance instance,
 
   return wgpuInstanceCreateSurface(instance, &desc);
 }
+
+// -----------------------------------------------------------------------------
+// Windows surface helper (HWND)
+// -----------------------------------------------------------------------------
+
+#if defined(_WIN32)
+
+WGPUSurface mbt_wgpu_instance_create_surface_windows_hwnd(WGPUInstance instance,
+                                                         void *hinstance,
+                                                         void *hwnd) {
+  if (!instance || !hinstance || !hwnd) {
+    return NULL;
+  }
+
+  WGPUSurfaceSourceWindowsHWND source = {
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceWindowsHWND,
+          },
+      .hinstance = hinstance,
+      .hwnd = hwnd,
+  };
+
+  WGPUSurfaceDescriptor desc = {
+      .nextInChain = &source.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+
+  return wgpuInstanceCreateSurface(instance, &desc);
+}
+
+#else
+
+WGPUSurface mbt_wgpu_instance_create_surface_windows_hwnd(WGPUInstance instance,
+                                                         void *hinstance,
+                                                         void *hwnd) {
+  (void)instance;
+  (void)hinstance;
+  (void)hwnd;
+  return NULL;
+}
+
+#endif
 
 uint32_t mbt_wgpu_surface_configure_default(WGPUSurface surface, WGPUAdapter adapter,
                                             WGPUDevice device, uint32_t width,

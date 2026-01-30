@@ -14,7 +14,28 @@
 
 #include "wgpu_stub.h"
 
+#if defined(_WIN32)
+#include <windows.h>
+static CRITICAL_SECTION g_wait_any_mu;
+static INIT_ONCE g_wait_any_mu_once = INIT_ONCE_STATIC_INIT;
+static BOOL CALLBACK mbt_wgpu_init_wait_any_mu(PINIT_ONCE once, PVOID param, PVOID *ctx) {
+  (void)once;
+  (void)param;
+  (void)ctx;
+  InitializeCriticalSection(&g_wait_any_mu);
+  return TRUE;
+}
+static void mbt_wgpu_wait_any_mu_lock(void) {
+  InitOnceExecuteOnce(&g_wait_any_mu_once, mbt_wgpu_init_wait_any_mu, NULL, NULL);
+  EnterCriticalSection(&g_wait_any_mu);
+}
+static void mbt_wgpu_wait_any_mu_unlock(void) { LeaveCriticalSection(&g_wait_any_mu); }
+#else
 #include <pthread.h>
+static pthread_mutex_t g_wait_any_mu = PTHREAD_MUTEX_INITIALIZER;
+static void mbt_wgpu_wait_any_mu_lock(void) { pthread_mutex_lock(&g_wait_any_mu); }
+static void mbt_wgpu_wait_any_mu_unlock(void) { pthread_mutex_unlock(&g_wait_any_mu); }
+#endif
 
 // ---------------------------------------------------------------------------
 // Debug labels / markers (best-effort)
@@ -72,33 +93,33 @@ typedef struct {
 static mbt_wait_any_entry_t g_wait_any_entries[64];
 static size_t g_wait_any_entries_len = 0;
 static uint64_t g_wait_any_next_id = 1u;
-static pthread_mutex_t g_wait_any_mu = PTHREAD_MUTEX_INITIALIZER;
+// g_wait_any_mu is defined in the platform-specific section above.
 
 static uint64_t mbt_wait_any_new_id(void) {
-  pthread_mutex_lock(&g_wait_any_mu);
+  mbt_wgpu_wait_any_mu_lock();
   uint64_t id = 0u;
   if (g_wait_any_entries_len < (sizeof(g_wait_any_entries) / sizeof(g_wait_any_entries[0]))) {
     id = g_wait_any_next_id++;
     g_wait_any_entries[g_wait_any_entries_len++] =
         (mbt_wait_any_entry_t){.id = id, .completed = false};
   }
-  pthread_mutex_unlock(&g_wait_any_mu);
+  mbt_wgpu_wait_any_mu_unlock();
   return id;
 }
 
 static void mbt_wait_any_mark_completed(uint64_t id) {
-  pthread_mutex_lock(&g_wait_any_mu);
+  mbt_wgpu_wait_any_mu_lock();
   for (size_t i = 0; i < g_wait_any_entries_len; i++) {
     if (g_wait_any_entries[i].id == id) {
       g_wait_any_entries[i].completed = true;
       break;
     }
   }
-  pthread_mutex_unlock(&g_wait_any_mu);
+  mbt_wgpu_wait_any_mu_unlock();
 }
 
 static bool mbt_wait_any_take_completed(uint64_t id, bool *completed_out) {
-  pthread_mutex_lock(&g_wait_any_mu);
+  mbt_wgpu_wait_any_mu_lock();
   for (size_t i = 0; i < g_wait_any_entries_len; i++) {
     if (g_wait_any_entries[i].id == id) {
       bool completed = g_wait_any_entries[i].completed;
@@ -106,12 +127,12 @@ static bool mbt_wait_any_take_completed(uint64_t id, bool *completed_out) {
         g_wait_any_entries[i] = g_wait_any_entries[g_wait_any_entries_len - 1];
         g_wait_any_entries_len--;
       }
-      pthread_mutex_unlock(&g_wait_any_mu);
+      mbt_wgpu_wait_any_mu_unlock();
       *completed_out = completed;
       return true;
     }
   }
-  pthread_mutex_unlock(&g_wait_any_mu);
+  mbt_wgpu_wait_any_mu_unlock();
   return false;
 }
 
