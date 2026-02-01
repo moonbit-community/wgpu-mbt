@@ -42,10 +42,32 @@ static const char *mbt_wgpu_lib_filename(void) {
 #endif
 }
 
+#if defined(_WIN32)
+static void mbt_wgpu_print_win32_error(DWORD err) {
+  if (err == 0) {
+    return;
+  }
+  LPSTR buf = NULL;
+  DWORD flags =
+      FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+  DWORD len = FormatMessageA(flags, NULL, err,
+                             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                             (LPSTR)&buf, 0, NULL);
+  if (!len || !buf) {
+    return;
+  }
+  // The buffer usually ends with a newline; print as-is to keep it readable.
+  fprintf(stderr, "wgpu-mbt: win32: %s", buf);
+  LocalFree(buf);
+}
+#endif
+
 static void mbt_wgpu_die(const char *what) {
   fprintf(stderr, "wgpu-mbt: %s", what);
 #if defined(_WIN32)
-  fprintf(stderr, " (GetLastError=%lu)\n", (unsigned long)GetLastError());
+  DWORD err = GetLastError();
+  fprintf(stderr, " (GetLastError=%lu)\n", (unsigned long)err);
+  mbt_wgpu_print_win32_error(err);
 #else
   fprintf(stderr, "\n");
   const char *err = dlerror();
@@ -73,7 +95,9 @@ static void mbt_wgpu_init(void) {
 #if defined(_WIN32)
   g_mbt_wgpu_lib = LoadLibraryA(override);
   if (!g_mbt_wgpu_lib) {
-    mbt_wgpu_die("failed to LoadLibraryA MBT_WGPU_NATIVE_LIB");
+    char msg[512];
+    (void)snprintf(msg, sizeof(msg), "failed to LoadLibraryA: %s", override);
+    mbt_wgpu_die(msg);
   }
 #else
   g_mbt_wgpu_lib = dlopen(override, RTLD_LAZY | RTLD_LOCAL);
