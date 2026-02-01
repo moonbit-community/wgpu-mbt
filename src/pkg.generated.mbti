@@ -1303,6 +1303,8 @@ pub fn CommandEncoder::copy_buffer_to_texture_ptr(Self, @c.WGPUTexelCopyBufferIn
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(Self, Buffer, Texture, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(Self, Buffer, Texture, UInt, UInt, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer(Self, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUTexelCopyBufferInfoPtr, @c.WGPUExtent3DPtr) -> Unit
+pub fn CommandEncoder::copy_texture_to_buffer_bytes_per_pixel(Self, Texture, Buffer, UInt, UInt, UInt) -> Unit
+pub fn CommandEncoder::copy_texture_to_buffer_bytes_per_pixel_mip_layer(Self, Texture, UInt, UInt, Buffer, UInt, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_ptr(Self, @c.WGPUTexelCopyTextureInfoPtr, @c.WGPUTexelCopyBufferInfoPtr, @c.WGPUExtent3DPtr) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8(Self, Texture, Buffer, UInt, UInt) -> Unit
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(Self, Texture, UInt, UInt, Buffer, UInt, UInt) -> Unit
@@ -1567,6 +1569,8 @@ pub fn Queue::submit_one_for_index(Self, CommandBuffer) -> UInt64
 pub fn Queue::submit_raw(Self, UInt64, @c.WGPUCommandBufferPtr) -> Unit
 pub fn Queue::timestamp_period(Self) -> Float
 pub fn Queue::write_buffer(Self, Buffer, UInt64, Bytes) -> Unit
+pub fn Queue::write_texture_2d_bytes_per_pixel(Self, Texture, UInt, UInt, UInt, Bytes) -> Unit
+pub fn Queue::write_texture_2d_bytes_per_pixel_mip_layer(Self, Texture, UInt, UInt, UInt, UInt, UInt, Bytes) -> Unit
 pub fn Queue::write_texture_ptr(Self, @c.WGPUTexelCopyTextureInfoPtr, Bytes, @c.WGPUTexelCopyBufferLayoutPtr, @c.WGPUExtent3DPtr, data_size? : UInt64) -> Unit
 pub fn Queue::write_texture_rgba8_2d(Self, Texture, UInt, UInt, Bytes) -> Unit
 pub fn Queue::write_texture_rgba8_2d_mip_layer(Self, Texture, UInt, UInt, UInt, UInt, Bytes) -> Unit

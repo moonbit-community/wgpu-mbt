@@ -2088,6 +2088,46 @@ pub fn command_encoder_copy_texture_to_buffer_rgba8_mip_layer(
 }
 
 ///|
+pub fn command_encoder_copy_texture_to_buffer_bytes_per_pixel(
+  encoder : CommandEncoder,
+  texture : Texture,
+  buffer : Buffer,
+  width : UInt,
+  height : UInt,
+  bytes_per_pixel : UInt,
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * bytes_per_pixel, 256U)
+  let src = texel_copy_texture_info_default_new(texture)
+  let dst = texel_copy_buffer_info_new(buffer, 0UL, bytes_per_row, height)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuCommandEncoderCopyTextureToBuffer(encoder, src, dst, extent)
+  extent3d_free(extent)
+  texel_copy_buffer_info_free(dst)
+  texel_copy_texture_info_free(src)
+}
+
+///|
+pub fn command_encoder_copy_texture_to_buffer_bytes_per_pixel_mip_layer(
+  encoder : CommandEncoder,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  buffer : Buffer,
+  width : UInt,
+  height : UInt,
+  bytes_per_pixel : UInt,
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * bytes_per_pixel, 256U)
+  let src = texel_copy_texture_info_new(texture, mip_level, 0U, 0U, array_layer)
+  let dst = texel_copy_buffer_info_new(buffer, 0UL, bytes_per_row, height)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuCommandEncoderCopyTextureToBuffer(encoder, src, dst, extent)
+  extent3d_free(extent)
+  texel_copy_buffer_info_free(dst)
+  texel_copy_texture_info_free(src)
+}
+
+///|
 pub fn command_encoder_copy_buffer_to_texture_rgba8(
   encoder : CommandEncoder,
   buffer : Buffer,
@@ -2265,6 +2305,48 @@ pub fn queue_write_texture_rgba8_2d_mip_layer(
   size : UInt64,
 ) -> Unit {
   let bytes_per_row = align_up_u32(width * 4U, 256U)
+  let dst = texel_copy_texture_info_new(texture, mip_level, 0U, 0U, array_layer)
+  let layout = texel_copy_buffer_layout_new(0UL, bytes_per_row, height)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuQueueWriteTexture_bytes(queue, dst, data, size, layout, extent)
+  extent3d_free(extent)
+  texel_copy_buffer_layout_free(layout)
+  texel_copy_texture_info_free(dst)
+}
+
+///|
+pub fn queue_write_texture_2d_bytes_per_pixel(
+  queue : Queue,
+  texture : Texture,
+  width : UInt,
+  height : UInt,
+  bytes_per_pixel : UInt,
+  data : Bytes,
+  size : UInt64,
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * bytes_per_pixel, 256U)
+  let dst = texel_copy_texture_info_default_new(texture)
+  let layout = texel_copy_buffer_layout_new(0UL, bytes_per_row, height)
+  let extent = extent3d_new(width, height, 1U)
+  wgpuQueueWriteTexture_bytes(queue, dst, data, size, layout, extent)
+  extent3d_free(extent)
+  texel_copy_buffer_layout_free(layout)
+  texel_copy_texture_info_free(dst)
+}
+
+///|
+pub fn queue_write_texture_2d_bytes_per_pixel_mip_layer(
+  queue : Queue,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  width : UInt,
+  height : UInt,
+  bytes_per_pixel : UInt,
+  data : Bytes,
+  size : UInt64,
+) -> Unit {
+  let bytes_per_row = align_up_u32(width * bytes_per_pixel, 256U)
   let dst = texel_copy_texture_info_new(texture, mip_level, 0U, 0U, array_layer)
   let layout = texel_copy_buffer_layout_new(0UL, bytes_per_row, height)
   let extent = extent3d_new(width, height, 1U)

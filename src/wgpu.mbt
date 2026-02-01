@@ -3631,6 +3631,48 @@ pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(
 }
 
 ///|
+pub fn CommandEncoder::copy_texture_to_buffer_bytes_per_pixel(
+  self : CommandEncoder,
+  texture : Texture,
+  buffer : Buffer,
+  width : UInt,
+  height : UInt,
+  bytes_per_pixel : UInt,
+) -> Unit {
+  @c.command_encoder_copy_texture_to_buffer_bytes_per_pixel(
+    self.raw,
+    texture.raw,
+    buffer.raw,
+    width,
+    height,
+    bytes_per_pixel,
+  )
+}
+
+///|
+pub fn CommandEncoder::copy_texture_to_buffer_bytes_per_pixel_mip_layer(
+  self : CommandEncoder,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  buffer : Buffer,
+  width : UInt,
+  height : UInt,
+  bytes_per_pixel : UInt,
+) -> Unit {
+  @c.command_encoder_copy_texture_to_buffer_bytes_per_pixel_mip_layer(
+    self.raw,
+    texture.raw,
+    mip_level,
+    array_layer,
+    buffer.raw,
+    width,
+    height,
+    bytes_per_pixel,
+  )
+}
+
+///|
 pub fn CommandEncoder::copy_buffer_to_texture_rgba8(
   self : CommandEncoder,
   buffer : Buffer,
@@ -4042,6 +4084,88 @@ pub fn Queue::write_texture_rgba8_2d_mip_layer(
     array_layer,
     width,
     height,
+    payload,
+    payload.length().to_uint64(),
+  )
+}
+
+///|
+pub fn Queue::write_texture_2d_bytes_per_pixel(
+  self : Queue,
+  texture : Texture,
+  width : UInt,
+  height : UInt,
+  bytes_per_pixel : UInt,
+  data : Bytes,
+) -> Unit {
+  let row_bytes = (width * bytes_per_pixel).reinterpret_as_int()
+  let bytes_per_row = align_up_int(row_bytes, 256)
+  let rows = height.reinterpret_as_int()
+  let required_len = bytes_per_row * rows
+  let payload = if data.length() == required_len {
+    data
+  } else {
+    let src_len = data.length()
+    Bytes::makei(required_len, i => {
+      let row = i / bytes_per_row
+      let col = i % bytes_per_row
+      let src_index = row * row_bytes + col
+      if col < row_bytes && src_index < src_len {
+        data[src_index]
+      } else {
+        0
+      }
+    })
+  }
+  @c.queue_write_texture_2d_bytes_per_pixel(
+    self.raw,
+    texture.raw,
+    width,
+    height,
+    bytes_per_pixel,
+    payload,
+    payload.length().to_uint64(),
+  )
+}
+
+///|
+pub fn Queue::write_texture_2d_bytes_per_pixel_mip_layer(
+  self : Queue,
+  texture : Texture,
+  mip_level : UInt,
+  array_layer : UInt,
+  width : UInt,
+  height : UInt,
+  bytes_per_pixel : UInt,
+  data : Bytes,
+) -> Unit {
+  let row_bytes = (width * bytes_per_pixel).reinterpret_as_int()
+  let bytes_per_row = align_up_int(row_bytes, 256)
+  let rows = height.reinterpret_as_int()
+  let required_len = bytes_per_row * rows
+  let payload = if data.length() == required_len {
+    data
+  } else {
+    let src_len = data.length()
+    Bytes::makei(required_len, i => {
+      let row = i / bytes_per_row
+      let col = i % bytes_per_row
+      let src_index = row * row_bytes + col
+      if col < row_bytes && src_index < src_len {
+        data[src_index]
+      } else {
+        0
+      }
+    })
+  }
+  @c.queue_write_texture_2d_bytes_per_pixel_mip_layer(
+    self.raw,
+    texture.raw,
+    mip_level,
+    array_layer,
+    width,
+    height,
+    bytes_per_pixel,
     payload,
     payload.length().to_uint64(),
   )

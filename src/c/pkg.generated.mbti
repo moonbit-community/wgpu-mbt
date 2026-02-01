@@ -208,6 +208,10 @@ pub fn command_encoder_copy_buffer_to_texture_rgba8(WGPUCommandEncoder, WGPUBuff
 
 pub fn command_encoder_copy_buffer_to_texture_rgba8_mip_layer(WGPUCommandEncoder, WGPUBuffer, WGPUTexture, UInt, UInt, UInt, UInt) -> Unit
 
+pub fn command_encoder_copy_texture_to_buffer_bytes_per_pixel(WGPUCommandEncoder, WGPUTexture, WGPUBuffer, UInt, UInt, UInt) -> Unit
+
+pub fn command_encoder_copy_texture_to_buffer_bytes_per_pixel_mip_layer(WGPUCommandEncoder, WGPUTexture, UInt, UInt, WGPUBuffer, UInt, UInt, UInt) -> Unit
+
 pub fn command_encoder_copy_texture_to_buffer_rgba8(WGPUCommandEncoder, WGPUTexture, WGPUBuffer, UInt, UInt) -> Unit
 
 pub fn command_encoder_copy_texture_to_buffer_rgba8_mip_layer(WGPUCommandEncoder, WGPUTexture, UInt, UInt, WGPUBuffer, UInt, UInt) -> Unit
@@ -551,6 +555,10 @@ pub fn queue_submit(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> Unit
 pub fn queue_submit_for_index(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> UInt64
 
 pub fn queue_write_buffer(WGPUQueue, WGPUBuffer, UInt64, Bytes, UInt64) -> Unit
+
+pub fn queue_write_texture_2d_bytes_per_pixel(WGPUQueue, WGPUTexture, UInt, UInt, UInt, Bytes, UInt64) -> Unit
+
+pub fn queue_write_texture_2d_bytes_per_pixel_mip_layer(WGPUQueue, WGPUTexture, UInt, UInt, UInt, UInt, UInt, Bytes, UInt64) -> Unit
 
 pub fn queue_write_texture_rgba8_2d(WGPUQueue, WGPUTexture, UInt, UInt, Bytes, UInt64) -> Unit
 
