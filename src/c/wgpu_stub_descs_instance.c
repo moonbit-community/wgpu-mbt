@@ -159,3 +159,47 @@ void mbt_wgpu_device_descriptor_free(WGPUDeviceDescriptor *desc) {
   free(out->queue_label);
   free(out);
 }
+
+void mbt_wgpu_device_descriptor_set_required_limits(WGPUDeviceDescriptor *desc,
+                                                    const WGPULimits *limits) {
+  if (!desc) {
+    return;
+  }
+  mbt_device_descriptor_owned_t *out = (mbt_device_descriptor_owned_t *)desc;
+  out->desc.requiredLimits = limits;
+}
+
+WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
+    WGPUAdapter adapter, uint32_t max_bind_groups, uint32_t max_dynamic_uniform_buffers,
+    uint64_t max_uniform_buffer_binding_size, uint64_t max_storage_buffer_binding_size) {
+  WGPULimits base = {0};
+  base.nextInChain = NULL;
+  WGPUStatus st = wgpuAdapterGetLimits(adapter, &base);
+  if (st != WGPUStatus_Success) {
+    return NULL;
+  }
+
+  WGPULimits *out = (WGPULimits *)malloc(sizeof(WGPULimits));
+  if (!out) {
+    return NULL;
+  }
+  *out = base;
+  out->nextInChain = NULL;
+
+  if (max_bind_groups != 0u) {
+    out->maxBindGroups = max_bind_groups;
+  }
+  if (max_dynamic_uniform_buffers != 0u) {
+    out->maxDynamicUniformBuffersPerPipelineLayout = max_dynamic_uniform_buffers;
+  }
+  if (max_uniform_buffer_binding_size != 0u) {
+    out->maxUniformBufferBindingSize = max_uniform_buffer_binding_size;
+  }
+  if (max_storage_buffer_binding_size != 0u) {
+    out->maxStorageBufferBindingSize = max_storage_buffer_binding_size;
+  }
+
+  return out;
+}
+
+void mbt_wgpu_limits_free(WGPULimits *limits) { free(limits); }

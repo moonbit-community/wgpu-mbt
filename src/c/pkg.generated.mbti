@@ -386,6 +386,8 @@ pub fn device_descriptor_new_features_utf8(Bytes, UInt64, UInt64, FixedArray[UIn
 
 pub fn device_descriptor_new_no_features_utf8(Bytes, UInt64, Bytes, UInt64) -> WGPUDeviceDescriptorPtr
 
+pub fn device_descriptor_set_required_limits(WGPUDeviceDescriptorPtr, WGPULimitsPtr) -> Unit
+
 pub fn device_destroy(WGPUDevice) -> Unit
 
 pub fn device_destroy_record_lost(WGPUDevice) -> Unit
@@ -477,6 +479,10 @@ pub fn instance_request_adapter_sync_ptr(WGPUInstance, WGPURequestAdapterOptions
 pub fn instance_wait_any_one_packed_u64(WGPUInstance, UInt64, UInt64) -> UInt64
 
 pub fn instance_wgsl_language_features_count_u64(WGPUInstance) -> UInt64
+
+pub fn limits_free(WGPULimitsPtr) -> Unit
+
+pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64) -> WGPULimitsPtr
 
 pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
 

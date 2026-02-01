@@ -88,6 +88,25 @@ pub extern "C" fn device_descriptor_free(
 ) -> Unit = "mbt_wgpu_device_descriptor_free"
 
 ///|
+pub extern "C" fn device_descriptor_set_required_limits(
+  desc : WGPUDeviceDescriptorPtr,
+  limits : WGPULimitsPtr,
+) -> Unit = "mbt_wgpu_device_descriptor_set_required_limits"
+
+///|
+pub extern "C" fn limits_new_from_adapter_overrides_u32(
+  adapter : WGPUAdapter,
+  max_bind_groups_u32 : UInt,
+  max_dynamic_uniform_buffers_u32 : UInt,
+  max_uniform_buffer_binding_size : UInt64,
+  max_storage_buffer_binding_size : UInt64,
+) -> WGPULimitsPtr = "mbt_wgpu_limits_new_from_adapter_overrides_u32"
+
+///|
+#borrow(limits)
+pub extern "C" fn limits_free(limits : WGPULimitsPtr) -> Unit = "mbt_wgpu_limits_free"
+
+///|
 pub extern "C" fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|

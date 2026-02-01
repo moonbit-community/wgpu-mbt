@@ -1962,6 +1962,60 @@ pub fn Adapter::request_device_sync_with_features(
 }
 
 ///|
+pub fn Adapter::request_device_sync_with_features_and_limits(
+  self : Adapter,
+  instance : Instance,
+  required_features_u32 : Array[UInt],
+  max_bind_groups_u32? : UInt = 0U,
+  max_dynamic_uniform_buffers_u32? : UInt = 0U,
+  max_uniform_buffer_binding_size? : UInt64 = 0UL,
+  max_storage_buffer_binding_size? : UInt64 = 0UL,
+  label? : String = "",
+  queue_label? : String = "",
+) -> Device {
+  let limits = @c.limits_new_from_adapter_overrides_u32(
+    self.raw,
+    max_bind_groups_u32,
+    max_dynamic_uniform_buffers_u32,
+    max_uniform_buffer_binding_size,
+    max_storage_buffer_binding_size,
+  )
+  let label_bytes = utf8_bytes(label)
+  let queue_label_bytes = utf8_bytes(queue_label)
+  let count = required_features_u32.length()
+  let desc = if count == 0 {
+    @c.device_descriptor_new_no_features_utf8(
+      label_bytes,
+      label_bytes.length().to_uint64(),
+      queue_label_bytes,
+      queue_label_bytes.length().to_uint64(),
+    )
+  } else {
+    let fixed = FixedArray::from_array(required_features_u32[:])
+    @c.device_descriptor_new_features_utf8(
+      label_bytes,
+      label_bytes.length().to_uint64(),
+      count.to_uint64(),
+      fixed,
+      queue_label_bytes,
+      queue_label_bytes.length().to_uint64(),
+    )
+  }
+
+  // Best-effort: if we fail to allocate/fetch limits, request the device with
+  // default limits (requiredLimits = NULL).
+  @c.device_descriptor_set_required_limits(desc, limits)
+  let device_raw = @c.adapter_request_device_sync_ptr(
+    instance.raw,
+    self.raw,
+    desc,
+  )
+  @c.device_descriptor_free(desc)
+  @c.limits_free(limits)
+  Device::{ raw: device_raw }
+}
+
+///|
 pub fn Adapter::request_device_sync_timestamp_query(
   self : Adapter,
   instance : Instance,

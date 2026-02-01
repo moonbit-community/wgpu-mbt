@@ -1197,6 +1197,7 @@ pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device
 pub fn Adapter::request_device_sync_with_features(Self, Instance, Array[UInt], label? : String, queue_label? : String) -> Device
+pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, label? : String, queue_label? : String) -> Device
 pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64
