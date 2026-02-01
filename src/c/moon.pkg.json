@@ -6,6 +6,7 @@
     "wgpu_stub_surface.c",
     "wgpu_stub_extras.c",
     "wgpu_stub_helpers_sync.c",
+    "wgpu_stub_descs_instance.c",
     "wgpu_stub_descs_pipelines.c",
     "wgpu_stub_map.c"
   ],

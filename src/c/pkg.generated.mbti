@@ -464,6 +464,8 @@ pub fn instance_release(WGPUInstance) -> Unit
 
 pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
 
+pub fn instance_request_adapter_sync_options_u32(WGPUInstance, UInt, UInt, Bool, UInt, WGPUSurface) -> WGPUAdapter
+
 pub fn instance_request_adapter_sync_ptr(WGPUInstance, WGPURequestAdapterOptionsPtr) -> WGPUAdapter
 
 pub fn instance_wait_any_one_packed_u64(WGPUInstance, UInt64, UInt64) -> UInt64
@@ -487,6 +489,8 @@ pub fn null_ptr() -> UnitPtr
 pub fn null_request_adapter_options_ptr() -> WGPURequestAdapterOptionsPtr
 
 pub fn null_submission_index_ptr() -> WGPUSubmissionIndexPtr
+
+pub fn null_surface() -> WGPUSurface
 
 pub fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr
 
@@ -669,6 +673,10 @@ pub fn render_pipeline_descriptor_rgba8_pos2_new(WGPUPipelineLayout, WGPUShaderM
 pub fn render_pipeline_release(WGPURenderPipeline) -> Unit
 
 pub fn render_pipeline_set_label_utf8(WGPURenderPipeline, Bytes, UInt64) -> Unit
+
+pub fn request_adapter_options_free(WGPURequestAdapterOptionsPtr) -> Unit
+
+pub fn request_adapter_options_new_u32(UInt, UInt, Bool, UInt, WGPUSurface) -> WGPURequestAdapterOptionsPtr
 
 pub fn sampler_descriptor_free(WGPUSamplerDescriptorPtr) -> Unit
 

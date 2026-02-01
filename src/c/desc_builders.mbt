@@ -41,6 +41,24 @@ pub extern "C" fn null_instance_descriptor_ptr() -> WGPUInstanceDescriptorPtr = 
 pub extern "C" fn null_request_adapter_options_ptr() -> WGPURequestAdapterOptionsPtr = "mbt_wgpu_null_ptr"
 
 ///|
+pub extern "C" fn null_surface() -> WGPUSurface = "mbt_wgpu_null_surface"
+
+///|
+pub extern "C" fn request_adapter_options_new_u32(
+  feature_level_u32 : UInt,
+  power_preference_u32 : UInt,
+  force_fallback_adapter : Bool,
+  backend_type_u32 : UInt,
+  compatible_surface : WGPUSurface,
+) -> WGPURequestAdapterOptionsPtr = "mbt_wgpu_request_adapter_options_new_u32"
+
+///|
+#borrow(options)
+pub extern "C" fn request_adapter_options_free(
+  options : WGPURequestAdapterOptionsPtr,
+) -> Unit = "mbt_wgpu_request_adapter_options_free"
+
+///|
 pub extern "C" fn null_device_descriptor_ptr() -> WGPUDeviceDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|

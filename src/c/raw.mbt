@@ -780,6 +780,24 @@ pub extern "C" fn instance_request_adapter_sync_ptr(
 ) -> Adapter = "mbt_wgpu_instance_request_adapter_sync_ptr"
 
 ///|
+pub fn instance_request_adapter_sync_options_u32(
+  instance : Instance,
+  feature_level_u32 : UInt,
+  power_preference_u32 : UInt,
+  force_fallback_adapter : Bool,
+  backend_type_u32 : UInt,
+  compatible_surface : WGPUSurface,
+) -> Adapter {
+  let opts = request_adapter_options_new_u32(
+    feature_level_u32, power_preference_u32, force_fallback_adapter, backend_type_u32,
+    compatible_surface,
+  )
+  let adapter = instance_request_adapter_sync_ptr(instance, opts)
+  request_adapter_options_free(opts)
+  adapter
+}
+
+///|
 pub extern "C" fn instance_process_events(instance : Instance) -> Unit = "wgpuInstanceProcessEvents"
 
 ///|
