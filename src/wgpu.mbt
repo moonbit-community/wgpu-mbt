@@ -2710,6 +2710,36 @@ pub fn Device::create_render_pipeline_color_format_alpha_blend(
 }
 
 ///|
+pub fn Device::create_render_pipeline_color_format_entries(
+  self : Device,
+  shader_module : ShaderModule,
+  format_u32 : UInt,
+  vs_entry? : String = "vs_main",
+  fs_entry? : String = "fs_main",
+  alpha_blend? : Bool = false,
+  depth? : Bool = false,
+  color_write_mask? : UInt64 = COLOR_WRITE_MASK_ALL,
+) -> RenderPipeline {
+  let vs_bytes = utf8_bytes(vs_entry)
+  let fs_bytes = utf8_bytes(fs_entry)
+  let desc = @c.render_pipeline_descriptor_color_format_entries_u32_new(
+    @c.null_pipeline_layout(),
+    shader_module.raw,
+    format_u32,
+    color_write_mask.to_uint(),
+    alpha_blend,
+    depth,
+    vs_bytes,
+    vs_bytes.length().to_uint64(),
+    fs_bytes,
+    fs_bytes.length().to_uint64(),
+  )
+  let raw = @c.wgpuDeviceCreateRenderPipeline(self.raw, desc)
+  @c.render_pipeline_descriptor_free(desc)
+  RenderPipeline::{ raw, }
+}
+
+///|
 pub fn Device::create_render_pipeline_rgba8_mrt2(
   self : Device,
   shader_module : ShaderModule,

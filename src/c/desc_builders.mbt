@@ -387,6 +387,21 @@ pub extern "C" fn render_pipeline_descriptor_color_format_alpha_blend_new(
 ) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_color_format_alpha_blend_new"
 
 ///|
+#borrow(vs_entry, fs_entry)
+pub extern "C" fn render_pipeline_descriptor_color_format_entries_u32_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+  format_u32 : UInt,
+  color_write_mask_u32 : UInt,
+  alpha_blend : Bool,
+  depth : Bool,
+  vs_entry : Bytes,
+  vs_entry_len : UInt64,
+  fs_entry : Bytes,
+  fs_entry_len : UInt64,
+) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_color_format_entries_u32_new"
+
+///|
 pub extern "C" fn render_pipeline_descriptor_rgba8_alpha_blend_new(
   layout : WGPUPipelineLayout,
   shader_module : WGPUShaderModule,

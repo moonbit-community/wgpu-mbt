@@ -1173,8 +1173,8 @@ typedef struct {
   WGPUVertexAttribute attr;
   WGPUVertexBufferLayout vbuf;
 
-  char vs_entry[7];
-  char fs_entry[7];
+  char vs_entry[64];
+  char fs_entry[64];
 } mbt_render_pipeline_desc_t;
 
 static WGPURenderPipelineDescriptor *
@@ -1325,6 +1325,41 @@ mbt_wgpu_render_pipeline_descriptor_color_format_alpha_blend_new(
     return NULL;
   }
   out->color_target.format = (WGPUTextureFormat)format;
+  return &out->desc;
+}
+
+WGPURenderPipelineDescriptor *
+mbt_wgpu_render_pipeline_descriptor_color_format_entries_u32_new(
+    WGPUPipelineLayout layout, WGPUShaderModule shader_module, uint32_t format,
+    uint32_t color_write_mask_u32, bool alpha_blend, bool depth, const uint8_t *vs_entry,
+    uint64_t vs_entry_len, const uint8_t *fs_entry, uint64_t fs_entry_len) {
+  if (!vs_entry || !fs_entry || vs_entry_len == 0u || fs_entry_len == 0u) {
+    return NULL;
+  }
+  if (vs_entry_len > (sizeof(((mbt_render_pipeline_desc_t *)0)->vs_entry)) ||
+      fs_entry_len > (sizeof(((mbt_render_pipeline_desc_t *)0)->fs_entry))) {
+    return NULL;
+  }
+
+  mbt_render_pipeline_desc_t *out =
+      (mbt_render_pipeline_desc_t *)mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
+          layout, shader_module, false, alpha_blend, depth);
+  if (!out) {
+    return NULL;
+  }
+
+  memcpy(out->vs_entry, vs_entry, (size_t)vs_entry_len);
+  memcpy(out->fs_entry, fs_entry, (size_t)fs_entry_len);
+  // Note: render pipeline descriptors store vertex state by-value, so we must
+  // update `out->desc.vertex` (not only `out->vertex`).
+  out->desc.vertex.entryPoint =
+      (WGPUStringView){.data = out->vs_entry, .length = (size_t)vs_entry_len};
+  out->fragment.entryPoint =
+      (WGPUStringView){.data = out->fs_entry, .length = (size_t)fs_entry_len};
+
+  out->color_target.format = (WGPUTextureFormat)format;
+  out->color_target.writeMask = (WGPUColorWriteMask)color_write_mask_u32;
+
   return &out->desc;
 }
 

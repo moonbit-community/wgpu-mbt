@@ -662,6 +662,8 @@ pub fn render_pass_write_timestamp(WGPURenderPassEncoder, WGPUQuerySet, UInt) ->
 
 pub fn render_pipeline_descriptor_color_format_alpha_blend_new(WGPUPipelineLayout, WGPUShaderModule, UInt) -> WGPURenderPipelineDescriptorPtr
 
+pub fn render_pipeline_descriptor_color_format_entries_u32_new(WGPUPipelineLayout, WGPUShaderModule, UInt, UInt, Bool, Bool, Bytes, UInt64, Bytes, UInt64) -> WGPURenderPipelineDescriptorPtr
+
 pub fn render_pipeline_descriptor_color_format_new(WGPUPipelineLayout, WGPUShaderModule, UInt) -> WGPURenderPipelineDescriptorPtr
 
 pub fn render_pipeline_descriptor_free(WGPURenderPipelineDescriptorPtr) -> Unit
