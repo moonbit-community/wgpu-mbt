@@ -572,6 +572,9 @@ pub extern "C" fn device_pop_error_scope_sync_u32(
 ) -> UInt = "mbt_wgpu_device_pop_error_scope_sync"
 
 ///|
+pub extern "C" fn set_log_callback_stderr_enabled(enabled : Bool) -> Unit = "mbt_wgpu_set_log_callback_stderr_enabled"
+
+///|
 fn align_up_u32(value : UInt, align : UInt) -> UInt {
   let rem = value % align
   if rem == 0U {

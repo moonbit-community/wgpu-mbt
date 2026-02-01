@@ -14,6 +14,8 @@
 
 #include "wgpu_stub.h"
 
+#include <stdio.h>
+
 #if defined(_WIN32)
 #include <windows.h>
 static CRITICAL_SECTION g_wait_any_mu;
@@ -36,6 +38,25 @@ static pthread_mutex_t g_wait_any_mu = PTHREAD_MUTEX_INITIALIZER;
 static void mbt_wgpu_wait_any_mu_lock(void) { pthread_mutex_lock(&g_wait_any_mu); }
 static void mbt_wgpu_wait_any_mu_unlock(void) { pthread_mutex_unlock(&g_wait_any_mu); }
 #endif
+
+// ---------------------------------------------------------------------------
+// Logging
+// ---------------------------------------------------------------------------
+
+static void mbt_wgpu_log_stderr_cb(WGPULogLevel level, WGPUStringView message, void *userdata) {
+  (void)userdata;
+  // message.data may be non-null but not NUL-terminated; honor message.length.
+  fprintf(stderr, "[wgpu-native:%u] %.*s\n", (unsigned)level, (int)message.length,
+          message.data ? message.data : "");
+}
+
+void mbt_wgpu_set_log_callback_stderr_enabled(bool enabled) {
+  if (enabled) {
+    wgpuSetLogCallback(mbt_wgpu_log_stderr_cb, NULL);
+  } else {
+    wgpuSetLogCallback(NULL, NULL);
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Debug labels / markers (best-effort)

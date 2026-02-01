@@ -1152,6 +1152,8 @@ pub fn get_version() -> UInt
 
 pub fn set_debug_labels_enabled(Bool) -> Unit
 
+pub fn set_log_callback_stderr_enabled(Bool) -> Unit
+
 pub fn set_log_level(UInt) -> Unit
 
 // Errors
