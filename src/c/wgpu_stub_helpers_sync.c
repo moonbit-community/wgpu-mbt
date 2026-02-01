@@ -14,6 +14,8 @@
 
 #include "wgpu_stub.h"
 
+#include <stdio.h>
+
 #if defined(_WIN32)
 #include <windows.h>
 static CRITICAL_SECTION g_device_lost_mu;
@@ -39,6 +41,17 @@ static void mbt_wgpu_device_lost_mu_lock(void) { pthread_mutex_lock(&g_device_lo
 static void mbt_wgpu_device_lost_mu_unlock(void) { pthread_mutex_unlock(&g_device_lost_mu); }
 static void mbt_wgpu_sleep_1ms(void) { usleep(1000); }
 #endif
+
+static bool g_mbt_wgpu_uncaptured_error_stderr_enabled = false;
+static bool g_mbt_wgpu_device_lost_stderr_enabled = false;
+
+void mbt_wgpu_set_uncaptured_error_stderr_enabled(bool enabled) {
+  g_mbt_wgpu_uncaptured_error_stderr_enabled = enabled;
+}
+
+void mbt_wgpu_set_device_lost_stderr_enabled(bool enabled) {
+  g_mbt_wgpu_device_lost_stderr_enabled = enabled;
+}
 
 void mbt_wgpu_render_pass_set_blend_constant_rgba(WGPURenderPassEncoder pass,
                                                   double r, double g, double b,
@@ -249,10 +262,14 @@ static void mbt_uncaptured_error_noop_cb(WGPUDevice const *device, WGPUErrorType
                                         WGPUStringView message, void *userdata1,
                                         void *userdata2) {
   (void)device;
-  (void)type;
-  (void)message;
   (void)userdata1;
   (void)userdata2;
+
+  if (!g_mbt_wgpu_uncaptured_error_stderr_enabled) {
+    return;
+  }
+  fprintf(stderr, "[wgpu-native:uncaptured-error:%u] %.*s\n", (unsigned)type, (int)message.length,
+          message.data ? message.data : "");
 }
 
 typedef struct {
@@ -286,7 +303,6 @@ static void mbt_device_lost_upsert(WGPUDevice device, uint32_t reason) {
 static void mbt_device_lost_cb(WGPUDevice const *device, WGPUDeviceLostReason reason,
                                WGPUStringView message, void *userdata1,
                                void *userdata2) {
-  (void)message;
   (void)userdata1;
   (void)userdata2;
 
@@ -296,6 +312,11 @@ static void mbt_device_lost_cb(WGPUDevice const *device, WGPUDeviceLostReason re
   }
 
   mbt_device_lost_upsert(handle, (uint32_t)reason);
+
+  if (g_mbt_wgpu_device_lost_stderr_enabled) {
+    fprintf(stderr, "[wgpu-native:device-lost:%u] %.*s\n", (unsigned)reason, (int)message.length,
+            message.data ? message.data : "");
+  }
 }
 
 // Returns the recorded device-lost reason for `device`, and clears the entry.

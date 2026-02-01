@@ -1514,6 +1514,16 @@ pub fn set_log_callback_stderr_enabled(enabled : Bool) -> Unit {
 }
 
 ///|
+pub fn set_uncaptured_error_stderr_enabled(enabled : Bool) -> Unit {
+  @c.set_uncaptured_error_stderr_enabled(enabled)
+}
+
+///|
+pub fn set_device_lost_stderr_enabled(enabled : Bool) -> Unit {
+  @c.set_device_lost_stderr_enabled(enabled)
+}
+
+///|
 pub fn get_instance_capabilities() -> InstanceCapabilities {
   let enable = @c.instance_capabilities_timed_wait_any_enable_u32() != 0U
   let max_count = @c.instance_capabilities_timed_wait_any_max_count_u64()
