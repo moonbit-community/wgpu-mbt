@@ -2169,6 +2169,21 @@ declare pub fn RenderPipelineDescBuilder::set_color_target_format(
 
 ///|
 #declaration_only
+declare pub fn RenderPipelineDescBuilder::set_color_target_count(
+  self : RenderPipelineDescBuilder,
+  count_u32 : UInt,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_color_target_format_at(
+  self : RenderPipelineDescBuilder,
+  index_u32 : UInt,
+  format : TextureFormat,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn RenderPipelineDescBuilder::enable_alpha_blend(
   self : RenderPipelineDescBuilder,
 ) -> Unit

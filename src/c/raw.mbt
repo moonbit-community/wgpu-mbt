@@ -259,6 +259,21 @@ pub extern "C" fn render_pipeline_desc_builder_set_color_target_format(
 
 ///|
 #borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_color_target_count(
+  builder : OpaquePtr,
+  count_u32 : UInt,
+) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_count"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_color_target_format_at(
+  builder : OpaquePtr,
+  index_u32 : UInt,
+  format_u32 : UInt,
+) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at"
+
+///|
+#borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_enable_alpha_blend(
   builder : OpaquePtr,
 ) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend"

@@ -692,7 +692,11 @@ pub fn render_pipeline_desc_builder_free(OpaquePtr) -> Unit
 
 pub fn render_pipeline_desc_builder_new(WGPUPipelineLayout, WGPUShaderModule) -> OpaquePtr
 
+pub fn render_pipeline_desc_builder_set_color_target_count(OpaquePtr, UInt) -> Unit
+
 pub fn render_pipeline_desc_builder_set_color_target_format(OpaquePtr, UInt) -> Unit
+
+pub fn render_pipeline_desc_builder_set_color_target_format_at(OpaquePtr, UInt, UInt) -> Unit
 
 pub fn render_pipeline_desc_builder_set_depth_stencil(OpaquePtr, UInt, Bool, UInt) -> Unit
 

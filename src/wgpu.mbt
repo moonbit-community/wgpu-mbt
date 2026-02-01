@@ -3623,6 +3623,27 @@ pub fn RenderPipelineDescBuilder::set_color_target_format(
 }
 
 ///|
+pub fn RenderPipelineDescBuilder::set_color_target_count(
+  self : RenderPipelineDescBuilder,
+  count_u32 : UInt,
+) -> Unit {
+  @c.render_pipeline_desc_builder_set_color_target_count(self.raw, count_u32)
+}
+
+///|
+pub fn RenderPipelineDescBuilder::set_color_target_format_at(
+  self : RenderPipelineDescBuilder,
+  index_u32 : UInt,
+  format : TextureFormat,
+) -> Unit {
+  @c.render_pipeline_desc_builder_set_color_target_format_at(
+    self.raw,
+    index_u32,
+    format.raw,
+  )
+}
+
+///|
 pub fn RenderPipelineDescBuilder::enable_alpha_blend(
   self : RenderPipelineDescBuilder,
 ) -> Unit {

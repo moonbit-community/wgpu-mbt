@@ -1716,7 +1716,9 @@ pub fn RenderPipelineDescBuilder::enable_alpha_blend(Self) -> Unit
 pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(Self) -> @c.WGPURenderPipelineDescriptorPtr
 pub fn RenderPipelineDescBuilder::free(Self) -> Unit
 pub fn RenderPipelineDescBuilder::new(ShaderModule, layout? : PipelineLayout) -> Self
+pub fn RenderPipelineDescBuilder::set_color_target_count(Self, UInt) -> Unit
 pub fn RenderPipelineDescBuilder::set_color_target_format(Self, TextureFormat) -> Unit
+pub fn RenderPipelineDescBuilder::set_color_target_format_at(Self, UInt, TextureFormat) -> Unit
 pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt) -> Unit
 pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Unit
 pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Unit

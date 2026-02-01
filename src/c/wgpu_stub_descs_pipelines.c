@@ -1154,12 +1154,14 @@ void mbt_wgpu_compute_pipeline_descriptor_free(WGPUComputePipelineDescriptor *de
 
 #define MBT_WGPU_RP_MAX_ATTRS 16u
 #define MBT_WGPU_RP_MAX_VBUFS 4u
+#define MBT_WGPU_RP_MAX_TARGETS 4u
 
 typedef struct {
   WGPURenderPipelineDescriptor desc;
   WGPUVertexState vertex;
   WGPUFragmentState fragment;
-  WGPUColorTargetState color_target;
+  WGPUColorTargetState color_targets[MBT_WGPU_RP_MAX_TARGETS];
+  uint32_t color_target_count;
   WGPUPrimitiveState primitive;
   WGPUMultisampleState multisample;
 
@@ -1196,6 +1198,7 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
 
   memcpy(out->vs_entry, "vs_main", 7);
   memcpy(out->fs_entry, "fs_main", 7);
+  out->color_target_count = 1u;
   out->vbuf_count = 0u;
   out->current_vbuf = 0u;
   for (size_t i = 0; i < MBT_WGPU_RP_MAX_VBUFS; i++) {
@@ -1268,7 +1271,7 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
       .buffers = pos2 ? out->vbufs : NULL,
   };
 
-  out->color_target = (WGPUColorTargetState){
+  out->color_targets[0] = (WGPUColorTargetState){
       .nextInChain = NULL,
       .format = WGPUTextureFormat_RGBA8Unorm,
       .blend = alpha_blend ? &out->blend : NULL,
@@ -1282,7 +1285,7 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
       .constantCount = 0u,
       .constants = NULL,
       .targetCount = 1u,
-      .targets = &out->color_target,
+      .targets = out->color_targets,
   };
 
   out->primitive = (WGPUPrimitiveState){
@@ -1363,7 +1366,60 @@ void mbt_wgpu_render_pipeline_desc_builder_set_color_target_format(void *builder
     return;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
-  out->color_target.format = (WGPUTextureFormat)format;
+  out->color_targets[0].format = (WGPUTextureFormat)format;
+}
+
+void mbt_wgpu_render_pipeline_desc_builder_set_color_target_count(void *builder,
+                                                                  uint32_t count_u32) {
+  if (!builder) {
+    return;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+
+  uint32_t count = count_u32;
+  if (count == 0u) {
+    count = 1u;
+  }
+  if (count > MBT_WGPU_RP_MAX_TARGETS) {
+    count = MBT_WGPU_RP_MAX_TARGETS;
+  }
+
+  uint32_t old = out->color_target_count;
+  if (old == 0u) {
+    old = 1u;
+  }
+  if (old > MBT_WGPU_RP_MAX_TARGETS) {
+    old = MBT_WGPU_RP_MAX_TARGETS;
+  }
+
+  WGPUTextureFormat fmt0 = out->color_targets[0].format;
+  const WGPUBlendState *blend0 = out->color_targets[0].blend;
+  for (uint32_t i = old; i < count; i++) {
+    out->color_targets[i] = (WGPUColorTargetState){
+        .nextInChain = NULL,
+        .format = fmt0,
+        .blend = blend0,
+        .writeMask = WGPUColorWriteMask_All,
+    };
+  }
+
+  out->color_target_count = count;
+  out->fragment.targetCount = (size_t)count;
+  out->fragment.targets = out->color_targets;
+  out->desc.fragment = &out->fragment;
+}
+
+void mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at(
+    void *builder, uint32_t index_u32, uint32_t format_u32) {
+  if (!builder) {
+    return;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  uint32_t idx = index_u32;
+  if (idx >= out->color_target_count) {
+    return;
+  }
+  out->color_targets[idx].format = (WGPUTextureFormat)format_u32;
 }
 
 void mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend(void *builder) {
@@ -1385,7 +1441,14 @@ void mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend(void *builder) {
       .color = out->blend_color,
       .alpha = out->blend_alpha,
   };
-  out->color_target.blend = &out->blend;
+  // Apply to all current color targets.
+  uint32_t n = out->color_target_count;
+  if (n > MBT_WGPU_RP_MAX_TARGETS) {
+    n = MBT_WGPU_RP_MAX_TARGETS;
+  }
+  for (uint32_t i = 0; i < n; i++) {
+    out->color_targets[i].blend = &out->blend;
+  }
 }
 
 void mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout(
@@ -1519,7 +1582,7 @@ mbt_wgpu_render_pipeline_descriptor_color_format_new(WGPUPipelineLayout layout,
   if (!out) {
     return NULL;
   }
-  out->color_target.format = (WGPUTextureFormat)format;
+  out->color_targets[0].format = (WGPUTextureFormat)format;
   return &out->desc;
 }
 
@@ -1532,7 +1595,7 @@ mbt_wgpu_render_pipeline_descriptor_color_format_alpha_blend_new(
   if (!out) {
     return NULL;
   }
-  out->color_target.format = (WGPUTextureFormat)format;
+  out->color_targets[0].format = (WGPUTextureFormat)format;
   return &out->desc;
 }
 
@@ -1565,8 +1628,8 @@ mbt_wgpu_render_pipeline_descriptor_color_format_entries_u32_new(
   out->fragment.entryPoint =
       (WGPUStringView){.data = out->fs_entry, .length = (size_t)fs_entry_len};
 
-  out->color_target.format = (WGPUTextureFormat)format;
-  out->color_target.writeMask = (WGPUColorWriteMask)color_write_mask_u32;
+  out->color_targets[0].format = (WGPUTextureFormat)format;
+  out->color_targets[0].writeMask = (WGPUColorWriteMask)color_write_mask_u32;
 
   return &out->desc;
 }
