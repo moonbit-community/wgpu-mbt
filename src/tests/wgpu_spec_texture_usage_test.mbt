@@ -17,7 +17,9 @@ test "spec: device.create_texture_rgba8_2d_with_usage" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
-  let usage = @wgpu.TEXTURE_USAGE_COPY_DST | @wgpu.TEXTURE_USAGE_TEXTURE_BINDING
+  let usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_COPY_DST | @wgpu.TEXTURE_USAGE_TEXTURE_BINDING,
+  )
   let tex = device.create_texture_rgba8_2d_with_usage(1U, 1U, usage)
   tex.release()
   device.release()

@@ -19,8 +19,9 @@ test "wgpu surface present (CAMetalLayer)" {
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
   let surface = instance.create_surface_metal_layer()
-  let usage = @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
-    @wgpu.TEXTURE_USAGE_COPY_SRC
+  let usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+  )
   let format = surface.configure_default(adapter, device, 1U, 1U, usage)
   inspect(format == 0U, content="false")
   let st = surface.get_current_texture()
@@ -57,7 +58,10 @@ test "wgpu surface present (CAMetalLayer)" {
     #|}
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
-  let pipeline = device.create_render_pipeline_color_format(sm, format)
+  let pipeline = device.create_render_pipeline_color_format(
+    sm,
+    @wgpu.TextureFormat::from_u32(format),
+  )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color_clear(view, 0.0, 0.0, 0.0, 1.0)
   pass.set_pipeline(pipeline)

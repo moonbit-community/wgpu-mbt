@@ -350,10 +350,12 @@ test "wgpu texture: create_texture_rgba8_2d_with_usage can render+copy" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let usage = @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
+  let usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
     @wgpu.TEXTURE_USAGE_COPY_SRC |
     @wgpu.TEXTURE_USAGE_COPY_DST |
-    @wgpu.TEXTURE_USAGE_TEXTURE_BINDING
+    @wgpu.TEXTURE_USAGE_TEXTURE_BINDING,
+  )
   let tex = device.create_texture_rgba8_2d_with_usage(1U, 1U, usage)
   let view = tex.create_view()
   let readback = device.create_buffer(

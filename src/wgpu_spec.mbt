@@ -76,6 +76,18 @@ pub type SurfaceTexture
 
 ///|
 #declaration_only
+pub type TextureFormat
+
+///|
+#declaration_only
+pub type TextureDimension
+
+///|
+#declaration_only
+pub type TextureUsage
+
+///|
+#declaration_only
 pub type GlobalReport
 
 ///|
@@ -1194,7 +1206,7 @@ declare pub fn Surface::configure_default(
   device : Device,
   width : UInt,
   height : UInt,
-  usage : UInt64,
+  usage : TextureUsage,
 ) -> UInt
 
 ///|
@@ -1205,8 +1217,8 @@ declare pub fn Surface::configure_u32(
   device : Device,
   width : UInt,
   height : UInt,
-  usage : UInt64,
-  format_u32 : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
 ) -> Bool
@@ -1219,8 +1231,8 @@ declare pub fn Surface::configure_view_formats_u32(
   device : Device,
   width : UInt,
   height : UInt,
-  usage : UInt64,
-  format_u32 : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
   view_formats : Array[UInt],
@@ -1660,7 +1672,7 @@ declare pub fn Device::create_texture_rgba8_2d_with_usage(
   self : Device,
   width : UInt,
   height : UInt,
-  usage : UInt64,
+  usage : TextureUsage,
 ) -> Texture
 
 ///|
@@ -1681,7 +1693,7 @@ declare pub fn Device::create_texture_rgba8_2d_array_with_usage(
   height : UInt,
   layers : UInt,
   mip_level_count : UInt,
-  usage : UInt64,
+  usage : TextureUsage,
 ) -> Texture
 
 ///|
@@ -1691,9 +1703,9 @@ declare pub fn Device::create_texture_u32(
   width : UInt,
   height : UInt,
   depth_or_array_layers : UInt,
-  usage : UInt64,
-  dimension_u32 : UInt,
-  format_u32 : UInt,
+  usage : TextureUsage,
+  dimension : TextureDimension,
+  format : TextureFormat,
   mip_level_count? : UInt = 1U,
   sample_count? : UInt = 1U,
   view_formats? : Array[UInt] = [],
@@ -1822,7 +1834,15 @@ declare pub fn Device::create_render_pipeline_rgba8(
 declare pub fn Device::create_render_pipeline_color_format(
   self : Device,
   shader_module : ShaderModule,
-  format : UInt,
+  format : TextureFormat,
+) -> RenderPipeline
+
+///|
+#declaration_only
+declare pub fn Device::create_render_pipeline_color_format_alpha_blend(
+  self : Device,
+  shader_module : ShaderModule,
+  format : TextureFormat,
 ) -> RenderPipeline
 
 ///|

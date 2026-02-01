@@ -137,9 +137,11 @@ test "wgpu render: alpha blending + arbitrary format pipeline (BGRA8Unorm)" {
     1U,
     1U,
     1U,
-    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
-    @wgpu.TEXTURE_DIMENSION_2D,
-    @wgpu.TEXTURE_FORMAT_BGRA8_UNORM,
+    @wgpu.TextureUsage::from_u64(
+      @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+    ),
+    @wgpu.TextureDimension::from_u32(@wgpu.TEXTURE_DIMENSION_2D),
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_BGRA8_UNORM),
   )
   let view = tex.create_view()
   let readback = device.create_buffer(
@@ -190,11 +192,11 @@ test "wgpu render: alpha blending + arbitrary format pipeline (BGRA8Unorm)" {
   let sm_red = device.create_shader_module_wgsl(wgsl_red_half)
   let p_green = device.create_render_pipeline_color_format(
     sm_green,
-    @wgpu.TEXTURE_FORMAT_BGRA8_UNORM,
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_BGRA8_UNORM),
   )
   let p_blend = device.create_render_pipeline_color_format_alpha_blend(
     sm_red,
-    @wgpu.TEXTURE_FORMAT_BGRA8_UNORM,
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_BGRA8_UNORM),
   )
 
   // Pass 1: draw full green.

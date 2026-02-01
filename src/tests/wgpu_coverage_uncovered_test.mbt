@@ -167,7 +167,9 @@ test "coverage: copy buffer->texture (bytesPerRow aligned) + copy texture->textu
   // 64 * 4 = 256, so bytesPerRow is already aligned (covers align_up_u32 rem==0).
   let upload = device.create_buffer(size=256UL, usage=upload_usage)
   queue.write_buffer(upload, 0UL, rgba_prefix_bytes(256, 0U, 255U, 0U, 255U))
-  let usage = @wgpu.TEXTURE_USAGE_COPY_DST | @wgpu.TEXTURE_USAGE_COPY_SRC
+  let usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_COPY_DST | @wgpu.TEXTURE_USAGE_COPY_SRC,
+  )
   let src_tex = device.create_texture_rgba8_2d_with_usage(64U, 1U, usage)
   let dst_tex = device.create_texture_rgba8_2d_with_usage(64U, 1U, usage)
   let readback = device.create_buffer(

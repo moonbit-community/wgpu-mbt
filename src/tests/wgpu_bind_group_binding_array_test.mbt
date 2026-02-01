@@ -30,17 +30,17 @@ test "wgpu bind group builder (binding arrays via extras)" {
     16U,
     8U,
     1U,
-    @wgpu.TEXTURE_USAGE_TEXTURE_BINDING,
-    @wgpu.TEXTURE_DIMENSION_2D,
-    @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
+    @wgpu.TextureUsage::from_u64(@wgpu.TEXTURE_USAGE_TEXTURE_BINDING),
+    @wgpu.TextureDimension::from_u32(@wgpu.TEXTURE_DIMENSION_2D),
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
   )
   let tex1 = device.create_texture_u32(
     4U,
     2U,
     1U,
-    @wgpu.TEXTURE_USAGE_TEXTURE_BINDING,
-    @wgpu.TEXTURE_DIMENSION_2D,
-    @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
+    @wgpu.TextureUsage::from_u64(@wgpu.TEXTURE_USAGE_TEXTURE_BINDING),
+    @wgpu.TextureDimension::from_u32(@wgpu.TEXTURE_DIMENSION_2D),
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
   )
   let view0 = tex0.create_view()
   let view1 = tex1.create_view()

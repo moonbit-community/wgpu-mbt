@@ -22,9 +22,9 @@ test "wgpu texture view formats (sRGB view)" {
     16U,
     8U,
     1U,
-    @wgpu.TEXTURE_USAGE_TEXTURE_BINDING,
-    @wgpu.TEXTURE_DIMENSION_2D,
-    @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
+    @wgpu.TextureUsage::from_u64(@wgpu.TEXTURE_USAGE_TEXTURE_BINDING),
+    @wgpu.TextureDimension::from_u32(@wgpu.TEXTURE_DIMENSION_2D),
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
     view_formats=[@wgpu.TEXTURE_FORMAT_RGBA8_UNORM_SRGB],
   )
   let view = tex.create_view_u32(

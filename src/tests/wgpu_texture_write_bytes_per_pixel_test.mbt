@@ -31,9 +31,11 @@ test "wgpu texture: write_texture_2d_bytes_per_pixel (BGRA8Unorm)" {
     1U,
     1U,
     1U,
-    @wgpu.TEXTURE_USAGE_COPY_DST | @wgpu.TEXTURE_USAGE_COPY_SRC,
-    @wgpu.TEXTURE_DIMENSION_2D,
-    @wgpu.TEXTURE_FORMAT_BGRA8_UNORM,
+    @wgpu.TextureUsage::from_u64(
+      @wgpu.TEXTURE_USAGE_COPY_DST | @wgpu.TEXTURE_USAGE_COPY_SRC,
+    ),
+    @wgpu.TextureDimension::from_u32(@wgpu.TEXTURE_DIMENSION_2D),
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_BGRA8_UNORM),
   )
 
   // Upload a single BGRA pixel: green.

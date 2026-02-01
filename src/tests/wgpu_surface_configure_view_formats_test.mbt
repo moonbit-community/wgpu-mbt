@@ -21,16 +21,18 @@ test "wgpu surface configure_view_formats_u32" {
   let fmt0 = surface.capabilities_format_u32_at(adapter, 0UL)
   let pm0 = surface.capabilities_present_mode_u32_at(adapter, 0UL)
   let am0 = surface.capabilities_alpha_mode_u32_at(adapter, 0UL)
-  let usage = @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
+  let usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
     @wgpu.TEXTURE_USAGE_COPY_SRC |
-    @wgpu.TEXTURE_USAGE_COPY_DST
+    @wgpu.TEXTURE_USAGE_COPY_DST,
+  )
   let ok = surface.configure_view_formats_u32(
     adapter,
     device,
     1U,
     1U,
     usage,
-    fmt0,
+    @wgpu.TextureFormat::from_u32(fmt0),
     pm0,
     am0,
     [fmt0],

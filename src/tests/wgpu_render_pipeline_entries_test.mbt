@@ -58,7 +58,7 @@ test "wgpu render pipeline: custom entry points via descriptor builder" {
   let sm = device.create_shader_module_wgsl(wgsl)
   let p = device.create_render_pipeline_color_format_entries(
     sm,
-    @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
     vs_entry="vs_custom",
     fs_entry="fs_custom",
   )

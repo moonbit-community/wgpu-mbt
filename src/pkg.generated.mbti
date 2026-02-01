@@ -1427,9 +1427,9 @@ pub fn Device::create_render_bundle_encoder_ptr(Self, @c.WGPURenderBundleEncoder
 pub fn Device::create_render_bundle_encoder_rgba8(Self) -> RenderBundleEncoder
 pub fn Device::create_render_pipeline(Self, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
 pub fn Device::create_render_pipeline_async_sync_ptr(Self, Instance, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
-pub fn Device::create_render_pipeline_color_format(Self, ShaderModule, UInt) -> RenderPipeline
-pub fn Device::create_render_pipeline_color_format_alpha_blend(Self, ShaderModule, UInt) -> RenderPipeline
-pub fn Device::create_render_pipeline_color_format_entries(Self, ShaderModule, UInt, vs_entry? : String, fs_entry? : String, alpha_blend? : Bool, depth? : Bool, color_write_mask? : UInt64) -> RenderPipeline
+pub fn Device::create_render_pipeline_color_format(Self, ShaderModule, TextureFormat) -> RenderPipeline
+pub fn Device::create_render_pipeline_color_format_alpha_blend(Self, ShaderModule, TextureFormat) -> RenderPipeline
+pub fn Device::create_render_pipeline_color_format_entries(Self, ShaderModule, TextureFormat, vs_entry? : String, fs_entry? : String, alpha_blend? : Bool, depth? : Bool, color_write_mask? : UInt64) -> RenderPipeline
 pub fn Device::create_render_pipeline_ptr(Self, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8(Self, ShaderModule) -> RenderPipeline
 pub fn Device::create_render_pipeline_rgba8_alpha_blend(Self, ShaderModule) -> RenderPipeline
@@ -1457,9 +1457,9 @@ pub fn Device::create_texture_depth24plus_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_ptr(Self, @c.WGPUTextureDescriptorPtr) -> Texture
 pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array(Self, UInt, UInt, UInt, UInt) -> Texture
-pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, UInt64) -> Texture
-pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, UInt64) -> Texture
-pub fn Device::create_texture_u32(Self, UInt, UInt, UInt, UInt64, UInt, UInt, mip_level_count? : UInt, sample_count? : UInt, view_formats? : Array[UInt]) -> Texture
+pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, TextureUsage) -> Texture
+pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, TextureUsage) -> Texture
+pub fn Device::create_texture_u32(Self, UInt, UInt, UInt, TextureUsage, TextureDimension, TextureFormat, mip_level_count? : UInt, sample_count? : UInt, view_formats? : Array[UInt]) -> Texture
 pub fn Device::destroy(Self) -> Unit
 pub fn Device::destroy_raw(Self) -> Unit
 pub fn Device::get_adapter_info(Self) -> @c.WGPUAdapterInfo
@@ -1739,10 +1739,10 @@ pub fn Surface::capabilities_present_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_present_modes_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::capabilities_usages_u64(Self, Adapter) -> UInt64
 pub fn Surface::configure(Self, @c.WGPUSurfaceConfigurationPtr) -> Unit
-pub fn Surface::configure_best_effort(Self, Adapter, Device, UInt, UInt, UInt64, prefer_srgb? : Bool, vsync? : Bool) -> Bool
-pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, UInt64) -> UInt
-pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt) -> Bool
-pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt, Array[UInt]) -> Bool
+pub fn Surface::configure_best_effort(Self, Adapter, Device, UInt, UInt, TextureUsage, prefer_srgb? : Bool, vsync? : Bool) -> Bool
+pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, TextureUsage) -> UInt
+pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt) -> Bool
+pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[UInt]) -> Bool
 pub fn Surface::get_capabilities(Self, Adapter, @c.WGPUSurfaceCapabilitiesPtr) -> @c.WGPUStatus
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture
 pub fn Surface::get_current_texture_raw(Self, @c.WGPUSurfaceTexturePtr) -> Unit
@@ -1797,6 +1797,24 @@ pub fn Texture::sample_count_u32(Self) -> UInt
 pub fn Texture::set_label(Self, String) -> Unit
 pub fn Texture::usage_u64(Self) -> UInt64
 pub fn Texture::width_u32(Self) -> UInt
+
+pub struct TextureDimension {
+  raw : UInt
+}
+pub fn TextureDimension::from_u32(UInt) -> Self
+pub fn TextureDimension::to_u32(Self) -> UInt
+
+pub struct TextureFormat {
+  raw : UInt
+}
+pub fn TextureFormat::from_u32(UInt) -> Self
+pub fn TextureFormat::to_u32(Self) -> UInt
+
+pub struct TextureUsage {
+  raw : UInt64
+}
+pub fn TextureUsage::from_u64(UInt64) -> Self
+pub fn TextureUsage::to_u64(Self) -> UInt64
 
 pub struct TextureView {
   raw : @c.WGPUTextureView

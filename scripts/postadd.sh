@@ -1,6 +1,28 @@
 #!/bin/sh
 set -eu
 
+maybe_install_local_macos() {
+  if [ "$(uname -s 2>/dev/null || true)" != "Darwin" ]; then
+    return 0
+  fi
+  if [ -z "${HOME:-}" ]; then
+    return 0
+  fi
+
+  # Dev convenience: if this repo has a local wgpu-native build (submodule),
+  # copy it into a stable per-user location so projects don't rely on CWD.
+  src="vendor/wgpu-native/target/release/libwgpu_native.dylib"
+  dst="$HOME/.local/lib/libwgpu_native.dylib"
+  if [ -f "$src" ]; then
+    mkdir -p "$HOME/.local/lib"
+    cp -f "$src" "$dst"
+    printf "%s\n" "wgpu-mbt: installed libwgpu_native.dylib -> $dst"
+    printf "%s\n\n" "wgpu-mbt: export MBT_WGPU_NATIVE_LIB=\"$dst\""
+  fi
+}
+
+maybe_install_local_macos
+
 cat <<'EOF'
 wgpu-mbt: native runtime dependency not bundled
 

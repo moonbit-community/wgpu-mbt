@@ -30,7 +30,10 @@ Useful introspection helpers:
   - `git clone https://github.com/gfx-rs/wgpu-native`
   - `cd wgpu-native`
   - `cargo build --release --no-default-features --features metal,wgsl`
-  - `export MBT_WGPU_NATIVE_LIB=\"$PWD/target/release/libwgpu_native.dylib\"`
+  - (recommended) copy to a stable per-user location:
+    - `mkdir -p \"$HOME/.local/lib\"`
+    - `cp target/release/libwgpu_native.dylib \"$HOME/.local/lib/libwgpu_native.dylib\"`
+    - `export MBT_WGPU_NATIVE_LIB=\"$HOME/.local/lib/libwgpu_native.dylib\"`
 - Build & run the smoke executable:
   - `moon run cmd/main`
 - Run tests:
@@ -70,6 +73,11 @@ This module does **not** bundle wgpu-native artifacts. Users are responsible for
 - Installing/building a compatible `libwgpu_native` dynamic library for their platform.
 - Setting `MBT_WGPU_NATIVE_LIB` to a path to that library before running.
 - Ensuring the file exists and is readable in the deployment environment.
+
+Recommended macOS location:
+- `MBT_WGPU_NATIVE_LIB=\"$HOME/.local/lib/libwgpu_native.dylib\"`
+  - If you have this repo checked out with `vendor/wgpu-native`, `moon add` will also try to copy
+    `vendor/wgpu-native/target/release/libwgpu_native.dylib` to that location via `postadd`.
 
 If `MBT_WGPU_NATIVE_LIB` is unset (or points to a bad path), the process will abort
 when the first WebGPU symbol is used (because we `dlopen` the library lazily).

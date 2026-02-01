@@ -73,6 +73,54 @@ pub struct SurfaceTexture {
 }
 
 ///|
+/// Type-safe wrappers for frequently-used numeric enums/flags.
+///
+/// v0.3.0+ gradually moves public APIs away from raw `UInt`/`UInt64` for these.
+pub struct TextureFormat {
+  raw : UInt
+}
+
+///|
+pub fn TextureFormat::from_u32(raw : UInt) -> TextureFormat {
+  TextureFormat::{ raw, }
+}
+
+///|
+pub fn TextureFormat::to_u32(self : TextureFormat) -> UInt {
+  self.raw
+}
+
+///|
+pub struct TextureDimension {
+  raw : UInt
+}
+
+///|
+pub fn TextureDimension::from_u32(raw : UInt) -> TextureDimension {
+  TextureDimension::{ raw, }
+}
+
+///|
+pub fn TextureDimension::to_u32(self : TextureDimension) -> UInt {
+  self.raw
+}
+
+///|
+pub struct TextureUsage {
+  raw : UInt64
+}
+
+///|
+pub fn TextureUsage::from_u64(raw : UInt64) -> TextureUsage {
+  TextureUsage::{ raw, }
+}
+
+///|
+pub fn TextureUsage::to_u64(self : TextureUsage) -> UInt64 {
+  self.raw
+}
+
+///|
 pub fn SurfaceTexture::is_success(self : SurfaceTexture) -> Bool {
   let st = self.status()
   st == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
@@ -1698,7 +1746,7 @@ pub fn Surface::configure_default(
   device : Device,
   width : UInt,
   height : UInt,
-  usage : UInt64,
+  usage : TextureUsage,
 ) -> UInt {
   @c.surface_configure_default(
     self.raw,
@@ -1706,7 +1754,7 @@ pub fn Surface::configure_default(
     device.raw,
     width,
     height,
-    usage,
+    usage.raw,
   )
 }
 
@@ -1717,8 +1765,8 @@ pub fn Surface::configure_u32(
   device : Device,
   width : UInt,
   height : UInt,
-  usage : UInt64,
-  format_u32 : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
 ) -> Bool {
@@ -1728,8 +1776,8 @@ pub fn Surface::configure_u32(
     device.raw,
     width,
     height,
-    usage,
-    format_u32,
+    usage.raw,
+    format.raw,
     present_mode_u32,
     alpha_mode_u32,
   )
@@ -1742,8 +1790,8 @@ pub fn Surface::configure_view_formats_u32(
   device : Device,
   width : UInt,
   height : UInt,
-  usage : UInt64,
-  format_u32 : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
   view_formats : Array[UInt],
@@ -1751,7 +1799,7 @@ pub fn Surface::configure_view_formats_u32(
   let count = view_formats.length()
   if count == 0 {
     self.configure_u32(
-      adapter, device, width, height, usage, format_u32, present_mode_u32, alpha_mode_u32,
+      adapter, device, width, height, usage, format, present_mode_u32, alpha_mode_u32,
     )
   } else {
     let fixed = FixedArray::from_array(view_formats[:])
@@ -1761,8 +1809,8 @@ pub fn Surface::configure_view_formats_u32(
       device.raw,
       width,
       height,
-      usage,
-      format_u32,
+      usage.raw,
+      format.raw,
       present_mode_u32,
       alpha_mode_u32,
       count.to_uint64(),
@@ -1953,7 +2001,7 @@ pub fn Surface::configure_best_effort(
   device : Device,
   width : UInt,
   height : UInt,
-  usage : UInt64,
+  usage : TextureUsage,
   prefer_srgb? : Bool = true,
   vsync? : Bool = true,
 ) -> Bool {
@@ -1991,12 +2039,21 @@ pub fn Surface::configure_best_effort(
   ]
   let am = pick_first_supported_u32(alpha_modes, am_prefs)
   let supported_usage = self.capabilities_usages_u64(adapter)
-  let actual_usage = if (usage & supported_usage) == 0UL {
+  let actual_usage = if (usage.raw & supported_usage) == 0UL {
     supported_usage
   } else {
-    usage & supported_usage
+    usage.raw & supported_usage
   }
-  self.configure_u32(adapter, device, width, height, actual_usage, fmt, pm, am)
+  self.configure_u32(
+    adapter,
+    device,
+    width,
+    height,
+    TextureUsage::from_u64(actual_usage),
+    TextureFormat::from_u32(fmt),
+    pm,
+    am,
+  )
 }
 
 ///|
@@ -2599,14 +2656,14 @@ pub fn Device::create_texture_rgba8_2d_with_usage(
   self : Device,
   width : UInt,
   height : UInt,
-  usage : UInt64,
+  usage : TextureUsage,
 ) -> Texture {
   Texture::{
     raw: @c.device_create_texture_rgba8_2d_with_usage(
       self.raw,
       width,
       height,
-      usage,
+      usage.raw,
     ),
   }
 }
@@ -2624,10 +2681,12 @@ pub fn Device::create_texture_rgba8_2d_array(
     height,
     layers,
     mip_level_count,
-    TEXTURE_USAGE_RENDER_ATTACHMENT |
-    TEXTURE_USAGE_COPY_SRC |
-    TEXTURE_USAGE_COPY_DST |
-    TEXTURE_USAGE_TEXTURE_BINDING,
+    TextureUsage::from_u64(
+      TEXTURE_USAGE_RENDER_ATTACHMENT |
+      TEXTURE_USAGE_COPY_SRC |
+      TEXTURE_USAGE_COPY_DST |
+      TEXTURE_USAGE_TEXTURE_BINDING,
+    ),
   )
 }
 
@@ -2638,7 +2697,7 @@ pub fn Device::create_texture_rgba8_2d_array_with_usage(
   height : UInt,
   layers : UInt,
   mip_level_count : UInt,
-  usage : UInt64,
+  usage : TextureUsage,
 ) -> Texture {
   Texture::{
     raw: @c.device_create_texture_rgba8_2d_array_with_usage(
@@ -2647,7 +2706,7 @@ pub fn Device::create_texture_rgba8_2d_array_with_usage(
       height,
       layers,
       mip_level_count,
-      usage,
+      usage.raw,
     ),
   }
 }
@@ -2658,9 +2717,9 @@ pub fn Device::create_texture_u32(
   width : UInt,
   height : UInt,
   depth_or_array_layers : UInt,
-  usage : UInt64,
-  dimension_u32 : UInt,
-  format_u32 : UInt,
+  usage : TextureUsage,
+  dimension : TextureDimension,
+  format : TextureFormat,
   mip_level_count? : UInt = 1U,
   sample_count? : UInt = 1U,
   view_formats? : Array[UInt] = [],
@@ -2673,9 +2732,9 @@ pub fn Device::create_texture_u32(
         width,
         height,
         depth_or_array_layers,
-        usage,
-        dimension_u32,
-        format_u32,
+        usage.raw,
+        dimension.raw,
+        format.raw,
         mip_level_count,
         sample_count,
       ),
@@ -2688,9 +2747,9 @@ pub fn Device::create_texture_u32(
         width,
         height,
         depth_or_array_layers,
-        usage,
-        dimension_u32,
-        format_u32,
+        usage.raw,
+        dimension.raw,
+        format.raw,
         mip_level_count,
         sample_count,
         count.to_uint64(),
@@ -2832,13 +2891,13 @@ pub fn Device::create_render_pipeline_ptr(
 pub fn Device::create_render_pipeline_color_format(
   self : Device,
   shader_module : ShaderModule,
-  format : UInt,
+  format : TextureFormat,
 ) -> RenderPipeline {
   RenderPipeline::{
     raw: @c.device_create_render_pipeline_color_format(
       self.raw,
       shader_module.raw,
-      format,
+      format.raw,
     ),
   }
 }
@@ -2847,13 +2906,13 @@ pub fn Device::create_render_pipeline_color_format(
 pub fn Device::create_render_pipeline_color_format_alpha_blend(
   self : Device,
   shader_module : ShaderModule,
-  format : UInt,
+  format : TextureFormat,
 ) -> RenderPipeline {
   RenderPipeline::{
     raw: @c.device_create_render_pipeline_color_format_alpha_blend(
       self.raw,
       shader_module.raw,
-      format,
+      format.raw,
     ),
   }
 }
@@ -2862,7 +2921,7 @@ pub fn Device::create_render_pipeline_color_format_alpha_blend(
 pub fn Device::create_render_pipeline_color_format_entries(
   self : Device,
   shader_module : ShaderModule,
-  format_u32 : UInt,
+  format : TextureFormat,
   vs_entry? : String = "vs_main",
   fs_entry? : String = "fs_main",
   alpha_blend? : Bool = false,
@@ -2874,7 +2933,7 @@ pub fn Device::create_render_pipeline_color_format_entries(
   let desc = @c.render_pipeline_descriptor_color_format_entries_u32_new(
     @c.null_pipeline_layout(),
     shader_module.raw,
-    format_u32,
+    format.raw,
     color_write_mask.to_uint(),
     alpha_blend,
     depth,

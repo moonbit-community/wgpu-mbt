@@ -23,8 +23,9 @@ test "wgpu Surface/Texture/BindGroup API extensions" {
   surface0.release()
   let usages = surface1.capabilities_usages_u64(adapter)
   inspect(usages != 0UL, content="true")
-  let surface_usage = @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
-    @wgpu.TEXTURE_USAGE_COPY_SRC
+  let surface_usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+  )
   let format = surface1.configure_default(
     adapter, device, 1U, 1U, surface_usage,
   )

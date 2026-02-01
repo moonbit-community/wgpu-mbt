@@ -18,9 +18,11 @@ test "wgpu surface: configure_best_effort" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let surface = instance.create_surface_metal_layer()
-  let usage = @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
+  let usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
     @wgpu.TEXTURE_USAGE_COPY_SRC |
-    @wgpu.TEXTURE_USAGE_COPY_DST
+    @wgpu.TEXTURE_USAGE_COPY_DST,
+  )
   let ok = surface.configure_best_effort(
     adapter,
     device,
