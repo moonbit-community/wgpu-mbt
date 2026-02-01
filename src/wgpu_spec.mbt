@@ -2199,6 +2199,15 @@ declare pub fn RenderPipelineDescBuilder::set_topology_u32(
 
 ///|
 #declaration_only
+declare pub fn RenderPipelineDescBuilder::set_depth_stencil(
+  self : RenderPipelineDescBuilder,
+  depth_format : TextureFormat,
+  depth_write_enabled? : Bool = true,
+  depth_compare_u32? : UInt = COMPARE_FUNCTION_LESS,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(
   self : RenderPipelineDescBuilder,
 ) -> @c.WGPURenderPipelineDescriptorPtr

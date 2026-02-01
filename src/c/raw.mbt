@@ -289,6 +289,15 @@ pub extern "C" fn render_pipeline_desc_builder_set_topology(
 
 ///|
 #borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_depth_stencil(
+  builder : OpaquePtr,
+  depth_format_u32 : UInt,
+  depth_write_enabled : Bool,
+  depth_compare_u32 : UInt,
+) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil"
+
+///|
+#borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_finish(
   builder : OpaquePtr,
 ) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_desc_builder_finish"

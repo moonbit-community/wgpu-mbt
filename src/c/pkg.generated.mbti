@@ -692,6 +692,8 @@ pub fn render_pipeline_desc_builder_new(WGPUPipelineLayout, WGPUShaderModule) ->
 
 pub fn render_pipeline_desc_builder_set_color_target_format(OpaquePtr, UInt) -> Unit
 
+pub fn render_pipeline_desc_builder_set_depth_stencil(OpaquePtr, UInt, Bool, UInt) -> Unit
+
 pub fn render_pipeline_desc_builder_set_entry_points_utf8(OpaquePtr, Bytes, UInt64, Bytes, UInt64) -> Unit
 
 pub fn render_pipeline_desc_builder_set_topology(OpaquePtr, UInt) -> Unit

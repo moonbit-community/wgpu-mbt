@@ -1431,6 +1431,36 @@ void mbt_wgpu_render_pipeline_desc_builder_set_topology(void *builder, uint32_t 
   out->desc.primitive.topology = (WGPUPrimitiveTopology)topology_u32;
 }
 
+void mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil(
+    void *builder, uint32_t depth_format_u32, bool depth_write_enabled,
+    uint32_t depth_compare_u32) {
+  if (!builder) {
+    return;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+
+  out->stencil = (WGPUStencilFaceState){
+      .compare = WGPUCompareFunction_Always,
+      .failOp = WGPUStencilOperation_Keep,
+      .depthFailOp = WGPUStencilOperation_Keep,
+      .passOp = WGPUStencilOperation_Keep,
+  };
+  out->depth_stencil = (WGPUDepthStencilState){
+      .nextInChain = NULL,
+      .format = (WGPUTextureFormat)depth_format_u32,
+      .depthWriteEnabled = depth_write_enabled ? WGPUOptionalBool_True : WGPUOptionalBool_False,
+      .depthCompare = (WGPUCompareFunction)depth_compare_u32,
+      .stencilFront = out->stencil,
+      .stencilBack = out->stencil,
+      .stencilReadMask = 0u,
+      .stencilWriteMask = 0u,
+      .depthBias = 0,
+      .depthBiasSlopeScale = 0.0f,
+      .depthBiasClamp = 0.0f,
+  };
+  out->desc.depthStencil = &out->depth_stencil;
+}
+
 WGPURenderPipelineDescriptor *mbt_wgpu_render_pipeline_desc_builder_finish(void *builder) {
   return (WGPURenderPipelineDescriptor *)builder;
 }
