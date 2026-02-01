@@ -14,6 +14,10 @@
 
 ///|
 test "wgpu Surface/Texture/BindGroup API extensions" {
+  if !@wgpu.platform_is_macos() {
+    inspect("skipped", content="skipped")
+    return
+  }
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)

@@ -14,6 +14,10 @@
 
 ///|
 test "wgpu surface capabilities (items)" {
+  if !@wgpu.platform_is_macos() {
+    inspect("skipped", content="skipped")
+    return
+  }
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let surface = instance.create_surface_metal_layer()

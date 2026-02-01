@@ -21,5 +21,29 @@ bool mbt_wgpu_shader_module_is_null(WGPUShaderModule shader_module) {
   return shader_module == NULL;
 }
 
+bool mbt_wgpu_platform_is_macos(void) {
+#if defined(__APPLE__)
+  return true;
+#else
+  return false;
+#endif
+}
+
+bool mbt_wgpu_platform_is_linux(void) {
+#if defined(__linux__)
+  return true;
+#else
+  return false;
+#endif
+}
+
+bool mbt_wgpu_platform_is_windows(void) {
+#if defined(_WIN32)
+  return true;
+#else
+  return false;
+#endif
+}
+
 WGPUIndexFormat mbt_wgpu_index_format_uint16(void) { return WGPUIndexFormat_Uint16; }
 WGPUIndexFormat mbt_wgpu_index_format_uint32(void) { return WGPUIndexFormat_Uint32; }

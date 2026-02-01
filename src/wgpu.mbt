@@ -121,6 +121,21 @@ pub fn TextureUsage::to_u64(self : TextureUsage) -> UInt64 {
 }
 
 ///|
+pub fn platform_is_macos() -> Bool {
+  @c.platform_is_macos()
+}
+
+///|
+pub fn platform_is_linux() -> Bool {
+  @c.platform_is_linux()
+}
+
+///|
+pub fn platform_is_windows() -> Bool {
+  @c.platform_is_windows()
+}
+
+///|
 pub fn SurfaceTexture::is_success(self : SurfaceTexture) -> Bool {
   let st = self.status()
   st == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||

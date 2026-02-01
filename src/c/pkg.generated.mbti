@@ -524,6 +524,12 @@ pub fn pipeline_layout_release(WGPUPipelineLayout) -> Unit
 
 pub fn pipeline_layout_set_label_utf8(WGPUPipelineLayout, Bytes, UInt64) -> Unit
 
+pub fn platform_is_linux() -> Bool
+
+pub fn platform_is_macos() -> Bool
+
+pub fn platform_is_windows() -> Bool
+
 pub fn query_set_descriptor_free(WGPUQuerySetDescriptorPtr) -> Unit
 
 pub fn query_set_descriptor_new(WGPUQueryType, UInt) -> WGPUQuerySetDescriptorPtr

@@ -143,6 +143,18 @@ pub type InstanceCapabilities
 pub type WaitAnyResult
 
 ///|
+#declaration_only
+declare pub fn platform_is_macos() -> Bool
+
+///|
+#declaration_only
+declare pub fn platform_is_linux() -> Bool
+
+///|
+#declaration_only
+declare pub fn platform_is_windows() -> Bool
+
+///|
 // --- BEGIN GENERATED WEBGPU HANDLE TYPES ---
 // --- END GENERATED WEBGPU HANDLE TYPES ---
 

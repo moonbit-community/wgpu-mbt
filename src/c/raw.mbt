@@ -33,6 +33,15 @@ pub extern "C" fn null_ptr() -> UnitPtr = "mbt_wgpu_null_ptr"
 pub extern "C" fn null_opaque_ptr() -> OpaquePtr = "mbt_wgpu_null_ptr"
 
 ///|
+pub extern "C" fn platform_is_macos() -> Bool = "mbt_wgpu_platform_is_macos"
+
+///|
+pub extern "C" fn platform_is_linux() -> Bool = "mbt_wgpu_platform_is_linux"
+
+///|
+pub extern "C" fn platform_is_windows() -> Bool = "mbt_wgpu_platform_is_windows"
+
+///|
 pub extern "C" fn null_uint_ptr() -> UIntPtr = "mbt_wgpu_null_uint_ptr"
 
 ///|
