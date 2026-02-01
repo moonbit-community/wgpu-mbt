@@ -16,6 +16,7 @@
 
 #if defined(_WIN32)
 #include <windows.h>
+#include <wchar.h>
 #else
 #include <dlfcn.h>
 #include <pthread.h>
@@ -93,10 +94,25 @@ static void mbt_wgpu_init(void) {
 
   // Platform-specific dynamic loader.
 #if defined(_WIN32)
-  g_mbt_wgpu_lib = LoadLibraryA(override);
+  // Prefer LoadLibraryW for UTF-8 paths, but fall back to LoadLibraryA.
+  g_mbt_wgpu_lib = NULL;
+  int wlen = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, override, -1, NULL, 0);
+  if (wlen > 0) {
+    wchar_t *wpath = (wchar_t *)malloc((size_t)wlen * sizeof(wchar_t));
+    if (wpath) {
+      int ok = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, override, -1, wpath, wlen);
+      if (ok > 0) {
+        g_mbt_wgpu_lib = LoadLibraryW(wpath);
+      }
+      free(wpath);
+    }
+  }
+  if (!g_mbt_wgpu_lib) {
+    g_mbt_wgpu_lib = LoadLibraryA(override);
+  }
   if (!g_mbt_wgpu_lib) {
     char msg[512];
-    (void)snprintf(msg, sizeof(msg), "failed to LoadLibraryA: %s", override);
+    (void)snprintf(msg, sizeof(msg), "failed to LoadLibrary{W,A}: %s", override);
     mbt_wgpu_die(msg);
   }
 #else
