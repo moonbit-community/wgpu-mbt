@@ -1924,6 +1924,44 @@ pub fn Adapter::request_device_sync_ptr(
 }
 
 ///|
+pub fn Adapter::request_device_sync_with_features(
+  self : Adapter,
+  instance : Instance,
+  required_features_u32 : Array[UInt],
+  label? : String = "",
+  queue_label? : String = "",
+) -> Device {
+  let label_bytes = utf8_bytes(label)
+  let queue_label_bytes = utf8_bytes(queue_label)
+  let count = required_features_u32.length()
+  let desc = if count == 0 {
+    @c.device_descriptor_new_no_features_utf8(
+      label_bytes,
+      label_bytes.length().to_uint64(),
+      queue_label_bytes,
+      queue_label_bytes.length().to_uint64(),
+    )
+  } else {
+    let fixed = FixedArray::from_array(required_features_u32[:])
+    @c.device_descriptor_new_features_utf8(
+      label_bytes,
+      label_bytes.length().to_uint64(),
+      count.to_uint64(),
+      fixed,
+      queue_label_bytes,
+      queue_label_bytes.length().to_uint64(),
+    )
+  }
+  let device_raw = @c.adapter_request_device_sync_ptr(
+    instance.raw,
+    self.raw,
+    desc,
+  )
+  @c.device_descriptor_free(desc)
+  Device::{ raw: device_raw }
+}
+
+///|
 pub fn Adapter::request_device_sync_timestamp_query(
   self : Adapter,
   instance : Instance,

@@ -62,6 +62,32 @@ pub extern "C" fn request_adapter_options_free(
 pub extern "C" fn null_device_descriptor_ptr() -> WGPUDeviceDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|
+#borrow(label, queue_label)
+pub extern "C" fn device_descriptor_new_no_features_utf8(
+  label : Bytes,
+  label_len : UInt64,
+  queue_label : Bytes,
+  queue_label_len : UInt64,
+) -> WGPUDeviceDescriptorPtr = "mbt_wgpu_device_descriptor_new_no_features_utf8"
+
+///|
+#borrow(label, required_features_u32, queue_label)
+pub extern "C" fn device_descriptor_new_features_utf8(
+  label : Bytes,
+  label_len : UInt64,
+  required_feature_count : UInt64,
+  required_features_u32 : FixedArray[UInt],
+  queue_label : Bytes,
+  queue_label_len : UInt64,
+) -> WGPUDeviceDescriptorPtr = "mbt_wgpu_device_descriptor_new_features_utf8"
+
+///|
+#borrow(desc)
+pub extern "C" fn device_descriptor_free(
+  desc : WGPUDeviceDescriptorPtr,
+) -> Unit = "mbt_wgpu_device_descriptor_free"
+
+///|
 pub extern "C" fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|

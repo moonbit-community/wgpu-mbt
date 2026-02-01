@@ -380,6 +380,12 @@ pub fn device_create_texture_u32(WGPUDevice, UInt, UInt, UInt, UInt64, UInt, UIn
 
 pub fn device_create_texture_view_formats_u32(WGPUDevice, UInt, UInt, UInt, UInt64, UInt, UInt, UInt, UInt, UInt64, FixedArray[UInt]) -> WGPUTexture
 
+pub fn device_descriptor_free(WGPUDeviceDescriptorPtr) -> Unit
+
+pub fn device_descriptor_new_features_utf8(Bytes, UInt64, UInt64, FixedArray[UInt], Bytes, UInt64) -> WGPUDeviceDescriptorPtr
+
+pub fn device_descriptor_new_no_features_utf8(Bytes, UInt64, Bytes, UInt64) -> WGPUDeviceDescriptorPtr
+
 pub fn device_destroy(WGPUDevice) -> Unit
 
 pub fn device_destroy_record_lost(WGPUDevice) -> Unit
