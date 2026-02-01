@@ -682,6 +682,8 @@ pub fn render_pass_write_timestamp(WGPURenderPassEncoder, WGPUQuerySet, UInt) ->
 
 pub fn render_pipeline_desc_builder_add_vertex_attribute(OpaquePtr, UInt, UInt64, UInt) -> Bool
 
+pub fn render_pipeline_desc_builder_add_vertex_buffer_layout(OpaquePtr, UInt64, UInt) -> UInt
+
 pub fn render_pipeline_desc_builder_enable_alpha_blend(OpaquePtr) -> Unit
 
 pub fn render_pipeline_desc_builder_finish(OpaquePtr) -> WGPURenderPipelineDescriptorPtr

@@ -1153,6 +1153,7 @@ void mbt_wgpu_compute_pipeline_descriptor_free(WGPUComputePipelineDescriptor *de
 }
 
 #define MBT_WGPU_RP_MAX_ATTRS 16u
+#define MBT_WGPU_RP_MAX_VBUFS 4u
 
 typedef struct {
   WGPURenderPipelineDescriptor desc;
@@ -1171,10 +1172,12 @@ typedef struct {
   WGPUStencilFaceState stencil;
   WGPUDepthStencilState depth_stencil;
 
-  // Optional: vertex buffer layout.
-  WGPUVertexAttribute attrs[MBT_WGPU_RP_MAX_ATTRS];
-  uint32_t attr_count;
-  WGPUVertexBufferLayout vbuf;
+  // Optional: vertex buffer layouts.
+  WGPUVertexAttribute attrs[MBT_WGPU_RP_MAX_VBUFS][MBT_WGPU_RP_MAX_ATTRS];
+  uint32_t attr_counts[MBT_WGPU_RP_MAX_VBUFS];
+  WGPUVertexBufferLayout vbufs[MBT_WGPU_RP_MAX_VBUFS];
+  uint32_t vbuf_count;
+  uint32_t current_vbuf;
 
   char vs_entry[64];
   char fs_entry[64];
@@ -1193,20 +1196,26 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
 
   memcpy(out->vs_entry, "vs_main", 7);
   memcpy(out->fs_entry, "fs_main", 7);
-  out->attr_count = 0u;
+  out->vbuf_count = 0u;
+  out->current_vbuf = 0u;
+  for (size_t i = 0; i < MBT_WGPU_RP_MAX_VBUFS; i++) {
+    out->attr_counts[i] = 0u;
+  }
 
   if (pos2) {
-    out->attrs[0] = (WGPUVertexAttribute){
+    out->attrs[0][0] = (WGPUVertexAttribute){
         .format = WGPUVertexFormat_Float32x2,
         .offset = 0u,
         .shaderLocation = 0u,
     };
-    out->attr_count = 1u;
-    out->vbuf = (WGPUVertexBufferLayout){
+    out->vbuf_count = 1u;
+    out->current_vbuf = 0u;
+    out->attr_counts[0] = 1u;
+    out->vbufs[0] = (WGPUVertexBufferLayout){
         .stepMode = WGPUVertexStepMode_Vertex,
         .arrayStride = 8u,
         .attributeCount = 1u,
-        .attributes = out->attrs,
+        .attributes = out->attrs[0],
     };
   }
 
@@ -1256,7 +1265,7 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
       .constantCount = 0u,
       .constants = NULL,
       .bufferCount = pos2 ? 1u : 0u,
-      .buffers = pos2 ? &out->vbuf : NULL,
+      .buffers = pos2 ? out->vbufs : NULL,
   };
 
   out->color_target = (WGPUColorTargetState){
@@ -1385,18 +1394,49 @@ void mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout(
     return;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
-  out->attr_count = 0u;
-  out->vbuf = (WGPUVertexBufferLayout){
+  out->vbuf_count = 1u;
+  out->current_vbuf = 0u;
+  out->attr_counts[0] = 0u;
+  out->vbufs[0] = (WGPUVertexBufferLayout){
       .stepMode = (WGPUVertexStepMode)step_mode_u32,
       .arrayStride = array_stride,
       .attributeCount = 0u,
-      .attributes = out->attrs,
+      .attributes = out->attrs[0],
   };
 
   out->vertex.bufferCount = 1u;
-  out->vertex.buffers = &out->vbuf;
+  out->vertex.buffers = out->vbufs;
   out->desc.vertex.bufferCount = 1u;
-  out->desc.vertex.buffers = &out->vbuf;
+  out->desc.vertex.buffers = out->vbufs;
+}
+
+uint32_t mbt_wgpu_render_pipeline_desc_builder_add_vertex_buffer_layout(
+    void *builder, uint64_t array_stride, uint32_t step_mode_u32) {
+  if (!builder) {
+    return 0xFFFFFFFFu;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  if (out->vbuf_count >= MBT_WGPU_RP_MAX_VBUFS) {
+    return 0xFFFFFFFFu;
+  }
+
+  uint32_t idx = out->vbuf_count;
+  out->vbuf_count++;
+  out->current_vbuf = idx;
+  out->attr_counts[idx] = 0u;
+  out->vbufs[idx] = (WGPUVertexBufferLayout){
+      .stepMode = (WGPUVertexStepMode)step_mode_u32,
+      .arrayStride = array_stride,
+      .attributeCount = 0u,
+      .attributes = out->attrs[idx],
+  };
+
+  out->vertex.bufferCount = (size_t)out->vbuf_count;
+  out->vertex.buffers = out->vbufs;
+  out->desc.vertex.bufferCount = (size_t)out->vbuf_count;
+  out->desc.vertex.buffers = out->vbufs;
+
+  return idx;
 }
 
 bool mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
@@ -1405,20 +1445,24 @@ bool mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
     return false;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
-  if (out->desc.vertex.bufferCount == 0u || !out->desc.vertex.buffers) {
+  if (out->vbuf_count == 0u) {
     return false;
   }
-  if (out->attr_count >= MBT_WGPU_RP_MAX_ATTRS) {
+  uint32_t idx = out->current_vbuf;
+  if (idx >= out->vbuf_count) {
+    return false;
+  }
+  if (out->attr_counts[idx] >= MBT_WGPU_RP_MAX_ATTRS) {
     return false;
   }
 
-  out->attrs[out->attr_count] = (WGPUVertexAttribute){
+  out->attrs[idx][out->attr_counts[idx]] = (WGPUVertexAttribute){
       .format = (WGPUVertexFormat)format_u32,
       .offset = offset,
       .shaderLocation = shader_location,
   };
-  out->attr_count++;
-  out->vbuf.attributeCount = (size_t)out->attr_count;
+  out->attr_counts[idx]++;
+  out->vbufs[idx].attributeCount = (size_t)out->attr_counts[idx];
   return true;
 }
 

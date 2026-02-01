@@ -76,3 +76,43 @@ pub fn u64le_at(bytes : Bytes, off : Int) -> UInt64 {
   (b6 << 48) |
   (b7 << 56)
 }
+
+///|
+pub fn f32le_bytes(v : Float) -> Bytes {
+  let bits : UInt = v.reinterpret_as_int().reinterpret_as_uint()
+  let b0 = (bits & 0xFF).to_byte()
+  let b1 = ((bits >> 8) & 0xFF).to_byte()
+  let b2 = ((bits >> 16) & 0xFF).to_byte()
+  let b3 = ((bits >> 24) & 0xFF).to_byte()
+  Bytes::from_array([b0, b1, b2, b3])
+}
+
+///|
+pub fn concat_bytes(parts : Array[Bytes]) -> Bytes {
+  let out : Ref[Array[Byte]] = @ref.new([])
+  for i = 0; i < parts.length(); i = i + 1 {
+    let p = parts[i]
+    for j = 0; j < p.length(); j = j + 1 {
+      out.val.push(p[j])
+    }
+  }
+  Bytes::from_array(out.val)
+}
+
+///|
+pub fn vertices_pos2_fullscreen_tri_bytes() -> Bytes {
+  // Full-screen triangle positions (pos2).
+  concat_bytes([
+    f32le_bytes(-1.0),
+    f32le_bytes(-1.0),
+    f32le_bytes(3.0),
+    f32le_bytes(-1.0),
+    f32le_bytes(-1.0),
+    f32le_bytes(3.0),
+  ])
+}
+
+///|
+pub fn vertices_pos2_bytes() -> Bytes {
+  vertices_pos2_fullscreen_tri_bytes()
+}

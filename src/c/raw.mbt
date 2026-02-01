@@ -282,6 +282,14 @@ pub extern "C" fn render_pipeline_desc_builder_add_vertex_attribute(
 
 ///|
 #borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_add_vertex_buffer_layout(
+  builder : OpaquePtr,
+  array_stride : UInt64,
+  step_mode_u32 : UInt,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_add_vertex_buffer_layout"
+
+///|
+#borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_topology(
   builder : OpaquePtr,
   topology_u32 : UInt,

@@ -2183,6 +2183,14 @@ declare pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(
 
 ///|
 #declaration_only
+declare pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(
+  self : RenderPipelineDescBuilder,
+  array_stride : UInt64,
+  step_mode_u32 : UInt,
+) -> UInt
+
+///|
+#declaration_only
 declare pub fn RenderPipelineDescBuilder::add_vertex_attribute(
   self : RenderPipelineDescBuilder,
   format_u32 : UInt,

@@ -2,6 +2,10 @@
 package "Milky2018/wgpu_mbt/tests"
 
 // Values
+pub fn concat_bytes(Array[Bytes]) -> Bytes
+
+pub fn f32le_bytes(Float) -> Bytes
+
 pub fn read_rgba8_from_copy_out(Bytes, UInt, UInt) -> FixedArray[UInt]
 
 pub fn rgba_bytes(UInt, UInt, UInt, UInt) -> Bytes
@@ -11,6 +15,10 @@ pub fn u32le_at(Bytes, Int) -> UInt
 pub fn u32le_pack(Array[UInt]) -> Bytes
 
 pub fn u64le_at(Bytes, Int) -> UInt64
+
+pub fn vertices_pos2_bytes() -> Bytes
+
+pub fn vertices_pos2_fullscreen_tri_bytes() -> Bytes
 
 // Errors
 

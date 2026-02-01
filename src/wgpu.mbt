@@ -3643,6 +3643,19 @@ pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(
 }
 
 ///|
+pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(
+  self : RenderPipelineDescBuilder,
+  array_stride : UInt64,
+  step_mode_u32 : UInt,
+) -> UInt {
+  @c.render_pipeline_desc_builder_add_vertex_buffer_layout(
+    self.raw,
+    array_stride,
+    step_mode_u32,
+  )
+}
+
+///|
 pub fn RenderPipelineDescBuilder::add_vertex_attribute(
   self : RenderPipelineDescBuilder,
   format_u32 : UInt,

@@ -1710,6 +1710,7 @@ pub struct RenderPipelineDescBuilder {
   raw : @c.OpaquePtr
 }
 pub fn RenderPipelineDescBuilder::add_vertex_attribute(Self, UInt, UInt64, UInt) -> Bool
+pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(Self, UInt64, UInt) -> UInt
 pub fn RenderPipelineDescBuilder::create_pipeline(Self, Device) -> RenderPipeline
 pub fn RenderPipelineDescBuilder::enable_alpha_blend(Self) -> Unit
 pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(Self) -> @c.WGPURenderPipelineDescriptorPtr
