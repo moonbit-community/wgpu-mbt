@@ -1152,6 +1152,8 @@ void mbt_wgpu_compute_pipeline_descriptor_free(WGPUComputePipelineDescriptor *de
   free(desc);
 }
 
+#define MBT_WGPU_RP_MAX_ATTRS 16u
+
 typedef struct {
   WGPURenderPipelineDescriptor desc;
   WGPUVertexState vertex;
@@ -1169,8 +1171,9 @@ typedef struct {
   WGPUStencilFaceState stencil;
   WGPUDepthStencilState depth_stencil;
 
-  // Optional: pos2 vertex buffer.
-  WGPUVertexAttribute attr;
+  // Optional: vertex buffer layout.
+  WGPUVertexAttribute attrs[MBT_WGPU_RP_MAX_ATTRS];
+  uint32_t attr_count;
   WGPUVertexBufferLayout vbuf;
 
   char vs_entry[64];
@@ -1190,18 +1193,20 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
 
   memcpy(out->vs_entry, "vs_main", 7);
   memcpy(out->fs_entry, "fs_main", 7);
+  out->attr_count = 0u;
 
   if (pos2) {
-    out->attr = (WGPUVertexAttribute){
+    out->attrs[0] = (WGPUVertexAttribute){
         .format = WGPUVertexFormat_Float32x2,
         .offset = 0u,
         .shaderLocation = 0u,
     };
+    out->attr_count = 1u;
     out->vbuf = (WGPUVertexBufferLayout){
         .stepMode = WGPUVertexStepMode_Vertex,
         .arrayStride = 8u,
         .attributeCount = 1u,
-        .attributes = &out->attr,
+        .attributes = out->attrs,
     };
   }
 
@@ -1299,6 +1304,135 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
   };
 
   return &out->desc;
+}
+
+// -----------------------------------------------------------------------------
+// RenderPipelineDescriptor arena builder (MVP)
+//
+// The returned builder pointer aliases the descriptor allocation: it is safe to
+// free the finished descriptor via `mbt_wgpu_render_pipeline_descriptor_free()`,
+// because `desc` is the first field in the allocation.
+// -----------------------------------------------------------------------------
+
+void *mbt_wgpu_render_pipeline_desc_builder_new(WGPUPipelineLayout layout,
+                                                WGPUShaderModule shader_module) {
+  return (void *)mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
+      layout, shader_module, false, false, false);
+}
+
+void mbt_wgpu_render_pipeline_desc_builder_free(void *builder) { free(builder); }
+
+void mbt_wgpu_render_pipeline_desc_builder_set_entry_points_utf8(
+    void *builder, const uint8_t *vs_entry, uint64_t vs_entry_len,
+    const uint8_t *fs_entry, uint64_t fs_entry_len) {
+  if (!builder || !vs_entry || !fs_entry || vs_entry_len == 0u || fs_entry_len == 0u) {
+    return;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  if (vs_entry_len > sizeof(out->vs_entry) || fs_entry_len > sizeof(out->fs_entry)) {
+    return;
+  }
+
+  memset(out->vs_entry, 0, sizeof(out->vs_entry));
+  memset(out->fs_entry, 0, sizeof(out->fs_entry));
+  memcpy(out->vs_entry, vs_entry, (size_t)vs_entry_len);
+  memcpy(out->fs_entry, fs_entry, (size_t)fs_entry_len);
+
+  // Note: render pipeline descriptors store vertex state by-value, so we must
+  // update `out->desc.vertex` (not only `out->vertex`).
+  out->vertex.entryPoint =
+      (WGPUStringView){.data = out->vs_entry, .length = (size_t)vs_entry_len};
+  out->desc.vertex.entryPoint = out->vertex.entryPoint;
+
+  out->fragment.entryPoint =
+      (WGPUStringView){.data = out->fs_entry, .length = (size_t)fs_entry_len};
+}
+
+void mbt_wgpu_render_pipeline_desc_builder_set_color_target_format(void *builder,
+                                                                   uint32_t format) {
+  if (!builder) {
+    return;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  out->color_target.format = (WGPUTextureFormat)format;
+}
+
+void mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend(void *builder) {
+  if (!builder) {
+    return;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  out->blend_color = (WGPUBlendComponent){
+      .operation = WGPUBlendOperation_Add,
+      .srcFactor = WGPUBlendFactor_SrcAlpha,
+      .dstFactor = WGPUBlendFactor_OneMinusSrcAlpha,
+  };
+  out->blend_alpha = (WGPUBlendComponent){
+      .operation = WGPUBlendOperation_Add,
+      .srcFactor = WGPUBlendFactor_One,
+      .dstFactor = WGPUBlendFactor_OneMinusSrcAlpha,
+  };
+  out->blend = (WGPUBlendState){
+      .color = out->blend_color,
+      .alpha = out->blend_alpha,
+  };
+  out->color_target.blend = &out->blend;
+}
+
+void mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout(
+    void *builder, uint64_t array_stride, uint32_t step_mode_u32) {
+  if (!builder) {
+    return;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  out->attr_count = 0u;
+  out->vbuf = (WGPUVertexBufferLayout){
+      .stepMode = (WGPUVertexStepMode)step_mode_u32,
+      .arrayStride = array_stride,
+      .attributeCount = 0u,
+      .attributes = out->attrs,
+  };
+
+  out->vertex.bufferCount = 1u;
+  out->vertex.buffers = &out->vbuf;
+  out->desc.vertex.bufferCount = 1u;
+  out->desc.vertex.buffers = &out->vbuf;
+}
+
+bool mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
+    void *builder, uint32_t format_u32, uint64_t offset, uint32_t shader_location) {
+  if (!builder) {
+    return false;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  if (out->desc.vertex.bufferCount == 0u || !out->desc.vertex.buffers) {
+    return false;
+  }
+  if (out->attr_count >= MBT_WGPU_RP_MAX_ATTRS) {
+    return false;
+  }
+
+  out->attrs[out->attr_count] = (WGPUVertexAttribute){
+      .format = (WGPUVertexFormat)format_u32,
+      .offset = offset,
+      .shaderLocation = shader_location,
+  };
+  out->attr_count++;
+  out->vbuf.attributeCount = (size_t)out->attr_count;
+  return true;
+}
+
+void mbt_wgpu_render_pipeline_desc_builder_set_topology(void *builder, uint32_t topology_u32) {
+  if (!builder) {
+    return;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  out->primitive.topology = (WGPUPrimitiveTopology)topology_u32;
+  out->desc.primitive.topology = (WGPUPrimitiveTopology)topology_u32;
+}
+
+WGPURenderPipelineDescriptor *mbt_wgpu_render_pipeline_desc_builder_finish(void *builder) {
+  return (WGPURenderPipelineDescriptor *)builder;
 }
 
 WGPURenderPipelineDescriptor *

@@ -1706,6 +1706,20 @@ pub fn RenderPipeline::release(Self) -> Unit
 pub fn RenderPipeline::release_raw(Self) -> Unit
 pub fn RenderPipeline::set_label(Self, String) -> Unit
 
+pub struct RenderPipelineDescBuilder {
+  raw : @c.OpaquePtr
+}
+pub fn RenderPipelineDescBuilder::add_vertex_attribute(Self, UInt, UInt64, UInt) -> Bool
+pub fn RenderPipelineDescBuilder::create_pipeline(Self, Device) -> RenderPipeline
+pub fn RenderPipelineDescBuilder::enable_alpha_blend(Self) -> Unit
+pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(Self) -> @c.WGPURenderPipelineDescriptorPtr
+pub fn RenderPipelineDescBuilder::free(Self) -> Unit
+pub fn RenderPipelineDescBuilder::new(ShaderModule, layout? : PipelineLayout) -> Self
+pub fn RenderPipelineDescBuilder::set_color_target_format(Self, TextureFormat) -> Unit
+pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Unit
+pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Unit
+pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(Self, UInt64, UInt) -> Unit
+
 pub struct Sampler {
   raw : @c.WGPUSampler
 }

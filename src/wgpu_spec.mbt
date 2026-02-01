@@ -128,6 +128,10 @@ pub type BindGroupBuilder
 
 ///|
 #declaration_only
+pub type RenderPipelineDescBuilder
+
+///|
+#declaration_only
 pub type PipelineLayout
 
 ///|
@@ -2140,6 +2144,77 @@ declare pub fn BindGroupBuilder::finish(
 ///|
 #declaration_only
 declare pub fn BindGroupBuilder::free(self : BindGroupBuilder) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::new(
+  shader_module : ShaderModule,
+  layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
+) -> RenderPipelineDescBuilder
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_entry_points(
+  self : RenderPipelineDescBuilder,
+  vs_entry : String,
+  fs_entry : String,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_color_target_format(
+  self : RenderPipelineDescBuilder,
+  format : TextureFormat,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::enable_alpha_blend(
+  self : RenderPipelineDescBuilder,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(
+  self : RenderPipelineDescBuilder,
+  array_stride : UInt64,
+  step_mode_u32 : UInt,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::add_vertex_attribute(
+  self : RenderPipelineDescBuilder,
+  format_u32 : UInt,
+  offset : UInt64,
+  shader_location : UInt,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_topology_u32(
+  self : RenderPipelineDescBuilder,
+  topology_u32 : UInt,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(
+  self : RenderPipelineDescBuilder,
+) -> @c.WGPURenderPipelineDescriptorPtr
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::create_pipeline(
+  self : RenderPipelineDescBuilder,
+  device : Device,
+) -> RenderPipeline
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::free(
+  self : RenderPipelineDescBuilder,
+) -> Unit
 
 ///|
 #declaration_only

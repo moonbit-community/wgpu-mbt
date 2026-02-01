@@ -230,6 +230,76 @@ pub extern "C" fn bind_group_builder_finish(
 ) -> BindGroup = "mbt_wgpu_bind_group_builder_finish"
 
 ///|
+/// RenderPipelineDescriptor arena builder (MVP).
+///
+/// Note: the finished descriptor pointer aliases the builder allocation. Free
+/// it with `render_pipeline_descriptor_free(desc)` (from `desc_builders.mbt`),
+/// or abandon the builder early with `render_pipeline_desc_builder_free`.
+pub extern "C" fn render_pipeline_desc_builder_new(
+  layout : PipelineLayout,
+  shader_module : ShaderModule,
+) -> OpaquePtr = "mbt_wgpu_render_pipeline_desc_builder_new"
+
+///|
+#borrow(builder, vs_entry, fs_entry)
+pub extern "C" fn render_pipeline_desc_builder_set_entry_points_utf8(
+  builder : OpaquePtr,
+  vs_entry : Bytes,
+  vs_entry_len : UInt64,
+  fs_entry : Bytes,
+  fs_entry_len : UInt64,
+) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_entry_points_utf8"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_color_target_format(
+  builder : OpaquePtr,
+  format_u32 : UInt,
+) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_format"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_enable_alpha_blend(
+  builder : OpaquePtr,
+) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_vertex_buffer_layout(
+  builder : OpaquePtr,
+  array_stride : UInt64,
+  step_mode_u32 : UInt,
+) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_add_vertex_attribute(
+  builder : OpaquePtr,
+  format_u32 : UInt,
+  offset : UInt64,
+  shader_location : UInt,
+) -> Bool = "mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_topology(
+  builder : OpaquePtr,
+  topology_u32 : UInt,
+) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_topology"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_finish(
+  builder : OpaquePtr,
+) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_desc_builder_finish"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_free(
+  builder : OpaquePtr,
+) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_free"
+
+///|
 pub fn create_instance() -> Instance {
   wgpuCreateInstance(null_instance_descriptor_ptr())
 }
