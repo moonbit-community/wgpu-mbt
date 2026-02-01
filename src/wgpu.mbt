@@ -1905,6 +1905,86 @@ pub fn Surface::capabilities_alpha_modes(
 }
 
 ///|
+fn array_contains_u32(xs : Array[UInt], v : UInt) -> Bool {
+  let n = xs.length()
+  for i = 0; i < n; i = i + 1 {
+    if xs[i] == v {
+      return true
+    }
+  }
+  false
+}
+
+///|
+fn pick_first_supported_u32(xs : Array[UInt], prefs : Array[UInt]) -> UInt {
+  let n = prefs.length()
+  for i = 0; i < n; i = i + 1 {
+    let v = prefs[i]
+    if array_contains_u32(xs, v) {
+      return v
+    }
+  }
+  if xs.length() == 0 {
+    0U
+  } else {
+    xs[0]
+  }
+}
+
+///|
+pub fn Surface::configure_best_effort(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : UInt64,
+  prefer_srgb? : Bool = true,
+  vsync? : Bool = true,
+) -> Bool {
+  let formats = self.capabilities_formats(adapter)
+  let present_modes = self.capabilities_present_modes(adapter)
+  let alpha_modes = self.capabilities_alpha_modes(adapter)
+  let format_prefs = if prefer_srgb {
+    [
+      TEXTURE_FORMAT_BGRA8_UNORM_SRGB,
+      TEXTURE_FORMAT_RGBA8_UNORM_SRGB,
+      TEXTURE_FORMAT_BGRA8_UNORM,
+      TEXTURE_FORMAT_RGBA8_UNORM,
+    ]
+  } else {
+    [
+      TEXTURE_FORMAT_BGRA8_UNORM,
+      TEXTURE_FORMAT_RGBA8_UNORM,
+      TEXTURE_FORMAT_BGRA8_UNORM_SRGB,
+      TEXTURE_FORMAT_RGBA8_UNORM_SRGB,
+    ]
+  }
+  let fmt = pick_first_supported_u32(formats, format_prefs)
+  let pm_prefs = if vsync {
+    [PRESENT_MODE_FIFO, PRESENT_MODE_FIFO_RELAXED]
+  } else {
+    [PRESENT_MODE_MAILBOX, PRESENT_MODE_IMMEDIATE, PRESENT_MODE_FIFO]
+  }
+  let pm = pick_first_supported_u32(present_modes, pm_prefs)
+  let am_prefs = [
+    COMPOSITE_ALPHA_MODE_AUTO,
+    COMPOSITE_ALPHA_MODE_OPAQUE,
+    COMPOSITE_ALPHA_MODE_PREMULTIPLIED,
+    COMPOSITE_ALPHA_MODE_UNPREMULTIPLIED,
+    COMPOSITE_ALPHA_MODE_INHERIT,
+  ]
+  let am = pick_first_supported_u32(alpha_modes, am_prefs)
+  let supported_usage = self.capabilities_usages_u64(adapter)
+  let actual_usage = if (usage & supported_usage) == 0UL {
+    supported_usage
+  } else {
+    usage & supported_usage
+  }
+  self.configure_u32(adapter, device, width, height, actual_usage, fmt, pm, am)
+}
+
+///|
 pub fn Adapter::request_device_sync(
   self : Adapter,
   instance : Instance,

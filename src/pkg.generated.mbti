@@ -1733,6 +1733,7 @@ pub fn Surface::capabilities_present_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_present_modes_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::capabilities_usages_u64(Self, Adapter) -> UInt64
 pub fn Surface::configure(Self, @c.WGPUSurfaceConfigurationPtr) -> Unit
+pub fn Surface::configure_best_effort(Self, Adapter, Device, UInt, UInt, UInt64, prefer_srgb? : Bool, vsync? : Bool) -> Bool
 pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, UInt64) -> UInt
 pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt) -> Bool
 pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, UInt64, UInt, UInt, UInt, Array[UInt]) -> Bool
