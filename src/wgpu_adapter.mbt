@@ -21,6 +21,22 @@ pub fn Adapter::request_device_sync(
 }
 
 ///|
+pub fn Adapter::try_request_device_sync(
+  self : Adapter,
+  instance : Instance,
+) -> Result[Device, NativeError] {
+  match require_native_symbol("wgpuAdapterRequestDevice") {
+    Ok(_) => ()
+    Err(e) => return Err(e)
+  }
+  match require_native_symbol("wgpuInstanceProcessEvents") {
+    Ok(_) => ()
+    Err(e) => return Err(e)
+  }
+  Ok(self.request_device_sync(instance))
+}
+
+///|
 pub fn Adapter::request_device_sync_ptr(
   self : Adapter,
   instance : Instance,
@@ -29,6 +45,23 @@ pub fn Adapter::request_device_sync_ptr(
   Device::{
     raw: @c.adapter_request_device_sync_ptr(instance.raw, self.raw, descriptor),
   }
+}
+
+///|
+pub fn Adapter::try_request_device_sync_ptr(
+  self : Adapter,
+  instance : Instance,
+  descriptor : @c.WGPUDeviceDescriptorPtr,
+) -> Result[Device, NativeError] {
+  match require_native_symbol("wgpuAdapterRequestDevice") {
+    Ok(_) => ()
+    Err(e) => return Err(e)
+  }
+  match require_native_symbol("wgpuInstanceProcessEvents") {
+    Ok(_) => ()
+    Err(e) => return Err(e)
+  }
+  Ok(self.request_device_sync_ptr(instance, descriptor))
 }
 
 ///|

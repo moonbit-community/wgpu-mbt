@@ -48,11 +48,42 @@ pub fn Instance::request_adapter_sync(self : Instance) -> Adapter {
 }
 
 ///|
+pub fn Instance::try_request_adapter_sync(
+  self : Instance,
+) -> Result[Adapter, NativeError] {
+  match require_native_symbol("wgpuInstanceRequestAdapter") {
+    Ok(_) => ()
+    Err(e) => return Err(e)
+  }
+  match require_native_symbol("wgpuInstanceProcessEvents") {
+    Ok(_) => ()
+    Err(e) => return Err(e)
+  }
+  Ok(self.request_adapter_sync())
+}
+
+///|
 pub fn Instance::request_adapter_sync_ptr(
   self : Instance,
   options : @c.WGPURequestAdapterOptionsPtr,
 ) -> Adapter {
   Adapter::{ raw: @c.instance_request_adapter_sync_ptr(self.raw, options) }
+}
+
+///|
+pub fn Instance::try_request_adapter_sync_ptr(
+  self : Instance,
+  options : @c.WGPURequestAdapterOptionsPtr,
+) -> Result[Adapter, NativeError] {
+  match require_native_symbol("wgpuInstanceRequestAdapter") {
+    Ok(_) => ()
+    Err(e) => return Err(e)
+  }
+  match require_native_symbol("wgpuInstanceProcessEvents") {
+    Ok(_) => ()
+    Err(e) => return Err(e)
+  }
+  Ok(self.request_adapter_sync_ptr(options))
 }
 
 ///|

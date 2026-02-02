@@ -190,7 +190,9 @@ If you see crashes/aborts early in the program, it is usually because `libwgpu_n
 - Inspect loader diagnostics:
   - `@wgpu.native_diagnostic()`
 - Avoid aborts while checking availability:
-  - `@wgpu.require_native()` (or `Instance::try_create()` / `Instance::try_create_ptr(...)`)
+  - `@wgpu.native_check()` / `@wgpu.require_native_symbol("wgpu...")`
+  - `Instance::try_create()` / `Instance::try_create_ptr(...)`
+  - `Instance::try_request_adapter_sync()` / `Adapter::try_request_device_sync(...)`
 - Fix typical causes:
   - Install the native library to the default per-user path (recommended) by running `python3 scripts/postadd.py`
   - Or set `MBT_WGPU_NATIVE_LIB` to an absolute path to your `.dylib` / `.so` / `.dll`
@@ -220,9 +222,30 @@ Minimal example (same as `src/cmd/main/main.mbt`):
 
 ```moonbit
 fn main {
-  let instance = @wgpu.Instance::create()
-  let adapter = instance.request_adapter_sync()
-  let device = adapter.request_device_sync(instance)
+  let instance = match @wgpu.Instance::try_create() {
+    Ok(i) => i
+    Err(e) => {
+      println(e.message())
+      return
+    }
+  }
+  let adapter = match instance.try_request_adapter_sync() {
+    Ok(a) => a
+    Err(e) => {
+      println(e.message())
+      instance.release()
+      return
+    }
+  }
+  let device = match adapter.try_request_device_sync(instance) {
+    Ok(d) => d
+    Err(e) => {
+      println(e.message())
+      adapter.release()
+      instance.release()
+      return
+    }
+  }
   let queue = device.queue()
   let buf = device.create_buffer(
     size=4UL,

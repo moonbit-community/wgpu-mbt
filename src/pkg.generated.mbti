@@ -448,6 +448,10 @@ pub const MIPMAP_FILTER_MODE_UNDEFINED : UInt = 0x00000000
 
 pub const MIP_LEVEL_COUNT_UNDEFINED : UInt = 0xFFFFFFFF
 
+pub const NATIVE_ERR_MISSING_SYMBOL : UInt = 2
+
+pub const NATIVE_ERR_UNAVAILABLE : UInt = 1
+
 pub const NATIVE_FEATURE_BUFFER_BINDING_ARRAY : UInt = 0x0003000F
 
 pub const NATIVE_FEATURE_CONSERVATIVE_RASTERIZATION : UInt = 0x00030015
@@ -1174,7 +1178,11 @@ pub fn get_version() -> UInt
 
 pub fn native_available() -> Bool
 
+pub fn native_check() -> Result[Unit, NativeError]
+
 pub fn native_diagnostic() -> String
+
+pub fn native_has_symbol(String) -> Bool
 
 pub fn platform_is_linux() -> Bool
 
@@ -1183,6 +1191,8 @@ pub fn platform_is_macos() -> Bool
 pub fn platform_is_windows() -> Bool
 
 pub fn require_native() -> Result[Unit, NativeLoadError]
+
+pub fn require_native_symbol(String) -> Result[Unit, NativeError]
 
 pub fn set_compilation_info_enabled(Bool) -> Unit
 
@@ -1245,6 +1255,8 @@ pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Arr
 pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64
+pub fn Adapter::try_request_device_sync(Self, Instance) -> Result[Device, NativeError]
+pub fn Adapter::try_request_device_sync_ptr(Self, Instance, @c.WGPUDeviceDescriptorPtr) -> Result[Device, NativeError]
 
 pub struct BindGroup {
   raw : @c.WGPUBindGroup
@@ -1583,6 +1595,8 @@ pub fn Instance::request_adapter_sync_options_u32(Self, feature_level_u32? : UIn
 pub fn Instance::request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Adapter
 pub fn Instance::try_create() -> Result[Self, NativeLoadError]
 pub fn Instance::try_create_ptr(@c.WGPUInstanceDescriptorPtr) -> Result[Self, NativeLoadError]
+pub fn Instance::try_request_adapter_sync(Self) -> Result[Adapter, NativeError]
+pub fn Instance::try_request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Result[Adapter, NativeError]
 pub fn Instance::wait_any(Self, UInt64, @c.WGPUFutureWaitInfoPtr, UInt64) -> @c.WGPUWaitStatus
 pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult
 pub fn Instance::wgpu_generate_report(Self, @c.WGPUGlobalReportPtr) -> Unit
@@ -1599,6 +1613,15 @@ pub struct MapMode {
 pub fn MapMode::from_u64(UInt64) -> Self
 pub fn MapMode::to_u64(Self) -> UInt64
 pub impl Eq for MapMode
+
+pub struct NativeError {
+  kind : UInt
+  symbol : String
+  diagnostic : String
+}
+pub fn NativeError::message(Self) -> String
+pub fn NativeError::missing_symbol(String, String) -> Self
+pub fn NativeError::unavailable(String) -> Self
 
 pub struct NativeLoadError {
   diagnostic : String

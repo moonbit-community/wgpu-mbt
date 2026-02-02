@@ -22,8 +22,25 @@ fn main {
       return
     }
   }
-  let adapter = instance.request_adapter_sync()
-  let device = adapter.request_device_sync(instance)
+  let adapter = match instance.try_request_adapter_sync() {
+    Ok(a) => a
+    Err(e) => {
+      println("failed to request adapter:")
+      println(e.message())
+      instance.release()
+      return
+    }
+  }
+  let device = match adapter.try_request_device_sync(instance) {
+    Ok(d) => d
+    Err(e) => {
+      println("failed to request device:")
+      println(e.message())
+      adapter.release()
+      instance.release()
+      return
+    }
+  }
   let queue = device.queue()
   let buf = device.create_buffer(
     size=4UL,

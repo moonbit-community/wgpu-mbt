@@ -73,6 +73,34 @@ pub fn require_native() -> Result[Unit, NativeLoadError] {
 }
 
 ///|
+pub fn native_check() -> Result[Unit, NativeError] {
+  if native_available() {
+    Ok(())
+  } else {
+    Err(NativeError::unavailable(native_diagnostic()))
+  }
+}
+
+///|
+pub fn native_has_symbol(name : String) -> Bool {
+  let b = utf8_bytes(name)
+  @c.optional_sym_present_utf8(b, b.length().to_uint64())
+}
+
+///|
+pub fn require_native_symbol(name : String) -> Result[Unit, NativeError] {
+  match native_check() {
+    Ok(_) => ()
+    Err(e) => return Err(e)
+  }
+  if native_has_symbol(name) {
+    Ok(())
+  } else {
+    Err(NativeError::missing_symbol(name, native_diagnostic()))
+  }
+}
+
+///|
 pub fn set_log_level(level : UInt) -> Unit {
   @c.wgpuSetLogLevel(level)
 }
