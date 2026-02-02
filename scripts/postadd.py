@@ -13,6 +13,7 @@ import hashlib
 import json
 import os
 import platform
+import subprocess
 import sys
 import tempfile
 import urllib.request
@@ -88,6 +89,23 @@ def _download(url: str, dst: Path) -> None:
   tmp.replace(dst)
 
 
+def _download_via_gh(tag: str, asset_name: str, dst: Path) -> None:
+  # Works for both public and private repos as long as `gh auth login` is done.
+  with tempfile.TemporaryDirectory() as td:
+    d = Path(td)
+    cmd = ["gh", "release", "download", "-R", REPO, tag, "-p", asset_name, "-D", str(d)]
+    p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    if p.returncode != 0:
+      _die(
+        "failed to download via gh; ensure GitHub CLI is installed and authenticated "
+        f"(gh auth login). Output:\n{p.stdout}"
+      )
+    src = d / asset_name
+    if not src.exists():
+      _die(f"gh download succeeded but file missing: {src}")
+    src.replace(dst)
+
+
 def _sha256(path: Path) -> str:
   h = hashlib.sha256()
   with path.open("rb") as f:
@@ -99,9 +117,16 @@ def _sha256(path: Path) -> str:
 def _expected_sha256(version: str, asset_name: str) -> str:
   tag = f"v{version}"
   url = f"https://github.com/{REPO}/releases/download/{tag}/SHA256SUMS"
-  req = urllib.request.Request(url, headers={"User-Agent": "wgpu-mbt postadd"})
-  with urllib.request.urlopen(req, timeout=60) as r:
-    txt = r.read().decode("utf-8", errors="replace")
+  try:
+    req = urllib.request.Request(url, headers={"User-Agent": "wgpu-mbt postadd"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+      txt = r.read().decode("utf-8", errors="replace")
+  except Exception:
+    # Private repos (or restricted assets) typically return 404 without auth. Fall back to `gh`.
+    with tempfile.TemporaryDirectory() as td:
+      tmp = Path(td) / "SHA256SUMS"
+      _download_via_gh(tag, "SHA256SUMS", tmp)
+      txt = tmp.read_text(encoding="utf-8", errors="replace")
   for line in txt.splitlines():
     # format: "<hex>  <filename>"
     parts = line.strip().split()
@@ -138,8 +163,9 @@ def main() -> None:
 
   try:
     _download(url, dst)
-  except Exception as e:
-    _die(f"failed to download {asset_name}: {e}")
+  except Exception:
+    # Private repos (or restricted assets) typically return 404 without auth. Fall back to `gh`.
+    _download_via_gh(tag, asset_name, dst)
 
   got = _sha256(dst)
   if got.lower() != expected.lower():
@@ -162,4 +188,3 @@ def main() -> None:
 
 if __name__ == "__main__":
   main()
-

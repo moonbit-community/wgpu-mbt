@@ -49,6 +49,9 @@ the matching release asset, verify its SHA256, and install it into a stable per-
 
 If you want to disable postadd scripts, set `MOON_IGNORE_POSTADD=1`.
 
+Note: if this repository is private in your org, `postadd` will fall back to using GitHub CLI
+(`gh release download`), so you need `gh` installed and authenticated (`gh auth login`).
+
 You can always override the runtime library path with `MBT_WGPU_NATIVE_LIB`.
 
 ## Quickstart (macOS)
