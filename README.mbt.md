@@ -183,6 +183,19 @@ To avoid aborts and surface a diagnostic string instead, use:
 - `@wgpu.require_native()` (returns `Result[Unit, NativeLoadError]`)
 - `Instance::try_create()` / `Instance::try_create_ptr(...)` (returns `Result[Instance, NativeLoadError]`)
 
+## Troubleshooting
+
+If you see crashes/aborts early in the program, it is usually because `libwgpu_native` cannot be located/loaded.
+
+- Inspect loader diagnostics:
+  - `@wgpu.native_diagnostic()`
+- Avoid aborts while checking availability:
+  - `@wgpu.require_native()` (or `Instance::try_create()` / `Instance::try_create_ptr(...)`)
+- Fix typical causes:
+  - Install the native library to the default per-user path (recommended) by running `python3 scripts/postadd.py`
+  - Or set `MBT_WGPU_NATIVE_LIB` to an absolute path to your `.dylib` / `.so` / `.dll`
+- If you changed/replaced the native library or changed `MBT_WGPU_NATIVE_LIB`, re-run `python3 scripts/postadd.py` so feature probes refresh the marker files.
+
 ## Using as a library
 
 This repo is usable as a regular MoonBit library (the CLI under `cmd/` / `src/cmd/` is just an example).
