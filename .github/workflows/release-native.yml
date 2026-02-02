@@ -4,6 +4,11 @@ on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish assets to (e.g. v0.4.6). Defaults to the ref name."
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -93,10 +98,11 @@ jobs:
       - name: Create or update GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         shell: bash
         run: |
           set -euo pipefail
-          tag="${GITHUB_REF_NAME}"
+          tag="${{ github.event.inputs.tag || github.ref_name }}"
           if ! gh release view "$tag" >/dev/null 2>&1; then
             gh release create "$tag" --title "$tag" --notes "Prebuilt wgpu-native binaries for $tag."
           fi
