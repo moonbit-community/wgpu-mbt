@@ -1,6 +1,7 @@
 {
   "import": [],
   "native-stub": [
+    "wgpu_dynload.c",
     "wgpu_dyn.c",
     "wgpu_stub_core.c",
     "wgpu_optional_sym.c",
