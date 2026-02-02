@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  windows:
+    name: Windows (build-only)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MoonBit
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $zipUrl = "https://cli.moonbitlang.com/binaries/latest/moonbit-windows-x86_64.zip"
+          $zipPath = Join-Path $env:RUNNER_TEMP "moonbit.zip"
+          $moonHome = Join-Path $env:USERPROFILE ".moon"
+
+          Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath
+          New-Item -ItemType Directory -Force -Path $moonHome | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $moonHome -Force
+
+          "MOON_HOME=$moonHome" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          (Join-Path $moonHome "bin") | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+
+      - name: Moon version
+        shell: pwsh
+        run: moon version --all
+
+      - name: Lint (moon check)
+        shell: pwsh
+        run: moon check
+
+      - name: Compile tests (no runtime deps)
+        shell: pwsh
+        run: moon test --build-only --target native
+
