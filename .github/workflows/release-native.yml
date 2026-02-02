@@ -10,6 +10,9 @@ on:
         required: false
         type: string
 
+env:
+  WGPU_NATIVE_REV: ba4deb5d935652f40c7e051b15cbb5d097219941
+
 permissions:
   contents: write
 
@@ -60,6 +63,9 @@ jobs:
           set -euo pipefail
           git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/gfx-rs/wgpu-native "$RUNNER_TEMP/wgpu-native"
           cd "$RUNNER_TEMP/wgpu-native"
+          git fetch --depth 1 origin "$WGPU_NATIVE_REV"
+          git checkout "$WGPU_NATIVE_REV"
+          git submodule update --init --recursive --depth 1
           cargo build --release --no-default-features --features "${{ matrix.features }}"
 
           mkdir -p "$GITHUB_WORKSPACE/dist"
