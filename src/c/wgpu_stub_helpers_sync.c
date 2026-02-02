@@ -14,7 +14,9 @@
 
 #include "wgpu_stub.h"
 
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -34,6 +36,7 @@ static void mbt_wgpu_device_lost_mu_lock(void) {
 static void mbt_wgpu_device_lost_mu_unlock(void) { LeaveCriticalSection(&g_device_lost_mu); }
 static void mbt_wgpu_sleep_1ms(void) { Sleep(1); }
 #else
+#include <dlfcn.h>
 #include <pthread.h>
 #include <unistd.h>
 static pthread_mutex_t g_device_lost_mu = PTHREAD_MUTEX_INITIALIZER;
@@ -41,6 +44,81 @@ static void mbt_wgpu_device_lost_mu_lock(void) { pthread_mutex_lock(&g_device_lo
 static void mbt_wgpu_device_lost_mu_unlock(void) { pthread_mutex_unlock(&g_device_lost_mu); }
 static void mbt_wgpu_sleep_1ms(void) { usleep(1000); }
 #endif
+
+// Optional native symbol lookup (without calling wgpuGetProcAddress).
+//
+// Some wgpu-native builds have `wgpuGetProcAddress` wired to an unimplemented
+// stub that panics. For "optional" entry points we therefore probe the dynamic
+// library directly via dlopen/dlsym (or LoadLibrary/GetProcAddress).
+#if defined(_WIN32)
+static HMODULE g_mbt_wgpu_optional_lib = NULL;
+static INIT_ONCE g_mbt_wgpu_optional_once = INIT_ONCE_STATIC_INIT;
+static BOOL CALLBACK mbt_wgpu_optional_init_once(PINIT_ONCE once, PVOID param, PVOID *ctx) {
+  (void)once;
+  (void)param;
+  (void)ctx;
+  const char *path = getenv("MBT_WGPU_NATIVE_LIB");
+  if (!path || !path[0]) {
+    return TRUE;
+  }
+
+  // Prefer LoadLibraryW for UTF-8 paths; fall back to LoadLibraryA.
+  g_mbt_wgpu_optional_lib = NULL;
+  int wlen = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, path, -1, NULL, 0);
+  if (wlen > 0) {
+    wchar_t *wpath = (wchar_t *)malloc((size_t)wlen * sizeof(wchar_t));
+    if (wpath) {
+      int ok = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, path, -1, wpath, wlen);
+      if (ok > 0) {
+        g_mbt_wgpu_optional_lib = LoadLibraryW(wpath);
+      }
+      free(wpath);
+    }
+  }
+  if (!g_mbt_wgpu_optional_lib) {
+    g_mbt_wgpu_optional_lib = LoadLibraryA(path);
+  }
+  return TRUE;
+}
+
+static void *mbt_wgpu_optional_sym(const char *name) {
+  InitOnceExecuteOnce(&g_mbt_wgpu_optional_once, mbt_wgpu_optional_init_once, NULL, NULL);
+  if (!g_mbt_wgpu_optional_lib) {
+    return NULL;
+  }
+  return (void *)GetProcAddress(g_mbt_wgpu_optional_lib, name);
+}
+#else
+static void *g_mbt_wgpu_optional_lib = NULL;
+static pthread_once_t g_mbt_wgpu_optional_once = PTHREAD_ONCE_INIT;
+static void mbt_wgpu_optional_init(void) {
+  const char *path = getenv("MBT_WGPU_NATIVE_LIB");
+  if (!path || !path[0]) {
+    return;
+  }
+  g_mbt_wgpu_optional_lib = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
+}
+
+static void *mbt_wgpu_optional_sym(const char *name) {
+  pthread_once(&g_mbt_wgpu_optional_once, mbt_wgpu_optional_init);
+  if (!g_mbt_wgpu_optional_lib) {
+    return NULL;
+  }
+  dlerror(); // clear
+  return dlsym(g_mbt_wgpu_optional_lib, name);
+}
+#endif
+
+static bool mbt_wgpu_env_truthy(const char *name) {
+  const char *v = getenv(name);
+  if (!v || !v[0]) {
+    return false;
+  }
+  // Common truthy spellings.
+  return (strcmp(v, "1") == 0) || (strcmp(v, "true") == 0) || (strcmp(v, "TRUE") == 0) ||
+         (strcmp(v, "yes") == 0) || (strcmp(v, "YES") == 0) || (strcmp(v, "on") == 0) ||
+         (strcmp(v, "ON") == 0);
+}
 
 static bool g_mbt_wgpu_uncaptured_error_stderr_enabled = false;
 static bool g_mbt_wgpu_device_lost_stderr_enabled = false;
@@ -381,6 +459,51 @@ static void mbt_queue_work_done_cb(WGPUQueueWorkDoneStatus status, void *userdat
   out->status = status;
 }
 
+typedef struct {
+  WGPUCreatePipelineAsyncStatus status;
+  WGPUComputePipeline pipeline;
+} mbt_create_compute_pipeline_result_t;
+
+static void mbt_create_compute_pipeline_cb(WGPUCreatePipelineAsyncStatus status,
+                                           WGPUComputePipeline pipeline,
+                                           WGPUStringView message,
+                                           void *userdata1, void *userdata2) {
+  (void)message;
+  (void)userdata2;
+  mbt_create_compute_pipeline_result_t *out = (mbt_create_compute_pipeline_result_t *)userdata1;
+  out->status = status;
+  out->pipeline = pipeline;
+}
+
+typedef struct {
+  WGPUCreatePipelineAsyncStatus status;
+  WGPURenderPipeline pipeline;
+} mbt_create_render_pipeline_result_t;
+
+static void mbt_create_render_pipeline_cb(WGPUCreatePipelineAsyncStatus status,
+                                          WGPURenderPipeline pipeline,
+                                          WGPUStringView message,
+                                          void *userdata1, void *userdata2) {
+  (void)message;
+  (void)userdata2;
+  mbt_create_render_pipeline_result_t *out = (mbt_create_render_pipeline_result_t *)userdata1;
+  out->status = status;
+  out->pipeline = pipeline;
+}
+
+typedef struct {
+  WGPUCompilationInfoRequestStatus status;
+} mbt_compilation_info_result_t;
+
+static void mbt_compilation_info_cb(WGPUCompilationInfoRequestStatus status,
+                                    struct WGPUCompilationInfo const *compilationInfo,
+                                    void *userdata1, void *userdata2) {
+  (void)compilationInfo;
+  (void)userdata2;
+  mbt_compilation_info_result_t *out = (mbt_compilation_info_result_t *)userdata1;
+  out->status = status;
+}
+
 WGPUInstance mbt_wgpu_create_instance(void) { return wgpuCreateInstance(NULL); }
 
 WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
@@ -508,28 +631,129 @@ uint32_t mbt_wgpu_queue_on_submitted_work_done_sync(WGPUInstance instance,
 WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline_async_sync_ptr(
     WGPUInstance instance, WGPUDevice device,
     const WGPUComputePipelineDescriptor *descriptor) {
-  (void)instance;
-  // wgpu-native currently may not implement the async pipeline creation entry
-  // points in all builds, so we conservatively fall back to the synchronous API.
+  // wgpu-native historically shipped builds where the async pipeline entrypoints
+  // were missing or panicked; keep a conservative fallback and allow opting out.
+  if (!instance || !mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_PIPELINE_ASYNC") ||
+      mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_PIPELINE_ASYNC")) {
+    return wgpuDeviceCreateComputePipeline(device, descriptor);
+  }
+
+  static bool checked = false;
+  static WGPUProcDeviceCreateComputePipelineAsync pfn = NULL;
+  if (!checked) {
+    pfn = (WGPUProcDeviceCreateComputePipelineAsync)mbt_wgpu_optional_sym(
+        "wgpuDeviceCreateComputePipelineAsync");
+    checked = true;
+  }
+  if (!pfn) {
+    return wgpuDeviceCreateComputePipeline(device, descriptor);
+  }
+
+  mbt_create_compute_pipeline_result_t out = {0};
+
+  WGPUCreateComputePipelineAsyncCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_create_compute_pipeline_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  (void)pfn(device, descriptor, info);
+  // Bounded wait: 2s worst-case (2000 * 1ms).
+  const int max_iters = 2000;
+  for (int i = 0; i < max_iters && out.status == 0; i++) {
+    (void)wgpuDevicePoll(device, false, NULL);
+    wgpuInstanceProcessEvents(instance);
+    mbt_wgpu_sleep_1ms();
+  }
+
+  if (out.status == WGPUCreatePipelineAsyncStatus_Success && out.pipeline) {
+    return out.pipeline;
+  }
   return wgpuDeviceCreateComputePipeline(device, descriptor);
 }
 
 WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_async_sync_ptr(
     WGPUInstance instance, WGPUDevice device,
     const WGPURenderPipelineDescriptor *descriptor) {
-  (void)instance;
-  // See comment above: prefer the synchronous API to avoid hitting unimplemented
-  // async entry points.
+  if (!instance || !mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_PIPELINE_ASYNC") ||
+      mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_PIPELINE_ASYNC")) {
+    return wgpuDeviceCreateRenderPipeline(device, descriptor);
+  }
+
+  static bool checked = false;
+  static WGPUProcDeviceCreateRenderPipelineAsync pfn = NULL;
+  if (!checked) {
+    pfn = (WGPUProcDeviceCreateRenderPipelineAsync)mbt_wgpu_optional_sym(
+        "wgpuDeviceCreateRenderPipelineAsync");
+    checked = true;
+  }
+  if (!pfn) {
+    return wgpuDeviceCreateRenderPipeline(device, descriptor);
+  }
+
+  mbt_create_render_pipeline_result_t out = {0};
+
+  WGPUCreateRenderPipelineAsyncCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_create_render_pipeline_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  (void)pfn(device, descriptor, info);
+  const int max_iters = 2000;
+  for (int i = 0; i < max_iters && out.status == 0; i++) {
+    (void)wgpuDevicePoll(device, false, NULL);
+    wgpuInstanceProcessEvents(instance);
+    mbt_wgpu_sleep_1ms();
+  }
+
+  if (out.status == WGPUCreatePipelineAsyncStatus_Success && out.pipeline) {
+    return out.pipeline;
+  }
   return wgpuDeviceCreateRenderPipeline(device, descriptor);
 }
 
 uint32_t mbt_wgpu_shader_module_get_compilation_info_sync_status_u32(
     WGPUInstance instance, WGPUShaderModule shader_module) {
-  (void)instance;
-  (void)shader_module;
-  // wgpu-native may not implement compilation-info callbacks in all builds.
-  // Returning 0 (Unknown/Unavailable) avoids aborting via the unimplemented entry point.
-  return 0u;
+  // Keep a safe default: return 0 (Unavailable) if the callback entrypoint
+  // isn't exposed via wgpuGetProcAddress, or if explicitly disabled.
+  if (!instance || !mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_COMPILATION_INFO") ||
+      mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_COMPILATION_INFO")) {
+    return 0u;
+  }
+
+  static bool checked = false;
+  static WGPUProcShaderModuleGetCompilationInfo pfn = NULL;
+  if (!checked) {
+    pfn = (WGPUProcShaderModuleGetCompilationInfo)mbt_wgpu_optional_sym(
+        "wgpuShaderModuleGetCompilationInfo");
+    checked = true;
+  }
+  if (!pfn) {
+    return 0u;
+  }
+
+  mbt_compilation_info_result_t out = {0};
+
+  WGPUCompilationInfoCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_compilation_info_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  (void)pfn(shader_module, info);
+  const int max_iters = 2000;
+  for (int i = 0; i < max_iters && out.status == 0; i++) {
+    wgpuInstanceProcessEvents(instance);
+    mbt_wgpu_sleep_1ms();
+  }
+  return (uint32_t)out.status;
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(

@@ -18,7 +18,10 @@ Known limitation:
 - Debug labels / markers (`*.set_label`, `*.insert_debug_marker`, `*.push_debug_group`, `*.pop_debug_group`) are **disabled by default** to avoid `wgpu-native` panics/unimplemented APIs. You can opt in via:
   - `@wgpu.set_debug_labels_enabled(true)` (recommended for local debugging)
   - env var `MBT_WGPU_DEBUG_LABELS=1`
-  When enabled, the implementation is best-effort via `wgpuGetProcAddress` and will still no-op if the underlying proc is unavailable.
+  When enabled, the implementation is best-effort via dynamic symbol lookup and will still no-op if the underlying proc is unavailable.
+- Async pipeline creation (`wgpuDeviceCreate*PipelineAsync`) and shader compilation info (`wgpuShaderModuleGetCompilationInfo`) may be **unimplemented** (panic) in some wgpu-native builds. We keep safe sync stubs by default; you can opt in at your own risk:
+  - `MBT_WGPU_ENABLE_PIPELINE_ASYNC=1`
+  - `MBT_WGPU_ENABLE_COMPILATION_INFO=1`
 
 Useful introspection helpers:
 - Adapter info strings: `Adapter::info_vendor`, `Adapter::info_architecture`, `Adapter::info_device`, `Adapter::info_description`

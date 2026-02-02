@@ -14,7 +14,9 @@
 
 #include "wgpu_stub.h"
 
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -33,10 +35,72 @@ static void mbt_wgpu_wait_any_mu_lock(void) {
 }
 static void mbt_wgpu_wait_any_mu_unlock(void) { LeaveCriticalSection(&g_wait_any_mu); }
 #else
+#include <dlfcn.h>
 #include <pthread.h>
 static pthread_mutex_t g_wait_any_mu = PTHREAD_MUTEX_INITIALIZER;
 static void mbt_wgpu_wait_any_mu_lock(void) { pthread_mutex_lock(&g_wait_any_mu); }
 static void mbt_wgpu_wait_any_mu_unlock(void) { pthread_mutex_unlock(&g_wait_any_mu); }
+#endif
+
+// Optional native symbol lookup (without calling wgpuGetProcAddress).
+// Some wgpu-native builds wire wgpuGetProcAddress to a panic stub.
+#if defined(_WIN32)
+static HMODULE g_mbt_wgpu_optional_lib = NULL;
+static INIT_ONCE g_mbt_wgpu_optional_once = INIT_ONCE_STATIC_INIT;
+static BOOL CALLBACK mbt_wgpu_optional_init_once(PINIT_ONCE once, PVOID param, PVOID *ctx) {
+  (void)once;
+  (void)param;
+  (void)ctx;
+  const char *path = getenv("MBT_WGPU_NATIVE_LIB");
+  if (!path || !path[0]) {
+    return TRUE;
+  }
+
+  // Prefer LoadLibraryW for UTF-8 paths; fall back to LoadLibraryA.
+  g_mbt_wgpu_optional_lib = NULL;
+  int wlen = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, path, -1, NULL, 0);
+  if (wlen > 0) {
+    wchar_t *wpath = (wchar_t *)malloc((size_t)wlen * sizeof(wchar_t));
+    if (wpath) {
+      int ok = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, path, -1, wpath, wlen);
+      if (ok > 0) {
+        g_mbt_wgpu_optional_lib = LoadLibraryW(wpath);
+      }
+      free(wpath);
+    }
+  }
+  if (!g_mbt_wgpu_optional_lib) {
+    g_mbt_wgpu_optional_lib = LoadLibraryA(path);
+  }
+  return TRUE;
+}
+
+static void *mbt_wgpu_optional_sym(const char *name) {
+  InitOnceExecuteOnce(&g_mbt_wgpu_optional_once, mbt_wgpu_optional_init_once, NULL, NULL);
+  if (!g_mbt_wgpu_optional_lib) {
+    return NULL;
+  }
+  return (void *)GetProcAddress(g_mbt_wgpu_optional_lib, name);
+}
+#else
+static void *g_mbt_wgpu_optional_lib = NULL;
+static pthread_once_t g_mbt_wgpu_optional_once = PTHREAD_ONCE_INIT;
+static void mbt_wgpu_optional_init(void) {
+  const char *path = getenv("MBT_WGPU_NATIVE_LIB");
+  if (!path || !path[0]) {
+    return;
+  }
+  g_mbt_wgpu_optional_lib = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
+}
+
+static void *mbt_wgpu_optional_sym(const char *name) {
+  pthread_once(&g_mbt_wgpu_optional_once, mbt_wgpu_optional_init);
+  if (!g_mbt_wgpu_optional_lib) {
+    return NULL;
+  }
+  dlerror(); // clear
+  return dlsym(g_mbt_wgpu_optional_lib, name);
+}
 #endif
 
 // ---------------------------------------------------------------------------
@@ -80,8 +144,7 @@ void mbt_wgpu_set_debug_labels_enabled(bool enabled) {
 }
 
 static WGPUProc mbt_wgpu_get_proc(const char *name) {
-  return wgpuGetProcAddress(
-      mbt_wgpu_string_view((const uint8_t *)name, (uint64_t)strlen(name)));
+  return (WGPUProc)mbt_wgpu_optional_sym(name);
 }
 
 uint32_t mbt_wgpu_instance_capabilities_timed_wait_any_enable_u32(void) {
