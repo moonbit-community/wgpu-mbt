@@ -1186,6 +1186,14 @@ declare pub fn set_debug_labels_enabled(enabled : Bool) -> Unit
 
 ///|
 #declaration_only
+declare pub fn set_pipeline_async_enabled(enabled : Bool) -> Unit
+
+///|
+#declaration_only
+declare pub fn set_compilation_info_enabled(enabled : Bool) -> Unit
+
+///|
+#declaration_only
 declare pub fn Instance::create() -> Instance
 
 ///|

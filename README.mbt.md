@@ -22,6 +22,10 @@ Known limitation:
 - Async pipeline creation (`wgpuDeviceCreate*PipelineAsync`) and shader compilation info (`wgpuShaderModuleGetCompilationInfo`) may be **unimplemented** (panic) in some wgpu-native builds. We keep safe sync stubs by default; you can opt in at your own risk:
   - `MBT_WGPU_ENABLE_PIPELINE_ASYNC=1`
   - `MBT_WGPU_ENABLE_COMPILATION_INFO=1` (use `ShaderModule::get_compilation_info_sync` to read status + messages)
+  - You can also enable/disable at runtime:
+    - `@wgpu.set_pipeline_async_enabled(true|false)`
+    - `@wgpu.set_compilation_info_enabled(true|false)`
+    `MBT_WGPU_DISABLE_*` env vars still force-disable.
 
 Useful introspection helpers:
 - Adapter info strings: `Adapter::info_vendor`, `Adapter::info_architecture`, `Adapter::info_device`, `Adapter::info_description`

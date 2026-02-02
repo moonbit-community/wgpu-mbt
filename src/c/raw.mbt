@@ -696,6 +696,12 @@ pub extern "C" fn set_uncaptured_error_stderr_enabled(enabled : Bool) -> Unit = 
 pub extern "C" fn set_device_lost_stderr_enabled(enabled : Bool) -> Unit = "mbt_wgpu_set_device_lost_stderr_enabled"
 
 ///|
+pub extern "C" fn set_pipeline_async_enabled(enabled : Bool) -> Unit = "mbt_wgpu_set_pipeline_async_enabled"
+
+///|
+pub extern "C" fn set_compilation_info_enabled(enabled : Bool) -> Unit = "mbt_wgpu_set_compilation_info_enabled"
+
+///|
 fn align_up_u32(value : UInt, align : UInt) -> UInt {
   let rem = value % align
   if rem == 0U {

@@ -774,11 +774,15 @@ pub fn sampler_release(WGPUSampler) -> Unit
 
 pub fn sampler_set_label_utf8(WGPUSampler, Bytes, UInt64) -> Unit
 
+pub fn set_compilation_info_enabled(Bool) -> Unit
+
 pub fn set_debug_labels_enabled(Bool) -> Unit
 
 pub fn set_device_lost_stderr_enabled(Bool) -> Unit
 
 pub fn set_log_callback_stderr_enabled(Bool) -> Unit
+
+pub fn set_pipeline_async_enabled(Bool) -> Unit
 
 pub fn set_uncaptured_error_stderr_enabled(Bool) -> Unit
 

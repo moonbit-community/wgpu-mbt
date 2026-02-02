@@ -123,6 +123,47 @@ static bool mbt_wgpu_env_truthy(const char *name) {
 static bool g_mbt_wgpu_uncaptured_error_stderr_enabled = false;
 static bool g_mbt_wgpu_device_lost_stderr_enabled = false;
 
+static bool g_mbt_wgpu_pipeline_async_enabled = false;
+static bool g_mbt_wgpu_pipeline_async_inited = false;
+
+static bool g_mbt_wgpu_compilation_info_enabled = false;
+static bool g_mbt_wgpu_compilation_info_inited = false;
+
+static bool mbt_wgpu_pipeline_async_enabled(void) {
+  // Explicit disable always wins.
+  if (mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_PIPELINE_ASYNC")) {
+    return false;
+  }
+  if (!g_mbt_wgpu_pipeline_async_inited) {
+    g_mbt_wgpu_pipeline_async_enabled =
+        mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_PIPELINE_ASYNC");
+    g_mbt_wgpu_pipeline_async_inited = true;
+  }
+  return g_mbt_wgpu_pipeline_async_enabled;
+}
+
+static bool mbt_wgpu_compilation_info_enabled(void) {
+  if (mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_COMPILATION_INFO")) {
+    return false;
+  }
+  if (!g_mbt_wgpu_compilation_info_inited) {
+    g_mbt_wgpu_compilation_info_enabled =
+        mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_COMPILATION_INFO");
+    g_mbt_wgpu_compilation_info_inited = true;
+  }
+  return g_mbt_wgpu_compilation_info_enabled;
+}
+
+void mbt_wgpu_set_pipeline_async_enabled(bool enabled) {
+  g_mbt_wgpu_pipeline_async_enabled = enabled;
+  g_mbt_wgpu_pipeline_async_inited = true;
+}
+
+void mbt_wgpu_set_compilation_info_enabled(bool enabled) {
+  g_mbt_wgpu_compilation_info_enabled = enabled;
+  g_mbt_wgpu_compilation_info_inited = true;
+}
+
 void mbt_wgpu_set_uncaptured_error_stderr_enabled(bool enabled) {
   g_mbt_wgpu_uncaptured_error_stderr_enabled = enabled;
 }
@@ -684,8 +725,7 @@ WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline_async_sync_ptr(
     const WGPUComputePipelineDescriptor *descriptor) {
   // wgpu-native historically shipped builds where the async pipeline entrypoints
   // were missing or panicked; keep a conservative fallback and allow opting out.
-  if (!instance || !mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_PIPELINE_ASYNC") ||
-      mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_PIPELINE_ASYNC")) {
+  if (!instance || !mbt_wgpu_pipeline_async_enabled()) {
     return wgpuDeviceCreateComputePipeline(device, descriptor);
   }
 
@@ -728,8 +768,7 @@ WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline_async_sync_ptr(
 WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_async_sync_ptr(
     WGPUInstance instance, WGPUDevice device,
     const WGPURenderPipelineDescriptor *descriptor) {
-  if (!instance || !mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_PIPELINE_ASYNC") ||
-      mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_PIPELINE_ASYNC")) {
+  if (!instance || !mbt_wgpu_pipeline_async_enabled()) {
     return wgpuDeviceCreateRenderPipeline(device, descriptor);
   }
 
@@ -771,9 +810,7 @@ WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_async_sync_ptr(
 void *mbt_wgpu_shader_module_get_compilation_info_sync_new(
     WGPUInstance instance, WGPUShaderModule shader_module) {
   // Keep safe behavior by default: opt-in only.
-  if (!instance || !shader_module ||
-      !mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_COMPILATION_INFO") ||
-      mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_COMPILATION_INFO")) {
+  if (!instance || !shader_module || !mbt_wgpu_compilation_info_enabled()) {
     return NULL;
   }
 

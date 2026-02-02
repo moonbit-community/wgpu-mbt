@@ -1156,6 +1156,8 @@ pub fn platform_is_macos() -> Bool
 
 pub fn platform_is_windows() -> Bool
 
+pub fn set_compilation_info_enabled(Bool) -> Unit
+
 pub fn set_debug_labels_enabled(Bool) -> Unit
 
 pub fn set_device_lost_stderr_enabled(Bool) -> Unit
@@ -1163,6 +1165,8 @@ pub fn set_device_lost_stderr_enabled(Bool) -> Unit
 pub fn set_log_callback_stderr_enabled(Bool) -> Unit
 
 pub fn set_log_level(UInt) -> Unit
+
+pub fn set_pipeline_async_enabled(Bool) -> Unit
 
 pub fn set_uncaptured_error_stderr_enabled(Bool) -> Unit
 

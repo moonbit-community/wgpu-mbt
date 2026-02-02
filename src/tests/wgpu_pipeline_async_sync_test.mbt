@@ -14,6 +14,9 @@
 
 ///|
 test "wgpu: async pipeline sync helpers + shader compilation status" {
+  // Make the test robust even if the user has opt-in env vars set globally.
+  @wgpu.set_pipeline_async_enabled(false)
+  @wgpu.set_compilation_info_enabled(false)
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
