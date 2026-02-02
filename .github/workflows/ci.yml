@@ -77,11 +77,15 @@ jobs:
           cargo build --release --no-default-features --features vulkan,wgsl
           echo "MBT_WGPU_NATIVE_LIB=$RUNNER_TEMP/wgpu-native/target/release/libwgpu_native.so" >> "$GITHUB_ENV"
 
-      - name: Run headless smoke test
+      - name: Run Vulkan smoke suite
         shell: bash
         run: |
           set -euo pipefail
           moon test --target native src/tests/wgpu_linux_headless_smoke_test.mbt
+          moon test --target native src/tests/wgpu_smoke_test.mbt
+          moon test --target native src/tests/wgpu_queue_write_buffer_test.mbt
+          moon test --target native src/tests/wgpu_render_offscreen_test.mbt
+          moon test --target native src/tests/wgpu_spec_buffer_map_test.mbt
 
   macos:
     name: macOS (build-only)
