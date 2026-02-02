@@ -7,6 +7,60 @@ on:
     branches: [main]
 
 jobs:
+  linux:
+    name: Linux (build-only)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MoonBit
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "MOON_HOME=$HOME/.moon" >> "$GITHUB_ENV"
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Moon version
+        shell: bash
+        run: moon version --all
+
+      - name: Lint (moon check)
+        shell: bash
+        run: moon check
+
+      - name: Compile tests (no runtime deps)
+        shell: bash
+        run: moon test --build-only --target native
+
+  macos:
+    name: macOS (build-only)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MoonBit
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "MOON_HOME=$HOME/.moon" >> "$GITHUB_ENV"
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Moon version
+        shell: bash
+        run: moon version --all
+
+      - name: Lint (moon check)
+        shell: bash
+        run: moon check
+
+      - name: Compile tests (no runtime deps)
+        shell: bash
+        run: moon test --build-only --target native
+
   windows:
     name: Windows (build-only)
     runs-on: windows-latest
@@ -40,4 +94,3 @@ jobs:
       - name: Compile tests (no runtime deps)
         shell: pwsh
         run: moon test --build-only --target native
-
