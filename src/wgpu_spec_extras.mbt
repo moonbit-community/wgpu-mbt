@@ -1033,7 +1033,7 @@ declare pub fn BindGroupBuilder::free(self : BindGroupBuilder) -> Unit
 declare pub fn RenderPipelineDescBuilder::new(
   shader_module : ShaderModule,
   layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
-) -> RenderPipelineDescBuilder
+) -> Result[RenderPipelineDescBuilder, RenderPipelineDescError]
 
 ///|
 #declaration_only
@@ -1041,21 +1041,21 @@ declare pub fn RenderPipelineDescBuilder::set_entry_points(
   self : RenderPipelineDescBuilder,
   vs_entry : String,
   fs_entry : String,
-) -> Unit
+) -> Result[Unit, RenderPipelineDescError]
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_color_target_format(
   self : RenderPipelineDescBuilder,
   format : TextureFormat,
-) -> Unit
+) -> Result[Unit, RenderPipelineDescError]
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_color_target_count(
   self : RenderPipelineDescBuilder,
   count_u32 : UInt,
-) -> Unit
+) -> Result[Unit, RenderPipelineDescError]
 
 ///|
 #declaration_only
@@ -1063,13 +1063,13 @@ declare pub fn RenderPipelineDescBuilder::set_color_target_format_at(
   self : RenderPipelineDescBuilder,
   index_u32 : UInt,
   format : TextureFormat,
-) -> Unit
+) -> Result[Unit, RenderPipelineDescError]
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::enable_alpha_blend(
   self : RenderPipelineDescBuilder,
-) -> Unit
+) -> Result[Unit, RenderPipelineDescError]
 
 ///|
 #declaration_only
@@ -1077,7 +1077,7 @@ declare pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(
   self : RenderPipelineDescBuilder,
   array_stride : UInt64,
   step_mode_u32 : UInt,
-) -> Unit
+) -> Result[Unit, RenderPipelineDescError]
 
 ///|
 #declaration_only
@@ -1085,7 +1085,7 @@ declare pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(
   self : RenderPipelineDescBuilder,
   array_stride : UInt64,
   step_mode_u32 : UInt,
-) -> UInt
+) -> Result[UInt, RenderPipelineDescError]
 
 ///|
 #declaration_only
@@ -1094,14 +1094,14 @@ declare pub fn RenderPipelineDescBuilder::add_vertex_attribute(
   format_u32 : UInt,
   offset : UInt64,
   shader_location : UInt,
-) -> Unit
+) -> Result[Unit, RenderPipelineDescError]
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_topology_u32(
   self : RenderPipelineDescBuilder,
   topology_u32 : UInt,
-) -> Unit
+) -> Result[Unit, RenderPipelineDescError]
 
 ///|
 #declaration_only
@@ -1110,26 +1110,38 @@ declare pub fn RenderPipelineDescBuilder::set_depth_stencil(
   depth_format : TextureFormat,
   depth_write_enabled? : Bool = true,
   depth_compare_u32? : UInt = COMPARE_FUNCTION_LESS,
-) -> Unit
+) -> Result[Unit, RenderPipelineDescError]
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(
   self : RenderPipelineDescBuilder,
-) -> @c.WGPURenderPipelineDescriptorPtr
+) -> Result[@c.WGPURenderPipelineDescriptorPtr, RenderPipelineDescError]
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::create_pipeline(
   self : RenderPipelineDescBuilder,
   device : Device,
-) -> RenderPipeline
+) -> Result[RenderPipeline, RenderPipelineDescError]
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::free(
   self : RenderPipelineDescBuilder,
 ) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::last_error(
+  self : RenderPipelineDescBuilder,
+) -> RenderPipelineDescError
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescError::message(
+  self : RenderPipelineDescError,
+) -> String
 
 ///|
 #declaration_only

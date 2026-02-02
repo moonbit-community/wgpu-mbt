@@ -1743,20 +1743,28 @@ pub fn RenderPipeline::set_label(Self, String) -> Unit
 pub struct RenderPipelineDescBuilder {
   raw : @c.OpaquePtr
 }
-pub fn RenderPipelineDescBuilder::add_vertex_attribute(Self, UInt, UInt64, UInt) -> Unit
-pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(Self, UInt64, UInt) -> UInt
-pub fn RenderPipelineDescBuilder::create_pipeline(Self, Device) -> RenderPipeline
-pub fn RenderPipelineDescBuilder::enable_alpha_blend(Self) -> Unit
-pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(Self) -> @c.WGPURenderPipelineDescriptorPtr
+pub fn RenderPipelineDescBuilder::add_vertex_attribute(Self, UInt, UInt64, UInt) -> Result[Unit, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(Self, UInt64, UInt) -> Result[UInt, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::create_pipeline(Self, Device) -> Result[RenderPipeline, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::enable_alpha_blend(Self) -> Result[Unit, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(Self) -> Result[@c.WGPURenderPipelineDescriptorPtr, RenderPipelineDescError]
 pub fn RenderPipelineDescBuilder::free(Self) -> Unit
-pub fn RenderPipelineDescBuilder::new(ShaderModule, layout? : PipelineLayout) -> Self
-pub fn RenderPipelineDescBuilder::set_color_target_count(Self, UInt) -> Unit
-pub fn RenderPipelineDescBuilder::set_color_target_format(Self, TextureFormat) -> Unit
-pub fn RenderPipelineDescBuilder::set_color_target_format_at(Self, UInt, TextureFormat) -> Unit
-pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt) -> Unit
-pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Unit
-pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Unit
-pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(Self, UInt64, UInt) -> Unit
+pub fn RenderPipelineDescBuilder::last_error(Self) -> RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::new(ShaderModule, layout? : PipelineLayout) -> Result[Self, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::set_color_target_count(Self, UInt) -> Result[Unit, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::set_color_target_format(Self, TextureFormat) -> Result[Unit, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::set_color_target_format_at(Self, UInt, TextureFormat) -> Result[Unit, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt) -> Result[Unit, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Result[Unit, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Result[Unit, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(Self, UInt64, UInt) -> Result[Unit, RenderPipelineDescError]
+
+pub struct RenderPipelineDescError {
+  code : UInt
+  a : UInt
+  b : UInt
+}
+pub fn RenderPipelineDescError::message(Self) -> String
 
 pub struct Sampler {
   raw : @c.WGPUSampler

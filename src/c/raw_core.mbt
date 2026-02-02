@@ -58,6 +58,14 @@ pub extern "C" fn null_submission_index_ptr() -> WGPUSubmissionIndexPtr = "mbt_w
 pub extern "C" fn shader_module_is_null(shader_module : ShaderModule) -> Bool = "mbt_wgpu_shader_module_is_null"
 
 ///|
+pub extern "C" fn null_render_pipeline_descriptor_ptr() -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_null_ptr"
+
+///|
+pub extern "C" fn render_pipeline_descriptor_ptr_is_null(
+  p : WGPURenderPipelineDescriptorPtr,
+) -> Bool = "mbt_wgpu_render_pipeline_descriptor_ptr_is_null"
+
+///|
 fn align_up_u32(value : UInt, align : UInt) -> UInt {
   let rem = value % align
   if rem == 0U {

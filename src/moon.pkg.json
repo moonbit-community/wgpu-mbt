@@ -5,6 +5,7 @@
       "alias": "c"
     },
     "moonbitlang/core/ref",
+    "moonbitlang/core/result",
     "moonbitlang/core/encoding/utf8"
   ],
   "targets": {

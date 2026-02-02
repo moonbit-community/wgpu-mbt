@@ -338,6 +338,13 @@ pub struct RenderPipelineDescBuilder {
 }
 
 ///|
+pub struct RenderPipelineDescError {
+  code : UInt
+  a : UInt
+  b : UInt
+}
+
+///|
 pub struct PipelineLayout {
   raw : @c.PipelineLayout
 }

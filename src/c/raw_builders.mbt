@@ -210,21 +210,21 @@ pub extern "C" fn render_pipeline_desc_builder_set_entry_points_utf8(
   vs_entry_len : UInt64,
   fs_entry : Bytes,
   fs_entry_len : UInt64,
-) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_entry_points_utf8"
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_entry_points_utf8"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_color_target_format(
   builder : OpaquePtr,
   format_u32 : UInt,
-) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_format"
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_format"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_color_target_count(
   builder : OpaquePtr,
   count_u32 : UInt,
-) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_count"
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_count"
 
 ///|
 #borrow(builder)
@@ -232,13 +232,13 @@ pub extern "C" fn render_pipeline_desc_builder_set_color_target_format_at(
   builder : OpaquePtr,
   index_u32 : UInt,
   format_u32 : UInt,
-) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at"
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_enable_alpha_blend(
   builder : OpaquePtr,
-) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend"
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend"
 
 ///|
 #borrow(builder)
@@ -246,7 +246,7 @@ pub extern "C" fn render_pipeline_desc_builder_set_vertex_buffer_layout(
   builder : OpaquePtr,
   array_stride : UInt64,
   step_mode_u32 : UInt,
-) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout"
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout"
 
 ///|
 #borrow(builder)
@@ -255,7 +255,7 @@ pub extern "C" fn render_pipeline_desc_builder_add_vertex_attribute(
   format_u32 : UInt,
   offset : UInt64,
   shader_location : UInt,
-) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute"
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute"
 
 ///|
 #borrow(builder)
@@ -270,7 +270,7 @@ pub extern "C" fn render_pipeline_desc_builder_add_vertex_buffer_layout(
 pub extern "C" fn render_pipeline_desc_builder_set_topology(
   builder : OpaquePtr,
   topology_u32 : UInt,
-) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_topology"
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_topology"
 
 ///|
 #borrow(builder)
@@ -279,13 +279,25 @@ pub extern "C" fn render_pipeline_desc_builder_set_depth_stencil(
   depth_format_u32 : UInt,
   depth_write_enabled : Bool,
   depth_compare_u32 : UInt,
-) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil"
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_finish(
   builder : OpaquePtr,
 ) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_desc_builder_finish"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_last_error_u32(
+  builder : OpaquePtr,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_last_error_u32"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_last_error_args_u64(
+  builder : OpaquePtr,
+) -> UInt64 = "mbt_wgpu_render_pipeline_desc_builder_last_error_args_u64"
 
 ///|
 #borrow(builder)

@@ -120,15 +120,19 @@ test "wgpu render pipeline desc builder: 2 vertex buffers (pos2 + color)" {
     #|}
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
-  let b = @wgpu.RenderPipelineDescBuilder::new(sm)
-  b.set_color_target_format(
+  let b = @wgpu.RenderPipelineDescBuilder::new(sm).unwrap()
+  b
+  .set_color_target_format(
     @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
   )
-  b.set_vertex_buffer_layout(8UL, @wgpu.VERTEX_STEP_MODE_VERTEX)
-  b.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X2, 0UL, 0U)
-  ignore(b.add_vertex_buffer_layout(16UL, @wgpu.VERTEX_STEP_MODE_VERTEX))
-  b.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X4, 0UL, 1U)
-  let pipeline = b.create_pipeline(device)
+  .unwrap()
+  b.set_vertex_buffer_layout(8UL, @wgpu.VERTEX_STEP_MODE_VERTEX).unwrap()
+  b.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X2, 0UL, 0U).unwrap()
+  ignore(
+    b.add_vertex_buffer_layout(16UL, @wgpu.VERTEX_STEP_MODE_VERTEX).unwrap(),
+  )
+  b.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X4, 0UL, 1U).unwrap()
+  let pipeline = b.create_pipeline(device).unwrap()
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(view)
   pass.set_pipeline(pipeline)

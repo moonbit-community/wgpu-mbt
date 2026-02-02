@@ -23,6 +23,10 @@ bool mbt_wgpu_shader_module_is_null(WGPUShaderModule shader_module) {
   return shader_module == NULL;
 }
 
+bool mbt_wgpu_render_pipeline_descriptor_ptr_is_null(WGPURenderPipelineDescriptor *p) {
+  return p == NULL;
+}
+
 bool mbt_wgpu_platform_is_macos(void) {
 #if defined(__APPLE__)
   return true;

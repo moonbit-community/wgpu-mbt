@@ -14,19 +14,6 @@
 
 #include "wgpu_stub.h"
 
-#include <stdio.h>
-
-static void mbt_wgpu_rp_builder_die(const char *what) {
-  fprintf(stderr, "wgpu-mbt: RenderPipelineDescBuilder: %s\n", what);
-  abort();
-}
-
-static void mbt_wgpu_rp_builder_die_u32(const char *what, uint32_t a, uint32_t b) {
-  fprintf(stderr, "wgpu-mbt: RenderPipelineDescBuilder: %s (%u, %u)\n", what, (unsigned)a,
-          (unsigned)b);
-  abort();
-}
-
 WGPUBufferDescriptor *mbt_wgpu_buffer_descriptor_new(uint64_t size, uint64_t usage,
                                                     int32_t mapped_at_creation) {
   WGPUBufferDescriptor *desc = (WGPUBufferDescriptor *)malloc(sizeof(WGPUBufferDescriptor));
@@ -1169,6 +1156,20 @@ void mbt_wgpu_compute_pipeline_descriptor_free(WGPUComputePipelineDescriptor *de
 #define MBT_WGPU_RP_MAX_VBUFS 4u
 #define MBT_WGPU_RP_MAX_TARGETS 4u
 
+typedef enum {
+  MBT_WGPU_RP_OK = 0u,
+  MBT_WGPU_RP_ERR_NULL_BUILDER = 1u,
+  MBT_WGPU_RP_ERR_ENTRY_EMPTY = 2u,
+  MBT_WGPU_RP_ERR_ENTRY_TOO_LONG = 3u,
+  MBT_WGPU_RP_ERR_COLOR_TARGET_COUNT_ZERO = 4u,
+  MBT_WGPU_RP_ERR_COLOR_TARGET_COUNT_EXCEEDS_MAX = 5u,
+  MBT_WGPU_RP_ERR_COLOR_TARGET_INDEX_OOB = 6u,
+  MBT_WGPU_RP_ERR_NO_VERTEX_BUFFER_LAYOUT = 7u,
+  MBT_WGPU_RP_ERR_VERTEX_BUFFER_LAYOUT_EXCEEDS_MAX = 8u,
+  MBT_WGPU_RP_ERR_VERTEX_ATTRIBUTE_EXCEEDS_MAX = 9u,
+  MBT_WGPU_RP_ERR_INTERNAL = 10u,
+} mbt_wgpu_rp_err_t;
+
 typedef struct {
   WGPURenderPipelineDescriptor desc;
   WGPUVertexState vertex;
@@ -1196,7 +1197,25 @@ typedef struct {
 
   char vs_entry[64];
   char fs_entry[64];
+
+  uint32_t last_error;
+  uint32_t last_error_a;
+  uint32_t last_error_b;
 } mbt_render_pipeline_desc_t;
+
+static void mbt_wgpu_rp_builder_clear_error(mbt_render_pipeline_desc_t *out) {
+  out->last_error = MBT_WGPU_RP_OK;
+  out->last_error_a = 0u;
+  out->last_error_b = 0u;
+}
+
+static uint32_t mbt_wgpu_rp_builder_set_error(mbt_render_pipeline_desc_t *out, uint32_t code,
+                                              uint32_t a, uint32_t b) {
+  out->last_error = code;
+  out->last_error_a = a;
+  out->last_error_b = b;
+  return code;
+}
 
 static WGPURenderPipelineDescriptor *
 mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
@@ -1214,6 +1233,7 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
   out->color_target_count = 1u;
   out->vbuf_count = 0u;
   out->current_vbuf = 0u;
+  mbt_wgpu_rp_builder_clear_error(out);
   for (size_t i = 0; i < MBT_WGPU_RP_MAX_VBUFS; i++) {
     out->attr_counts[i] = 0u;
   }
@@ -1347,15 +1367,23 @@ void *mbt_wgpu_render_pipeline_desc_builder_new(WGPUPipelineLayout layout,
 
 void mbt_wgpu_render_pipeline_desc_builder_free(void *builder) { free(builder); }
 
-void mbt_wgpu_render_pipeline_desc_builder_set_entry_points_utf8(
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_entry_points_utf8(
     void *builder, const uint8_t *vs_entry, uint64_t vs_entry_len,
     const uint8_t *fs_entry, uint64_t fs_entry_len) {
-  if (!builder || !vs_entry || !fs_entry || vs_entry_len == 0u || fs_entry_len == 0u) {
-    return;
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
+  if (!vs_entry || !fs_entry || vs_entry_len == 0u || fs_entry_len == 0u) {
+    return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_ENTRY_EMPTY,
+                                         (uint32_t)vs_entry_len,
+                                         (uint32_t)fs_entry_len);
+  }
   if (vs_entry_len > sizeof(out->vs_entry) || fs_entry_len > sizeof(out->fs_entry)) {
-    return;
+    return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_ENTRY_TOO_LONG,
+                                         (uint32_t)vs_entry_len,
+                                         (uint32_t)fs_entry_len);
   }
 
   memset(out->vs_entry, 0, sizeof(out->vs_entry));
@@ -1371,35 +1399,42 @@ void mbt_wgpu_render_pipeline_desc_builder_set_entry_points_utf8(
 
   out->fragment.entryPoint =
       (WGPUStringView){.data = out->fs_entry, .length = (size_t)fs_entry_len};
+  return MBT_WGPU_RP_OK;
 }
 
-void mbt_wgpu_render_pipeline_desc_builder_set_color_target_format(void *builder,
-                                                                   uint32_t format) {
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_format(void *builder,
+                                                                       uint32_t format) {
   if (!builder) {
-    return;
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
   out->color_targets[0].format = (WGPUTextureFormat)format;
+  return MBT_WGPU_RP_OK;
 }
 
-void mbt_wgpu_render_pipeline_desc_builder_set_color_target_count(void *builder,
-                                                                  uint32_t count_u32) {
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_count(void *builder,
+                                                                      uint32_t count_u32) {
   if (!builder) {
-    mbt_wgpu_rp_builder_die("builder is NULL");
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
 
   uint32_t count = count_u32;
   if (count == 0u) {
-    mbt_wgpu_rp_builder_die("color target count must be >= 1");
+    return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_COLOR_TARGET_COUNT_ZERO, 0u,
+                                         0u);
   }
   if (count > MBT_WGPU_RP_MAX_TARGETS) {
-    mbt_wgpu_rp_builder_die_u32("color target count exceeds max", count, MBT_WGPU_RP_MAX_TARGETS);
+    return mbt_wgpu_rp_builder_set_error(
+        out, MBT_WGPU_RP_ERR_COLOR_TARGET_COUNT_EXCEEDS_MAX, count, MBT_WGPU_RP_MAX_TARGETS);
   }
 
   uint32_t old = out->color_target_count;
   if (old == 0u || old > MBT_WGPU_RP_MAX_TARGETS) {
-    mbt_wgpu_rp_builder_die("internal error: invalid previous color_target_count");
+    return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_INTERNAL, old,
+                                         MBT_WGPU_RP_MAX_TARGETS);
   }
 
   WGPUTextureFormat fmt0 = out->color_targets[0].format;
@@ -1417,26 +1452,31 @@ void mbt_wgpu_render_pipeline_desc_builder_set_color_target_count(void *builder,
   out->fragment.targetCount = (size_t)count;
   out->fragment.targets = out->color_targets;
   out->desc.fragment = &out->fragment;
+  return MBT_WGPU_RP_OK;
 }
 
-void mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at(
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at(
     void *builder, uint32_t index_u32, uint32_t format_u32) {
   if (!builder) {
-    mbt_wgpu_rp_builder_die("builder is NULL");
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
   uint32_t idx = index_u32;
   if (idx >= out->color_target_count) {
-    mbt_wgpu_rp_builder_die_u32("color target index out of range", idx, out->color_target_count);
+    return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_COLOR_TARGET_INDEX_OOB, idx,
+                                         out->color_target_count);
   }
   out->color_targets[idx].format = (WGPUTextureFormat)format_u32;
+  return MBT_WGPU_RP_OK;
 }
 
-void mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend(void *builder) {
+uint32_t mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend(void *builder) {
   if (!builder) {
-    return;
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
   out->blend_color = (WGPUBlendComponent){
       .operation = WGPUBlendOperation_Add,
       .srcFactor = WGPUBlendFactor_SrcAlpha,
@@ -1459,14 +1499,16 @@ void mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend(void *builder) {
   for (uint32_t i = 0; i < n; i++) {
     out->color_targets[i].blend = &out->blend;
   }
+  return MBT_WGPU_RP_OK;
 }
 
-void mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout(
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout(
     void *builder, uint64_t array_stride, uint32_t step_mode_u32) {
   if (!builder) {
-    return;
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
   out->vbuf_count = 1u;
   out->current_vbuf = 0u;
   out->attr_counts[0] = 0u;
@@ -1481,17 +1523,20 @@ void mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout(
   out->vertex.buffers = out->vbufs;
   out->desc.vertex.bufferCount = 1u;
   out->desc.vertex.buffers = out->vbufs;
+  return MBT_WGPU_RP_OK;
 }
 
 uint32_t mbt_wgpu_render_pipeline_desc_builder_add_vertex_buffer_layout(
     void *builder, uint64_t array_stride, uint32_t step_mode_u32) {
   if (!builder) {
-    mbt_wgpu_rp_builder_die("builder is NULL");
+    return 0xFFFFFFFFu;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
   if (out->vbuf_count >= MBT_WGPU_RP_MAX_VBUFS) {
-    mbt_wgpu_rp_builder_die_u32("vertex buffer layout count exceeds max", out->vbuf_count + 1u,
-                                MBT_WGPU_RP_MAX_VBUFS);
+    mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_VERTEX_BUFFER_LAYOUT_EXCEEDS_MAX,
+                                  out->vbuf_count + 1u, MBT_WGPU_RP_MAX_VBUFS);
+    return 0xFFFFFFFFu;
   }
 
   uint32_t idx = out->vbuf_count;
@@ -1513,22 +1558,24 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_add_vertex_buffer_layout(
   return idx;
 }
 
-void mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
+uint32_t mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
     void *builder, uint32_t format_u32, uint64_t offset, uint32_t shader_location) {
   if (!builder) {
-    mbt_wgpu_rp_builder_die("builder is NULL");
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
   if (out->vbuf_count == 0u) {
-    mbt_wgpu_rp_builder_die("no vertex buffer layout is set");
+    return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_NO_VERTEX_BUFFER_LAYOUT, 0u,
+                                         0u);
   }
   uint32_t idx = out->current_vbuf;
   if (idx >= out->vbuf_count) {
-    mbt_wgpu_rp_builder_die("internal error: current_vbuf out of range");
+    return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_INTERNAL, idx, out->vbuf_count);
   }
   if (out->attr_counts[idx] >= MBT_WGPU_RP_MAX_ATTRS) {
-    mbt_wgpu_rp_builder_die_u32("vertex attribute count exceeds max", out->attr_counts[idx] + 1u,
-                                MBT_WGPU_RP_MAX_ATTRS);
+    return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_VERTEX_ATTRIBUTE_EXCEEDS_MAX,
+                                         out->attr_counts[idx] + 1u, MBT_WGPU_RP_MAX_ATTRS);
   }
 
   out->attrs[idx][out->attr_counts[idx]] = (WGPUVertexAttribute){
@@ -1538,24 +1585,28 @@ void mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
   };
   out->attr_counts[idx]++;
   out->vbufs[idx].attributeCount = (size_t)out->attr_counts[idx];
+  return MBT_WGPU_RP_OK;
 }
 
-void mbt_wgpu_render_pipeline_desc_builder_set_topology(void *builder, uint32_t topology_u32) {
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_topology(void *builder, uint32_t topology_u32) {
   if (!builder) {
-    return;
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
   out->primitive.topology = (WGPUPrimitiveTopology)topology_u32;
   out->desc.primitive.topology = (WGPUPrimitiveTopology)topology_u32;
+  return MBT_WGPU_RP_OK;
 }
 
-void mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil(
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil(
     void *builder, uint32_t depth_format_u32, bool depth_write_enabled,
     uint32_t depth_compare_u32) {
   if (!builder) {
-    return;
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
 
   out->stencil = (WGPUStencilFaceState){
       .compare = WGPUCompareFunction_Always,
@@ -1577,10 +1628,34 @@ void mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil(
       .depthBiasClamp = 0.0f,
   };
   out->desc.depthStencil = &out->depth_stencil;
+  return MBT_WGPU_RP_OK;
 }
 
 WGPURenderPipelineDescriptor *mbt_wgpu_render_pipeline_desc_builder_finish(void *builder) {
+  if (!builder) {
+    return NULL;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  if (out->last_error != MBT_WGPU_RP_OK) {
+    return NULL;
+  }
   return (WGPURenderPipelineDescriptor *)builder;
+}
+
+uint32_t mbt_wgpu_render_pipeline_desc_builder_last_error_u32(void *builder) {
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  return out->last_error;
+}
+
+uint64_t mbt_wgpu_render_pipeline_desc_builder_last_error_args_u64(void *builder) {
+  if (!builder) {
+    return 0ull;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  return (((uint64_t)out->last_error_a) << 32) | (uint64_t)out->last_error_b;
 }
 
 WGPURenderPipelineDescriptor *
