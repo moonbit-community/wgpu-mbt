@@ -13,8 +13,13 @@
     "wgpu_stub_map.c"
   ],
   "targets": {
-    "raw.mbt": [
-      "native"
-    ]
+    "raw.mbt": ["native"],
+    "raw_adapter_device.mbt": ["native"],
+    "raw_builders.mbt": ["native"],
+    "raw_core.mbt": ["native"],
+    "raw_debug_async.mbt": ["native"],
+    "raw_helpers.mbt": ["native"],
+    "raw_instance.mbt": ["native"],
+    "raw_surface.mbt": ["native"]
   }
 }
