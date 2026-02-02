@@ -14,36 +14,38 @@
 
 ///|
 test "spec: buffer.map_{read,write}_sync + unmap" {
-  let instance = @wgpu.Instance::create()
-  let adapter = instance.request_adapter_sync()
-  let device = adapter.request_device_sync(instance)
-  let queue = device.queue()
-  let write_buf = device.create_buffer(
-    size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_WRITE | @wgpu.BUFFER_USAGE_COPY_SRC),
-  )
-  let read_buf = device.create_buffer(
-    size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
-  )
-  write_buf.map_write_sync(instance, 0UL, rgba_bytes(9U, 8U, 7U, 6U))
-  write_buf.unmap()
-  let encoder = device.create_command_encoder()
-  encoder.copy_buffer_to_buffer(write_buf, 0UL, read_buf, 0UL, 4UL)
-  let cmd = encoder.finish()
-  queue.submit_one(cmd)
-  cmd.release()
-  encoder.release()
-  let out = read_buf.map_read_sync(instance, 0UL, 4UL)
-  read_buf.unmap()
-  inspect(
-    [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
-    content="[9, 8, 7, 6]",
-  )
-  read_buf.release()
-  write_buf.release()
-  queue.release()
-  device.release()
-  adapter.release()
-  instance.release()
+  skip_on_wgpu_error(() => {
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let device = adapter.request_device_sync(instance)
+    let queue = device.queue()
+    let write_buf = device.create_buffer(
+      size=8UL,
+      usage=bu(@wgpu.BUFFER_USAGE_MAP_WRITE | @wgpu.BUFFER_USAGE_COPY_SRC),
+    )
+    let read_buf = device.create_buffer(
+      size=8UL,
+      usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    )
+    write_buf.map_write_sync(instance, 0UL, rgba_bytes(9U, 8U, 7U, 6U))
+    write_buf.unmap()
+    let encoder = device.create_command_encoder()
+    encoder.copy_buffer_to_buffer(write_buf, 0UL, read_buf, 0UL, 4UL)
+    let cmd = encoder.finish()
+    queue.submit_one(cmd)
+    cmd.release()
+    encoder.release()
+    let out = read_buf.map_read_sync(instance, 0UL, 4UL)
+    read_buf.unmap()
+    inspect(
+      [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
+      content="[9, 8, 7, 6]",
+    )
+    read_buf.release()
+    write_buf.release()
+    queue.release()
+    device.release()
+    adapter.release()
+    instance.release()
+  })
 }

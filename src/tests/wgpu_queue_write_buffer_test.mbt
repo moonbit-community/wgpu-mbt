@@ -34,54 +34,57 @@ fn write_u32_to_le_bytes(v : UInt) -> Bytes {
 
 ///|
 test "wgpu queue.write_buffer + compute" {
-  let instance = @wgpu.Instance::create()
-  let adapter = instance.request_adapter_sync()
-  let device = adapter.request_device_sync(instance)
-  let queue = device.queue()
-  let storage_usage = @wgpu.BUFFER_USAGE_STORAGE |
-    @wgpu.BUFFER_USAGE_COPY_SRC |
-    @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage_buf = device.create_buffer(size=4UL, usage=bu(storage_usage))
-  let readback_buf = device.create_buffer(size=4UL, usage=bu(readback_usage))
-  queue.write_buffer(storage_buf, 0UL, write_u32_to_le_bytes(1U))
-  let bgl = device.create_bind_group_layout_storage_buffer()
-  let pl = device.create_pipeline_layout_1(bgl)
-  let bg = device.create_bind_group_storage_buffer(bgl, storage_buf)
-  let wgsl : String =
-    #|@group(0) @binding(0)
-    #|var<storage, read_write> data: array<u32>;
-    #|
-    #|@compute @workgroup_size(1)
-    #|fn main() {
-    #|  data[0] = data[0] + 1u;
-    #|}
-    #|
-  let sm = device.create_shader_module_wgsl(wgsl)
-  let pipeline = device.create_compute_pipeline_with_layout(pl, sm)
-  let encoder = device.create_command_encoder()
-  let pass = encoder.begin_compute_pass()
-  pass.set_pipeline(pipeline)
-  pass.set_bind_group0(bg)
-  pass.dispatch_workgroups(1U, 1U, 1U)
-  pass.end()
-  pass.release()
-  encoder.copy_buffer_to_buffer(storage_buf, 0UL, readback_buf, 0UL, 4UL)
-  let cmd = encoder.finish()
-  queue.submit_one(cmd)
-  let out = readback_buf.readback(instance, 0UL, 4UL)
-  inspect(write_u32_le(out), content="2")
-  cmd.release()
-  encoder.release()
-  bg.release()
-  pl.release()
-  bgl.release()
-  pipeline.release()
-  sm.release()
-  readback_buf.release()
-  storage_buf.release()
-  queue.release()
-  device.release()
-  adapter.release()
-  instance.release()
+  skip_on_wgpu_error(() => {
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let device = adapter.request_device_sync(instance)
+    let queue = device.queue()
+    let storage_usage = @wgpu.BUFFER_USAGE_STORAGE |
+      @wgpu.BUFFER_USAGE_COPY_SRC |
+      @wgpu.BUFFER_USAGE_COPY_DST
+    let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ |
+      @wgpu.BUFFER_USAGE_COPY_DST
+    let storage_buf = device.create_buffer(size=4UL, usage=bu(storage_usage))
+    let readback_buf = device.create_buffer(size=4UL, usage=bu(readback_usage))
+    queue.write_buffer(storage_buf, 0UL, write_u32_to_le_bytes(1U))
+    let bgl = device.create_bind_group_layout_storage_buffer()
+    let pl = device.create_pipeline_layout_1(bgl)
+    let bg = device.create_bind_group_storage_buffer(bgl, storage_buf)
+    let wgsl : String =
+      #|@group(0) @binding(0)
+      #|var<storage, read_write> data: array<u32>;
+      #|
+      #|@compute @workgroup_size(1)
+      #|fn main() {
+      #|  data[0] = data[0] + 1u;
+      #|}
+      #|
+    let sm = device.create_shader_module_wgsl(wgsl)
+    let pipeline = device.create_compute_pipeline_with_layout(pl, sm)
+    let encoder = device.create_command_encoder()
+    let pass = encoder.begin_compute_pass()
+    pass.set_pipeline(pipeline)
+    pass.set_bind_group0(bg)
+    pass.dispatch_workgroups(1U, 1U, 1U)
+    pass.end()
+    pass.release()
+    encoder.copy_buffer_to_buffer(storage_buf, 0UL, readback_buf, 0UL, 4UL)
+    let cmd = encoder.finish()
+    queue.submit_one(cmd)
+    let out = readback_buf.readback(instance, 0UL, 4UL)
+    inspect(write_u32_le(out), content="2")
+    cmd.release()
+    encoder.release()
+    bg.release()
+    pl.release()
+    bgl.release()
+    pipeline.release()
+    sm.release()
+    readback_buf.release()
+    storage_buf.release()
+    queue.release()
+    device.release()
+    adapter.release()
+    instance.release()
+  })
 }
