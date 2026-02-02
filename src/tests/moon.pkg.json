@@ -190,6 +190,9 @@
     "wgpu_log_version_test.mbt": [
       "native"
     ],
+    "wgpu_linux_headless_smoke_test.mbt": [
+      "native"
+    ],
     "wgpu_instance_capabilities_test.mbt": [
       "native"
     ],

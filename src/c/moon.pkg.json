@@ -3,6 +3,7 @@
   "native-stub": [
     "wgpu_dyn.c",
     "wgpu_stub_core.c",
+    "wgpu_optional_sym.c",
     "wgpu_stub_surface.c",
     "wgpu_stub_extras.c",
     "wgpu_stub_helpers_sync.c",
