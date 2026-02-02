@@ -1,6 +1,6 @@
 {
   "name": "Milky2018/wgpu_mbt",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "readme": "README.mbt.md",
   "repository": "https://github.com/moonbit-community/wgpu-mbt.git",
   "license": "Apache-2.0",
@@ -8,7 +8,7 @@
   "description": "This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU)",
   "source": "src",
   "preferred-target": "native",
-  "exclude": ["vendor"],
+  "exclude": ["vendor", "trace.json", "_build", "target", "src/c/target"],
   "scripts": {
     "postadd": "sh scripts/postadd.sh"
   }
