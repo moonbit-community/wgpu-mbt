@@ -123,14 +123,30 @@ jobs:
           $ErrorActionPreference = "Stop"
           $zipUrl = "https://cli.moonbitlang.com/binaries/latest/moonbit-windows-x86_64.zip"
           $zipPath = Join-Path $env:RUNNER_TEMP "moonbit.zip"
+          $coreUrl = "https://cli.moonbitlang.com/cores/core-latest.zip"
+          $coreZipPath = Join-Path $env:RUNNER_TEMP "core.zip"
           $moonHome = Join-Path $env:USERPROFILE ".moon"
+          $moonLib = Join-Path $moonHome "lib"
 
           Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath
           New-Item -ItemType Directory -Force -Path $moonHome | Out-Null
           Expand-Archive -Path $zipPath -DestinationPath $moonHome -Force
 
+          # The Windows zip does not include the standard library checkout.
+          # Install core explicitly (mirrors unix.sh install logic).
+          Invoke-WebRequest -Uri $coreUrl -OutFile $coreZipPath
+          New-Item -ItemType Directory -Force -Path $moonLib | Out-Null
+          Remove-Item -Recurse -Force -ErrorAction SilentlyContinue (Join-Path $moonLib "core")
+          Expand-Archive -Path $coreZipPath -DestinationPath $moonLib -Force
+
           "MOON_HOME=$moonHome" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           (Join-Path $moonHome "bin") | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+
+          # Bundle core so `moon check` can inject `moonbitlang/core`.
+          $env:MOON_HOME = $moonHome
+          $env:PATH = (Join-Path $moonHome "bin") + ";" + $env:PATH
+          moon bundle --warn-list -a --all --source-dir (Join-Path $moonLib "core")
+          moon bundle --warn-list -a --target wasm-gc --source-dir (Join-Path $moonLib "core") --quiet
 
       - name: Moon version
         shell: pwsh
