@@ -18,6 +18,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "wgpu_dynload.h"
+
 #if defined(_WIN32)
 #include <windows.h>
 static CRITICAL_SECTION g_device_lost_mu;
@@ -57,46 +59,78 @@ static bool mbt_wgpu_env_truthy(const char *name) {
          (strcmp(v, "ON") == 0);
 }
 
-static bool mbt_wgpu_marker_exists(const char *marker_filename) {
+static bool mbt_wgpu_marker_allows_current_lib(const char *marker_filename) {
   if (!marker_filename || !marker_filename[0]) {
     return false;
   }
+
+  char marker_path[4096];
 
 #if defined(_WIN32)
   const char *home = getenv("USERPROFILE");
   if (!home || !home[0]) {
     return false;
   }
-  char path[4096];
-  int n = snprintf(path, sizeof(path), "%s\\.local\\share\\wgpu_mbt\\%s", home,
-                   marker_filename);
-  if (n <= 0 || (size_t)n >= sizeof(path)) {
+  int n = snprintf(marker_path, sizeof(marker_path), "%s\\.local\\share\\wgpu_mbt\\%s",
+                   home, marker_filename);
+  if (n <= 0 || (size_t)n >= sizeof(marker_path)) {
     return false;
   }
-  DWORD attrs = GetFileAttributesA(path);
-  if (attrs == INVALID_FILE_ATTRIBUTES) {
-    return false;
-  }
-  return (attrs & FILE_ATTRIBUTE_DIRECTORY) == 0;
 #else
   const char *data_home = getenv("XDG_DATA_HOME");
   const char *home = getenv("HOME");
   if ((!data_home || !data_home[0]) && (!home || !home[0])) {
     return false;
   }
-  char path[4096];
   int n;
   if (data_home && data_home[0]) {
-    n = snprintf(path, sizeof(path), "%s/wgpu_mbt/%s", data_home, marker_filename);
+    n = snprintf(marker_path, sizeof(marker_path), "%s/wgpu_mbt/%s", data_home,
+                 marker_filename);
   } else {
-    n = snprintf(path, sizeof(path), "%s/.local/share/wgpu_mbt/%s", home,
+    n = snprintf(marker_path, sizeof(marker_path), "%s/.local/share/wgpu_mbt/%s", home,
                  marker_filename);
   }
-  if (n <= 0 || (size_t)n >= sizeof(path)) {
+  if (n <= 0 || (size_t)n >= sizeof(marker_path)) {
     return false;
   }
-  return access(path, F_OK) == 0;
 #endif
+
+  FILE *f = fopen(marker_path, "rb");
+  if (!f) {
+    return false;
+  }
+
+  char line[4096];
+  if (!fgets(line, sizeof(line), f)) {
+    fclose(f);
+    return false;
+  }
+  fclose(f);
+
+  // Trim trailing newline / CRLF.
+  size_t len = strlen(line);
+  while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == '\r')) {
+    line[len - 1] = '\0';
+    len--;
+  }
+
+  const char *prefix = "lib_path=";
+  size_t prefix_len = strlen(prefix);
+  if (strncmp(line, prefix, prefix_len) != 0) {
+    return false;
+  }
+  const char *marker_lib_path = line + prefix_len;
+  if (!marker_lib_path[0]) {
+    return false;
+  }
+
+  char resolved[4096];
+  const char *current_path = mbt_wgpu_native_resolve_lib_path(resolved, sizeof(resolved));
+  if (!current_path || !current_path[0]) {
+    return false;
+  }
+
+  return strcmp(marker_lib_path, current_path) == 0;
 }
 
 static const char *MBT_WGPU_MARKER_PIPELINE_ASYNC = "pipeline_async.ok";
@@ -119,7 +153,7 @@ static bool mbt_wgpu_pipeline_async_enabled(void) {
   if (!g_mbt_wgpu_pipeline_async_inited) {
     g_mbt_wgpu_pipeline_async_enabled =
         mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_PIPELINE_ASYNC") ||
-        mbt_wgpu_marker_exists(MBT_WGPU_MARKER_PIPELINE_ASYNC);
+        mbt_wgpu_marker_allows_current_lib(MBT_WGPU_MARKER_PIPELINE_ASYNC);
     g_mbt_wgpu_pipeline_async_inited = true;
   }
   return g_mbt_wgpu_pipeline_async_enabled;
@@ -132,7 +166,7 @@ static bool mbt_wgpu_compilation_info_enabled(void) {
   if (!g_mbt_wgpu_compilation_info_inited) {
     g_mbt_wgpu_compilation_info_enabled =
         mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_COMPILATION_INFO") ||
-        mbt_wgpu_marker_exists(MBT_WGPU_MARKER_COMPILATION_INFO);
+        mbt_wgpu_marker_allows_current_lib(MBT_WGPU_MARKER_COMPILATION_INFO);
     g_mbt_wgpu_compilation_info_inited = true;
   }
   return g_mbt_wgpu_compilation_info_enabled;

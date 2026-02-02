@@ -27,6 +27,7 @@ Known limitation:
   - Windows: `%USERPROFILE%\\.local\\share\\wgpu_mbt\\`
 
   If a marker exists, the feature is auto-enabled by default (unless force-disabled).
+  Marker files include the resolved native library path (`lib_path=...`) and are only trusted when they match the current `MBT_WGPU_NATIVE_LIB` / default resolved path. If you replace the native library or change `MBT_WGPU_NATIVE_LIB`, re-run `python3 scripts/postadd.py` to refresh markers.
 
   You can also opt in manually at your own risk:
   - `MBT_WGPU_ENABLE_PIPELINE_ASYNC=1`

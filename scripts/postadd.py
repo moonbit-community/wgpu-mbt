@@ -184,13 +184,13 @@ def _auto_probe_and_write_markers(lib_path: Path) -> None:
 
   ok_pipeline = _run_moon_probe(root, "src/cmd/probe_pipeline_async", env)
   if ok_pipeline:
-    m_pipeline.write_text("ok\n", encoding="utf-8")
+    m_pipeline.write_text(f"lib_path={lib_path}\n", encoding="utf-8")
   else:
     m_pipeline.unlink(missing_ok=True)  # type: ignore[arg-type]
 
   ok_comp = _run_moon_probe(root, "src/cmd/probe_compilation_info", env)
   if ok_comp:
-    m_comp.write_text("ok\n", encoding="utf-8")
+    m_comp.write_text(f"lib_path={lib_path}\n", encoding="utf-8")
   else:
     m_comp.unlink(missing_ok=True)  # type: ignore[arg-type]
 
