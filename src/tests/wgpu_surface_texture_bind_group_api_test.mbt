@@ -26,14 +26,14 @@ test "wgpu Surface/Texture/BindGroup API extensions" {
   let surface1 = surface0.add_ref()
   surface0.release()
   let usages = surface1.capabilities_usages_u64(adapter)
-  inspect(usages != 0UL, content="true")
+  inspect(usages.raw != 0UL, content="true")
   let surface_usage = @wgpu.TextureUsage::from_u64(
     @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
   )
   let format = surface1.configure_default(
     adapter, device, 1U, 1U, surface_usage,
   )
-  inspect(format == 0U, content="false")
+  inspect(format.raw == 0U, content="false")
   surface1.unconfigure()
   surface1.release()
   let tex_desc = @wgpu_c.texture_descriptor_rgba8_2d_default_new(1U, 1U)

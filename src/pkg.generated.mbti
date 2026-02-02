@@ -1252,7 +1252,7 @@ pub struct BindGroupLayoutBuilder {
 }
 pub fn BindGroupLayoutBuilder::add_buffer(Self, UInt, UInt64, UInt, has_dynamic_offset? : Bool, min_binding_size? : UInt64, count? : UInt) -> Bool
 pub fn BindGroupLayoutBuilder::add_sampler(Self, UInt, UInt64, UInt, count? : UInt) -> Bool
-pub fn BindGroupLayoutBuilder::add_storage_texture(Self, UInt, UInt64, UInt, UInt, UInt, count? : UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_storage_texture(Self, UInt, UInt64, UInt, TextureFormat, UInt, count? : UInt) -> Bool
 pub fn BindGroupLayoutBuilder::add_texture(Self, UInt, UInt64, UInt, UInt, multisampled? : Bool, count? : UInt) -> Bool
 pub fn BindGroupLayoutBuilder::finish(Self, Device, label? : String) -> BindGroupLayout
 pub fn BindGroupLayoutBuilder::free(Self) -> Unit
@@ -1465,7 +1465,7 @@ pub fn Device::create_texture_rgba8_2d(Self, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array(Self, UInt, UInt, UInt, UInt) -> Texture
 pub fn Device::create_texture_rgba8_2d_array_with_usage(Self, UInt, UInt, UInt, UInt, TextureUsage) -> Texture
 pub fn Device::create_texture_rgba8_2d_with_usage(Self, UInt, UInt, TextureUsage) -> Texture
-pub fn Device::create_texture_u32(Self, UInt, UInt, UInt, TextureUsage, TextureDimension, TextureFormat, mip_level_count? : UInt, sample_count? : UInt, view_formats? : Array[UInt]) -> Texture
+pub fn Device::create_texture_u32(Self, UInt, UInt, UInt, TextureUsage, TextureDimension, TextureFormat, mip_level_count? : UInt, sample_count? : UInt, view_formats? : Array[TextureFormat]) -> Texture
 pub fn Device::destroy(Self) -> Unit
 pub fn Device::destroy_raw(Self) -> Unit
 pub fn Device::get_adapter_info(Self) -> @c.WGPUAdapterInfo
@@ -1755,18 +1755,18 @@ pub fn Surface::add_ref_raw(Self) -> Unit
 pub fn Surface::capabilities_alpha_mode_u32_at(Self, Adapter, UInt64) -> UInt
 pub fn Surface::capabilities_alpha_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_alpha_modes_count_u64(Self, Adapter) -> UInt64
-pub fn Surface::capabilities_format_u32_at(Self, Adapter, UInt64) -> UInt
-pub fn Surface::capabilities_formats(Self, Adapter) -> Array[UInt]
+pub fn Surface::capabilities_format_u32_at(Self, Adapter, UInt64) -> TextureFormat
+pub fn Surface::capabilities_formats(Self, Adapter) -> Array[TextureFormat]
 pub fn Surface::capabilities_formats_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::capabilities_present_mode_u32_at(Self, Adapter, UInt64) -> UInt
 pub fn Surface::capabilities_present_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_present_modes_count_u64(Self, Adapter) -> UInt64
-pub fn Surface::capabilities_usages_u64(Self, Adapter) -> UInt64
+pub fn Surface::capabilities_usages_u64(Self, Adapter) -> TextureUsage
 pub fn Surface::configure(Self, @c.WGPUSurfaceConfigurationPtr) -> Unit
 pub fn Surface::configure_best_effort(Self, Adapter, Device, UInt, UInt, TextureUsage, prefer_srgb? : Bool, vsync? : Bool) -> Bool
-pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, TextureUsage) -> UInt
+pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, TextureUsage) -> TextureFormat
 pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt) -> Bool
-pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[UInt]) -> Bool
+pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat]) -> Bool
 pub fn Surface::get_capabilities(Self, Adapter, @c.WGPUSurfaceCapabilitiesPtr) -> @c.WGPUStatus
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture
 pub fn Surface::get_current_texture_raw(Self, @c.WGPUSurfaceTexturePtr) -> Unit
@@ -1798,12 +1798,12 @@ pub fn Texture::create_view_2d(Self, UInt, UInt) -> TextureView
 pub fn Texture::create_view_2d_array(Self, UInt, UInt, UInt, UInt) -> TextureView
 pub fn Texture::create_view_ptr(Self, @c.WGPUTextureViewDescriptorPtr) -> TextureView
 pub fn Texture::create_view_raw(Self, @c.WGPUTextureViewDescriptorPtr) -> TextureView
-pub fn Texture::create_view_u32(Self, UInt, UInt, UInt, UInt, UInt, UInt, UInt) -> TextureView
+pub fn Texture::create_view_u32(Self, TextureFormat, UInt, UInt, UInt, UInt, UInt, UInt) -> TextureView
 pub fn Texture::depth_or_array_layers_u32(Self) -> UInt
 pub fn Texture::destroy(Self) -> Unit
 pub fn Texture::destroy_raw(Self) -> Unit
-pub fn Texture::dimension_u32(Self) -> UInt
-pub fn Texture::format_u32(Self) -> UInt
+pub fn Texture::dimension_u32(Self) -> TextureDimension
+pub fn Texture::format_u32(Self) -> TextureFormat
 pub fn Texture::get_depth_or_array_layers(Self) -> UInt
 pub fn Texture::get_dimension(Self) -> @c.WGPUTextureDimension
 pub fn Texture::get_format(Self) -> @c.WGPUTextureFormat
@@ -1819,7 +1819,7 @@ pub fn Texture::release(Self) -> Unit
 pub fn Texture::release_raw(Self) -> Unit
 pub fn Texture::sample_count_u32(Self) -> UInt
 pub fn Texture::set_label(Self, String) -> Unit
-pub fn Texture::usage_u64(Self) -> UInt64
+pub fn Texture::usage_u64(Self) -> TextureUsage
 pub fn Texture::width_u32(Self) -> UInt
 
 pub struct TextureDimension {
@@ -1827,18 +1827,21 @@ pub struct TextureDimension {
 }
 pub fn TextureDimension::from_u32(UInt) -> Self
 pub fn TextureDimension::to_u32(Self) -> UInt
+pub impl Eq for TextureDimension
 
 pub struct TextureFormat {
   raw : UInt
 }
 pub fn TextureFormat::from_u32(UInt) -> Self
 pub fn TextureFormat::to_u32(Self) -> UInt
+pub impl Eq for TextureFormat
 
 pub struct TextureUsage {
   raw : UInt64
 }
 pub fn TextureUsage::from_u64(UInt64) -> Self
 pub fn TextureUsage::to_u64(Self) -> UInt64
+pub impl Eq for TextureUsage
 
 pub struct TextureView {
   raw : @c.WGPUTextureView

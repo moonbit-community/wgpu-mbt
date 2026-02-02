@@ -33,7 +33,7 @@ test "wgpu surface capabilities (items)" {
     pm_count - 1UL,
   )
   let am_last = surface.capabilities_alpha_mode_u32_at(adapter, am_count - 1UL)
-  inspect(fmt0 != 0U && fmt_last != 0U, content="true")
+  inspect(fmt0.raw != 0U && fmt_last.raw != 0U, content="true")
   inspect(pm0 != 0U && pm_last != 0U, content="true")
   inspect(am0 != 0U && am_last != 0U, content="true")
   surface.release()

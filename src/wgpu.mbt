@@ -91,6 +91,22 @@ pub fn TextureFormat::to_u32(self : TextureFormat) -> UInt {
 }
 
 ///|
+pub impl Eq for TextureFormat with equal(
+  self : TextureFormat,
+  other : TextureFormat,
+) -> Bool {
+  self.raw == other.raw
+}
+
+///|
+pub impl Eq for TextureFormat with not_equal(
+  self : TextureFormat,
+  other : TextureFormat,
+) -> Bool {
+  self.raw != other.raw
+}
+
+///|
 pub struct TextureDimension {
   raw : UInt
 }
@@ -106,6 +122,22 @@ pub fn TextureDimension::to_u32(self : TextureDimension) -> UInt {
 }
 
 ///|
+pub impl Eq for TextureDimension with equal(
+  self : TextureDimension,
+  other : TextureDimension,
+) -> Bool {
+  self.raw == other.raw
+}
+
+///|
+pub impl Eq for TextureDimension with not_equal(
+  self : TextureDimension,
+  other : TextureDimension,
+) -> Bool {
+  self.raw != other.raw
+}
+
+///|
 pub struct TextureUsage {
   raw : UInt64
 }
@@ -118,6 +150,22 @@ pub fn TextureUsage::from_u64(raw : UInt64) -> TextureUsage {
 ///|
 pub fn TextureUsage::to_u64(self : TextureUsage) -> UInt64 {
   self.raw
+}
+
+///|
+pub impl Eq for TextureUsage with equal(
+  self : TextureUsage,
+  other : TextureUsage,
+) -> Bool {
+  self.raw == other.raw
+}
+
+///|
+pub impl Eq for TextureUsage with not_equal(
+  self : TextureUsage,
+  other : TextureUsage,
+) -> Bool {
+  self.raw != other.raw
 }
 
 ///|
@@ -1767,14 +1815,16 @@ pub fn Surface::configure_default(
   width : UInt,
   height : UInt,
   usage : TextureUsage,
-) -> UInt {
-  @c.surface_configure_default(
-    self.raw,
-    adapter.raw,
-    device.raw,
-    width,
-    height,
-    usage.raw,
+) -> TextureFormat {
+  TextureFormat::from_u32(
+    @c.surface_configure_default(
+      self.raw,
+      adapter.raw,
+      device.raw,
+      width,
+      height,
+      usage.raw,
+    ),
   )
 }
 
@@ -1814,7 +1864,7 @@ pub fn Surface::configure_view_formats_u32(
   format : TextureFormat,
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
-  view_formats : Array[UInt],
+  view_formats : Array[TextureFormat],
 ) -> Bool {
   let count = view_formats.length()
   if count == 0 {
@@ -1822,7 +1872,11 @@ pub fn Surface::configure_view_formats_u32(
       adapter, device, width, height, usage, format, present_mode_u32, alpha_mode_u32,
     )
   } else {
-    let fixed = FixedArray::from_array(view_formats[:])
+    let raw_view_formats : Ref[Array[UInt]] = @ref.new([])
+    for i = 0; i < count; i = i + 1 {
+      raw_view_formats.val.push(view_formats[i].raw)
+    }
+    let fixed = FixedArray::from_array(raw_view_formats.val[:])
     @c.surface_configure_view_formats_u32(
       self.raw,
       adapter.raw,
@@ -1917,8 +1971,10 @@ pub fn Surface::capabilities_alpha_modes_count_u64(
 pub fn Surface::capabilities_usages_u64(
   self : Surface,
   adapter : Adapter,
-) -> UInt64 {
-  @c.surface_capabilities_usages_u64(self.raw, adapter.raw)
+) -> TextureUsage {
+  TextureUsage::from_u64(
+    @c.surface_capabilities_usages_u64(self.raw, adapter.raw),
+  )
 }
 
 ///|
@@ -1926,8 +1982,10 @@ pub fn Surface::capabilities_format_u32_at(
   self : Surface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt {
-  @c.surface_capabilities_format_u32_at(self.raw, adapter.raw, index)
+) -> TextureFormat {
+  TextureFormat::from_u32(
+    @c.surface_capabilities_format_u32_at(self.raw, adapter.raw, index),
+  )
 }
 
 ///|
@@ -1952,9 +2010,9 @@ pub fn Surface::capabilities_alpha_mode_u32_at(
 pub fn Surface::capabilities_formats(
   self : Surface,
   adapter : Adapter,
-) -> Array[UInt] {
+) -> Array[TextureFormat] {
   let count = self.capabilities_formats_count_u64(adapter)
-  let out : Ref[Array[UInt]] = @ref.new([])
+  let out : Ref[Array[TextureFormat]] = @ref.new([])
   for i = 0; i < count.to_int(); i = i + 1 {
     out.val.push(self.capabilities_format_u32_at(adapter, i.to_uint64()))
   }
@@ -2015,6 +2073,39 @@ fn pick_first_supported_u32(xs : Array[UInt], prefs : Array[UInt]) -> UInt {
 }
 
 ///|
+fn array_contains_texture_format(
+  xs : Array[TextureFormat],
+  v : TextureFormat,
+) -> Bool {
+  let n = xs.length()
+  for i = 0; i < n; i = i + 1 {
+    if xs[i].raw == v.raw {
+      return true
+    }
+  }
+  false
+}
+
+///|
+fn pick_first_supported_texture_format(
+  xs : Array[TextureFormat],
+  prefs : Array[TextureFormat],
+) -> TextureFormat {
+  let n = prefs.length()
+  for i = 0; i < n; i = i + 1 {
+    let v = prefs[i]
+    if array_contains_texture_format(xs, v) {
+      return v
+    }
+  }
+  if xs.length() == 0 {
+    TextureFormat::from_u32(0U)
+  } else {
+    xs[0]
+  }
+}
+
+///|
 pub fn Surface::configure_best_effort(
   self : Surface,
   adapter : Adapter,
@@ -2030,20 +2121,20 @@ pub fn Surface::configure_best_effort(
   let alpha_modes = self.capabilities_alpha_modes(adapter)
   let format_prefs = if prefer_srgb {
     [
-      TEXTURE_FORMAT_BGRA8_UNORM_SRGB,
-      TEXTURE_FORMAT_RGBA8_UNORM_SRGB,
-      TEXTURE_FORMAT_BGRA8_UNORM,
-      TEXTURE_FORMAT_RGBA8_UNORM,
+      TextureFormat::from_u32(TEXTURE_FORMAT_BGRA8_UNORM_SRGB),
+      TextureFormat::from_u32(TEXTURE_FORMAT_RGBA8_UNORM_SRGB),
+      TextureFormat::from_u32(TEXTURE_FORMAT_BGRA8_UNORM),
+      TextureFormat::from_u32(TEXTURE_FORMAT_RGBA8_UNORM),
     ]
   } else {
     [
-      TEXTURE_FORMAT_BGRA8_UNORM,
-      TEXTURE_FORMAT_RGBA8_UNORM,
-      TEXTURE_FORMAT_BGRA8_UNORM_SRGB,
-      TEXTURE_FORMAT_RGBA8_UNORM_SRGB,
+      TextureFormat::from_u32(TEXTURE_FORMAT_BGRA8_UNORM),
+      TextureFormat::from_u32(TEXTURE_FORMAT_RGBA8_UNORM),
+      TextureFormat::from_u32(TEXTURE_FORMAT_BGRA8_UNORM_SRGB),
+      TextureFormat::from_u32(TEXTURE_FORMAT_RGBA8_UNORM_SRGB),
     ]
   }
-  let fmt = pick_first_supported_u32(formats, format_prefs)
+  let fmt = pick_first_supported_texture_format(formats, format_prefs)
   let pm_prefs = if vsync {
     [PRESENT_MODE_FIFO, PRESENT_MODE_FIFO_RELAXED]
   } else {
@@ -2059,10 +2150,10 @@ pub fn Surface::configure_best_effort(
   ]
   let am = pick_first_supported_u32(alpha_modes, am_prefs)
   let supported_usage = self.capabilities_usages_u64(adapter)
-  let actual_usage = if (usage.raw & supported_usage) == 0UL {
-    supported_usage
+  let actual_usage = if (usage.raw & supported_usage.raw) == 0UL {
+    supported_usage.raw
   } else {
-    usage.raw & supported_usage
+    usage.raw & supported_usage.raw
   }
   self.configure_u32(
     adapter,
@@ -2070,7 +2161,7 @@ pub fn Surface::configure_best_effort(
     width,
     height,
     TextureUsage::from_u64(actual_usage),
-    TextureFormat::from_u32(fmt),
+    fmt,
     pm,
     am,
   )
@@ -2742,7 +2833,7 @@ pub fn Device::create_texture_u32(
   format : TextureFormat,
   mip_level_count? : UInt = 1U,
   sample_count? : UInt = 1U,
-  view_formats? : Array[UInt] = [],
+  view_formats? : Array[TextureFormat] = [],
 ) -> Texture {
   let count = view_formats.length()
   if count == 0 {
@@ -2760,7 +2851,11 @@ pub fn Device::create_texture_u32(
       ),
     }
   } else {
-    let fixed = FixedArray::from_array(view_formats[:])
+    let raw_view_formats : Ref[Array[UInt]] = @ref.new([])
+    for i = 0; i < count; i = i + 1 {
+      raw_view_formats.val.push(view_formats[i].raw)
+    }
+    let fixed = FixedArray::from_array(raw_view_formats.val[:])
     Texture::{
       raw: @c.device_create_texture_view_formats_u32(
         self.raw,
@@ -2795,7 +2890,7 @@ pub fn Texture::create_view_ptr(
 ///|
 pub fn Texture::create_view_u32(
   self : Texture,
-  format_u32 : UInt,
+  format : TextureFormat,
   view_dimension_u32 : UInt,
   aspect_u32 : UInt,
   base_array_layer : UInt,
@@ -2806,7 +2901,7 @@ pub fn Texture::create_view_u32(
   TextureView::{
     raw: @c.texture_create_view_u32(
       self.raw,
-      format_u32,
+      format.raw,
       view_dimension_u32,
       aspect_u32,
       base_array_layer,
@@ -2873,18 +2968,18 @@ pub fn Texture::sample_count_u32(self : Texture) -> UInt {
 }
 
 ///|
-pub fn Texture::dimension_u32(self : Texture) -> UInt {
-  @c.texture_get_dimension_u32(self.raw)
+pub fn Texture::dimension_u32(self : Texture) -> TextureDimension {
+  TextureDimension::from_u32(@c.texture_get_dimension_u32(self.raw))
 }
 
 ///|
-pub fn Texture::format_u32(self : Texture) -> UInt {
-  @c.texture_get_format_u32(self.raw)
+pub fn Texture::format_u32(self : Texture) -> TextureFormat {
+  TextureFormat::from_u32(@c.texture_get_format_u32(self.raw))
 }
 
 ///|
-pub fn Texture::usage_u64(self : Texture) -> UInt64 {
-  @c.texture_get_usage_u64(self.raw)
+pub fn Texture::usage_u64(self : Texture) -> TextureUsage {
+  TextureUsage::from_u64(@c.texture_get_usage_u64(self.raw))
 }
 
 ///|
@@ -3400,7 +3495,7 @@ pub fn BindGroupLayoutBuilder::add_storage_texture(
   binding : UInt,
   visibility : UInt64,
   access_u32 : UInt,
-  format_u32 : UInt,
+  format : TextureFormat,
   view_dimension_u32 : UInt,
   count? : UInt = 1U,
 ) -> Bool {
@@ -3410,7 +3505,7 @@ pub fn BindGroupLayoutBuilder::add_storage_texture(
       binding,
       visibility,
       access_u32,
-      format_u32,
+      format.raw,
       view_dimension_u32,
     )
   } else {
@@ -3419,7 +3514,7 @@ pub fn BindGroupLayoutBuilder::add_storage_texture(
       binding,
       visibility,
       access_u32,
-      format_u32,
+      format.raw,
       view_dimension_u32,
       count,
     )

@@ -30,16 +30,7 @@ test "wgpu surface configure_u32" {
     @wgpu.TEXTURE_USAGE_COPY_SRC |
     @wgpu.TEXTURE_USAGE_COPY_DST,
   )
-  let ok = surface.configure_u32(
-    adapter,
-    device,
-    1U,
-    1U,
-    usage,
-    @wgpu.TextureFormat::from_u32(fmt0),
-    pm0,
-    am0,
-  )
+  let ok = surface.configure_u32(adapter, device, 1U, 1U, usage, fmt0, pm0, am0)
   inspect(ok, content="true")
   let st = surface.get_current_texture()
   let status = st.status()

@@ -1223,7 +1223,7 @@ declare pub fn Surface::configure_default(
   width : UInt,
   height : UInt,
   usage : TextureUsage,
-) -> UInt
+) -> TextureFormat
 
 ///|
 #declaration_only
@@ -1251,7 +1251,7 @@ declare pub fn Surface::configure_view_formats_u32(
   format : TextureFormat,
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
-  view_formats : Array[UInt],
+  view_formats : Array[TextureFormat],
 ) -> Bool
 
 ///|
@@ -1333,7 +1333,7 @@ declare pub fn Surface::capabilities_format_u32_at(
   self : Surface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt
+) -> TextureFormat
 
 ///|
 #declaration_only
@@ -1356,7 +1356,7 @@ declare pub fn Surface::capabilities_alpha_mode_u32_at(
 declare pub fn Surface::capabilities_formats(
   self : Surface,
   adapter : Adapter,
-) -> Array[UInt]
+) -> Array[TextureFormat]
 
 ///|
 #declaration_only
@@ -1724,7 +1724,7 @@ declare pub fn Device::create_texture_u32(
   format : TextureFormat,
   mip_level_count? : UInt = 1U,
   sample_count? : UInt = 1U,
-  view_formats? : Array[UInt] = [],
+  view_formats? : Array[TextureFormat] = [],
 ) -> Texture
 
 ///|
@@ -1735,7 +1735,7 @@ declare pub fn Texture::create_view(self : Texture) -> TextureView
 #declaration_only
 declare pub fn Texture::create_view_u32(
   self : Texture,
-  format_u32 : UInt,
+  format : TextureFormat,
   view_dimension_u32 : UInt,
   aspect_u32 : UInt,
   base_array_layer : UInt,
@@ -1784,15 +1784,15 @@ declare pub fn Texture::sample_count_u32(self : Texture) -> UInt
 
 ///|
 #declaration_only
-declare pub fn Texture::dimension_u32(self : Texture) -> UInt
+declare pub fn Texture::dimension_u32(self : Texture) -> TextureDimension
 
 ///|
 #declaration_only
-declare pub fn Texture::format_u32(self : Texture) -> UInt
+declare pub fn Texture::format_u32(self : Texture) -> TextureFormat
 
 ///|
 #declaration_only
-declare pub fn Texture::usage_u64(self : Texture) -> UInt64
+declare pub fn Texture::usage_u64(self : Texture) -> TextureUsage
 
 ///|
 #declaration_only
@@ -2057,7 +2057,7 @@ declare pub fn BindGroupLayoutBuilder::add_storage_texture(
   binding : UInt,
   visibility : UInt64,
   access_u32 : UInt,
-  format_u32 : UInt,
+  format : TextureFormat,
   view_dimension_u32 : UInt,
   count? : UInt = 1U,
 ) -> Bool

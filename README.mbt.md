@@ -86,6 +86,10 @@ when the first WebGPU symbol is used (because we `dlopen` the library lazily).
 
 This repo is usable as a regular MoonBit library (the CLI under `cmd/` / `src/cmd/` is just an example).
 
+- v0.3.0+: several texture-related APIs now use type-safe wrappers:
+  - `TextureFormat` / `TextureDimension` / `TextureUsage` instead of raw `UInt`/`UInt64`
+  - use `TextureFormat::from_u32(...)` / `TextureUsage::from_u64(...)` when you need to bridge from numeric constants
+
 - Import the library package in your package `moon.pkg.json`:
   - `{ "path": "Milky2018/wgpu_mbt", "alias": "wgpu" }`
 - Provide the native runtime library yourself (this module does **not** bundle it):

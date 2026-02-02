@@ -36,7 +36,7 @@ test "wgpu surface configure_view_formats_u32" {
     1U,
     1U,
     usage,
-    @wgpu.TextureFormat::from_u32(fmt0),
+    fmt0,
     pm0,
     am0,
     [fmt0],

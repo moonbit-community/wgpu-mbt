@@ -27,9 +27,9 @@ test "wgpu texture getters" {
     tex.depth_or_array_layers_u32() == 1U &&
     tex.mip_level_count_u32() > 0U &&
     tex.sample_count_u32() > 0U &&
-    tex.dimension_u32() != 0U &&
-    tex.format_u32() != 0U &&
-    (tex.usage_u64() & req_usage_u64) == req_usage_u64
+    tex.dimension_u32().raw != 0U &&
+    tex.format_u32().raw != 0U &&
+    (tex.usage_u64().raw & req_usage_u64) == req_usage_u64
   inspect(ok, content="true")
   tex.release()
   device.release()
