@@ -63,6 +63,29 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libvulkan1 mesa-vulkan-drivers vulkan-tools clang libclang-dev pkg-config
 
+      - name: Configure Vulkan ICD (lavapipe)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Available Vulkan ICDs:"
+          ls -la /usr/share/vulkan/icd.d || true
+
+          icd=""
+          for cand in /usr/share/vulkan/icd.d/lvp_icd.x86_64.json /usr/share/vulkan/icd.d/lvp_icd.json; do
+            if [ -f "$cand" ]; then
+              icd="$cand"
+              break
+            fi
+          done
+          if [ -n "$icd" ]; then
+            echo "Using ICD: $icd"
+            echo "VK_ICD_FILENAMES=$icd" >> "$GITHUB_ENV"
+          else
+            echo "No lavapipe ICD found; continuing with default loader search."
+          fi
+
+          vulkaninfo --summary || true
+
       - name: Install MoonBit
         shell: bash
         run: |
