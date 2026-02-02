@@ -8,11 +8,22 @@
     "moonbitlang/core/encoding/utf8"
   ],
   "targets": {
-    "consts.mbt": [
-      "native"
-    ],
-    "wgpu.mbt": [
-      "native"
-    ]
+    "consts.mbt": ["native"],
+    "wgpu.mbt": ["native"],
+    "wgpu_adapter.mbt": ["native"],
+    "wgpu_bind_groups.mbt": ["native"],
+    "wgpu_buffer.mbt": ["native"],
+    "wgpu_device.mbt": ["native"],
+    "wgpu_handles.mbt": ["native"],
+    "wgpu_instance.mbt": ["native"],
+    "wgpu_passes.mbt": ["native"],
+    "wgpu_pipeline.mbt": ["native"],
+    "wgpu_pipeline_desc_builder.mbt": ["native"],
+    "wgpu_queue.mbt": ["native"],
+    "wgpu_runtime.mbt": ["native"],
+    "wgpu_shader.mbt": ["native"],
+    "wgpu_surface.mbt": ["native"],
+    "wgpu_texture.mbt": ["native"],
+    "wgpu_types.mbt": ["native"]
   }
 }

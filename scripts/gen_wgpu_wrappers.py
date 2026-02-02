@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate MoonBit WebGPU handle wrappers in:
-  - src/wgpu.mbt
+  - src/wgpu_handles.mbt
   - src/wgpu_spec_handles.mbt
 
 We intentionally generate only "handle methods" (functions whose name is
@@ -26,7 +26,8 @@ from typing import Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WGPU_MBT = ROOT / "src" / "wgpu.mbt"
+SRC_DIR = ROOT / "src"
+WGPU_MBT = SRC_DIR / "wgpu_handles.mbt"
 WGPU_SPEC_HANDLES = ROOT / "src" / "wgpu_spec_handles.mbt"
 WEBGPU_CAPI = ROOT / "src" / "c" / "webgpu_capi.mbt"
 
@@ -699,13 +700,22 @@ def main() -> int:
     fns = _extract_extern_fns_from_webgpu_capi(webgpu_text)
     handles = _handle_types_from_fns(fns)
 
-    # For collision checks, only consider hand-written APIs. If we include the
-    # already-generated sections, repeated generator runs will drift method
-    # names (e.g. add extra `_raw` suffixes).
-    wgpu_text_for_parse = _replace_marked_section(wgpu_text, TYPES_BEGIN, TYPES_END, "")
-    wgpu_text_for_parse = _replace_marked_section(wgpu_text_for_parse, METHODS_BEGIN, METHODS_END, "")
-    existing_structs = _parse_existing_wrapper_structs(wgpu_text_for_parse)
-    existing_methods = _parse_existing_methods(wgpu_text_for_parse)
+    # For collision checks, parse the whole package (all src/*.mbt), but exclude
+    # the generated sections inside `wgpu_handles.mbt` so repeated generator
+    # runs are stable.
+    impl_texts: list[str] = []
+    for p in sorted(SRC_DIR.glob("*.mbt")):
+        if p.name.startswith("wgpu_spec"):
+            continue
+        t = _read_text(p)
+        if p.name == WGPU_MBT.name:
+            t = _replace_marked_section(t, TYPES_BEGIN, TYPES_END, "")
+            t = _replace_marked_section(t, METHODS_BEGIN, METHODS_END, "")
+        impl_texts.append(t)
+    impl_text = "\n".join(impl_texts)
+
+    existing_structs = _parse_existing_wrapper_structs(impl_text)
+    existing_methods = _parse_existing_methods(impl_text)
 
     gen_structs = _gen_structs(handles, existing_structs)
     gen_methods, skipped = _gen_methods(fns, handles, existing_structs, existing_methods)
