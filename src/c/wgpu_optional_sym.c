@@ -9,7 +9,36 @@
 
 #include "wgpu_optional_sym.h"
 
+#include <stdio.h>
 #include <stdlib.h>
+
+static const char *mbt_wgpu_optional_lib_filename(void) {
+#if defined(__APPLE__)
+  return "libwgpu_native.dylib";
+#elif defined(_WIN32)
+  return "wgpu_native.dll";
+#else
+  return "libwgpu_native.so";
+#endif
+}
+
+static const char *mbt_wgpu_optional_default_lib_path(char *buf, size_t buflen) {
+#if defined(_WIN32)
+  const char *home = getenv("USERPROFILE");
+  if (!home || !home[0]) {
+    return NULL;
+  }
+  (void)snprintf(buf, buflen, "%s\\.local\\lib\\%s", home, mbt_wgpu_optional_lib_filename());
+  return buf;
+#else
+  const char *home = getenv("HOME");
+  if (!home || !home[0]) {
+    return NULL;
+  }
+  (void)snprintf(buf, buflen, "%s/.local/lib/%s", home, mbt_wgpu_optional_lib_filename());
+  return buf;
+#endif
+}
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -23,7 +52,12 @@ static BOOL CALLBACK mbt_wgpu_optional_init_once(PINIT_ONCE once, PVOID param, P
   (void)param;
   (void)ctx;
 
-  const char *path = getenv("MBT_WGPU_NATIVE_LIB");
+  const char *override = getenv("MBT_WGPU_NATIVE_LIB");
+  const char *path = (override && override[0]) ? override : NULL;
+  char fallback[1024];
+  if (!path) {
+    path = mbt_wgpu_optional_default_lib_path(fallback, sizeof(fallback));
+  }
   if (!path || !path[0]) {
     return TRUE;
   }
@@ -67,7 +101,12 @@ static void *g_mbt_wgpu_optional_lib = NULL;
 static pthread_once_t g_mbt_wgpu_optional_once = PTHREAD_ONCE_INIT;
 
 static void mbt_wgpu_optional_init(void) {
-  const char *path = getenv("MBT_WGPU_NATIVE_LIB");
+  const char *override = getenv("MBT_WGPU_NATIVE_LIB");
+  const char *path = (override && override[0]) ? override : NULL;
+  char fallback[1024];
+  if (!path) {
+    path = mbt_wgpu_optional_default_lib_path(fallback, sizeof(fallback));
+  }
   if (!path || !path[0]) {
     return;
   }
@@ -86,4 +125,3 @@ void *mbt_wgpu_optional_sym(const char *name) {
   return dlsym(g_mbt_wgpu_optional_lib, name);
 }
 #endif
-

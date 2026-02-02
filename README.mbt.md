@@ -9,7 +9,7 @@ This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused o
   - macOS + Metal (primary)
   - Linux + Vulkan (experimental, core API works; window surfaces depend on host integration)
   - Windows (experimental, Vulkan/DX12 via wgpu-native; window surfaces via HWND)
-- Native dependency: **runtime** dynamic library `libwgpu_native` loaded via `dlopen` (see `MBT_WGPU_NATIVE_LIB` below)
+- Native dependency: **runtime** dynamic library `libwgpu_native` loaded via `dlopen` / `LoadLibrary` (see below)
 - Constants: exported as `pub const` in `SCREAMING_SNAKE_CASE` (e.g. `BUFFER_USAGE_COPY_DST`)
 - Tests: all tests live under `src/tests/` and are listed in `src/tests/moon.pkg.json` `targets`
 
@@ -31,9 +31,31 @@ Useful introspection helpers:
 - Adapter info strings: `Adapter::info_vendor`, `Adapter::info_architecture`, `Adapter::info_device`, `Adapter::info_description`
 - Instance capabilities: `get_instance_capabilities()` (currently exposes timed-wait-any support fields)
 
+## Prebuilt native binaries (recommended)
+
+This module does **not** ship `libwgpu_native` inside the MoonBit publish package, but we do publish
+prebuilt binaries as GitHub Release assets for convenience:
+
+- `darwin-arm64-metal` -> `libwgpu_native.dylib`
+- `linux-amd64-vulkan` -> `libwgpu_native.so`
+- `windows-amd64-dx12` -> `wgpu_native.dll`
+
+When you `moon add Milky2018/wgpu_mbt`, a `postadd` hook (`python3 scripts/postadd.py`) can download
+the matching release asset, verify its SHA256, and install it into a stable per-user path:
+
+- macOS: `$HOME/.local/lib/libwgpu_native.dylib`
+- Linux: `$HOME/.local/lib/libwgpu_native.so`
+- Windows: `%USERPROFILE%\\.local\\lib\\wgpu_native.dll`
+
+If you want to disable postadd scripts, set `MOON_IGNORE_POSTADD=1`.
+
+You can always override the runtime library path with `MBT_WGPU_NATIVE_LIB`.
+
 ## Quickstart (macOS)
 
-- Build `wgpu-native` and point `MBT_WGPU_NATIVE_LIB` at the resulting dylib:
+- Recommended: install the prebuilt dylib to `$HOME/.local/lib/` via postadd:
+  - `moon add Milky2018/wgpu_mbt` (downloads on first add), or run `python3 scripts/postadd.py`
+- Or build `wgpu-native` yourself and point `MBT_WGPU_NATIVE_LIB` at the resulting dylib:
   - `git clone https://github.com/gfx-rs/wgpu-native`
   - `cd wgpu-native`
   - `cargo build --release --no-default-features --features metal,wgsl`
@@ -52,7 +74,9 @@ Useful introspection helpers:
 
 ## Quickstart (Linux + Vulkan) (experimental)
 
-- Build `wgpu-native` (Vulkan) and point `MBT_WGPU_NATIVE_LIB` at the resulting `.so`:
+- Recommended: install the prebuilt `.so` to `$HOME/.local/lib/` via postadd:
+  - `moon add Milky2018/wgpu_mbt` (downloads on first add), or run `python3 scripts/postadd.py`
+- Or build `wgpu-native` (Vulkan) and point `MBT_WGPU_NATIVE_LIB` at the resulting `.so`:
   - `git clone https://github.com/gfx-rs/wgpu-native`
   - `cd wgpu-native`
   - `cargo build --release --no-default-features --features vulkan,wgsl`
@@ -65,7 +89,9 @@ Useful introspection helpers:
 
 ## Quickstart (Windows) (experimental)
 
-- Build `wgpu-native` and point `MBT_WGPU_NATIVE_LIB` at the resulting `.dll`:
+- Recommended: install the prebuilt `.dll` to `%USERPROFILE%\\.local\\lib\\` via postadd:
+  - `moon add Milky2018/wgpu_mbt` (downloads on first add), or run `python3 scripts/postadd.py`
+- Or build `wgpu-native` and point `MBT_WGPU_NATIVE_LIB` at the resulting `.dll`:
   - `git clone https://github.com/gfx-rs/wgpu-native`
   - `cd wgpu-native`
   - `cargo build --release --no-default-features --features dx12,wgsl`
@@ -75,19 +101,23 @@ Useful introspection helpers:
 
 ## Native runtime dependency (required)
 
-This module does **not** bundle wgpu-native artifacts. Users are responsible for:
+This module does **not** bundle wgpu-native artifacts inside the MoonBit publish package. Users are responsible for:
 
-- Installing/building a compatible `libwgpu_native` dynamic library for their platform.
-- Setting `MBT_WGPU_NATIVE_LIB` to a path to that library before running.
-- Ensuring the file exists and is readable in the deployment environment.
+- Installing a compatible `libwgpu_native` dynamic library for their platform:
+  - via GitHub Release prebuilt assets (recommended), or
+  - building from source (see quickstarts above).
 
-Recommended macOS location:
-- `MBT_WGPU_NATIVE_LIB=\"$HOME/.local/lib/libwgpu_native.dylib\"`
-  - If you have this repo checked out with `vendor/wgpu-native`, `moon add` will also try to copy
-    `vendor/wgpu-native/target/release/libwgpu_native.dylib` to that location via `postadd`.
+Runtime library discovery order:
+1) `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)`
+2) default per-user install path:
+   - macOS: `$HOME/.local/lib/libwgpu_native.dylib`
+   - Linux: `$HOME/.local/lib/libwgpu_native.so`
+   - Windows: `%USERPROFILE%\\.local\\lib\\wgpu_native.dll`
 
-If `MBT_WGPU_NATIVE_LIB` is unset (or points to a bad path), the process will abort
-when the first WebGPU symbol is used (because we `dlopen` the library lazily).
+This module does **not** try to locate the library via CWD.
+
+If neither location works, the process will abort when the first WebGPU symbol is used
+(because we `dlopen` the library lazily).
 
 ## Using as a library
 
@@ -106,7 +136,8 @@ This repo is usable as a regular MoonBit library (the CLI under `cmd/` / `src/cm
   - `{ "path": "Milky2018/wgpu_mbt", "alias": "wgpu" }`
 - Provide the native runtime library yourself (this module does **not** bundle it):
   - set `MBT_WGPU_NATIVE_LIB` to a path to `libwgpu_native.(dylib|so|dll)` before running anything that touches WebGPU
-  - this module does not search for the dylib via CWD; the env var is the single source of truth
+  - if you install to the default per-user path (see above), you can omit the env var
+  - this module does not search for the dylib via CWD
 
 Minimal example (same as `src/cmd/main/main.mbt`):
 
@@ -150,8 +181,9 @@ fn main {
 ## Build details
 
 - `src/c/wgpu_dyn.c` exports `wgpu*` symbols from our native-stub archive and forwards them to `libwgpu_native` loaded at runtime (dlopen+dlsym).
-- The runtime library location is controlled by the env var:
-  - `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.dylib`
+- The runtime library location is controlled by:
+  - `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)` (override), or
+  - the default per-user install path (`$HOME/.local/lib/...`).
 - Headers used for stub compilation are checked into this repo (see `src/c/webgpu.h` and `src/c/wgpu_native_shim.h`) so the build does not depend on a `vendor/` checkout.
 
 ## Repo layout
