@@ -32,6 +32,14 @@ Useful introspection helpers:
 - Adapter info strings: `Adapter::info_vendor`, `Adapter::info_architecture`, `Adapter::info_device`, `Adapter::info_description`
 - Instance capabilities: `get_instance_capabilities()` (currently exposes timed-wait-any support fields)
 
+## Platform support matrix
+
+| Platform | wgpu-native backend | Surface creation | Notes |
+|---|---|---|---|
+| macOS | Metal | `Instance::create_surface_metal_layer()` | Most tested (primary target). |
+| Linux | Vulkan | `Instance::create_surface_wayland(wl_display_ptr, wl_surface_ptr)` | Wayland-only for now; host app owns the Wayland objects and must pass stable pointers. Headless Vulkan is tested in CI. |
+| Windows | DX12 (and others via wgpu-native) | `Instance::create_surface_windows_hwnd(hinstance, hwnd)` | Experimental; host app owns HWND/HINSTANCE. |
+
 ## Prebuilt native binaries (recommended)
 
 This module does **not** ship `libwgpu_native` inside the MoonBit publish package, but we do publish
@@ -90,6 +98,45 @@ You can always override the runtime library path with `MBT_WGPU_NATIVE_LIB`.
   - X11 (XCB/Xlib) is intentionally not supported in this module at the moment.
 - Run any headless example/test that does not require a window surface (recommended to start).
   - Note: current `src/tests/` includes several macOS Metal surface tests.
+
+### Wayland surface integration (host-owned pointers)
+
+`wgpu_mbt` does **not** create a Wayland window for you. Your host application must:
+
+1) create/manage the Wayland connection + surface (`wl_display*`, `wl_surface*`)
+2) pass those pointers into `Instance::create_surface_wayland`
+3) keep them alive until you `Surface::unconfigure` / `Surface::release`
+
+Minimal usage pattern (MoonBit):
+
+```mbt
+let instance = @wgpu.Instance::create()
+let surface = instance.create_surface_wayland(wl_display_ptr, wl_surface_ptr)
+let adapter = instance.request_adapter_sync_options_surface_u32(
+  surface,
+  backend_type_u32=@wgpu.BACKEND_TYPE_VULKAN,
+)
+let device = adapter.request_device_sync(instance)
+
+// Configure swapchain.
+let usage = @wgpu.TextureUsage::from_u64(@wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT)
+let _format = surface.configure_default(adapter, device, width, height, usage)
+
+// Render loop (sketch).
+let st = surface.get_current_texture()
+if st.is_success() {
+  let tex = st.take_texture()
+  // ... create view, encode commands, submit ...
+  tex.release()
+  surface.present()
+}
+st.release()
+
+surface.release()
+device.release()
+adapter.release()
+instance.release()
+```
 
 ## Quickstart (Windows) (experimental)
 
