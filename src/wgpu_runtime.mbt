@@ -48,6 +48,22 @@ pub fn native_available() -> Bool {
 }
 
 ///|
+pub fn native_diagnostic() -> String {
+  let len = @c.native_diagnostic_utf8_len()
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.native_diagnostic_utf8(out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
 pub fn set_log_level(level : UInt) -> Unit {
   @c.wgpuSetLogLevel(level)
 }

@@ -6,8 +6,28 @@
 
 #include "wgpu_dynload.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+static size_t mbt_wgpu_appendf(char *buf, size_t buflen, size_t n, const char *fmt, ...) {
+  if (!buf || buflen == 0 || n >= buflen) {
+    return n;
+  }
+  va_list ap;
+  va_start(ap, fmt);
+  int wrote = vsnprintf(buf + n, buflen - n, fmt, ap);
+  va_end(ap);
+  if (wrote <= 0) {
+    return n;
+  }
+  size_t w = (size_t)wrote;
+  if (w >= buflen - n) {
+    return buflen - 1;
+  }
+  return n + w;
+}
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -164,10 +184,77 @@ uint32_t mbt_wgpu_native_available_u32(void) {
   return mbt_wgpu_native_sym_optional("wgpuCreateInstance") ? 1u : 0u;
 }
 
+static uint64_t mbt_wgpu_native_diagnostic_impl(char *out, size_t out_len) {
+  size_t n = 0;
+  const char *override = getenv("MBT_WGPU_NATIVE_LIB");
+  n = mbt_wgpu_appendf(out, out_len, n, "MBT_WGPU_NATIVE_LIB=%s\n",
+                       (override && override[0]) ? override : "<unset>");
+
+  char path_buf[1024];
+  const char *path = mbt_wgpu_native_resolve_lib_path(path_buf, sizeof(path_buf));
+  n = mbt_wgpu_appendf(out, out_len, n, "resolved_path=%s\n",
+                       (path && path[0]) ? path : "<none>");
+
+  if (!path || !path[0]) {
+    n = mbt_wgpu_appendf(out, out_len, n,
+                         "status=unavailable (cannot resolve path)\n");
+    return (uint64_t)n;
+  }
+
+  SetLastError(0);
+  HMODULE lib = mbt_wgpu_native_load_library_utf8(path);
+  if (!lib) {
+    DWORD err = GetLastError();
+    n = mbt_wgpu_appendf(out, out_len, n, "LoadLibrary failed (GetLastError=%lu)\n",
+                         (unsigned long)err);
+    char msg[512];
+    DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+    DWORD len =
+        FormatMessageA(flags, NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), msg,
+                       (DWORD)sizeof(msg), NULL);
+    if (len > 0) {
+      n = mbt_wgpu_appendf(out, out_len, n, "win32=%s\n", msg);
+    }
+    return (uint64_t)n;
+  }
+
+  SetLastError(0);
+  FARPROC sym = GetProcAddress(lib, "wgpuCreateInstance");
+  if (sym) {
+    n = mbt_wgpu_appendf(out, out_len, n, "wgpuCreateInstance=ok\n");
+    n = mbt_wgpu_appendf(out, out_len, n, "status=available\n");
+  } else {
+    DWORD err = GetLastError();
+    n = mbt_wgpu_appendf(out, out_len, n,
+                         "GetProcAddress(wgpuCreateInstance) failed (GetLastError=%lu)\n",
+                         (unsigned long)err);
+    n = mbt_wgpu_appendf(out, out_len, n, "status=unavailable (missing symbol)\n");
+  }
+  FreeLibrary(lib);
+  return (uint64_t)n;
+}
+
+uint64_t mbt_wgpu_native_diagnostic_utf8_len(void) {
+  char buf[4096];
+  return mbt_wgpu_native_diagnostic_impl(buf, sizeof(buf));
+}
+
+bool mbt_wgpu_native_diagnostic_utf8(uint8_t *out, uint64_t out_len) {
+  if (!out || out_len == 0u) {
+    return false;
+  }
+  char buf[4096];
+  uint64_t len = mbt_wgpu_native_diagnostic_impl(buf, sizeof(buf));
+  if (out_len < len) {
+    return false;
+  }
+  memcpy(out, buf, (size_t)len);
+  return true;
+}
+
 #else
 #include <dlfcn.h>
 #include <pthread.h>
-#include <string.h>
 
 static void *g_mbt_wgpu_native_lib = NULL;
 static pthread_mutex_t g_mbt_wgpu_native_mu = PTHREAD_MUTEX_INITIALIZER;
@@ -272,5 +359,68 @@ void *mbt_wgpu_native_sym_optional(const char *name) {
 uint32_t mbt_wgpu_native_available_u32(void) {
   // Probe a core symbol so we don't treat an arbitrary library as wgpu-native.
   return mbt_wgpu_native_sym_optional("wgpuCreateInstance") ? 1u : 0u;
+}
+
+static uint64_t mbt_wgpu_native_diagnostic_impl(char *out, size_t out_len) {
+  size_t n = 0;
+  const char *override = getenv("MBT_WGPU_NATIVE_LIB");
+  n = mbt_wgpu_appendf(out, out_len, n, "MBT_WGPU_NATIVE_LIB=%s\n",
+                       (override && override[0]) ? override : "<unset>");
+
+  char path_buf[1024];
+  const char *path = mbt_wgpu_native_resolve_lib_path(path_buf, sizeof(path_buf));
+  n = mbt_wgpu_appendf(out, out_len, n, "resolved_path=%s\n",
+                       (path && path[0]) ? path : "<none>");
+
+  if (!path || !path[0]) {
+    n = mbt_wgpu_appendf(out, out_len, n, "status=unavailable (cannot resolve path)\n");
+    return (uint64_t)n;
+  }
+
+  dlerror();  // clear
+  void *lib = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
+  if (!lib) {
+    const char *err = dlerror();
+    n = mbt_wgpu_appendf(out, out_len, n, "dlopen failed\n");
+    if (err && err[0]) {
+      n = mbt_wgpu_appendf(out, out_len, n, "dlerror=%s\n", err);
+    }
+    return (uint64_t)n;
+  }
+
+  dlerror();  // clear
+  void *sym = dlsym(lib, "wgpuCreateInstance");
+  const char *sym_err = dlerror();
+  if (sym) {
+    n = mbt_wgpu_appendf(out, out_len, n, "dlsym(wgpuCreateInstance)=ok\n");
+    n = mbt_wgpu_appendf(out, out_len, n, "status=available\n");
+  } else {
+    n = mbt_wgpu_appendf(out, out_len, n, "dlsym(wgpuCreateInstance)=failed\n");
+    if (sym_err && sym_err[0]) {
+      n = mbt_wgpu_appendf(out, out_len, n, "dlerror=%s\n", sym_err);
+    }
+    n = mbt_wgpu_appendf(out, out_len, n, "status=unavailable (missing symbol)\n");
+  }
+
+  dlclose(lib);
+  return (uint64_t)n;
+}
+
+uint64_t mbt_wgpu_native_diagnostic_utf8_len(void) {
+  char buf[4096];
+  return mbt_wgpu_native_diagnostic_impl(buf, sizeof(buf));
+}
+
+bool mbt_wgpu_native_diagnostic_utf8(uint8_t *out, uint64_t out_len) {
+  if (!out || out_len == 0u) {
+    return false;
+  }
+  char buf[4096];
+  uint64_t len = mbt_wgpu_native_diagnostic_impl(buf, sizeof(buf));
+  if (out_len < len) {
+    return false;
+  }
+  memcpy(out, buf, (size_t)len);
+  return true;
 }
 #endif

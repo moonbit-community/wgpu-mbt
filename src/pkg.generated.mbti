@@ -1152,6 +1152,8 @@ pub fn get_version() -> UInt
 
 pub fn native_available() -> Bool
 
+pub fn native_diagnostic() -> String
+
 pub fn platform_is_linux() -> Bool
 
 pub fn platform_is_macos() -> Bool

@@ -510,6 +510,10 @@ pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UI
 
 pub fn native_available_u32() -> UInt
 
+pub fn native_diagnostic_utf8(Bytes, UInt64) -> Bool
+
+pub fn native_diagnostic_utf8_len() -> UInt64
+
 pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
 
 pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr

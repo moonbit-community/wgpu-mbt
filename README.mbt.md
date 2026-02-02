@@ -189,6 +189,7 @@ fn main {
   - `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)` (override), or
   - the default per-user install path (`$HOME/.local/lib/...`).
 - You can proactively check whether the native library is available (and avoid a hard abort on first WebGPU call) via `@wgpu.native_available()`.
+- If loading fails, `@wgpu.native_diagnostic()` returns a best-effort diagnostic string (resolved path + loader error).
 - Headers used for stub compilation are checked into this repo (see `src/c/webgpu.h` and `src/c/wgpu_native_shim.h`) so the build does not depend on a `vendor/` checkout.
 
 ## Repo layout
