@@ -18,6 +18,10 @@ declare pub fn get_version() -> UInt
 
 ///|
 #declaration_only
+declare pub fn native_available() -> Bool
+
+///|
+#declaration_only
 declare pub fn set_log_level(level : UInt) -> Unit
 
 ///|

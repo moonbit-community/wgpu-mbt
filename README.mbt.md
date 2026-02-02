@@ -188,13 +188,14 @@ fn main {
 - The runtime library location is controlled by:
   - `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)` (override), or
   - the default per-user install path (`$HOME/.local/lib/...`).
+- You can proactively check whether the native library is available (and avoid a hard abort on first WebGPU call) via `@wgpu.native_available()`.
 - Headers used for stub compilation are checked into this repo (see `src/c/webgpu.h` and `src/c/wgpu_native_shim.h`) so the build does not depend on a `vendor/` checkout.
 
 ## Repo layout
 
-- `src/`: MoonBit wrapper API (`src/wgpu.mbt`) + public contract (`src/wgpu_spec.mbt`)
+- `src/`: MoonBit wrapper API (split under `src/wgpu_*.mbt`) + public contract (split under `src/wgpu_spec_*.mbt`)
 - `src/c/`: raw FFI + C stubs
-  - `src/c/raw.mbt`: extern declarations for C stubs / C API entrypoints
+  - `src/c/raw.mbt`: compatibility index (see `src/c/raw_*.mbt` for the split bindings)
   - `src/c/wgpu_stub.h`: shared header for C stubs
   - `src/c/wgpu_stub_*.c`: C translation units
 - `src/tests/`: blackbox tests (`wgpu_*_test.mbt`) + `src/tests/moon.pkg.json`
@@ -204,6 +205,6 @@ fn main {
 - This repo uses `bd` (beads) to track implementation tasks; issue state lives under `.beads/`.
 - When adding a new API:
   1) add a failing test under `src/tests/` (syntax-correct)
-  2) add placeholder in `src/wgpu_spec.mbt`
-  3) implement via `src/c/wgpu_stub_*.c` + `src/c/raw.mbt` + `src/wgpu.mbt`
+  2) add placeholder in `src/wgpu_spec_*.mbt` (usually `src/wgpu_spec_extras.mbt`)
+  3) implement via `src/c/wgpu_stub_*.c` + `src/c/raw_*.mbt` + `src/wgpu_*.mbt`
   4) make `moon check` clean, then make `moon test` green

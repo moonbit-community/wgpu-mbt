@@ -7,6 +7,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdint.h>
 
 // Returns the platform-specific wgpu-native dynamic library filename.
 const char *mbt_wgpu_native_lib_filename(void);
@@ -30,3 +31,6 @@ void *mbt_wgpu_native_open_optional(void);
 void *mbt_wgpu_native_sym_required(const char *name);
 void *mbt_wgpu_native_sym_optional(const char *name);
 
+// Returns 1 if we can open `libwgpu_native` and resolve a core symbol.
+// Never aborts.
+uint32_t mbt_wgpu_native_available_u32(void);

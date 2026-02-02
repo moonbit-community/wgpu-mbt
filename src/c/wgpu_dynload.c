@@ -159,6 +159,11 @@ void *mbt_wgpu_native_sym_optional(const char *name) {
   return (void *)GetProcAddress(lib, name);
 }
 
+uint32_t mbt_wgpu_native_available_u32(void) {
+  // Probe a core symbol so we don't treat an arbitrary library as wgpu-native.
+  return mbt_wgpu_native_sym_optional("wgpuCreateInstance") ? 1u : 0u;
+}
+
 #else
 #include <dlfcn.h>
 #include <pthread.h>
@@ -262,5 +267,10 @@ void *mbt_wgpu_native_sym_optional(const char *name) {
   }
   dlerror();  // clear
   return dlsym(lib, name);
+}
+
+uint32_t mbt_wgpu_native_available_u32(void) {
+  // Probe a core symbol so we don't treat an arbitrary library as wgpu-native.
+  return mbt_wgpu_native_sym_optional("wgpuCreateInstance") ? 1u : 0u;
 }
 #endif

@@ -508,6 +508,8 @@ pub fn limits_free(WGPULimitsPtr) -> Unit
 
 pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64) -> WGPULimitsPtr
 
+pub fn native_available_u32() -> UInt
+
 pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
 
 pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr

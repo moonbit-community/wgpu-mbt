@@ -46,6 +46,9 @@ pub extern "C" fn platform_is_linux() -> Bool = "mbt_wgpu_platform_is_linux"
 pub extern "C" fn platform_is_windows() -> Bool = "mbt_wgpu_platform_is_windows"
 
 ///|
+pub extern "C" fn native_available_u32() -> UInt = "mbt_wgpu_native_available_u32"
+
+///|
 pub extern "C" fn null_uint_ptr() -> UIntPtr = "mbt_wgpu_null_uint_ptr"
 
 ///|

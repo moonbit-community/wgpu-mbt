@@ -43,6 +43,11 @@ pub fn get_version() -> UInt {
 }
 
 ///|
+pub fn native_available() -> Bool {
+  @c.native_available_u32() != 0U
+}
+
+///|
 pub fn set_log_level(level : UInt) -> Unit {
   @c.wgpuSetLogLevel(level)
 }
