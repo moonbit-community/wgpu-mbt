@@ -2,7 +2,7 @@
 """
 Generate MoonBit WebGPU handle wrappers in:
   - src/wgpu.mbt
-  - src/wgpu_spec.mbt
+  - src/wgpu_spec_handles.mbt
 
 We intentionally generate only "handle methods" (functions whose name is
 wgpu<Handle><Op> and whose first parameter is WGPU<Handle>).
@@ -27,7 +27,7 @@ from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 WGPU_MBT = ROOT / "src" / "wgpu.mbt"
-WGPU_SPEC = ROOT / "src" / "wgpu_spec.mbt"
+WGPU_SPEC_HANDLES = ROOT / "src" / "wgpu_spec_handles.mbt"
 WEBGPU_CAPI = ROOT / "src" / "c" / "webgpu_capi.mbt"
 
 MBTI_C = ROOT / "src" / "c" / "pkg.generated.mbti"
@@ -694,13 +694,18 @@ def _gen_spec_methods(generated_methods_mbt: str) -> str:
 def main() -> int:
     webgpu_text = _read_text(WEBGPU_CAPI)
     wgpu_text = _read_text(WGPU_MBT)
-    spec_text = _read_text(WGPU_SPEC)
+    spec_text = _read_text(WGPU_SPEC_HANDLES)
 
     fns = _extract_extern_fns_from_webgpu_capi(webgpu_text)
     handles = _handle_types_from_fns(fns)
 
-    existing_structs = _parse_existing_wrapper_structs(wgpu_text)
-    existing_methods = _parse_existing_methods(wgpu_text)
+    # For collision checks, only consider hand-written APIs. If we include the
+    # already-generated sections, repeated generator runs will drift method
+    # names (e.g. add extra `_raw` suffixes).
+    wgpu_text_for_parse = _replace_marked_section(wgpu_text, TYPES_BEGIN, TYPES_END, "")
+    wgpu_text_for_parse = _replace_marked_section(wgpu_text_for_parse, METHODS_BEGIN, METHODS_END, "")
+    existing_structs = _parse_existing_wrapper_structs(wgpu_text_for_parse)
+    existing_methods = _parse_existing_methods(wgpu_text_for_parse)
 
     gen_structs = _gen_structs(handles, existing_structs)
     gen_methods, skipped = _gen_methods(fns, handles, existing_structs, existing_methods)
@@ -715,7 +720,7 @@ def main() -> int:
     spec_methods = _gen_spec_methods(gen_methods)
     spec_text = _replace_marked_section(spec_text, SPEC_TYPES_BEGIN, SPEC_TYPES_END, spec_types)
     spec_text = _replace_marked_section(spec_text, SPEC_METHODS_BEGIN, SPEC_METHODS_END, spec_methods)
-    _write_text(WGPU_SPEC, spec_text)
+    _write_text(WGPU_SPEC_HANDLES, spec_text)
 
     if skipped:
         # Keep output short but actionable.
