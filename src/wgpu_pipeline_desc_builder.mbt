@@ -24,7 +24,11 @@ pub fn RenderPipelineDescBuilder::new(
 ) -> Result[RenderPipelineDescBuilder, RenderPipelineDescError] {
   let raw = @c.render_pipeline_desc_builder_new(layout.raw, shader_module.raw)
   if @c.opaque_ptr_is_null(raw) {
-    Err(RenderPipelineDescError::{ code: 11U, a: 0U, b: 0U })
+    Err(RenderPipelineDescError::{
+      code: RENDER_PIPELINE_DESC_ERR_OOM,
+      a: 0U,
+      b: 0U,
+    })
   } else {
     Ok(RenderPipelineDescBuilder::{ raw, })
   }
@@ -254,29 +258,63 @@ pub fn RenderPipelineDescBuilder::last_error(
 pub fn RenderPipelineDescError::message(
   self : RenderPipelineDescError,
 ) -> String {
-  if self.code == 1U {
+  if self.code == RENDER_PIPELINE_DESC_ERR_NULL_BUILDER {
     "builder is NULL"
-  } else if self.code == 2U {
+  } else if self.code == RENDER_PIPELINE_DESC_ERR_ENTRY_EMPTY {
     "entry point is empty"
-  } else if self.code == 3U {
+  } else if self.code == RENDER_PIPELINE_DESC_ERR_ENTRY_TOO_LONG {
     "entry point too long"
-  } else if self.code == 4U {
+  } else if self.code == RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_ZERO {
     "color target count must be >= 1"
-  } else if self.code == 5U {
+  } else if self.code == RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_EXCEEDS_MAX {
     "color target count exceeds max"
-  } else if self.code == 6U {
+  } else if self.code == RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_INDEX_OOB {
     "color target index out of range"
-  } else if self.code == 7U {
+  } else if self.code == RENDER_PIPELINE_DESC_ERR_NO_VERTEX_BUFFER_LAYOUT {
     "no vertex buffer layout is set"
-  } else if self.code == 8U {
+  } else if self.code ==
+    RENDER_PIPELINE_DESC_ERR_VERTEX_BUFFER_LAYOUT_EXCEEDS_MAX {
     "vertex buffer layout count exceeds max"
-  } else if self.code == 9U {
+  } else if self.code == RENDER_PIPELINE_DESC_ERR_VERTEX_ATTRIBUTE_EXCEEDS_MAX {
     "vertex attribute count exceeds max"
-  } else if self.code == 10U {
+  } else if self.code == RENDER_PIPELINE_DESC_ERR_INTERNAL {
     "internal error"
-  } else if self.code == 11U {
+  } else if self.code == RENDER_PIPELINE_DESC_ERR_OOM {
     "allocation failed"
   } else {
     "unknown error"
   }
 }
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_NULL_BUILDER : UInt = 1U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_ENTRY_EMPTY : UInt = 2U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_ENTRY_TOO_LONG : UInt = 3U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_ZERO : UInt = 4U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_EXCEEDS_MAX : UInt = 5U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_INDEX_OOB : UInt = 6U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_NO_VERTEX_BUFFER_LAYOUT : UInt = 7U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_VERTEX_BUFFER_LAYOUT_EXCEEDS_MAX : UInt = 8U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_VERTEX_ATTRIBUTE_EXCEEDS_MAX : UInt = 9U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_INTERNAL : UInt = 10U
+
+///|
+pub const RENDER_PIPELINE_DESC_ERR_OOM : UInt = 11U
