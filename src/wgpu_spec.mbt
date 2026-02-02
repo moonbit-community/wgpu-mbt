@@ -2246,7 +2246,7 @@ declare pub fn RenderPipelineDescBuilder::add_vertex_attribute(
   format_u32 : UInt,
   offset : UInt64,
   shader_location : UInt,
-) -> Bool
+) -> Unit
 
 ///|
 #declaration_only

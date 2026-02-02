@@ -702,7 +702,7 @@ pub fn render_pass_set_viewport(WGPURenderPassEncoder, Float, Float, Float, Floa
 
 pub fn render_pass_write_timestamp(WGPURenderPassEncoder, WGPUQuerySet, UInt) -> Unit
 
-pub fn render_pipeline_desc_builder_add_vertex_attribute(OpaquePtr, UInt, UInt64, UInt) -> Bool
+pub fn render_pipeline_desc_builder_add_vertex_attribute(OpaquePtr, UInt, UInt64, UInt) -> Unit
 
 pub fn render_pipeline_desc_builder_add_vertex_buffer_layout(OpaquePtr, UInt64, UInt) -> UInt
 

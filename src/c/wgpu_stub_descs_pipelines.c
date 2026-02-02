@@ -14,6 +14,19 @@
 
 #include "wgpu_stub.h"
 
+#include <stdio.h>
+
+static void mbt_wgpu_rp_builder_die(const char *what) {
+  fprintf(stderr, "wgpu-mbt: RenderPipelineDescBuilder: %s\n", what);
+  abort();
+}
+
+static void mbt_wgpu_rp_builder_die_u32(const char *what, uint32_t a, uint32_t b) {
+  fprintf(stderr, "wgpu-mbt: RenderPipelineDescBuilder: %s (%u, %u)\n", what, (unsigned)a,
+          (unsigned)b);
+  abort();
+}
+
 WGPUBufferDescriptor *mbt_wgpu_buffer_descriptor_new(uint64_t size, uint64_t usage,
                                                     int32_t mapped_at_creation) {
   WGPUBufferDescriptor *desc = (WGPUBufferDescriptor *)malloc(sizeof(WGPUBufferDescriptor));
@@ -1372,24 +1385,21 @@ void mbt_wgpu_render_pipeline_desc_builder_set_color_target_format(void *builder
 void mbt_wgpu_render_pipeline_desc_builder_set_color_target_count(void *builder,
                                                                   uint32_t count_u32) {
   if (!builder) {
-    return;
+    mbt_wgpu_rp_builder_die("builder is NULL");
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
 
   uint32_t count = count_u32;
   if (count == 0u) {
-    count = 1u;
+    mbt_wgpu_rp_builder_die("color target count must be >= 1");
   }
   if (count > MBT_WGPU_RP_MAX_TARGETS) {
-    count = MBT_WGPU_RP_MAX_TARGETS;
+    mbt_wgpu_rp_builder_die_u32("color target count exceeds max", count, MBT_WGPU_RP_MAX_TARGETS);
   }
 
   uint32_t old = out->color_target_count;
-  if (old == 0u) {
-    old = 1u;
-  }
-  if (old > MBT_WGPU_RP_MAX_TARGETS) {
-    old = MBT_WGPU_RP_MAX_TARGETS;
+  if (old == 0u || old > MBT_WGPU_RP_MAX_TARGETS) {
+    mbt_wgpu_rp_builder_die("internal error: invalid previous color_target_count");
   }
 
   WGPUTextureFormat fmt0 = out->color_targets[0].format;
@@ -1412,12 +1422,12 @@ void mbt_wgpu_render_pipeline_desc_builder_set_color_target_count(void *builder,
 void mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at(
     void *builder, uint32_t index_u32, uint32_t format_u32) {
   if (!builder) {
-    return;
+    mbt_wgpu_rp_builder_die("builder is NULL");
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
   uint32_t idx = index_u32;
   if (idx >= out->color_target_count) {
-    return;
+    mbt_wgpu_rp_builder_die_u32("color target index out of range", idx, out->color_target_count);
   }
   out->color_targets[idx].format = (WGPUTextureFormat)format_u32;
 }
@@ -1476,11 +1486,12 @@ void mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout(
 uint32_t mbt_wgpu_render_pipeline_desc_builder_add_vertex_buffer_layout(
     void *builder, uint64_t array_stride, uint32_t step_mode_u32) {
   if (!builder) {
-    return 0xFFFFFFFFu;
+    mbt_wgpu_rp_builder_die("builder is NULL");
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
   if (out->vbuf_count >= MBT_WGPU_RP_MAX_VBUFS) {
-    return 0xFFFFFFFFu;
+    mbt_wgpu_rp_builder_die_u32("vertex buffer layout count exceeds max", out->vbuf_count + 1u,
+                                MBT_WGPU_RP_MAX_VBUFS);
   }
 
   uint32_t idx = out->vbuf_count;
@@ -1502,21 +1513,22 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_add_vertex_buffer_layout(
   return idx;
 }
 
-bool mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
+void mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
     void *builder, uint32_t format_u32, uint64_t offset, uint32_t shader_location) {
   if (!builder) {
-    return false;
+    mbt_wgpu_rp_builder_die("builder is NULL");
   }
   mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
   if (out->vbuf_count == 0u) {
-    return false;
+    mbt_wgpu_rp_builder_die("no vertex buffer layout is set");
   }
   uint32_t idx = out->current_vbuf;
   if (idx >= out->vbuf_count) {
-    return false;
+    mbt_wgpu_rp_builder_die("internal error: current_vbuf out of range");
   }
   if (out->attr_counts[idx] >= MBT_WGPU_RP_MAX_ATTRS) {
-    return false;
+    mbt_wgpu_rp_builder_die_u32("vertex attribute count exceeds max", out->attr_counts[idx] + 1u,
+                                MBT_WGPU_RP_MAX_ATTRS);
   }
 
   out->attrs[idx][out->attr_counts[idx]] = (WGPUVertexAttribute){
@@ -1526,7 +1538,6 @@ bool mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
   };
   out->attr_counts[idx]++;
   out->vbufs[idx].attributeCount = (size_t)out->attr_counts[idx];
-  return true;
 }
 
 void mbt_wgpu_render_pipeline_desc_builder_set_topology(void *builder, uint32_t topology_u32) {

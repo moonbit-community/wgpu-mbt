@@ -3927,7 +3927,7 @@ pub fn RenderPipelineDescBuilder::add_vertex_attribute(
   format_u32 : UInt,
   offset : UInt64,
   shader_location : UInt,
-) -> Bool {
+) -> Unit {
   @c.render_pipeline_desc_builder_add_vertex_attribute(
     self.raw,
     format_u32,

@@ -125,15 +125,9 @@ test "wgpu render pipeline desc builder: 2 vertex buffers (pos2 + color)" {
     @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
   )
   b.set_vertex_buffer_layout(8UL, @wgpu.VERTEX_STEP_MODE_VERTEX)
-  inspect(
-    b.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X2, 0UL, 0U),
-    content="true",
-  )
+  b.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X2, 0UL, 0U)
   ignore(b.add_vertex_buffer_layout(16UL, @wgpu.VERTEX_STEP_MODE_VERTEX))
-  inspect(
-    b.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X4, 0UL, 1U),
-    content="true",
-  )
+  b.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X4, 0UL, 1U)
   let pipeline = b.create_pipeline(device)
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(view)

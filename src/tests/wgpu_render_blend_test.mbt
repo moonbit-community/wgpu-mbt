@@ -307,19 +307,13 @@ test "wgpu render pipeline desc builder: pos2 + alpha blend + arbitrary format (
   let b_green = @wgpu.RenderPipelineDescBuilder::new(sm_green)
   b_green.set_color_target_format(fmt)
   b_green.set_vertex_buffer_layout(8UL, @wgpu.VERTEX_STEP_MODE_VERTEX)
-  inspect(
-    b_green.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X2, 0UL, 0U),
-    content="true",
-  )
+  b_green.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X2, 0UL, 0U)
   let p_green = b_green.create_pipeline(device)
   let b_blend = @wgpu.RenderPipelineDescBuilder::new(sm_red)
   b_blend.set_color_target_format(fmt)
   b_blend.enable_alpha_blend()
   b_blend.set_vertex_buffer_layout(8UL, @wgpu.VERTEX_STEP_MODE_VERTEX)
-  inspect(
-    b_blend.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X2, 0UL, 0U),
-    content="true",
-  )
+  b_blend.add_vertex_attribute(@wgpu.VERTEX_FORMAT_FLOAT32X2, 0UL, 0U)
   let p_blend = b_blend.create_pipeline(device)
 
   // Pass 1: draw full green.
