@@ -18,10 +18,28 @@ pub fn Instance::create() -> Instance {
 }
 
 ///|
+pub fn Instance::try_create() -> Result[Instance, NativeLoadError] {
+  match require_native() {
+    Ok(_) => Ok(Instance::create())
+    Err(e) => Err(e)
+  }
+}
+
+///|
 pub fn Instance::create_ptr(
   descriptor : @c.WGPUInstanceDescriptorPtr,
 ) -> Instance {
   Instance::{ raw: @c.wgpuCreateInstance(descriptor) }
+}
+
+///|
+pub fn Instance::try_create_ptr(
+  descriptor : @c.WGPUInstanceDescriptorPtr,
+) -> Result[Instance, NativeLoadError] {
+  match require_native() {
+    Ok(_) => Ok(Instance::create_ptr(descriptor))
+    Err(e) => Err(e)
+  }
 }
 
 ///|

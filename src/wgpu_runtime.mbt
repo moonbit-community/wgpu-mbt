@@ -64,6 +64,15 @@ pub fn native_diagnostic() -> String {
 }
 
 ///|
+pub fn require_native() -> Result[Unit, NativeLoadError] {
+  if native_available() {
+    Ok(())
+  } else {
+    Err(NativeLoadError::{ diagnostic: native_diagnostic() })
+  }
+}
+
+///|
 pub fn set_log_level(level : UInt) -> Unit {
   @c.wgpuSetLogLevel(level)
 }

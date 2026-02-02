@@ -345,6 +345,16 @@ pub struct RenderPipelineDescError {
 }
 
 ///|
+pub struct NativeLoadError {
+  diagnostic : String
+}
+
+///|
+pub fn NativeLoadError::message(self : NativeLoadError) -> String {
+  self.diagnostic
+}
+
+///|
 pub struct PipelineLayout {
   raw : @c.PipelineLayout
 }

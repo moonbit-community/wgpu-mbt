@@ -1182,6 +1182,8 @@ pub fn platform_is_macos() -> Bool
 
 pub fn platform_is_windows() -> Bool
 
+pub fn require_native() -> Result[Unit, NativeLoadError]
+
 pub fn set_compilation_info_enabled(Bool) -> Unit
 
 pub fn set_debug_labels_enabled(Bool) -> Unit
@@ -1579,6 +1581,8 @@ pub fn Instance::request_adapter_sync(Self) -> Adapter
 pub fn Instance::request_adapter_sync_options_surface_u32(Self, Surface, feature_level_u32? : UInt, power_preference_u32? : UInt, force_fallback_adapter? : Bool, backend_type_u32? : UInt) -> Adapter
 pub fn Instance::request_adapter_sync_options_u32(Self, feature_level_u32? : UInt, power_preference_u32? : UInt, force_fallback_adapter? : Bool, backend_type_u32? : UInt) -> Adapter
 pub fn Instance::request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Adapter
+pub fn Instance::try_create() -> Result[Self, NativeLoadError]
+pub fn Instance::try_create_ptr(@c.WGPUInstanceDescriptorPtr) -> Result[Self, NativeLoadError]
 pub fn Instance::wait_any(Self, UInt64, @c.WGPUFutureWaitInfoPtr, UInt64) -> @c.WGPUWaitStatus
 pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult
 pub fn Instance::wgpu_generate_report(Self, @c.WGPUGlobalReportPtr) -> Unit
@@ -1595,6 +1599,11 @@ pub struct MapMode {
 pub fn MapMode::from_u64(UInt64) -> Self
 pub fn MapMode::to_u64(Self) -> UInt64
 pub impl Eq for MapMode
+
+pub struct NativeLoadError {
+  diagnostic : String
+}
+pub fn NativeLoadError::message(Self) -> String
 
 pub struct PipelineLayout {
   raw : @c.WGPUPipelineLayout

@@ -178,6 +178,10 @@ This module does **not** try to locate the library via CWD.
 If neither location works, the process will abort when the first WebGPU symbol is used
 (because we `dlopen` the library lazily).
 
+To avoid aborts and surface a diagnostic string instead, use:
+- `@wgpu.require_native()` (returns `Result[Unit, NativeLoadError]`)
+- `Instance::try_create()` / `Instance::try_create_ptr(...)` (returns `Result[Instance, NativeLoadError]`)
+
 ## Using as a library
 
 This repo is usable as a regular MoonBit library (the CLI under `cmd/` / `src/cmd/` is just an example).

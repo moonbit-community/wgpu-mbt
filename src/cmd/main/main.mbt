@@ -14,7 +14,14 @@
 
 ///|
 fn main {
-  let instance = @wgpu.Instance::create()
+  let instance = match @wgpu.Instance::try_create() {
+    Ok(i) => i
+    Err(e) => {
+      println("wgpu native library is unavailable:")
+      println(e.message())
+      return
+    }
+  }
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
