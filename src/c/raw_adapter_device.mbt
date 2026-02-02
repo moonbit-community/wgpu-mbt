@@ -199,6 +199,9 @@ pub extern "C" fn adapter_request_device_sync_ptr(
 ) -> Device = "mbt_wgpu_adapter_request_device_sync_ptr"
 
 ///|
+pub extern "C" fn adapter_request_device_sync_last_status_u32() -> UInt = "mbt_wgpu_adapter_request_device_sync_last_status_u32"
+
+///|
 pub extern "C" fn adapter_request_device_sync_timestamp_query(
   instance : Instance,
   adapter : Adapter,

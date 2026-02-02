@@ -55,6 +55,9 @@ pub extern "C" fn instance_request_adapter_sync_ptr(
 ) -> Adapter = "mbt_wgpu_instance_request_adapter_sync_ptr"
 
 ///|
+pub extern "C" fn instance_request_adapter_sync_last_status_u32() -> UInt = "mbt_wgpu_instance_request_adapter_sync_last_status_u32"
+
+///|
 pub fn instance_request_adapter_sync_options_u32(
   instance : Instance,
   feature_level_u32 : UInt,

@@ -616,8 +616,25 @@ static void mbt_compilation_info_cb(WGPUCompilationInfoRequestStatus status,
 
 WGPUInstance mbt_wgpu_create_instance(void) { return wgpuCreateInstance(NULL); }
 
+#if defined(_WIN32)
+__declspec(thread) static uint32_t g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
+__declspec(thread) static uint32_t g_mbt_wgpu_last_request_device_status_u32 = 0u;
+#else
+static _Thread_local uint32_t g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
+static _Thread_local uint32_t g_mbt_wgpu_last_request_device_status_u32 = 0u;
+#endif
+
+uint32_t mbt_wgpu_instance_request_adapter_sync_last_status_u32(void) {
+  return g_mbt_wgpu_last_request_adapter_status_u32;
+}
+
+uint32_t mbt_wgpu_adapter_request_device_sync_last_status_u32(void) {
+  return g_mbt_wgpu_last_request_device_status_u32;
+}
+
 WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
     WGPUInstance instance, const WGPURequestAdapterOptions *options) {
+  g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
   mbt_request_adapter_result_t out = {0};
   WGPURequestAdapterCallbackInfo info = {
       .nextInChain = NULL,
@@ -631,6 +648,7 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
     wgpuInstanceProcessEvents(instance);
   }
 
+  g_mbt_wgpu_last_request_adapter_status_u32 = (uint32_t)out.status;
   if (out.status != WGPURequestAdapterStatus_Success) {
     return NULL;
   }
@@ -643,6 +661,7 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync(WGPUInstance instance) {
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_ptr(
     WGPUInstance instance, WGPUAdapter adapter, const WGPUDeviceDescriptor *desc_in) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
   mbt_request_device_result_t out = {0};
   WGPURequestDeviceCallbackInfo info = {
       .nextInChain = NULL,
@@ -710,6 +729,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_ptr(
     wgpuInstanceProcessEvents(instance);
   }
 
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
@@ -977,6 +997,7 @@ uint32_t mbt_wgpu_shader_module_get_compilation_info_sync_status_u32(
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(
     WGPUInstance instance, WGPUAdapter adapter) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
   mbt_request_device_result_t out = {0};
   WGPURequestDeviceCallbackInfo info = {
       .nextInChain = NULL,
@@ -1023,6 +1044,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(
     wgpuInstanceProcessEvents(instance);
   }
 
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
@@ -1031,6 +1053,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query(
     WGPUInstance instance, WGPUAdapter adapter) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
   mbt_request_device_result_t out = {0};
   WGPURequestDeviceCallbackInfo info = {
       .nextInChain = NULL,
@@ -1077,6 +1100,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query(
     wgpuInstanceProcessEvents(instance);
   }
 
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
@@ -1085,6 +1109,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query(
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders(
     WGPUInstance instance, WGPUAdapter adapter) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
   mbt_request_device_result_t out = {0};
   WGPURequestDeviceCallbackInfo info = {
       .nextInChain = NULL,
@@ -1132,6 +1157,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders(
     wgpuInstanceProcessEvents(instance);
   }
 
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
@@ -1140,6 +1166,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders(
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes(
     WGPUInstance instance, WGPUAdapter adapter) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
   mbt_request_device_result_t out = {0};
   WGPURequestDeviceCallbackInfo info = {
       .nextInChain = NULL,
@@ -1187,6 +1214,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes(
     wgpuInstanceProcessEvents(instance);
   }
 
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
@@ -1195,6 +1223,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes(
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance instance,
                                                                WGPUAdapter adapter) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
   mbt_request_device_result_t out = {0};
   WGPURequestDeviceCallbackInfo info = {
       .nextInChain = NULL,
@@ -1255,6 +1284,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance inst
     wgpuInstanceProcessEvents(instance);
   }
 
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
@@ -1263,6 +1293,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance inst
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_texture_binding_array(
     WGPUInstance instance, WGPUAdapter adapter) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
   mbt_request_device_result_t out = {0};
   WGPURequestDeviceCallbackInfo info = {
       .nextInChain = NULL,
@@ -1309,6 +1340,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_texture_binding_array(
     wgpuInstanceProcessEvents(instance);
   }
 
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
@@ -1317,6 +1349,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_texture_binding_array(
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
     WGPUInstance instance, WGPUAdapter adapter) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
   mbt_request_device_result_t out = {0};
   WGPURequestDeviceCallbackInfo info = {
       .nextInChain = NULL,
@@ -1363,6 +1396,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
     wgpuInstanceProcessEvents(instance);
   }
 
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }

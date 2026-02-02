@@ -46,24 +46,26 @@ declare pub fn set_compilation_info_enabled(enabled : Bool) -> Unit
 
 ///|
 #declaration_only
-declare pub fn Instance::create() -> Instance
+declare pub fn Instance::create() -> Instance raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Instance::create_ptr(
   descriptor : @c.WGPUInstanceDescriptorPtr,
-) -> Instance
+) -> Instance raise WgpuError
 
 ///|
 #declaration_only
-declare pub fn Instance::request_adapter_sync(self : Instance) -> Adapter
+declare pub fn Instance::request_adapter_sync(
+  self : Instance,
+) -> Adapter raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Instance::request_adapter_sync_ptr(
   self : Instance,
   options : @c.WGPURequestAdapterOptionsPtr,
-) -> Adapter
+) -> Adapter raise WgpuError
 
 ///|
 #declaration_only
@@ -264,7 +266,7 @@ declare pub fn Surface::capabilities_alpha_modes(
 declare pub fn Adapter::request_device_sync(
   self : Adapter,
   instance : Instance,
-) -> Device
+) -> Device raise WgpuError
 
 ///|
 #declaration_only
@@ -272,56 +274,56 @@ declare pub fn Adapter::request_device_sync_ptr(
   self : Adapter,
   instance : Instance,
   descriptor : @c.WGPUDeviceDescriptorPtr,
-) -> Device
+) -> Device raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_sync_timestamp_query(
   self : Adapter,
   instance : Instance,
-) -> Device
+) -> Device raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(
   self : Adapter,
   instance : Instance,
-) -> Device
+) -> Device raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_sync_timestamp_query_inside_passes(
   self : Adapter,
   instance : Instance,
-) -> Device
+) -> Device raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_sync_push_constants(
   self : Adapter,
   instance : Instance,
-) -> Device
+) -> Device raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_sync_texture_binding_array(
   self : Adapter,
   instance : Instance,
-) -> Device
+) -> Device raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_sync_pipeline_statistics_query(
   self : Adapter,
   instance : Instance,
-) -> Device
+) -> Device raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_sync_spirv_shader_passthrough(
   self : Adapter,
   instance : Instance,
-) -> Device
+) -> Device raise WgpuError
 
 ///|
 #declaration_only
@@ -1037,7 +1039,7 @@ declare pub fn BindGroupBuilder::free(self : BindGroupBuilder) -> Unit
 declare pub fn RenderPipelineDescBuilder::new(
   shader_module : ShaderModule,
   layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
-) -> Result[RenderPipelineDescBuilder, RenderPipelineDescError]
+) -> RenderPipelineDescBuilder raise RenderPipelineDescError
 
 ///|
 #declaration_only
@@ -1045,21 +1047,21 @@ declare pub fn RenderPipelineDescBuilder::set_entry_points(
   self : RenderPipelineDescBuilder,
   vs_entry : String,
   fs_entry : String,
-) -> Result[Unit, RenderPipelineDescError]
+) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_color_target_format(
   self : RenderPipelineDescBuilder,
   format : TextureFormat,
-) -> Result[Unit, RenderPipelineDescError]
+) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_color_target_count(
   self : RenderPipelineDescBuilder,
   count_u32 : UInt,
-) -> Result[Unit, RenderPipelineDescError]
+) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
@@ -1067,13 +1069,13 @@ declare pub fn RenderPipelineDescBuilder::set_color_target_format_at(
   self : RenderPipelineDescBuilder,
   index_u32 : UInt,
   format : TextureFormat,
-) -> Result[Unit, RenderPipelineDescError]
+) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::enable_alpha_blend(
   self : RenderPipelineDescBuilder,
-) -> Result[Unit, RenderPipelineDescError]
+) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
@@ -1081,7 +1083,7 @@ declare pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(
   self : RenderPipelineDescBuilder,
   array_stride : UInt64,
   step_mode_u32 : UInt,
-) -> Result[Unit, RenderPipelineDescError]
+) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
@@ -1089,7 +1091,7 @@ declare pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(
   self : RenderPipelineDescBuilder,
   array_stride : UInt64,
   step_mode_u32 : UInt,
-) -> Result[UInt, RenderPipelineDescError]
+) -> UInt raise RenderPipelineDescError
 
 ///|
 #declaration_only
@@ -1098,14 +1100,14 @@ declare pub fn RenderPipelineDescBuilder::add_vertex_attribute(
   format_u32 : UInt,
   offset : UInt64,
   shader_location : UInt,
-) -> Result[Unit, RenderPipelineDescError]
+) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_topology_u32(
   self : RenderPipelineDescBuilder,
   topology_u32 : UInt,
-) -> Result[Unit, RenderPipelineDescError]
+) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
@@ -1114,20 +1116,20 @@ declare pub fn RenderPipelineDescBuilder::set_depth_stencil(
   depth_format : TextureFormat,
   depth_write_enabled? : Bool = true,
   depth_compare_u32? : UInt = COMPARE_FUNCTION_LESS,
-) -> Result[Unit, RenderPipelineDescError]
+) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(
   self : RenderPipelineDescBuilder,
-) -> Result[@c.WGPURenderPipelineDescriptorPtr, RenderPipelineDescError]
+) -> @c.WGPURenderPipelineDescriptorPtr raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::create_pipeline(
   self : RenderPipelineDescBuilder,
   device : Device,
-) -> Result[RenderPipeline, RenderPipelineDescError]
+) -> RenderPipeline raise RenderPipelineDescError
 
 ///|
 #declaration_only

@@ -13,77 +13,48 @@
 // limitations under the License.
 
 ///|
-pub fn Instance::create() -> Instance {
+pub fn Instance::create() -> Instance raise WgpuError {
+  require_native()
   Instance::{ raw: @c.create_instance() }
-}
-
-///|
-pub fn Instance::try_create() -> Result[Instance, NativeLoadError] {
-  match require_native() {
-    Ok(_) => Ok(Instance::create())
-    Err(e) => Err(e)
-  }
 }
 
 ///|
 pub fn Instance::create_ptr(
   descriptor : @c.WGPUInstanceDescriptorPtr,
-) -> Instance {
+) -> Instance raise WgpuError {
+  require_native()
   Instance::{ raw: @c.wgpuCreateInstance(descriptor) }
 }
 
 ///|
-pub fn Instance::try_create_ptr(
-  descriptor : @c.WGPUInstanceDescriptorPtr,
-) -> Result[Instance, NativeLoadError] {
-  match require_native() {
-    Ok(_) => Ok(Instance::create_ptr(descriptor))
-    Err(e) => Err(e)
-  }
-}
-
-///|
-pub fn Instance::request_adapter_sync(self : Instance) -> Adapter {
-  Adapter::{ raw: @c.instance_request_adapter_sync(self.raw) }
-}
-
-///|
-pub fn Instance::try_request_adapter_sync(
+pub fn Instance::request_adapter_sync(
   self : Instance,
-) -> Result[Adapter, NativeError] {
-  match require_native_symbol("wgpuInstanceRequestAdapter") {
-    Ok(_) => ()
-    Err(e) => return Err(e)
+) -> Adapter raise WgpuError {
+  require_native_symbol("wgpuInstanceRequestAdapter")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let raw = @c.instance_request_adapter_sync(self.raw)
+  if @c.adapter_is_null(raw) {
+    raise WgpuRequestAdapterFailed(
+      @c.instance_request_adapter_sync_last_status_u32(),
+    )
   }
-  match require_native_symbol("wgpuInstanceProcessEvents") {
-    Ok(_) => ()
-    Err(e) => return Err(e)
-  }
-  Ok(self.request_adapter_sync())
+  Adapter::{ raw, }
 }
 
 ///|
 pub fn Instance::request_adapter_sync_ptr(
   self : Instance,
   options : @c.WGPURequestAdapterOptionsPtr,
-) -> Adapter {
-  Adapter::{ raw: @c.instance_request_adapter_sync_ptr(self.raw, options) }
-}
-
-///|
-pub fn Instance::try_request_adapter_sync_ptr(
-  self : Instance,
-  options : @c.WGPURequestAdapterOptionsPtr,
-) -> Result[Adapter, NativeError] {
-  match require_native_symbol("wgpuInstanceRequestAdapter") {
-    Ok(_) => ()
-    Err(e) => return Err(e)
+) -> Adapter raise WgpuError {
+  require_native_symbol("wgpuInstanceRequestAdapter")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let raw = @c.instance_request_adapter_sync_ptr(self.raw, options)
+  if @c.adapter_is_null(raw) {
+    raise WgpuRequestAdapterFailed(
+      @c.instance_request_adapter_sync_last_status_u32(),
+    )
   }
-  match require_native_symbol("wgpuInstanceProcessEvents") {
-    Ok(_) => ()
-    Err(e) => return Err(e)
-  }
-  Ok(self.request_adapter_sync_ptr(options))
+  Adapter::{ raw, }
 }
 
 ///|

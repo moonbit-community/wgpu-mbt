@@ -338,56 +338,28 @@ pub struct RenderPipelineDescBuilder {
 }
 
 ///|
-pub struct RenderPipelineDescError {
-  code : UInt
-  a : UInt
-  b : UInt
+suberror RenderPipelineDescError {
+  RenderPipelineDescError(UInt, UInt, UInt)
 }
 
 ///|
-pub struct NativeLoadError {
-  diagnostic : String
+suberror WgpuError {
+  WgpuNativeUnavailable(String)
+  WgpuNativeMissingSymbol(String, String)
+  WgpuRequestAdapterFailed(UInt)
+  WgpuRequestDeviceFailed(UInt)
 }
 
 ///|
-pub fn NativeLoadError::message(self : NativeLoadError) -> String {
-  self.diagnostic
-}
-
-///|
-pub struct NativeError {
-  kind : UInt
-  symbol : String
-  diagnostic : String
-}
-
-///|
-pub const NATIVE_ERR_UNAVAILABLE : UInt = 1U
-
-///|
-pub const NATIVE_ERR_MISSING_SYMBOL : UInt = 2U
-
-///|
-pub fn NativeError::unavailable(diagnostic : String) -> NativeError {
-  NativeError::{ kind: NATIVE_ERR_UNAVAILABLE, symbol: "", diagnostic }
-}
-
-///|
-pub fn NativeError::missing_symbol(
-  symbol : String,
-  diagnostic : String,
-) -> NativeError {
-  NativeError::{ kind: NATIVE_ERR_MISSING_SYMBOL, symbol, diagnostic }
-}
-
-///|
-pub fn NativeError::message(self : NativeError) -> String {
-  if self.kind == NATIVE_ERR_UNAVAILABLE {
-    "native library is unavailable\n" + self.diagnostic
-  } else if self.kind == NATIVE_ERR_MISSING_SYMBOL {
-    "native library is missing symbol: " + self.symbol + "\n" + self.diagnostic
-  } else {
-    "native error (unknown kind)\n" + self.diagnostic
+pub fn WgpuError::message(self : WgpuError) -> String {
+  match self {
+    WgpuNativeUnavailable(diag) => "native library is unavailable\n" + diag
+    WgpuNativeMissingSymbol(sym, diag) =>
+      "native library is missing symbol: " + sym + "\n" + diag
+    WgpuRequestAdapterFailed(status) =>
+      "wgpuInstanceRequestAdapter failed (status=" + status.to_string() + ")"
+    WgpuRequestDeviceFailed(status) =>
+      "wgpuAdapterRequestDevice failed (status=" + status.to_string() + ")"
   }
 }
 

@@ -179,9 +179,11 @@ This module does **not** try to locate the library via CWD.
 If neither location works, the process will abort when the first WebGPU symbol is used
 (because we `dlopen` the library lazily).
 
-To avoid aborts and surface a diagnostic string instead, use:
-- `@wgpu.require_native()` (returns `Result[Unit, NativeLoadError]`)
-- `Instance::try_create()` / `Instance::try_create_ptr(...)` (returns `Result[Instance, NativeLoadError]`)
+To avoid aborts and surface a diagnostic string instead, use `try/catch` around:
+- `@wgpu.require_native()` / `@wgpu.require_native_symbol("wgpu...")` (raises `WgpuError`)
+- `Instance::create()` / `Instance::create_ptr(...)` (raises `WgpuError`)
+- `Instance::request_adapter_sync()` / `Instance::request_adapter_sync_ptr(...)` (raises `WgpuError`)
+- `Adapter::request_device_sync()` / `Adapter::request_device_sync_ptr(...)` (raises `WgpuError`)
 
 ## Troubleshooting
 
@@ -189,10 +191,10 @@ If you see crashes/aborts early in the program, it is usually because `libwgpu_n
 
 - Inspect loader diagnostics:
   - `@wgpu.native_diagnostic()`
-- Avoid aborts while checking availability:
-  - `@wgpu.native_check()` / `@wgpu.require_native_symbol("wgpu...")`
-  - `Instance::try_create()` / `Instance::try_create_ptr(...)`
-  - `Instance::try_request_adapter_sync()` / `Adapter::try_request_device_sync(...)`
+- Avoid aborts while checking availability (use `try/catch`):
+  - `@wgpu.require_native()` / `@wgpu.require_native_symbol("wgpu...")`
+  - `Instance::create()` / `Instance::create_ptr(...)`
+  - `Instance::request_adapter_sync()` / `Adapter::request_device_sync(...)`
 - Fix typical causes:
   - Install the native library to the default per-user path (recommended) by running `python3 scripts/postadd.py`
   - Or set `MBT_WGPU_NATIVE_LIB` to an absolute path to your `.dylib` / `.so` / `.dll`
@@ -222,59 +224,44 @@ Minimal example (same as `src/cmd/main/main.mbt`):
 
 ```moonbit
 fn main {
-  let instance = match @wgpu.Instance::try_create() {
-    Ok(i) => i
-    Err(e) => {
+  try {
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let device = adapter.request_device_sync(instance)
+    let queue = device.queue()
+    let buf = device.create_buffer(
+      size=4UL,
+      usage=@wgpu.BufferUsage::from_u64(@wgpu.BUFFER_USAGE_COPY_DST),
+    )
+    ignore(buf.size())
+    let wgsl : String =
+      #|@compute @workgroup_size(1)
+      #|fn main() {}
+      #|
+    let sm = device.create_shader_module_wgsl(wgsl)
+    let pipeline = device.create_compute_pipeline(sm)
+    let encoder = device.create_command_encoder()
+    let pass = encoder.begin_compute_pass()
+    pass.set_pipeline(pipeline)
+    pass.dispatch_workgroups(1U, 1U, 1U)
+    pass.end()
+    pass.release()
+    let cmd = encoder.finish()
+    queue.submit_one(cmd)
+    buf.release()
+    cmd.release()
+    encoder.release()
+    pipeline.release()
+    sm.release()
+    queue.release()
+    device.release()
+    adapter.release()
+    instance.release()
+  } catch {
+    e => {
       println(e.message())
-      return
     }
   }
-  let adapter = match instance.try_request_adapter_sync() {
-    Ok(a) => a
-    Err(e) => {
-      println(e.message())
-      instance.release()
-      return
-    }
-  }
-  let device = match adapter.try_request_device_sync(instance) {
-    Ok(d) => d
-    Err(e) => {
-      println(e.message())
-      adapter.release()
-      instance.release()
-      return
-    }
-  }
-  let queue = device.queue()
-  let buf = device.create_buffer(
-    size=4UL,
-    usage=@wgpu.BufferUsage::from_u64(@wgpu.BUFFER_USAGE_COPY_DST),
-  )
-  ignore(buf.size())
-  let wgsl : String =
-    #|@compute @workgroup_size(1)
-    #|fn main() {}
-    #|
-  let sm = device.create_shader_module_wgsl(wgsl)
-  let pipeline = device.create_compute_pipeline(sm)
-  let encoder = device.create_command_encoder()
-  let pass = encoder.begin_compute_pass()
-  pass.set_pipeline(pipeline)
-  pass.dispatch_workgroups(1U, 1U, 1U)
-  pass.end()
-  pass.release()
-  let cmd = encoder.finish()
-  queue.submit_one(cmd)
-  buf.release()
-  cmd.release()
-  encoder.release()
-  pipeline.release()
-  sm.release()
-  queue.release()
-  device.release()
-  adapter.release()
-  instance.release()
 }
 ```
 

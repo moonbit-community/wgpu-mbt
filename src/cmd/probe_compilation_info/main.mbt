@@ -34,23 +34,31 @@ fn has_symbol(name : String) -> Bool {
 
 ///|
 fn main {
-  @wgpu.set_compilation_info_enabled(true)
-  if !has_symbol(SYM_GET_COMPILATION_INFO) {
-    println(
-      "probe_compilation_info: missing symbol: " + SYM_GET_COMPILATION_INFO,
-    )
-    panic()
+  try {
+    @wgpu.set_compilation_info_enabled(true)
+    if !has_symbol(SYM_GET_COMPILATION_INFO) {
+      println(
+        "probe_compilation_info: missing symbol: " + SYM_GET_COMPILATION_INFO,
+      )
+      panic()
+    }
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let device = adapter.request_device_sync(instance)
+    let sm = device.create_shader_module_wgsl(WGSL)
+    let _status = sm.get_compilation_info_sync_status_u32(instance)
+    let info = sm.get_compilation_info_sync(instance)
+    ignore(info.status_u32)
+    sm.release()
+    device.release()
+    adapter.release()
+    instance.release()
+    println("probe_compilation_info: ok")
+  } catch {
+    e => {
+      println("probe_compilation_info: failed:")
+      println(e.message())
+      panic()
+    }
   }
-  let instance = @wgpu.Instance::create()
-  let adapter = instance.request_adapter_sync()
-  let device = adapter.request_device_sync(instance)
-  let sm = device.create_shader_module_wgsl(WGSL)
-  let _status = sm.get_compilation_info_sync_status_u32(instance)
-  let info = sm.get_compilation_info_sync(instance)
-  ignore(info.status_u32)
-  sm.release()
-  device.release()
-  adapter.release()
-  instance.release()
-  println("probe_compilation_info: ok")
 }

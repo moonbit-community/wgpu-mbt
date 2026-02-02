@@ -448,10 +448,6 @@ pub const MIPMAP_FILTER_MODE_UNDEFINED : UInt = 0x00000000
 
 pub const MIP_LEVEL_COUNT_UNDEFINED : UInt = 0xFFFFFFFF
 
-pub const NATIVE_ERR_MISSING_SYMBOL : UInt = 2
-
-pub const NATIVE_ERR_UNAVAILABLE : UInt = 1
-
 pub const NATIVE_FEATURE_BUFFER_BINDING_ARRAY : UInt = 0x0003000F
 
 pub const NATIVE_FEATURE_CONSERVATIVE_RASTERIZATION : UInt = 0x00030015
@@ -1178,8 +1174,6 @@ pub fn get_version() -> UInt
 
 pub fn native_available() -> Bool
 
-pub fn native_check() -> Result[Unit, NativeError]
-
 pub fn native_diagnostic() -> String
 
 pub fn native_has_symbol(String) -> Bool
@@ -1190,9 +1184,9 @@ pub fn platform_is_macos() -> Bool
 
 pub fn platform_is_windows() -> Bool
 
-pub fn require_native() -> Result[Unit, NativeLoadError]
+pub fn require_native() -> Unit raise WgpuError
 
-pub fn require_native_symbol(String) -> Result[Unit, NativeError]
+pub fn require_native_symbol(String) -> Unit raise WgpuError
 
 pub fn set_compilation_info_enabled(Bool) -> Unit
 
@@ -1209,6 +1203,11 @@ pub fn set_pipeline_async_enabled(Bool) -> Unit
 pub fn set_uncaptured_error_stderr_enabled(Bool) -> Unit
 
 // Errors
+type RenderPipelineDescError
+pub fn RenderPipelineDescError::message(Self) -> String
+
+type WgpuError
+pub fn WgpuError::message(Self) -> String
 
 // Types and methods
 pub struct Adapter {
@@ -1241,22 +1240,20 @@ pub fn Adapter::limits_max_texture_dimension_2d_u32(Self) -> UInt
 pub fn Adapter::raw_handle(Self) -> @c.WGPUAdapter
 pub fn Adapter::release(Self) -> Unit
 pub fn Adapter::release_raw(Self) -> Unit
-pub fn Adapter::request_device_sync(Self, Instance) -> Device
-pub fn Adapter::request_device_sync_pipeline_statistics_query(Self, Instance) -> Device
-pub fn Adapter::request_device_sync_ptr(Self, Instance, @c.WGPUDeviceDescriptorPtr) -> Device
-pub fn Adapter::request_device_sync_push_constants(Self, Instance) -> Device
-pub fn Adapter::request_device_sync_spirv_shader_passthrough(Self, Instance) -> Device
-pub fn Adapter::request_device_sync_texture_binding_array(Self, Instance) -> Device
-pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device
-pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device
-pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device
-pub fn Adapter::request_device_sync_with_features(Self, Instance, Array[UInt], label? : String, queue_label? : String) -> Device
-pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, label? : String, queue_label? : String) -> Device
+pub fn Adapter::request_device_sync(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_pipeline_statistics_query(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_ptr(Self, Instance, @c.WGPUDeviceDescriptorPtr) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_push_constants(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_spirv_shader_passthrough(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_texture_binding_array(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_with_features(Self, Instance, Array[UInt], label? : String, queue_label? : String) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, label? : String, queue_label? : String) -> Device raise WgpuError
 pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64
-pub fn Adapter::try_request_device_sync(Self, Instance) -> Result[Device, NativeError]
-pub fn Adapter::try_request_device_sync_ptr(Self, Instance, @c.WGPUDeviceDescriptorPtr) -> Result[Device, NativeError]
 
 pub struct BindGroup {
   raw : @c.WGPUBindGroup
@@ -1572,8 +1569,8 @@ pub struct Instance {
 }
 pub fn Instance::add_ref(Self) -> Self
 pub fn Instance::add_ref_raw(Self) -> Unit
-pub fn Instance::create() -> Self
-pub fn Instance::create_ptr(@c.WGPUInstanceDescriptorPtr) -> Self
+pub fn Instance::create() -> Self raise WgpuError
+pub fn Instance::create_ptr(@c.WGPUInstanceDescriptorPtr) -> Self raise WgpuError
 pub fn Instance::create_surface(Self, @c.WGPUSurfaceDescriptorPtr) -> Surface
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
 pub fn Instance::create_surface_wayland(Self, @c.OpaquePtr, @c.OpaquePtr) -> Surface
@@ -1589,14 +1586,10 @@ pub fn Instance::process_events_raw(Self) -> Unit
 pub fn Instance::raw_handle(Self) -> @c.WGPUInstance
 pub fn Instance::release(Self) -> Unit
 pub fn Instance::release_raw(Self) -> Unit
-pub fn Instance::request_adapter_sync(Self) -> Adapter
+pub fn Instance::request_adapter_sync(Self) -> Adapter raise WgpuError
 pub fn Instance::request_adapter_sync_options_surface_u32(Self, Surface, feature_level_u32? : UInt, power_preference_u32? : UInt, force_fallback_adapter? : Bool, backend_type_u32? : UInt) -> Adapter
 pub fn Instance::request_adapter_sync_options_u32(Self, feature_level_u32? : UInt, power_preference_u32? : UInt, force_fallback_adapter? : Bool, backend_type_u32? : UInt) -> Adapter
-pub fn Instance::request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Adapter
-pub fn Instance::try_create() -> Result[Self, NativeLoadError]
-pub fn Instance::try_create_ptr(@c.WGPUInstanceDescriptorPtr) -> Result[Self, NativeLoadError]
-pub fn Instance::try_request_adapter_sync(Self) -> Result[Adapter, NativeError]
-pub fn Instance::try_request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Result[Adapter, NativeError]
+pub fn Instance::request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Adapter raise WgpuError
 pub fn Instance::wait_any(Self, UInt64, @c.WGPUFutureWaitInfoPtr, UInt64) -> @c.WGPUWaitStatus
 pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult
 pub fn Instance::wgpu_generate_report(Self, @c.WGPUGlobalReportPtr) -> Unit
@@ -1613,20 +1606,6 @@ pub struct MapMode {
 pub fn MapMode::from_u64(UInt64) -> Self
 pub fn MapMode::to_u64(Self) -> UInt64
 pub impl Eq for MapMode
-
-pub struct NativeError {
-  kind : UInt
-  symbol : String
-  diagnostic : String
-}
-pub fn NativeError::message(Self) -> String
-pub fn NativeError::missing_symbol(String, String) -> Self
-pub fn NativeError::unavailable(String) -> Self
-
-pub struct NativeLoadError {
-  diagnostic : String
-}
-pub fn NativeLoadError::message(Self) -> String
 
 pub struct PipelineLayout {
   raw : @c.WGPUPipelineLayout
@@ -1799,28 +1778,21 @@ pub fn RenderPipeline::set_label(Self, String) -> Unit
 pub struct RenderPipelineDescBuilder {
   raw : @c.OpaquePtr
 }
-pub fn RenderPipelineDescBuilder::add_vertex_attribute(Self, UInt, UInt64, UInt) -> Result[Unit, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(Self, UInt64, UInt) -> Result[UInt, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::create_pipeline(Self, Device) -> Result[RenderPipeline, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::enable_alpha_blend(Self) -> Result[Unit, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(Self) -> Result[@c.WGPURenderPipelineDescriptorPtr, RenderPipelineDescError]
+pub fn RenderPipelineDescBuilder::add_vertex_attribute(Self, UInt, UInt64, UInt) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(Self, UInt64, UInt) -> UInt raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::create_pipeline(Self, Device) -> RenderPipeline raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::enable_alpha_blend(Self) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::finish_descriptor_ptr(Self) -> @c.WGPURenderPipelineDescriptorPtr raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::free(Self) -> Unit
 pub fn RenderPipelineDescBuilder::last_error(Self) -> RenderPipelineDescError
-pub fn RenderPipelineDescBuilder::new(ShaderModule, layout? : PipelineLayout) -> Result[Self, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::set_color_target_count(Self, UInt) -> Result[Unit, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::set_color_target_format(Self, TextureFormat) -> Result[Unit, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::set_color_target_format_at(Self, UInt, TextureFormat) -> Result[Unit, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt) -> Result[Unit, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Result[Unit, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Result[Unit, RenderPipelineDescError]
-pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(Self, UInt64, UInt) -> Result[Unit, RenderPipelineDescError]
-
-pub struct RenderPipelineDescError {
-  code : UInt
-  a : UInt
-  b : UInt
-}
-pub fn RenderPipelineDescError::message(Self) -> String
+pub fn RenderPipelineDescBuilder::new(ShaderModule, layout? : PipelineLayout) -> Self raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_color_target_count(Self, UInt) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_color_target_format(Self, TextureFormat) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_color_target_format_at(Self, UInt, TextureFormat) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(Self, UInt64, UInt) -> Unit raise RenderPipelineDescError
 
 pub struct Sampler {
   raw : @c.WGPUSampler

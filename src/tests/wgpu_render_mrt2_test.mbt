@@ -144,12 +144,12 @@ test "wgpu render pipeline desc builder: MRT2 writes distinct colors" {
     #|}
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
-  let b = @wgpu.RenderPipelineDescBuilder::new(sm).unwrap()
-  b.set_color_target_count(2U).unwrap()
+  let b = @wgpu.RenderPipelineDescBuilder::new(sm)
+  b.set_color_target_count(2U)
   let fmt = @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM)
-  b.set_color_target_format_at(0U, fmt).unwrap()
-  b.set_color_target_format_at(1U, fmt).unwrap()
-  let pipeline = b.create_pipeline(device).unwrap()
+  b.set_color_target_format_at(0U, fmt)
+  b.set_color_target_format_at(1U, fmt)
+  let pipeline = b.create_pipeline(device)
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color2(view0, view1)
   pass.set_pipeline(pipeline)

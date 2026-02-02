@@ -64,39 +64,23 @@ pub fn native_diagnostic() -> String {
 }
 
 ///|
-pub fn require_native() -> Result[Unit, NativeLoadError] {
-  if native_available() {
-    Ok(())
-  } else {
-    Err(NativeLoadError::{ diagnostic: native_diagnostic() })
-  }
-}
-
-///|
-pub fn native_check() -> Result[Unit, NativeError] {
-  if native_available() {
-    Ok(())
-  } else {
-    Err(NativeError::unavailable(native_diagnostic()))
-  }
-}
-
-///|
 pub fn native_has_symbol(name : String) -> Bool {
   let b = utf8_bytes(name)
   @c.optional_sym_present_utf8(b, b.length().to_uint64())
 }
 
 ///|
-pub fn require_native_symbol(name : String) -> Result[Unit, NativeError] {
-  match native_check() {
-    Ok(_) => ()
-    Err(e) => return Err(e)
+pub fn require_native() -> Unit raise WgpuError {
+  if !native_available() {
+    raise WgpuNativeUnavailable(native_diagnostic())
   }
-  if native_has_symbol(name) {
-    Ok(())
-  } else {
-    Err(NativeError::missing_symbol(name, native_diagnostic()))
+}
+
+///|
+pub fn require_native_symbol(name : String) -> Unit raise WgpuError {
+  require_native()
+  if !native_has_symbol(name) {
+    raise WgpuNativeMissingSymbol(name, native_diagnostic())
   }
 }
 

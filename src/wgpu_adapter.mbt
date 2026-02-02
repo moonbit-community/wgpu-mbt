@@ -16,24 +16,16 @@
 pub fn Adapter::request_device_sync(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  Device::{ raw: @c.adapter_request_device_sync(instance.raw, self.raw) }
-}
-
-///|
-pub fn Adapter::try_request_device_sync(
-  self : Adapter,
-  instance : Instance,
-) -> Result[Device, NativeError] {
-  match require_native_symbol("wgpuAdapterRequestDevice") {
-    Ok(_) => ()
-    Err(e) => return Err(e)
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync(instance.raw, self.raw)
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
   }
-  match require_native_symbol("wgpuInstanceProcessEvents") {
-    Ok(_) => ()
-    Err(e) => return Err(e)
-  }
-  Ok(self.request_device_sync(instance))
+  Device::{ raw: device_raw }
 }
 
 ///|
@@ -41,27 +33,20 @@ pub fn Adapter::request_device_sync_ptr(
   self : Adapter,
   instance : Instance,
   descriptor : @c.WGPUDeviceDescriptorPtr,
-) -> Device {
-  Device::{
-    raw: @c.adapter_request_device_sync_ptr(instance.raw, self.raw, descriptor),
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_ptr(
+    instance.raw,
+    self.raw,
+    descriptor,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
   }
-}
-
-///|
-pub fn Adapter::try_request_device_sync_ptr(
-  self : Adapter,
-  instance : Instance,
-  descriptor : @c.WGPUDeviceDescriptorPtr,
-) -> Result[Device, NativeError] {
-  match require_native_symbol("wgpuAdapterRequestDevice") {
-    Ok(_) => ()
-    Err(e) => return Err(e)
-  }
-  match require_native_symbol("wgpuInstanceProcessEvents") {
-    Ok(_) => ()
-    Err(e) => return Err(e)
-  }
-  Ok(self.request_device_sync_ptr(instance, descriptor))
+  Device::{ raw: device_raw }
 }
 
 ///|
@@ -71,7 +56,9 @@ pub fn Adapter::request_device_sync_with_features(
   required_features_u32 : Array[UInt],
   label? : String = "",
   queue_label? : String = "",
-) -> Device {
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
   let label_bytes = utf8_bytes(label)
   let queue_label_bytes = utf8_bytes(queue_label)
   let count = required_features_u32.length()
@@ -99,6 +86,11 @@ pub fn Adapter::request_device_sync_with_features(
     desc,
   )
   @c.device_descriptor_free(desc)
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
+  }
   Device::{ raw: device_raw }
 }
 
@@ -113,7 +105,9 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
   max_storage_buffer_binding_size? : UInt64 = 0UL,
   label? : String = "",
   queue_label? : String = "",
-) -> Device {
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
   let limits = @c.limits_new_from_adapter_overrides_u32(
     self.raw,
     max_bind_groups_u32,
@@ -153,6 +147,11 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
   )
   @c.device_descriptor_free(desc)
   @c.limits_free(limits)
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
+  }
   Device::{ raw: device_raw }
 }
 
@@ -160,85 +159,133 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
 pub fn Adapter::request_device_sync_timestamp_query(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  Device::{
-    raw: @c.adapter_request_device_sync_timestamp_query(instance.raw, self.raw),
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_timestamp_query(
+    instance.raw,
+    self.raw,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
   }
+  Device::{ raw: device_raw }
 }
 
 ///|
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  Device::{
-    raw: @c.adapter_request_device_sync_timestamp_query_inside_encoders(
-      instance.raw,
-      self.raw,
-    ),
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_timestamp_query_inside_encoders(
+    instance.raw,
+    self.raw,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
   }
+  Device::{ raw: device_raw }
 }
 
 ///|
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  Device::{
-    raw: @c.adapter_request_device_sync_timestamp_query_inside_passes(
-      instance.raw,
-      self.raw,
-    ),
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_timestamp_query_inside_passes(
+    instance.raw,
+    self.raw,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
   }
+  Device::{ raw: device_raw }
 }
 
 ///|
 pub fn Adapter::request_device_sync_push_constants(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  Device::{
-    raw: @c.adapter_request_device_sync_push_constants(instance.raw, self.raw),
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_push_constants(
+    instance.raw,
+    self.raw,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
   }
+  Device::{ raw: device_raw }
 }
 
 ///|
 pub fn Adapter::request_device_sync_texture_binding_array(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  Device::{
-    raw: @c.adapter_request_device_sync_texture_binding_array(
-      instance.raw,
-      self.raw,
-    ),
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_texture_binding_array(
+    instance.raw,
+    self.raw,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
   }
+  Device::{ raw: device_raw }
 }
 
 ///|
 pub fn Adapter::request_device_sync_pipeline_statistics_query(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  Device::{
-    raw: @c.adapter_request_device_sync_pipeline_statistics_query(
-      instance.raw,
-      self.raw,
-    ),
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_pipeline_statistics_query(
+    instance.raw,
+    self.raw,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
   }
+  Device::{ raw: device_raw }
 }
 
 ///|
 pub fn Adapter::request_device_sync_spirv_shader_passthrough(
   self : Adapter,
   instance : Instance,
-) -> Device {
-  Device::{
-    raw: @c.adapter_request_device_sync_spirv_shader_passthrough(
-      instance.raw,
-      self.raw,
-    ),
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_spirv_shader_passthrough(
+    instance.raw,
+    self.raw,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
   }
+  Device::{ raw: device_raw }
 }
 
 ///|

@@ -38,6 +38,8 @@ pub fn adapter_info_vendor_utf8(WGPUAdapter, Bytes, UInt64) -> Bool
 
 pub fn adapter_info_vendor_utf8_len(WGPUAdapter) -> UInt64
 
+pub fn adapter_is_null(WGPUAdapter) -> Bool
+
 pub fn adapter_limits_max_bind_groups_u32(WGPUAdapter) -> UInt
 
 pub fn adapter_limits_max_buffer_size_u64(WGPUAdapter) -> UInt64
@@ -49,6 +51,8 @@ pub fn adapter_limits_max_texture_dimension_2d_u32(WGPUAdapter) -> UInt
 pub fn adapter_release(WGPUAdapter) -> Unit
 
 pub fn adapter_request_device_sync(WGPUInstance, WGPUAdapter) -> WGPUDevice
+
+pub fn adapter_request_device_sync_last_status_u32() -> UInt
 
 pub fn adapter_request_device_sync_pipeline_statistics_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
@@ -418,6 +422,8 @@ pub fn device_destroy_record_lost(WGPUDevice) -> Unit
 
 pub fn device_get_queue(WGPUDevice) -> WGPUQueue
 
+pub fn device_is_null(WGPUDevice) -> Bool
+
 pub fn device_limits_max_bind_groups_u32(WGPUDevice) -> UInt
 
 pub fn device_limits_max_buffer_size_u64(WGPUDevice) -> UInt64
@@ -495,6 +501,8 @@ pub fn instance_process_events(WGPUInstance) -> Unit
 pub fn instance_release(WGPUInstance) -> Unit
 
 pub fn instance_request_adapter_sync(WGPUInstance) -> WGPUAdapter
+
+pub fn instance_request_adapter_sync_last_status_u32() -> UInt
 
 pub fn instance_request_adapter_sync_options_u32(WGPUInstance, UInt, UInt, Bool, UInt, WGPUSurface) -> WGPUAdapter
 

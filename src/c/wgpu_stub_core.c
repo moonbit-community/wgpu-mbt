@@ -27,6 +27,9 @@ bool mbt_wgpu_render_pipeline_descriptor_ptr_is_null(WGPURenderPipelineDescripto
   return p == NULL;
 }
 
+bool mbt_wgpu_adapter_is_null(WGPUAdapter adapter) { return adapter == NULL; }
+bool mbt_wgpu_device_is_null(WGPUDevice device) { return device == NULL; }
+
 bool mbt_wgpu_platform_is_macos(void) {
 #if defined(__APPLE__)
   return true;
