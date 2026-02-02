@@ -35,7 +35,7 @@ test "wgpu render: alpha blending over loaded color" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_green : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -146,7 +146,7 @@ test "wgpu render: alpha blending + arbitrary format pipeline (BGRA8Unorm)" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_green : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -264,11 +264,11 @@ test "wgpu render pipeline desc builder: pos2 + alpha blend + arbitrary format (
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let vb = device.create_buffer(
     size=24UL,
-    usage=@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   queue.write_buffer(vb, 0UL, vertices_pos2_bytes())
   let wgsl_green : String =

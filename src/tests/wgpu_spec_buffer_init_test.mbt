@@ -17,7 +17,7 @@ test "spec: device.create_buffer_init" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
-  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let buf = device.create_buffer_init(usage~, rgba_bytes(1U, 2U, 3U, 4U))
   let out = buf.readback(instance, 0UL, 4UL)
   inspect(

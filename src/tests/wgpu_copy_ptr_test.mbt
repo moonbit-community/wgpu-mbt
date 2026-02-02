@@ -20,8 +20,8 @@ test "wgpu copy ptr helpers: buffer<->texture" {
   let queue = device.queue()
   let upload_usage = @wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let upload_buf = device.create_buffer(size=256UL, usage=upload_usage)
-  let readback_buf = device.create_buffer(size=256UL, usage=readback_usage)
+  let upload_buf = device.create_buffer(size=256UL, usage=bu(upload_usage))
+  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
   queue.write_buffer(upload_buf, 0UL, rgba_bytes(255U, 0U, 0U, 255U))
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let encoder = device.create_command_encoder()

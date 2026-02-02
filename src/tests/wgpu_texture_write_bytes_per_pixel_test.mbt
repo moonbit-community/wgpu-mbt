@@ -48,7 +48,7 @@ test "wgpu texture: write_texture_2d_bytes_per_pixel (BGRA8Unorm)" {
   )
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   encoder.copy_texture_to_buffer_bytes_per_pixel(tex, readback, 1U, 1U, 4U)

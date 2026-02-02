@@ -1,5 +1,9 @@
 {
   "import": [
+    {
+      "path": "Milky2018/wgpu_mbt",
+      "alias": "wgpu"
+    },
     "moonbitlang/core/ref"
   ],
   "test-import": [

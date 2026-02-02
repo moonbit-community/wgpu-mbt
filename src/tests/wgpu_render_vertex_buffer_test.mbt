@@ -21,10 +21,10 @@ test "wgpu offscreen render with vertex buffer" {
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
   let vb_usage = @wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST
-  let vb = device.create_buffer(size=24UL, usage=vb_usage)
+  let vb = device.create_buffer(size=24UL, usage=bu(vb_usage))
   queue.write_buffer(vb, 0UL, vertices_pos2_fullscreen_tri_bytes())
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=readback_usage)
+  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
     #|
@@ -84,7 +84,7 @@ test "wgpu render pipeline desc builder: 2 vertex buffers (pos2 + color)" {
   let view = tex.create_view()
   let vb0 = device.create_buffer(
     size=24UL,
-    usage=@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   queue.write_buffer(vb0, 0UL, vertices_pos2_fullscreen_tri_bytes())
   let color = concat_bytes([
@@ -96,12 +96,12 @@ test "wgpu render pipeline desc builder: 2 vertex buffers (pos2 + color)" {
   let colors = concat_bytes([color, color, color])
   let vb1 = device.create_buffer(
     size=48UL,
-    usage=@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   queue.write_buffer(vb1, 0UL, colors)
   let readback_buf = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32>, @location(0) col: vec4<f32> };

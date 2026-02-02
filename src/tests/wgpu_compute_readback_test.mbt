@@ -31,8 +31,8 @@ test "wgpu compute storage buffer readback" {
   let queue = device.queue()
   let storage_usage = @wgpu.BUFFER_USAGE_STORAGE | @wgpu.BUFFER_USAGE_COPY_SRC
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage_buf = device.create_buffer(size=4UL, usage=storage_usage)
-  let readback_buf = device.create_buffer(size=4UL, usage=readback_usage)
+  let storage_buf = device.create_buffer(size=4UL, usage=bu(storage_usage))
+  let readback_buf = device.create_buffer(size=4UL, usage=bu(readback_usage))
   let bgl = device.create_bind_group_layout_storage_buffer()
   let pl = device.create_pipeline_layout_1(bgl)
   let bg = device.create_bind_group_storage_buffer(bgl, storage_buf)

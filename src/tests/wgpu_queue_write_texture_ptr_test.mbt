@@ -28,7 +28,7 @@ test "wgpu Queue::write_texture_ptr writes pixel" {
   @wgpu_c.texel_copy_buffer_layout_free(layout)
   @wgpu_c.texel_copy_texture_info_free(dst)
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=readback_usage)
+  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
   let encoder = device.create_command_encoder()
   let src = @wgpu_c.texel_copy_texture_info_default_new(tex.raw_handle())
   let dst2 = @wgpu_c.texel_copy_buffer_info_new(

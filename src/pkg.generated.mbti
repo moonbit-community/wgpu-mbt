@@ -1250,10 +1250,10 @@ pub fn BindGroupLayout::set_label(Self, String) -> Unit
 pub struct BindGroupLayoutBuilder {
   raw : @c.OpaquePtr
 }
-pub fn BindGroupLayoutBuilder::add_buffer(Self, UInt, UInt64, UInt, has_dynamic_offset? : Bool, min_binding_size? : UInt64, count? : UInt) -> Bool
-pub fn BindGroupLayoutBuilder::add_sampler(Self, UInt, UInt64, UInt, count? : UInt) -> Bool
-pub fn BindGroupLayoutBuilder::add_storage_texture(Self, UInt, UInt64, UInt, TextureFormat, UInt, count? : UInt) -> Bool
-pub fn BindGroupLayoutBuilder::add_texture(Self, UInt, UInt64, UInt, UInt, multisampled? : Bool, count? : UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_buffer(Self, UInt, ShaderStage, UInt, has_dynamic_offset? : Bool, min_binding_size? : UInt64, count? : UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_sampler(Self, UInt, ShaderStage, UInt, count? : UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_storage_texture(Self, UInt, ShaderStage, UInt, TextureFormat, UInt, count? : UInt) -> Bool
+pub fn BindGroupLayoutBuilder::add_texture(Self, UInt, ShaderStage, UInt, UInt, multisampled? : Bool, count? : UInt) -> Bool
 pub fn BindGroupLayoutBuilder::finish(Self, Device, label? : String) -> BindGroupLayout
 pub fn BindGroupLayoutBuilder::free(Self) -> Unit
 pub fn BindGroupLayoutBuilder::new(max_entries~ : UInt64) -> Self
@@ -1278,7 +1278,14 @@ pub fn Buffer::set_label(Self, String) -> Unit
 pub fn Buffer::size(Self) -> UInt64
 pub fn Buffer::unmap(Self) -> Unit
 pub fn Buffer::unmap_raw(Self) -> Unit
-pub fn Buffer::usage_u64(Self) -> UInt64
+pub fn Buffer::usage_u64(Self) -> BufferUsage
+
+pub struct BufferUsage {
+  raw : UInt64
+}
+pub fn BufferUsage::from_u64(UInt64) -> Self
+pub fn BufferUsage::to_u64(Self) -> UInt64
+pub impl Eq for BufferUsage
 
 pub struct CommandBuffer {
   raw : @c.WGPUCommandBuffer
@@ -1406,8 +1413,8 @@ pub fn Device::create_bind_group_storage_texture_2d(Self, BindGroupLayout, Textu
 pub fn Device::create_bind_group_texture_2d(Self, BindGroupLayout, TextureView) -> BindGroup
 pub fn Device::create_bind_group_uniform_buffer(Self, BindGroupLayout, Buffer) -> BindGroup
 pub fn Device::create_bind_group_uniform_buffer_16(Self, BindGroupLayout, Buffer) -> BindGroup
-pub fn Device::create_buffer(Self, size~ : UInt64, usage~ : UInt64, mapped_at_creation? : Bool) -> Buffer
-pub fn Device::create_buffer_init(Self, usage~ : UInt64, Bytes) -> Buffer
+pub fn Device::create_buffer(Self, size~ : UInt64, usage~ : BufferUsage, mapped_at_creation? : Bool) -> Buffer
+pub fn Device::create_buffer_init(Self, usage~ : BufferUsage, Bytes) -> Buffer
 pub fn Device::create_buffer_ptr(Self, @c.WGPUBufferDescriptorPtr) -> Buffer
 pub fn Device::create_buffer_raw(Self, @c.WGPUBufferDescriptorPtr) -> Buffer
 pub fn Device::create_command_encoder(Self) -> CommandEncoder
@@ -1422,7 +1429,7 @@ pub fn Device::create_pipeline_layout(Self, @c.WGPUPipelineLayoutDescriptorPtr) 
 pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_2(Self, BindGroupLayout, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_ptr(Self, @c.WGPUPipelineLayoutDescriptorPtr) -> PipelineLayout
-pub fn Device::create_pipeline_layout_push_constants(Self, UInt64, UInt, UInt) -> PipelineLayout
+pub fn Device::create_pipeline_layout_push_constants(Self, ShaderStage, UInt, UInt) -> PipelineLayout
 pub fn Device::create_query_set(Self, @c.WGPUQuerySetDescriptorPtr) -> QuerySet
 pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
 pub fn Device::create_query_set_pipeline_statistics(Self, UInt, UInt) -> QuerySet
@@ -1538,6 +1545,13 @@ pub struct InstanceCapabilities {
   timed_wait_any_max_count : UInt64
 }
 
+pub struct MapMode {
+  raw : UInt64
+}
+pub fn MapMode::from_u64(UInt64) -> Self
+pub fn MapMode::to_u64(Self) -> UInt64
+pub impl Eq for MapMode
+
 pub struct PipelineLayout {
   raw : @c.WGPUPipelineLayout
 }
@@ -1628,7 +1642,7 @@ pub fn RenderBundleEncoder::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -
 pub fn RenderBundleEncoder::set_label(Self, String) -> Unit
 pub fn RenderBundleEncoder::set_pipeline(Self, RenderPipeline) -> Unit
 pub fn RenderBundleEncoder::set_pipeline_raw(Self, RenderPipeline) -> Unit
-pub fn RenderBundleEncoder::set_push_constants(Self, UInt64, UInt, Bytes) -> Unit
+pub fn RenderBundleEncoder::set_push_constants(Self, ShaderStage, UInt, Bytes) -> Unit
 pub fn RenderBundleEncoder::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderBundleEncoder::set_vertex_buffer_raw(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 
@@ -1682,7 +1696,7 @@ pub fn RenderPass::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_label(Self, String) -> Unit
 pub fn RenderPass::set_pipeline(Self, RenderPipeline) -> Unit
 pub fn RenderPass::set_pipeline_raw(Self, RenderPipeline) -> Unit
-pub fn RenderPass::set_push_constants(Self, UInt64, UInt, Bytes) -> Unit
+pub fn RenderPass::set_push_constants(Self, ShaderStage, UInt, Bytes) -> Unit
 pub fn RenderPass::set_scissor_rect(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::set_scissor_rect_raw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::set_stencil_reference(Self, UInt) -> Unit
@@ -1745,6 +1759,13 @@ pub fn ShaderModule::raw_handle(Self) -> @c.WGPUShaderModule
 pub fn ShaderModule::release(Self) -> Unit
 pub fn ShaderModule::release_raw(Self) -> Unit
 pub fn ShaderModule::set_label(Self, String) -> Unit
+
+pub struct ShaderStage {
+  raw : UInt64
+}
+pub fn ShaderStage::from_u64(UInt64) -> Self
+pub fn ShaderStage::to_u64(Self) -> UInt64
+pub impl Eq for ShaderStage
 
 pub struct Surface {
   raw : @c.WGPUSurface

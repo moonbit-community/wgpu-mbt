@@ -75,7 +75,7 @@ pub struct SurfaceTexture {
 ///|
 /// Type-safe wrappers for frequently-used numeric enums/flags.
 ///
-/// v0.3.0+ gradually moves public APIs away from raw `UInt`/`UInt64` for these.
+/// v0.4.0+ gradually moves public APIs away from raw `UInt`/`UInt64` for these.
 pub struct TextureFormat {
   raw : UInt
 }
@@ -165,6 +165,87 @@ pub impl Eq for TextureUsage with not_equal(
   self : TextureUsage,
   other : TextureUsage,
 ) -> Bool {
+  self.raw != other.raw
+}
+
+///|
+pub struct BufferUsage {
+  raw : UInt64
+}
+
+///|
+pub fn BufferUsage::from_u64(raw : UInt64) -> BufferUsage {
+  BufferUsage::{ raw, }
+}
+
+///|
+pub fn BufferUsage::to_u64(self : BufferUsage) -> UInt64 {
+  self.raw
+}
+
+///|
+pub impl Eq for BufferUsage with equal(self : BufferUsage, other : BufferUsage) -> Bool {
+  self.raw == other.raw
+}
+
+///|
+pub impl Eq for BufferUsage with not_equal(
+  self : BufferUsage,
+  other : BufferUsage,
+) -> Bool {
+  self.raw != other.raw
+}
+
+///|
+pub struct ShaderStage {
+  raw : UInt64
+}
+
+///|
+pub fn ShaderStage::from_u64(raw : UInt64) -> ShaderStage {
+  ShaderStage::{ raw, }
+}
+
+///|
+pub fn ShaderStage::to_u64(self : ShaderStage) -> UInt64 {
+  self.raw
+}
+
+///|
+pub impl Eq for ShaderStage with equal(self : ShaderStage, other : ShaderStage) -> Bool {
+  self.raw == other.raw
+}
+
+///|
+pub impl Eq for ShaderStage with not_equal(
+  self : ShaderStage,
+  other : ShaderStage,
+) -> Bool {
+  self.raw != other.raw
+}
+
+///|
+pub struct MapMode {
+  raw : UInt64
+}
+
+///|
+pub fn MapMode::from_u64(raw : UInt64) -> MapMode {
+  MapMode::{ raw, }
+}
+
+///|
+pub fn MapMode::to_u64(self : MapMode) -> UInt64 {
+  self.raw
+}
+
+///|
+pub impl Eq for MapMode with equal(self : MapMode, other : MapMode) -> Bool {
+  self.raw == other.raw
+}
+
+///|
+pub impl Eq for MapMode with not_equal(self : MapMode, other : MapMode) -> Bool {
   self.raw != other.raw
 }
 
@@ -2593,11 +2674,11 @@ pub fn Device::limits_max_buffer_size_u64(self : Device) -> UInt64 {
 pub fn Device::create_buffer(
   self : Device,
   size~ : UInt64,
-  usage~ : UInt64,
+  usage~ : BufferUsage,
   mapped_at_creation? : Bool = false,
 ) -> Buffer {
   Buffer::{
-    raw: @c.device_create_buffer(self.raw, size, usage, mapped_at_creation),
+    raw: @c.device_create_buffer(self.raw, size, usage.raw, mapped_at_creation),
   }
 }
 
@@ -2612,14 +2693,14 @@ pub fn Device::create_buffer_ptr(
 ///|
 pub fn Device::create_buffer_init(
   self : Device,
-  usage~ : UInt64,
+  usage~ : BufferUsage,
   data : Bytes,
 ) -> Buffer {
   let size = data.length().to_uint64()
   let padded_size = align_up(size, 4UL)
   let buffer = self.create_buffer(
     size=padded_size,
-    usage=usage | BUFFER_USAGE_COPY_DST,
+    usage=BufferUsage::from_u64(usage.raw | BUFFER_USAGE_COPY_DST),
   )
   if padded_size != 0UL {
     let queue = self.queue()
@@ -3403,7 +3484,7 @@ pub fn BindGroupLayoutBuilder::new(
 pub fn BindGroupLayoutBuilder::add_buffer(
   self : BindGroupLayoutBuilder,
   binding : UInt,
-  visibility : UInt64,
+  visibility : ShaderStage,
   type_u32 : UInt,
   has_dynamic_offset? : Bool = false,
   min_binding_size? : UInt64 = 0UL,
@@ -3413,7 +3494,7 @@ pub fn BindGroupLayoutBuilder::add_buffer(
     @c.bind_group_layout_builder_add_buffer(
       self.raw,
       binding,
-      visibility,
+      visibility.raw,
       type_u32,
       has_dynamic_offset,
       min_binding_size,
@@ -3422,7 +3503,7 @@ pub fn BindGroupLayoutBuilder::add_buffer(
     @c.bind_group_layout_builder_add_buffer_array(
       self.raw,
       binding,
-      visibility,
+      visibility.raw,
       type_u32,
       has_dynamic_offset,
       min_binding_size,
@@ -3435,7 +3516,7 @@ pub fn BindGroupLayoutBuilder::add_buffer(
 pub fn BindGroupLayoutBuilder::add_sampler(
   self : BindGroupLayoutBuilder,
   binding : UInt,
-  visibility : UInt64,
+  visibility : ShaderStage,
   type_u32 : UInt,
   count? : UInt = 1U,
 ) -> Bool {
@@ -3443,14 +3524,14 @@ pub fn BindGroupLayoutBuilder::add_sampler(
     @c.bind_group_layout_builder_add_sampler(
       self.raw,
       binding,
-      visibility,
+      visibility.raw,
       type_u32,
     )
   } else {
     @c.bind_group_layout_builder_add_sampler_array(
       self.raw,
       binding,
-      visibility,
+      visibility.raw,
       type_u32,
       count,
     )
@@ -3461,7 +3542,7 @@ pub fn BindGroupLayoutBuilder::add_sampler(
 pub fn BindGroupLayoutBuilder::add_texture(
   self : BindGroupLayoutBuilder,
   binding : UInt,
-  visibility : UInt64,
+  visibility : ShaderStage,
   sample_type_u32 : UInt,
   view_dimension_u32 : UInt,
   multisampled? : Bool = false,
@@ -3471,7 +3552,7 @@ pub fn BindGroupLayoutBuilder::add_texture(
     @c.bind_group_layout_builder_add_texture(
       self.raw,
       binding,
-      visibility,
+      visibility.raw,
       sample_type_u32,
       view_dimension_u32,
       multisampled,
@@ -3480,7 +3561,7 @@ pub fn BindGroupLayoutBuilder::add_texture(
     @c.bind_group_layout_builder_add_texture_array(
       self.raw,
       binding,
-      visibility,
+      visibility.raw,
       sample_type_u32,
       view_dimension_u32,
       multisampled,
@@ -3493,7 +3574,7 @@ pub fn BindGroupLayoutBuilder::add_texture(
 pub fn BindGroupLayoutBuilder::add_storage_texture(
   self : BindGroupLayoutBuilder,
   binding : UInt,
-  visibility : UInt64,
+  visibility : ShaderStage,
   access_u32 : UInt,
   format : TextureFormat,
   view_dimension_u32 : UInt,
@@ -3503,7 +3584,7 @@ pub fn BindGroupLayoutBuilder::add_storage_texture(
     @c.bind_group_layout_builder_add_storage_texture(
       self.raw,
       binding,
-      visibility,
+      visibility.raw,
       access_u32,
       format.raw,
       view_dimension_u32,
@@ -3512,7 +3593,7 @@ pub fn BindGroupLayoutBuilder::add_storage_texture(
     @c.bind_group_layout_builder_add_storage_texture_array(
       self.raw,
       binding,
-      visibility,
+      visibility.raw,
       access_u32,
       format.raw,
       view_dimension_u32,
@@ -3872,14 +3953,14 @@ pub fn Device::create_pipeline_layout_2(
 ///|
 pub fn Device::create_pipeline_layout_push_constants(
   self : Device,
-  stages : UInt64,
+  stages : ShaderStage,
   start : UInt,
   end : UInt,
 ) -> PipelineLayout {
   PipelineLayout::{
     raw: @c.device_create_pipeline_layout_push_constants(
       self.raw,
-      stages,
+      stages.raw,
       start,
       end,
     ),
@@ -4769,13 +4850,13 @@ pub fn RenderPass::set_pipeline(
 ///|
 pub fn RenderPass::set_push_constants(
   self : RenderPass,
-  stages : UInt64,
+  stages : ShaderStage,
   offset : UInt,
   data : Bytes,
 ) -> Unit {
   @c.render_pass_set_push_constants_bytes(
     self.raw,
-    stages,
+    stages.raw,
     offset,
     data,
     data.length().to_uint64(),
@@ -5117,8 +5198,8 @@ pub fn Buffer::size(self : Buffer) -> UInt64 {
 }
 
 ///|
-pub fn Buffer::usage_u64(self : Buffer) -> UInt64 {
-  @c.wgpuBufferGetUsage(self.raw)
+pub fn Buffer::usage_u64(self : Buffer) -> BufferUsage {
+  BufferUsage::from_u64(@c.wgpuBufferGetUsage(self.raw))
 }
 
 ///|
@@ -5287,13 +5368,13 @@ pub fn RenderBundleEncoder::set_pipeline(
 ///|
 pub fn RenderBundleEncoder::set_push_constants(
   self : RenderBundleEncoder,
-  stages : UInt64,
+  stages : ShaderStage,
   offset : UInt,
   data : Bytes,
 ) -> Unit {
   @c.render_bundle_encoder_set_push_constants_bytes(
     self.raw,
-    stages,
+    stages.raw,
     offset,
     data,
     data.length().to_uint64(),

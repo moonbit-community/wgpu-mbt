@@ -22,6 +22,16 @@ pub fn rgba_bytes(r : UInt, g : UInt, b : UInt, a : UInt) -> Bytes {
 }
 
 ///|
+pub fn bu(raw : UInt64) -> @wgpu.BufferUsage {
+  @wgpu.BufferUsage::from_u64(raw)
+}
+
+///|
+pub fn ss(raw : UInt64) -> @wgpu.ShaderStage {
+  @wgpu.ShaderStage::from_u64(raw)
+}
+
+///|
 /// Read a single RGBA8 pixel from a buffer produced by
 /// `CommandEncoder::copy_texture_to_buffer_rgba8`, which uses `bytesPerRow=256`.
 pub fn read_rgba8_from_copy_out(

@@ -46,24 +46,24 @@ test "wgpu bind group builder (binding arrays via extras)" {
   let view1 = tex1.create_view()
   let sampler = device.create_sampler_linear_clamp()
   let storage_usage = @wgpu.BUFFER_USAGE_STORAGE
-  let storage = device.create_buffer(size=16UL, usage=storage_usage)
+  let storage = device.create_buffer(size=16UL, usage=bu(storage_usage))
   let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=3UL)
   let bgl_ok0 = bglb.add_texture(
     0U,
-    @wgpu.SHADER_STAGE_COMPUTE,
+    ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.TEXTURE_SAMPLE_TYPE_FLOAT,
     @wgpu.TEXTURE_VIEW_DIMENSION_2D,
     count=2U,
   )
   let bgl_ok1 = bglb.add_sampler(
     1U,
-    @wgpu.SHADER_STAGE_COMPUTE,
+    ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.SAMPLER_BINDING_TYPE_FILTERING,
     count=2U,
   )
   let bgl_ok2 = bglb.add_buffer(
     2U,
-    @wgpu.SHADER_STAGE_COMPUTE,
+    ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.BUFFER_BINDING_TYPE_STORAGE,
   )
   inspect([bgl_ok0, bgl_ok1, bgl_ok2], content="[true, true, true]")

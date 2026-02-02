@@ -1,7 +1,13 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "Milky2018/wgpu_mbt/tests"
 
+import {
+  "Milky2018/wgpu_mbt",
+}
+
 // Values
+pub fn bu(UInt64) -> @wgpu_mbt.BufferUsage
+
 pub fn concat_bytes(Array[Bytes]) -> Bytes
 
 pub fn f32le_bytes(Float) -> Bytes
@@ -9,6 +15,8 @@ pub fn f32le_bytes(Float) -> Bytes
 pub fn read_rgba8_from_copy_out(Bytes, UInt, UInt) -> FixedArray[UInt]
 
 pub fn rgba_bytes(UInt, UInt, UInt, UInt) -> Bytes
+
+pub fn ss(UInt64) -> @wgpu_mbt.ShaderStage
 
 pub fn u32le_at(Bytes, Int) -> UInt
 

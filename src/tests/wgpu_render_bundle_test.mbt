@@ -22,7 +22,7 @@ test "wgpu render bundle: executeBundles renders pixel" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -47,7 +47,7 @@ test "wgpu render bundle: executeBundles renders pixel" {
   let sm = device.create_shader_module_wgsl(wgsl)
   let bgl = device.create_bind_group_layout_uniform_buffer()
   let ub = device.create_buffer_init(
-    usage=@wgpu.BUFFER_USAGE_UNIFORM,
+    usage=bu(@wgpu.BUFFER_USAGE_UNIFORM),
     Bytes::makei(16, _ => 0),
   )
   let bg = device.create_bind_group_uniform_buffer_16(bgl, ub)
@@ -56,7 +56,7 @@ test "wgpu render bundle: executeBundles renders pixel" {
     pipeline_layout, sm,
   )
   let idx = Bytes::makei(6, i => if i == 2 { 1 } else if i == 4 { 2 } else { 0 })
-  let ib = device.create_buffer_init(usage=@wgpu.BUFFER_USAGE_INDEX, idx)
+  let ib = device.create_buffer_init(usage=bu(@wgpu.BUFFER_USAGE_INDEX), idx)
   let bundle_encoder = device.create_render_bundle_encoder_rgba8()
   bundle_encoder.set_pipeline(pipeline)
   bundle_encoder.insert_debug_marker("marker")

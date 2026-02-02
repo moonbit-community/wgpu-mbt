@@ -56,7 +56,7 @@ test "wgpu Surface/Texture/BindGroup API extensions" {
   bgl1.release()
   let buf = device.create_buffer(
     size=16UL,
-    usage=@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let layout = device.create_bind_group_layout_uniform_buffer()
   let bg0 = device.create_bind_group_uniform_buffer(layout, buf)

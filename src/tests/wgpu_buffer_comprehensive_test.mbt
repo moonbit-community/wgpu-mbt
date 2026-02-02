@@ -18,7 +18,7 @@ test "wgpu buffer: queue.write_buffer pads to 4 bytes" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let buf = device.create_buffer(size=4UL, usage~)
   let data = Bytes::from_array([(1).to_byte(), (2).to_byte(), (3).to_byte()])
   queue.write_buffer(buf, 0UL, data)
@@ -41,7 +41,7 @@ test "wgpu buffer: queue.write_buffer supports empty write" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let buf = device.create_buffer(size=4UL, usage~)
   queue.write_buffer(buf, 0UL, [])
   submit_empty(device, queue)
@@ -71,7 +71,7 @@ test "wgpu buffer: map_read_sync slices unaligned offset" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let buf = device.create_buffer(size=8UL, usage~)
   let data = Bytes::from_array([
     (10).to_byte(),
@@ -99,11 +99,11 @@ test "wgpu buffer: map_write_sync supports unaligned offset via padding" {
   let queue = device.queue()
   let write_buf = device.create_buffer(
     size=8UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_WRITE | @wgpu.BUFFER_USAGE_COPY_SRC,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_WRITE | @wgpu.BUFFER_USAGE_COPY_SRC),
   )
   let read_buf = device.create_buffer(
     size=8UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let data = Bytes::from_array([(7).to_byte(), (8).to_byte(), (9).to_byte()])
   write_buf.map_write_sync(instance, 1UL, data)
@@ -136,15 +136,15 @@ test "wgpu buffer: copy_buffer_to_buffer supports offsets" {
   let queue = device.queue()
   let src = device.create_buffer(
     size=16UL,
-    usage=@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let dst = device.create_buffer(
     size=8UL,
-    usage=@wgpu.BUFFER_USAGE_COPY_DST | @wgpu.BUFFER_USAGE_COPY_SRC,
+    usage=bu(@wgpu.BUFFER_USAGE_COPY_DST | @wgpu.BUFFER_USAGE_COPY_SRC),
   )
   let staging = device.create_buffer(
     size=8UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let src_data = Bytes::makei(16, i => i.to_byte())
   queue.write_buffer(src, 0UL, src_data)
@@ -186,7 +186,7 @@ test "wgpu buffer: destroy then release does not crash" {
   let device = adapter.request_device_sync(instance)
   let buf = device.create_buffer(
     size=4UL,
-    usage=@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   buf.destroy()
   buf.release()
@@ -200,7 +200,7 @@ test "wgpu buffer: device.create_buffer_init pads to 4 bytes" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
-  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let data = Bytes::from_array([(9).to_byte(), (8).to_byte(), (7).to_byte()])
   let buf = device.create_buffer_init(usage~, data)
   let out = buf.readback(instance, 0UL, 4UL)
@@ -220,7 +220,7 @@ test "wgpu buffer: readback supports unaligned offset via internal alignment" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let buf = device.create_buffer(size=16UL, usage~)
   let data = Bytes::makei(8, i => (i + 1).to_byte())
   queue.write_buffer(buf, 0UL, data)
@@ -242,7 +242,7 @@ test "wgpu buffer: readback returns empty on out-of-bounds" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
-  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let buf = device.create_buffer(size=8UL, usage~)
   let out = buf.readback(instance, 10UL, 4UL)
   inspect(out, content="b\"\"")
@@ -257,7 +257,7 @@ test "wgpu buffer: map_read_sync returns empty on out-of-bounds" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
-  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let buf = device.create_buffer(size=8UL, usage~)
   let out = buf.map_read_sync(instance, 10UL, 4UL)
   inspect(out, content="b\"\"")
@@ -273,7 +273,7 @@ test "wgpu buffer: queue.write_buffer supports non-zero offset" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let buf = device.create_buffer(size=8UL, usage~)
   let data = Bytes::from_array([
     (4).to_byte(),
@@ -312,15 +312,15 @@ test "wgpu buffer: queue.submit can submit multiple command buffers" {
   let queue = device.queue()
   let src = device.create_buffer(
     size=8UL,
-    usage=@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let dst = device.create_buffer(
     size=8UL,
-    usage=@wgpu.BUFFER_USAGE_COPY_DST | @wgpu.BUFFER_USAGE_COPY_SRC,
+    usage=bu(@wgpu.BUFFER_USAGE_COPY_DST | @wgpu.BUFFER_USAGE_COPY_SRC),
   )
   let staging = device.create_buffer(
     size=8UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let src_data = Bytes::makei(8, i => (i + 1).to_byte())
   queue.write_buffer(src, 0UL, src_data)

@@ -53,10 +53,10 @@ test "wgpu offscreen render with uniform buffer bind group" {
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
   let vb_usage = @wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST
-  let vb = device.create_buffer(size=24UL, usage=vb_usage)
+  let vb = device.create_buffer(size=24UL, usage=bu(vb_usage))
   queue.write_buffer(vb, 0UL, vertices_pos2_bytes())
   let ub_usage = @wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST
-  let ub = device.create_buffer(size=16UL, usage=ub_usage)
+  let ub = device.create_buffer(size=16UL, usage=bu(ub_usage))
   queue.write_buffer(ub, 0UL, render_uniform_vec4_bytes(0.0, 0.0, 1.0, 1.0))
   let bgl = device.create_bind_group_layout_uniform_buffer()
   let pl = device.create_pipeline_layout_1(bgl)
@@ -82,7 +82,7 @@ test "wgpu offscreen render with uniform buffer bind group" {
   let sm = device.create_shader_module_wgsl(wgsl)
   let pipeline = device.create_render_pipeline_rgba8_pos2_with_layout(pl, sm)
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=readback_usage)
+  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(view)
   pass.set_pipeline(pipeline)

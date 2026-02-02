@@ -20,15 +20,15 @@ test "wgpu compute: dispatch_workgroups_indirect" {
   let queue = device.queue()
   let out_buf = device.create_buffer(
     size=16UL,
-    usage=@wgpu.BUFFER_USAGE_STORAGE | @wgpu.BUFFER_USAGE_COPY_SRC,
+    usage=bu(@wgpu.BUFFER_USAGE_STORAGE | @wgpu.BUFFER_USAGE_COPY_SRC),
   )
   let readback = device.create_buffer(
     size=16UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let indirect = device.create_buffer(
     size=12UL,
-    usage=@wgpu.BUFFER_USAGE_INDIRECT | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_INDIRECT | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   // workgroupCountX=4, Y=1, Z=1
   let args = u32le_pack([4U, 1U, 1U])

@@ -88,6 +88,18 @@ pub type TextureUsage
 
 ///|
 #declaration_only
+pub type BufferUsage
+
+///|
+#declaration_only
+pub type ShaderStage
+
+///|
+#declaration_only
+pub type MapMode
+
+///|
+#declaration_only
 pub type GlobalReport
 
 ///|
@@ -1603,7 +1615,7 @@ declare pub fn Device::limits_max_buffer_size_u64(self : Device) -> UInt64
 declare pub fn Device::create_buffer(
   self : Device,
   size~ : UInt64,
-  usage~ : UInt64,
+  usage~ : BufferUsage,
   mapped_at_creation? : Bool = false,
 ) -> Buffer
 
@@ -1611,7 +1623,7 @@ declare pub fn Device::create_buffer(
 #declaration_only
 declare pub fn Device::create_buffer_init(
   self : Device,
-  usage~ : UInt64,
+  usage~ : BufferUsage,
   data : Bytes,
 ) -> Buffer
 
@@ -2021,7 +2033,7 @@ declare pub fn BindGroupLayoutBuilder::new(
 declare pub fn BindGroupLayoutBuilder::add_buffer(
   self : BindGroupLayoutBuilder,
   binding : UInt,
-  visibility : UInt64,
+  visibility : ShaderStage,
   type_u32 : UInt,
   has_dynamic_offset? : Bool = false,
   min_binding_size? : UInt64 = 0UL,
@@ -2033,7 +2045,7 @@ declare pub fn BindGroupLayoutBuilder::add_buffer(
 declare pub fn BindGroupLayoutBuilder::add_sampler(
   self : BindGroupLayoutBuilder,
   binding : UInt,
-  visibility : UInt64,
+  visibility : ShaderStage,
   type_u32 : UInt,
   count? : UInt = 1U,
 ) -> Bool
@@ -2043,7 +2055,7 @@ declare pub fn BindGroupLayoutBuilder::add_sampler(
 declare pub fn BindGroupLayoutBuilder::add_texture(
   self : BindGroupLayoutBuilder,
   binding : UInt,
-  visibility : UInt64,
+  visibility : ShaderStage,
   sample_type_u32 : UInt,
   view_dimension_u32 : UInt,
   multisampled? : Bool = false,
@@ -2055,7 +2067,7 @@ declare pub fn BindGroupLayoutBuilder::add_texture(
 declare pub fn BindGroupLayoutBuilder::add_storage_texture(
   self : BindGroupLayoutBuilder,
   binding : UInt,
-  visibility : UInt64,
+  visibility : ShaderStage,
   access_u32 : UInt,
   format : TextureFormat,
   view_dimension_u32 : UInt,
@@ -2267,7 +2279,7 @@ declare pub fn Device::create_pipeline_layout_2(
 #declaration_only
 declare pub fn Device::create_pipeline_layout_push_constants(
   self : Device,
-  stages : UInt64,
+  stages : ShaderStage,
   start : UInt,
   end : UInt,
 ) -> PipelineLayout
@@ -2720,7 +2732,7 @@ declare pub fn RenderPass::set_pipeline(
 #declaration_only
 declare pub fn RenderPass::set_push_constants(
   self : RenderPass,
-  stages : UInt64,
+  stages : ShaderStage,
   offset : UInt,
   data : Bytes,
 ) -> Unit
@@ -2961,7 +2973,7 @@ declare pub fn Buffer::size(self : Buffer) -> UInt64
 
 ///|
 #declaration_only
-declare pub fn Buffer::usage_u64(self : Buffer) -> UInt64
+declare pub fn Buffer::usage_u64(self : Buffer) -> BufferUsage
 
 ///|
 #declaration_only
@@ -3049,7 +3061,7 @@ declare pub fn RenderBundleEncoder::set_pipeline(
 #declaration_only
 declare pub fn RenderBundleEncoder::set_push_constants(
   self : RenderBundleEncoder,
-  stages : UInt64,
+  stages : ShaderStage,
   offset : UInt,
   data : Bytes,
 ) -> Unit

@@ -90,6 +90,11 @@ This repo is usable as a regular MoonBit library (the CLI under `cmd/` / `src/cm
   - `TextureFormat` / `TextureDimension` / `TextureUsage` instead of raw `UInt`/`UInt64`
   - use `TextureFormat::from_u32(...)` / `TextureUsage::from_u64(...)` when you need to bridge from numeric constants
 
+- v0.4.0+: several buffer/stage-related APIs now use type-safe wrappers:
+  - `BufferUsage` instead of raw `UInt64` for buffer usages
+  - `ShaderStage` instead of raw `UInt64` for stage/visibility flags
+  - use `BufferUsage::from_u64(...)` / `ShaderStage::from_u64(...)` when you need to bridge from numeric constants
+
 - Import the library package in your package `moon.pkg.json`:
   - `{ "path": "Milky2018/wgpu_mbt", "alias": "wgpu" }`
 - Provide the native runtime library yourself (this module does **not** bundle it):
@@ -104,7 +109,10 @@ fn main {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let buf = device.create_buffer(size=4UL, usage=@wgpu.BUFFER_USAGE_COPY_DST)
+  let buf = device.create_buffer(
+    size=4UL,
+    usage=@wgpu.BufferUsage::from_u64(@wgpu.BUFFER_USAGE_COPY_DST),
+  )
   ignore(buf.size())
   let wgsl : String =
     #|@compute @workgroup_size(1)

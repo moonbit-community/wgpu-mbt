@@ -30,13 +30,13 @@ test "wgpu offscreen render with index buffer u32" {
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
   let vb_usage = @wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST
-  let vb = device.create_buffer(size=24UL, usage=vb_usage)
+  let vb = device.create_buffer(size=24UL, usage=bu(vb_usage))
   queue.write_buffer(vb, 0UL, vertices_pos2_bytes())
   let ib_usage = @wgpu.BUFFER_USAGE_INDEX | @wgpu.BUFFER_USAGE_COPY_DST
-  let ib = device.create_buffer(size=12UL, usage=ib_usage)
+  let ib = device.create_buffer(size=12UL, usage=bu(ib_usage))
   queue.write_buffer(ib, 0UL, idx_u32_indices())
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=readback_usage)
+  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
     #|

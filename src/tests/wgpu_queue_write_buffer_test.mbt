@@ -42,8 +42,8 @@ test "wgpu queue.write_buffer + compute" {
     @wgpu.BUFFER_USAGE_COPY_SRC |
     @wgpu.BUFFER_USAGE_COPY_DST
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage_buf = device.create_buffer(size=4UL, usage=storage_usage)
-  let readback_buf = device.create_buffer(size=4UL, usage=readback_usage)
+  let storage_buf = device.create_buffer(size=4UL, usage=bu(storage_usage))
+  let readback_buf = device.create_buffer(size=4UL, usage=bu(readback_usage))
   queue.write_buffer(storage_buf, 0UL, write_u32_to_le_bytes(1U))
   let bgl = device.create_bind_group_layout_storage_buffer()
   let pl = device.create_pipeline_layout_1(bgl)

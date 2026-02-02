@@ -24,7 +24,7 @@ test "wgpu render depth" {
   let depth_view = depth_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_far_red : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -115,7 +115,7 @@ test "wgpu render depth: pipeline desc builder" {
   let depth_view = depth_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_far_red : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };

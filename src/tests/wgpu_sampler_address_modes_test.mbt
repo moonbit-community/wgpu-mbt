@@ -24,7 +24,7 @@ fn sampler_addr_sample_r(
   let out_view = out_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(out_view)

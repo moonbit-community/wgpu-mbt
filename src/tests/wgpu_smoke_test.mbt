@@ -18,7 +18,10 @@ test "wgpu smoke" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let buf = device.create_buffer(size=4UL, usage=@wgpu.BUFFER_USAGE_COPY_DST)
+  let buf = device.create_buffer(
+    size=4UL,
+    usage=bu(@wgpu.BUFFER_USAGE_COPY_DST),
+  )
   inspect(buf.size(), content="4")
   let wgsl : String =
     #|@compute @workgroup_size(1)

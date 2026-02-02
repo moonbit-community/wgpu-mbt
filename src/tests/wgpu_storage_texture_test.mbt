@@ -39,7 +39,7 @@ test "wgpu storage texture: compute textureStore writes pixel" {
   let pipeline = device.create_compute_pipeline_with_layout(pl, sm)
   let readback = device.create_buffer(
     size=256UL,
-    usage=@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_compute_pass()

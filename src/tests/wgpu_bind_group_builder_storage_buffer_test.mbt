@@ -22,12 +22,12 @@ test "wgpu bind group builder (storage buffer)" {
     @wgpu.BUFFER_USAGE_COPY_SRC |
     @wgpu.BUFFER_USAGE_COPY_DST
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage = device.create_buffer(size=4UL, usage=storage_usage)
-  let readback = device.create_buffer(size=256UL, usage=readback_usage)
+  let storage = device.create_buffer(size=4UL, usage=bu(storage_usage))
+  let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
   let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=1UL)
   let bgl_ok = bglb.add_buffer(
     0U,
-    @wgpu.SHADER_STAGE_COMPUTE,
+    ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.BUFFER_BINDING_TYPE_STORAGE,
   )
   inspect(bgl_ok, content="true")

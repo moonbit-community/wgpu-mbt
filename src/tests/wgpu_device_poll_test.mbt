@@ -24,8 +24,8 @@ test "wgpu device.poll + queue extras" {
     @wgpu.BUFFER_USAGE_COPY_SRC |
     @wgpu.BUFFER_USAGE_COPY_DST
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage = device.create_buffer(size=4UL, usage=storage_usage)
-  let readback = device.create_buffer(size=256UL, usage=readback_usage)
+  let storage = device.create_buffer(size=4UL, usage=bu(storage_usage))
+  let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
   let wgsl : String =
     #|@group(0) @binding(0) var<storage, read_write> out: array<u32>;
     #|

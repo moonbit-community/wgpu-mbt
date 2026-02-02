@@ -20,11 +20,11 @@ test "spec: queue.submit" {
   let queue = device.queue()
   let src = device.create_buffer(
     size=4UL,
-    usage=@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST,
+    usage=bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let dst = device.create_buffer(
     size=4UL,
-    usage=@wgpu.BUFFER_USAGE_COPY_DST | @wgpu.BUFFER_USAGE_COPY_SRC,
+    usage=bu(@wgpu.BUFFER_USAGE_COPY_DST | @wgpu.BUFFER_USAGE_COPY_SRC),
   )
   let encoder = device.create_command_encoder()
   encoder.copy_buffer_to_buffer(src, 0UL, dst, 0UL, 4UL)
