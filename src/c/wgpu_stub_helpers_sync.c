@@ -492,16 +492,67 @@ static void mbt_create_render_pipeline_cb(WGPUCreatePipelineAsyncStatus status,
 }
 
 typedef struct {
-  WGPUCompilationInfoRequestStatus status;
-} mbt_compilation_info_result_t;
+  uint32_t type_u32;
+  uint64_t line_num_u64;
+  uint64_t line_pos_u64;
+  uint64_t offset_u64;
+  uint64_t length_u64;
+  uint8_t *text;
+  uint64_t text_len_u64;
+} mbt_compilation_message_t;
+
+typedef struct {
+  // 0 means "pending/not observed yet".
+  uint32_t status_u32;
+  uint32_t message_count_u32;
+  mbt_compilation_message_t *messages;
+} mbt_compilation_info_t;
 
 static void mbt_compilation_info_cb(WGPUCompilationInfoRequestStatus status,
                                     struct WGPUCompilationInfo const *compilationInfo,
                                     void *userdata1, void *userdata2) {
-  (void)compilationInfo;
   (void)userdata2;
-  mbt_compilation_info_result_t *out = (mbt_compilation_info_result_t *)userdata1;
-  out->status = status;
+  mbt_compilation_info_t *out = (mbt_compilation_info_t *)userdata1;
+  out->status_u32 = (uint32_t)status;
+
+  if (status != WGPUCompilationInfoRequestStatus_Success || !compilationInfo) {
+    return;
+  }
+
+  size_t count = (size_t)compilationInfo->messageCount;
+  if (count == 0) {
+    out->message_count_u32 = 0u;
+    return;
+  }
+
+  mbt_compilation_message_t *msgs =
+      (mbt_compilation_message_t *)calloc(count, sizeof(mbt_compilation_message_t));
+  if (!msgs) {
+    out->message_count_u32 = 0u;
+    return;
+  }
+
+  for (size_t i = 0; i < count; i++) {
+    const WGPUCompilationMessage *m = &compilationInfo->messages[i];
+    msgs[i].type_u32 = (uint32_t)m->type;
+    msgs[i].line_num_u64 = (uint64_t)m->lineNum;
+    msgs[i].line_pos_u64 = (uint64_t)m->linePos;
+    msgs[i].offset_u64 = (uint64_t)m->offset;
+    msgs[i].length_u64 = (uint64_t)m->length;
+    msgs[i].text = NULL;
+    msgs[i].text_len_u64 = (uint64_t)m->message.length;
+    if (msgs[i].text_len_u64 != 0 && m->message.data) {
+      msgs[i].text = (uint8_t *)malloc((size_t)msgs[i].text_len_u64);
+      if (msgs[i].text) {
+        memcpy(msgs[i].text, m->message.data, (size_t)msgs[i].text_len_u64);
+      } else {
+        msgs[i].text_len_u64 = 0u;
+      }
+    }
+  }
+
+  out->messages = msgs;
+  out->message_count_u32 = (uint32_t)count;
 }
 
 WGPUInstance mbt_wgpu_create_instance(void) { return wgpuCreateInstance(NULL); }
@@ -717,13 +768,13 @@ WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_async_sync_ptr(
   return wgpuDeviceCreateRenderPipeline(device, descriptor);
 }
 
-uint32_t mbt_wgpu_shader_module_get_compilation_info_sync_status_u32(
+void *mbt_wgpu_shader_module_get_compilation_info_sync_new(
     WGPUInstance instance, WGPUShaderModule shader_module) {
-  // Keep a safe default: return 0 (Unavailable) if the callback entrypoint
-  // isn't exposed via wgpuGetProcAddress, or if explicitly disabled.
-  if (!instance || !mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_COMPILATION_INFO") ||
+  // Keep safe behavior by default: opt-in only.
+  if (!instance || !shader_module ||
+      !mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_COMPILATION_INFO") ||
       mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_COMPILATION_INFO")) {
-    return 0u;
+    return NULL;
   }
 
   static bool checked = false;
@@ -734,26 +785,139 @@ uint32_t mbt_wgpu_shader_module_get_compilation_info_sync_status_u32(
     checked = true;
   }
   if (!pfn) {
-    return 0u;
+    return NULL;
   }
 
-  mbt_compilation_info_result_t out = {0};
+  mbt_compilation_info_t *out =
+      (mbt_compilation_info_t *)calloc(1, sizeof(mbt_compilation_info_t));
+  if (!out) {
+    return NULL;
+  }
 
   WGPUCompilationInfoCallbackInfo info = {
       .nextInChain = NULL,
       .mode = WGPUCallbackMode_AllowProcessEvents,
       .callback = mbt_compilation_info_cb,
-      .userdata1 = &out,
+      .userdata1 = out,
       .userdata2 = NULL,
   };
 
   (void)pfn(shader_module, info);
   const int max_iters = 2000;
-  for (int i = 0; i < max_iters && out.status == 0; i++) {
+  for (int i = 0; i < max_iters && out->status_u32 == 0; i++) {
     wgpuInstanceProcessEvents(instance);
     mbt_wgpu_sleep_1ms();
   }
-  return (uint32_t)out.status;
+  if (out->status_u32 == 0) {
+    // Timed out; treat as unavailable.
+    for (uint32_t i = 0; i < out->message_count_u32; i++) {
+      free(out->messages[i].text);
+    }
+    free(out->messages);
+    free(out);
+    return NULL;
+  }
+
+  return out;
+}
+
+void mbt_wgpu_compilation_info_free(void *info) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  if (!p) {
+    return;
+  }
+  for (uint32_t i = 0; i < p->message_count_u32; i++) {
+    free(p->messages[i].text);
+  }
+  free(p->messages);
+  free(p);
+}
+
+uint32_t mbt_wgpu_compilation_info_status_u32(void *info) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  return p ? p->status_u32 : 0u;
+}
+
+uint32_t mbt_wgpu_compilation_info_message_count_u32(void *info) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  return p ? p->message_count_u32 : 0u;
+}
+
+uint32_t mbt_wgpu_compilation_info_message_type_u32(void *info, uint32_t index) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  if (!p || index >= p->message_count_u32) {
+    return 0u;
+  }
+  return p->messages[index].type_u32;
+}
+
+uint64_t mbt_wgpu_compilation_info_message_line_num_u64(void *info, uint32_t index) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  if (!p || index >= p->message_count_u32) {
+    return 0u;
+  }
+  return p->messages[index].line_num_u64;
+}
+
+uint64_t mbt_wgpu_compilation_info_message_line_pos_u64(void *info, uint32_t index) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  if (!p || index >= p->message_count_u32) {
+    return 0u;
+  }
+  return p->messages[index].line_pos_u64;
+}
+
+uint64_t mbt_wgpu_compilation_info_message_offset_u64(void *info, uint32_t index) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  if (!p || index >= p->message_count_u32) {
+    return 0u;
+  }
+  return p->messages[index].offset_u64;
+}
+
+uint64_t mbt_wgpu_compilation_info_message_length_u64(void *info, uint32_t index) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  if (!p || index >= p->message_count_u32) {
+    return 0u;
+  }
+  return p->messages[index].length_u64;
+}
+
+uint64_t mbt_wgpu_compilation_info_message_utf8_len(void *info, uint32_t index) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  if (!p || index >= p->message_count_u32) {
+    return 0u;
+  }
+  return p->messages[index].text_len_u64;
+}
+
+bool mbt_wgpu_compilation_info_message_utf8(void *info, uint32_t index,
+                                            uint8_t *out, uint64_t out_len) {
+  mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
+  if (!p || !out || index >= p->message_count_u32) {
+    return false;
+  }
+  uint64_t len = p->messages[index].text_len_u64;
+  if (len > out_len) {
+    return false;
+  }
+  if (len != 0 && p->messages[index].text) {
+    memcpy(out, p->messages[index].text, (size_t)len);
+  }
+  return true;
+}
+
+uint32_t mbt_wgpu_shader_module_get_compilation_info_sync_status_u32(
+    WGPUInstance instance, WGPUShaderModule shader_module) {
+  mbt_compilation_info_t *info =
+      (mbt_compilation_info_t *)mbt_wgpu_shader_module_get_compilation_info_sync_new(
+          instance, shader_module);
+  if (!info) {
+    return 0u;
+  }
+  uint32_t status = info->status_u32;
+  mbt_wgpu_compilation_info_free(info);
+  return status;
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(

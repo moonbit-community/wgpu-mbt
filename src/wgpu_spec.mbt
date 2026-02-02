@@ -100,6 +100,14 @@ pub type MapMode
 
 ///|
 #declaration_only
+pub type CompilationMessage
+
+///|
+#declaration_only
+pub type CompilationInfo
+
+///|
+#declaration_only
 pub type GlobalReport
 
 ///|
@@ -1050,6 +1058,13 @@ declare pub fn ShaderModule::get_compilation_info_sync_status_u32(
   self : ShaderModule,
   instance : Instance,
 ) -> UInt
+
+///|
+#declaration_only
+declare pub fn ShaderModule::get_compilation_info_sync(
+  self : ShaderModule,
+  instance : Instance,
+) -> CompilationInfo
 
 ///|
 #declaration_only

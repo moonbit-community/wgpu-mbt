@@ -1547,6 +1547,65 @@ pub fn ShaderModule::get_compilation_info_sync_status_u32(
 }
 
 ///|
+pub struct CompilationMessage {
+  type_u32 : UInt
+  line_num_u64 : UInt64
+  line_pos_u64 : UInt64
+  offset_u64 : UInt64
+  length_u64 : UInt64
+  text : String
+}
+
+///|
+pub struct CompilationInfo {
+  status_u32 : UInt
+  messages : Array[CompilationMessage]
+}
+
+///|
+pub fn ShaderModule::get_compilation_info_sync(
+  self : ShaderModule,
+  instance : Instance,
+) -> CompilationInfo {
+  let info = @c.shader_module_get_compilation_info_sync_new(
+    instance.raw,
+    self.raw,
+  )
+  if @c.opaque_ptr_is_null(info) {
+    CompilationInfo::{ status_u32: 0U, messages: [] }
+  } else {
+    let status_u32 = @c.compilation_info_status_u32(info)
+    let count_u32 = @c.compilation_info_message_count_u32(info)
+    let messages : Ref[Array[CompilationMessage]] = @ref.new([])
+    for i = 0; i < count_u32.reinterpret_as_int(); i = i + 1 {
+      let idx = i.reinterpret_as_uint()
+      let text_len = @c.compilation_info_message_utf8_len(info, idx)
+      let text = if text_len == 0UL {
+        ""
+      } else {
+        let out = Bytes::new(text_len.to_int())
+        let ok = @c.compilation_info_message_utf8(info, idx, out, text_len)
+        if ok {
+          @utf8.decode_lossy(out[:], ignore_bom=true)
+        } else {
+          ""
+        }
+      }
+      messages.val.push(CompilationMessage::{
+        type_u32: @c.compilation_info_message_type_u32(info, idx),
+        line_num_u64: @c.compilation_info_message_line_num_u64(info, idx),
+        line_pos_u64: @c.compilation_info_message_line_pos_u64(info, idx),
+        offset_u64: @c.compilation_info_message_offset_u64(info, idx),
+        length_u64: @c.compilation_info_message_length_u64(info, idx),
+        text,
+      })
+    }
+    @c.compilation_info_free(info)
+    CompilationInfo::{ status_u32, messages: messages.val }
+  }
+}
+
+///|
 pub fn ShaderModule::release_raw(self : ShaderModule) -> Unit {
   @c.wgpuShaderModuleRelease(self.raw)
 }

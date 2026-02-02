@@ -21,7 +21,7 @@ Known limitation:
   When enabled, the implementation is best-effort via dynamic symbol lookup and will still no-op if the underlying proc is unavailable.
 - Async pipeline creation (`wgpuDeviceCreate*PipelineAsync`) and shader compilation info (`wgpuShaderModuleGetCompilationInfo`) may be **unimplemented** (panic) in some wgpu-native builds. We keep safe sync stubs by default; you can opt in at your own risk:
   - `MBT_WGPU_ENABLE_PIPELINE_ASYNC=1`
-  - `MBT_WGPU_ENABLE_COMPILATION_INFO=1`
+  - `MBT_WGPU_ENABLE_COMPILATION_INFO=1` (use `ShaderModule::get_compilation_info_sync` to read status + messages)
 
 Useful introspection helpers:
 - Adapter info strings: `Adapter::info_vendor`, `Adapter::info_architecture`, `Adapter::info_device`, `Adapter::info_description`

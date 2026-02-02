@@ -74,6 +74,12 @@ test "wgpu: async pipeline sync helpers + shader compilation status" {
     status == 0U || status == @wgpu.COMPILATION_INFO_REQUEST_STATUS_SUCCESS,
     true,
   )
+  let info = sm_render.get_compilation_info_sync(instance)
+  assert_eq(
+    info.status_u32 == 0U ||
+    info.status_u32 == @wgpu.COMPILATION_INFO_REQUEST_STATUS_SUCCESS,
+    true,
+  )
   sm_render.release()
   sm_compute.release()
   pl.release()

@@ -236,6 +236,26 @@ pub fn command_encoder_set_label_utf8(WGPUCommandEncoder, Bytes, UInt64) -> Unit
 
 pub fn command_encoder_write_timestamp(WGPUCommandEncoder, WGPUQuerySet, UInt) -> Unit
 
+pub fn compilation_info_free(OpaquePtr) -> Unit
+
+pub fn compilation_info_message_count_u32(OpaquePtr) -> UInt
+
+pub fn compilation_info_message_length_u64(OpaquePtr, UInt) -> UInt64
+
+pub fn compilation_info_message_line_num_u64(OpaquePtr, UInt) -> UInt64
+
+pub fn compilation_info_message_line_pos_u64(OpaquePtr, UInt) -> UInt64
+
+pub fn compilation_info_message_offset_u64(OpaquePtr, UInt) -> UInt64
+
+pub fn compilation_info_message_type_u32(OpaquePtr, UInt) -> UInt
+
+pub fn compilation_info_message_utf8(OpaquePtr, UInt, Bytes, UInt64) -> Bool
+
+pub fn compilation_info_message_utf8_len(OpaquePtr, UInt) -> UInt64
+
+pub fn compilation_info_status_u32(OpaquePtr) -> UInt
+
 pub fn compute_pass_begin_pipeline_statistics_query(WGPUComputePassEncoder, WGPUQuerySet, UInt) -> Unit
 
 pub fn compute_pass_descriptor_default_new() -> WGPUComputePassDescriptorPtr
@@ -512,6 +532,8 @@ pub fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr
 
 pub fn null_uint_ptr() -> UIntPtr
 
+pub fn opaque_ptr_is_null(OpaquePtr) -> Bool
+
 pub fn pipeline_layout_descriptor_1_new(WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_descriptor_2_new(WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr
@@ -763,6 +785,8 @@ pub fn set_uncaptured_error_stderr_enabled(Bool) -> Unit
 pub fn shader_module_descriptor_free(WGPUShaderModuleDescriptorPtr) -> Unit
 
 pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr
+
+pub fn shader_module_get_compilation_info_sync_new(WGPUInstance, WGPUShaderModule) -> OpaquePtr
 
 pub fn shader_module_get_compilation_info_sync_status_u32(WGPUInstance, WGPUShaderModule) -> UInt
 

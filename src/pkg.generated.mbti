@@ -1347,6 +1347,20 @@ pub fn CommandEncoder::set_label(Self, String) -> Unit
 pub fn CommandEncoder::write_timestamp(Self, QuerySet, UInt) -> Unit
 pub fn CommandEncoder::write_timestamp_raw(Self, QuerySet, UInt) -> Unit
 
+pub struct CompilationInfo {
+  status_u32 : UInt
+  messages : Array[CompilationMessage]
+}
+
+pub struct CompilationMessage {
+  type_u32 : UInt
+  line_num_u64 : UInt64
+  line_pos_u64 : UInt64
+  offset_u64 : UInt64
+  length_u64 : UInt64
+  text : String
+}
+
 pub struct ComputePass {
   raw : @c.WGPUComputePassEncoder
 }
@@ -1753,6 +1767,7 @@ pub struct ShaderModule {
 }
 pub fn ShaderModule::add_ref(Self) -> Self
 pub fn ShaderModule::add_ref_raw(Self) -> Unit
+pub fn ShaderModule::get_compilation_info_sync(Self, Instance) -> CompilationInfo
 pub fn ShaderModule::get_compilation_info_sync_status_u32(Self, Instance) -> UInt
 pub fn ShaderModule::is_null(Self) -> Bool
 pub fn ShaderModule::raw_handle(Self) -> @c.WGPUShaderModule
