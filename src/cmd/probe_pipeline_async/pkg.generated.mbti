@@ -1,0 +1,20 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Milky2018/wgpu_mbt/cmd/probe_pipeline_async"
+
+// Values
+pub const SYM_CREATE_COMPUTE_PIPELINE_ASYNC : String = "wgpuDeviceCreateComputePipelineAsync"
+
+pub const SYM_CREATE_RENDER_PIPELINE_ASYNC : String = "wgpuDeviceCreateRenderPipelineAsync"
+
+pub const WGSL_COMPUTE : String = "@compute @workgroup_size(1)\nfn main() {}\n"
+
+pub const WGSL_RENDER : String = "struct VSOut { @builtin(position) pos: vec4<f32> };\n\n@vertex\nfn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {\n  var positions = array<vec2<f32>, 3>(\n    vec2<f32>(-1.0, -1.0),\n    vec2<f32>( 3.0, -1.0),\n    vec2<f32>(-1.0,  3.0),\n  );\n  var out: VSOut;\n  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);\n  return out;\n}\n\n@fragment\nfn fs_main() -> @location(0) vec4<f32> {\n  return vec4<f32>(0.0, 1.0, 0.0, 1.0);\n}\n"
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

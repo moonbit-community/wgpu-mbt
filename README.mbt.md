@@ -20,7 +20,15 @@ Known limitation:
   - `@wgpu.set_debug_labels_enabled(true)` (recommended for local debugging)
   - env var `MBT_WGPU_DEBUG_LABELS=1`
   When enabled, the implementation is best-effort via dynamic symbol lookup and will still no-op if the underlying proc is unavailable.
-- Async pipeline creation (`wgpuDeviceCreate*PipelineAsync`) and shader compilation info (`wgpuShaderModuleGetCompilationInfo`) may be **unimplemented** (panic) in some wgpu-native builds. We keep safe sync stubs by default; you can opt in at your own risk:
+- Async pipeline creation (`wgpuDeviceCreate*PipelineAsync`) and shader compilation info (`wgpuShaderModuleGetCompilationInfo`) may be **unimplemented** (panic) in some wgpu-native builds. We keep safe sync stubs by default.
+
+  `postadd` will run best-effort probes in a subprocess and, if successful, write marker files under:
+  - `$XDG_DATA_HOME/wgpu_mbt/` (if set), otherwise `$HOME/.local/share/wgpu_mbt/`
+  - Windows: `%USERPROFILE%\\.local\\share\\wgpu_mbt\\`
+
+  If a marker exists, the feature is auto-enabled by default (unless force-disabled).
+
+  You can also opt in manually at your own risk:
   - `MBT_WGPU_ENABLE_PIPELINE_ASYNC=1`
   - `MBT_WGPU_ENABLE_COMPILATION_INFO=1` (use `ShaderModule::get_compilation_info_sync` to read status + messages)
   - You can also enable/disable at runtime:

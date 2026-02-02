@@ -22,6 +22,9 @@ from pathlib import Path
 
 REPO = "moonbit-community/wgpu-mbt"
 
+MARKER_PIPELINE_ASYNC = "pipeline_async.ok"
+MARKER_COMPILATION_INFO = "compilation_info.ok"
+
 
 def _die(msg: str, code: int = 1) -> "None":
   print(f"wgpu-mbt: {msg}", file=sys.stderr)
@@ -72,6 +75,20 @@ def _default_install_path(default_filename: str) -> Path:
   dst_dir = Path(home) / ".local" / "lib"
   dst_dir.mkdir(parents=True, exist_ok=True)
   return dst_dir / default_filename
+
+
+def _default_data_dir() -> Path:
+  home = os.environ.get("HOME") or os.environ.get("USERPROFILE") or str(Path.home())
+  if not home:
+    _die("HOME/USERPROFILE is not set")
+  if os.name == "nt":
+    base = Path(home) / ".local" / "share"
+  else:
+    xdg = os.environ.get("XDG_DATA_HOME", "")
+    base = Path(xdg) if xdg else (Path(home) / ".local" / "share")
+  d = base / "wgpu_mbt"
+  d.mkdir(parents=True, exist_ok=True)
+  return d
 
 
 def _download(url: str, dst: Path) -> None:
@@ -135,11 +152,58 @@ def _expected_sha256(version: str, asset_name: str) -> str:
   _die(f"SHA256SUMS does not contain {asset_name} (tag {tag})")
 
 
+def _run_moon_probe(root: Path, pkg_path: str, env: dict[str, str]) -> bool:
+  cmd = ["moon", "run", pkg_path, "--target", "native"]
+  try:
+    p = subprocess.run(cmd, cwd=root, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+  except FileNotFoundError:
+    print("wgpu-mbt: 'moon' not found; skipping feature probes")
+    return False
+  if p.returncode == 0:
+    return True
+  out = (p.stdout or "").strip()
+  if out:
+    print(f"wgpu-mbt: probe failed ({pkg_path}); leaving feature disabled.\n{out}")
+  else:
+    print(f"wgpu-mbt: probe failed ({pkg_path}); leaving feature disabled.")
+  return False
+
+
+def _auto_probe_and_write_markers(lib_path: Path) -> None:
+  root = Path(__file__).resolve().parents[1]
+  d = _default_data_dir()
+  m_pipeline = d / MARKER_PIPELINE_ASYNC
+  m_comp = d / MARKER_COMPILATION_INFO
+
+  env = dict(os.environ)
+  env["MBT_WGPU_NATIVE_LIB"] = str(lib_path)
+  env["MBT_WGPU_DISABLE_PIPELINE_ASYNC"] = "0"
+  env["MBT_WGPU_DISABLE_COMPILATION_INFO"] = "0"
+  env["MBT_WGPU_ENABLE_PIPELINE_ASYNC"] = "1"
+  env["MBT_WGPU_ENABLE_COMPILATION_INFO"] = "1"
+
+  ok_pipeline = _run_moon_probe(root, "src/cmd/probe_pipeline_async", env)
+  if ok_pipeline:
+    m_pipeline.write_text("ok\n", encoding="utf-8")
+  else:
+    m_pipeline.unlink(missing_ok=True)  # type: ignore[arg-type]
+
+  ok_comp = _run_moon_probe(root, "src/cmd/probe_compilation_info", env)
+  if ok_comp:
+    m_comp.write_text("ok\n", encoding="utf-8")
+  else:
+    m_comp.unlink(missing_ok=True)  # type: ignore[arg-type]
+
+  if ok_pipeline or ok_comp:
+    print(f"wgpu-mbt: wrote feature markers under {d}")
+
+
 def main() -> None:
-  # If the user already points to a library, don't override it.
   override = os.environ.get("MBT_WGPU_NATIVE_LIB", "")
   if override and Path(override).exists():
-    print(f"wgpu-mbt: MBT_WGPU_NATIVE_LIB is already set -> {override}")
+    lib_path = Path(override)
+    print(f"wgpu-mbt: MBT_WGPU_NATIVE_LIB is already set -> {lib_path}")
+    _auto_probe_and_write_markers(lib_path)
     return
 
   version = _module_version()
@@ -159,6 +223,7 @@ def main() -> None:
     got = _sha256(dst)
     if got.lower() == expected.lower():
       print(f"wgpu-mbt: libwgpu_native already installed -> {dst}")
+      _auto_probe_and_write_markers(dst)
       return
 
   try:
@@ -184,6 +249,7 @@ def main() -> None:
 
   print(f"wgpu-mbt: installed libwgpu_native -> {dst}")
   print(f"wgpu-mbt: tip: you can override with MBT_WGPU_NATIVE_LIB={dst}")
+  _auto_probe_and_write_markers(dst)
 
 
 if __name__ == "__main__":

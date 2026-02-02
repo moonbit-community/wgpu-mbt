@@ -57,6 +57,51 @@ static bool mbt_wgpu_env_truthy(const char *name) {
          (strcmp(v, "ON") == 0);
 }
 
+static bool mbt_wgpu_marker_exists(const char *marker_filename) {
+  if (!marker_filename || !marker_filename[0]) {
+    return false;
+  }
+
+#if defined(_WIN32)
+  const char *home = getenv("USERPROFILE");
+  if (!home || !home[0]) {
+    return false;
+  }
+  char path[4096];
+  int n = snprintf(path, sizeof(path), "%s\\.local\\share\\wgpu_mbt\\%s", home,
+                   marker_filename);
+  if (n <= 0 || (size_t)n >= sizeof(path)) {
+    return false;
+  }
+  DWORD attrs = GetFileAttributesA(path);
+  if (attrs == INVALID_FILE_ATTRIBUTES) {
+    return false;
+  }
+  return (attrs & FILE_ATTRIBUTE_DIRECTORY) == 0;
+#else
+  const char *data_home = getenv("XDG_DATA_HOME");
+  const char *home = getenv("HOME");
+  if ((!data_home || !data_home[0]) && (!home || !home[0])) {
+    return false;
+  }
+  char path[4096];
+  int n;
+  if (data_home && data_home[0]) {
+    n = snprintf(path, sizeof(path), "%s/wgpu_mbt/%s", data_home, marker_filename);
+  } else {
+    n = snprintf(path, sizeof(path), "%s/.local/share/wgpu_mbt/%s", home,
+                 marker_filename);
+  }
+  if (n <= 0 || (size_t)n >= sizeof(path)) {
+    return false;
+  }
+  return access(path, F_OK) == 0;
+#endif
+}
+
+static const char *MBT_WGPU_MARKER_PIPELINE_ASYNC = "pipeline_async.ok";
+static const char *MBT_WGPU_MARKER_COMPILATION_INFO = "compilation_info.ok";
+
 static bool g_mbt_wgpu_uncaptured_error_stderr_enabled = false;
 static bool g_mbt_wgpu_device_lost_stderr_enabled = false;
 
@@ -73,7 +118,8 @@ static bool mbt_wgpu_pipeline_async_enabled(void) {
   }
   if (!g_mbt_wgpu_pipeline_async_inited) {
     g_mbt_wgpu_pipeline_async_enabled =
-        mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_PIPELINE_ASYNC");
+        mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_PIPELINE_ASYNC") ||
+        mbt_wgpu_marker_exists(MBT_WGPU_MARKER_PIPELINE_ASYNC);
     g_mbt_wgpu_pipeline_async_inited = true;
   }
   return g_mbt_wgpu_pipeline_async_enabled;
@@ -85,7 +131,8 @@ static bool mbt_wgpu_compilation_info_enabled(void) {
   }
   if (!g_mbt_wgpu_compilation_info_inited) {
     g_mbt_wgpu_compilation_info_enabled =
-        mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_COMPILATION_INFO");
+        mbt_wgpu_env_truthy("MBT_WGPU_ENABLE_COMPILATION_INFO") ||
+        mbt_wgpu_marker_exists(MBT_WGPU_MARKER_COMPILATION_INFO);
     g_mbt_wgpu_compilation_info_inited = true;
   }
   return g_mbt_wgpu_compilation_info_enabled;

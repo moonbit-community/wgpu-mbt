@@ -542,6 +542,8 @@ pub fn null_uint_ptr() -> UIntPtr
 
 pub fn opaque_ptr_is_null(OpaquePtr) -> Bool
 
+pub fn optional_sym_present_utf8(Bytes, UInt64) -> Bool
+
 pub fn pipeline_layout_descriptor_1_new(WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_descriptor_2_new(WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr

@@ -7,9 +7,14 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <stdint.h>
 
 // Returns a raw function pointer for `name`, or NULL if unavailable.
 // Never aborts.
 void *mbt_wgpu_optional_sym(const char *name);
 
+// Returns true if the optional symbol exists in the loaded native library.
+// `name` is a UTF-8 byte slice and does not need to be NUL-terminated.
+// Never aborts.
+bool mbt_wgpu_optional_sym_present_utf8(const uint8_t *name, uint64_t name_len);

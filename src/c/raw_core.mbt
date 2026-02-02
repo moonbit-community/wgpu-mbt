@@ -56,6 +56,13 @@ pub extern "C" fn native_diagnostic_utf8_len() -> UInt64 = "mbt_wgpu_native_diag
 pub extern "C" fn native_diagnostic_utf8(out : Bytes, out_len : UInt64) -> Bool = "mbt_wgpu_native_diagnostic_utf8"
 
 ///|
+#borrow(name)
+pub extern "C" fn optional_sym_present_utf8(
+  name : Bytes,
+  name_len : UInt64,
+) -> Bool = "mbt_wgpu_optional_sym_present_utf8"
+
+///|
 pub extern "C" fn null_uint_ptr() -> UIntPtr = "mbt_wgpu_null_uint_ptr"
 
 ///|
