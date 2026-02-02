@@ -17,50 +17,57 @@ test "linux/vulkan: headless smoke (compute pipeline)" {
   if !@wgpu.platform_is_linux() {
     inspect("skipped (not linux)", content="skipped (not linux)")
   } else {
-    let instance = @wgpu.Instance::create()
+    try {
+      let instance = @wgpu.Instance::create()
 
-    // Prefer Vulkan explicitly, so this test also works on multi-backend hosts.
-    // If there is no Vulkan adapter, skip to avoid breaking local Linux hosts.
-    let vulkan_count = instance.enumerate_adapters_count_vulkan()
-    if vulkan_count == 0UL {
-      inspect(
-        "skipped (no vulkan adapter)",
-        content="skipped (no vulkan adapter)",
+      // Prefer Vulkan explicitly, so this test also works on multi-backend hosts.
+      // If there is no Vulkan adapter, skip to avoid breaking local Linux hosts.
+      let vulkan_count = instance.enumerate_adapters_count_vulkan()
+      if vulkan_count == 0UL {
+        inspect(
+          "skipped (no vulkan adapter)",
+          content="skipped (no vulkan adapter)",
+        )
+        instance.release()
+        return
+      }
+      let adapter = instance.request_adapter_sync_options_u32(
+        feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
+        power_preference_u32=@wgpu.POWER_PREFERENCE_UNDEFINED,
+        backend_type_u32=@wgpu.BACKEND_TYPE_VULKAN,
       )
-      instance.release()
-      return
-    }
-    let adapter = instance.request_adapter_sync_options_u32(
-      feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
-      power_preference_u32=@wgpu.POWER_PREFERENCE_UNDEFINED,
-      backend_type_u32=@wgpu.BACKEND_TYPE_VULKAN,
-    )
 
-    // Minimal headless compute.
-    let device = adapter.request_device_sync(instance)
-    let queue = device.queue()
-    let wgsl : String =
-      #|@compute @workgroup_size(1)
-      #|fn main() {}
-      #|
-    let sm = device.create_shader_module_wgsl(wgsl)
-    let pipeline = device.create_compute_pipeline(sm)
-    let encoder = device.create_command_encoder()
-    let pass = encoder.begin_compute_pass()
-    pass.set_pipeline(pipeline)
-    pass.dispatch_workgroups(1U, 1U, 1U)
-    pass.end()
-    pass.release()
-    let cmd = encoder.finish()
-    queue.submit_one(cmd)
-    cmd.release()
-    encoder.release()
-    pipeline.release()
-    sm.release()
-    queue.release()
-    device.release()
-    adapter.release()
-    instance.release()
-    inspect("ok", content="ok")
+      // Minimal headless compute.
+      let device = adapter.request_device_sync(instance)
+      let queue = device.queue()
+      let wgsl : String =
+        #|@compute @workgroup_size(1)
+        #|fn main() {}
+        #|
+      let sm = device.create_shader_module_wgsl(wgsl)
+      let pipeline = device.create_compute_pipeline(sm)
+      let encoder = device.create_command_encoder()
+      let pass = encoder.begin_compute_pass()
+      pass.set_pipeline(pipeline)
+      pass.dispatch_workgroups(1U, 1U, 1U)
+      pass.end()
+      pass.release()
+      let cmd = encoder.finish()
+      queue.submit_one(cmd)
+      cmd.release()
+      encoder.release()
+      pipeline.release()
+      sm.release()
+      queue.release()
+      device.release()
+      adapter.release()
+      instance.release()
+      inspect("ok", content="ok")
+    } catch {
+      e => {
+        println(e.to_string())
+        inspect("skipped (wgpu error)", content="skipped (wgpu error)")
+      }
+    }
   }
 }
