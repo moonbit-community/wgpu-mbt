@@ -12,7 +12,7 @@ This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU), focused o
 - Native dependency: **runtime** dynamic library `libwgpu_native` loaded via `dlopen` / `LoadLibrary` (see below)
 - Constants: exported as `pub const` in `SCREAMING_SNAKE_CASE` (e.g. `BUFFER_USAGE_COPY_DST`)
 - Tests: all tests live under `src/tests/` and are listed in `src/tests/moon.pkg.json` `targets`
-- RenderPipelineDescBuilder: returns recoverable `Result` errors on invalid configuration (no silent clamping / abort)
+- RenderPipelineDescBuilder: raises recoverable errors on invalid configuration (no silent clamping / abort)
 
 Known limitation:
 - `Instance::wgsl_language_features_count_u64()` is currently a safe stub that returns `0` because `wgpuInstanceGetWGSLLanguageFeatures` panics in some wgpu-native builds.

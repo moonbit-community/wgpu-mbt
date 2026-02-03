@@ -4,8 +4,7 @@
       "path": "Milky2018/wgpu_mbt",
       "alias": "wgpu"
     },
-    "moonbitlang/core/ref",
-    "moonbitlang/core/result"
+    "moonbitlang/core/ref"
   ],
   "test-import": [
     {
@@ -17,7 +16,6 @@
       "alias": "wgpu_c"
     },
     "moonbitlang/core/ref",
-    "moonbitlang/core/result",
     "moonbitlang/core/encoding/utf8"
   ],
   "targets": {

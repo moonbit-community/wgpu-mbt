@@ -242,6 +242,10 @@ pub fn command_encoder_write_timestamp(WGPUCommandEncoder, WGPUQuerySet, UInt) -
 
 pub fn compilation_info_free(OpaquePtr) -> Unit
 
+pub fn compilation_info_last_error_kind_u32() -> UInt
+
+pub fn compilation_info_last_status_u32() -> UInt
+
 pub fn compilation_info_message_count_u32(OpaquePtr) -> UInt
 
 pub fn compilation_info_message_length_u64(OpaquePtr, UInt) -> UInt64

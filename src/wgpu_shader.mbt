@@ -79,9 +79,39 @@ pub fn ShaderModule::get_compilation_info_sync_or_raise(
     self.raw,
   )
   if @c.opaque_ptr_is_null(info) {
-    raise OptionalSymbolRuntimeFailed(
-      "compilation_info", "unavailable (disabled, timed out, or allocation failed)",
-    )
+    let kind = @c.compilation_info_last_error_kind_u32()
+    let status = @c.compilation_info_last_status_u32()
+    if kind == 1U {
+      raise OptionalSymbolDisabled("compilation_info")
+    } else if kind == 2U {
+      // This should be covered by `native_has_symbol`, but keep it for completeness.
+      raise OptionalSymbolMissingSymbol(
+        "wgpuShaderModuleGetCompilationInfo",
+        native_diagnostic(),
+      )
+    } else if kind == 3U {
+      raise OptionalSymbolRuntimeFailed(
+        "compilation_info", "timed out while waiting for compilation info callback",
+      )
+    } else if kind == 4U {
+      raise OptionalSymbolRuntimeFailed(
+        "compilation_info", "allocation failed while preparing compilation info request",
+      )
+    } else if kind == 5U {
+      raise OptionalSymbolRuntimeFailed(
+        "compilation_info",
+        "invalid input (status_u32=" + status.to_string() + ")",
+      )
+    } else {
+      raise OptionalSymbolRuntimeFailed(
+        "compilation_info",
+        "unavailable (kind_u32=" +
+        kind.to_string() +
+        ", status_u32=" +
+        status.to_string() +
+        ")",
+      )
+    }
   }
   let status_u32 = @c.compilation_info_status_u32(info)
   let count_u32 = @c.compilation_info_message_count_u32(info)

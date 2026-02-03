@@ -255,6 +255,12 @@ pub extern "C" fn pipeline_async_last_status_u32() -> UInt = "mbt_wgpu_pipeline_
 pub extern "C" fn pipeline_async_last_error_kind_u32() -> UInt = "mbt_wgpu_pipeline_async_last_error_kind_u32"
 
 ///|
+pub extern "C" fn compilation_info_last_status_u32() -> UInt = "mbt_wgpu_compilation_info_last_status_u32"
+
+///|
+pub extern "C" fn compilation_info_last_error_kind_u32() -> UInt = "mbt_wgpu_compilation_info_last_error_kind_u32"
+
+///|
 pub extern "C" fn shader_module_get_compilation_info_sync_status_u32(
   instance : Instance,
   shader_module : ShaderModule,

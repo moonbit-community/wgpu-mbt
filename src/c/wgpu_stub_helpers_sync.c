@@ -641,6 +641,23 @@ enum {
   MBT_WGPU_PIPELINE_ASYNC_ERR_INVALID_INPUT = 5u,
 };
 
+#if defined(_WIN32)
+__declspec(thread) static uint32_t g_mbt_wgpu_last_compilation_info_status_u32 = 0u;
+__declspec(thread) static uint32_t g_mbt_wgpu_last_compilation_info_error_kind_u32 = 0u;
+#else
+static _Thread_local uint32_t g_mbt_wgpu_last_compilation_info_status_u32 = 0u;
+static _Thread_local uint32_t g_mbt_wgpu_last_compilation_info_error_kind_u32 = 0u;
+#endif
+
+enum {
+  MBT_WGPU_COMPILATION_INFO_ERR_NONE = 0u,
+  MBT_WGPU_COMPILATION_INFO_ERR_DISABLED = 1u,
+  MBT_WGPU_COMPILATION_INFO_ERR_MISSING_SYMBOL = 2u,
+  MBT_WGPU_COMPILATION_INFO_ERR_TIMEOUT = 3u,
+  MBT_WGPU_COMPILATION_INFO_ERR_ALLOC_FAILED = 4u,
+  MBT_WGPU_COMPILATION_INFO_ERR_INVALID_INPUT = 5u,
+};
+
 uint32_t mbt_wgpu_instance_request_adapter_sync_last_status_u32(void) {
   return g_mbt_wgpu_last_request_adapter_status_u32;
 }
@@ -655,6 +672,14 @@ uint32_t mbt_wgpu_pipeline_async_last_status_u32(void) {
 
 uint32_t mbt_wgpu_pipeline_async_last_error_kind_u32(void) {
   return g_mbt_wgpu_last_pipeline_async_error_kind_u32;
+}
+
+uint32_t mbt_wgpu_compilation_info_last_status_u32(void) {
+  return g_mbt_wgpu_last_compilation_info_status_u32;
+}
+
+uint32_t mbt_wgpu_compilation_info_last_error_kind_u32(void) {
+  return g_mbt_wgpu_last_compilation_info_error_kind_u32;
 }
 
 WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
@@ -984,8 +1009,18 @@ WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_async_sync_ptr_strict(
 
 void *mbt_wgpu_shader_module_get_compilation_info_sync_new(
     WGPUInstance instance, WGPUShaderModule shader_module) {
+  g_mbt_wgpu_last_compilation_info_status_u32 = 0u;
+  g_mbt_wgpu_last_compilation_info_error_kind_u32 = MBT_WGPU_COMPILATION_INFO_ERR_NONE;
+
   // Keep safe behavior by default: opt-in only.
-  if (!instance || !shader_module || !mbt_wgpu_compilation_info_enabled()) {
+  if (!instance || !shader_module) {
+    g_mbt_wgpu_last_compilation_info_error_kind_u32 =
+        MBT_WGPU_COMPILATION_INFO_ERR_INVALID_INPUT;
+    return NULL;
+  }
+  if (!mbt_wgpu_compilation_info_enabled()) {
+    g_mbt_wgpu_last_compilation_info_error_kind_u32 =
+        MBT_WGPU_COMPILATION_INFO_ERR_DISABLED;
     return NULL;
   }
 
@@ -997,12 +1032,16 @@ void *mbt_wgpu_shader_module_get_compilation_info_sync_new(
     checked = true;
   }
   if (!pfn) {
+    g_mbt_wgpu_last_compilation_info_error_kind_u32 =
+        MBT_WGPU_COMPILATION_INFO_ERR_MISSING_SYMBOL;
     return NULL;
   }
 
   mbt_compilation_info_t *out =
       (mbt_compilation_info_t *)calloc(1, sizeof(mbt_compilation_info_t));
   if (!out) {
+    g_mbt_wgpu_last_compilation_info_error_kind_u32 =
+        MBT_WGPU_COMPILATION_INFO_ERR_ALLOC_FAILED;
     return NULL;
   }
 
@@ -1021,6 +1060,8 @@ void *mbt_wgpu_shader_module_get_compilation_info_sync_new(
     mbt_wgpu_sleep_1ms();
   }
   if (out->status_u32 == 0) {
+    g_mbt_wgpu_last_compilation_info_error_kind_u32 =
+        MBT_WGPU_COMPILATION_INFO_ERR_TIMEOUT;
     // Timed out; treat as unavailable.
     for (uint32_t i = 0; i < out->message_count_u32; i++) {
       free(out->messages[i].text);
@@ -1030,6 +1071,7 @@ void *mbt_wgpu_shader_module_get_compilation_info_sync_new(
     return NULL;
   }
 
+  g_mbt_wgpu_last_compilation_info_status_u32 = out->status_u32;
   return out;
 }
 
