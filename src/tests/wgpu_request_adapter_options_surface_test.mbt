@@ -14,26 +14,28 @@
 
 ///|
 test "wgpu request_adapter options: compatibleSurface (Metal-only best-effort)" {
-  let instance = @wgpu.Instance::create()
-  let metal_count = instance.enumerate_adapters_count_metal()
-  if metal_count == 0UL {
-    // Other platforms: this test is a no-op.
+  skip_unless_macos(() => {
+    let instance = @wgpu.Instance::create()
+    let metal_count = instance.enumerate_adapters_count_metal()
+    if metal_count == 0UL {
+      // Best-effort: some setups may not expose a Metal adapter.
+      inspect(true, content="true")
+      instance.release()
+      return
+    }
+    let surface = instance.create_surface_metal_layer()
+    let adapter = instance.request_adapter_sync_options_surface_u32(
+      surface,
+      feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
+      backend_type_u32=@wgpu.BACKEND_TYPE_METAL,
+    )
+    let device = adapter.request_device_sync(instance)
+    let queue = device.queue()
     inspect(true, content="true")
+    queue.release()
+    device.release()
+    adapter.release()
+    surface.release()
     instance.release()
-    return
-  }
-  let surface = instance.create_surface_metal_layer()
-  let adapter = instance.request_adapter_sync_options_surface_u32(
-    surface,
-    feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
-    backend_type_u32=@wgpu.BACKEND_TYPE_METAL,
-  )
-  let device = adapter.request_device_sync(instance)
-  let queue = device.queue()
-  inspect(true, content="true")
-  queue.release()
-  device.release()
-  adapter.release()
-  surface.release()
-  instance.release()
+  })
 }

@@ -129,5 +129,33 @@ pub fn vertices_pos2_bytes() -> Bytes {
 
 ///|
 pub fn skip_on_wgpu_error(run : () -> Unit raise Error) -> Unit raise Error {
-  run()
+  run() catch {
+    @wgpu.WgpuNativeUnavailable(_) =>
+      inspect("skipped (wgpu error)", content="skipped (wgpu error)")
+    @wgpu.WgpuNativeMissingSymbol(_, _) =>
+      inspect("skipped (wgpu error)", content="skipped (wgpu error)")
+    @wgpu.WgpuRequestAdapterFailed(_) =>
+      inspect("skipped (wgpu error)", content="skipped (wgpu error)")
+    @wgpu.WgpuRequestDeviceFailed(_) =>
+      inspect("skipped (wgpu error)", content="skipped (wgpu error)")
+    e => raise e
+  }
+}
+
+///|
+pub fn skip_unless_macos(run : () -> Unit raise Error) -> Unit raise Error {
+  if !@wgpu.platform_is_macos() {
+    inspect("skipped (macOS only)", content="skipped (macOS only)")
+  } else {
+    skip_on_wgpu_error(run)
+  }
+}
+
+///|
+pub fn skip_unless_linux(run : () -> Unit raise Error) -> Unit raise Error {
+  if !@wgpu.platform_is_linux() {
+    inspect("skipped (Linux only)", content="skipped (Linux only)")
+  } else {
+    skip_on_wgpu_error(run)
+  }
 }

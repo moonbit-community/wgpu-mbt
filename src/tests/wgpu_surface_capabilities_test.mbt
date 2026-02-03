@@ -14,14 +14,16 @@
 
 ///|
 test "wgpu surface capabilities (counts)" {
-  let instance = @wgpu.Instance::create()
-  let adapter = instance.request_adapter_sync()
-  let surface = instance.create_surface_metal_layer()
-  let fmt_count = surface.capabilities_formats_count_u64(adapter)
-  let pm_count = surface.capabilities_present_modes_count_u64(adapter)
-  let am_count = surface.capabilities_alpha_modes_count_u64(adapter)
-  inspect(fmt_count > 0UL && pm_count > 0UL && am_count > 0UL, content="true")
-  surface.release()
-  adapter.release()
-  instance.release()
+  skip_unless_macos(() => {
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let surface = instance.create_surface_metal_layer()
+    let fmt_count = surface.capabilities_formats_count_u64(adapter)
+    let pm_count = surface.capabilities_present_modes_count_u64(adapter)
+    let am_count = surface.capabilities_alpha_modes_count_u64(adapter)
+    inspect(fmt_count > 0UL && pm_count > 0UL && am_count > 0UL, content="true")
+    surface.release()
+    adapter.release()
+    instance.release()
+  })
 }

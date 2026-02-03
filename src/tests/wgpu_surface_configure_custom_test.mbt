@@ -14,31 +14,35 @@
 
 ///|
 test "wgpu surface configure_u32" {
-  let instance = @wgpu.Instance::create()
-  let adapter = instance.request_adapter_sync()
-  let device = adapter.request_device_sync(instance)
-  let surface = instance.create_surface_metal_layer()
-  let fmt0 = surface.capabilities_format_u32_at(adapter, 0UL)
-  let pm0 = surface.capabilities_present_mode_u32_at(adapter, 0UL)
-  let am0 = surface.capabilities_alpha_mode_u32_at(adapter, 0UL)
-  let usage = @wgpu.TextureUsage::from_u64(
-    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
-    @wgpu.TEXTURE_USAGE_COPY_SRC |
-    @wgpu.TEXTURE_USAGE_COPY_DST,
-  )
-  let ok = surface.configure_u32(adapter, device, 1U, 1U, usage, fmt0, pm0, am0)
-  inspect(ok, content="true")
-  let st = surface.get_current_texture()
-  let status = st.status()
-  inspect(
-    status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
-    status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL,
-    content="true",
-  )
-  st.release()
-  surface.unconfigure()
-  surface.release()
-  device.release()
-  adapter.release()
-  instance.release()
+  skip_unless_macos(() => {
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let device = adapter.request_device_sync(instance)
+    let surface = instance.create_surface_metal_layer()
+    let fmt0 = surface.capabilities_format_u32_at(adapter, 0UL)
+    let pm0 = surface.capabilities_present_mode_u32_at(adapter, 0UL)
+    let am0 = surface.capabilities_alpha_mode_u32_at(adapter, 0UL)
+    let usage = @wgpu.TextureUsage::from_u64(
+      @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
+      @wgpu.TEXTURE_USAGE_COPY_SRC |
+      @wgpu.TEXTURE_USAGE_COPY_DST,
+    )
+    let ok = surface.configure_u32(
+      adapter, device, 1U, 1U, usage, fmt0, pm0, am0,
+    )
+    inspect(ok, content="true")
+    let st = surface.get_current_texture()
+    let status = st.status()
+    inspect(
+      status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
+      status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL,
+      content="true",
+    )
+    st.release()
+    surface.unconfigure()
+    surface.release()
+    device.release()
+    adapter.release()
+    instance.release()
+  })
 }

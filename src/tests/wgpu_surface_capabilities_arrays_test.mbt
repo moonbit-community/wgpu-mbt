@@ -14,32 +14,34 @@
 
 ///|
 test "wgpu surface capabilities (arrays)" {
-  let instance = @wgpu.Instance::create()
-  let adapter = instance.request_adapter_sync()
-  let surface = instance.create_surface_metal_layer()
-  let fmt_count = surface.capabilities_formats_count_u64(adapter)
-  let pm_count = surface.capabilities_present_modes_count_u64(adapter)
-  let am_count = surface.capabilities_alpha_modes_count_u64(adapter)
-  let fmts = surface.capabilities_formats(adapter)
-  let pms = surface.capabilities_present_modes(adapter)
-  let ams = surface.capabilities_alpha_modes(adapter)
-  let ok = fmts.length().to_uint64() == fmt_count &&
-    pms.length().to_uint64() == pm_count &&
-    ams.length().to_uint64() == am_count &&
-    fmt_count > 0UL &&
-    pm_count > 0UL &&
-    am_count > 0UL &&
-    fmts[0] == surface.capabilities_format_u32_at(adapter, 0UL) &&
-    pms[0] == surface.capabilities_present_mode_u32_at(adapter, 0UL) &&
-    ams[0] == surface.capabilities_alpha_mode_u32_at(adapter, 0UL) &&
-    fmts[fmts.length() - 1] ==
-    surface.capabilities_format_u32_at(adapter, fmt_count - 1UL) &&
-    pms[pms.length() - 1] ==
-    surface.capabilities_present_mode_u32_at(adapter, pm_count - 1UL) &&
-    ams[ams.length() - 1] ==
-    surface.capabilities_alpha_mode_u32_at(adapter, am_count - 1UL)
-  inspect(ok, content="true")
-  surface.release()
-  adapter.release()
-  instance.release()
+  skip_unless_macos(() => {
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let surface = instance.create_surface_metal_layer()
+    let fmt_count = surface.capabilities_formats_count_u64(adapter)
+    let pm_count = surface.capabilities_present_modes_count_u64(adapter)
+    let am_count = surface.capabilities_alpha_modes_count_u64(adapter)
+    let fmts = surface.capabilities_formats(adapter)
+    let pms = surface.capabilities_present_modes(adapter)
+    let ams = surface.capabilities_alpha_modes(adapter)
+    let ok = fmts.length().to_uint64() == fmt_count &&
+      pms.length().to_uint64() == pm_count &&
+      ams.length().to_uint64() == am_count &&
+      fmt_count > 0UL &&
+      pm_count > 0UL &&
+      am_count > 0UL &&
+      fmts[0] == surface.capabilities_format_u32_at(adapter, 0UL) &&
+      pms[0] == surface.capabilities_present_mode_u32_at(adapter, 0UL) &&
+      ams[0] == surface.capabilities_alpha_mode_u32_at(adapter, 0UL) &&
+      fmts[fmts.length() - 1] ==
+      surface.capabilities_format_u32_at(adapter, fmt_count - 1UL) &&
+      pms[pms.length() - 1] ==
+      surface.capabilities_present_mode_u32_at(adapter, pm_count - 1UL) &&
+      ams[ams.length() - 1] ==
+      surface.capabilities_alpha_mode_u32_at(adapter, am_count - 1UL)
+    inspect(ok, content="true")
+    surface.release()
+    adapter.release()
+    instance.release()
+  })
 }

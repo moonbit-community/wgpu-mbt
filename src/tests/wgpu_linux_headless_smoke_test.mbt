@@ -14,39 +14,41 @@
 
 ///|
 test "linux/vulkan: headless smoke (compute pipeline)" {
-  let instance = @wgpu.Instance::create()
+  skip_unless_linux(() => {
+    let instance = @wgpu.Instance::create()
 
-  // Prefer Vulkan explicitly, so this test also works on multi-backend hosts.
-  let adapter = instance.request_adapter_sync_options_u32(
-    feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
-    power_preference_u32=@wgpu.POWER_PREFERENCE_UNDEFINED,
-    backend_type_u32=@wgpu.BACKEND_TYPE_VULKAN,
-  )
+    // Prefer Vulkan explicitly, so this test also works on multi-backend hosts.
+    let adapter = instance.request_adapter_sync_options_u32(
+      feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
+      power_preference_u32=@wgpu.POWER_PREFERENCE_UNDEFINED,
+      backend_type_u32=@wgpu.BACKEND_TYPE_VULKAN,
+    )
 
-  // Minimal headless compute.
-  let device = adapter.request_device_sync(instance)
-  let queue = device.queue()
-  let wgsl : String =
-    #|@compute @workgroup_size(1)
-    #|fn main() {}
-    #|
-  let sm = device.create_shader_module_wgsl(wgsl)
-  let pipeline = device.create_compute_pipeline(sm)
-  let encoder = device.create_command_encoder()
-  let pass = encoder.begin_compute_pass()
-  pass.set_pipeline(pipeline)
-  pass.dispatch_workgroups(1U, 1U, 1U)
-  pass.end()
-  pass.release()
-  let cmd = encoder.finish()
-  queue.submit_one(cmd)
-  cmd.release()
-  encoder.release()
-  pipeline.release()
-  sm.release()
-  queue.release()
-  device.release()
-  adapter.release()
-  instance.release()
-  inspect("ok", content="ok")
+    // Minimal headless compute.
+    let device = adapter.request_device_sync(instance)
+    let queue = device.queue()
+    let wgsl : String =
+      #|@compute @workgroup_size(1)
+      #|fn main() {}
+      #|
+    let sm = device.create_shader_module_wgsl(wgsl)
+    let pipeline = device.create_compute_pipeline(sm)
+    let encoder = device.create_command_encoder()
+    let pass = encoder.begin_compute_pass()
+    pass.set_pipeline(pipeline)
+    pass.dispatch_workgroups(1U, 1U, 1U)
+    pass.end()
+    pass.release()
+    let cmd = encoder.finish()
+    queue.submit_one(cmd)
+    cmd.release()
+    encoder.release()
+    pipeline.release()
+    sm.release()
+    queue.release()
+    device.release()
+    adapter.release()
+    instance.release()
+    inspect("ok", content="ok")
+  })
 }

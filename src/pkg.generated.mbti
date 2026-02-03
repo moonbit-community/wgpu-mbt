@@ -1230,7 +1230,12 @@ pub fn SurfacePresentError::message(Self) -> String
 type SurfaceTextureError
 pub fn SurfaceTextureError::message(Self) -> String
 
-type WgpuError
+pub suberror WgpuError {
+  WgpuNativeUnavailable(String)
+  WgpuNativeMissingSymbol(String, String)
+  WgpuRequestAdapterFailed(UInt)
+  WgpuRequestDeviceFailed(UInt)
+}
 pub fn WgpuError::message(Self) -> String
 
 // Types and methods

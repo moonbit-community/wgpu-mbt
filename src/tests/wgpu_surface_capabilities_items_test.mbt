@@ -14,25 +14,30 @@
 
 ///|
 test "wgpu surface capabilities (items)" {
-  let instance = @wgpu.Instance::create()
-  let adapter = instance.request_adapter_sync()
-  let surface = instance.create_surface_metal_layer()
-  let fmt_count = surface.capabilities_formats_count_u64(adapter)
-  let pm_count = surface.capabilities_present_modes_count_u64(adapter)
-  let am_count = surface.capabilities_alpha_modes_count_u64(adapter)
-  let fmt0 = surface.capabilities_format_u32_at(adapter, 0UL)
-  let pm0 = surface.capabilities_present_mode_u32_at(adapter, 0UL)
-  let am0 = surface.capabilities_alpha_mode_u32_at(adapter, 0UL)
-  let fmt_last = surface.capabilities_format_u32_at(adapter, fmt_count - 1UL)
-  let pm_last = surface.capabilities_present_mode_u32_at(
-    adapter,
-    pm_count - 1UL,
-  )
-  let am_last = surface.capabilities_alpha_mode_u32_at(adapter, am_count - 1UL)
-  inspect(fmt0.raw != 0U && fmt_last.raw != 0U, content="true")
-  inspect(pm0 != 0U && pm_last != 0U, content="true")
-  inspect(am0 != 0U && am_last != 0U, content="true")
-  surface.release()
-  adapter.release()
-  instance.release()
+  skip_unless_macos(() => {
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let surface = instance.create_surface_metal_layer()
+    let fmt_count = surface.capabilities_formats_count_u64(adapter)
+    let pm_count = surface.capabilities_present_modes_count_u64(adapter)
+    let am_count = surface.capabilities_alpha_modes_count_u64(adapter)
+    let fmt0 = surface.capabilities_format_u32_at(adapter, 0UL)
+    let pm0 = surface.capabilities_present_mode_u32_at(adapter, 0UL)
+    let am0 = surface.capabilities_alpha_mode_u32_at(adapter, 0UL)
+    let fmt_last = surface.capabilities_format_u32_at(adapter, fmt_count - 1UL)
+    let pm_last = surface.capabilities_present_mode_u32_at(
+      adapter,
+      pm_count - 1UL,
+    )
+    let am_last = surface.capabilities_alpha_mode_u32_at(
+      adapter,
+      am_count - 1UL,
+    )
+    inspect(fmt0.raw != 0U && fmt_last.raw != 0U, content="true")
+    inspect(pm0 != 0U && pm_last != 0U, content="true")
+    inspect(am0 != 0U && am_last != 0U, content="true")
+    surface.release()
+    adapter.release()
+    instance.release()
+  })
 }

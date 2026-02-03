@@ -18,6 +18,10 @@ pub fn rgba_bytes(UInt, UInt, UInt, UInt) -> Bytes
 
 pub fn skip_on_wgpu_error(() -> Unit raise) -> Unit raise
 
+pub fn skip_unless_linux(() -> Unit raise) -> Unit raise
+
+pub fn skip_unless_macos(() -> Unit raise) -> Unit raise
+
 pub fn ss(UInt64) -> @wgpu_mbt.ShaderStage
 
 pub fn u32le_at(Bytes, Int) -> UInt

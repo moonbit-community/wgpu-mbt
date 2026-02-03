@@ -14,75 +14,81 @@
 
 ///|
 test "wgpu surface present (CAMetalLayer)" {
-  let instance = @wgpu.Instance::create()
-  let adapter = instance.request_adapter_sync()
-  let device = adapter.request_device_sync(instance)
-  let queue = device.queue()
-  let surface = instance.create_surface_metal_layer()
-  let usage = @wgpu.TextureUsage::from_u64(
-    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
-  )
-  let format = surface.configure_default(adapter, device, 1U, 1U, usage)
-  inspect(format.raw == 0U, content="false")
-  let st = surface.get_current_texture()
-  let status = st.status()
-  inspect(
-    status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
-    status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL,
-    content="true",
-  )
-  inspect(st.is_success(), content="true")
-  let tex = st.take_texture()
-  st.release()
-  let view = tex.create_view()
-  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
-  let wgsl : String =
-    #|struct VSOut { @builtin(position) pos: vec4<f32> };
-    #|
-    #|@vertex
-    #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
-    #|  var positions = array<vec2<f32>, 3>(
-    #|    vec2<f32>(-1.0, -1.0),
-    #|    vec2<f32>( 3.0, -1.0),
-    #|    vec2<f32>(-1.0,  3.0),
-    #|  );
-    #|  var out: VSOut;
-    #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
-    #|  return out;
-    #|}
-    #|
-    #|@fragment
-    #|fn fs_main() -> @location(0) vec4<f32> {
-    #|  return vec4<f32>(0.0, 1.0, 0.0, 1.0);
-    #|}
-    #|
-  let sm = device.create_shader_module_wgsl(wgsl)
-  let pipeline = device.create_render_pipeline_color_format(sm, format)
-  let encoder = device.create_command_encoder()
-  let pass = encoder.begin_render_pass_color_clear(view, 0.0, 0.0, 0.0, 1.0)
-  pass.set_pipeline(pipeline)
-  pass.draw(3U, 1U, 0U, 0U)
-  pass.end()
-  pass.release()
-  encoder.copy_texture_to_buffer_rgba8(tex, readback_buf, 1U, 1U)
-  let cmd = encoder.finish()
-  queue.submit_one(cmd)
-  let present_status = surface.present()
-  inspect(present_status == 0U || present_status == 1U, content="true")
-  let out = readback_buf.readback(instance, 0UL, 256UL)
-  let rgba = read_rgba8_from_copy_out(out, 0U, 0U)
-  inspect(rgba, content="[0, 255, 0, 255]")
-  cmd.release()
-  encoder.release()
-  pipeline.release()
-  sm.release()
-  readback_buf.release()
-  view.release()
-  tex.release()
-  surface.release()
-  queue.release()
-  device.release()
-  adapter.release()
-  instance.release()
+  skip_unless_macos(() => {
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let device = adapter.request_device_sync(instance)
+    let queue = device.queue()
+    let surface = instance.create_surface_metal_layer()
+    let usage = @wgpu.TextureUsage::from_u64(
+      @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+    )
+    let format = surface.configure_default(adapter, device, 1U, 1U, usage)
+    inspect(format.raw == 0U, content="false")
+    let st = surface.get_current_texture()
+    let status = st.status()
+    inspect(
+      status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
+      status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL,
+      content="true",
+    )
+    inspect(st.is_success(), content="true")
+    let tex = st.take_texture()
+    st.release()
+    let view = tex.create_view()
+    let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ |
+      @wgpu.BUFFER_USAGE_COPY_DST
+    let readback_buf = device.create_buffer(
+      size=256UL,
+      usage=bu(readback_usage),
+    )
+    let wgsl : String =
+      #|struct VSOut { @builtin(position) pos: vec4<f32> };
+      #|
+      #|@vertex
+      #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+      #|  var positions = array<vec2<f32>, 3>(
+      #|    vec2<f32>(-1.0, -1.0),
+      #|    vec2<f32>( 3.0, -1.0),
+      #|    vec2<f32>(-1.0,  3.0),
+      #|  );
+      #|  var out: VSOut;
+      #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
+      #|  return out;
+      #|}
+      #|
+      #|@fragment
+      #|fn fs_main() -> @location(0) vec4<f32> {
+      #|  return vec4<f32>(0.0, 1.0, 0.0, 1.0);
+      #|}
+      #|
+    let sm = device.create_shader_module_wgsl(wgsl)
+    let pipeline = device.create_render_pipeline_color_format(sm, format)
+    let encoder = device.create_command_encoder()
+    let pass = encoder.begin_render_pass_color_clear(view, 0.0, 0.0, 0.0, 1.0)
+    pass.set_pipeline(pipeline)
+    pass.draw(3U, 1U, 0U, 0U)
+    pass.end()
+    pass.release()
+    encoder.copy_texture_to_buffer_rgba8(tex, readback_buf, 1U, 1U)
+    let cmd = encoder.finish()
+    queue.submit_one(cmd)
+    let present_status = surface.present()
+    inspect(present_status == 0U || present_status == 1U, content="true")
+    let out = readback_buf.readback(instance, 0UL, 256UL)
+    let rgba = read_rgba8_from_copy_out(out, 0U, 0U)
+    inspect(rgba, content="[0, 255, 0, 255]")
+    cmd.release()
+    encoder.release()
+    pipeline.release()
+    sm.release()
+    readback_buf.release()
+    view.release()
+    tex.release()
+    surface.release()
+    queue.release()
+    device.release()
+    adapter.release()
+    instance.release()
+  })
 }

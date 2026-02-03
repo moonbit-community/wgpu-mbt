@@ -349,7 +349,7 @@ suberror RenderPipelineDescError {
 }
 
 ///|
-suberror WgpuError {
+pub suberror WgpuError {
   WgpuNativeUnavailable(String)
   WgpuNativeMissingSymbol(String, String)
   WgpuRequestAdapterFailed(UInt)
