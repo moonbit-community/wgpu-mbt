@@ -364,6 +364,40 @@ pub fn WgpuError::message(self : WgpuError) -> String {
 }
 
 ///|
+suberror SurfaceTextureError {
+  SurfaceTextureError(UInt)
+}
+
+///|
+pub fn SurfaceTextureError::message(self : SurfaceTextureError) -> String {
+  let SurfaceTextureError(status) = self
+  let name = if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL {
+    "SuccessOptimal"
+  } else if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL {
+    "SuccessSuboptimal"
+  } else if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_TIMEOUT {
+    "Timeout"
+  } else if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_OUTDATED {
+    "Outdated"
+  } else if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_LOST {
+    "Lost"
+  } else if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_OUT_OF_MEMORY {
+    "OutOfMemory"
+  } else if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_DEVICE_LOST {
+    "DeviceLost"
+  } else if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_ERROR {
+    "Error"
+  } else {
+    "Unknown"
+  }
+  "wgpuSurfaceGetCurrentTexture failed (status=" +
+  name +
+  ", u32=" +
+  status.to_string() +
+  ")"
+}
+
+///|
 pub struct PipelineLayout {
   raw : @c.PipelineLayout
 }

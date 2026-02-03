@@ -149,7 +149,19 @@ declare pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture
 
 ///|
 #declaration_only
+declare pub fn Surface::get_current_texture_or_raise(
+  self : Surface,
+) -> SurfaceTexture raise SurfaceTextureError
+
+///|
+#declaration_only
 declare pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt
+
+///|
+#declaration_only
+declare pub fn SurfaceTexture::require_success(
+  self : SurfaceTexture,
+) -> Unit raise SurfaceTextureError
 
 ///|
 #declaration_only

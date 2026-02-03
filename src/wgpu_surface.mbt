@@ -111,8 +111,36 @@ pub fn Surface::get_current_texture(self : Surface) -> SurfaceTexture {
 }
 
 ///|
+pub fn Surface::get_current_texture_or_raise(
+  self : Surface,
+) -> SurfaceTexture raise SurfaceTextureError {
+  let st = self.get_current_texture()
+  let status = st.status()
+  if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
+    status == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL {
+    st
+  } else {
+    st.release()
+    raise SurfaceTextureError(status)
+  }
+}
+
+///|
 pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt {
   @c.surface_texture_status(self.raw)
+}
+
+///|
+pub fn SurfaceTexture::require_success(
+  self : SurfaceTexture,
+) -> Unit raise SurfaceTextureError {
+  let status = self.status()
+  if status == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
+    status == SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL {
+    ()
+  } else {
+    raise SurfaceTextureError(status)
+  }
 }
 
 ///|
