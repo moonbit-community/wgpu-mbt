@@ -1203,6 +1203,9 @@ pub fn set_pipeline_async_enabled(Bool) -> Unit
 pub fn set_uncaptured_error_stderr_enabled(Bool) -> Unit
 
 // Errors
+type BufferSyncError
+pub fn BufferSyncError::message(Self) -> String
+
 type RenderPipelineDescError
 pub fn RenderPipelineDescError::message(Self) -> String
 
@@ -1313,9 +1316,12 @@ pub fn Buffer::get_map_state(Self) -> @c.WGPUBufferMapState
 pub fn Buffer::get_size(Self) -> UInt64
 pub fn Buffer::get_usage(Self) -> UInt64
 pub fn Buffer::map_read_sync(Self, Instance, UInt64, UInt64) -> Bytes
+pub fn Buffer::map_read_sync_or_raise(Self, Instance, UInt64, UInt64) -> Bytes raise BufferSyncError
 pub fn Buffer::map_write_sync(Self, Instance, UInt64, Bytes) -> Unit
+pub fn Buffer::map_write_sync_or_raise(Self, Instance, UInt64, Bytes) -> Unit raise BufferSyncError
 pub fn Buffer::raw_handle(Self) -> @c.WGPUBuffer
 pub fn Buffer::readback(Self, Instance, UInt64, UInt64) -> Bytes
+pub fn Buffer::readback_or_raise(Self, Instance, UInt64, UInt64) -> Bytes raise BufferSyncError
 pub fn Buffer::release(Self) -> Unit
 pub fn Buffer::release_raw(Self) -> Unit
 pub fn Buffer::set_label(Self, String) -> Unit

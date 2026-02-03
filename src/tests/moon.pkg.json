@@ -264,6 +264,9 @@
     "wgpu_buffer_usage_test.mbt": [
       "native"
     ],
+    "wgpu_buffer_sync_or_raise_test.mbt": [
+      "native"
+    ],
     "wgpu_queue_write_texture_ptr_test.mbt": [
       "native"
     ],

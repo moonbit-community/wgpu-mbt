@@ -113,6 +113,7 @@ jobs:
           moon test --target native src/tests/wgpu_linux_headless_smoke_test.mbt
           moon test --target native src/tests/wgpu_smoke_test.mbt
           moon test --target native src/tests/wgpu_queue_write_buffer_test.mbt
+          moon test --target native src/tests/wgpu_buffer_sync_or_raise_test.mbt
           moon test --target native src/tests/wgpu_render_offscreen_test.mbt
           moon test --target native src/tests/wgpu_spec_buffer_map_test.mbt
 

@@ -72,6 +72,46 @@ pub fn Buffer::readback(
 }
 
 ///|
+pub fn Buffer::readback_or_raise(
+  self : Buffer,
+  instance : Instance,
+  offset : UInt64,
+  size : UInt64,
+) -> Bytes raise BufferSyncError {
+  let buf_size = self.size()
+  if offset + size > buf_size {
+    raise BufferSyncOutOfBounds(offset, size, buf_size)
+  }
+
+  // WebGPU requires map offset/size alignment; do a small aligned read and
+  // then slice out the requested range.
+  let aligned_offset = offset - offset % 8UL
+  let prefix = offset - aligned_offset
+  let need = prefix + size
+  // `offset` must be aligned to 8 bytes; `size` must be aligned to 4 bytes.
+  let rem = need % 4UL
+  let aligned_size = if rem == 0UL { need } else { need + (4UL - rem) }
+  if aligned_offset + aligned_size > buf_size {
+    raise BufferSyncAlignedOutOfBounds(
+      offset, size, aligned_offset, aligned_size, buf_size,
+    )
+  }
+  let out = Bytes::new(aligned_size.to_int())
+  let ok = @c.buffer_readback_sync(
+    instance.raw,
+    self.raw,
+    aligned_offset,
+    aligned_size,
+    out,
+    aligned_size,
+  )
+  if !ok {
+    raise BufferSyncFailed("buffer_readback_sync")
+  }
+  out[:][prefix.to_int():(prefix + size).to_int()].to_bytes()
+}
+
+///|
 pub fn Buffer::map_read_sync(
   self : Buffer,
   instance : Instance,
@@ -103,6 +143,41 @@ pub fn Buffer::map_read_sync(
   } else {
     out[:][prefix.to_int():(prefix + size).to_int()].to_bytes()
   }
+}
+
+///|
+pub fn Buffer::map_read_sync_or_raise(
+  self : Buffer,
+  instance : Instance,
+  offset : UInt64,
+  size : UInt64,
+) -> Bytes raise BufferSyncError {
+  let buf_size = self.size()
+  if offset + size > buf_size {
+    raise BufferSyncOutOfBounds(offset, size, buf_size)
+  }
+  let aligned_offset = offset - offset % 8UL
+  let prefix = offset - aligned_offset
+  let need = prefix + size
+  let aligned_size = align_up(need, 4UL)
+  if aligned_offset + aligned_size > buf_size {
+    raise BufferSyncAlignedOutOfBounds(
+      offset, size, aligned_offset, aligned_size, buf_size,
+    )
+  }
+  let out = Bytes::new(aligned_size.to_int())
+  let ok = @c.buffer_map_read_sync(
+    instance.raw,
+    self.raw,
+    aligned_offset,
+    aligned_size,
+    out,
+    aligned_size,
+  )
+  if !ok {
+    raise BufferSyncFailed("buffer_map_read_sync")
+  }
+  out[:][prefix.to_int():(prefix + size).to_int()].to_bytes()
 }
 
 ///|
@@ -150,6 +225,61 @@ pub fn Buffer::map_write_sync(
     aligned_size,
   )
 
+}
+
+///|
+pub fn Buffer::map_write_sync_or_raise(
+  self : Buffer,
+  instance : Instance,
+  offset : UInt64,
+  data : Bytes,
+) -> Unit raise BufferSyncError {
+  let buf_size = self.size()
+  let data_len = data.length().to_uint64()
+  if offset + data_len > buf_size {
+    raise BufferSyncOutOfBounds(offset, data_len, buf_size)
+  }
+  let aligned_offset = offset - offset % 8UL
+  let prefix = offset - aligned_offset
+  let need = prefix + data_len
+  let aligned_size = align_up(need, 4UL)
+  if aligned_offset + aligned_size > buf_size {
+    raise BufferSyncAlignedOutOfBounds(
+      offset, data_len, aligned_offset, aligned_size, buf_size,
+    )
+  }
+  if aligned_offset == offset && aligned_size == data_len {
+    let ok = @c.buffer_map_write_sync(
+      instance.raw,
+      self.raw,
+      offset,
+      data,
+      data_len,
+    )
+    if !ok {
+      raise BufferSyncFailed("buffer_map_write_sync")
+    }
+    return
+  }
+  let len = data.length()
+  let prefix_i = prefix.to_int()
+  let padded = Bytes::makei(aligned_size.to_int(), i => if i >= prefix_i &&
+    i < prefix_i + len {
+    data[i - prefix_i]
+  } else {
+    0
+  })
+  let ok = @c.buffer_map_write_sync(
+    instance.raw,
+    self.raw,
+    aligned_offset,
+    padded,
+    aligned_size,
+  )
+  if !ok {
+    raise BufferSyncFailed("buffer_map_write_sync")
+  }
+  ()
 }
 
 ///|

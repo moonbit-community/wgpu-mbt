@@ -1891,6 +1891,15 @@ declare pub fn Buffer::readback(
 
 ///|
 #declaration_only
+declare pub fn Buffer::readback_or_raise(
+  self : Buffer,
+  instance : Instance,
+  offset : UInt64,
+  size : UInt64,
+) -> Bytes raise BufferSyncError
+
+///|
+#declaration_only
 declare pub fn Buffer::map_read_sync(
   self : Buffer,
   instance : Instance,
@@ -1900,12 +1909,30 @@ declare pub fn Buffer::map_read_sync(
 
 ///|
 #declaration_only
+declare pub fn Buffer::map_read_sync_or_raise(
+  self : Buffer,
+  instance : Instance,
+  offset : UInt64,
+  size : UInt64,
+) -> Bytes raise BufferSyncError
+
+///|
+#declaration_only
 declare pub fn Buffer::map_write_sync(
   self : Buffer,
   instance : Instance,
   offset : UInt64,
   data : Bytes,
 ) -> Unit
+
+///|
+#declaration_only
+declare pub fn Buffer::map_write_sync_or_raise(
+  self : Buffer,
+  instance : Instance,
+  offset : UInt64,
+  data : Bytes,
+) -> Unit raise BufferSyncError
 
 ///|
 #declaration_only

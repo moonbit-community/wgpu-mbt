@@ -398,6 +398,46 @@ pub fn SurfaceTextureError::message(self : SurfaceTextureError) -> String {
 }
 
 ///|
+suberror BufferSyncError {
+  BufferSyncOutOfBounds(UInt64, UInt64, UInt64)
+  BufferSyncAlignedOutOfBounds(UInt64, UInt64, UInt64, UInt64, UInt64)
+  BufferSyncFailed(String)
+}
+
+///|
+pub fn BufferSyncError::message(self : BufferSyncError) -> String {
+  match self {
+    BufferSyncOutOfBounds(offset, size, buf_size) =>
+      "buffer range is out of bounds (offset=" +
+      offset.to_string() +
+      ", size=" +
+      size.to_string() +
+      ", buffer_size=" +
+      buf_size.to_string() +
+      ")"
+    BufferSyncAlignedOutOfBounds(
+      offset,
+      size,
+      aligned_offset,
+      aligned_size,
+      buf_size
+    ) =>
+      "buffer range is within bounds, but required aligned mapping exceeds buffer size (offset=" +
+      offset.to_string() +
+      ", size=" +
+      size.to_string() +
+      ", aligned_offset=" +
+      aligned_offset.to_string() +
+      ", aligned_size=" +
+      aligned_size.to_string() +
+      ", buffer_size=" +
+      buf_size.to_string() +
+      ")"
+    BufferSyncFailed(op) => "buffer sync operation failed: " + op
+  }
+}
+
+///|
 pub struct PipelineLayout {
   raw : @c.PipelineLayout
 }
