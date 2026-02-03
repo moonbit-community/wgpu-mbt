@@ -129,16 +129,5 @@ pub fn vertices_pos2_bytes() -> Bytes {
 
 ///|
 pub fn skip_on_wgpu_error(run : () -> Unit raise Error) -> Unit raise Error {
-  run() catch {
-    e => {
-      let msg = e.to_string()
-      if msg.contains("WgpuError"[:]) {
-        println(msg)
-        inspect("skipped (wgpu error)", content="skipped (wgpu error)")
-      } else {
-        println(msg)
-        raise e
-      }
-    }
-  }
+  run()
 }

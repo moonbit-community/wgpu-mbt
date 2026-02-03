@@ -11,7 +11,7 @@ env:
 
 jobs:
   linux:
-    name: Linux (build-only)
+    name: Linux
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,7 +35,7 @@ jobs:
 
       - name: Compile tests (no runtime deps)
         shell: bash
-        run: moon test --build-only --target native
+        run: moon test --target native
 
       - name: Package contents sanity (exclude artifacts)
         shell: bash
@@ -110,15 +110,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          moon test --target native src/tests/wgpu_linux_headless_smoke_test.mbt
-          moon test --target native src/tests/wgpu_smoke_test.mbt
-          moon test --target native src/tests/wgpu_queue_write_buffer_test.mbt
-          moon test --target native src/tests/wgpu_buffer_sync_or_raise_test.mbt
-          moon test --target native src/tests/wgpu_render_offscreen_test.mbt
-          moon test --target native src/tests/wgpu_spec_buffer_map_test.mbt
+          moon test --target native
 
   macos:
-    name: macOS (build-only)
+    name: macOS
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -142,10 +137,10 @@ jobs:
 
       - name: Compile tests (no runtime deps)
         shell: bash
-        run: moon test --build-only --target native
+        run: moon test --target native
 
   windows:
-    name: Windows (build-only)
+    name: Windows
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -192,4 +187,4 @@ jobs:
 
       - name: Compile tests (no runtime deps)
         shell: pwsh
-        run: moon test --build-only --target native
+        run: moon test --target native
