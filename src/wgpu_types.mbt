@@ -73,6 +73,12 @@ pub struct SurfaceTexture {
 }
 
 ///|
+pub struct SurfaceFrame {
+  surface : Surface
+  texture : Texture
+}
+
+///|
 /// Type-safe wrappers for frequently-used numeric enums/flags.
 ///
 /// v0.4.0+ gradually moves public APIs away from raw `UInt`/`UInt64` for these.
@@ -360,6 +366,53 @@ pub fn WgpuError::message(self : WgpuError) -> String {
       "wgpuInstanceRequestAdapter failed (status=" + status.to_string() + ")"
     WgpuRequestDeviceFailed(status) =>
       "wgpuAdapterRequestDevice failed (status=" + status.to_string() + ")"
+  }
+}
+
+///|
+suberror OptionalSymbolError {
+  OptionalSymbolNativeUnavailable(String)
+  OptionalSymbolMissingSymbol(String, String)
+  OptionalSymbolDisabled(String)
+  OptionalSymbolRuntimeFailed(String, String)
+}
+
+///|
+pub const OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE : UInt = 1U
+
+///|
+pub const OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL : UInt = 2U
+
+///|
+pub const OPTIONAL_SYMBOL_ERROR_KIND_DISABLED : UInt = 3U
+
+///|
+pub const OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED : UInt = 4U
+
+///|
+pub fn OptionalSymbolError::kind_u32(self : OptionalSymbolError) -> UInt {
+  match self {
+    OptionalSymbolNativeUnavailable(_) =>
+      OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE
+    OptionalSymbolMissingSymbol(_, _) =>
+      OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL
+    OptionalSymbolDisabled(_) => OPTIONAL_SYMBOL_ERROR_KIND_DISABLED
+    OptionalSymbolRuntimeFailed(_, _) =>
+      OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED
+  }
+}
+
+///|
+pub fn OptionalSymbolError::message(self : OptionalSymbolError) -> String {
+  match self {
+    OptionalSymbolNativeUnavailable(diag) =>
+      "native library is unavailable\n" + diag
+    OptionalSymbolMissingSymbol(sym, diag) =>
+      "native library is missing symbol: " + sym + "\n" + diag
+    OptionalSymbolDisabled(feature) =>
+      "optional feature is disabled: " + feature
+    OptionalSymbolRuntimeFailed(feature, detail) =>
+      "optional feature runtime failed: " + feature + "\n" + detail
   }
 }
 

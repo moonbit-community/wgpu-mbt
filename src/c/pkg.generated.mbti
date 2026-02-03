@@ -340,6 +340,8 @@ pub fn device_create_compute_pipeline(WGPUDevice, WGPUShaderModule) -> WGPUCompu
 
 pub fn device_create_compute_pipeline_async_sync_ptr(WGPUInstance, WGPUDevice, WGPUComputePipelineDescriptorPtr) -> WGPUComputePipeline
 
+pub fn device_create_compute_pipeline_async_sync_ptr_strict(WGPUInstance, WGPUDevice, WGPUComputePipelineDescriptorPtr) -> WGPUComputePipeline
+
 pub fn device_create_compute_pipeline_with_layout(WGPUDevice, WGPUPipelineLayout, WGPUShaderModule) -> WGPUComputePipeline
 
 pub fn device_create_pipeline_layout_1(WGPUDevice, WGPUBindGroupLayout) -> WGPUPipelineLayout
@@ -359,6 +361,8 @@ pub fn device_create_query_set_timestamp(WGPUDevice, UInt) -> WGPUQuerySet
 pub fn device_create_render_bundle_encoder_rgba8(WGPUDevice) -> WGPURenderBundleEncoder
 
 pub fn device_create_render_pipeline_async_sync_ptr(WGPUInstance, WGPUDevice, WGPURenderPipelineDescriptorPtr) -> WGPURenderPipeline
+
+pub fn device_create_render_pipeline_async_sync_ptr_strict(WGPUInstance, WGPUDevice, WGPURenderPipelineDescriptorPtr) -> WGPURenderPipeline
 
 pub fn device_create_render_pipeline_color_format(WGPUDevice, WGPUShaderModule, UInt) -> WGPURenderPipeline
 
@@ -555,6 +559,10 @@ pub fn null_uint_ptr() -> UIntPtr
 pub fn opaque_ptr_is_null(OpaquePtr) -> Bool
 
 pub fn optional_sym_present_utf8(Bytes, UInt64) -> Bool
+
+pub fn pipeline_async_last_error_kind_u32() -> UInt
+
+pub fn pipeline_async_last_status_u32() -> UInt
 
 pub fn pipeline_layout_descriptor_1_new(WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr
 

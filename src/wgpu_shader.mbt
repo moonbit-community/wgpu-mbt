@@ -61,6 +61,59 @@ pub fn ShaderModule::get_compilation_info_sync(
 }
 
 ///|
+pub fn ShaderModule::get_compilation_info_sync_or_raise(
+  self : ShaderModule,
+  instance : Instance,
+) -> CompilationInfo raise OptionalSymbolError {
+  if !native_available() {
+    raise OptionalSymbolNativeUnavailable(native_diagnostic())
+  }
+  if !native_has_symbol("wgpuShaderModuleGetCompilationInfo") {
+    raise OptionalSymbolMissingSymbol(
+      "wgpuShaderModuleGetCompilationInfo",
+      native_diagnostic(),
+    )
+  }
+  let info = @c.shader_module_get_compilation_info_sync_new(
+    instance.raw,
+    self.raw,
+  )
+  if @c.opaque_ptr_is_null(info) {
+    raise OptionalSymbolRuntimeFailed(
+      "compilation_info", "unavailable (disabled, timed out, or allocation failed)",
+    )
+  }
+  let status_u32 = @c.compilation_info_status_u32(info)
+  let count_u32 = @c.compilation_info_message_count_u32(info)
+  let messages : Ref[Array[CompilationMessage]] = @ref.new([])
+  for i = 0; i < count_u32.reinterpret_as_int(); i = i + 1 {
+    let idx = i.reinterpret_as_uint()
+    let text_len = @c.compilation_info_message_utf8_len(info, idx)
+    let text = if text_len == 0UL {
+      ""
+    } else {
+      let out = Bytes::new(text_len.to_int())
+      let ok = @c.compilation_info_message_utf8(info, idx, out, text_len)
+      if ok {
+        @utf8.decode_lossy(out[:], ignore_bom=true)
+      } else {
+        ""
+      }
+    }
+    messages.val.push(CompilationMessage::{
+      type_u32: @c.compilation_info_message_type_u32(info, idx),
+      line_num_u64: @c.compilation_info_message_line_num_u64(info, idx),
+      line_pos_u64: @c.compilation_info_message_line_pos_u64(info, idx),
+      offset_u64: @c.compilation_info_message_offset_u64(info, idx),
+      length_u64: @c.compilation_info_message_length_u64(info, idx),
+      text,
+    })
+  }
+  @c.compilation_info_free(info)
+  CompilationInfo::{ status_u32, messages: messages.val }
+}
+
+///|
 pub fn ShaderModule::release(self : ShaderModule) -> Unit {
   @c.shader_module_release(self.raw)
 }

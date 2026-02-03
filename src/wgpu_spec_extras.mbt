@@ -184,6 +184,12 @@ declare pub fn Surface::get_current_texture_or_raise(
 
 ///|
 #declaration_only
+declare pub fn Surface::get_current_frame_or_raise(
+  self : Surface,
+) -> SurfaceFrame raise SurfaceTextureError
+
+///|
+#declaration_only
 declare pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt
 
 ///|
@@ -195,6 +201,26 @@ declare pub fn SurfaceTexture::require_success(
 ///|
 #declaration_only
 declare pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture
+
+///|
+#declaration_only
+declare pub fn SurfaceTexture::take_texture_or_raise(
+  self : SurfaceTexture,
+) -> Texture raise SurfaceTextureError
+
+///|
+#declaration_only
+declare pub fn SurfaceFrame::present(self : SurfaceFrame) -> UInt
+
+///|
+#declaration_only
+declare pub fn SurfaceFrame::present_or_raise(
+  self : SurfaceFrame,
+) -> Unit raise SurfacePresentError
+
+///|
+#declaration_only
+declare pub fn SurfaceFrame::release(self : SurfaceFrame) -> Unit
 
 ///|
 #declaration_only

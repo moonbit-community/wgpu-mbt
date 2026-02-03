@@ -443,6 +443,59 @@ pub fn Device::create_compute_pipeline_async_sync_ptr(
 }
 
 ///|
+pub fn Device::create_compute_pipeline_async_sync_ptr_or_raise(
+  self : Device,
+  instance : Instance,
+  descriptor : @c.WGPUComputePipelineDescriptorPtr,
+) -> ComputePipeline raise OptionalSymbolError {
+  if !native_available() {
+    raise OptionalSymbolNativeUnavailable(native_diagnostic())
+  }
+  if !native_has_symbol("wgpuDeviceCreateComputePipelineAsync") {
+    raise OptionalSymbolMissingSymbol(
+      "wgpuDeviceCreateComputePipelineAsync",
+      native_diagnostic(),
+    )
+  }
+  let raw = @c.device_create_compute_pipeline_async_sync_ptr_strict(
+    instance.raw,
+    self.raw,
+    descriptor,
+  )
+  let kind = @c.pipeline_async_last_error_kind_u32()
+  let status = @c.pipeline_async_last_status_u32()
+  if kind != 0U {
+    if kind == 1U {
+      raise OptionalSymbolDisabled("pipeline_async")
+    } else if kind == 2U {
+      raise OptionalSymbolMissingSymbol(
+        "wgpuDeviceCreateComputePipelineAsync",
+        native_diagnostic(),
+      )
+    } else if kind == 3U {
+      raise OptionalSymbolRuntimeFailed(
+        "pipeline_async", "timed out while waiting for async pipeline callback",
+      )
+    } else if kind == 4U {
+      raise OptionalSymbolRuntimeFailed(
+        "pipeline_async",
+        "async pipeline creation failed (status_u32=" + status.to_string() + ")",
+      )
+    } else {
+      raise OptionalSymbolRuntimeFailed(
+        "pipeline_async",
+        "invalid input or unknown failure (kind_u32=" +
+        kind.to_string() +
+        ", status_u32=" +
+        status.to_string() +
+        ")",
+      )
+    }
+  }
+  ComputePipeline::{ raw, }
+}
+
+///|
 pub fn Device::create_pipeline_layout(
   self : Device,
   descriptor : @c.WGPUPipelineLayoutDescriptorPtr,
@@ -493,6 +546,59 @@ pub fn Device::create_render_pipeline_async_sync_ptr(
       descriptor,
     ),
   }
+}
+
+///|
+pub fn Device::create_render_pipeline_async_sync_ptr_or_raise(
+  self : Device,
+  instance : Instance,
+  descriptor : @c.WGPURenderPipelineDescriptorPtr,
+) -> RenderPipeline raise OptionalSymbolError {
+  if !native_available() {
+    raise OptionalSymbolNativeUnavailable(native_diagnostic())
+  }
+  if !native_has_symbol("wgpuDeviceCreateRenderPipelineAsync") {
+    raise OptionalSymbolMissingSymbol(
+      "wgpuDeviceCreateRenderPipelineAsync",
+      native_diagnostic(),
+    )
+  }
+  let raw = @c.device_create_render_pipeline_async_sync_ptr_strict(
+    instance.raw,
+    self.raw,
+    descriptor,
+  )
+  let kind = @c.pipeline_async_last_error_kind_u32()
+  let status = @c.pipeline_async_last_status_u32()
+  if kind != 0U {
+    if kind == 1U {
+      raise OptionalSymbolDisabled("pipeline_async")
+    } else if kind == 2U {
+      raise OptionalSymbolMissingSymbol(
+        "wgpuDeviceCreateRenderPipelineAsync",
+        native_diagnostic(),
+      )
+    } else if kind == 3U {
+      raise OptionalSymbolRuntimeFailed(
+        "pipeline_async", "timed out while waiting for async pipeline callback",
+      )
+    } else if kind == 4U {
+      raise OptionalSymbolRuntimeFailed(
+        "pipeline_async",
+        "async pipeline creation failed (status_u32=" + status.to_string() + ")",
+      )
+    } else {
+      raise OptionalSymbolRuntimeFailed(
+        "pipeline_async",
+        "invalid input or unknown failure (kind_u32=" +
+        kind.to_string() +
+        ", status_u32=" +
+        status.to_string() +
+        ")",
+      )
+    }
+  }
+  RenderPipeline::{ raw, }
 }
 
 ///|

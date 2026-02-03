@@ -542,6 +542,14 @@ pub const OPTIONAL_BOOL_TRUE : UInt = 0x00000001
 
 pub const OPTIONAL_BOOL_UNDEFINED : UInt = 0x00000002
 
+pub const OPTIONAL_SYMBOL_ERROR_KIND_DISABLED : UInt = 3
+
+pub const OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL : UInt = 2
+
+pub const OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE : UInt = 1
+
+pub const OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED : UInt = 4
+
 pub const PIPELINE_STATISTIC_NAME_CLIPPER_INVOCATIONS : UInt = 0x00000001
 
 pub const PIPELINE_STATISTIC_NAME_CLIPPER_PRIMITIVES_OUT : UInt = 0x00000002
@@ -1206,6 +1214,10 @@ pub fn set_uncaptured_error_stderr_enabled(Bool) -> Unit
 type BufferSyncError
 pub fn BufferSyncError::message(Self) -> String
 
+type OptionalSymbolError
+pub fn OptionalSymbolError::kind_u32(Self) -> UInt
+pub fn OptionalSymbolError::message(Self) -> String
+
 type RenderPipelineDescError
 pub fn RenderPipelineDescError::message(Self) -> String
 
@@ -1492,6 +1504,7 @@ pub fn Device::create_command_encoder_ptr(Self, @c.WGPUCommandEncoderDescriptorP
 pub fn Device::create_command_encoder_raw(Self, @c.WGPUCommandEncoderDescriptorPtr) -> CommandEncoder
 pub fn Device::create_compute_pipeline(Self, ShaderModule) -> ComputePipeline
 pub fn Device::create_compute_pipeline_async_sync_ptr(Self, Instance, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline
+pub fn Device::create_compute_pipeline_async_sync_ptr_or_raise(Self, Instance, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline raise OptionalSymbolError
 pub fn Device::create_compute_pipeline_ptr(Self, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline
 pub fn Device::create_compute_pipeline_raw(Self, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline
 pub fn Device::create_compute_pipeline_with_layout(Self, PipelineLayout, ShaderModule) -> ComputePipeline
@@ -1510,6 +1523,7 @@ pub fn Device::create_render_bundle_encoder_ptr(Self, @c.WGPURenderBundleEncoder
 pub fn Device::create_render_bundle_encoder_rgba8(Self) -> RenderBundleEncoder
 pub fn Device::create_render_pipeline(Self, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
 pub fn Device::create_render_pipeline_async_sync_ptr(Self, Instance, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline
+pub fn Device::create_render_pipeline_async_sync_ptr_or_raise(Self, Instance, @c.WGPURenderPipelineDescriptorPtr) -> RenderPipeline raise OptionalSymbolError
 pub fn Device::create_render_pipeline_color_format(Self, ShaderModule, TextureFormat) -> RenderPipeline
 pub fn Device::create_render_pipeline_color_format_alpha_blend(Self, ShaderModule, TextureFormat) -> RenderPipeline
 pub fn Device::create_render_pipeline_color_format_entries(Self, ShaderModule, TextureFormat, vs_entry? : String, fs_entry? : String, alpha_blend? : Bool, depth? : Bool, color_write_mask? : UInt64) -> RenderPipeline
@@ -1825,6 +1839,7 @@ pub struct ShaderModule {
 pub fn ShaderModule::add_ref(Self) -> Self
 pub fn ShaderModule::add_ref_raw(Self) -> Unit
 pub fn ShaderModule::get_compilation_info_sync(Self, Instance) -> CompilationInfo
+pub fn ShaderModule::get_compilation_info_sync_or_raise(Self, Instance) -> CompilationInfo raise OptionalSymbolError
 pub fn ShaderModule::get_compilation_info_sync_status_u32(Self, Instance) -> UInt
 pub fn ShaderModule::is_null(Self) -> Bool
 pub fn ShaderModule::raw_handle(Self) -> @c.WGPUShaderModule
@@ -1863,6 +1878,7 @@ pub fn Surface::configure_u32_or_raise(Self, Adapter, Device, UInt, UInt, Textur
 pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat]) -> Bool
 pub fn Surface::configure_view_formats_u32_or_raise(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat]) -> Unit raise SurfaceConfigureError
 pub fn Surface::get_capabilities(Self, Adapter, @c.WGPUSurfaceCapabilitiesPtr) -> @c.WGPUStatus
+pub fn Surface::get_current_frame_or_raise(Self) -> SurfaceFrame raise SurfaceTextureError
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture
 pub fn Surface::get_current_texture_or_raise(Self) -> SurfaceTexture raise SurfaceTextureError
 pub fn Surface::get_current_texture_raw(Self, @c.WGPUSurfaceTexturePtr) -> Unit
@@ -1877,6 +1893,14 @@ pub fn Surface::set_label(Self, String) -> Unit
 pub fn Surface::unconfigure(Self) -> Unit
 pub fn Surface::unconfigure_raw(Self) -> Unit
 
+pub struct SurfaceFrame {
+  surface : Surface
+  texture : Texture
+}
+pub fn SurfaceFrame::present(Self) -> UInt
+pub fn SurfaceFrame::present_or_raise(Self) -> Unit raise SurfacePresentError
+pub fn SurfaceFrame::release(Self) -> Unit
+
 pub struct SurfaceTexture {
   raw : @c.OpaquePtr
 }
@@ -1885,6 +1909,7 @@ pub fn SurfaceTexture::release(Self) -> Unit
 pub fn SurfaceTexture::require_success(Self) -> Unit raise SurfaceTextureError
 pub fn SurfaceTexture::status(Self) -> UInt
 pub fn SurfaceTexture::take_texture(Self) -> Texture
+pub fn SurfaceTexture::take_texture_or_raise(Self) -> Texture raise SurfaceTextureError
 
 pub struct Texture {
   raw : @c.WGPUTexture

@@ -184,6 +184,16 @@ pub fn Surface::get_current_texture_or_raise(
 }
 
 ///|
+pub fn Surface::get_current_frame_or_raise(
+  self : Surface,
+) -> SurfaceFrame raise SurfaceTextureError {
+  let st = self.get_current_texture_or_raise()
+  let tex = st.take_texture()
+  st.release()
+  SurfaceFrame::{ surface: self.add_ref(), texture: tex }
+}
+
+///|
 pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt {
   @c.surface_texture_status(self.raw)
 }
@@ -207,6 +217,14 @@ pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture {
 }
 
 ///|
+pub fn SurfaceTexture::take_texture_or_raise(
+  self : SurfaceTexture,
+) -> Texture raise SurfaceTextureError {
+  self.require_success()
+  self.take_texture()
+}
+
+///|
 pub fn Surface::present(self : Surface) -> UInt {
   @c.surface_present_u32(self.raw)
 }
@@ -220,6 +238,24 @@ pub fn Surface::present_or_raise(
     raise SurfacePresentError(status)
   }
   ()
+}
+
+///|
+pub fn SurfaceFrame::present(self : SurfaceFrame) -> UInt {
+  self.surface.present()
+}
+
+///|
+pub fn SurfaceFrame::present_or_raise(
+  self : SurfaceFrame,
+) -> Unit raise SurfacePresentError {
+  self.surface.present_or_raise()
+}
+
+///|
+pub fn SurfaceFrame::release(self : SurfaceFrame) -> Unit {
+  self.texture.release()
+  self.surface.release()
 }
 
 ///|

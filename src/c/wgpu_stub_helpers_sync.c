@@ -624,12 +624,37 @@ static _Thread_local uint32_t g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
 static _Thread_local uint32_t g_mbt_wgpu_last_request_device_status_u32 = 0u;
 #endif
 
+#if defined(_WIN32)
+__declspec(thread) static uint32_t g_mbt_wgpu_last_pipeline_async_status_u32 = 0u;
+__declspec(thread) static uint32_t g_mbt_wgpu_last_pipeline_async_error_kind_u32 = 0u;
+#else
+static _Thread_local uint32_t g_mbt_wgpu_last_pipeline_async_status_u32 = 0u;
+static _Thread_local uint32_t g_mbt_wgpu_last_pipeline_async_error_kind_u32 = 0u;
+#endif
+
+enum {
+  MBT_WGPU_PIPELINE_ASYNC_ERR_NONE = 0u,
+  MBT_WGPU_PIPELINE_ASYNC_ERR_DISABLED = 1u,
+  MBT_WGPU_PIPELINE_ASYNC_ERR_MISSING_SYMBOL = 2u,
+  MBT_WGPU_PIPELINE_ASYNC_ERR_TIMEOUT = 3u,
+  MBT_WGPU_PIPELINE_ASYNC_ERR_FAILED = 4u,
+  MBT_WGPU_PIPELINE_ASYNC_ERR_INVALID_INPUT = 5u,
+};
+
 uint32_t mbt_wgpu_instance_request_adapter_sync_last_status_u32(void) {
   return g_mbt_wgpu_last_request_adapter_status_u32;
 }
 
 uint32_t mbt_wgpu_adapter_request_device_sync_last_status_u32(void) {
   return g_mbt_wgpu_last_request_device_status_u32;
+}
+
+uint32_t mbt_wgpu_pipeline_async_last_status_u32(void) {
+  return g_mbt_wgpu_last_pipeline_async_status_u32;
+}
+
+uint32_t mbt_wgpu_pipeline_async_last_error_kind_u32(void) {
+  return g_mbt_wgpu_last_pipeline_async_error_kind_u32;
 }
 
 WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
@@ -803,6 +828,62 @@ WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline_async_sync_ptr(
   return wgpuDeviceCreateComputePipeline(device, descriptor);
 }
 
+WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline_async_sync_ptr_strict(
+    WGPUInstance instance, WGPUDevice device,
+    const WGPUComputePipelineDescriptor *descriptor) {
+  g_mbt_wgpu_last_pipeline_async_status_u32 = 0u;
+  g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_NONE;
+
+  if (!instance || !device || !descriptor) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_INVALID_INPUT;
+    return NULL;
+  }
+  if (!mbt_wgpu_pipeline_async_enabled()) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_DISABLED;
+    return NULL;
+  }
+
+  static bool checked = false;
+  static WGPUProcDeviceCreateComputePipelineAsync pfn = NULL;
+  if (!checked) {
+    pfn = (WGPUProcDeviceCreateComputePipelineAsync)mbt_wgpu_optional_sym(
+        "wgpuDeviceCreateComputePipelineAsync");
+    checked = true;
+  }
+  if (!pfn) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_MISSING_SYMBOL;
+    return NULL;
+  }
+
+  mbt_create_compute_pipeline_result_t out = {0};
+  WGPUCreateComputePipelineAsyncCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_create_compute_pipeline_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  (void)pfn(device, descriptor, info);
+  const int max_iters = 2000;
+  for (int i = 0; i < max_iters && out.status == 0; i++) {
+    (void)wgpuDevicePoll(device, false, NULL);
+    wgpuInstanceProcessEvents(instance);
+    mbt_wgpu_sleep_1ms();
+  }
+
+  if (out.status == 0) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_TIMEOUT;
+    return NULL;
+  }
+  g_mbt_wgpu_last_pipeline_async_status_u32 = (uint32_t)out.status;
+  if (out.status != WGPUCreatePipelineAsyncStatus_Success || !out.pipeline) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_FAILED;
+    return NULL;
+  }
+  return out.pipeline;
+}
+
 WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_async_sync_ptr(
     WGPUInstance instance, WGPUDevice device,
     const WGPURenderPipelineDescriptor *descriptor) {
@@ -843,6 +924,62 @@ WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_async_sync_ptr(
     return out.pipeline;
   }
   return wgpuDeviceCreateRenderPipeline(device, descriptor);
+}
+
+WGPURenderPipeline mbt_wgpu_device_create_render_pipeline_async_sync_ptr_strict(
+    WGPUInstance instance, WGPUDevice device,
+    const WGPURenderPipelineDescriptor *descriptor) {
+  g_mbt_wgpu_last_pipeline_async_status_u32 = 0u;
+  g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_NONE;
+
+  if (!instance || !device || !descriptor) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_INVALID_INPUT;
+    return NULL;
+  }
+  if (!mbt_wgpu_pipeline_async_enabled()) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_DISABLED;
+    return NULL;
+  }
+
+  static bool checked = false;
+  static WGPUProcDeviceCreateRenderPipelineAsync pfn = NULL;
+  if (!checked) {
+    pfn = (WGPUProcDeviceCreateRenderPipelineAsync)mbt_wgpu_optional_sym(
+        "wgpuDeviceCreateRenderPipelineAsync");
+    checked = true;
+  }
+  if (!pfn) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_MISSING_SYMBOL;
+    return NULL;
+  }
+
+  mbt_create_render_pipeline_result_t out = {0};
+  WGPUCreateRenderPipelineAsyncCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_create_render_pipeline_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  (void)pfn(device, descriptor, info);
+  const int max_iters = 2000;
+  for (int i = 0; i < max_iters && out.status == 0; i++) {
+    (void)wgpuDevicePoll(device, false, NULL);
+    wgpuInstanceProcessEvents(instance);
+    mbt_wgpu_sleep_1ms();
+  }
+
+  if (out.status == 0) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_TIMEOUT;
+    return NULL;
+  }
+  g_mbt_wgpu_last_pipeline_async_status_u32 = (uint32_t)out.status;
+  if (out.status != WGPUCreatePipelineAsyncStatus_Success || !out.pipeline) {
+    g_mbt_wgpu_last_pipeline_async_error_kind_u32 = MBT_WGPU_PIPELINE_ASYNC_ERR_FAILED;
+    return NULL;
+  }
+  return out.pipeline;
 }
 
 void *mbt_wgpu_shader_module_get_compilation_info_sync_new(

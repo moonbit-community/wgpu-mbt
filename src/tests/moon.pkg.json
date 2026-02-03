@@ -273,6 +273,9 @@
     "wgpu_native_diagnostic_test.mbt": [
       "native"
     ],
+    "wgpu_optional_symbol_or_raise_test.mbt": [
+      "native"
+    ],
     "wgpu_capi_symbols_test.mbt": [
       "native"
     ]

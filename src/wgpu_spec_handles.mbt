@@ -334,6 +334,14 @@ declare pub fn Device::create_compute_pipeline_async_sync_ptr(
 
 ///|
 #declaration_only
+declare pub fn Device::create_compute_pipeline_async_sync_ptr_or_raise(
+  self : Device,
+  instance : Instance,
+  descriptor : @c.WGPUComputePipelineDescriptorPtr,
+) -> ComputePipeline raise OptionalSymbolError
+
+///|
+#declaration_only
 declare pub fn Device::create_pipeline_layout(
   self : Device,
   descriptor : @c.WGPUPipelineLayoutDescriptorPtr,
@@ -367,6 +375,14 @@ declare pub fn Device::create_render_pipeline_async_sync_ptr(
   instance : Instance,
   descriptor : @c.WGPURenderPipelineDescriptorPtr,
 ) -> RenderPipeline
+
+///|
+#declaration_only
+declare pub fn Device::create_render_pipeline_async_sync_ptr_or_raise(
+  self : Device,
+  instance : Instance,
+  descriptor : @c.WGPURenderPipelineDescriptorPtr,
+) -> RenderPipeline raise OptionalSymbolError
 
 ///|
 #declaration_only
@@ -892,6 +908,13 @@ declare pub fn ShaderModule::get_compilation_info_sync_status_u32(
   self : ShaderModule,
   instance : Instance,
 ) -> UInt
+
+///|
+#declaration_only
+declare pub fn ShaderModule::get_compilation_info_sync_or_raise(
+  self : ShaderModule,
+  instance : Instance,
+) -> CompilationInfo raise OptionalSymbolError
 
 ///|
 #declaration_only

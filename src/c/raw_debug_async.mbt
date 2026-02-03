@@ -226,11 +226,33 @@ pub extern "C" fn device_create_compute_pipeline_async_sync_ptr(
 
 ///|
 #borrow(descriptor)
+pub extern "C" fn device_create_compute_pipeline_async_sync_ptr_strict(
+  instance : Instance,
+  device : Device,
+  descriptor : WGPUComputePipelineDescriptorPtr,
+) -> ComputePipeline = "mbt_wgpu_device_create_compute_pipeline_async_sync_ptr_strict"
+
+///|
+#borrow(descriptor)
 pub extern "C" fn device_create_render_pipeline_async_sync_ptr(
   instance : Instance,
   device : Device,
   descriptor : WGPURenderPipelineDescriptorPtr,
 ) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_async_sync_ptr"
+
+///|
+#borrow(descriptor)
+pub extern "C" fn device_create_render_pipeline_async_sync_ptr_strict(
+  instance : Instance,
+  device : Device,
+  descriptor : WGPURenderPipelineDescriptorPtr,
+) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_async_sync_ptr_strict"
+
+///|
+pub extern "C" fn pipeline_async_last_status_u32() -> UInt = "mbt_wgpu_pipeline_async_last_status_u32"
+
+///|
+pub extern "C" fn pipeline_async_last_error_kind_u32() -> UInt = "mbt_wgpu_pipeline_async_last_error_kind_u32"
 
 ///|
 pub extern "C" fn shader_module_get_compilation_info_sync_status_u32(
