@@ -522,9 +522,13 @@ pub fn native_diagnostic_utf8(Bytes, UInt64) -> Bool
 
 pub fn native_diagnostic_utf8_len() -> UInt64
 
+pub fn null_adapter() -> WGPUAdapter
+
 pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
 
 pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr
+
+pub fn null_device() -> WGPUDevice
 
 pub fn null_device_descriptor_ptr() -> WGPUDeviceDescriptorPtr
 

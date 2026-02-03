@@ -438,6 +438,58 @@ pub fn BufferSyncError::message(self : BufferSyncError) -> String {
 }
 
 ///|
+suberror SurfaceConfigureError {
+  SurfaceConfigureError(UInt, UInt, UInt64, UInt, UInt, UInt)
+}
+
+///|
+pub fn SurfaceConfigureError::message(self : SurfaceConfigureError) -> String {
+  let SurfaceConfigureError(
+    width,
+    height,
+    usage,
+    format,
+    present_mode,
+    alpha_mode
+  ) = self
+  "surface configuration failed (width=" +
+  width.to_string() +
+  ", height=" +
+  height.to_string() +
+  ", usage_u64=" +
+  usage.to_string() +
+  ", format_u32=" +
+  format.to_string() +
+  ", present_mode_u32=" +
+  present_mode.to_string() +
+  ", alpha_mode_u32=" +
+  alpha_mode.to_string() +
+  ")"
+}
+
+///|
+suberror SurfacePresentError {
+  SurfacePresentError(UInt)
+}
+
+///|
+pub fn SurfacePresentError::message(self : SurfacePresentError) -> String {
+  let SurfacePresentError(status) = self
+  let name = if status == STATUS_SUCCESS {
+    "Success"
+  } else if status == STATUS_ERROR {
+    "Error"
+  } else {
+    "Unknown"
+  }
+  "wgpuSurfacePresent failed (status=" +
+  name +
+  ", u32=" +
+  status.to_string() +
+  ")"
+}
+
+///|
 pub struct PipelineLayout {
   raw : @c.PipelineLayout
 }

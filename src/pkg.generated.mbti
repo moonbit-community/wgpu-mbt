@@ -1209,6 +1209,12 @@ pub fn BufferSyncError::message(Self) -> String
 type RenderPipelineDescError
 pub fn RenderPipelineDescError::message(Self) -> String
 
+type SurfaceConfigureError
+pub fn SurfaceConfigureError::message(Self) -> String
+
+type SurfacePresentError
+pub fn SurfacePresentError::message(Self) -> String
+
 type SurfaceTextureError
 pub fn SurfaceTextureError::message(Self) -> String
 
@@ -1853,13 +1859,16 @@ pub fn Surface::configure(Self, @c.WGPUSurfaceConfigurationPtr) -> Unit
 pub fn Surface::configure_best_effort(Self, Adapter, Device, UInt, UInt, TextureUsage, prefer_srgb? : Bool, vsync? : Bool) -> Bool
 pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, TextureUsage) -> TextureFormat
 pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt) -> Bool
+pub fn Surface::configure_u32_or_raise(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt) -> Unit raise SurfaceConfigureError
 pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat]) -> Bool
+pub fn Surface::configure_view_formats_u32_or_raise(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat]) -> Unit raise SurfaceConfigureError
 pub fn Surface::get_capabilities(Self, Adapter, @c.WGPUSurfaceCapabilitiesPtr) -> @c.WGPUStatus
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture
 pub fn Surface::get_current_texture_or_raise(Self) -> SurfaceTexture raise SurfaceTextureError
 pub fn Surface::get_current_texture_raw(Self, @c.WGPUSurfaceTexturePtr) -> Unit
 pub fn Surface::metal_layer_handle(Self) -> @c.OpaquePtr
 pub fn Surface::present(Self) -> UInt
+pub fn Surface::present_or_raise(Self) -> Unit raise SurfacePresentError
 pub fn Surface::present_raw(Self) -> @c.WGPUStatus
 pub fn Surface::raw_handle(Self) -> @c.WGPUSurface
 pub fn Surface::release(Self) -> Unit

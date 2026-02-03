@@ -33,6 +33,12 @@ pub extern "C" fn null_ptr() -> UnitPtr = "mbt_wgpu_null_ptr"
 pub extern "C" fn null_opaque_ptr() -> OpaquePtr = "mbt_wgpu_null_ptr"
 
 ///|
+pub extern "C" fn null_adapter() -> Adapter = "mbt_wgpu_null_adapter"
+
+///|
+pub extern "C" fn null_device() -> Device = "mbt_wgpu_null_device"
+
+///|
 #borrow(p)
 pub extern "C" fn opaque_ptr_is_null(p : OpaquePtr) -> Bool = "mbt_wgpu_opaque_ptr_is_null"
 

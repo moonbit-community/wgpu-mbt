@@ -66,6 +66,34 @@ pub fn Surface::configure_u32(
 }
 
 ///|
+pub fn Surface::configure_u32_or_raise(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+) -> Unit raise SurfaceConfigureError {
+  let ok = self.configure_u32(
+    adapter, device, width, height, usage, format, present_mode_u32, alpha_mode_u32,
+  )
+  if !ok {
+    raise SurfaceConfigureError(
+      width,
+      height,
+      usage.raw,
+      format.raw,
+      present_mode_u32,
+      alpha_mode_u32,
+    )
+  }
+  ()
+}
+
+///|
 pub fn Surface::configure_view_formats_u32(
   self : Surface,
   adapter : Adapter,
@@ -103,6 +131,36 @@ pub fn Surface::configure_view_formats_u32(
       fixed,
     )
   }
+}
+
+///|
+pub fn Surface::configure_view_formats_u32_or_raise(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+  view_formats : Array[TextureFormat],
+) -> Unit raise SurfaceConfigureError {
+  let ok = self.configure_view_formats_u32(
+    adapter, device, width, height, usage, format, present_mode_u32, alpha_mode_u32,
+    view_formats,
+  )
+  if !ok {
+    raise SurfaceConfigureError(
+      width,
+      height,
+      usage.raw,
+      format.raw,
+      present_mode_u32,
+      alpha_mode_u32,
+    )
+  }
+  ()
 }
 
 ///|
@@ -151,6 +209,17 @@ pub fn SurfaceTexture::take_texture(self : SurfaceTexture) -> Texture {
 ///|
 pub fn Surface::present(self : Surface) -> UInt {
   @c.surface_present_u32(self.raw)
+}
+
+///|
+pub fn Surface::present_or_raise(
+  self : Surface,
+) -> Unit raise SurfacePresentError {
+  let status = self.present()
+  if status != STATUS_SUCCESS {
+    raise SurfacePresentError(status)
+  }
+  ()
 }
 
 ///|

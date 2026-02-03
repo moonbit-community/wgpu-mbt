@@ -16,6 +16,8 @@
 
 void *mbt_wgpu_null_ptr(void) { return NULL; }
 void *mbt_wgpu_null_uint_ptr(void) { return NULL; }
+WGPUAdapter mbt_wgpu_null_adapter(void) { return NULL; }
+WGPUDevice mbt_wgpu_null_device(void) { return NULL; }
 
 bool mbt_wgpu_opaque_ptr_is_null(void *p) { return p == NULL; }
 

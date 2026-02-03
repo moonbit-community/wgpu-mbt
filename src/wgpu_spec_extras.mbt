@@ -130,6 +130,20 @@ declare pub fn Surface::configure_u32(
 
 ///|
 #declaration_only
+declare pub fn Surface::configure_u32_or_raise(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+) -> Unit raise SurfaceConfigureError
+
+///|
+#declaration_only
 declare pub fn Surface::configure_view_formats_u32(
   self : Surface,
   adapter : Adapter,
@@ -142,6 +156,21 @@ declare pub fn Surface::configure_view_formats_u32(
   alpha_mode_u32 : UInt,
   view_formats : Array[TextureFormat],
 ) -> Bool
+
+///|
+#declaration_only
+declare pub fn Surface::configure_view_formats_u32_or_raise(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  width : UInt,
+  height : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+  view_formats : Array[TextureFormat],
+) -> Unit raise SurfaceConfigureError
 
 ///|
 #declaration_only
@@ -202,6 +231,12 @@ declare pub fn GlobalReport::release(self : GlobalReport) -> Unit
 ///|
 #declaration_only
 declare pub fn Surface::present(self : Surface) -> UInt
+
+///|
+#declaration_only
+declare pub fn Surface::present_or_raise(
+  self : Surface,
+) -> Unit raise SurfacePresentError
 
 ///|
 #declaration_only
