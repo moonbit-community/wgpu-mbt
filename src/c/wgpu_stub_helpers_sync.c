@@ -382,6 +382,45 @@ typedef struct {
   size_t message_len;
 } mbt_request_adapter_result_t;
 
+static bool mbt_wgpu_symbol_present(const char *name) {
+  return mbt_wgpu_optional_sym(name) != NULL;
+}
+
+static WGPUAdapter mbt_wgpu_enumerate_first_adapter(WGPUInstance instance,
+                                                    WGPUInstanceBackend backends) {
+  if (!instance) {
+    return NULL;
+  }
+  if (!mbt_wgpu_symbol_present("wgpuInstanceEnumerateAdapters")) {
+    return NULL;
+  }
+  WGPUInstanceEnumerateAdapterOptions opts = {
+      .nextInChain = NULL,
+      .backends = backends,
+  };
+  size_t count = wgpuInstanceEnumerateAdapters(instance, &opts, NULL);
+  if (count == 0) {
+    return NULL;
+  }
+  WGPUAdapter *adapters = (WGPUAdapter *)calloc(count, sizeof(WGPUAdapter));
+  if (!adapters) {
+    return NULL;
+  }
+  size_t out_count = wgpuInstanceEnumerateAdapters(instance, &opts, adapters);
+  if (out_count == 0) {
+    free(adapters);
+    return NULL;
+  }
+  WGPUAdapter first = adapters[0];
+  for (size_t i = 1; i < out_count; i++) {
+    if (adapters[i]) {
+      wgpuAdapterRelease(adapters[i]);
+    }
+  }
+  free(adapters);
+  return first;
+}
+
 static bool mbt_wgpu_env_flag_enabled(const char *name) {
   const char *v = getenv(name);
   if (!v) {
@@ -805,7 +844,38 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
   if (out.message_len != 0u) {
     memcpy(g_mbt_wgpu_last_request_adapter_message, out.message, out.message_len);
   }
-  if (out.status != WGPURequestAdapterStatus_Success) {
+  // Some backends may report "Success" but still return a null adapter (JS-style
+  // "no adapter available"). Try to pick the first enumerated adapter if the
+  // extra API is available.
+  if (out.status == WGPURequestAdapterStatus_Success && out.adapter == NULL) {
+    WGPUInstanceBackend backends = WGPUInstanceBackend_Primary;
+    if (options) {
+      switch (options->backendType) {
+      case WGPUBackendType_Vulkan:
+        backends = WGPUInstanceBackend_Vulkan;
+        break;
+      case WGPUBackendType_D3D12:
+        backends = WGPUInstanceBackend_DX12;
+        break;
+      case WGPUBackendType_D3D11:
+        backends = WGPUInstanceBackend_DX11;
+        break;
+      case WGPUBackendType_Metal:
+        backends = WGPUInstanceBackend_Metal;
+        break;
+      case WGPUBackendType_OpenGL:
+      case WGPUBackendType_OpenGLES:
+        backends = WGPUInstanceBackend_GL;
+        break;
+      default:
+        backends = WGPUInstanceBackend_Primary;
+        break;
+      }
+    }
+    out.adapter = mbt_wgpu_enumerate_first_adapter(instance, backends);
+  }
+
+  if (out.status != WGPURequestAdapterStatus_Success || out.adapter == NULL) {
     return NULL;
   }
   return out.adapter;
