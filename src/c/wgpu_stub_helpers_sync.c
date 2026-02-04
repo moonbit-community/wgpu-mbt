@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdatomic.h>
 
 // Implemented in wgpu_stub_extras.c.
 void mbt_wgpu_set_log_callback_stderr_enabled(bool enabled);
@@ -414,6 +415,7 @@ void mbt_wgpu_query_set_descriptor_free(WGPUQuerySetDescriptor *desc) { free(des
 // to drive async adapter/device requests synchronously.
 
 typedef struct {
+  _Atomic uint32_t done_u32;
   WGPURequestAdapterStatus status;
   WGPUAdapter adapter;
   // Best-effort diagnostics. message.data is not guaranteed to be NUL-terminated.
@@ -506,9 +508,14 @@ static void mbt_request_adapter_cb(WGPURequestAdapterStatus status,
               (int)out->message_len, out->message);
     }
   }
+
+  // Publish the result to the waiting thread. Writes above happen-before
+  // the acquire-load in the waiter.
+  atomic_store_explicit(&out->done_u32, 1u, memory_order_release);
 }
 
 typedef struct {
+  _Atomic uint32_t done_u32;
   WGPURequestDeviceStatus status;
   WGPUDevice device;
   // Best-effort diagnostics. message.data is not guaranteed to be NUL-terminated.
@@ -646,6 +653,10 @@ static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice dev
               (int)out->message_len, out->message);
     }
   }
+
+  // Publish the result to the waiting thread. Writes above happen-before
+  // the acquire-load in the waiter.
+  atomic_store_explicit(&out->done_u32, 1u, memory_order_release);
 }
 
 typedef struct {
@@ -917,6 +928,7 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
   g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
   g_mbt_wgpu_last_request_adapter_message_len_u64 = 0u;
   mbt_request_adapter_result_t out = {0};
+  atomic_store_explicit(&out.done_u32, 0u, memory_order_relaxed);
   WGPURequestAdapterCallbackInfo info = {
       .nextInChain = NULL,
       .mode = WGPUCallbackMode_AllowProcessEvents,
@@ -925,7 +937,7 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
       .userdata2 = NULL,
   };
   (void)wgpuInstanceRequestAdapter(instance, options, info);
-  while (out.status == 0) {
+  while (atomic_load_explicit(&out.done_u32, memory_order_acquire) == 0u) {
     wgpuInstanceProcessEvents(instance);
   }
 
@@ -994,6 +1006,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_ptr(
   g_mbt_wgpu_last_request_device_status_u32 = 0u;
   g_mbt_wgpu_last_request_device_message_len_u64 = 0u;
   mbt_request_device_result_t out = {0};
+  atomic_store_explicit(&out.done_u32, 0u, memory_order_relaxed);
   WGPURequestDeviceCallbackInfo info = {
       .nextInChain = NULL,
       .mode = WGPUCallbackMode_AllowProcessEvents,
@@ -1056,7 +1069,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_ptr(
   }
 
   (void)wgpuAdapterRequestDevice(adapter, &desc, info);
-  while (out.status == 0) {
+  while (atomic_load_explicit(&out.done_u32, memory_order_acquire) == 0u) {
     wgpuInstanceProcessEvents(instance);
   }
 

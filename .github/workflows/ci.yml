@@ -26,33 +26,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libvulkan1 mesa-vulkan-drivers vulkan-tools clang libclang-dev pkg-config
 
-      - name: Install Vulkan SDK (SwiftShader)
-        uses: jakoch/install-vulkan-sdk-action@v1
-        with:
-          vulkan_version: latest
-          install_runtime: true
-          install_tools: true
-          install_swiftshader: true
-
-      - name: Configure Vulkan ICD (SwiftShader preferred)
+      - name: Configure Vulkan ICD (lavapipe)
         shell: bash
         run: |
           set -euo pipefail
           echo "Available Vulkan ICDs:"
           ls -la /usr/share/vulkan/icd.d || true
 
-          # Prefer SwiftShader when installed; some CI runners' lavapipe builds are
-          # not WebGPU-capable enough for wgpu.
           icd=""
-          swift_icd="$(find "$HOME" -maxdepth 6 -type f -name 'vk_swiftshader_icd.json' 2>/dev/null | head -n 1 || true)"
-          if [ -n "$swift_icd" ]; then
-            icd="$swift_icd"
-          fi
           for cand in /usr/share/vulkan/icd.d/lvp_icd.x86_64.json /usr/share/vulkan/icd.d/lvp_icd.json; do
             if [ -f "$cand" ]; then
-              if [ -z "$icd" ]; then
-                icd="$cand"
-              fi
+              icd="$cand"
               break
             fi
           done
@@ -175,7 +159,7 @@ jobs:
           moon test --target native --test-failure-json
 
   windows:
-    name: Windows Vulkan (full)
+    name: Windows DX12 (full)
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -187,35 +171,6 @@ jobs:
           $ErrorActionPreference = "Stop"
           choco install -y llvm
           "LIBCLANG_PATH=C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-
-      - name: Install Vulkan SDK (SwiftShader)
-        uses: jakoch/install-vulkan-sdk-action@v1
-        with:
-          vulkan_version: latest
-          install_runtime: true
-          install_tools: true
-          install_swiftshader: true
-
-      - name: Configure Vulkan ICD (SwiftShader)
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-          $icd = $null
-          $cands = @()
-          if ($env:VULKAN_SDK) {
-            $cands += Get-ChildItem -Path $env:VULKAN_SDK -Recurse -Filter "vk_swiftshader_icd.json" -ErrorAction SilentlyContinue
-          }
-          $cands += Get-ChildItem -Path "C:\\SwiftShader" -Recurse -Filter "vk_swiftshader_icd.json" -ErrorAction SilentlyContinue
-          $cands += Get-ChildItem -Path $env:RUNNER_TEMP -Recurse -Filter "vk_swiftshader_icd.json" -ErrorAction SilentlyContinue
-          if ($cands.Count -gt 0) {
-            $icd = $cands[0].FullName
-          }
-          if (-not $icd) {
-            Write-Host "SwiftShader ICD not found; Vulkan loader will use default search path."
-          } else {
-            Write-Host "Using ICD: $icd"
-            "VK_ICD_FILENAMES=$icd" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-          }
 
       - name: Install MoonBit
         shell: pwsh
@@ -256,7 +211,7 @@ jobs:
         shell: pwsh
         run: moon check
 
-      - name: Build wgpu-native (Vulkan)
+      - name: Build wgpu-native (DX12)
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
@@ -265,7 +220,7 @@ jobs:
           git fetch --depth 1 origin $env:WGPU_NATIVE_REV
           git checkout $env:WGPU_NATIVE_REV
           git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features vulkan,wgsl,spirv
+          cargo build --release --no-default-features --features dx12,wgsl,spirv
           "MBT_WGPU_NATIVE_LIB=$env:RUNNER_TEMP\wgpu-native\target\release\wgpu_native.dll" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Probe wgpu smoke (diagnostic)
