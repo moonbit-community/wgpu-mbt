@@ -14,7 +14,8 @@
 
 void *mbt_wgpu_optional_sym(const char *name) { return mbt_wgpu_native_sym_optional(name); }
 
-bool mbt_wgpu_optional_sym_present_utf8(const uint8_t *name, uint64_t name_len) {
+int32_t mbt_wgpu_optional_sym_present_utf8(const uint8_t *name,
+                                          uint64_t name_len) {
   if (!name || name_len == 0u) {
     return false;
   }

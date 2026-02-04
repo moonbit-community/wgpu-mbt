@@ -74,8 +74,8 @@ static void mbt_wgpu_log_stderr_cb(WGPULogLevel level, WGPUStringView message, v
           message.data ? message.data : "");
 }
 
-void mbt_wgpu_set_log_callback_stderr_enabled(bool enabled) {
-  if (enabled) {
+void mbt_wgpu_set_log_callback_stderr_enabled(int32_t enabled) {
+  if (enabled != 0) {
     wgpuSetLogCallback(mbt_wgpu_log_stderr_cb, NULL);
   } else {
     wgpuSetLogCallback(NULL, NULL);
@@ -98,8 +98,8 @@ static bool mbt_wgpu_debug_labels_enabled(void) {
   return g_mbt_wgpu_debug_labels_enabled;
 }
 
-void mbt_wgpu_set_debug_labels_enabled(bool enabled) {
-  g_mbt_wgpu_debug_labels_enabled = enabled;
+void mbt_wgpu_set_debug_labels_enabled(int32_t enabled) {
+  g_mbt_wgpu_debug_labels_enabled = enabled != 0;
   g_mbt_wgpu_debug_labels_inited = true;
 }
 
@@ -394,7 +394,7 @@ uint64_t mbt_wgpu_adapter_info_vendor_utf8_len(WGPUAdapter adapter) {
   return out;
 }
 
-bool mbt_wgpu_adapter_info_vendor_utf8(WGPUAdapter adapter, uint8_t *out,
+int32_t mbt_wgpu_adapter_info_vendor_utf8(WGPUAdapter adapter, uint8_t *out,
                                        uint64_t out_len) {
   if (!adapter || !out) {
     return false;
@@ -424,7 +424,7 @@ uint64_t mbt_wgpu_adapter_info_architecture_utf8_len(WGPUAdapter adapter) {
   return out;
 }
 
-bool mbt_wgpu_adapter_info_architecture_utf8(WGPUAdapter adapter, uint8_t *out,
+int32_t mbt_wgpu_adapter_info_architecture_utf8(WGPUAdapter adapter, uint8_t *out,
                                              uint64_t out_len) {
   if (!adapter || !out) {
     return false;
@@ -454,7 +454,7 @@ uint64_t mbt_wgpu_adapter_info_device_utf8_len(WGPUAdapter adapter) {
   return out;
 }
 
-bool mbt_wgpu_adapter_info_device_utf8(WGPUAdapter adapter, uint8_t *out,
+int32_t mbt_wgpu_adapter_info_device_utf8(WGPUAdapter adapter, uint8_t *out,
                                        uint64_t out_len) {
   if (!adapter || !out) {
     return false;
@@ -484,7 +484,7 @@ uint64_t mbt_wgpu_adapter_info_description_utf8_len(WGPUAdapter adapter) {
   return out;
 }
 
-bool mbt_wgpu_adapter_info_description_utf8(WGPUAdapter adapter, uint8_t *out,
+int32_t mbt_wgpu_adapter_info_description_utf8(WGPUAdapter adapter, uint8_t *out,
                                             uint64_t out_len) {
   if (!adapter || !out) {
     return false;
@@ -586,7 +586,8 @@ uint64_t mbt_wgpu_adapter_supported_features_count(WGPUAdapter adapter) {
   return out;
 }
 
-bool mbt_wgpu_adapter_supported_features_contains(WGPUAdapter adapter, uint32_t feature_u32) {
+int32_t mbt_wgpu_adapter_supported_features_contains(WGPUAdapter adapter,
+                                                     uint32_t feature_u32) {
   if (!adapter) {
     return false;
   }
@@ -628,7 +629,8 @@ uint64_t mbt_wgpu_device_supported_features_count(WGPUDevice device) {
   return out;
 }
 
-bool mbt_wgpu_device_supported_features_contains(WGPUDevice device, uint32_t feature_u32) {
+int32_t mbt_wgpu_device_supported_features_contains(WGPUDevice device,
+                                                    uint32_t feature_u32) {
   if (!device) {
     return false;
   }

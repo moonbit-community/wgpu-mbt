@@ -26,9 +26,9 @@ static void mbt_buffer_map_cb2(WGPUMapAsyncStatus status, WGPUStringView message
   out->status = status;
 }
 
-bool mbt_wgpu_buffer_map_read_sync(WGPUInstance instance, WGPUBuffer buffer,
-                                   uint64_t offset, uint64_t size,
-                                   uint8_t *out, uint64_t out_len) {
+int32_t mbt_wgpu_buffer_map_read_sync(WGPUInstance instance, WGPUBuffer buffer,
+                                      uint64_t offset, uint64_t size,
+                                      uint8_t *out, uint64_t out_len) {
   if (size > out_len) {
     return false;
   }
@@ -56,9 +56,9 @@ bool mbt_wgpu_buffer_map_read_sync(WGPUInstance instance, WGPUBuffer buffer,
   return true;
 }
 
-bool mbt_wgpu_buffer_map_write_sync(WGPUInstance instance, WGPUBuffer buffer,
-                                    uint64_t offset, const uint8_t *data,
-                                    uint64_t data_len) {
+int32_t mbt_wgpu_buffer_map_write_sync(WGPUInstance instance, WGPUBuffer buffer,
+                                       uint64_t offset, const uint8_t *data,
+                                       uint64_t data_len) {
   mbt_map_result2_t map = {0};
   WGPUBufferMapCallbackInfo info = {
       .nextInChain = NULL,

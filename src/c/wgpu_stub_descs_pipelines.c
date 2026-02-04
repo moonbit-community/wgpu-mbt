@@ -2915,10 +2915,12 @@ static bool mbt_wgpu_bind_group_layout_builder_push(mbt_bind_group_layout_builde
   return true;
 }
 
-bool mbt_wgpu_bind_group_layout_builder_add_buffer(void *builder, uint32_t binding,
-                                                   uint64_t visibility, uint32_t type_u32,
-                                                   bool has_dynamic_offset,
-                                                   uint64_t min_binding_size) {
+int32_t mbt_wgpu_bind_group_layout_builder_add_buffer(void *builder,
+                                                      uint32_t binding,
+                                                      uint64_t visibility,
+                                                      uint32_t type_u32,
+                                                      int32_t has_dynamic_offset,
+                                                      uint64_t min_binding_size) {
   mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
   WGPUBindGroupLayoutEntry entry = {
       .nextInChain = NULL,
@@ -2938,9 +2940,10 @@ bool mbt_wgpu_bind_group_layout_builder_add_buffer(void *builder, uint32_t bindi
   return mbt_wgpu_bind_group_layout_builder_push(b, entry, NULL);
 }
 
-bool mbt_wgpu_bind_group_layout_builder_add_sampler(void *builder, uint32_t binding,
-                                                    uint64_t visibility,
-                                                    uint32_t type_u32) {
+int32_t mbt_wgpu_bind_group_layout_builder_add_sampler(void *builder,
+                                                       uint32_t binding,
+                                                       uint64_t visibility,
+                                                       uint32_t type_u32) {
   mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
   WGPUBindGroupLayoutEntry entry = {
       .nextInChain = NULL,
@@ -2958,11 +2961,12 @@ bool mbt_wgpu_bind_group_layout_builder_add_sampler(void *builder, uint32_t bind
   return mbt_wgpu_bind_group_layout_builder_push(b, entry, NULL);
 }
 
-bool mbt_wgpu_bind_group_layout_builder_add_texture(void *builder, uint32_t binding,
-                                                    uint64_t visibility,
-                                                    uint32_t sample_type_u32,
-                                                    uint32_t view_dimension_u32,
-                                                    bool multisampled) {
+int32_t mbt_wgpu_bind_group_layout_builder_add_texture(void *builder,
+                                                       uint32_t binding,
+                                                       uint64_t visibility,
+                                                       uint32_t sample_type_u32,
+                                                       uint32_t view_dimension_u32,
+                                                       int32_t multisampled) {
   mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
   WGPUBindGroupLayoutEntry entry = {
       .nextInChain = NULL,
@@ -2982,12 +2986,12 @@ bool mbt_wgpu_bind_group_layout_builder_add_texture(void *builder, uint32_t bind
   return mbt_wgpu_bind_group_layout_builder_push(b, entry, NULL);
 }
 
-bool mbt_wgpu_bind_group_layout_builder_add_storage_texture(void *builder,
-                                                           uint32_t binding,
-                                                           uint64_t visibility,
-                                                           uint32_t access_u32,
-                                                           uint32_t format_u32,
-                                                           uint32_t view_dimension_u32) {
+int32_t mbt_wgpu_bind_group_layout_builder_add_storage_texture(void *builder,
+                                                              uint32_t binding,
+                                                              uint64_t visibility,
+                                                              uint32_t access_u32,
+                                                              uint32_t format_u32,
+                                                              uint32_t view_dimension_u32) {
   mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
   WGPUBindGroupLayoutEntry entry = {
       .nextInChain = NULL,
@@ -3028,9 +3032,9 @@ static WGPUBindGroupLayoutEntryExtras *mbt_wgpu_bind_group_layout_entry_extras_n
   return extras;
 }
 
-bool mbt_wgpu_bind_group_layout_builder_add_buffer_array(
+int32_t mbt_wgpu_bind_group_layout_builder_add_buffer_array(
     void *builder, uint32_t binding, uint64_t visibility, uint32_t type_u32,
-    bool has_dynamic_offset, uint64_t min_binding_size, uint32_t count) {
+    int32_t has_dynamic_offset, uint64_t min_binding_size, uint32_t count) {
   if (count <= 1u) {
     return mbt_wgpu_bind_group_layout_builder_add_buffer(
         builder, binding, visibility, type_u32, has_dynamic_offset, min_binding_size);
@@ -3062,10 +3066,9 @@ bool mbt_wgpu_bind_group_layout_builder_add_buffer_array(
   return true;
 }
 
-bool mbt_wgpu_bind_group_layout_builder_add_sampler_array(void *builder, uint32_t binding,
-                                                          uint64_t visibility,
-                                                          uint32_t type_u32,
-                                                          uint32_t count) {
+int32_t mbt_wgpu_bind_group_layout_builder_add_sampler_array(
+    void *builder, uint32_t binding, uint64_t visibility, uint32_t type_u32,
+    uint32_t count) {
   if (count <= 1u) {
     return mbt_wgpu_bind_group_layout_builder_add_sampler(builder, binding, visibility,
                                                           type_u32);
@@ -3095,12 +3098,9 @@ bool mbt_wgpu_bind_group_layout_builder_add_sampler_array(void *builder, uint32_
   return true;
 }
 
-bool mbt_wgpu_bind_group_layout_builder_add_texture_array(void *builder, uint32_t binding,
-                                                          uint64_t visibility,
-                                                          uint32_t sample_type_u32,
-                                                          uint32_t view_dimension_u32,
-                                                          bool multisampled,
-                                                          uint32_t count) {
+int32_t mbt_wgpu_bind_group_layout_builder_add_texture_array(
+    void *builder, uint32_t binding, uint64_t visibility, uint32_t sample_type_u32,
+    uint32_t view_dimension_u32, int32_t multisampled, uint32_t count) {
   if (count <= 1u) {
     return mbt_wgpu_bind_group_layout_builder_add_texture(
         builder, binding, visibility, sample_type_u32, view_dimension_u32, multisampled);
@@ -3132,7 +3132,7 @@ bool mbt_wgpu_bind_group_layout_builder_add_texture_array(void *builder, uint32_
   return true;
 }
 
-bool mbt_wgpu_bind_group_layout_builder_add_storage_texture_array(
+int32_t mbt_wgpu_bind_group_layout_builder_add_storage_texture_array(
     void *builder, uint32_t binding, uint64_t visibility, uint32_t access_u32,
     uint32_t format_u32, uint32_t view_dimension_u32, uint32_t count) {
   if (count <= 1u) {
@@ -3254,9 +3254,9 @@ static bool mbt_wgpu_bind_group_builder_push(mbt_bind_group_builder_t *b,
   return true;
 }
 
-bool mbt_wgpu_bind_group_builder_add_buffer(void *builder, uint32_t binding,
-                                           WGPUBuffer buffer, uint64_t offset,
-                                           uint64_t size) {
+int32_t mbt_wgpu_bind_group_builder_add_buffer(void *builder, uint32_t binding,
+                                              WGPUBuffer buffer, uint64_t offset,
+                                              uint64_t size) {
   mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
   WGPUBindGroupEntry entry = {
       .nextInChain = NULL,
@@ -3270,8 +3270,8 @@ bool mbt_wgpu_bind_group_builder_add_buffer(void *builder, uint32_t binding,
   return mbt_wgpu_bind_group_builder_push(b, entry, NULL);
 }
 
-bool mbt_wgpu_bind_group_builder_add_sampler(void *builder, uint32_t binding,
-                                            WGPUSampler sampler) {
+int32_t mbt_wgpu_bind_group_builder_add_sampler(void *builder, uint32_t binding,
+                                               WGPUSampler sampler) {
   mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
   WGPUBindGroupEntry entry = {
       .nextInChain = NULL,
@@ -3285,8 +3285,9 @@ bool mbt_wgpu_bind_group_builder_add_sampler(void *builder, uint32_t binding,
   return mbt_wgpu_bind_group_builder_push(b, entry, NULL);
 }
 
-bool mbt_wgpu_bind_group_builder_add_texture_view(void *builder, uint32_t binding,
-                                                 WGPUTextureView view) {
+int32_t mbt_wgpu_bind_group_builder_add_texture_view(void *builder,
+                                                    uint32_t binding,
+                                                    WGPUTextureView view) {
   mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
   WGPUBindGroupEntry entry = {
       .nextInChain = NULL,
@@ -3322,9 +3323,10 @@ static WGPUBindGroupEntryExtras *mbt_wgpu_bind_group_entry_extras_new(void) {
   return ex;
 }
 
-bool mbt_wgpu_bind_group_builder_add_texture_view_array(void *builder, uint32_t binding,
-                                                       uint64_t view_count,
-                                                       const WGPUTextureView *views) {
+int32_t mbt_wgpu_bind_group_builder_add_texture_view_array(void *builder,
+                                                          uint32_t binding,
+                                                          uint64_t view_count,
+                                                          const WGPUTextureView *views) {
   if (view_count == 0u || !views) {
     return false;
   }
@@ -3363,9 +3365,10 @@ bool mbt_wgpu_bind_group_builder_add_texture_view_array(void *builder, uint32_t 
   return true;
 }
 
-bool mbt_wgpu_bind_group_builder_add_sampler_array(void *builder, uint32_t binding,
-                                                   uint64_t sampler_count,
-                                                   const WGPUSampler *samplers) {
+int32_t mbt_wgpu_bind_group_builder_add_sampler_array(void *builder,
+                                                     uint32_t binding,
+                                                     uint64_t sampler_count,
+                                                     const WGPUSampler *samplers) {
   if (sampler_count == 0u || !samplers) {
     return false;
   }
@@ -3403,10 +3406,12 @@ bool mbt_wgpu_bind_group_builder_add_sampler_array(void *builder, uint32_t bindi
   return true;
 }
 
-bool mbt_wgpu_bind_group_builder_add_buffer_array(void *builder, uint32_t binding,
-                                                  uint64_t buffer_count,
-                                                  const WGPUBuffer *buffers,
-                                                  uint64_t offset, uint64_t size) {
+int32_t mbt_wgpu_bind_group_builder_add_buffer_array(void *builder,
+                                                    uint32_t binding,
+                                                    uint64_t buffer_count,
+                                                    const WGPUBuffer *buffers,
+                                                    uint64_t offset,
+                                                    uint64_t size) {
   if (buffer_count == 0u || !buffers) {
     return false;
   }

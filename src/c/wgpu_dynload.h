@@ -39,4 +39,4 @@ uint32_t mbt_wgpu_native_available_u32(void);
 // Returns a diagnostic message about how wgpu-native would be located/loaded.
 // This function never aborts.
 uint64_t mbt_wgpu_native_diagnostic_utf8_len(void);
-bool mbt_wgpu_native_diagnostic_utf8(uint8_t *out, uint64_t out_len);
+int32_t mbt_wgpu_native_diagnostic_utf8(uint8_t *out, uint64_t out_len);

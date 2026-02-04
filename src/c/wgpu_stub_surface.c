@@ -259,10 +259,12 @@ uint32_t mbt_wgpu_surface_configure_default(WGPUSurface surface, WGPUAdapter ada
   return (uint32_t)format;
 }
 
-bool mbt_wgpu_surface_configure_u32(WGPUSurface surface, WGPUAdapter adapter,
-                                    WGPUDevice device, uint32_t width, uint32_t height,
-                                    uint64_t usage, uint32_t format_u32,
-                                    uint32_t present_mode_u32, uint32_t alpha_mode_u32) {
+int32_t mbt_wgpu_surface_configure_u32(WGPUSurface surface, WGPUAdapter adapter,
+                                       WGPUDevice device, uint32_t width,
+                                       uint32_t height, uint64_t usage,
+                                       uint32_t format_u32,
+                                       uint32_t present_mode_u32,
+                                       uint32_t alpha_mode_u32) {
   if (!surface || !adapter || !device || width == 0u || height == 0u) {
     return false;
   }
@@ -323,7 +325,7 @@ bool mbt_wgpu_surface_configure_u32(WGPUSurface surface, WGPUAdapter adapter,
   return true;
 }
 
-bool mbt_wgpu_surface_configure_view_formats_u32(
+int32_t mbt_wgpu_surface_configure_view_formats_u32(
     WGPUSurface surface, WGPUAdapter adapter, WGPUDevice device, uint32_t width,
     uint32_t height, uint64_t usage, uint32_t format_u32, uint32_t present_mode_u32,
     uint32_t alpha_mode_u32, uint64_t view_format_count,

@@ -22,7 +22,7 @@
 #include <inttypes.h>
 
 // Implemented in wgpu_stub_extras.c.
-void mbt_wgpu_set_log_callback_stderr_enabled(bool enabled);
+void mbt_wgpu_set_log_callback_stderr_enabled(int32_t enabled);
 
 static bool mbt_wgpu_env_flag_enabled(const char *name);
 static bool mbt_wgpu_debug_take(const char *env_name);
@@ -227,22 +227,22 @@ static bool mbt_wgpu_compilation_info_enabled(void) {
   return g_mbt_wgpu_compilation_info_enabled;
 }
 
-void mbt_wgpu_set_pipeline_async_enabled(bool enabled) {
-  g_mbt_wgpu_pipeline_async_enabled = enabled;
+void mbt_wgpu_set_pipeline_async_enabled(int32_t enabled) {
+  g_mbt_wgpu_pipeline_async_enabled = enabled != 0;
   g_mbt_wgpu_pipeline_async_inited = true;
 }
 
-void mbt_wgpu_set_compilation_info_enabled(bool enabled) {
-  g_mbt_wgpu_compilation_info_enabled = enabled;
+void mbt_wgpu_set_compilation_info_enabled(int32_t enabled) {
+  g_mbt_wgpu_compilation_info_enabled = enabled != 0;
   g_mbt_wgpu_compilation_info_inited = true;
 }
 
-void mbt_wgpu_set_uncaptured_error_stderr_enabled(bool enabled) {
-  g_mbt_wgpu_uncaptured_error_stderr_enabled = enabled;
+void mbt_wgpu_set_uncaptured_error_stderr_enabled(int32_t enabled) {
+  g_mbt_wgpu_uncaptured_error_stderr_enabled = enabled != 0;
 }
 
-void mbt_wgpu_set_device_lost_stderr_enabled(bool enabled) {
-  g_mbt_wgpu_device_lost_stderr_enabled = enabled;
+void mbt_wgpu_set_device_lost_stderr_enabled(int32_t enabled) {
+  g_mbt_wgpu_device_lost_stderr_enabled = enabled != 0;
 }
 
 void mbt_wgpu_render_pass_set_blend_constant_rgba(WGPURenderPassEncoder pass,
@@ -903,8 +903,8 @@ uint64_t mbt_wgpu_instance_request_adapter_sync_last_message_utf8_len(void) {
   return g_mbt_wgpu_last_request_adapter_message_len_u64;
 }
 
-bool mbt_wgpu_instance_request_adapter_sync_last_message_utf8(uint8_t *out,
-                                                              uint64_t out_len) {
+int32_t mbt_wgpu_instance_request_adapter_sync_last_message_utf8(uint8_t *out,
+                                                                 uint64_t out_len) {
   if (!out || out_len == 0u) {
     return false;
   }
@@ -923,8 +923,8 @@ uint64_t mbt_wgpu_adapter_request_device_sync_last_message_utf8_len(void) {
   return g_mbt_wgpu_last_request_device_message_len_u64;
 }
 
-bool mbt_wgpu_adapter_request_device_sync_last_message_utf8(uint8_t *out,
-                                                            uint64_t out_len) {
+int32_t mbt_wgpu_adapter_request_device_sync_last_message_utf8(uint8_t *out,
+                                                               uint64_t out_len) {
   if (!out || out_len == 0u) {
     return false;
   }
@@ -1475,8 +1475,8 @@ uint64_t mbt_wgpu_compilation_info_message_utf8_len(void *info, uint32_t index) 
   return p->messages[index].text_len_u64;
 }
 
-bool mbt_wgpu_compilation_info_message_utf8(void *info, uint32_t index,
-                                            uint8_t *out, uint64_t out_len) {
+int32_t mbt_wgpu_compilation_info_message_utf8(void *info, uint32_t index,
+                                               uint8_t *out, uint64_t out_len) {
   mbt_compilation_info_t *p = (mbt_compilation_info_t *)info;
   if (!p || !out || index >= p->message_count_u32) {
     return false;

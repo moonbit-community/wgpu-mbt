@@ -239,7 +239,7 @@ uint64_t mbt_wgpu_native_diagnostic_utf8_len(void) {
   return mbt_wgpu_native_diagnostic_impl(buf, sizeof(buf));
 }
 
-bool mbt_wgpu_native_diagnostic_utf8(uint8_t *out, uint64_t out_len) {
+int32_t mbt_wgpu_native_diagnostic_utf8(uint8_t *out, uint64_t out_len) {
   if (!out || out_len == 0u) {
     return false;
   }
@@ -411,7 +411,7 @@ uint64_t mbt_wgpu_native_diagnostic_utf8_len(void) {
   return mbt_wgpu_native_diagnostic_impl(buf, sizeof(buf));
 }
 
-bool mbt_wgpu_native_diagnostic_utf8(uint8_t *out, uint64_t out_len) {
+int32_t mbt_wgpu_native_diagnostic_utf8(uint8_t *out, uint64_t out_len) {
   if (!out || out_len == 0u) {
     return false;
   }
