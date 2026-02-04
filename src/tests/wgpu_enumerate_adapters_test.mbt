@@ -17,6 +17,11 @@ test "wgpu instance.enumerate_adapters (Metal)" {
   let instance = @wgpu.Instance::create()
   let count = instance.enumerate_adapters_count_metal()
   // On macOS/Metal we expect at least one adapter.
-  inspect(count > 0UL, content="true")
+  // Other platforms should usually have none.
+  if @wgpu.platform_is_macos() {
+    inspect(count > 0UL, content="true")
+  } else {
+    inspect(count == 0UL, content="true")
+  }
   instance.release()
 }

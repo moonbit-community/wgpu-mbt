@@ -15,24 +15,29 @@
 ///|
 test "wgpu request_adapter options: featureLevel + backendType (best-effort)" {
   let instance = @wgpu.Instance::create()
-
-  // On non-macOS platforms this should typically be 0; use it as a signal to
-  // avoid forcing the Metal backend where it won't exist.
-  let metal_count = instance.enumerate_adapters_count_metal()
-  let backend = if metal_count > 0UL {
+  let backend = if @wgpu.platform_is_macos() {
     @wgpu.BACKEND_TYPE_METAL
+  } else if @wgpu.platform_is_linux() {
+    @wgpu.BACKEND_TYPE_VULKAN
+  } else if @wgpu.platform_is_windows() {
+    @wgpu.BACKEND_TYPE_D3_D12
   } else {
     @wgpu.BACKEND_TYPE_UNDEFINED
   }
   let adapter = instance.request_adapter_sync_options_u32(
     feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
     power_preference_u32=@wgpu.POWER_PREFERENCE_UNDEFINED,
+    force_fallback_adapter=!@wgpu.platform_is_macos(),
     backend_type_u32=backend,
   )
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  if metal_count > 0UL {
+  if @wgpu.platform_is_macos() {
     inspect(backend, content="5")
+  } else if @wgpu.platform_is_linux() {
+    inspect(backend, content="6")
+  } else if @wgpu.platform_is_windows() {
+    inspect(backend, content="4")
   } else {
     inspect(backend, content="0")
   }

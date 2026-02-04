@@ -32,13 +32,38 @@ pub fn Instance::request_adapter_sync(
 ) -> Adapter raise WgpuError {
   require_native_symbol("wgpuInstanceRequestAdapter")
   require_native_symbol("wgpuInstanceProcessEvents")
-  let raw = @c.instance_request_adapter_sync(self.raw)
-  if @c.adapter_is_null(raw) {
+  let raw0 = @c.instance_request_adapter_sync(self.raw)
+  if !@c.adapter_is_null(raw0) {
+    return Adapter::{ raw: raw0 }
+  }
+
+  // Best-effort fallback: GitHub runners often do not expose a hardware adapter,
+  // and wgpu-native's default options may return Unavailable on some platforms.
+  // Try again with explicit backend + fallback adapter enabled.
+  let backend = if platform_is_linux() {
+    BACKEND_TYPE_VULKAN
+  } else if platform_is_windows() {
+    BACKEND_TYPE_D3_D12
+  } else if platform_is_macos() {
+    BACKEND_TYPE_METAL
+  } else {
+    BACKEND_TYPE_UNDEFINED
+  }
+  let raw1 = @c.instance_request_adapter_sync_options_u32(
+    self.raw,
+    FEATURE_LEVEL_CORE,
+    POWER_PREFERENCE_UNDEFINED,
+    true,
+    backend,
+    @c.null_surface(),
+  )
+  if @c.adapter_is_null(raw1) {
+    // Preserve the last observed status from the C helper.
     raise WgpuRequestAdapterFailed(
       @c.instance_request_adapter_sync_last_status_u32(),
     )
   }
-  Adapter::{ raw, }
+  Adapter::{ raw: raw1 }
 }
 
 ///|
