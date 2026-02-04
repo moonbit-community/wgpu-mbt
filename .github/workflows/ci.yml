@@ -79,6 +79,19 @@ jobs:
 
       - name: Probe wgpu smoke (diagnostic)
         shell: bash
+        run: |
+          set -euo pipefail
+          moon run --target native src/cmd/main/main.mbt
+
+      - name: Run full test suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon test --target native --test-failure-json
+
+      - name: Dump wgpu diagnostics (on failure)
+        if: failure()
+        shell: bash
         env:
           MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
           MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
@@ -87,15 +100,6 @@ jobs:
         run: |
           set -euo pipefail
           moon run --target native src/cmd/main/main.mbt
-
-      - name: Run full test suite
-        shell: bash
-        env:
-          MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
-          MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
-        run: |
-          set -euo pipefail
-          moon test --target native --test-failure-json
 
       - name: Package contents sanity (exclude artifacts)
         shell: bash
@@ -158,6 +162,18 @@ jobs:
           set -euo pipefail
           moon test --target native --test-failure-json
 
+      - name: Dump wgpu diagnostics (on failure)
+        if: failure()
+        shell: bash
+        env:
+          MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
+          MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
+          MBT_WGPU_LOG_STDERR: "1"
+          MBT_WGPU_LOG_LEVEL: "debug"
+        run: |
+          set -euo pipefail
+          moon run --target native src/cmd/main/main.mbt
+
   windows:
     name: Windows (Lavapipe Vulkan, full)
     runs-on: windows-latest
@@ -179,6 +195,7 @@ jobs:
           install_lavapipe: true
           cache: true
           stripdown: true
+          github_token: ${{ github.token }}
 
       - name: Install MoonBit
         shell: pwsh
@@ -272,7 +289,6 @@ jobs:
           $lavapipeBin | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
 
           "VK_ICD_FILENAMES=$vkIcd" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-          "VK_LOADER_DEBUG=error" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Build wgpu-native (Vulkan)
         shell: pwsh
@@ -288,20 +304,25 @@ jobs:
 
       - name: Probe wgpu smoke (diagnostic)
         shell: pwsh
-        env:
-          MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
-          MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
-          MBT_WGPU_LOG_STDERR: "1"
-          MBT_WGPU_LOG_LEVEL: "debug"
         run: |
           $ErrorActionPreference = "Stop"
           moon run --target native src/cmd/main/main.mbt
 
       - name: Run full test suite
         shell: pwsh
-        env:
-          MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
-          MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
         run: |
           $ErrorActionPreference = "Stop"
           moon test --target native --test-failure-json
+
+      - name: Dump wgpu diagnostics (on failure)
+        if: failure()
+        shell: pwsh
+        env:
+          MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
+          MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
+          MBT_WGPU_LOG_STDERR: "1"
+          MBT_WGPU_LOG_LEVEL: "debug"
+          VK_LOADER_DEBUG: all
+        run: |
+          $ErrorActionPreference = "Stop"
+          moon run --target native src/cmd/main/main.mbt
