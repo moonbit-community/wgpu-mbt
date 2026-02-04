@@ -22,7 +22,8 @@
 WGPUSurface mbt_wgpu_null_surface(void) { return NULL; }
 
 WGPURequestAdapterOptions *mbt_wgpu_request_adapter_options_new_u32(
-    uint32_t feature_level_u32, uint32_t power_preference_u32, bool force_fallback_adapter,
+    uint32_t feature_level_u32, uint32_t power_preference_u32,
+    int32_t force_fallback_adapter,
     uint32_t backend_type_u32, WGPUSurface compatible_surface) {
   WGPURequestAdapterOptions *out =
       (WGPURequestAdapterOptions *)malloc(sizeof(WGPURequestAdapterOptions));
@@ -34,7 +35,7 @@ WGPURequestAdapterOptions *mbt_wgpu_request_adapter_options_new_u32(
       .nextInChain = NULL,
       .featureLevel = (WGPUFeatureLevel)feature_level_u32,
       .powerPreference = (WGPUPowerPreference)power_preference_u32,
-      .forceFallbackAdapter = force_fallback_adapter ? 1u : 0u,
+      .forceFallbackAdapter = force_fallback_adapter != 0 ? 1u : 0u,
       .backendType = (WGPUBackendType)backend_type_u32,
       .compatibleSurface = compatible_surface,
   };

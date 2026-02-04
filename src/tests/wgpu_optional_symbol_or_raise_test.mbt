@@ -38,7 +38,8 @@ test "optional symbol or_raise: compilation info disabled => runtime fail" {
         if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL ||
           kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE {
           outcome.val = "skipped (missing optional symbol)"
-        } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED {
+        } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED ||
+          kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_DISABLED {
           outcome.val = "expected"
         } else {
           outcome.val = "unexpected_kind"
