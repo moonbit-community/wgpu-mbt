@@ -848,7 +848,18 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
   // "no adapter available"). Try to pick the first enumerated adapter if the
   // extra API is available.
   if (out.status == WGPURequestAdapterStatus_Success && out.adapter == NULL) {
-    WGPUInstanceBackend backends = WGPUInstanceBackend_Primary;
+    // Prefer a single backend when enumerating; some builds appear to behave
+    // poorly when multiple backend flags are provided.
+    WGPUInstanceBackend backends =
+#if defined(__linux__)
+        WGPUInstanceBackend_Vulkan;
+#elif defined(_WIN32)
+        WGPUInstanceBackend_DX12;
+#elif defined(__APPLE__)
+        WGPUInstanceBackend_Metal;
+#else
+        WGPUInstanceBackend_All;
+#endif
     if (options) {
       switch (options->backendType) {
       case WGPUBackendType_Vulkan:
@@ -868,7 +879,7 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
         backends = WGPUInstanceBackend_GL;
         break;
       default:
-        backends = WGPUInstanceBackend_Primary;
+        // Keep the platform default.
         break;
       }
     }
