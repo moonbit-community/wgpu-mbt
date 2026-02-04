@@ -11,7 +11,7 @@ env:
 
 jobs:
   linux:
-    name: Linux Vulkan (smoke)
+    name: Linux Vulkan (full)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -72,18 +72,14 @@ jobs:
           git fetch --depth 1 origin "$WGPU_NATIVE_REV"
           git checkout "$WGPU_NATIVE_REV"
           git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features vulkan,wgsl
+          cargo build --release --no-default-features --features vulkan,wgsl,spirv
           echo "MBT_WGPU_NATIVE_LIB=$RUNNER_TEMP/wgpu-native/target/release/libwgpu_native.so" >> "$GITHUB_ENV"
 
-      - name: Run Vulkan smoke suite
+      - name: Run full test suite
         shell: bash
         run: |
           set -euo pipefail
-          moon test --target native src/tests/wgpu_linux_headless_smoke_test.mbt
-          moon test --target native src/tests/wgpu_smoke_test.mbt
-          moon test --target native src/tests/wgpu_queue_write_buffer_test.mbt
-          moon test --target native src/tests/wgpu_render_offscreen_test.mbt
-          moon test --target native src/tests/wgpu_spec_buffer_map_test.mbt
+          moon test --target native
 
       - name: Package contents sanity (exclude artifacts)
         shell: bash
@@ -98,7 +94,7 @@ jobs:
           fi
 
   macos:
-    name: macOS Metal (smoke)
+    name: macOS Metal (full)
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -137,21 +133,17 @@ jobs:
           git fetch --depth 1 origin "$WGPU_NATIVE_REV"
           git checkout "$WGPU_NATIVE_REV"
           git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features metal,wgsl
+          cargo build --release --no-default-features --features metal,wgsl,spirv
           echo "MBT_WGPU_NATIVE_LIB=$RUNNER_TEMP/wgpu-native/target/release/libwgpu_native.dylib" >> "$GITHUB_ENV"
 
-      - name: Run Metal smoke suite
+      - name: Run full test suite
         shell: bash
         run: |
           set -euo pipefail
-          moon test --target native src/tests/wgpu_smoke_test.mbt
-          moon test --target native src/tests/wgpu_queue_write_buffer_test.mbt
-          moon test --target native src/tests/wgpu_render_offscreen_test.mbt
-          moon test --target native src/tests/wgpu_spec_buffer_map_test.mbt
-          moon test --target native src/tests/wgpu_surface_present_test.mbt
+          moon test --target native
 
   windows:
-    name: Windows DX12 (smoke)
+    name: Windows DX12 (full)
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -212,14 +204,11 @@ jobs:
           git fetch --depth 1 origin $env:WGPU_NATIVE_REV
           git checkout $env:WGPU_NATIVE_REV
           git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features dx12,wgsl
+          cargo build --release --no-default-features --features dx12,wgsl,spirv
           "MBT_WGPU_NATIVE_LIB=$env:RUNNER_TEMP\wgpu-native\target\release\wgpu_native.dll" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
-      - name: Run DX12 smoke suite
+      - name: Run full test suite
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          moon test --target native src/tests/wgpu_smoke_test.mbt
-          moon test --target native src/tests/wgpu_queue_write_buffer_test.mbt
-          moon test --target native src/tests/wgpu_render_offscreen_test.mbt
-          moon test --target native src/tests/wgpu_spec_buffer_map_test.mbt
+          moon test --target native
