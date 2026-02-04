@@ -32,14 +32,10 @@ pub fn Instance::request_adapter_sync(
 ) -> Adapter raise WgpuError {
   require_native_symbol("wgpuInstanceRequestAdapter")
   require_native_symbol("wgpuInstanceProcessEvents")
-  let raw0 = @c.instance_request_adapter_sync(self.raw)
-  if !@c.adapter_is_null(raw0) {
-    return Adapter::{ raw: raw0 }
-  }
 
-  // Best-effort fallback: GitHub runners often do not expose a hardware adapter,
-  // and wgpu-native's default options may return Unavailable on some platforms.
-  // Try again with explicit backend + fallback adapter enabled.
+  // Best-effort strategy: the C API requires featureLevel to be specified, and
+  // CI environments may only expose software adapters. Try a small matrix of
+  // request options before giving up.
   let backend = if platform_is_linux() {
     BACKEND_TYPE_VULKAN
   } else if platform_is_windows() {
@@ -49,35 +45,48 @@ pub fn Instance::request_adapter_sync(
   } else {
     BACKEND_TYPE_UNDEFINED
   }
-  let raw1 = @c.instance_request_adapter_sync_options_u32(
-    self.raw,
-    FEATURE_LEVEL_CORE,
-    POWER_PREFERENCE_UNDEFINED,
-    true,
-    backend,
-    @c.null_surface(),
-  )
-  if !@c.adapter_is_null(raw1) {
-    return Adapter::{ raw: raw1 }
-  }
-
-  // Some software adapters (e.g. CI Vulkan ICDs) only satisfy the compatibility
-  // feature level. Try that before giving up.
-  let raw2 = @c.instance_request_adapter_sync_options_u32(
-    self.raw,
-    FEATURE_LEVEL_COMPATIBILITY,
-    POWER_PREFERENCE_UNDEFINED,
-    true,
-    backend,
-    @c.null_surface(),
-  )
-  if @c.adapter_is_null(raw2) {
-    // Preserve the last observed status from the C helper.
-    raise WgpuRequestAdapterFailed(
-      @c.instance_request_adapter_sync_last_status_u32(),
+  fn try_request(
+    feature_level_u32 : UInt,
+    force_fallback_adapter : Bool,
+    backend_type_u32 : UInt,
+  ) -> @c.Adapter {
+    @c.instance_request_adapter_sync_options_u32(
+      self.raw,
+      feature_level_u32,
+      POWER_PREFERENCE_UNDEFINED,
+      force_fallback_adapter,
+      backend_type_u32,
+      @c.null_surface(),
     )
   }
-  Adapter::{ raw: raw2 }
+
+  let attempts : Array[(UInt, Bool, UInt)] = [
+    // Prefer the default backend selection first.
+    (FEATURE_LEVEL_CORE, false, BACKEND_TYPE_UNDEFINED),
+    (FEATURE_LEVEL_CORE, false, backend),
+    // Then allow fallback adapters.
+    (FEATURE_LEVEL_CORE, true, BACKEND_TYPE_UNDEFINED),
+    (FEATURE_LEVEL_CORE, true, backend),
+    // Compatibility profile can be necessary for some software adapters.
+    (FEATURE_LEVEL_COMPATIBILITY, false, BACKEND_TYPE_UNDEFINED),
+    (FEATURE_LEVEL_COMPATIBILITY, false, backend),
+    (FEATURE_LEVEL_COMPATIBILITY, true, BACKEND_TYPE_UNDEFINED),
+    (FEATURE_LEVEL_COMPATIBILITY, true, backend),
+  ]
+  for attempt in attempts {
+    let (feature_level_u32, force_fallback_adapter, backend_type_u32) = attempt
+    let raw = try_request(
+      feature_level_u32, force_fallback_adapter, backend_type_u32,
+    )
+    if !@c.adapter_is_null(raw) {
+      return Adapter::{ raw, }
+    }
+  }
+
+  // Preserve the last observed status from the C helper.
+  raise WgpuRequestAdapterFailed(
+    @c.instance_request_adapter_sync_last_status_u32(),
+  )
 }
 
 ///|
