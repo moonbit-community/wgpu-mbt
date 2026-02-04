@@ -4,6 +4,10 @@
     {
       "path": "Milky2018/wgpu_mbt",
       "alias": "wgpu"
+    },
+    {
+      "path": "Milky2018/wgpu_mbt/c",
+      "alias": "wgpu_c"
     }
   ],
   "targets": {

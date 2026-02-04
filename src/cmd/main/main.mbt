@@ -16,6 +16,18 @@
 fn main {
   try {
     let instance = @wgpu.Instance::create()
+    if @wgpu.platform_is_linux() {
+      let n = @wgpu_c.instance_enumerate_adapters_count_vulkan(
+        instance.raw_handle(),
+      )
+      println("vulkan adapters (enumerate): " + n.to_string())
+    }
+    if @wgpu.platform_is_macos() {
+      let n = @wgpu_c.instance_enumerate_adapters_count_metal(
+        instance.raw_handle(),
+      )
+      println("metal adapters (enumerate): " + n.to_string())
+    }
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
     let queue = device.queue()
