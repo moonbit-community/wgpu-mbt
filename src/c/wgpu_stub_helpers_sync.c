@@ -411,8 +411,14 @@ static WGPUAdapter mbt_wgpu_enumerate_first_adapter(WGPUInstance instance,
     free(adapters);
     return NULL;
   }
-  WGPUAdapter first = adapters[0];
-  for (size_t i = 1; i < out_count; i++) {
+  // Prefer the first non-null handle, but be robust to buggy builds that
+  // report a positive out_count yet return NULL handles.
+  WGPUAdapter first = NULL;
+  for (size_t i = 0; i < out_count; i++) {
+    if (!first && adapters[i]) {
+      first = adapters[i];
+      continue;
+    }
     if (adapters[i]) {
       wgpuAdapterRelease(adapters[i]);
     }
@@ -452,10 +458,14 @@ static void mbt_request_adapter_cb(WGPURequestAdapterStatus status,
     out->message_len = n;
   }
 
-  if (status != WGPURequestAdapterStatus_Success &&
-      mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
-    fprintf(stderr, "[wgpu-native:request-adapter:%u] %.*s\n", (unsigned)status,
-            (int)out->message_len, out->message);
+  if (mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+    if (status != WGPURequestAdapterStatus_Success) {
+      fprintf(stderr, "[wgpu-native:request-adapter:%u] %.*s\n", (unsigned)status,
+              (int)out->message_len, out->message);
+    } else if (!adapter) {
+      fprintf(stderr, "[wgpu-native:request-adapter:success-but-null] %.*s\n",
+              (int)out->message_len, out->message);
+    }
   }
 }
 
@@ -588,10 +598,14 @@ static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice dev
     out->message_len = n;
   }
 
-  if (status != WGPURequestDeviceStatus_Success &&
-      mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_DEVICE")) {
-    fprintf(stderr, "[wgpu-native:request-device:%u] %.*s\n", (unsigned)status,
-            (int)out->message_len, out->message);
+  if (mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_DEVICE")) {
+    if (status != WGPURequestDeviceStatus_Success) {
+      fprintf(stderr, "[wgpu-native:request-device:%u] %.*s\n", (unsigned)status,
+              (int)out->message_len, out->message);
+    } else if (!device) {
+      fprintf(stderr, "[wgpu-native:request-device:success-but-null] %.*s\n",
+              (int)out->message_len, out->message);
+    }
   }
 }
 
@@ -912,6 +926,9 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
       }
     }
     out.adapter = mbt_wgpu_enumerate_first_adapter(instance, backends);
+    if (!out.adapter && mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+      fprintf(stderr, "[wgpu-native:request-adapter:enumerate-fallback-null]\n");
+    }
   }
 
   if (out.status != WGPURequestAdapterStatus_Success || out.adapter == NULL) {

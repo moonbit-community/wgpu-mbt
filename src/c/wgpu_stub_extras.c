@@ -263,9 +263,13 @@ static WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_backend(
     return NULL;
   }
 
-  // Keep the first adapter; release the rest.
-  WGPUAdapter first = adapters[0];
-  for (size_t i = 1; i < out_count; i++) {
+  // Keep the first non-null adapter; release the rest.
+  WGPUAdapter first = NULL;
+  for (size_t i = 0; i < out_count; i++) {
+    if (!first && adapters[i]) {
+      first = adapters[i];
+      continue;
+    }
     if (adapters[i]) {
       wgpuAdapterRelease(adapters[i]);
     }
