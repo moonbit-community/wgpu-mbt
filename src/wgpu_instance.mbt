@@ -30,6 +30,35 @@ pub fn Instance::create_ptr(
 pub fn Instance::request_adapter_sync(
   self : Instance,
 ) -> Adapter raise WgpuError {
+  require_native()
+
+  // Primary path: enumerate adapters (wgpu-native extra API).
+  // In some CI environments, requestAdapter may report "Success" but still
+  // return a null adapter handle.
+  if native_has_symbol("wgpuInstanceEnumerateAdapters") {
+    let raw = if platform_is_linux() {
+      let a0 = @c.instance_enumerate_adapter_first_vulkan(self.raw)
+      if !@c.adapter_is_null(a0) {
+        a0
+      } else {
+        @c.instance_enumerate_adapter_first_gl(self.raw)
+      }
+    } else if platform_is_windows() {
+      let a0 = @c.instance_enumerate_adapter_first_dx12(self.raw)
+      if !@c.adapter_is_null(a0) {
+        a0
+      } else {
+        @c.instance_enumerate_adapter_first_dx11(self.raw)
+      }
+    } else if platform_is_macos() {
+      @c.instance_enumerate_adapter_first_metal(self.raw)
+    } else {
+      @c.instance_enumerate_adapter_first_primary(self.raw)
+    }
+    if !@c.adapter_is_null(raw) {
+      return Adapter::{ raw, }
+    }
+  }
   require_native_symbol("wgpuInstanceRequestAdapter")
   require_native_symbol("wgpuInstanceProcessEvents")
 
@@ -78,49 +107,6 @@ pub fn Instance::request_adapter_sync(
     let raw = try_request(
       feature_level_u32, force_fallback_adapter, backend_type_u32,
     )
-    if !@c.adapter_is_null(raw) {
-      return Adapter::{ raw, }
-    }
-  }
-
-  // wgpu-native also exposes `wgpuInstanceEnumerateAdapters` (extra API). Some
-  // environments appear to return a null adapter from requestAdapter even when
-  // enumeration succeeds; try picking the first enumerated adapter.
-  if native_has_symbol("wgpuInstanceEnumerateAdapters") {
-    let raw = if platform_is_linux() {
-      let a0 = @c.instance_enumerate_adapter_first_vulkan(self.raw)
-      if !@c.adapter_is_null(a0) {
-        a0
-      } else {
-        let a1 = @c.instance_enumerate_adapter_first_gl(self.raw)
-        if !@c.adapter_is_null(a1) {
-          a1
-        } else {
-          @c.instance_enumerate_adapter_first_primary(self.raw)
-        }
-      }
-    } else if platform_is_windows() {
-      let a0 = @c.instance_enumerate_adapter_first_dx12(self.raw)
-      if !@c.adapter_is_null(a0) {
-        a0
-      } else {
-        let a1 = @c.instance_enumerate_adapter_first_dx11(self.raw)
-        if !@c.adapter_is_null(a1) {
-          a1
-        } else {
-          @c.instance_enumerate_adapter_first_primary(self.raw)
-        }
-      }
-    } else if platform_is_macos() {
-      let a0 = @c.instance_enumerate_adapter_first_metal(self.raw)
-      if !@c.adapter_is_null(a0) {
-        a0
-      } else {
-        @c.instance_enumerate_adapter_first_primary(self.raw)
-      }
-    } else {
-      @c.instance_enumerate_adapter_first_primary(self.raw)
-    }
     if !@c.adapter_is_null(raw) {
       return Adapter::{ raw, }
     }

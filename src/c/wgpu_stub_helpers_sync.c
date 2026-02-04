@@ -702,7 +702,35 @@ static void mbt_compilation_info_cb(WGPUCompilationInfoRequestStatus status,
   out->message_count_u32 = (uint32_t)count;
 }
 
-WGPUInstance mbt_wgpu_create_instance(void) { return wgpuCreateInstance(NULL); }
+WGPUInstance mbt_wgpu_create_instance(void) {
+  // wgpu-native uses an extra instance descriptor chain to select backends and
+  // DX12 compiler behavior. In headless CI, leaving this unspecified can lead
+  // to "Success but NULL handle" results from requestAdapter/requestDevice.
+  WGPUInstanceExtras extras = {0};
+  extras.chain = (WGPUChainedStruct){
+      .next = NULL,
+      .sType = WGPUSType_InstanceExtras,
+  };
+
+#if defined(__linux__)
+  extras.backends = WGPUInstanceBackend_Vulkan;
+#elif defined(_WIN32)
+  extras.backends = WGPUInstanceBackend_DX12;
+  // FXC is available on GitHub runners; prefer it over DXC to avoid missing-DXC issues.
+  extras.dx12ShaderCompiler = WGPUDx12Compiler_Fxc;
+#elif defined(__APPLE__)
+  extras.backends = WGPUInstanceBackend_Metal;
+#else
+  extras.backends = WGPUInstanceBackend_All;
+#endif
+
+  extras.flags = WGPUInstanceFlag_Default;
+
+  WGPUInstanceDescriptor desc = {0};
+  desc.nextInChain = &extras.chain;
+  desc.features = (WGPUInstanceCapabilities){0};
+  return wgpuCreateInstance(&desc);
+}
 
 #if defined(_WIN32)
 __declspec(thread) static uint32_t g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
