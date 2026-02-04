@@ -223,9 +223,21 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          $vkIcd = "C:\\Lavapipe\\share\\vulkan\\icd.d\\lvp_icd.x86_64.json"
-          if (!(Test-Path $vkIcd)) {
-            Write-Host "Lavapipe ICD not found at: $vkIcd"
+          # Prefer the ICD path installed by install-vulkan-sdk-action (RUNNER_TOOL_CACHE),
+          # but fallback to C:\Lavapipe for older layouts.
+          $toolCache = $env:RUNNER_TOOL_CACHE
+          if ([string]::IsNullOrEmpty($toolCache)) {
+            $toolCache = "C:\\hostedtoolcache\\windows"
+          }
+          $vkIcd = $null
+          $toolCacheIcd = Get-ChildItem -Path (Join-Path $toolCache "lavapipe") -Recurse -Filter "lvp_icd.x86_64.json" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($toolCacheIcd) {
+            $vkIcd = $toolCacheIcd.FullName
+          } elseif (Test-Path "C:\\Lavapipe\\share\\vulkan\\icd.d\\lvp_icd.x86_64.json") {
+            $vkIcd = "C:\\Lavapipe\\share\\vulkan\\icd.d\\lvp_icd.x86_64.json"
+          } else {
+            Write-Host "Lavapipe ICD not found in toolcache or C:\\Lavapipe"
+            Get-ChildItem -Path $toolCache -Recurse -ErrorAction SilentlyContinue | Select-Object -First 200 | Out-Host
             Get-ChildItem -Path "C:\\Lavapipe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 200 | Out-Host
             throw "Lavapipe ICD missing"
           }
@@ -243,10 +255,17 @@ jobs:
             Get-ChildItem -Path $runtimeDir -ErrorAction SilentlyContinue | Out-Host
             throw "vulkan-1.dll missing"
           }
-          $lavapipeBin = "C:\\Lavapipe\\bin"
+          # Also add Lavapipe's bin dir so its dependent DLLs resolve.
+          $lavapipeBin = $null
+          if ($vkIcd -like "*\\x64\\share\\vulkan\\icd.d\\lvp_icd.x86_64.json") {
+            $x64Dir = Split-Path (Split-Path (Split-Path (Split-Path $vkIcd -Parent) -Parent) -Parent) -Parent
+            $lavapipeBin = Join-Path $x64Dir "bin"
+          } else {
+            $lavapipeBin = "C:\\Lavapipe\\bin"
+          }
           if (!(Test-Path $lavapipeBin)) {
             Write-Host "Lavapipe bin dir not found at: $lavapipeBin"
-            Get-ChildItem -Path "C:\\Lavapipe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 200 | Out-Host
+            Get-ChildItem -Path (Split-Path $vkIcd -Parent) -Recurse -ErrorAction SilentlyContinue | Select-Object -First 200 | Out-Host
             throw "Lavapipe bin missing"
           }
           $runtimeDir | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
