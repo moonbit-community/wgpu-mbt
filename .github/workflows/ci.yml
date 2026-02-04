@@ -159,7 +159,7 @@ jobs:
           moon test --target native --test-failure-json
 
   windows:
-    name: Windows (Mesa GL, full)
+    name: Windows (Mesa Vulkan, full)
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -224,9 +224,10 @@ jobs:
           7z x $mesa7z "-o$mesaDir" | Out-Host
           # Override OpenGL DLL and point Vulkan loader at the lavapipe ICD (if used by wgpu-native).
           (Join-Path $mesaDir "x64") | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
-          "VK_ICD_FILENAMES=$(Join-Path $mesaDir \"x64\\lvp_icd.x86_64.json\")" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          $vkIcd = Join-Path (Join-Path $mesaDir "x64") "lvp_icd.x86_64.json"
+          "VK_ICD_FILENAMES=$vkIcd" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
-      - name: Build wgpu-native (GLES)
+      - name: Build wgpu-native (Vulkan)
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
@@ -235,7 +236,7 @@ jobs:
           git fetch --depth 1 origin $env:WGPU_NATIVE_REV
           git checkout $env:WGPU_NATIVE_REV
           git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features gles,wgsl,spirv
+          cargo build --release --no-default-features --features vulkan,wgsl,spirv
           "MBT_WGPU_NATIVE_LIB=$env:RUNNER_TEMP\wgpu-native\target\release\wgpu_native.dll" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Probe wgpu smoke (diagnostic)

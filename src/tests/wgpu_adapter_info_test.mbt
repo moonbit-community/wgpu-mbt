@@ -20,7 +20,11 @@ test "wgpu adapter info (numeric)" {
   let backend_ok = if @wgpu.platform_is_macos() {
     backend == @wgpu.BACKEND_TYPE_METAL
   } else if @wgpu.platform_is_windows() {
-    backend == @wgpu.BACKEND_TYPE_D3_D12 || backend == @wgpu.BACKEND_TYPE_D3_D11
+    backend == @wgpu.BACKEND_TYPE_D3_D12 ||
+    backend == @wgpu.BACKEND_TYPE_D3_D11 ||
+    backend == @wgpu.BACKEND_TYPE_VULKAN ||
+    backend == @wgpu.BACKEND_TYPE_OPEN_GL ||
+    backend == @wgpu.BACKEND_TYPE_OPEN_GLES
   } else if @wgpu.platform_is_linux() {
     backend == @wgpu.BACKEND_TYPE_VULKAN ||
     backend == @wgpu.BACKEND_TYPE_OPEN_GL ||

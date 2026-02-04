@@ -44,15 +44,20 @@ pub fn Instance::request_adapter_sync(
         @c.instance_enumerate_adapter_first_gl(self.raw)
       }
     } else if platform_is_windows() {
-      let a0 = @c.instance_enumerate_adapter_first_dx12(self.raw)
+      let a0 = @c.instance_enumerate_adapter_first_vulkan(self.raw)
       if !@c.adapter_is_null(a0) {
         a0
       } else {
-        let a1 = @c.instance_enumerate_adapter_first_vulkan(self.raw)
+        let a1 = @c.instance_enumerate_adapter_first_dx12(self.raw)
         if !@c.adapter_is_null(a1) {
           a1
         } else {
-          @c.instance_enumerate_adapter_first_dx11(self.raw)
+          let a2 = @c.instance_enumerate_adapter_first_gl(self.raw)
+          if !@c.adapter_is_null(a2) {
+            a2
+          } else {
+            @c.instance_enumerate_adapter_first_dx11(self.raw)
+          }
         }
       }
     } else if platform_is_macos() {
