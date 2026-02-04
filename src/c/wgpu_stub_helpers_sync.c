@@ -779,7 +779,7 @@ WGPUInstance mbt_wgpu_create_instance(void) {
   WGPUInstanceExtras extras = {0};
   extras.chain = (WGPUChainedStruct){
       .next = NULL,
-      .sType = WGPUSType_InstanceExtras,
+      .sType = (WGPUSType)WGPUSType_InstanceExtras,
   };
 
 #if defined(__linux__)
