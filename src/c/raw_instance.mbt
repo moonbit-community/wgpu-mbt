@@ -48,41 +48,43 @@ pub extern "C" fn instance_enumerate_adapters_count_vulkan(
 ///|
 pub extern "C" fn instance_enumerate_adapter_first_vulkan(
   instance : Instance,
-) -> Adapter = "mbt_wgpu_instance_enumerate_adapter_first_vulkan"
+) -> WGPUAdapter = "mbt_wgpu_instance_enumerate_adapter_first_vulkan"
 
 ///|
 pub extern "C" fn instance_enumerate_adapter_first_dx12(
   instance : Instance,
-) -> Adapter = "mbt_wgpu_instance_enumerate_adapter_first_dx12"
+) -> WGPUAdapter = "mbt_wgpu_instance_enumerate_adapter_first_dx12"
 
 ///|
 pub extern "C" fn instance_enumerate_adapter_first_dx11(
   instance : Instance,
-) -> Adapter = "mbt_wgpu_instance_enumerate_adapter_first_dx11"
+) -> WGPUAdapter = "mbt_wgpu_instance_enumerate_adapter_first_dx11"
 
 ///|
 pub extern "C" fn instance_enumerate_adapter_first_metal(
   instance : Instance,
-) -> Adapter = "mbt_wgpu_instance_enumerate_adapter_first_metal"
+) -> WGPUAdapter = "mbt_wgpu_instance_enumerate_adapter_first_metal"
 
 ///|
 pub extern "C" fn instance_enumerate_adapter_first_gl(
   instance : Instance,
-) -> Adapter = "mbt_wgpu_instance_enumerate_adapter_first_gl"
+) -> WGPUAdapter = "mbt_wgpu_instance_enumerate_adapter_first_gl"
 
 ///|
 pub extern "C" fn instance_enumerate_adapter_first_primary(
   instance : Instance,
-) -> Adapter = "mbt_wgpu_instance_enumerate_adapter_first_primary"
+) -> WGPUAdapter = "mbt_wgpu_instance_enumerate_adapter_first_primary"
 
 ///|
-pub extern "C" fn instance_request_adapter_sync(instance : Instance) -> Adapter = "mbt_wgpu_instance_request_adapter_sync"
+pub extern "C" fn instance_request_adapter_sync(
+  instance : Instance,
+) -> WGPUAdapter = "mbt_wgpu_instance_request_adapter_sync"
 
 ///|
 pub extern "C" fn instance_request_adapter_sync_ptr(
   instance : Instance,
   options : WGPURequestAdapterOptionsPtr,
-) -> Adapter = "mbt_wgpu_instance_request_adapter_sync_ptr"
+) -> WGPUAdapter = "mbt_wgpu_instance_request_adapter_sync_ptr"
 
 ///|
 pub extern "C" fn instance_request_adapter_sync_last_status_u32() -> UInt = "mbt_wgpu_instance_request_adapter_sync_last_status_u32"

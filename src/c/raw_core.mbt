@@ -33,10 +33,10 @@ pub extern "C" fn null_ptr() -> UnitPtr = "mbt_wgpu_null_ptr"
 pub extern "C" fn null_opaque_ptr() -> OpaquePtr = "mbt_wgpu_null_ptr"
 
 ///|
-pub extern "C" fn null_adapter() -> Adapter = "mbt_wgpu_null_adapter"
+pub extern "C" fn null_adapter() -> WGPUAdapter = "mbt_wgpu_null_adapter"
 
 ///|
-pub extern "C" fn null_device() -> Device = "mbt_wgpu_null_device"
+pub extern "C" fn null_device() -> WGPUDevice = "mbt_wgpu_null_device"
 
 ///|
 #borrow(p)
@@ -78,10 +78,10 @@ pub extern "C" fn null_submission_index_ptr() -> WGPUSubmissionIndexPtr = "mbt_w
 pub extern "C" fn shader_module_is_null(shader_module : ShaderModule) -> Bool = "mbt_wgpu_shader_module_is_null"
 
 ///|
-pub extern "C" fn adapter_is_null(adapter : Adapter) -> Bool = "mbt_wgpu_adapter_is_null"
+pub extern "C" fn adapter_is_null(adapter : WGPUAdapter) -> Bool = "mbt_wgpu_adapter_is_null"
 
 ///|
-pub extern "C" fn device_is_null(device : Device) -> Bool = "mbt_wgpu_device_is_null"
+pub extern "C" fn device_is_null(device : WGPUDevice) -> Bool = "mbt_wgpu_device_is_null"
 
 ///|
 pub extern "C" fn null_render_pipeline_descriptor_ptr() -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_null_ptr"

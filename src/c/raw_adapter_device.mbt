@@ -188,15 +188,15 @@ pub extern "C" fn device_pop_error_scope_sync_u32(
 ///|
 pub extern "C" fn adapter_request_device_sync(
   instance : Instance,
-  adapter : Adapter,
-) -> Device = "mbt_wgpu_adapter_request_device_sync"
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_ptr(
   instance : Instance,
-  adapter : Adapter,
+  adapter : WGPUAdapter,
   descriptor : WGPUDeviceDescriptorPtr,
-) -> Device = "mbt_wgpu_adapter_request_device_sync_ptr"
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_ptr"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_last_status_u32() -> UInt = "mbt_wgpu_adapter_request_device_sync_last_status_u32"
@@ -214,44 +214,44 @@ pub extern "C" fn adapter_request_device_sync_last_message_utf8(
 ///|
 pub extern "C" fn adapter_request_device_sync_timestamp_query(
   instance : Instance,
-  adapter : Adapter,
-) -> Device = "mbt_wgpu_adapter_request_device_sync_timestamp_query"
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_timestamp_query"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_timestamp_query_inside_encoders(
   instance : Instance,
-  adapter : Adapter,
-) -> Device = "mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders"
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_timestamp_query_inside_passes(
   instance : Instance,
-  adapter : Adapter,
-) -> Device = "mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes"
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_push_constants(
   instance : Instance,
-  adapter : Adapter,
-) -> Device = "mbt_wgpu_adapter_request_device_sync_push_constants"
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_push_constants"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_texture_binding_array(
   instance : Instance,
-  adapter : Adapter,
-) -> Device = "mbt_wgpu_adapter_request_device_sync_texture_binding_array"
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_texture_binding_array"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_pipeline_statistics_query(
   instance : Instance,
-  adapter : Adapter,
-) -> Device = "mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query"
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_spirv_shader_passthrough(
   instance : Instance,
-  adapter : Adapter,
-) -> Device = "mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough"
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough"
 
 ///|
 pub extern "C" fn queue_on_submitted_work_done_sync(
