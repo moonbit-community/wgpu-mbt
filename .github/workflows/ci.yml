@@ -7,7 +7,9 @@ on:
     branches: [main]
 
 env:
-  WGPU_NATIVE_REV: ba4deb5d935652f40c7e051b15cbb5d097219941
+  # NOTE: ba4deb5d (v27.0.4.0-1) regressed in GitHub-hosted runners (requestAdapter/RequestDevice
+  # returns Success with a NULL handle). Pin to the v27.0.4.0 tag commit.
+  WGPU_NATIVE_REV: 768f15f6ace8e4ec8e8720d5732b29e0b34250a8
 
 jobs:
   linux:
