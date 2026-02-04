@@ -159,7 +159,7 @@ jobs:
           moon test --target native --test-failure-json
 
   windows:
-    name: Windows DX12 (full)
+    name: Windows (Mesa GL, full)
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -170,6 +170,7 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           choco install -y llvm
+          choco install -y 7zip
           "LIBCLANG_PATH=C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Install MoonBit
@@ -211,7 +212,21 @@ jobs:
         shell: pwsh
         run: moon check
 
-      - name: Build wgpu-native (DX12)
+      - name: Install Mesa (software OpenGL)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $mesaUrl = "https://github.com/pal1000/mesa-dist-win/releases/download/25.3.3/mesa3d-25.3.3-release-msvc.7z"
+          $mesa7z = Join-Path $env:RUNNER_TEMP "mesa3d.7z"
+          $mesaDir = Join-Path $env:RUNNER_TEMP "mesa3d"
+          Invoke-WebRequest -Uri $mesaUrl -OutFile $mesa7z
+          New-Item -ItemType Directory -Force -Path $mesaDir | Out-Null
+          7z x $mesa7z "-o$mesaDir" | Out-Host
+          # Override OpenGL DLL and point Vulkan loader at the lavapipe ICD (if used by wgpu-native).
+          (Join-Path $mesaDir "x64") | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+          "VK_ICD_FILENAMES=$(Join-Path $mesaDir \"x64\\lvp_icd.x86_64.json\")" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Build wgpu-native (GLES)
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
@@ -220,7 +235,7 @@ jobs:
           git fetch --depth 1 origin $env:WGPU_NATIVE_REV
           git checkout $env:WGPU_NATIVE_REV
           git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features dx12,wgsl,spirv
+          cargo build --release --no-default-features --features gles,wgsl,spirv
           "MBT_WGPU_NATIVE_LIB=$env:RUNNER_TEMP\wgpu-native\target\release\wgpu_native.dll" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Probe wgpu smoke (diagnostic)
