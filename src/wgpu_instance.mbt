@@ -83,6 +83,49 @@ pub fn Instance::request_adapter_sync(
     }
   }
 
+  // wgpu-native also exposes `wgpuInstanceEnumerateAdapters` (extra API). Some
+  // environments appear to return a null adapter from requestAdapter even when
+  // enumeration succeeds; try picking the first enumerated adapter.
+  if native_has_symbol("wgpuInstanceEnumerateAdapters") {
+    let raw = if platform_is_linux() {
+      let a0 = @c.instance_enumerate_adapter_first_vulkan(self.raw)
+      if !@c.adapter_is_null(a0) {
+        a0
+      } else {
+        let a1 = @c.instance_enumerate_adapter_first_gl(self.raw)
+        if !@c.adapter_is_null(a1) {
+          a1
+        } else {
+          @c.instance_enumerate_adapter_first_primary(self.raw)
+        }
+      }
+    } else if platform_is_windows() {
+      let a0 = @c.instance_enumerate_adapter_first_dx12(self.raw)
+      if !@c.adapter_is_null(a0) {
+        a0
+      } else {
+        let a1 = @c.instance_enumerate_adapter_first_dx11(self.raw)
+        if !@c.adapter_is_null(a1) {
+          a1
+        } else {
+          @c.instance_enumerate_adapter_first_primary(self.raw)
+        }
+      }
+    } else if platform_is_macos() {
+      let a0 = @c.instance_enumerate_adapter_first_metal(self.raw)
+      if !@c.adapter_is_null(a0) {
+        a0
+      } else {
+        @c.instance_enumerate_adapter_first_primary(self.raw)
+      }
+    } else {
+      @c.instance_enumerate_adapter_first_primary(self.raw)
+    }
+    if !@c.adapter_is_null(raw) {
+      return Adapter::{ raw, }
+    }
+  }
+
   // Preserve the last observed status from the C helper.
   raise WgpuRequestAdapterFailed(
     @c.instance_request_adapter_sync_last_status_u32(),

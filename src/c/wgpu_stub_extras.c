@@ -239,6 +239,65 @@ uint64_t mbt_wgpu_instance_enumerate_adapters_count_vulkan(WGPUInstance instance
   return (uint64_t)count;
 }
 
+static WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_backend(
+    WGPUInstance instance, WGPUInstanceBackend backends) {
+  if (!instance) {
+    return NULL;
+  }
+  WGPUInstanceEnumerateAdapterOptions opts = {
+      .nextInChain = NULL,
+      .backends = backends,
+  };
+  size_t count = wgpuInstanceEnumerateAdapters(instance, &opts, NULL);
+  if (count == 0) {
+    return NULL;
+  }
+
+  WGPUAdapter *adapters = (WGPUAdapter *)calloc(count, sizeof(WGPUAdapter));
+  if (!adapters) {
+    return NULL;
+  }
+  size_t out_count = wgpuInstanceEnumerateAdapters(instance, &opts, adapters);
+  if (out_count == 0) {
+    free(adapters);
+    return NULL;
+  }
+
+  // Keep the first adapter; release the rest.
+  WGPUAdapter first = adapters[0];
+  for (size_t i = 1; i < out_count; i++) {
+    if (adapters[i]) {
+      wgpuAdapterRelease(adapters[i]);
+    }
+  }
+  free(adapters);
+  return first;
+}
+
+WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_vulkan(WGPUInstance instance) {
+  return mbt_wgpu_instance_enumerate_adapter_first_backend(instance, WGPUInstanceBackend_Vulkan);
+}
+
+WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_dx12(WGPUInstance instance) {
+  return mbt_wgpu_instance_enumerate_adapter_first_backend(instance, WGPUInstanceBackend_DX12);
+}
+
+WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_dx11(WGPUInstance instance) {
+  return mbt_wgpu_instance_enumerate_adapter_first_backend(instance, WGPUInstanceBackend_DX11);
+}
+
+WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_metal(WGPUInstance instance) {
+  return mbt_wgpu_instance_enumerate_adapter_first_backend(instance, WGPUInstanceBackend_Metal);
+}
+
+WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_gl(WGPUInstance instance) {
+  return mbt_wgpu_instance_enumerate_adapter_first_backend(instance, WGPUInstanceBackend_GL);
+}
+
+WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_primary(WGPUInstance instance) {
+  return mbt_wgpu_instance_enumerate_adapter_first_backend(instance, WGPUInstanceBackend_Primary);
+}
+
 uint32_t mbt_wgpu_adapter_info_backend_type_u32(WGPUAdapter adapter) {
   if (!adapter) {
     return 0u;
