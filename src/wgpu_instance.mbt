@@ -48,7 +48,12 @@ pub fn Instance::request_adapter_sync(
       if !@c.adapter_is_null(a0) {
         a0
       } else {
-        @c.instance_enumerate_adapter_first_dx11(self.raw)
+        let a1 = @c.instance_enumerate_adapter_first_vulkan(self.raw)
+        if !@c.adapter_is_null(a1) {
+          a1
+        } else {
+          @c.instance_enumerate_adapter_first_dx11(self.raw)
+        }
       }
     } else if platform_is_macos() {
       @c.instance_enumerate_adapter_first_metal(self.raw)
