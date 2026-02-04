@@ -379,6 +379,17 @@ typedef struct {
   WGPUAdapter adapter;
 } mbt_request_adapter_result_t;
 
+static bool mbt_wgpu_env_flag_enabled(const char *name) {
+  const char *v = getenv(name);
+  if (!v) {
+    return false;
+  }
+  // Accept a few common truthy spellings.
+  return strcmp(v, "1") == 0 || strcmp(v, "true") == 0 || strcmp(v, "TRUE") == 0 ||
+         strcmp(v, "yes") == 0 || strcmp(v, "YES") == 0 || strcmp(v, "on") == 0 ||
+         strcmp(v, "ON") == 0;
+}
+
 static void mbt_request_adapter_cb(WGPURequestAdapterStatus status,
                                    WGPUAdapter adapter,
                                    WGPUStringView message,
@@ -388,6 +399,12 @@ static void mbt_request_adapter_cb(WGPURequestAdapterStatus status,
   mbt_request_adapter_result_t *out = (mbt_request_adapter_result_t *)userdata1;
   out->status = status;
   out->adapter = adapter;
+
+  if (status != WGPURequestAdapterStatus_Success &&
+      mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+    fprintf(stderr, "[wgpu-native:request-adapter:%u] %.*s\n", (unsigned)status,
+            (int)message.length, message.data ? message.data : "");
+  }
 }
 
 typedef struct {
@@ -500,11 +517,16 @@ void mbt_wgpu_device_destroy_record_lost(WGPUDevice device) {
 static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice device,
                                   WGPUStringView message, void *userdata1,
                                   void *userdata2) {
-  (void)message;
   (void)userdata2;
   mbt_request_device_result_t *out = (mbt_request_device_result_t *)userdata1;
   out->status = status;
   out->device = device;
+
+  if (status != WGPURequestDeviceStatus_Success &&
+      mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_DEVICE")) {
+    fprintf(stderr, "[wgpu-native:request-device:%u] %.*s\n", (unsigned)status,
+            (int)message.length, message.data ? message.data : "");
+  }
 }
 
 typedef struct {
