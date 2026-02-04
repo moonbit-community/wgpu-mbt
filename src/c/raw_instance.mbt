@@ -58,6 +58,16 @@ pub extern "C" fn instance_request_adapter_sync_ptr(
 pub extern "C" fn instance_request_adapter_sync_last_status_u32() -> UInt = "mbt_wgpu_instance_request_adapter_sync_last_status_u32"
 
 ///|
+pub extern "C" fn instance_request_adapter_sync_last_message_utf8_len() -> UInt64 = "mbt_wgpu_instance_request_adapter_sync_last_message_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn instance_request_adapter_sync_last_message_utf8(
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_instance_request_adapter_sync_last_message_utf8"
+
+///|
 pub fn instance_request_adapter_sync_options_u32(
   instance : Instance,
   feature_level_u32 : UInt,

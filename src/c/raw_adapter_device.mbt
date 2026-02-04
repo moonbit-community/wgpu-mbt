@@ -202,6 +202,16 @@ pub extern "C" fn adapter_request_device_sync_ptr(
 pub extern "C" fn adapter_request_device_sync_last_status_u32() -> UInt = "mbt_wgpu_adapter_request_device_sync_last_status_u32"
 
 ///|
+pub extern "C" fn adapter_request_device_sync_last_message_utf8_len() -> UInt64 = "mbt_wgpu_adapter_request_device_sync_last_message_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn adapter_request_device_sync_last_message_utf8(
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_adapter_request_device_sync_last_message_utf8"
+
+///|
 pub extern "C" fn adapter_request_device_sync_timestamp_query(
   instance : Instance,
   adapter : Adapter,

@@ -75,6 +75,15 @@ jobs:
           cargo build --release --no-default-features --features vulkan,wgsl,spirv
           echo "MBT_WGPU_NATIVE_LIB=$RUNNER_TEMP/wgpu-native/target/release/libwgpu_native.so" >> "$GITHUB_ENV"
 
+      - name: Probe wgpu smoke (diagnostic)
+        shell: bash
+        env:
+          MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
+          MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
+        run: |
+          set -euo pipefail
+          moon run --target native src/cmd/main/main.mbt
+
       - name: Run full test suite
         shell: bash
         env:
@@ -82,7 +91,7 @@ jobs:
           MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
         run: |
           set -euo pipefail
-          moon test --target native
+          moon test --target native --test-failure-json
 
       - name: Package contents sanity (exclude artifacts)
         shell: bash
@@ -143,7 +152,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          moon test --target native
+          moon test --target native --test-failure-json
 
   windows:
     name: Windows DX12 (full)
@@ -210,6 +219,15 @@ jobs:
           cargo build --release --no-default-features --features dx12,wgsl,spirv
           "MBT_WGPU_NATIVE_LIB=$env:RUNNER_TEMP\wgpu-native\target\release\wgpu_native.dll" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
+      - name: Probe wgpu smoke (diagnostic)
+        shell: pwsh
+        env:
+          MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
+          MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
+        run: |
+          $ErrorActionPreference = "Stop"
+          moon run --target native src/cmd/main/main.mbt
+
       - name: Run full test suite
         shell: pwsh
         env:
@@ -217,4 +235,4 @@ jobs:
           MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
         run: |
           $ErrorActionPreference = "Stop"
-          moon test --target native
+          moon test --target native --test-failure-json

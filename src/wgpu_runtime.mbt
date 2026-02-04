@@ -64,6 +64,38 @@ pub fn native_diagnostic() -> String {
 }
 
 ///|
+pub fn last_request_adapter_message() -> String {
+  let len = @c.instance_request_adapter_sync_last_message_utf8_len()
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.instance_request_adapter_sync_last_message_utf8(out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
+pub fn last_request_device_message() -> String {
+  let len = @c.adapter_request_device_sync_last_message_utf8_len()
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.adapter_request_device_sync_last_message_utf8(out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
 pub fn native_has_symbol(name : String) -> Bool {
   let b = utf8_bytes(name)
   @c.optional_sym_present_utf8(b, b.length().to_uint64())

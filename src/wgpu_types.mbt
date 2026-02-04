@@ -357,15 +357,69 @@ pub suberror WgpuError {
 }
 
 ///|
+fn request_adapter_status_name(status : UInt) -> String {
+  if status == REQUEST_ADAPTER_STATUS_SUCCESS {
+    "Success"
+  } else if status == REQUEST_ADAPTER_STATUS_INSTANCE_DROPPED {
+    "InstanceDropped"
+  } else if status == REQUEST_ADAPTER_STATUS_UNAVAILABLE {
+    "Unavailable"
+  } else if status == REQUEST_ADAPTER_STATUS_ERROR {
+    "Error"
+  } else if status == REQUEST_ADAPTER_STATUS_UNKNOWN {
+    "Unknown"
+  } else {
+    "?"
+  }
+}
+
+///|
+fn request_device_status_name(status : UInt) -> String {
+  if status == REQUEST_DEVICE_STATUS_SUCCESS {
+    "Success"
+  } else if status == REQUEST_DEVICE_STATUS_INSTANCE_DROPPED {
+    "InstanceDropped"
+  } else if status == REQUEST_DEVICE_STATUS_ERROR {
+    "Error"
+  } else if status == REQUEST_DEVICE_STATUS_UNKNOWN {
+    "Unknown"
+  } else {
+    "?"
+  }
+}
+
+///|
 pub fn WgpuError::message(self : WgpuError) -> String {
   match self {
     WgpuNativeUnavailable(diag) => "native library is unavailable\n" + diag
     WgpuNativeMissingSymbol(sym, diag) =>
       "native library is missing symbol: " + sym + "\n" + diag
-    WgpuRequestAdapterFailed(status) =>
-      "wgpuInstanceRequestAdapter failed (status=" + status.to_string() + ")"
-    WgpuRequestDeviceFailed(status) =>
-      "wgpuAdapterRequestDevice failed (status=" + status.to_string() + ")"
+    WgpuRequestAdapterFailed(status) => {
+      let detail = last_request_adapter_message()
+      let base = "wgpuInstanceRequestAdapter failed (status=" +
+        status.to_string() +
+        ", name=" +
+        request_adapter_status_name(status) +
+        ")"
+      if detail.length() == 0 {
+        base
+      } else {
+        base + "\n" + detail
+      }
+    }
+    WgpuRequestDeviceFailed(status) => {
+      let detail = last_request_device_message()
+      let base = "wgpuAdapterRequestDevice failed (status=" +
+        status.to_string() +
+        ", name=" +
+        request_device_status_name(status) +
+        ")"
+      if detail.length() == 0 {
+        base
+      } else {
+        base + "\n" + detail
+      }
+    }
   }
 }
 
