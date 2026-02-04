@@ -25,7 +25,11 @@ test "wgpu request_adapter options: featureLevel + backendType (best-effort)" {
     @wgpu.BACKEND_TYPE_UNDEFINED
   }
   let adapter = instance.request_adapter_sync_options_u32(
-    feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
+    feature_level_u32=if @wgpu.platform_is_macos() {
+      @wgpu.FEATURE_LEVEL_CORE
+    } else {
+      @wgpu.FEATURE_LEVEL_COMPATIBILITY
+    },
     power_preference_u32=@wgpu.POWER_PREFERENCE_UNDEFINED,
     force_fallback_adapter=!@wgpu.platform_is_macos(),
     backend_type_u32=backend,

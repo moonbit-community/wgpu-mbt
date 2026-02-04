@@ -57,13 +57,27 @@ pub fn Instance::request_adapter_sync(
     backend,
     @c.null_surface(),
   )
-  if @c.adapter_is_null(raw1) {
+  if !@c.adapter_is_null(raw1) {
+    return Adapter::{ raw: raw1 }
+  }
+
+  // Some software adapters (e.g. CI Vulkan ICDs) only satisfy the compatibility
+  // feature level. Try that before giving up.
+  let raw2 = @c.instance_request_adapter_sync_options_u32(
+    self.raw,
+    FEATURE_LEVEL_COMPATIBILITY,
+    POWER_PREFERENCE_UNDEFINED,
+    true,
+    backend,
+    @c.null_surface(),
+  )
+  if @c.adapter_is_null(raw2) {
     // Preserve the last observed status from the C helper.
     raise WgpuRequestAdapterFailed(
       @c.instance_request_adapter_sync_last_status_u32(),
     )
   }
-  Adapter::{ raw: raw1 }
+  Adapter::{ raw: raw2 }
 }
 
 ///|
