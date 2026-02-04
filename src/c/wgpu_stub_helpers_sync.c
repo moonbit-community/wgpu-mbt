@@ -843,8 +843,8 @@ WGPUInstance mbt_wgpu_create_instance(void) {
 #elif defined(_WIN32)
   // Prefer DX12, but allow fallback to other enabled backends in CI.
   extras.backends = WGPUInstanceBackend_All;
-  // FXC is available on GitHub runners; prefer it over DXC to avoid missing-DXC issues.
-  extras.dx12ShaderCompiler = WGPUDx12Compiler_Fxc;
+  // Let wgpu-native pick the best available shader compiler (FXC vs DXC).
+  extras.dx12ShaderCompiler = WGPUDx12Compiler_Undefined;
 #elif defined(__APPLE__)
   extras.backends = WGPUInstanceBackend_Metal;
 #else
