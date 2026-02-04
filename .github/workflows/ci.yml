@@ -82,6 +82,8 @@ jobs:
         env:
           MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
           MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
+          MBT_WGPU_LOG_STDERR: "1"
+          MBT_WGPU_LOG_LEVEL: "debug"
         run: |
           set -euo pipefail
           moon run --target native src/cmd/main/main.mbt
@@ -226,6 +228,8 @@ jobs:
         env:
           MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
           MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
+          MBT_WGPU_LOG_STDERR: "1"
+          MBT_WGPU_LOG_LEVEL: "debug"
         run: |
           $ErrorActionPreference = "Stop"
           moon run --target native src/cmd/main/main.mbt

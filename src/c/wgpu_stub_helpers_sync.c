@@ -17,7 +17,46 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
+// Implemented in wgpu_stub_extras.c.
+void mbt_wgpu_set_log_callback_stderr_enabled(bool enabled);
+
+static WGPULogLevel mbt_wgpu_log_level_from_env(void) {
+  const char *v = getenv("MBT_WGPU_LOG_LEVEL");
+  if (!v || !v[0]) {
+    return WGPULogLevel_Warn;
+  }
+
+  // Minimal ASCII-only case-insensitive comparisons (portable across platforms).
+  static const char *names[] = {"off", "error", "warn", "warning", "info", "debug", "trace"};
+  bool match[7] = {false, false, false, false, false, false, false};
+  for (int i = 0; i < 7; i++) {
+    const char *p = v;
+    const char *q = names[i];
+    while (*p && *q) {
+      unsigned char pc = (unsigned char)*p++;
+      unsigned char qc = (unsigned char)*q++;
+      if ((unsigned char)tolower(pc) != (unsigned char)tolower(qc)) {
+        goto next_name;
+      }
+    }
+    if (*p == 0 && *q == 0) {
+      match[i] = true;
+    }
+  next_name:
+    (void)0;
+  }
+
+  if (match[0]) return WGPULogLevel_Off;
+  if (match[1]) return WGPULogLevel_Error;
+  if (match[2] || match[3]) return WGPULogLevel_Warn;
+  if (match[4]) return WGPULogLevel_Info;
+  if (match[5]) return WGPULogLevel_Debug;
+  if (match[6]) return WGPULogLevel_Trace;
+  // Default to warn on unknown values.
+  return WGPULogLevel_Warn;
+}
 #include "wgpu_dynload.h"
 
 #if defined(_WIN32)
@@ -717,6 +756,12 @@ static void mbt_compilation_info_cb(WGPUCompilationInfoRequestStatus status,
 }
 
 WGPUInstance mbt_wgpu_create_instance(void) {
+  // Optional verbose logging for debugging CI/driver issues.
+  if (mbt_wgpu_env_flag_enabled("MBT_WGPU_LOG_STDERR")) {
+    mbt_wgpu_set_log_callback_stderr_enabled(true);
+    wgpuSetLogLevel(mbt_wgpu_log_level_from_env());
+  }
+
   // wgpu-native uses an extra instance descriptor chain to select backends and
   // DX12 compiler behavior. In headless CI, leaving this unspecified can lead
   // to "Success but NULL handle" results from requestAdapter/requestDevice.
