@@ -17,6 +17,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <inttypes.h>
+#include <string.h>
+#include <stdatomic.h>
+
+static _Atomic uint32_t g_mbt_wgpu_debug_budget_u32 = 64u;
+
+static bool mbt_wgpu_debug_take(const char *env_name) {
+  const char *v = getenv(env_name);
+  if (!v || !v[0]) {
+    return false;
+  }
+  if (!(strcmp(v, "1") == 0 || strcmp(v, "true") == 0 || strcmp(v, "TRUE") == 0 ||
+        strcmp(v, "yes") == 0 || strcmp(v, "YES") == 0 || strcmp(v, "on") == 0 ||
+        strcmp(v, "ON") == 0)) {
+    return false;
+  }
+  uint32_t prev = atomic_fetch_sub_explicit(&g_mbt_wgpu_debug_budget_u32, 1u, memory_order_relaxed);
+  return prev != 0u;
+}
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -284,6 +302,13 @@ static WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_backend(
     printf("[wgpu-native:enumerate-adapters] backends=0x%08" PRIx64
            " count=%zu out_count=%zu first=NULL adapters[0]=%p\n",
            (uint64_t)backends, count, out_count, (void *)(out_count ? adapters[0] : NULL));
+    fflush(stdout);
+  }
+  if (mbt_wgpu_debug_take("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+    printf("[wgpu-native:enumerate-adapters:result] backends=0x%08" PRIx64
+           " count=%zu out_count=%zu first=%p adapters[0]=%p\n",
+           (uint64_t)backends, count, out_count, (void *)first,
+           (void *)(out_count ? adapters[0] : NULL));
     fflush(stdout);
   }
   free(adapters);

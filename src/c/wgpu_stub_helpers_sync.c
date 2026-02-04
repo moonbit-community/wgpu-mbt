@@ -25,6 +25,7 @@
 void mbt_wgpu_set_log_callback_stderr_enabled(bool enabled);
 
 static bool mbt_wgpu_env_flag_enabled(const char *name);
+static bool mbt_wgpu_debug_take(const char *env_name);
 
 // Portable-ish thread-local storage.
 #if defined(_MSC_VER)
@@ -490,6 +491,13 @@ static WGPUAdapter mbt_wgpu_enumerate_first_adapter(WGPUInstance instance,
            (uint64_t)backends, count, out_count, (void *)(out_count ? adapters[0] : NULL));
     fflush(stdout);
   }
+  if (mbt_wgpu_debug_take("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+    printf("[wgpu-native:enumerate-adapters:fallback:result] backends=0x%08" PRIx64
+           " count=%zu out_count=%zu first=%p adapters[0]=%p\n",
+           (uint64_t)backends, count, out_count, (void *)first,
+           (void *)(out_count ? adapters[0] : NULL));
+    fflush(stdout);
+  }
   free(adapters);
   return first;
 }
@@ -503,6 +511,16 @@ static bool mbt_wgpu_env_flag_enabled(const char *name) {
   return strcmp(v, "1") == 0 || strcmp(v, "true") == 0 || strcmp(v, "TRUE") == 0 ||
          strcmp(v, "yes") == 0 || strcmp(v, "YES") == 0 || strcmp(v, "on") == 0 ||
          strcmp(v, "ON") == 0;
+}
+
+static _Atomic uint32_t g_mbt_wgpu_debug_budget_u32 = 64u;
+
+static bool mbt_wgpu_debug_take(const char *env_name) {
+  if (!mbt_wgpu_env_flag_enabled(env_name)) {
+    return false;
+  }
+  uint32_t prev = atomic_fetch_sub_explicit(&g_mbt_wgpu_debug_budget_u32, 1u, memory_order_relaxed);
+  return prev != 0u;
 }
 
 static void mbt_wgpu_stderr_unbuffered_if_debug(void) {
@@ -534,16 +552,14 @@ static void mbt_request_adapter_cb(WGPURequestAdapterStatus status,
     out->message_len = n;
   }
 
-  if (mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
-    if (status != WGPURequestAdapterStatus_Success) {
-      printf("[wgpu-native:request-adapter:%u] %.*s\n", (unsigned)status, (int)out->message_len,
+  if (mbt_wgpu_debug_take("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+    printf("[wgpu-native:request-adapter:cb] status=%u adapter=%p message_len=%zu\n",
+           (unsigned)status, (void *)adapter, out->message_len);
+    if (out->message_len != 0u) {
+      printf("[wgpu-native:request-adapter:cb:message] %.*s\n", (int)out->message_len,
              out->message);
-      fflush(stdout);
-    } else if (!adapter) {
-      printf("[wgpu-native:request-adapter:success-but-null] adapter=NULL message_len=%zu %.*s\n",
-             out->message_len, (int)out->message_len, out->message);
-      fflush(stdout);
     }
+    fflush(stdout);
   }
 
   // Publish the result to the waiting thread. Writes above happen-before
@@ -681,16 +697,14 @@ static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice dev
     out->message_len = n;
   }
 
-  if (mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_DEVICE")) {
-    if (status != WGPURequestDeviceStatus_Success) {
-      printf("[wgpu-native:request-device:%u] %.*s\n", (unsigned)status, (int)out->message_len,
+  if (mbt_wgpu_debug_take("MBT_WGPU_DEBUG_REQUEST_DEVICE")) {
+    printf("[wgpu-native:request-device:cb] status=%u device=%p message_len=%zu\n",
+           (unsigned)status, (void *)device, out->message_len);
+    if (out->message_len != 0u) {
+      printf("[wgpu-native:request-device:cb:message] %.*s\n", (int)out->message_len,
              out->message);
-      fflush(stdout);
-    } else if (!device) {
-      printf("[wgpu-native:request-device:success-but-null] device=NULL message_len=%zu %.*s\n",
-             out->message_len, (int)out->message_len, out->message);
-      fflush(stdout);
     }
+    fflush(stdout);
   }
 
   // Publish the result to the waiting thread. Writes above happen-before
