@@ -77,10 +77,11 @@ jobs:
 
       - name: Run full test suite
         shell: bash
+        env:
+          MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
+          MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
         run: |
           set -euo pipefail
-          export MBT_WGPU_DEBUG_REQUEST_ADAPTER=1
-          export MBT_WGPU_DEBUG_REQUEST_DEVICE=1
           moon test --target native
 
       - name: Package contents sanity (exclude artifacts)
@@ -211,8 +212,9 @@ jobs:
 
       - name: Run full test suite
         shell: pwsh
+        env:
+          MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
+          MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
         run: |
           $ErrorActionPreference = "Stop"
-          $env:MBT_WGPU_DEBUG_REQUEST_ADAPTER = "1"
-          $env:MBT_WGPU_DEBUG_REQUEST_DEVICE = "1"
           moon test --target native
