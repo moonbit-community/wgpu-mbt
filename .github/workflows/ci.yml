@@ -24,7 +24,8 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y libvulkan1 mesa-vulkan-drivers vulkan-tools clang libclang-dev pkg-config
+          sudo apt-get install -y libvulkan1 mesa-vulkan-drivers vulkan-tools clang libclang-dev pkg-config \
+            libegl1-mesa libgl1-mesa-dri
 
       - name: Configure Vulkan ICD (lavapipe)
         shell: bash
@@ -74,7 +75,7 @@ jobs:
           git fetch --depth 1 origin "$WGPU_NATIVE_REV"
           git checkout "$WGPU_NATIVE_REV"
           git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features vulkan,wgsl,spirv
+          cargo build --release --no-default-features --features vulkan,gles,wgsl,spirv
           echo "MBT_WGPU_NATIVE_LIB=$RUNNER_TEMP/wgpu-native/target/release/libwgpu_native.so" >> "$GITHUB_ENV"
 
       - name: Probe wgpu smoke (diagnostic)
@@ -220,7 +221,7 @@ jobs:
           git fetch --depth 1 origin $env:WGPU_NATIVE_REV
           git checkout $env:WGPU_NATIVE_REV
           git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features dx12,wgsl,spirv
+          cargo build --release --no-default-features --features dx12,gles,wgsl,spirv
           "MBT_WGPU_NATIVE_LIB=$env:RUNNER_TEMP\wgpu-native\target\release\wgpu_native.dll" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Probe wgpu smoke (diagnostic)

@@ -772,9 +772,12 @@ WGPUInstance mbt_wgpu_create_instance(void) {
   };
 
 #if defined(__linux__)
-  extras.backends = WGPUInstanceBackend_Vulkan;
+  // CI uses software rendering; allow wgpu-native to pick the most usable
+  // backend available (Vulkan may be present but not always WebGPU-capable).
+  extras.backends = WGPUInstanceBackend_All;
 #elif defined(_WIN32)
-  extras.backends = WGPUInstanceBackend_DX12;
+  // Prefer DX12, but allow fallback to other enabled backends in CI.
+  extras.backends = WGPUInstanceBackend_All;
   // FXC is available on GitHub runners; prefer it over DXC to avoid missing-DXC issues.
   extras.dx12ShaderCompiler = WGPUDx12Compiler_Fxc;
 #elif defined(__APPLE__)
