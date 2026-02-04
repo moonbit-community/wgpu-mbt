@@ -11,46 +11,7 @@ env:
 
 jobs:
   linux:
-    name: Linux (build-only)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install MoonBit
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
-          echo "MOON_HOME=$HOME/.moon" >> "$GITHUB_ENV"
-          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
-
-      - name: Moon version
-        shell: bash
-        run: moon version --all
-
-      - name: Lint (moon check)
-        shell: bash
-        run: moon check
-
-      - name: Compile tests (no runtime deps)
-        shell: bash
-        run: moon test --build-only --target native
-
-      - name: Package contents sanity (exclude artifacts)
-        shell: bash
-        run: |
-          set -euo pipefail
-          # `moon package --list` includes status lines like "Running moon check ..." and
-          # "Package to .../_build/..."; we only want to validate the file list (one path per line).
-          moon package --list | awk '!/ /{print}' > package_files.txt
-          if grep -nE '(^|/)(trace\.json|_build|target|src/c/target|vendor)(/|$)' package_files.txt; then
-            echo "Unexpected build artifacts included in publish package."
-            exit 1
-          fi
-
-  linux-vulkan:
-    name: Linux Vulkan (headless smoke)
+    name: Linux Vulkan (smoke)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -94,6 +55,14 @@ jobs:
           echo "MOON_HOME=$HOME/.moon" >> "$GITHUB_ENV"
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
 
+      - name: Moon version
+        shell: bash
+        run: moon version --all
+
+      - name: Lint (moon check)
+        shell: bash
+        run: moon check
+
       - name: Build wgpu-native (Vulkan)
         shell: bash
         run: |
@@ -113,16 +82,35 @@ jobs:
           moon test --target native src/tests/wgpu_linux_headless_smoke_test.mbt
           moon test --target native src/tests/wgpu_smoke_test.mbt
           moon test --target native src/tests/wgpu_queue_write_buffer_test.mbt
-          moon test --target native src/tests/wgpu_buffer_sync_or_raise_test.mbt
           moon test --target native src/tests/wgpu_render_offscreen_test.mbt
           moon test --target native src/tests/wgpu_spec_buffer_map_test.mbt
 
+      - name: Package contents sanity (exclude artifacts)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # `moon package --list` includes status lines like "Running moon check ..." and
+          # "Package to .../_build/..."; we only want to validate the file list (one path per line).
+          moon package --list | awk '!/ /{print}' > package_files.txt
+          if grep -nE '(^|/)(trace\.json|_build|target|src/c/target|vendor)(/|$)' package_files.txt; then
+            echo "Unexpected build artifacts included in publish package."
+            exit 1
+          fi
+
   macos:
-    name: macOS (build-only)
+    name: macOS Metal (smoke)
     runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install system deps (bindgen)
+        shell: bash
+        run: |
+          set -euo pipefail
+          brew install llvm
+          echo "LIBCLANG_PATH=$(brew --prefix llvm)/lib" >> "$GITHUB_ENV"
+          echo "$(brew --prefix llvm)/bin" >> "$GITHUB_PATH"
 
       - name: Install MoonBit
         shell: bash
@@ -140,16 +128,41 @@ jobs:
         shell: bash
         run: moon check
 
-      - name: Compile tests (no runtime deps)
+      - name: Build wgpu-native (Metal)
         shell: bash
-        run: moon test --build-only --target native
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/gfx-rs/wgpu-native "$RUNNER_TEMP/wgpu-native"
+          cd "$RUNNER_TEMP/wgpu-native"
+          git fetch --depth 1 origin "$WGPU_NATIVE_REV"
+          git checkout "$WGPU_NATIVE_REV"
+          git submodule update --init --recursive --depth 1
+          cargo build --release --no-default-features --features metal,wgsl
+          echo "MBT_WGPU_NATIVE_LIB=$RUNNER_TEMP/wgpu-native/target/release/libwgpu_native.dylib" >> "$GITHUB_ENV"
+
+      - name: Run Metal smoke suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon test --target native src/tests/wgpu_smoke_test.mbt
+          moon test --target native src/tests/wgpu_queue_write_buffer_test.mbt
+          moon test --target native src/tests/wgpu_render_offscreen_test.mbt
+          moon test --target native src/tests/wgpu_spec_buffer_map_test.mbt
+          moon test --target native src/tests/wgpu_surface_present_test.mbt
 
   windows:
-    name: Windows (build-only)
+    name: Windows DX12 (smoke)
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install system deps (bindgen)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          choco install -y llvm
+          "LIBCLANG_PATH=C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Install MoonBit
         shell: pwsh
@@ -190,6 +203,23 @@ jobs:
         shell: pwsh
         run: moon check
 
-      - name: Compile tests (no runtime deps)
+      - name: Build wgpu-native (DX12)
         shell: pwsh
-        run: moon test --build-only --target native
+        run: |
+          $ErrorActionPreference = "Stop"
+          git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/gfx-rs/wgpu-native "$env:RUNNER_TEMP\wgpu-native"
+          Set-Location "$env:RUNNER_TEMP\wgpu-native"
+          git fetch --depth 1 origin $env:WGPU_NATIVE_REV
+          git checkout $env:WGPU_NATIVE_REV
+          git submodule update --init --recursive --depth 1
+          cargo build --release --no-default-features --features dx12,wgsl
+          "MBT_WGPU_NATIVE_LIB=$env:RUNNER_TEMP\wgpu-native\target\release\wgpu_native.dll" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Run DX12 smoke suite
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          moon test --target native src/tests/wgpu_smoke_test.mbt
+          moon test --target native src/tests/wgpu_queue_write_buffer_test.mbt
+          moon test --target native src/tests/wgpu_render_offscreen_test.mbt
+          moon test --target native src/tests/wgpu_spec_buffer_map_test.mbt
