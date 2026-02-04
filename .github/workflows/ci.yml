@@ -159,7 +159,7 @@ jobs:
           moon test --target native --test-failure-json
 
   windows:
-    name: Windows (Mesa Vulkan, full)
+    name: Windows (Lavapipe Vulkan, full)
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -170,10 +170,15 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           choco install -y llvm
-          choco install -y 7zip
-          # Provide Vulkan loader/runtime (vulkan-1.dll) on GitHub-hosted runners.
-          choco install -y vulkan-sdk
           "LIBCLANG_PATH=C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+      
+      - name: Install Vulkan Runtime + Lavapipe (software Vulkan)
+        uses: jakoch/install-vulkan-sdk-action@v1
+        with:
+          install_runtime_only: true
+          install_lavapipe: true
+          cache: true
+          stripdown: true
 
       - name: Install MoonBit
         shell: pwsh
@@ -214,19 +219,15 @@ jobs:
         shell: pwsh
         run: moon check
 
-      - name: Install Mesa (software OpenGL)
+      - name: Configure Vulkan ICD (lavapipe)
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          $mesaUrl = "https://github.com/pal1000/mesa-dist-win/releases/download/25.3.3/mesa3d-25.3.3-release-msvc.7z"
-          $mesa7z = Join-Path $env:RUNNER_TEMP "mesa3d.7z"
-          $mesaDir = Join-Path $env:RUNNER_TEMP "mesa3d"
-          Invoke-WebRequest -Uri $mesaUrl -OutFile $mesa7z
-          New-Item -ItemType Directory -Force -Path $mesaDir | Out-Null
-          7z x $mesa7z "-o$mesaDir" | Out-Host
-          # Override OpenGL DLL and point Vulkan loader at the lavapipe ICD (if used by wgpu-native).
-          (Join-Path $mesaDir "x64") | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
-          $vkIcd = Join-Path (Join-Path $mesaDir "x64") "lvp_icd.x86_64.json"
+          # Ensure the Vulkan loader (vulkan-1.dll) is discoverable.
+          $runtimeDir = Join-Path (Join-Path $env:VULKAN_SDK "runtime") "x64"
+          $runtimeDir | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+
+          $vkIcd = "C:\\Lavapipe\\share\\vulkan\\icd.d\\lvp_icd.x86_64.json"
           "VK_ICD_FILENAMES=$vkIcd" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Build wgpu-native (Vulkan)
