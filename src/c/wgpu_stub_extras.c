@@ -16,6 +16,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -259,6 +260,13 @@ static WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_backend(
   }
   size_t out_count = wgpuInstanceEnumerateAdapters(instance, &opts, adapters);
   if (out_count == 0) {
+    if (getenv("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+      fprintf(stderr,
+              "[wgpu-native:enumerate-adapters] backends=0x%08" PRIx64
+              " count=%zu out_count=0\n",
+              (uint64_t)backends, count);
+      fflush(stderr);
+    }
     free(adapters);
     return NULL;
   }
@@ -273,6 +281,13 @@ static WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_backend(
     if (adapters[i]) {
       wgpuAdapterRelease(adapters[i]);
     }
+  }
+  if (!first && getenv("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+    fprintf(stderr,
+            "[wgpu-native:enumerate-adapters] backends=0x%08" PRIx64
+            " count=%zu out_count=%zu first=NULL adapters[0]=%p\n",
+            (uint64_t)backends, count, out_count, (void *)(out_count ? adapters[0] : NULL));
+    fflush(stderr);
   }
   free(adapters);
   return first;

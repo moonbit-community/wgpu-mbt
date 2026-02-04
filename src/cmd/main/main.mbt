@@ -15,18 +15,46 @@
 ///|
 fn main {
   try {
+    println("native diagnostic:")
+    println(@wgpu.native_diagnostic())
+    println("wgpuGetVersion: " + @wgpu_c.wgpuGetVersion().to_string())
     let instance = @wgpu.Instance::create()
     if @wgpu.platform_is_linux() {
       let n = @wgpu_c.instance_enumerate_adapters_count_vulkan(
         instance.raw_handle(),
       )
       println("vulkan adapters (enumerate): " + n.to_string())
+      let a = @wgpu_c.instance_enumerate_adapter_first_vulkan(
+        instance.raw_handle(),
+      )
+      println(
+        "vulkan first adapter is null: " +
+        @wgpu_c.adapter_is_null(a).to_string(),
+      )
+      if !@wgpu_c.adapter_is_null(a) {
+        let backend = @wgpu_c.adapter_info_backend_type_u32(a)
+        println("vulkan first adapter backend_type_u32: " + backend.to_string())
+        @wgpu_c.wgpuAdapterRelease(a)
+      }
     }
     if @wgpu.platform_is_macos() {
       let n = @wgpu_c.instance_enumerate_adapters_count_metal(
         instance.raw_handle(),
       )
       println("metal adapters (enumerate): " + n.to_string())
+    }
+    if @wgpu.platform_is_windows() {
+      let a = @wgpu_c.instance_enumerate_adapter_first_dx12(
+        instance.raw_handle(),
+      )
+      println(
+        "dx12 first adapter is null: " + @wgpu_c.adapter_is_null(a).to_string(),
+      )
+      if !@wgpu_c.adapter_is_null(a) {
+        let backend = @wgpu_c.adapter_info_backend_type_u32(a)
+        println("dx12 first adapter backend_type_u32: " + backend.to_string())
+        @wgpu_c.wgpuAdapterRelease(a)
+      }
     }
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)

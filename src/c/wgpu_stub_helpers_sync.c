@@ -19,9 +19,23 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdatomic.h>
+#include <inttypes.h>
 
 // Implemented in wgpu_stub_extras.c.
 void mbt_wgpu_set_log_callback_stderr_enabled(bool enabled);
+
+static bool mbt_wgpu_env_flag_enabled(const char *name);
+
+// Portable-ish thread-local storage.
+#if defined(_MSC_VER)
+#define MBT_WGPU_THREAD_LOCAL __declspec(thread)
+#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L)
+#define MBT_WGPU_THREAD_LOCAL _Thread_local
+#elif defined(__GNUC__)
+#define MBT_WGPU_THREAD_LOCAL __thread
+#else
+#define MBT_WGPU_THREAD_LOCAL
+#endif
 
 static WGPULogLevel mbt_wgpu_log_level_from_env(void) {
   const char *v = getenv("MBT_WGPU_LOG_LEVEL");
@@ -449,6 +463,13 @@ static WGPUAdapter mbt_wgpu_enumerate_first_adapter(WGPUInstance instance,
   }
   size_t out_count = wgpuInstanceEnumerateAdapters(instance, &opts, adapters);
   if (out_count == 0) {
+    if (mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+      fprintf(stderr,
+              "[wgpu-native:enumerate-adapters:fallback] backends=0x%08" PRIx64
+              " count=%zu out_count=0\n",
+              (uint64_t)backends, count);
+      fflush(stderr);
+    }
     free(adapters);
     return NULL;
   }
@@ -464,6 +485,13 @@ static WGPUAdapter mbt_wgpu_enumerate_first_adapter(WGPUInstance instance,
       wgpuAdapterRelease(adapters[i]);
     }
   }
+  if (!first && mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
+    fprintf(stderr,
+            "[wgpu-native:enumerate-adapters:fallback] backends=0x%08" PRIx64
+            " count=%zu out_count=%zu first=NULL adapters[0]=%p\n",
+            (uint64_t)backends, count, out_count, (void *)(out_count ? adapters[0] : NULL));
+    fflush(stderr);
+  }
   free(adapters);
   return first;
 }
@@ -477,6 +505,15 @@ static bool mbt_wgpu_env_flag_enabled(const char *name) {
   return strcmp(v, "1") == 0 || strcmp(v, "true") == 0 || strcmp(v, "TRUE") == 0 ||
          strcmp(v, "yes") == 0 || strcmp(v, "YES") == 0 || strcmp(v, "on") == 0 ||
          strcmp(v, "ON") == 0;
+}
+
+static void mbt_wgpu_stderr_unbuffered_if_debug(void) {
+  // In CI, stderr may be buffered. Make debug output visible immediately.
+  if (mbt_wgpu_env_flag_enabled("MBT_WGPU_LOG_STDERR") ||
+      mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER") ||
+      mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_DEVICE")) {
+    setvbuf(stderr, NULL, _IONBF, 0);
+  }
 }
 
 static void mbt_request_adapter_cb(WGPURequestAdapterStatus status,
@@ -503,9 +540,12 @@ static void mbt_request_adapter_cb(WGPURequestAdapterStatus status,
     if (status != WGPURequestAdapterStatus_Success) {
       fprintf(stderr, "[wgpu-native:request-adapter:%u] %.*s\n", (unsigned)status,
               (int)out->message_len, out->message);
+      fflush(stderr);
     } else if (!adapter) {
-      fprintf(stderr, "[wgpu-native:request-adapter:success-but-null] %.*s\n",
-              (int)out->message_len, out->message);
+      fprintf(stderr,
+              "[wgpu-native:request-adapter:success-but-null] adapter=NULL message_len=%zu %.*s\n",
+              out->message_len, (int)out->message_len, out->message);
+      fflush(stderr);
     }
   }
 
@@ -648,9 +688,12 @@ static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice dev
     if (status != WGPURequestDeviceStatus_Success) {
       fprintf(stderr, "[wgpu-native:request-device:%u] %.*s\n", (unsigned)status,
               (int)out->message_len, out->message);
+      fflush(stderr);
     } else if (!device) {
-      fprintf(stderr, "[wgpu-native:request-device:success-but-null] %.*s\n",
-              (int)out->message_len, out->message);
+      fprintf(stderr,
+              "[wgpu-native:request-device:success-but-null] device=NULL message_len=%zu %.*s\n",
+              out->message_len, (int)out->message_len, out->message);
+      fflush(stderr);
     }
   }
 
@@ -767,6 +810,7 @@ static void mbt_compilation_info_cb(WGPUCompilationInfoRequestStatus status,
 }
 
 WGPUInstance mbt_wgpu_create_instance(void) {
+  mbt_wgpu_stderr_unbuffered_if_debug();
   // Optional verbose logging for debugging CI/driver issues.
   if (mbt_wgpu_env_flag_enabled("MBT_WGPU_LOG_STDERR")) {
     mbt_wgpu_set_log_callback_stderr_enabled(true);
@@ -805,33 +849,16 @@ WGPUInstance mbt_wgpu_create_instance(void) {
   return wgpuCreateInstance(&desc);
 }
 
-#if defined(_WIN32)
-__declspec(thread) static uint32_t g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
-__declspec(thread) static uint32_t g_mbt_wgpu_last_request_device_status_u32 = 0u;
-#else
-static _Thread_local uint32_t g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
-static _Thread_local uint32_t g_mbt_wgpu_last_request_device_status_u32 = 0u;
-#endif
+static MBT_WGPU_THREAD_LOCAL uint32_t g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
+static MBT_WGPU_THREAD_LOCAL uint32_t g_mbt_wgpu_last_request_device_status_u32 = 0u;
 
-#if defined(_WIN32)
-__declspec(thread) static uint8_t g_mbt_wgpu_last_request_adapter_message[2048];
-__declspec(thread) static uint64_t g_mbt_wgpu_last_request_adapter_message_len_u64 = 0u;
-__declspec(thread) static uint8_t g_mbt_wgpu_last_request_device_message[2048];
-__declspec(thread) static uint64_t g_mbt_wgpu_last_request_device_message_len_u64 = 0u;
-#else
-static _Thread_local uint8_t g_mbt_wgpu_last_request_adapter_message[2048];
-static _Thread_local uint64_t g_mbt_wgpu_last_request_adapter_message_len_u64 = 0u;
-static _Thread_local uint8_t g_mbt_wgpu_last_request_device_message[2048];
-static _Thread_local uint64_t g_mbt_wgpu_last_request_device_message_len_u64 = 0u;
-#endif
+static MBT_WGPU_THREAD_LOCAL uint8_t g_mbt_wgpu_last_request_adapter_message[2048];
+static MBT_WGPU_THREAD_LOCAL uint64_t g_mbt_wgpu_last_request_adapter_message_len_u64 = 0u;
+static MBT_WGPU_THREAD_LOCAL uint8_t g_mbt_wgpu_last_request_device_message[2048];
+static MBT_WGPU_THREAD_LOCAL uint64_t g_mbt_wgpu_last_request_device_message_len_u64 = 0u;
 
-#if defined(_WIN32)
-__declspec(thread) static uint32_t g_mbt_wgpu_last_pipeline_async_status_u32 = 0u;
-__declspec(thread) static uint32_t g_mbt_wgpu_last_pipeline_async_error_kind_u32 = 0u;
-#else
-static _Thread_local uint32_t g_mbt_wgpu_last_pipeline_async_status_u32 = 0u;
-static _Thread_local uint32_t g_mbt_wgpu_last_pipeline_async_error_kind_u32 = 0u;
-#endif
+static MBT_WGPU_THREAD_LOCAL uint32_t g_mbt_wgpu_last_pipeline_async_status_u32 = 0u;
+static MBT_WGPU_THREAD_LOCAL uint32_t g_mbt_wgpu_last_pipeline_async_error_kind_u32 = 0u;
 
 enum {
   MBT_WGPU_PIPELINE_ASYNC_ERR_NONE = 0u,
@@ -842,13 +869,8 @@ enum {
   MBT_WGPU_PIPELINE_ASYNC_ERR_INVALID_INPUT = 5u,
 };
 
-#if defined(_WIN32)
-__declspec(thread) static uint32_t g_mbt_wgpu_last_compilation_info_status_u32 = 0u;
-__declspec(thread) static uint32_t g_mbt_wgpu_last_compilation_info_error_kind_u32 = 0u;
-#else
-static _Thread_local uint32_t g_mbt_wgpu_last_compilation_info_status_u32 = 0u;
-static _Thread_local uint32_t g_mbt_wgpu_last_compilation_info_error_kind_u32 = 0u;
-#endif
+static MBT_WGPU_THREAD_LOCAL uint32_t g_mbt_wgpu_last_compilation_info_status_u32 = 0u;
+static MBT_WGPU_THREAD_LOCAL uint32_t g_mbt_wgpu_last_compilation_info_error_kind_u32 = 0u;
 
 enum {
   MBT_WGPU_COMPILATION_INFO_ERR_NONE = 0u,
