@@ -151,17 +151,24 @@ pub fn Instance::request_adapter_sync_options_u32(
   power_preference_u32? : UInt = POWER_PREFERENCE_UNDEFINED,
   force_fallback_adapter? : Bool = false,
   backend_type_u32? : UInt = BACKEND_TYPE_UNDEFINED,
-) -> Adapter {
-  Adapter::{
-    raw: @c.instance_request_adapter_sync_options_u32(
-      self.raw,
-      feature_level_u32,
-      power_preference_u32,
-      force_fallback_adapter,
-      backend_type_u32,
-      @c.null_surface(),
-    ),
+) -> Adapter raise WgpuError {
+  require_native()
+  require_native_symbol("wgpuInstanceRequestAdapter")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let raw = @c.instance_request_adapter_sync_options_u32(
+    self.raw,
+    feature_level_u32,
+    power_preference_u32,
+    force_fallback_adapter,
+    backend_type_u32,
+    @c.null_surface(),
+  )
+  if @c.adapter_is_null(raw) {
+    raise WgpuRequestAdapterFailed(
+      @c.instance_request_adapter_sync_last_status_u32(),
+    )
   }
+  Adapter::{ raw, }
 }
 
 ///|
@@ -172,17 +179,24 @@ pub fn Instance::request_adapter_sync_options_surface_u32(
   power_preference_u32? : UInt = POWER_PREFERENCE_UNDEFINED,
   force_fallback_adapter? : Bool = false,
   backend_type_u32? : UInt = BACKEND_TYPE_UNDEFINED,
-) -> Adapter {
-  Adapter::{
-    raw: @c.instance_request_adapter_sync_options_u32(
-      self.raw,
-      feature_level_u32,
-      power_preference_u32,
-      force_fallback_adapter,
-      backend_type_u32,
-      surface.raw,
-    ),
+) -> Adapter raise WgpuError {
+  require_native()
+  require_native_symbol("wgpuInstanceRequestAdapter")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let raw = @c.instance_request_adapter_sync_options_u32(
+    self.raw,
+    feature_level_u32,
+    power_preference_u32,
+    force_fallback_adapter,
+    backend_type_u32,
+    surface.raw,
+  )
+  if @c.adapter_is_null(raw) {
+    raise WgpuRequestAdapterFailed(
+      @c.instance_request_adapter_sync_last_status_u32(),
+    )
   }
+  Adapter::{ raw, }
 }
 
 ///|

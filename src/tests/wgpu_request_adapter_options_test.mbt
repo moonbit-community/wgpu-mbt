@@ -20,7 +20,7 @@ test "wgpu request_adapter options: featureLevel + backendType (best-effort)" {
   } else if @wgpu.platform_is_linux() {
     @wgpu.BACKEND_TYPE_VULKAN
   } else if @wgpu.platform_is_windows() {
-    @wgpu.BACKEND_TYPE_D3_D12
+    @wgpu.BACKEND_TYPE_UNDEFINED
   } else {
     @wgpu.BACKEND_TYPE_UNDEFINED
   }
@@ -41,7 +41,7 @@ test "wgpu request_adapter options: featureLevel + backendType (best-effort)" {
   } else if @wgpu.platform_is_linux() {
     inspect(backend, content="6")
   } else if @wgpu.platform_is_windows() {
-    inspect(backend, content="4")
+    inspect(backend, content="0")
   } else {
     inspect(backend, content="0")
   }

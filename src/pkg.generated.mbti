@@ -1625,8 +1625,8 @@ pub fn Instance::raw_handle(Self) -> @c.WGPUInstance
 pub fn Instance::release(Self) -> Unit
 pub fn Instance::release_raw(Self) -> Unit
 pub fn Instance::request_adapter_sync(Self) -> Adapter raise WgpuError
-pub fn Instance::request_adapter_sync_options_surface_u32(Self, Surface, feature_level_u32? : UInt, power_preference_u32? : UInt, force_fallback_adapter? : Bool, backend_type_u32? : UInt) -> Adapter
-pub fn Instance::request_adapter_sync_options_u32(Self, feature_level_u32? : UInt, power_preference_u32? : UInt, force_fallback_adapter? : Bool, backend_type_u32? : UInt) -> Adapter
+pub fn Instance::request_adapter_sync_options_surface_u32(Self, Surface, feature_level_u32? : UInt, power_preference_u32? : UInt, force_fallback_adapter? : Bool, backend_type_u32? : UInt) -> Adapter raise WgpuError
+pub fn Instance::request_adapter_sync_options_u32(Self, feature_level_u32? : UInt, power_preference_u32? : UInt, force_fallback_adapter? : Bool, backend_type_u32? : UInt) -> Adapter raise WgpuError
 pub fn Instance::request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Adapter raise WgpuError
 pub fn Instance::wait_any(Self, UInt64, @c.WGPUFutureWaitInfoPtr, UInt64) -> @c.WGPUWaitStatus
 pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult
