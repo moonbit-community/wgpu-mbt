@@ -1596,11 +1596,39 @@ pub fn Device::wait_lost_reason_sync(Self, Instance) -> UInt
 pub struct GlobalReport {
   raw : @c.WGPUGlobalReportPtr
 }
+pub fn GlobalReport::hub_bind_group_layouts_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_bind_group_layouts_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_bind_groups_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_bind_groups_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_buffers_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_buffers_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_command_buffers_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_command_buffers_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_compute_pipelines_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_compute_pipelines_num_released_from_user(Self) -> UInt64
 pub fn GlobalReport::hub_devices_element_size(Self) -> UInt64
 pub fn GlobalReport::hub_devices_num_allocated(Self) -> UInt64
+pub fn GlobalReport::hub_devices_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_devices_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_pipeline_layouts_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_pipeline_layouts_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_queues_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_queues_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_render_pipelines_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_render_pipelines_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_samplers_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_samplers_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_shader_modules_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_shader_modules_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_texture_views_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_texture_views_num_released_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_textures_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::hub_textures_num_released_from_user(Self) -> UInt64
 pub fn GlobalReport::release(Self) -> Unit
 pub fn GlobalReport::surfaces_element_size(Self) -> UInt64
 pub fn GlobalReport::surfaces_num_allocated(Self) -> UInt64
+pub fn GlobalReport::surfaces_num_kept_from_user(Self) -> UInt64
+pub fn GlobalReport::surfaces_num_released_from_user(Self) -> UInt64
 
 pub struct Instance {
   raw : @c.WGPUInstance

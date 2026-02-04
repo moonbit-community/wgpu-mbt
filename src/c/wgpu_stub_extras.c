@@ -805,6 +805,20 @@ uint64_t mbt_wgpu_global_report_surfaces_num_allocated(WGPUGlobalReport *report)
   return mbt_wgpu_u64_from_size_t(report->surfaces.numAllocated);
 }
 
+uint64_t mbt_wgpu_global_report_surfaces_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->surfaces.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_surfaces_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->surfaces.numReleasedFromUser);
+}
+
 uint64_t mbt_wgpu_global_report_surfaces_element_size(WGPUGlobalReport *report) {
   if (!report) {
     return 0u;
@@ -819,11 +833,193 @@ uint64_t mbt_wgpu_global_report_hub_devices_num_allocated(WGPUGlobalReport *repo
   return mbt_wgpu_u64_from_size_t(report->hub.devices.numAllocated);
 }
 
+uint64_t mbt_wgpu_global_report_hub_devices_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.devices.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_devices_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.devices.numReleasedFromUser);
+}
+
 uint64_t mbt_wgpu_global_report_hub_devices_element_size(WGPUGlobalReport *report) {
   if (!report) {
     return 0u;
   }
   return mbt_wgpu_u64_from_size_t(report->hub.devices.elementSize);
+}
+
+uint64_t mbt_wgpu_global_report_hub_queues_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.queues.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_queues_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.queues.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_buffers_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.buffers.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_buffers_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.buffers.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_textures_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.textures.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_textures_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.textures.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_texture_views_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.textureViews.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_texture_views_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.textureViews.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_samplers_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.samplers.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_samplers_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.samplers.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_shader_modules_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.shaderModules.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_shader_modules_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.shaderModules.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_pipeline_layouts_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.pipelineLayouts.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_pipeline_layouts_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.pipelineLayouts.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_bind_group_layouts_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.bindGroupLayouts.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_bind_group_layouts_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.bindGroupLayouts.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_bind_groups_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.bindGroups.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_bind_groups_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.bindGroups.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_command_buffers_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.commandBuffers.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_command_buffers_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.commandBuffers.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_render_pipelines_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.renderPipelines.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_render_pipelines_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.renderPipelines.numReleasedFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_compute_pipelines_num_kept_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.computePipelines.numKeptFromUser);
+}
+
+uint64_t mbt_wgpu_global_report_hub_compute_pipelines_num_released_from_user(WGPUGlobalReport *report) {
+  if (!report) {
+    return 0u;
+  }
+  return mbt_wgpu_u64_from_size_t(report->hub.computePipelines.numReleasedFromUser);
 }
 
 void mbt_wgpu_device_push_error_scope_u32(WGPUDevice device, uint32_t filter_u32) {

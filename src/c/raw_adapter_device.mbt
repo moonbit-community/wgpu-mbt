@@ -157,6 +157,18 @@ pub extern "C" fn global_report_surfaces_num_allocated(
 
 ///|
 #borrow(report)
+pub extern "C" fn global_report_surfaces_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_surfaces_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_surfaces_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_surfaces_num_released_from_user"
+
+///|
+#borrow(report)
 pub extern "C" fn global_report_surfaces_element_size(
   report : WGPUGlobalReportPtr,
 ) -> UInt64 = "mbt_wgpu_global_report_surfaces_element_size"
@@ -169,9 +181,165 @@ pub extern "C" fn global_report_hub_devices_num_allocated(
 
 ///|
 #borrow(report)
+pub extern "C" fn global_report_hub_devices_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_devices_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_devices_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_devices_num_released_from_user"
+
+///|
+#borrow(report)
 pub extern "C" fn global_report_hub_devices_element_size(
   report : WGPUGlobalReportPtr,
 ) -> UInt64 = "mbt_wgpu_global_report_hub_devices_element_size"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_queues_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_queues_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_queues_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_queues_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_buffers_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_buffers_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_buffers_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_buffers_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_textures_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_textures_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_textures_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_textures_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_texture_views_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_texture_views_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_texture_views_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_texture_views_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_samplers_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_samplers_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_samplers_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_samplers_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_shader_modules_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_shader_modules_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_shader_modules_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_shader_modules_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_pipeline_layouts_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_pipeline_layouts_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_pipeline_layouts_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_pipeline_layouts_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_bind_group_layouts_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_bind_group_layouts_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_bind_group_layouts_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_bind_group_layouts_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_bind_groups_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_bind_groups_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_bind_groups_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_bind_groups_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_command_buffers_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_command_buffers_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_command_buffers_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_command_buffers_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_render_pipelines_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_render_pipelines_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_render_pipelines_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_render_pipelines_num_released_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_compute_pipelines_num_kept_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_compute_pipelines_num_kept_from_user"
+
+///|
+#borrow(report)
+pub extern "C" fn global_report_hub_compute_pipelines_num_released_from_user(
+  report : WGPUGlobalReportPtr,
+) -> UInt64 = "mbt_wgpu_global_report_hub_compute_pipelines_num_released_from_user"
 
 ///|
 pub extern "C" fn device_push_error_scope_u32(

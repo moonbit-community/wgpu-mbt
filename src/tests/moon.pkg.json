@@ -205,6 +205,9 @@
     "wgpu_generate_report_test.mbt": [
       "native"
     ],
+    "wgpu_report_leak_check_test.mbt": [
+      "native"
+    ],
     "wgpu_shader_module_spirv_test.mbt": [
       "native"
     ],

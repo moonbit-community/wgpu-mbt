@@ -1,0 +1,18 @@
+{
+  "is-main": true,
+  "import": [
+    {
+      "path": "Milky2018/wgpu_mbt",
+      "alias": "wgpu"
+    },
+    {
+      "path": "moonbitlang/core/bench",
+      "alias": "core_bench"
+    }
+  ],
+  "targets": {
+    "main.mbt": [
+      "native"
+    ]
+  }
+}
