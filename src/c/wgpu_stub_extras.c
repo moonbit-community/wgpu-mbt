@@ -261,11 +261,9 @@ static WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_backend(
   size_t out_count = wgpuInstanceEnumerateAdapters(instance, &opts, adapters);
   if (out_count == 0) {
     if (getenv("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
-      fprintf(stderr,
-              "[wgpu-native:enumerate-adapters] backends=0x%08" PRIx64
-              " count=%zu out_count=0\n",
-              (uint64_t)backends, count);
-      fflush(stderr);
+      printf("[wgpu-native:enumerate-adapters] backends=0x%08" PRIx64 " count=%zu out_count=0\n",
+             (uint64_t)backends, count);
+      fflush(stdout);
     }
     free(adapters);
     return NULL;
@@ -283,11 +281,10 @@ static WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_backend(
     }
   }
   if (!first && getenv("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
-    fprintf(stderr,
-            "[wgpu-native:enumerate-adapters] backends=0x%08" PRIx64
-            " count=%zu out_count=%zu first=NULL adapters[0]=%p\n",
-            (uint64_t)backends, count, out_count, (void *)(out_count ? adapters[0] : NULL));
-    fflush(stderr);
+    printf("[wgpu-native:enumerate-adapters] backends=0x%08" PRIx64
+           " count=%zu out_count=%zu first=NULL adapters[0]=%p\n",
+           (uint64_t)backends, count, out_count, (void *)(out_count ? adapters[0] : NULL));
+    fflush(stdout);
   }
   free(adapters);
   return first;

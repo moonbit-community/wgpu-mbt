@@ -464,11 +464,10 @@ static WGPUAdapter mbt_wgpu_enumerate_first_adapter(WGPUInstance instance,
   size_t out_count = wgpuInstanceEnumerateAdapters(instance, &opts, adapters);
   if (out_count == 0) {
     if (mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
-      fprintf(stderr,
-              "[wgpu-native:enumerate-adapters:fallback] backends=0x%08" PRIx64
-              " count=%zu out_count=0\n",
-              (uint64_t)backends, count);
-      fflush(stderr);
+      printf("[wgpu-native:enumerate-adapters:fallback] backends=0x%08" PRIx64
+             " count=%zu out_count=0\n",
+             (uint64_t)backends, count);
+      fflush(stdout);
     }
     free(adapters);
     return NULL;
@@ -486,11 +485,10 @@ static WGPUAdapter mbt_wgpu_enumerate_first_adapter(WGPUInstance instance,
     }
   }
   if (!first && mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
-    fprintf(stderr,
-            "[wgpu-native:enumerate-adapters:fallback] backends=0x%08" PRIx64
-            " count=%zu out_count=%zu first=NULL adapters[0]=%p\n",
-            (uint64_t)backends, count, out_count, (void *)(out_count ? adapters[0] : NULL));
-    fflush(stderr);
+    printf("[wgpu-native:enumerate-adapters:fallback] backends=0x%08" PRIx64
+           " count=%zu out_count=%zu first=NULL adapters[0]=%p\n",
+           (uint64_t)backends, count, out_count, (void *)(out_count ? adapters[0] : NULL));
+    fflush(stdout);
   }
   free(adapters);
   return first;
@@ -538,14 +536,13 @@ static void mbt_request_adapter_cb(WGPURequestAdapterStatus status,
 
   if (mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_ADAPTER")) {
     if (status != WGPURequestAdapterStatus_Success) {
-      fprintf(stderr, "[wgpu-native:request-adapter:%u] %.*s\n", (unsigned)status,
-              (int)out->message_len, out->message);
-      fflush(stderr);
+      printf("[wgpu-native:request-adapter:%u] %.*s\n", (unsigned)status, (int)out->message_len,
+             out->message);
+      fflush(stdout);
     } else if (!adapter) {
-      fprintf(stderr,
-              "[wgpu-native:request-adapter:success-but-null] adapter=NULL message_len=%zu %.*s\n",
-              out->message_len, (int)out->message_len, out->message);
-      fflush(stderr);
+      printf("[wgpu-native:request-adapter:success-but-null] adapter=NULL message_len=%zu %.*s\n",
+             out->message_len, (int)out->message_len, out->message);
+      fflush(stdout);
     }
   }
 
@@ -686,14 +683,13 @@ static void mbt_request_device_cb(WGPURequestDeviceStatus status, WGPUDevice dev
 
   if (mbt_wgpu_env_flag_enabled("MBT_WGPU_DEBUG_REQUEST_DEVICE")) {
     if (status != WGPURequestDeviceStatus_Success) {
-      fprintf(stderr, "[wgpu-native:request-device:%u] %.*s\n", (unsigned)status,
-              (int)out->message_len, out->message);
-      fflush(stderr);
+      printf("[wgpu-native:request-device:%u] %.*s\n", (unsigned)status, (int)out->message_len,
+             out->message);
+      fflush(stdout);
     } else if (!device) {
-      fprintf(stderr,
-              "[wgpu-native:request-device:success-but-null] device=NULL message_len=%zu %.*s\n",
-              out->message_len, (int)out->message_len, out->message);
-      fflush(stderr);
+      printf("[wgpu-native:request-device:success-but-null] device=NULL message_len=%zu %.*s\n",
+             out->message_len, (int)out->message_len, out->message);
+      fflush(stdout);
     }
   }
 
