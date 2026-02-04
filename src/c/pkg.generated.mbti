@@ -1419,6 +1419,7 @@ pub type UIntPtr
 pub type UnitPtr
 
 #alias(Adapter)
+#alias(UnitPtr)
 #external
 pub type WGPUAdapter
 
@@ -1434,6 +1435,7 @@ pub type WGPUAdapterInfoPtr
 pub type WGPUAdapterPtr
 
 #alias(BindGroup)
+#alias(UnitPtr)
 #external
 pub type WGPUBindGroup
 
@@ -1442,6 +1444,7 @@ pub type WGPUBindGroup
 pub type WGPUBindGroupDescriptorPtr
 
 #alias(BindGroupLayout)
+#alias(UnitPtr)
 #external
 pub type WGPUBindGroupLayout
 
@@ -1450,6 +1453,7 @@ pub type WGPUBindGroupLayout
 pub type WGPUBindGroupLayoutDescriptorPtr
 
 #alias(Buffer)
+#alias(UnitPtr)
 #external
 pub type WGPUBuffer
 
@@ -1468,6 +1472,7 @@ pub type WGPUBufferMapState
 pub type WGPUColorPtr
 
 #alias(CommandBuffer)
+#alias(UnitPtr)
 #external
 pub type WGPUCommandBuffer
 
@@ -1480,6 +1485,7 @@ pub type WGPUCommandBufferDescriptorPtr
 pub type WGPUCommandBufferPtr
 
 #alias(CommandEncoder)
+#alias(UnitPtr)
 #external
 pub type WGPUCommandEncoder
 
@@ -1495,10 +1501,12 @@ pub type WGPUCompilationInfoCallbackInfo
 pub type WGPUComputePassDescriptorPtr
 
 #alias(ComputePassEncoder)
+#alias(UnitPtr)
 #external
 pub type WGPUComputePassEncoder
 
 #alias(ComputePipeline)
+#alias(UnitPtr)
 #external
 pub type WGPUComputePipeline
 
@@ -1513,6 +1521,7 @@ pub type WGPUCreateComputePipelineAsyncCallbackInfo
 pub type WGPUCreateRenderPipelineAsyncCallbackInfo
 
 #alias(Device)
+#alias(UnitPtr)
 #external
 pub type WGPUDevice
 
@@ -1545,6 +1554,7 @@ pub type WGPUGlobalReportPtr
 pub type WGPUIndexFormat
 
 #alias(Instance)
+#alias(UnitPtr)
 #external
 pub type WGPUInstance
 
@@ -1568,6 +1578,7 @@ pub type WGPULimitsPtr
 pub type WGPULogCallback
 
 #alias(PipelineLayout)
+#alias(UnitPtr)
 #external
 pub type WGPUPipelineLayout
 
@@ -1582,6 +1593,7 @@ pub type WGPUPopErrorScopeCallbackInfo
 pub type WGPUProc
 
 #alias(QuerySet)
+#alias(UnitPtr)
 #external
 pub type WGPUQuerySet
 
@@ -1593,12 +1605,14 @@ pub type WGPUQuerySetDescriptorPtr
 pub type WGPUQueryType
 
 #alias(Queue)
+#alias(UnitPtr)
 #external
 pub type WGPUQueue
 
 #external
 pub type WGPUQueueWorkDoneCallbackInfo
 
+#alias(UnitPtr)
 #external
 pub type WGPURenderBundle
 
@@ -1606,6 +1620,7 @@ pub type WGPURenderBundle
 #external
 pub type WGPURenderBundleDescriptorPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPURenderBundleEncoder
 
@@ -1622,10 +1637,12 @@ pub type WGPURenderBundlePtr
 pub type WGPURenderPassDescriptorPtr
 
 #alias(RenderPassEncoder)
+#alias(UnitPtr)
 #external
 pub type WGPURenderPassEncoder
 
 #alias(RenderPipeline)
+#alias(UnitPtr)
 #external
 pub type WGPURenderPipeline
 
@@ -1644,6 +1661,7 @@ pub type WGPURequestAdapterOptionsPtr
 pub type WGPURequestDeviceCallbackInfo
 
 #alias(Sampler)
+#alias(UnitPtr)
 #external
 pub type WGPUSampler
 
@@ -1652,6 +1670,7 @@ pub type WGPUSampler
 pub type WGPUSamplerDescriptorPtr
 
 #alias(ShaderModule)
+#alias(UnitPtr)
 #external
 pub type WGPUShaderModule
 
@@ -1687,6 +1706,7 @@ pub type WGPUSupportedWGSLLanguageFeatures
 #external
 pub type WGPUSupportedWGSLLanguageFeaturesPtr
 
+#alias(UnitPtr)
 #external
 pub type WGPUSurface
 
@@ -1722,6 +1742,7 @@ pub type WGPUTexelCopyBufferLayoutPtr
 pub type WGPUTexelCopyTextureInfoPtr
 
 #alias(Texture)
+#alias(UnitPtr)
 #external
 pub type WGPUTexture
 
@@ -1736,6 +1757,7 @@ pub type WGPUTextureDimension
 pub type WGPUTextureFormat
 
 #alias(TextureView)
+#alias(UnitPtr)
 #external
 pub type WGPUTextureView
 

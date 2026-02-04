@@ -31,6 +31,7 @@ pub type UnitPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUAdapter
 
 ///|
@@ -49,6 +50,7 @@ pub type WGPUAdapterPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUBindGroup
 
 ///|
@@ -58,6 +60,7 @@ pub type WGPUBindGroupDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUBindGroupLayout
 
 ///|
@@ -67,6 +70,7 @@ pub type WGPUBindGroupLayoutDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUBuffer
 
 ///|
@@ -89,6 +93,7 @@ pub type WGPUColorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUCommandBuffer
 
 ///|
@@ -103,6 +108,7 @@ pub type WGPUCommandBufferPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUCommandEncoder
 
 ///|
@@ -121,10 +127,12 @@ pub type WGPUComputePassDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUComputePassEncoder
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUComputePipeline
 
 ///|
@@ -142,6 +150,7 @@ pub type WGPUCreateRenderPipelineAsyncCallbackInfo
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUDevice
 
 ///|
@@ -182,6 +191,7 @@ pub type WGPUIndexFormat
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUInstance
 
 ///|
@@ -210,6 +220,7 @@ pub type WGPULogCallback
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUPipelineLayout
 
 ///|
@@ -227,6 +238,7 @@ pub type WGPUProc
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUQuerySet
 
 ///|
@@ -240,6 +252,7 @@ pub type WGPUQueryType
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUQueue
 
 ///|
@@ -248,6 +261,7 @@ pub type WGPUQueueWorkDoneCallbackInfo
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURenderBundle
 
 ///|
@@ -257,6 +271,7 @@ pub type WGPURenderBundleDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURenderBundleEncoder
 
 ///|
@@ -276,10 +291,12 @@ pub type WGPURenderPassDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURenderPassEncoder
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPURenderPipeline
 
 ///|
@@ -302,6 +319,7 @@ pub type WGPURequestDeviceCallbackInfo
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUSampler
 
 ///|
@@ -311,6 +329,7 @@ pub type WGPUSamplerDescriptorPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUShaderModule
 
 ///|
@@ -356,6 +375,7 @@ pub type WGPUSupportedWGSLLanguageFeaturesPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUSurface
 
 ///|
@@ -399,6 +419,7 @@ pub type WGPUTexelCopyTextureInfoPtr
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUTexture
 
 ///|
@@ -416,6 +437,7 @@ pub type WGPUTextureFormat
 
 ///|
 #external
+#alias(UnitPtr)
 pub type WGPUTextureView
 
 ///|
