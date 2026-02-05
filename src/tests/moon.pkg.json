@@ -15,6 +15,7 @@
       "path": "Milky2018/wgpu_mbt/c",
       "alias": "wgpu_c"
     },
+    "moonbitlang/core/bench",
     "moonbitlang/core/ref",
     "moonbitlang/core/encoding/utf8"
   ],
@@ -206,6 +207,9 @@
       "native"
     ],
     "wgpu_report_leak_check_test.mbt": [
+      "native"
+    ],
+    "wgpu_perf_bench_test.mbt": [
       "native"
     ],
     "wgpu_shader_module_spirv_test.mbt": [
