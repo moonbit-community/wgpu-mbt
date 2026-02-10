@@ -204,6 +204,8 @@ pub fn command_encoder_begin_render_pass_color_clear(WGPUCommandEncoder, WGPUTex
 
 pub fn command_encoder_begin_render_pass_color_depth(WGPUCommandEncoder, WGPUTextureView, WGPUTextureView) -> WGPURenderPassEncoder
 
+pub fn command_encoder_begin_render_pass_color_depth_u32(WGPUCommandEncoder, WGPUTextureView, UInt, UInt, Float, Float, Float, Float, WGPUTextureView, UInt, UInt, Float, Bool, UInt, UInt, UInt, Bool) -> WGPURenderPassEncoder
+
 pub fn command_encoder_begin_render_pass_color_load(WGPUCommandEncoder, WGPUTextureView) -> WGPURenderPassEncoder
 
 pub fn command_encoder_begin_render_pass_color_occlusion(WGPUCommandEncoder, WGPUTextureView, WGPUQuerySet) -> WGPURenderPassEncoder
@@ -749,6 +751,8 @@ pub fn render_pass_descriptor_color_clear_default_occlusion_new(WGPUTextureView,
 pub fn render_pass_descriptor_color_clear_new(WGPUTextureView, Float, Float, Float, Float) -> WGPURenderPassDescriptorPtr
 
 pub fn render_pass_descriptor_color_depth_new(WGPUTextureView, WGPUTextureView) -> WGPURenderPassDescriptorPtr
+
+pub fn render_pass_descriptor_color_depth_u32_new(WGPUTextureView, UInt, UInt, Float, Float, Float, Float, WGPUTextureView, UInt, UInt, Float, Bool, UInt, UInt, UInt, Bool) -> WGPURenderPassDescriptorPtr
 
 pub fn render_pass_descriptor_color_load_new(WGPUTextureView) -> WGPURenderPassDescriptorPtr
 

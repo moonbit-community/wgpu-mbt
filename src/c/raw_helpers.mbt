@@ -807,6 +807,37 @@ pub fn command_encoder_begin_render_pass_color_depth(
 }
 
 ///|
+pub fn command_encoder_begin_render_pass_color_depth_u32(
+  encoder : CommandEncoder,
+  color_view : TextureView,
+  color_load_op_u32 : UInt,
+  color_store_op_u32 : UInt,
+  color_clear_r_f32 : Float,
+  color_clear_g_f32 : Float,
+  color_clear_b_f32 : Float,
+  color_clear_a_f32 : Float,
+  depth_view : TextureView,
+  depth_load_op_u32 : UInt,
+  depth_store_op_u32 : UInt,
+  depth_clear_value_f32 : Float,
+  depth_read_only : Bool,
+  stencil_load_op_u32 : UInt,
+  stencil_store_op_u32 : UInt,
+  stencil_clear_value_u32 : UInt,
+  stencil_read_only : Bool,
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_color_depth_u32_new(
+    color_view, color_load_op_u32, color_store_op_u32, color_clear_r_f32, color_clear_g_f32,
+    color_clear_b_f32, color_clear_a_f32, depth_view, depth_load_op_u32, depth_store_op_u32,
+    depth_clear_value_f32, depth_read_only, stencil_load_op_u32, stencil_store_op_u32,
+    stencil_clear_value_u32, stencil_read_only,
+  )
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
+
+///|
 pub extern "C" fn render_pass_set_pipeline(
   pass : RenderPassEncoder,
   pipeline : RenderPipeline,

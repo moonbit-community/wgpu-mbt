@@ -497,6 +497,26 @@ pub extern "C" fn render_pass_descriptor_color_depth_new(
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_depth_new"
 
 ///|
+pub extern "C" fn render_pass_descriptor_color_depth_u32_new(
+  color_view : WGPUTextureView,
+  color_load_op_u32 : UInt,
+  color_store_op_u32 : UInt,
+  color_clear_r_f32 : Float,
+  color_clear_g_f32 : Float,
+  color_clear_b_f32 : Float,
+  color_clear_a_f32 : Float,
+  depth_view : WGPUTextureView,
+  depth_load_op_u32 : UInt,
+  depth_store_op_u32 : UInt,
+  depth_clear_value_f32 : Float,
+  depth_read_only : Bool,
+  stencil_load_op_u32 : UInt,
+  stencil_store_op_u32 : UInt,
+  stencil_clear_value_u32 : UInt,
+  stencil_read_only : Bool,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_depth_u32_new"
+
+///|
 #borrow(desc)
 pub extern "C" fn render_pass_descriptor_free(
   desc : WGPURenderPassDescriptorPtr,

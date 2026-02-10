@@ -1387,6 +1387,7 @@ pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color2(Self, TextureView, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_clear(Self, TextureView, Float, Float, Float, Float) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_depth(Self, TextureView, TextureView) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_color_depth_u32(Self, TextureView, TextureView, color_load_op_u32? : UInt, color_store_op_u32? : UInt, color_clear_r_f32? : Float, color_clear_g_f32? : Float, color_clear_b_f32? : Float, color_clear_a_f32? : Float, depth_load_op_u32? : UInt, depth_store_op_u32? : UInt, depth_clear_value_f32? : Float, depth_read_only? : Bool, stencil_load_op_u32? : UInt, stencil_store_op_u32? : UInt, stencil_clear_value_u32? : UInt, stencil_read_only? : Bool) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_load(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_occlusion(Self, TextureView, QuerySet) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_ptr(Self, @c.WGPURenderPassDescriptorPtr) -> RenderPass

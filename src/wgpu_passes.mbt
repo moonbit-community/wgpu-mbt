@@ -426,11 +426,48 @@ pub fn CommandEncoder::begin_render_pass_color_depth(
   color_view : TextureView,
   depth_view : TextureView,
 ) -> RenderPass {
+  self.begin_render_pass_color_depth_u32(color_view, depth_view)
+}
+
+///|
+pub fn CommandEncoder::begin_render_pass_color_depth_u32(
+  self : CommandEncoder,
+  color_view : TextureView,
+  depth_view : TextureView,
+  color_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  color_store_op_u32? : UInt = STORE_OP_STORE,
+  color_clear_r_f32? : Float = 0.0,
+  color_clear_g_f32? : Float = 0.0,
+  color_clear_b_f32? : Float = 0.0,
+  color_clear_a_f32? : Float = 1.0,
+  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  depth_store_op_u32? : UInt = STORE_OP_STORE,
+  depth_clear_value_f32? : Float = 1.0,
+  depth_read_only? : Bool = false,
+  stencil_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  stencil_store_op_u32? : UInt = STORE_OP_STORE,
+  stencil_clear_value_u32? : UInt = 0U,
+  stencil_read_only? : Bool = true,
+) -> RenderPass {
   RenderPass::{
-    raw: @c.command_encoder_begin_render_pass_color_depth(
+    raw: @c.command_encoder_begin_render_pass_color_depth_u32(
       self.raw,
       color_view.raw,
+      color_load_op_u32,
+      color_store_op_u32,
+      color_clear_r_f32,
+      color_clear_g_f32,
+      color_clear_b_f32,
+      color_clear_a_f32,
       depth_view.raw,
+      depth_load_op_u32,
+      depth_store_op_u32,
+      depth_clear_value_f32,
+      depth_read_only,
+      stencil_load_op_u32,
+      stencil_store_op_u32,
+      stencil_clear_value_u32,
+      stencil_read_only,
     ),
   }
 }
