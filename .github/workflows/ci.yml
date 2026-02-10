@@ -225,8 +225,9 @@ jobs:
           # Bundle core so `moon check` can inject `moonbitlang/core`.
           $env:MOON_HOME = $moonHome
           $env:PATH = (Join-Path $moonHome "bin") + ";" + $env:PATH
-          moon bundle --warn-list -a --all --source-dir (Join-Path $moonLib "core")
-          moon bundle --warn-list -a --target wasm-gc --source-dir (Join-Path $moonLib "core") --quiet
+          $coreManifest = Join-Path $moonLib "core\\moon.mod.json"
+          moon bundle --warn-list -a --all --manifest-path $coreManifest
+          moon bundle --warn-list -a --target wasm-gc --manifest-path $coreManifest --quiet
 
       - name: Moon version
         shell: pwsh
