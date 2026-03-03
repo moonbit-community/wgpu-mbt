@@ -10,6 +10,7 @@ env:
   # NOTE: ba4deb5d (v27.0.4.0-1) regressed in GitHub-hosted runners (requestAdapter/RequestDevice
   # returns Success with a NULL handle). Pin to the v27.0.4.0 tag commit.
   WGPU_NATIVE_REV: 768f15f6ace8e4ec8e8720d5732b29e0b34250a8
+  WGPU_NATIVE_TAG: v27.0.4.0
 
 jobs:
   linux:
@@ -65,17 +66,33 @@ jobs:
         shell: bash
         run: moon check
 
-      - name: Build wgpu-native (Vulkan)
+      - name: Install wgpu-native prebuilt (Vulkan)
         shell: bash
         run: |
           set -euo pipefail
-          git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/gfx-rs/wgpu-native "$RUNNER_TEMP/wgpu-native"
-          cd "$RUNNER_TEMP/wgpu-native"
-          git fetch --depth 1 origin "$WGPU_NATIVE_REV"
-          git checkout "$WGPU_NATIVE_REV"
-          git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features vulkan,wgsl,spirv
-          echo "MBT_WGPU_NATIVE_LIB=$RUNNER_TEMP/wgpu-native/target/release/libwgpu_native.so" >> "$GITHUB_ENV"
+          artifact_root="$RUNNER_TEMP/wgpu-native-prebuilt"
+          rm -rf "$artifact_root"
+          mkdir -p "$artifact_root"
+
+          gh release download -R gfx-rs/wgpu-native "$WGPU_NATIVE_TAG" -p commit-sha -D "$artifact_root"
+          actual_rev="$(tr -d '\r\n' < "$artifact_root/commit-sha")"
+          if [ "$actual_rev" != "$WGPU_NATIVE_REV" ]; then
+            echo "Release $WGPU_NATIVE_TAG commit mismatch: expected $WGPU_NATIVE_REV, got $actual_rev"
+            exit 1
+          fi
+
+          arch="$(uname -m)"
+          case "$arch" in
+            x86_64|amd64) asset="wgpu-linux-x86_64-release.zip" ;;
+            aarch64|arm64) asset="wgpu-linux-aarch64-release.zip" ;;
+            *)
+              echo "Unsupported Linux arch: $arch"
+              exit 1
+              ;;
+          esac
+          gh release download -R gfx-rs/wgpu-native "$WGPU_NATIVE_TAG" -p "$asset" -D "$artifact_root"
+          unzip -q -o "$artifact_root/$asset" -d "$artifact_root"
+          echo "MBT_WGPU_NATIVE_LIB=$artifact_root/lib/libwgpu_native.so" >> "$GITHUB_ENV"
 
       - name: Probe wgpu smoke (diagnostic)
         shell: bash
@@ -144,17 +161,33 @@ jobs:
         shell: bash
         run: moon check
 
-      - name: Build wgpu-native (Metal)
+      - name: Install wgpu-native prebuilt (Metal)
         shell: bash
         run: |
           set -euo pipefail
-          git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/gfx-rs/wgpu-native "$RUNNER_TEMP/wgpu-native"
-          cd "$RUNNER_TEMP/wgpu-native"
-          git fetch --depth 1 origin "$WGPU_NATIVE_REV"
-          git checkout "$WGPU_NATIVE_REV"
-          git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features metal,wgsl,spirv
-          echo "MBT_WGPU_NATIVE_LIB=$RUNNER_TEMP/wgpu-native/target/release/libwgpu_native.dylib" >> "$GITHUB_ENV"
+          artifact_root="$RUNNER_TEMP/wgpu-native-prebuilt"
+          rm -rf "$artifact_root"
+          mkdir -p "$artifact_root"
+
+          gh release download -R gfx-rs/wgpu-native "$WGPU_NATIVE_TAG" -p commit-sha -D "$artifact_root"
+          actual_rev="$(tr -d '\r\n' < "$artifact_root/commit-sha")"
+          if [ "$actual_rev" != "$WGPU_NATIVE_REV" ]; then
+            echo "Release $WGPU_NATIVE_TAG commit mismatch: expected $WGPU_NATIVE_REV, got $actual_rev"
+            exit 1
+          fi
+
+          arch="$(uname -m)"
+          case "$arch" in
+            x86_64|amd64) asset="wgpu-macos-x86_64-release.zip" ;;
+            aarch64|arm64) asset="wgpu-macos-aarch64-release.zip" ;;
+            *)
+              echo "Unsupported macOS arch: $arch"
+              exit 1
+              ;;
+          esac
+          gh release download -R gfx-rs/wgpu-native "$WGPU_NATIVE_TAG" -p "$asset" -D "$artifact_root"
+          unzip -q -o "$artifact_root/$asset" -d "$artifact_root"
+          echo "MBT_WGPU_NATIVE_LIB=$artifact_root/lib/libwgpu_native.dylib" >> "$GITHUB_ENV"
 
       - name: Run full test suite
         shell: bash
@@ -291,17 +324,36 @@ jobs:
 
           "VK_ICD_FILENAMES=$vkIcd" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
-      - name: Build wgpu-native (Vulkan)
+      - name: Install wgpu-native prebuilt (Vulkan)
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/gfx-rs/wgpu-native "$env:RUNNER_TEMP\wgpu-native"
-          Set-Location "$env:RUNNER_TEMP\wgpu-native"
-          git fetch --depth 1 origin $env:WGPU_NATIVE_REV
-          git checkout $env:WGPU_NATIVE_REV
-          git submodule update --init --recursive --depth 1
-          cargo build --release --no-default-features --features vulkan,wgsl,spirv
-          "MBT_WGPU_NATIVE_LIB=$env:RUNNER_TEMP\wgpu-native\target\release\wgpu_native.dll" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          $artifactRoot = Join-Path $env:RUNNER_TEMP "wgpu-native-prebuilt"
+          Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $artifactRoot
+          New-Item -ItemType Directory -Force -Path $artifactRoot | Out-Null
+
+          gh release download -R gfx-rs/wgpu-native $env:WGPU_NATIVE_TAG -p commit-sha -D $artifactRoot
+          $actualRev = (Get-Content (Join-Path $artifactRoot "commit-sha") -Raw).Trim()
+          if ($actualRev -ne $env:WGPU_NATIVE_REV) {
+            throw "Release $($env:WGPU_NATIVE_TAG) commit mismatch: expected $($env:WGPU_NATIVE_REV), got $actualRev"
+          }
+
+          $arch = $env:PROCESSOR_ARCHITECTURE
+          if ([string]::IsNullOrEmpty($arch)) {
+            throw "PROCESSOR_ARCHITECTURE is empty"
+          }
+          switch ($arch.ToUpperInvariant()) {
+            "AMD64" { $asset = "wgpu-windows-x86_64-msvc-release.zip" }
+            "ARM64" { $asset = "wgpu-windows-aarch64-msvc-release.zip" }
+            default { throw "Unsupported Windows arch: $arch" }
+          }
+          gh release download -R gfx-rs/wgpu-native $env:WGPU_NATIVE_TAG -p $asset -D $artifactRoot
+          Expand-Archive -Path (Join-Path $artifactRoot $asset) -DestinationPath $artifactRoot -Force
+          $dllPath = Join-Path $artifactRoot "lib\\wgpu_native.dll"
+          if (!(Test-Path $dllPath)) {
+            throw "Missing wgpu_native.dll at $dllPath"
+          }
+          "MBT_WGPU_NATIVE_LIB=$dllPath" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Probe wgpu smoke (diagnostic)
         shell: pwsh
