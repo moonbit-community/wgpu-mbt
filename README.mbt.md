@@ -286,7 +286,7 @@ fn main {
 
 ## Contributing / Workflow
 
-- This repo uses `bd` (beads) to track implementation tasks; issue state lives under `.beads/`.
+- Track work with GitHub Issues/PRs.
 - When adding a new API:
   1) add a failing test under `src/tests/` (syntax-correct)
   2) add placeholder in `src/wgpu_spec_*.mbt` (usually `src/wgpu_spec_extras.mbt`)
