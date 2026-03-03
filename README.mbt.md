@@ -51,15 +51,12 @@ Useful introspection helpers:
 
 ## Prebuilt native binaries (recommended)
 
-This module does **not** ship `libwgpu_native` inside the MoonBit publish package, but we do publish
-prebuilt binaries as GitHub Release assets for convenience:
-
-- `darwin-arm64-metal` -> `libwgpu_native.dylib`
-- `linux-amd64-vulkan` -> `libwgpu_native.so`
-- `windows-amd64-dx12` -> `wgpu_native.dll`
+This module does **not** ship `libwgpu_native` inside the MoonBit publish package.
+We now use upstream prebuilt binaries from `gfx-rs/wgpu-native` (pinned to a known-good tag/commit),
+instead of rebuilding and republishing native dylibs in this repository.
 
 When you `moon add Milky2018/wgpu_mbt`, a `postadd` hook (`python3 scripts/postadd.py`) can download
-the matching release asset, verify its SHA256, and install it into a stable per-user path:
+the matching upstream release asset, verify the upstream commit pin, and install it into a stable per-user path:
 
 - macOS: `$HOME/.local/lib/libwgpu_native.dylib`
 - Linux: `$HOME/.local/lib/libwgpu_native.so`
@@ -67,7 +64,7 @@ the matching release asset, verify its SHA256, and install it into a stable per-
 
 If you want to disable postadd scripts, set `MOON_IGNORE_POSTADD=1`.
 
-Note: if this repository is private in your org, `postadd` will fall back to using GitHub CLI
+If direct download fails (for example corporate network restrictions), `postadd` falls back to GitHub CLI
 (`gh release download`), so you need `gh` installed and authenticated (`gh auth login`).
 
 You can always override the runtime library path with `MBT_WGPU_NATIVE_LIB`.
@@ -164,7 +161,7 @@ instance.release()
 This module does **not** bundle wgpu-native artifacts inside the MoonBit publish package. Users are responsible for:
 
 - Installing a compatible `libwgpu_native` dynamic library for their platform:
-  - via GitHub Release prebuilt assets (recommended), or
+  - via upstream `gfx-rs/wgpu-native` prebuilt assets (recommended), or
   - building from source (see quickstarts above).
 
 Runtime library discovery order:

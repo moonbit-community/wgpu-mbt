@@ -9,18 +9,20 @@
 
 from __future__ import annotations
 
-import hashlib
-import json
 import os
 import platform
+import shutil
 import subprocess
 import sys
 import tempfile
 import urllib.request
+import zipfile
 from pathlib import Path
 
 
-REPO = "moonbit-community/wgpu-mbt"
+UPSTREAM_REPO = "gfx-rs/wgpu-native"
+UPSTREAM_TAG = "v27.0.4.0"
+UPSTREAM_COMMIT_SHA = "768f15f6ace8e4ec8e8720d5732b29e0b34250a8"
 
 MARKER_PIPELINE_ASYNC = "pipeline_async.ok"
 MARKER_COMPILATION_INFO = "compilation_info.ok"
@@ -31,39 +33,31 @@ def _die(msg: str, code: int = 1) -> "None":
   raise SystemExit(code)
 
 
-def _module_version() -> str:
-  root = Path(__file__).resolve().parents[1]
-  mod = root / "moon.mod.json"
-  try:
-    data = json.loads(mod.read_text(encoding="utf-8"))
-  except Exception as e:
-    _die(f"failed to read moon.mod.json: {e}")
-  ver = data.get("version")
-  if not isinstance(ver, str) or not ver:
-    _die("moon.mod.json: missing version")
-  return ver
-
-
-def _platform_asset() -> tuple[str, str]:
-  # Returns: (asset_name, default_filename)
+def _platform_asset() -> tuple[str, str, str]:
+  # Returns: (zip_asset_name, zipped_lib_relpath, default_filename)
   sp = sys.platform
   arch = platform.machine().lower()
 
   if sp == "darwin":
-    # We currently publish darwin-arm64-metal.
-    if arch not in ("arm64", "aarch64"):
-      _die(f"unsupported macOS arch: {arch} (only arm64 is supported by prebuilt assets)")
-    return ("libwgpu_native-darwin-arm64-metal.dylib", "libwgpu_native.dylib")
+    if arch in ("arm64", "aarch64"):
+      return ("wgpu-macos-aarch64-release.zip", "lib/libwgpu_native.dylib", "libwgpu_native.dylib")
+    if arch in ("x86_64", "amd64"):
+      return ("wgpu-macos-x86_64-release.zip", "lib/libwgpu_native.dylib", "libwgpu_native.dylib")
+    _die(f"unsupported macOS arch: {arch}")
 
   if sp.startswith("linux"):
-    if arch not in ("x86_64", "amd64"):
-      _die(f"unsupported linux arch: {arch} (only amd64 is supported by prebuilt assets)")
-    return ("libwgpu_native-linux-amd64-vulkan.so", "libwgpu_native.so")
+    if arch in ("x86_64", "amd64"):
+      return ("wgpu-linux-x86_64-release.zip", "lib/libwgpu_native.so", "libwgpu_native.so")
+    if arch in ("aarch64", "arm64"):
+      return ("wgpu-linux-aarch64-release.zip", "lib/libwgpu_native.so", "libwgpu_native.so")
+    _die(f"unsupported Linux arch: {arch}")
 
   if sp == "win32":
-    if arch not in ("amd64", "x86_64"):
-      _die(f"unsupported windows arch: {arch} (only amd64 is supported by prebuilt assets)")
-    return ("wgpu_native-windows-amd64-dx12.dll", "wgpu_native.dll")
+    if arch in ("amd64", "x86_64"):
+      return ("wgpu-windows-x86_64-msvc-release.zip", "lib/wgpu_native.dll", "wgpu_native.dll")
+    if arch in ("aarch64", "arm64"):
+      return ("wgpu-windows-aarch64-msvc-release.zip", "lib/wgpu_native.dll", "wgpu_native.dll")
+    _die(f"unsupported Windows arch: {arch}")
 
   _die(f"unsupported platform: {sp}")
 
@@ -106,11 +100,11 @@ def _download(url: str, dst: Path) -> None:
   tmp.replace(dst)
 
 
-def _download_via_gh(tag: str, asset_name: str, dst: Path) -> None:
+def _download_via_gh(repo: str, tag: str, asset_name: str, dst: Path) -> None:
   # Works for both public and private repos as long as `gh auth login` is done.
   with tempfile.TemporaryDirectory() as td:
     d = Path(td)
-    cmd = ["gh", "release", "download", "-R", REPO, tag, "-p", asset_name, "-D", str(d)]
+    cmd = ["gh", "release", "download", "-R", repo, tag, "-p", asset_name, "-D", str(d)]
     p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     if p.returncode != 0:
       _die(
@@ -123,33 +117,39 @@ def _download_via_gh(tag: str, asset_name: str, dst: Path) -> None:
     src.replace(dst)
 
 
-def _sha256(path: Path) -> str:
-  h = hashlib.sha256()
-  with path.open("rb") as f:
-    for chunk in iter(lambda: f.read(1024 * 256), b""):
-      h.update(chunk)
-  return h.hexdigest()
-
-
-def _expected_sha256(version: str, asset_name: str) -> str:
-  tag = f"v{version}"
-  url = f"https://github.com/{REPO}/releases/download/{tag}/SHA256SUMS"
+def _download_release_asset(repo: str, tag: str, asset_name: str, dst: Path) -> None:
+  url = f"https://github.com/{repo}/releases/download/{tag}/{asset_name}"
   try:
-    req = urllib.request.Request(url, headers={"User-Agent": "wgpu-mbt postadd"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-      txt = r.read().decode("utf-8", errors="replace")
+    _download(url, dst)
   except Exception:
-    # Private repos (or restricted assets) typically return 404 without auth. Fall back to `gh`.
-    with tempfile.TemporaryDirectory() as td:
-      tmp = Path(td) / "SHA256SUMS"
-      _download_via_gh(tag, "SHA256SUMS", tmp)
-      txt = tmp.read_text(encoding="utf-8", errors="replace")
-  for line in txt.splitlines():
-    # format: "<hex>  <filename>"
-    parts = line.strip().split()
-    if len(parts) >= 2 and parts[-1] == asset_name:
-      return parts[0]
-  _die(f"SHA256SUMS does not contain {asset_name} (tag {tag})")
+    _download_via_gh(repo, tag, asset_name, dst)
+
+
+def _verify_upstream_release_commit() -> None:
+  with tempfile.TemporaryDirectory() as td:
+    commit_file = Path(td) / "commit-sha"
+    _download_release_asset(UPSTREAM_REPO, UPSTREAM_TAG, "commit-sha", commit_file)
+    actual = commit_file.read_text(encoding="utf-8", errors="replace").strip()
+  if actual != UPSTREAM_COMMIT_SHA:
+    _die(
+      "upstream release commit mismatch "
+      f"(tag {UPSTREAM_TAG} expected {UPSTREAM_COMMIT_SHA}, got {actual})"
+    )
+
+
+def _extract_zipped_library(zip_path: Path, member_relpath: str, dst: Path) -> None:
+  member_norm = member_relpath.replace("\\", "/")
+  with zipfile.ZipFile(zip_path) as zf:
+    mapping = {name.replace("\\", "/"): name for name in zf.namelist()}
+    member_real = mapping.get(member_norm)
+    if member_real is None:
+      preview = ", ".join(sorted(mapping.keys())[:20])
+      _die(f"{zip_path.name} does not contain {member_relpath}; entries: {preview}")
+    with zf.open(member_real, "r") as src:
+      with tempfile.NamedTemporaryFile(delete=False) as f:
+        tmp = Path(f.name)
+        shutil.copyfileobj(src, f)
+  tmp.replace(dst)
 
 
 def _run_moon_probe(root: Path, pkg_path: str, env: dict[str, str]) -> bool:
@@ -206,39 +206,14 @@ def main() -> None:
     _auto_probe_and_write_markers(lib_path)
     return
 
-  version = _module_version()
-  asset_name, default_filename = _platform_asset()
+  asset_name, zipped_member, default_filename = _platform_asset()
   dst = _default_install_path(default_filename)
+  _verify_upstream_release_commit()
 
-  tag = f"v{version}"
-  url = f"https://github.com/{REPO}/releases/download/{tag}/{asset_name}"
-
-  try:
-    expected = _expected_sha256(version, asset_name)
-  except Exception as e:
-    _die(str(e))
-
-  # If already installed and matches, keep it.
-  if dst.exists():
-    got = _sha256(dst)
-    if got.lower() == expected.lower():
-      print(f"wgpu-mbt: libwgpu_native already installed -> {dst}")
-      _auto_probe_and_write_markers(dst)
-      return
-
-  try:
-    _download(url, dst)
-  except Exception:
-    # Private repos (or restricted assets) typically return 404 without auth. Fall back to `gh`.
-    _download_via_gh(tag, asset_name, dst)
-
-  got = _sha256(dst)
-  if got.lower() != expected.lower():
-    try:
-      dst.unlink(missing_ok=True)  # type: ignore[arg-type]
-    except Exception:
-      pass
-    _die(f"sha256 mismatch for {dst} (expected {expected}, got {got})")
+  with tempfile.TemporaryDirectory() as td:
+    zip_path = Path(td) / asset_name
+    _download_release_asset(UPSTREAM_REPO, UPSTREAM_TAG, asset_name, zip_path)
+    _extract_zipped_library(zip_path, zipped_member, dst)
 
   # Make executable bit on unix.
   if os.name != "nt":
@@ -247,7 +222,7 @@ def main() -> None:
     except Exception:
       pass
 
-  print(f"wgpu-mbt: installed libwgpu_native -> {dst}")
+  print(f"wgpu-mbt: installed libwgpu_native -> {dst} (from {UPSTREAM_REPO}@{UPSTREAM_TAG})")
   print(f"wgpu-mbt: tip: you can override with MBT_WGPU_NATIVE_LIB={dst}")
   _auto_probe_and_write_markers(dst)
 
