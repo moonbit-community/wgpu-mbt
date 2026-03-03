@@ -68,6 +68,8 @@ jobs:
 
       - name: Install wgpu-native prebuilt (Vulkan)
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           artifact_root="$RUNNER_TEMP/wgpu-native-prebuilt"
@@ -163,6 +165,8 @@ jobs:
 
       - name: Install wgpu-native prebuilt (Metal)
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           artifact_root="$RUNNER_TEMP/wgpu-native-prebuilt"
@@ -326,6 +330,8 @@ jobs:
 
       - name: Install wgpu-native prebuilt (Vulkan)
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
           $artifactRoot = Join-Path $env:RUNNER_TEMP "wgpu-native-prebuilt"
