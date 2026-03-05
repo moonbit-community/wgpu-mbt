@@ -8,8 +8,5 @@
   "description": "This repo contains a MoonBit port of the `wgpu-native` C API (WebGPU)",
   "source": "src",
   "preferred-target": "native",
-  "exclude": ["vendor", "trace.json", "_build", "target", "src/c/target"],
-  "scripts": {
-    "postadd": "python3 scripts/postadd.py"
-  }
+  "exclude": ["vendor", "trace.json", "_build", "target", "src/c/target"]
 }

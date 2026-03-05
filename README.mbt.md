@@ -21,15 +21,7 @@ Known limitation:
   - env var `MBT_WGPU_DEBUG_LABELS=1`
   When enabled, the implementation is best-effort via dynamic symbol lookup and will still no-op if the underlying proc is unavailable.
 - Async pipeline creation (`wgpuDeviceCreate*PipelineAsync`) and shader compilation info (`wgpuShaderModuleGetCompilationInfo`) may be **unimplemented** (panic) in some wgpu-native builds. We keep safe sync stubs by default.
-
-  `postadd` will run best-effort probes in a subprocess and, if successful, write marker files under:
-  - `$XDG_DATA_HOME/wgpu_mbt/` (if set), otherwise `$HOME/.local/share/wgpu_mbt/`
-  - Windows: `%USERPROFILE%\\.local\\share\\wgpu_mbt\\`
-
-  If a marker exists, the feature is auto-enabled by default (unless force-disabled).
-  Marker files include the resolved native library path (`lib_path=...`) and are only trusted when they match the current `MBT_WGPU_NATIVE_LIB` / default resolved path. If you replace the native library or change `MBT_WGPU_NATIVE_LIB`, re-run `python3 scripts/postadd.py` to refresh markers.
-
-  You can also opt in manually at your own risk:
+- You can opt in manually at your own risk:
   - `MBT_WGPU_ENABLE_PIPELINE_ASYNC=1`
   - `MBT_WGPU_ENABLE_COMPILATION_INFO=1` (use `ShaderModule::get_compilation_info_sync` to read status + messages)
   - You can also enable/disable at runtime:
@@ -55,24 +47,21 @@ This module does **not** ship `libwgpu_native` inside the MoonBit publish packag
 We now use upstream prebuilt binaries from `gfx-rs/wgpu-native` (pinned to a known-good tag/commit),
 instead of rebuilding and republishing native dylibs in this repository.
 
-When you `moon add Milky2018/wgpu_mbt`, a `postadd` hook (`python3 scripts/postadd.py`) can download
-the matching upstream release asset, verify the upstream commit pin, and install it into a stable per-user path:
+After `moon add Milky2018/wgpu_mbt`, install the matching upstream native library yourself into a stable per-user path:
 
 - macOS: `$HOME/.local/lib/libwgpu_native.dylib`
 - Linux: `$HOME/.local/lib/libwgpu_native.so`
 - Windows: `%USERPROFILE%\\.local\\lib\\wgpu_native.dll`
 
-If you want to disable postadd scripts, set `MOON_IGNORE_POSTADD=1`.
-
-If direct download fails (for example corporate network restrictions), `postadd` falls back to GitHub CLI
-(`gh release download`), so you need `gh` installed and authenticated (`gh auth login`).
+You can download from upstream release assets:
+- <https://github.com/gfx-rs/wgpu-native/releases/tag/v27.0.4.0>
 
 You can always override the runtime library path with `MBT_WGPU_NATIVE_LIB`.
 
 ## Quickstart (macOS)
 
-- Recommended: install the prebuilt dylib to `$HOME/.local/lib/` via postadd:
-  - `moon add Milky2018/wgpu_mbt` (downloads on first add), or run `python3 scripts/postadd.py`
+- Install the prebuilt dylib from upstream release assets, copy to `$HOME/.local/lib/libwgpu_native.dylib`, then run:
+  - `moon run cmd/main`
 - Or build `wgpu-native` yourself and point `MBT_WGPU_NATIVE_LIB` at the resulting dylib:
   - `git clone https://github.com/gfx-rs/wgpu-native`
   - `cd wgpu-native`
@@ -92,8 +81,7 @@ You can always override the runtime library path with `MBT_WGPU_NATIVE_LIB`.
 
 ## Quickstart (Linux + Vulkan) (experimental)
 
-- Recommended: install the prebuilt `.so` to `$HOME/.local/lib/` via postadd:
-  - `moon add Milky2018/wgpu_mbt` (downloads on first add), or run `python3 scripts/postadd.py`
+- Install the prebuilt `.so` from upstream release assets, copy to `$HOME/.local/lib/libwgpu_native.so`, then run tests/examples.
 - Or build `wgpu-native` (Vulkan) and point `MBT_WGPU_NATIVE_LIB` at the resulting `.so`:
   - `git clone https://github.com/gfx-rs/wgpu-native`
   - `cd wgpu-native`
@@ -146,8 +134,7 @@ instance.release()
 
 ## Quickstart (Windows) (experimental)
 
-- Recommended: install the prebuilt `.dll` to `%USERPROFILE%\\.local\\lib\\` via postadd:
-  - `moon add Milky2018/wgpu_mbt` (downloads on first add), or run `python3 scripts/postadd.py`
+- Install the prebuilt `.dll` from upstream release assets, copy to `%USERPROFILE%\\.local\\lib\\wgpu_native.dll`, then run tests/examples.
 - Or build `wgpu-native` and point `MBT_WGPU_NATIVE_LIB` at the resulting `.dll`:
   - `git clone https://github.com/gfx-rs/wgpu-native`
   - `cd wgpu-native`
@@ -193,9 +180,8 @@ If you see crashes/aborts early in the program, it is usually because `libwgpu_n
   - `Instance::create()` / `Instance::create_ptr(...)`
   - `Instance::request_adapter_sync()` / `Adapter::request_device_sync(...)`
 - Fix typical causes:
-  - Install the native library to the default per-user path (recommended) by running `python3 scripts/postadd.py`
+  - Install the native library to the default per-user path (recommended) from upstream release assets
   - Or set `MBT_WGPU_NATIVE_LIB` to an absolute path to your `.dylib` / `.so` / `.dll`
-- If you changed/replaced the native library or changed `MBT_WGPU_NATIVE_LIB`, re-run `python3 scripts/postadd.py` so feature probes refresh the marker files.
 
 ## Using as a library
 
