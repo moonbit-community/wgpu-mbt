@@ -1439,12 +1439,13 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_count(void *buil
 
   WGPUTextureFormat fmt0 = out->color_targets[0].format;
   const WGPUBlendState *blend0 = out->color_targets[0].blend;
+  WGPUColorWriteMask write_mask0 = out->color_targets[0].writeMask;
   for (uint32_t i = old; i < count; i++) {
     out->color_targets[i] = (WGPUColorTargetState){
         .nextInChain = NULL,
         .format = fmt0,
         .blend = blend0,
-        .writeMask = WGPUColorWriteMask_All,
+        .writeMask = write_mask0,
     };
   }
 
@@ -1468,6 +1469,66 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at(
                                          out->color_target_count);
   }
   out->color_targets[idx].format = (WGPUTextureFormat)format_u32;
+  return MBT_WGPU_RP_OK;
+}
+
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_write_mask(
+    void *builder, uint64_t write_mask_u64) {
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
+  out->color_targets[0].writeMask = (WGPUColorWriteMask)(uint32_t)write_mask_u64;
+  return MBT_WGPU_RP_OK;
+}
+
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_write_mask_at(
+    void *builder, uint32_t index_u32, uint64_t write_mask_u64) {
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
+  uint32_t idx = index_u32;
+  if (idx >= out->color_target_count) {
+    return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_COLOR_TARGET_INDEX_OOB, idx,
+                                         out->color_target_count);
+  }
+  out->color_targets[idx].writeMask = (WGPUColorWriteMask)(uint32_t)write_mask_u64;
+  return MBT_WGPU_RP_OK;
+}
+
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_blend_components(
+    void *builder, uint32_t color_src_factor_u32, uint32_t color_dst_factor_u32,
+    uint32_t color_operation_u32, uint32_t alpha_src_factor_u32, uint32_t alpha_dst_factor_u32,
+    uint32_t alpha_operation_u32) {
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
+  out->blend_color = (WGPUBlendComponent){
+      .operation = (WGPUBlendOperation)color_operation_u32,
+      .srcFactor = (WGPUBlendFactor)color_src_factor_u32,
+      .dstFactor = (WGPUBlendFactor)color_dst_factor_u32,
+  };
+  out->blend_alpha = (WGPUBlendComponent){
+      .operation = (WGPUBlendOperation)alpha_operation_u32,
+      .srcFactor = (WGPUBlendFactor)alpha_src_factor_u32,
+      .dstFactor = (WGPUBlendFactor)alpha_dst_factor_u32,
+  };
+  out->blend = (WGPUBlendState){
+      .color = out->blend_color,
+      .alpha = out->blend_alpha,
+  };
+  uint32_t n = out->color_target_count;
+  if (n > MBT_WGPU_RP_MAX_TARGETS) {
+    n = MBT_WGPU_RP_MAX_TARGETS;
+  }
+  for (uint32_t i = 0; i < n; i++) {
+    out->color_targets[i].blend = &out->blend;
+  }
   return MBT_WGPU_RP_OK;
 }
 
@@ -1498,6 +1559,22 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend(void *builder)
   }
   for (uint32_t i = 0; i < n; i++) {
     out->color_targets[i].blend = &out->blend;
+  }
+  return MBT_WGPU_RP_OK;
+}
+
+uint32_t mbt_wgpu_render_pipeline_desc_builder_disable_blend(void *builder) {
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
+  uint32_t n = out->color_target_count;
+  if (n > MBT_WGPU_RP_MAX_TARGETS) {
+    n = MBT_WGPU_RP_MAX_TARGETS;
+  }
+  for (uint32_t i = 0; i < n; i++) {
+    out->color_targets[i].blend = NULL;
   }
   return MBT_WGPU_RP_OK;
 }

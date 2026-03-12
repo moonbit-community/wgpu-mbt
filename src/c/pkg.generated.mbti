@@ -820,6 +820,8 @@ pub fn render_pipeline_desc_builder_add_vertex_attribute(OpaquePtr, UInt, UInt64
 
 pub fn render_pipeline_desc_builder_add_vertex_buffer_layout(OpaquePtr, UInt64, UInt) -> UInt
 
+pub fn render_pipeline_desc_builder_disable_blend(OpaquePtr) -> UInt
+
 pub fn render_pipeline_desc_builder_enable_alpha_blend(OpaquePtr) -> UInt
 
 pub fn render_pipeline_desc_builder_finish(OpaquePtr) -> WGPURenderPipelineDescriptorPtr
@@ -832,11 +834,17 @@ pub fn render_pipeline_desc_builder_last_error_u32(OpaquePtr) -> UInt
 
 pub fn render_pipeline_desc_builder_new(WGPUPipelineLayout, WGPUShaderModule) -> OpaquePtr
 
+pub fn render_pipeline_desc_builder_set_blend_components(OpaquePtr, UInt, UInt, UInt, UInt, UInt, UInt) -> UInt
+
 pub fn render_pipeline_desc_builder_set_color_target_count(OpaquePtr, UInt) -> UInt
 
 pub fn render_pipeline_desc_builder_set_color_target_format(OpaquePtr, UInt) -> UInt
 
 pub fn render_pipeline_desc_builder_set_color_target_format_at(OpaquePtr, UInt, UInt) -> UInt
+
+pub fn render_pipeline_desc_builder_set_color_target_write_mask(OpaquePtr, UInt64) -> UInt
+
+pub fn render_pipeline_desc_builder_set_color_target_write_mask_at(OpaquePtr, UInt, UInt64) -> UInt
 
 pub fn render_pipeline_desc_builder_set_depth_stencil(OpaquePtr, UInt, Bool, UInt) -> UInt
 

@@ -98,10 +98,78 @@ pub fn RenderPipelineDescBuilder::set_color_target_format_at(
 }
 
 ///|
+pub fn RenderPipelineDescBuilder::set_color_target_write_mask(
+  self : RenderPipelineDescBuilder,
+  write_mask_u64 : UInt64,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_color_target_write_mask(
+    self.raw,
+    write_mask_u64,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::set_color_target_write_mask_at(
+  self : RenderPipelineDescBuilder,
+  index_u32 : UInt,
+  write_mask_u64 : UInt64,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_color_target_write_mask_at(
+    self.raw,
+    index_u32,
+    write_mask_u64,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::set_blend_components(
+  self : RenderPipelineDescBuilder,
+  color_src_factor_u32 : UInt,
+  color_dst_factor_u32 : UInt,
+  color_operation_u32 : UInt,
+  alpha_src_factor_u32 : UInt,
+  alpha_dst_factor_u32 : UInt,
+  alpha_operation_u32 : UInt,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_blend_components(
+    self.raw,
+    color_src_factor_u32,
+    color_dst_factor_u32,
+    color_operation_u32,
+    alpha_src_factor_u32,
+    alpha_dst_factor_u32,
+    alpha_operation_u32,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
 pub fn RenderPipelineDescBuilder::enable_alpha_blend(
   self : RenderPipelineDescBuilder,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_enable_alpha_blend(self.raw)
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::disable_blend(
+  self : RenderPipelineDescBuilder,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_disable_blend(self.raw)
   if err != 0U {
     raise self.last_error()
   }

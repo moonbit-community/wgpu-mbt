@@ -236,9 +236,42 @@ pub extern "C" fn render_pipeline_desc_builder_set_color_target_format_at(
 
 ///|
 #borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_color_target_write_mask(
+  builder : OpaquePtr,
+  write_mask_u64 : UInt64,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_write_mask"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_color_target_write_mask_at(
+  builder : OpaquePtr,
+  index_u32 : UInt,
+  write_mask_u64 : UInt64,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_write_mask_at"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_blend_components(
+  builder : OpaquePtr,
+  color_src_factor_u32 : UInt,
+  color_dst_factor_u32 : UInt,
+  color_operation_u32 : UInt,
+  alpha_src_factor_u32 : UInt,
+  alpha_dst_factor_u32 : UInt,
+  alpha_operation_u32 : UInt,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_blend_components"
+
+///|
+#borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_enable_alpha_blend(
   builder : OpaquePtr,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_disable_blend(
+  builder : OpaquePtr,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_disable_blend"
 
 ///|
 #borrow(builder)
