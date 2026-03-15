@@ -164,6 +164,23 @@ pub fn Device::create_query_set_pipeline_statistics(
 }
 
 ///|
+pub fn Device::create_query_set_pipeline_statistics_many(
+  self : Device,
+  count : UInt,
+  first_statistic_name_u32 : UInt,
+  other_statistic_names_u32 : Array[UInt],
+) -> QuerySet {
+  QuerySet::{
+    raw: @c.device_create_query_set_pipeline_statistics_many(
+      self.raw,
+      count,
+      first_statistic_name_u32,
+      other_statistic_names_u32,
+    ),
+  }
+}
+
+///|
 pub fn Device::create_query_set_ptr(
   self : Device,
   descriptor : @c.WGPUQuerySetDescriptorPtr,

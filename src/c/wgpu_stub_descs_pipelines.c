@@ -1158,6 +1158,13 @@ typedef struct {
   WGPUPipelineStatisticName name;
 } mbt_query_set_desc_pipeline_stats_t;
 
+typedef struct {
+  WGPUQuerySetDescriptor desc;
+  WGPUQuerySetDescriptorExtras extras;
+  uint64_t statistic_count;
+  WGPUPipelineStatisticName names[];
+} mbt_query_set_desc_pipeline_stats_many_t;
+
 WGPUQuerySetDescriptor *mbt_wgpu_query_set_descriptor_pipeline_statistics_new(
     uint32_t count, uint32_t statistic_name) {
   mbt_query_set_desc_pipeline_stats_t *out =
@@ -1175,6 +1182,43 @@ WGPUQuerySetDescriptor *mbt_wgpu_query_set_descriptor_pipeline_statistics_new(
           },
       .pipelineStatistics = &out->name,
       .pipelineStatisticCount = 1u,
+  };
+  out->desc = (WGPUQuerySetDescriptor){
+      .nextInChain = &out->extras.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .type = (WGPUQueryType)WGPUNativeQueryType_PipelineStatistics,
+      .count = count,
+  };
+  return &out->desc;
+}
+
+WGPUQuerySetDescriptor *mbt_wgpu_query_set_descriptor_pipeline_statistics_many_new(
+    uint32_t count, uint64_t statistic_count, const uint32_t *statistic_names_u32) {
+  if (statistic_count == 0u || !statistic_names_u32) {
+    return NULL;
+  }
+  if (statistic_count > (uint64_t)SIZE_MAX) {
+    return NULL;
+  }
+  size_t bytes = sizeof(mbt_query_set_desc_pipeline_stats_many_t) +
+                 (size_t)statistic_count * sizeof(WGPUPipelineStatisticName);
+  mbt_query_set_desc_pipeline_stats_many_t *out =
+      (mbt_query_set_desc_pipeline_stats_many_t *)malloc(bytes);
+  if (!out) {
+    return NULL;
+  }
+  out->statistic_count = statistic_count;
+  for (uint64_t i = 0; i < statistic_count; i++) {
+    out->names[i] = (WGPUPipelineStatisticName)statistic_names_u32[i];
+  }
+  out->extras = (WGPUQuerySetDescriptorExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_QuerySetDescriptorExtras,
+          },
+      .pipelineStatistics = out->names,
+      .pipelineStatisticCount = (size_t)statistic_count,
   };
   out->desc = (WGPUQuerySetDescriptor){
       .nextInChain = &out->extras.chain,

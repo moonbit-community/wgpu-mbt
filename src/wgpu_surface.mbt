@@ -78,6 +78,59 @@ pub fn surface_descriptor_free(desc : @c.WGPUSurfaceDescriptorPtr) -> Unit {
 }
 
 ///|
+pub fn surface_configuration_ptr_new(
+  device : Device,
+  config : SurfaceConfiguration,
+) -> @c.WGPUSurfaceConfigurationPtr {
+  let count = config.view_formats.length()
+  if count == 0 {
+    @c.surface_configuration_u32_new(
+      device.raw,
+      config.usage.raw,
+      config.format.raw,
+      config.width,
+      config.height,
+      config.present_mode_u32,
+      config.alpha_mode_u32,
+      config.desired_maximum_frame_latency,
+    )
+  } else {
+    let raw_view_formats : Ref[Array[UInt]] = @ref.new([])
+    for i = 0; i < count; i = i + 1 {
+      raw_view_formats.val.push(config.view_formats[i].raw)
+    }
+    let fixed = FixedArray::from_array(raw_view_formats.val[:])
+    @c.surface_configuration_u32_with_view_formats_new(
+      device.raw,
+      config.usage.raw,
+      config.format.raw,
+      config.width,
+      config.height,
+      config.present_mode_u32,
+      config.alpha_mode_u32,
+      config.desired_maximum_frame_latency,
+      count.to_uint64(),
+      fixed,
+    )
+  }
+}
+
+///|
+pub fn surface_configuration_ptr_free(
+  config : @c.WGPUSurfaceConfigurationPtr,
+) -> Unit {
+  @c.surface_configuration_free(config)
+}
+
+///|
+pub fn Surface::configure_ptr(
+  self : Surface,
+  config : @c.WGPUSurfaceConfigurationPtr,
+) -> Unit {
+  @c.wgpuSurfaceConfigure(self.raw, config)
+}
+
+///|
 pub fn Surface::configure_default(
   self : Surface,
   adapter : Adapter,

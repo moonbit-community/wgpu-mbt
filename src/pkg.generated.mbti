@@ -1240,6 +1240,10 @@ pub fn set_pipeline_async_enabled(Bool) -> Unit
 
 pub fn set_uncaptured_error_stderr_enabled(Bool) -> Unit
 
+pub fn surface_configuration_ptr_free(@c.WGPUSurfaceConfigurationPtr) -> Unit
+
+pub fn surface_configuration_ptr_new(Device, SurfaceConfiguration) -> @c.WGPUSurfaceConfigurationPtr
+
 pub fn surface_descriptor_android_native_window_new(@c.OpaquePtr) -> @c.WGPUSurfaceDescriptorPtr
 
 pub fn surface_descriptor_free(@c.WGPUSurfaceDescriptorPtr) -> Unit
@@ -1334,8 +1338,8 @@ pub fn Adapter::request_device_sync_texture_binding_array(Self, Instance) -> Dev
 pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device raise WgpuError
-pub fn Adapter::request_device_sync_with_features(Self, Instance, Array[UInt], label? : String, queue_label? : String) -> Device raise WgpuError
-pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, label? : String, queue_label? : String) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_with_features(Self, Instance, Array[UInt], label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
 pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64
@@ -1585,6 +1589,7 @@ pub fn Device::create_pipeline_layout_push_constants(Self, ShaderStage, UInt, UI
 pub fn Device::create_query_set(Self, @c.WGPUQuerySetDescriptorPtr) -> QuerySet
 pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
 pub fn Device::create_query_set_pipeline_statistics(Self, UInt, UInt) -> QuerySet
+pub fn Device::create_query_set_pipeline_statistics_many(Self, UInt, UInt, Array[UInt]) -> QuerySet
 pub fn Device::create_query_set_ptr(Self, @c.WGPUQuerySetDescriptorPtr) -> QuerySet
 pub fn Device::create_query_set_timestamp(Self, UInt) -> QuerySet
 pub fn Device::create_render_bundle_encoder(Self, @c.WGPURenderBundleEncoderDescriptorPtr) -> RenderBundleEncoder
@@ -1996,6 +2001,7 @@ pub fn Surface::capabilities_usages_u64(Self, Adapter) -> TextureUsage
 pub fn Surface::configure(Self, @c.WGPUSurfaceConfigurationPtr) -> Unit
 pub fn Surface::configure_best_effort(Self, Adapter, Device, UInt, UInt, TextureUsage, prefer_srgb? : Bool, vsync? : Bool, desired_maximum_frame_latency? : UInt) -> Bool
 pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, TextureUsage, desired_maximum_frame_latency? : UInt) -> TextureFormat
+pub fn Surface::configure_ptr(Self, @c.WGPUSurfaceConfigurationPtr) -> Unit
 pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, desired_maximum_frame_latency? : UInt) -> Bool
 pub fn Surface::configure_u32_or_raise(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, desired_maximum_frame_latency? : UInt) -> Unit raise SurfaceConfigureError
 pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat], desired_maximum_frame_latency? : UInt) -> Bool

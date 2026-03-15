@@ -96,6 +96,39 @@ pub extern "C" fn surface_descriptor_free(
 ) -> Unit = "mbt_wgpu_surface_descriptor_free"
 
 ///|
+pub extern "C" fn surface_configuration_u32_new(
+  device : Device,
+  usage_u64 : UInt64,
+  format_u32 : UInt,
+  width : UInt,
+  height : UInt,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+  desired_maximum_frame_latency : UInt,
+) -> WGPUSurfaceConfigurationPtr = "mbt_wgpu_surface_configuration_u32_new"
+
+///|
+#borrow(view_formats_u32)
+pub extern "C" fn surface_configuration_u32_with_view_formats_new(
+  device : Device,
+  usage_u64 : UInt64,
+  format_u32 : UInt,
+  width : UInt,
+  height : UInt,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+  desired_maximum_frame_latency : UInt,
+  view_format_count : UInt64,
+  view_formats_u32 : FixedArray[UInt],
+) -> WGPUSurfaceConfigurationPtr = "mbt_wgpu_surface_configuration_u32_with_view_formats_new"
+
+///|
+#borrow(config)
+pub extern "C" fn surface_configuration_free(
+  config : WGPUSurfaceConfigurationPtr,
+) -> Unit = "mbt_wgpu_surface_configuration_free"
+
+///|
 pub extern "C" fn request_adapter_options_new_u32(
   feature_level_u32 : UInt,
   power_preference_u32 : UInt,
@@ -138,6 +171,15 @@ pub extern "C" fn device_descriptor_new_features_utf8(
 pub extern "C" fn device_descriptor_free(
   desc : WGPUDeviceDescriptorPtr,
 ) -> Unit = "mbt_wgpu_device_descriptor_free"
+
+///|
+/// Set native `WGPUDeviceExtras.tracePath` on a descriptor allocated by this package.
+#borrow(desc, trace_path)
+pub extern "C" fn device_descriptor_set_trace_path_utf8(
+  desc : WGPUDeviceDescriptorPtr,
+  trace_path : Bytes,
+  trace_path_len : UInt64,
+) -> Unit = "mbt_wgpu_device_descriptor_set_trace_path_utf8"
 
 ///|
 pub extern "C" fn device_descriptor_set_required_limits(
@@ -684,6 +726,14 @@ pub extern "C" fn query_set_descriptor_pipeline_statistics_new(
   count : UInt,
   statistic_name : UInt,
 ) -> WGPUQuerySetDescriptorPtr = "mbt_wgpu_query_set_descriptor_pipeline_statistics_new"
+
+///|
+#borrow(statistic_names_u32)
+pub extern "C" fn query_set_descriptor_pipeline_statistics_many_new(
+  count : UInt,
+  statistic_count : UInt64,
+  statistic_names_u32 : FixedArray[UInt],
+) -> WGPUQuerySetDescriptorPtr = "mbt_wgpu_query_set_descriptor_pipeline_statistics_many_new"
 
 ///|
 #borrow(desc)

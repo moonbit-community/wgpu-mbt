@@ -132,6 +132,7 @@ pub fn Adapter::request_device_sync_with_features(
   required_features_u32 : Array[UInt],
   label? : String = "",
   queue_label? : String = "",
+  trace_path? : String = "",
 ) -> Device raise WgpuError {
   require_native_symbol("wgpuAdapterRequestDevice")
   require_native_symbol("wgpuInstanceProcessEvents")
@@ -156,6 +157,12 @@ pub fn Adapter::request_device_sync_with_features(
       queue_label_bytes.length().to_uint64(),
     )
   }
+  let trace_path_bytes = utf8_bytes(trace_path)
+  @c.device_descriptor_set_trace_path_utf8(
+    desc,
+    trace_path_bytes,
+    trace_path_bytes.length().to_uint64(),
+  )
   let device_raw = @c.adapter_request_device_sync_ptr(
     instance.raw,
     self.raw,
@@ -181,6 +188,7 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
   max_storage_buffer_binding_size? : UInt64 = 0UL,
   label? : String = "",
   queue_label? : String = "",
+  trace_path? : String = "",
 ) -> Device raise WgpuError {
   require_native_symbol("wgpuAdapterRequestDevice")
   require_native_symbol("wgpuInstanceProcessEvents")
@@ -212,6 +220,12 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
       queue_label_bytes.length().to_uint64(),
     )
   }
+  let trace_path_bytes = utf8_bytes(trace_path)
+  @c.device_descriptor_set_trace_path_utf8(
+    desc,
+    trace_path_bytes,
+    trace_path_bytes.length().to_uint64(),
+  )
 
   // Best-effort: if we fail to allocate/fetch limits, request the device with
   // default limits (requiredLimits = NULL).

@@ -32,6 +32,56 @@ test "wgpu native api: instance extras + descriptor coverage" {
     )
     @wgpu_c.shader_module_descriptor_free(sm_desc)
 
+    let empty = Bytes::new(0)
+    let device_desc = @wgpu_c.device_descriptor_new_no_features_utf8(
+      empty, 0UL, empty, 0UL,
+    )
+    let trace_path = @utf8.encode("_build/wgpu-trace")
+    @wgpu_c.device_descriptor_set_trace_path_utf8(
+      device_desc,
+      trace_path,
+      trace_path.length().to_uint64(),
+    )
+    @wgpu_c.device_descriptor_free(device_desc)
+
+    let surface_cfg = @wgpu_c.surface_configuration_u32_new(
+      @wgpu_c.null_device(),
+      @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT,
+      @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
+      1U,
+      1U,
+      @wgpu.PRESENT_MODE_FIFO,
+      @wgpu.COMPOSITE_ALPHA_MODE_AUTO,
+      2U,
+    )
+    @wgpu_c.surface_configuration_free(surface_cfg)
+    let view_formats = FixedArray::from_array([
+      @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
+      @wgpu.TEXTURE_FORMAT_BGRA8_UNORM,
+    ])
+    let surface_cfg_with_views = @wgpu_c.surface_configuration_u32_with_view_formats_new(
+      @wgpu_c.null_device(),
+      @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT,
+      @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
+      1U,
+      1U,
+      @wgpu.PRESENT_MODE_FIFO,
+      @wgpu.COMPOSITE_ALPHA_MODE_AUTO,
+      2U,
+      2UL,
+      view_formats,
+    )
+    @wgpu_c.surface_configuration_free(surface_cfg_with_views)
+
+    let stats = FixedArray::from_array([
+      @wgpu.PIPELINE_STATISTIC_NAME_COMPUTE_SHADER_INVOCATIONS,
+      @wgpu.PIPELINE_STATISTIC_NAME_VERTEX_SHADER_INVOCATIONS,
+    ])
+    let qs_desc = @wgpu_c.query_set_descriptor_pipeline_statistics_many_new(
+      1U, 2UL, stats,
+    )
+    @wgpu_c.query_set_descriptor_free(qs_desc)
+
     instance.release()
     inspect("ok", content="ok")
   })
@@ -43,6 +93,16 @@ test "wgpu native api: primitive extras builder calls" {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
+    let cfg = @wgpu.SurfaceConfiguration::new(
+      1U,
+      1U,
+      @wgpu.TextureUsage::from_u64(@wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT),
+      @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
+      @wgpu.PresentMode::from_u32(@wgpu.PRESENT_MODE_FIFO),
+      @wgpu.CompositeAlphaMode::from_u32(@wgpu.COMPOSITE_ALPHA_MODE_AUTO),
+    ).with_desired_maximum_frame_latency(2U)
+    let cfg_ptr = @wgpu.surface_configuration_ptr_new(device, cfg)
+    @wgpu.surface_configuration_ptr_free(cfg_ptr)
 
     let wgsl : String =
       #|@vertex

@@ -104,6 +104,13 @@ surface.configure_with_or_raise(adapter, device, config)
 You can still use `configure_u32` / `configure_view_formats_u32` / `configure_best_effort`,
 and pass `desired_maximum_frame_latency` as an optional named parameter.
 
+For raw `WGPUSurfaceConfiguration*` workflows (calling `Surface::configure_ptr` directly),
+the package now also exposes pointer builders that include
+`WGPUSurfaceConfigurationExtras.desiredMaximumFrameLatency`:
+
+- `surface_configuration_ptr_new(device, config)`
+- `surface_configuration_ptr_free(config_ptr)`
+
 ## Surface Sources (All Common Native Sources)
 
 High-level constructors now cover all common native surface sources:
@@ -136,11 +143,18 @@ You can create an instance with explicit native extras instead of defaults:
 
 This exposes backend/compiler knobs from `WGPUInstanceExtras` for advanced setups.
 
+For `WGPUDeviceExtras.tracePath`, you can set trace path on descriptor builders via:
+
+- `@wgpu_c.device_descriptor_set_trace_path_utf8(desc, trace_path, trace_path_len)`
+
 ## Shader / Pipeline Native Extras
 
 - GLSL shader module descriptor and helper:
   - `@wgpu_c.shader_module_descriptor_glsl_new(stage_u64, code, code_len)`
   - `Device::create_shader_module_glsl(stage_u64, code)`
+- Query set descriptor extras with multiple pipeline statistics:
+  - `@wgpu_c.query_set_descriptor_pipeline_statistics_many_new(...)`
+  - `Device::create_query_set_pipeline_statistics_many(count, first_statistic_name_u32, other_statistic_names_u32)`
 - Render pipeline primitive extras on builder:
   - `RenderPipelineDescBuilder::set_polygon_mode_u32(...)`
   - `RenderPipelineDescBuilder::set_conservative_rasterization(...)`

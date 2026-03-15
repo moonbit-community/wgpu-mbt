@@ -392,6 +392,8 @@ pub fn device_create_query_set_occlusion(WGPUDevice, UInt) -> WGPUQuerySet
 
 pub fn device_create_query_set_pipeline_statistics(WGPUDevice, UInt, UInt) -> WGPUQuerySet
 
+pub fn device_create_query_set_pipeline_statistics_many(WGPUDevice, UInt, UInt, Array[UInt]) -> WGPUQuerySet
+
 pub fn device_create_query_set_timestamp(WGPUDevice, UInt) -> WGPUQuerySet
 
 pub fn device_create_render_bundle_encoder_rgba8(WGPUDevice) -> WGPURenderBundleEncoder
@@ -457,6 +459,8 @@ pub fn device_descriptor_new_features_utf8(Bytes, UInt64, UInt64, FixedArray[UIn
 pub fn device_descriptor_new_no_features_utf8(Bytes, UInt64, Bytes, UInt64) -> WGPUDeviceDescriptorPtr
 
 pub fn device_descriptor_set_required_limits(WGPUDeviceDescriptorPtr, WGPULimitsPtr) -> Unit
+
+pub fn device_descriptor_set_trace_path_utf8(WGPUDeviceDescriptorPtr, Bytes, UInt64) -> Unit
 
 pub fn device_destroy(WGPUDevice) -> Unit
 
@@ -723,6 +727,8 @@ pub fn platform_is_windows() -> Bool
 pub fn query_set_descriptor_free(WGPUQuerySetDescriptorPtr) -> Unit
 
 pub fn query_set_descriptor_new(WGPUQueryType, UInt) -> WGPUQuerySetDescriptorPtr
+
+pub fn query_set_descriptor_pipeline_statistics_many_new(UInt, UInt64, FixedArray[UInt]) -> WGPUQuerySetDescriptorPtr
 
 pub fn query_set_descriptor_pipeline_statistics_new(UInt, UInt) -> WGPUQuerySetDescriptorPtr
 
@@ -1007,6 +1013,12 @@ pub fn surface_capabilities_present_mode_u32_at(WGPUSurface, WGPUAdapter, UInt64
 pub fn surface_capabilities_present_modes_count_u64(WGPUSurface, WGPUAdapter) -> UInt64
 
 pub fn surface_capabilities_usages_u64(WGPUSurface, WGPUAdapter) -> UInt64
+
+pub fn surface_configuration_free(WGPUSurfaceConfigurationPtr) -> Unit
+
+pub fn surface_configuration_u32_new(WGPUDevice, UInt64, UInt, UInt, UInt, UInt, UInt, UInt) -> WGPUSurfaceConfigurationPtr
+
+pub fn surface_configuration_u32_with_view_formats_new(WGPUDevice, UInt64, UInt, UInt, UInt, UInt, UInt, UInt, UInt64, FixedArray[UInt]) -> WGPUSurfaceConfigurationPtr
 
 pub fn surface_configure_default(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64, UInt) -> UInt
 

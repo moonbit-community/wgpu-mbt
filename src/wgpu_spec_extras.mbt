@@ -272,6 +272,24 @@ declare pub fn surface_descriptor_free(
 ) -> Unit
 
 ///|
+declare pub fn surface_configuration_ptr_new(
+  device : Device,
+  config : SurfaceConfiguration,
+) -> @c.WGPUSurfaceConfigurationPtr
+
+///|
+declare pub fn surface_configuration_ptr_free(
+  config : @c.WGPUSurfaceConfigurationPtr,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn Surface::configure_ptr(
+  self : Surface,
+  config : @c.WGPUSurfaceConfigurationPtr,
+) -> Unit
+
+///|
 declare pub fn SurfaceConfiguration::new(
   width : UInt,
   height : UInt,
@@ -562,6 +580,32 @@ declare pub fn Adapter::request_device_sync_ptr(
   self : Adapter,
   instance : Instance,
   descriptor : @c.WGPUDeviceDescriptorPtr,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_with_features(
+  self : Adapter,
+  instance : Instance,
+  required_features_u32 : Array[UInt],
+  label? : String = "",
+  queue_label? : String = "",
+  trace_path? : String = "",
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_with_features_and_limits(
+  self : Adapter,
+  instance : Instance,
+  required_features_u32 : Array[UInt],
+  max_bind_groups_u32? : UInt = 0U,
+  max_dynamic_uniform_buffers_u32? : UInt = 0U,
+  max_uniform_buffer_binding_size? : UInt64 = 0UL,
+  max_storage_buffer_binding_size? : UInt64 = 0UL,
+  label? : String = "",
+  queue_label? : String = "",
+  trace_path? : String = "",
 ) -> Device raise WgpuError
 
 ///|
@@ -876,6 +920,15 @@ declare pub fn Device::create_query_set_pipeline_statistics(
   self : Device,
   count : UInt,
   statistic_name : UInt,
+) -> QuerySet
+
+///|
+#declaration_only
+declare pub fn Device::create_query_set_pipeline_statistics_many(
+  self : Device,
+  count : UInt,
+  first_statistic_name_u32 : UInt,
+  other_statistic_names_u32 : Array[UInt],
 ) -> QuerySet
 
 ///|

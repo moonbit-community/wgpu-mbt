@@ -1674,6 +1674,28 @@ pub fn device_create_query_set_pipeline_statistics(
 }
 
 ///|
+pub fn device_create_query_set_pipeline_statistics_many(
+  device : Device,
+  count : UInt,
+  first_statistic_name_u32 : UInt,
+  other_statistic_names_u32 : Array[UInt],
+) -> QuerySet {
+  let all_stats : Array[UInt] = [first_statistic_name_u32]
+  for i = 0; i < other_statistic_names_u32.length(); i = i + 1 {
+    all_stats.push(other_statistic_names_u32[i])
+  }
+  let fixed = FixedArray::from_array(all_stats[:])
+  let desc = query_set_descriptor_pipeline_statistics_many_new(
+    count,
+    all_stats.length().to_uint64(),
+    fixed,
+  )
+  let qs = device_create_query_set(device, desc)
+  query_set_descriptor_free(desc)
+  qs
+}
+
+///|
 pub extern "C" fn query_set_release(query_set : QuerySet) -> Unit = "wgpuQuerySetRelease"
 
 ///|

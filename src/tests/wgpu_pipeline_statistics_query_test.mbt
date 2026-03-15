@@ -25,8 +25,11 @@ test "wgpu pipeline statistics query (feature-gated)" {
   let device = adapter.request_device_sync_pipeline_statistics_query(instance)
   let queue = device.queue()
 
-  // WGPUPipelineStatisticName_ComputeShaderInvocations = 4.
-  let qs = device.create_query_set_pipeline_statistics(1U, 4U)
+  let qs = device.create_query_set_pipeline_statistics_many(
+    1U,
+    @wgpu.PIPELINE_STATISTIC_NAME_COMPUTE_SHADER_INVOCATIONS,
+    [],
+  )
   let resolve = device.create_buffer(
     size=8UL,
     usage=bu(

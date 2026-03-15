@@ -204,6 +204,103 @@ void mbt_wgpu_surface_descriptor_free(WGPUSurfaceDescriptor *desc) {
   free(desc);
 }
 
+typedef struct {
+  WGPUSurfaceConfiguration config;
+  WGPUSurfaceConfigurationExtras extras;
+  WGPUTextureFormat *view_formats;
+} mbt_surface_configuration_owned_t;
+
+static WGPUSurfaceConfiguration *mbt_surface_configuration_new_base(
+    WGPUDevice device, uint64_t usage_u64, uint32_t format_u32, uint32_t width,
+    uint32_t height, uint32_t present_mode_u32, uint32_t alpha_mode_u32,
+    uint32_t desired_maximum_frame_latency) {
+  if (desired_maximum_frame_latency == 0u) {
+    return NULL;
+  }
+  mbt_surface_configuration_owned_t *out =
+      (mbt_surface_configuration_owned_t *)calloc(
+          1, sizeof(mbt_surface_configuration_owned_t));
+  if (!out) {
+    return NULL;
+  }
+  out->extras = (WGPUSurfaceConfigurationExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_SurfaceConfigurationExtras,
+          },
+      .desiredMaximumFrameLatency = desired_maximum_frame_latency,
+  };
+  out->config = (WGPUSurfaceConfiguration){
+      .nextInChain = &out->extras.chain,
+      .device = device,
+      .format = (WGPUTextureFormat)format_u32,
+      .usage = (WGPUTextureUsage)usage_u64,
+      .width = width,
+      .height = height,
+      .viewFormatCount = 0u,
+      .viewFormats = NULL,
+      .alphaMode = (WGPUCompositeAlphaMode)alpha_mode_u32,
+      .presentMode = (WGPUPresentMode)present_mode_u32,
+  };
+  out->view_formats = NULL;
+  return &out->config;
+}
+
+WGPUSurfaceConfiguration *mbt_wgpu_surface_configuration_u32_new(
+    WGPUDevice device, uint64_t usage_u64, uint32_t format_u32, uint32_t width,
+    uint32_t height, uint32_t present_mode_u32, uint32_t alpha_mode_u32,
+    uint32_t desired_maximum_frame_latency) {
+  return mbt_surface_configuration_new_base(
+      device, usage_u64, format_u32, width, height, present_mode_u32,
+      alpha_mode_u32, desired_maximum_frame_latency);
+}
+
+WGPUSurfaceConfiguration *mbt_wgpu_surface_configuration_u32_with_view_formats_new(
+    WGPUDevice device, uint64_t usage_u64, uint32_t format_u32, uint32_t width,
+    uint32_t height, uint32_t present_mode_u32, uint32_t alpha_mode_u32,
+    uint32_t desired_maximum_frame_latency, uint64_t view_format_count,
+    const uint32_t *view_formats_u32) {
+  if (view_format_count == 0u) {
+    return mbt_wgpu_surface_configuration_u32_new(
+        device, usage_u64, format_u32, width, height, present_mode_u32,
+        alpha_mode_u32, desired_maximum_frame_latency);
+  }
+  if (!view_formats_u32) {
+    return NULL;
+  }
+  WGPUSurfaceConfiguration *config = mbt_surface_configuration_new_base(
+      device, usage_u64, format_u32, width, height, present_mode_u32,
+      alpha_mode_u32, desired_maximum_frame_latency);
+  if (!config) {
+    return NULL;
+  }
+  mbt_surface_configuration_owned_t *out =
+      (mbt_surface_configuration_owned_t *)config;
+  out->view_formats = (WGPUTextureFormat *)calloc(
+      (size_t)view_format_count, sizeof(WGPUTextureFormat));
+  if (!out->view_formats) {
+    free(out);
+    return NULL;
+  }
+  for (size_t i = 0; i < (size_t)view_format_count; i++) {
+    out->view_formats[i] = (WGPUTextureFormat)view_formats_u32[i];
+  }
+  out->config.viewFormatCount = (size_t)view_format_count;
+  out->config.viewFormats = out->view_formats;
+  return &out->config;
+}
+
+void mbt_wgpu_surface_configuration_free(WGPUSurfaceConfiguration *config) {
+  if (!config) {
+    return;
+  }
+  mbt_surface_configuration_owned_t *out =
+      (mbt_surface_configuration_owned_t *)config;
+  free(out->view_formats);
+  free(out);
+}
+
 WGPURequestAdapterOptions *mbt_wgpu_request_adapter_options_new_u32(
     uint32_t feature_level_u32, uint32_t power_preference_u32,
     int32_t force_fallback_adapter,
@@ -232,9 +329,12 @@ typedef struct {
   WGPUDeviceDescriptor desc;
   // We keep these as separate fields so desc.defaultQueue can point to stable string views.
   WGPUQueueDescriptor queue;
+  WGPUDeviceExtras extras;
+  bool extras_enabled;
 
   uint8_t *label;
   uint8_t *queue_label;
+  uint8_t *trace_path;
   WGPUFeatureName *features;
 } mbt_device_descriptor_owned_t;
 
@@ -333,6 +433,47 @@ WGPUDeviceDescriptor *mbt_wgpu_device_descriptor_new_features_utf8(
   return &out->desc;
 }
 
+void mbt_wgpu_device_descriptor_set_trace_path_utf8(
+    WGPUDeviceDescriptor *desc, const uint8_t *trace_path,
+    uint64_t trace_path_len) {
+  if (!desc) {
+    return;
+  }
+  mbt_device_descriptor_owned_t *out = (mbt_device_descriptor_owned_t *)desc;
+  if (out->trace_path) {
+    free(out->trace_path);
+    out->trace_path = NULL;
+  }
+
+  if (!trace_path || trace_path_len == 0u) {
+    out->extras_enabled = false;
+    out->desc.nextInChain = NULL;
+    return;
+  }
+
+  out->trace_path = (uint8_t *)malloc((size_t)trace_path_len);
+  if (!out->trace_path) {
+    out->extras_enabled = false;
+    out->desc.nextInChain = NULL;
+    return;
+  }
+  memcpy(out->trace_path, trace_path, (size_t)trace_path_len);
+  out->extras = (WGPUDeviceExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_DeviceExtras,
+          },
+      .tracePath =
+          (WGPUStringView){
+              .data = (const char *)out->trace_path,
+              .length = (size_t)trace_path_len,
+          },
+  };
+  out->extras_enabled = true;
+  out->desc.nextInChain = &out->extras.chain;
+}
+
 void mbt_wgpu_device_descriptor_free(WGPUDeviceDescriptor *desc) {
   if (!desc) {
     return;
@@ -341,6 +482,7 @@ void mbt_wgpu_device_descriptor_free(WGPUDeviceDescriptor *desc) {
   free(out->features);
   free(out->label);
   free(out->queue_label);
+  free(out->trace_path);
   free(out);
 }
 
