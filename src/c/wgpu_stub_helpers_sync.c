@@ -453,6 +453,14 @@ WGPUFeatureName mbt_wgpu_feature_name_native_pipeline_statistics_query(void) {
   return (WGPUFeatureName)WGPUNativeFeature_PipelineStatisticsQuery;
 }
 
+WGPUFeatureName mbt_wgpu_feature_name_native_clear_texture(void) {
+  return (WGPUFeatureName)WGPUNativeFeature_ClearTexture;
+}
+
+WGPUFeatureName mbt_wgpu_feature_name_native_multiview(void) {
+  return (WGPUFeatureName)WGPUNativeFeature_Multiview;
+}
+
 WGPUFeatureName mbt_wgpu_feature_name_native_spirv_shader_passthrough(void) {
   return (WGPUFeatureName)WGPUNativeFeature_SpirvShaderPassthrough;
 }
@@ -1865,6 +1873,118 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_texture_binding_array(
 
   static const WGPUFeatureName required_features[1] = {
       (WGPUFeatureName)WGPUNativeFeature_TextureBindingArray,
+  };
+
+  WGPUDeviceDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .requiredFeatureCount = 1u,
+      .requiredFeatures = required_features,
+      .requiredLimits = NULL,
+      .defaultQueue =
+          (WGPUQueueDescriptor){
+              .nextInChain = NULL,
+              .label = (WGPUStringView){.data = NULL, .length = 0},
+          },
+      .deviceLostCallbackInfo =
+          (WGPUDeviceLostCallbackInfo){
+              .nextInChain = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+      .uncapturedErrorCallbackInfo =
+          (WGPUUncapturedErrorCallbackInfo){
+              .nextInChain = NULL,
+              .callback = mbt_uncaptured_error_noop_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+  };
+
+  (void)wgpuAdapterRequestDevice(adapter, &desc, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
+  if (out.status != WGPURequestDeviceStatus_Success) {
+    return NULL;
+  }
+  return out.device;
+}
+
+WGPUDevice mbt_wgpu_adapter_request_device_sync_clear_texture(
+    WGPUInstance instance, WGPUAdapter adapter) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
+  mbt_request_device_result_t out = {0};
+  WGPURequestDeviceCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_device_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  static const WGPUFeatureName required_features[1] = {
+      (WGPUFeatureName)WGPUNativeFeature_ClearTexture,
+  };
+
+  WGPUDeviceDescriptor desc = {
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .requiredFeatureCount = 1u,
+      .requiredFeatures = required_features,
+      .requiredLimits = NULL,
+      .defaultQueue =
+          (WGPUQueueDescriptor){
+              .nextInChain = NULL,
+              .label = (WGPUStringView){.data = NULL, .length = 0},
+          },
+      .deviceLostCallbackInfo =
+          (WGPUDeviceLostCallbackInfo){
+              .nextInChain = NULL,
+              .mode = WGPUCallbackMode_AllowSpontaneous,
+              .callback = mbt_device_lost_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+      .uncapturedErrorCallbackInfo =
+          (WGPUUncapturedErrorCallbackInfo){
+              .nextInChain = NULL,
+              .callback = mbt_uncaptured_error_noop_cb,
+              .userdata1 = NULL,
+              .userdata2 = NULL,
+          },
+  };
+
+  (void)wgpuAdapterRequestDevice(adapter, &desc, info);
+  while (out.status == 0) {
+    wgpuInstanceProcessEvents(instance);
+  }
+
+  g_mbt_wgpu_last_request_device_status_u32 = (uint32_t)out.status;
+  if (out.status != WGPURequestDeviceStatus_Success) {
+    return NULL;
+  }
+  return out.device;
+}
+
+WGPUDevice mbt_wgpu_adapter_request_device_sync_multiview(
+    WGPUInstance instance, WGPUAdapter adapter) {
+  g_mbt_wgpu_last_request_device_status_u32 = 0u;
+  mbt_request_device_result_t out = {0};
+  WGPURequestDeviceCallbackInfo info = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_request_device_cb,
+      .userdata1 = &out,
+      .userdata2 = NULL,
+  };
+
+  static const WGPUFeatureName required_features[1] = {
+      (WGPUFeatureName)WGPUNativeFeature_Multiview,
   };
 
   WGPUDeviceDescriptor desc = {

@@ -42,6 +42,29 @@ pub extern "C" fn instance_create_surface_wayland(
 ) -> WGPUSurface = "mbt_wgpu_instance_create_surface_wayland"
 
 ///|
+/// XCB surface helper (`xcb_connection_t*`, `xcb_window_t`).
+pub extern "C" fn instance_create_surface_xcb(
+  instance : Instance,
+  connection : OpaquePtr,
+  window : UInt,
+) -> WGPUSurface = "mbt_wgpu_instance_create_surface_xcb"
+
+///|
+/// Xlib surface helper (`Display*`, `Window`).
+pub extern "C" fn instance_create_surface_xlib(
+  instance : Instance,
+  display : OpaquePtr,
+  window : UInt64,
+) -> WGPUSurface = "mbt_wgpu_instance_create_surface_xlib"
+
+///|
+/// Android surface helper (`ANativeWindow*`).
+pub extern "C" fn instance_create_surface_android_native_window(
+  instance : Instance,
+  window : OpaquePtr,
+) -> WGPUSurface = "mbt_wgpu_instance_create_surface_android_native_window"
+
+///|
 /// Windows HWND surface helper (`HINSTANCE`, `HWND`).
 pub extern "C" fn instance_create_surface_windows_hwnd(
   instance : Instance,

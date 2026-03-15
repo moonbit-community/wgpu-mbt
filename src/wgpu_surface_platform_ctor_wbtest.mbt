@@ -24,11 +24,38 @@ test "surface platform constructors: null host handles are safe" {
   let surface_wayland = instance.create_surface_wayland(nullp, nullp)
   surface_wayland.release()
 
+  let surface_xcb = instance.create_surface_xcb(nullp, 0U)
+  surface_xcb.release()
+
+  let surface_xlib = instance.create_surface_xlib(nullp, 0UL)
+  surface_xlib.release()
+
+  let surface_android = instance.create_surface_android_native_window(nullp)
+  surface_android.release()
+
   let surface_hwnd = instance.create_surface_windows_hwnd(nullp, nullp)
   surface_hwnd.release()
 
   let surface_metal = instance.create_surface_metal_layer()
   surface_metal.release()
+
+  let desc_wayland = surface_descriptor_wayland_new(nullp, nullp)
+  surface_descriptor_free(desc_wayland)
+
+  let desc_xcb = surface_descriptor_xcb_new(nullp, 0U)
+  surface_descriptor_free(desc_xcb)
+
+  let desc_xlib = surface_descriptor_xlib_new(nullp, 0UL)
+  surface_descriptor_free(desc_xlib)
+
+  let desc_android = surface_descriptor_android_native_window_new(nullp)
+  surface_descriptor_free(desc_android)
+
+  let desc_hwnd = surface_descriptor_windows_hwnd_new(nullp, nullp)
+  surface_descriptor_free(desc_hwnd)
+
+  let desc_metal = surface_descriptor_metal_layer_new(nullp)
+  surface_descriptor_free(desc_metal)
 
   instance.release()
   inspect("ok", content="ok")

@@ -50,6 +50,82 @@ pub fn Adapter::request_device_sync_ptr(
 }
 
 ///|
+pub fn Adapter::request_device_future_id_u64(
+  self : Adapter,
+  descriptor? : @c.WGPUDeviceDescriptorPtr = @c.null_device_descriptor_ptr(),
+) -> UInt64 {
+  if !native_available() {
+    return 0UL
+  }
+  if !native_has_symbol("wgpuAdapterRequestDevice") {
+    return 0UL
+  }
+  @c.adapter_request_device_future_id_u64(self.raw, descriptor)
+}
+
+///|
+pub fn Adapter::request_device_async_status_u32(
+  self : Adapter,
+  future_id : UInt64,
+) -> UInt {
+  let _ = self
+  @c.adapter_request_device_async_status_u32(future_id)
+}
+
+///|
+pub fn Adapter::request_device_async_device(
+  self : Adapter,
+  future_id : UInt64,
+) -> Device {
+  let _ = self
+  Device::{ raw: @c.adapter_request_device_async_device(future_id) }
+}
+
+///|
+pub fn Adapter::request_device_async_message(
+  self : Adapter,
+  future_id : UInt64,
+) -> String {
+  let _ = self
+  let len = @c.adapter_request_device_async_message_utf8_len(future_id)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.adapter_request_device_async_message_utf8(future_id, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
+pub fn Adapter::request_device_async_clear(
+  self : Adapter,
+  future_id : UInt64,
+) -> Unit {
+  let _ = self
+  @c.adapter_request_device_async_clear(future_id)
+}
+
+///|
+pub fn Adapter::request_device_async_take_or_raise(
+  self : Adapter,
+  future_id : UInt64,
+) -> Device raise WgpuError {
+  let status = self.request_device_async_status_u32(future_id)
+  let device = self.request_device_async_device(future_id)
+  self.request_device_async_clear(future_id)
+  if status == REQUEST_DEVICE_STATUS_SUCCESS && !@c.device_is_null(device.raw) {
+    device
+  } else {
+    raise WgpuRequestDeviceFailed(status)
+  }
+}
+
+///|
 pub fn Adapter::request_device_sync_with_features(
   self : Adapter,
   instance : Instance,
@@ -251,6 +327,44 @@ pub fn Adapter::request_device_sync_texture_binding_array(
 }
 
 ///|
+pub fn Adapter::request_device_sync_clear_texture(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_clear_texture(
+    instance.raw,
+    self.raw,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
+  }
+  Device::{ raw: device_raw }
+}
+
+///|
+pub fn Adapter::request_device_sync_multiview(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  require_native_symbol("wgpuAdapterRequestDevice")
+  require_native_symbol("wgpuInstanceProcessEvents")
+  let device_raw = @c.adapter_request_device_sync_multiview(
+    instance.raw,
+    self.raw,
+  )
+  if @c.device_is_null(device_raw) {
+    raise WgpuRequestDeviceFailed(
+      @c.adapter_request_device_sync_last_status_u32(),
+    )
+  }
+  Device::{ raw: device_raw }
+}
+
+///|
 pub fn Adapter::request_device_sync_pipeline_statistics_query(
   self : Adapter,
   instance : Instance,
@@ -317,6 +431,16 @@ pub fn Adapter::has_feature_native_pipeline_statistics_query(
   self : Adapter,
 ) -> Bool {
   @c.adapter_has_feature_native_pipeline_statistics_query(self.raw)
+}
+
+///|
+pub fn Adapter::has_feature_native_clear_texture(self : Adapter) -> Bool {
+  @c.adapter_has_feature_native_clear_texture(self.raw)
+}
+
+///|
+pub fn Adapter::has_feature_native_multiview(self : Adapter) -> Bool {
+  @c.adapter_has_feature_native_multiview(self.raw)
 }
 
 ///|

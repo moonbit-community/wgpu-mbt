@@ -20,6 +20,57 @@ pub fn Surface::add_ref(self : Surface) -> Surface {
 }
 
 ///|
+pub fn surface_descriptor_metal_layer_new(
+  layer : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr {
+  @c.surface_descriptor_metal_layer_new(layer)
+}
+
+///|
+pub fn surface_descriptor_wayland_new(
+  display : @c.OpaquePtr,
+  surface : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr {
+  @c.surface_descriptor_wayland_new(display, surface)
+}
+
+///|
+pub fn surface_descriptor_windows_hwnd_new(
+  hinstance : @c.OpaquePtr,
+  hwnd : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr {
+  @c.surface_descriptor_windows_hwnd_new(hinstance, hwnd)
+}
+
+///|
+pub fn surface_descriptor_xcb_new(
+  connection : @c.OpaquePtr,
+  window : UInt,
+) -> @c.WGPUSurfaceDescriptorPtr {
+  @c.surface_descriptor_xcb_new(connection, window)
+}
+
+///|
+pub fn surface_descriptor_xlib_new(
+  display : @c.OpaquePtr,
+  window : UInt64,
+) -> @c.WGPUSurfaceDescriptorPtr {
+  @c.surface_descriptor_xlib_new(display, window)
+}
+
+///|
+pub fn surface_descriptor_android_native_window_new(
+  window : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr {
+  @c.surface_descriptor_android_native_window_new(window)
+}
+
+///|
+pub fn surface_descriptor_free(desc : @c.WGPUSurfaceDescriptorPtr) -> Unit {
+  @c.surface_descriptor_free(desc)
+}
+
+///|
 pub fn Surface::configure_default(
   self : Surface,
   adapter : Adapter,

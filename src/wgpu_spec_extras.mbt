@@ -93,6 +93,48 @@ declare pub fn Instance::request_adapter_sync_ptr(
 
 ///|
 #declaration_only
+declare pub fn Instance::request_adapter_future_id_u64(
+  self : Instance,
+  options? : @c.WGPURequestAdapterOptionsPtr = @c.null_request_adapter_options_ptr(),
+) -> UInt64
+
+///|
+#declaration_only
+declare pub fn Instance::request_adapter_async_status_u32(
+  self : Instance,
+  future_id : UInt64,
+) -> UInt
+
+///|
+#declaration_only
+declare pub fn Instance::request_adapter_async_adapter(
+  self : Instance,
+  future_id : UInt64,
+) -> Adapter
+
+///|
+#declaration_only
+declare pub fn Instance::request_adapter_async_message(
+  self : Instance,
+  future_id : UInt64,
+) -> String
+
+///|
+#declaration_only
+declare pub fn Instance::request_adapter_async_clear(
+  self : Instance,
+  future_id : UInt64,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn Instance::request_adapter_async_take_or_raise(
+  self : Instance,
+  future_id : UInt64,
+) -> Adapter raise WgpuError
+
+///|
+#declaration_only
 declare pub fn Instance::process_events(self : Instance) -> Unit
 
 ///|
@@ -125,7 +167,85 @@ declare pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface
 
 ///|
 #declaration_only
+declare pub fn Instance::create_surface_wayland(
+  self : Instance,
+  display : @c.OpaquePtr,
+  surface : @c.OpaquePtr,
+) -> Surface
+
+///|
+#declaration_only
+declare pub fn Instance::create_surface_xcb(
+  self : Instance,
+  connection : @c.OpaquePtr,
+  window : UInt,
+) -> Surface
+
+///|
+#declaration_only
+declare pub fn Instance::create_surface_xlib(
+  self : Instance,
+  display : @c.OpaquePtr,
+  window : UInt64,
+) -> Surface
+
+///|
+#declaration_only
+declare pub fn Instance::create_surface_android_native_window(
+  self : Instance,
+  window : @c.OpaquePtr,
+) -> Surface
+
+///|
+#declaration_only
+declare pub fn Instance::create_surface_windows_hwnd(
+  self : Instance,
+  hinstance : @c.OpaquePtr,
+  hwnd : @c.OpaquePtr,
+) -> Surface
+
+///|
+#declaration_only
 declare pub fn Instance::release(self : Instance) -> Unit
+
+///|
+declare pub fn surface_descriptor_metal_layer_new(
+  layer : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr
+
+///|
+declare pub fn surface_descriptor_wayland_new(
+  display : @c.OpaquePtr,
+  surface : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr
+
+///|
+declare pub fn surface_descriptor_windows_hwnd_new(
+  hinstance : @c.OpaquePtr,
+  hwnd : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr
+
+///|
+declare pub fn surface_descriptor_xcb_new(
+  connection : @c.OpaquePtr,
+  window : UInt,
+) -> @c.WGPUSurfaceDescriptorPtr
+
+///|
+declare pub fn surface_descriptor_xlib_new(
+  display : @c.OpaquePtr,
+  window : UInt64,
+) -> @c.WGPUSurfaceDescriptorPtr
+
+///|
+declare pub fn surface_descriptor_android_native_window_new(
+  window : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr
+
+///|
+declare pub fn surface_descriptor_free(
+  desc : @c.WGPUSurfaceDescriptorPtr,
+) -> Unit
 
 ///|
 declare pub fn SurfaceConfiguration::new(
@@ -422,6 +542,48 @@ declare pub fn Adapter::request_device_sync_ptr(
 
 ///|
 #declaration_only
+declare pub fn Adapter::request_device_future_id_u64(
+  self : Adapter,
+  descriptor? : @c.WGPUDeviceDescriptorPtr = @c.null_device_descriptor_ptr(),
+) -> UInt64
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_async_status_u32(
+  self : Adapter,
+  future_id : UInt64,
+) -> UInt
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_async_device(
+  self : Adapter,
+  future_id : UInt64,
+) -> Device
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_async_message(
+  self : Adapter,
+  future_id : UInt64,
+) -> String
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_async_clear(
+  self : Adapter,
+  future_id : UInt64,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_async_take_or_raise(
+  self : Adapter,
+  future_id : UInt64,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
 declare pub fn Adapter::request_device_sync_timestamp_query(
   self : Adapter,
   instance : Instance,
@@ -451,6 +613,20 @@ declare pub fn Adapter::request_device_sync_push_constants(
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_sync_texture_binding_array(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_clear_texture(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_multiview(
   self : Adapter,
   instance : Instance,
 ) -> Device raise WgpuError
@@ -500,6 +676,14 @@ declare pub fn Adapter::has_feature_native_push_constants(
 declare pub fn Adapter::has_feature_native_pipeline_statistics_query(
   self : Adapter,
 ) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_clear_texture(self : Adapter) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_multiview(self : Adapter) -> Bool
 
 ///|
 #declaration_only

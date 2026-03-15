@@ -380,6 +380,40 @@ pub extern "C" fn adapter_request_device_sync_last_message_utf8(
 ) -> Bool = "mbt_wgpu_adapter_request_device_sync_last_message_utf8"
 
 ///|
+pub extern "C" fn adapter_request_device_future_id_u64(
+  adapter : WGPUAdapter,
+  descriptor : WGPUDeviceDescriptorPtr,
+) -> UInt64 = "mbt_wgpu_adapter_request_device_future_id_u64"
+
+///|
+pub extern "C" fn adapter_request_device_async_status_u32(
+  future_id : UInt64,
+) -> UInt = "mbt_wgpu_adapter_request_device_async_status_u32"
+
+///|
+pub extern "C" fn adapter_request_device_async_device(
+  future_id : UInt64,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_async_device"
+
+///|
+pub extern "C" fn adapter_request_device_async_message_utf8_len(
+  future_id : UInt64,
+) -> UInt64 = "mbt_wgpu_adapter_request_device_async_message_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn adapter_request_device_async_message_utf8(
+  future_id : UInt64,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_adapter_request_device_async_message_utf8"
+
+///|
+pub extern "C" fn adapter_request_device_async_clear(
+  future_id : UInt64,
+) -> Unit = "mbt_wgpu_adapter_request_device_async_clear"
+
+///|
 pub extern "C" fn adapter_request_device_sync_timestamp_query(
   instance : Instance,
   adapter : WGPUAdapter,
@@ -408,6 +442,18 @@ pub extern "C" fn adapter_request_device_sync_texture_binding_array(
   instance : Instance,
   adapter : WGPUAdapter,
 ) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_texture_binding_array"
+
+///|
+pub extern "C" fn adapter_request_device_sync_clear_texture(
+  instance : Instance,
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_clear_texture"
+
+///|
+pub extern "C" fn adapter_request_device_sync_multiview(
+  instance : Instance,
+  adapter : WGPUAdapter,
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_multiview"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_pipeline_statistics_query(
@@ -474,6 +520,16 @@ pub fn adapter_has_feature_native_pipeline_statistics_query(
     adapter,
     feature_name_native_pipeline_statistics_query(),
   )
+}
+
+///|
+pub fn adapter_has_feature_native_clear_texture(adapter : Adapter) -> Bool {
+  wgpuAdapterHasFeature(adapter, feature_name_native_clear_texture())
+}
+
+///|
+pub fn adapter_has_feature_native_multiview(adapter : Adapter) -> Bool {
+  wgpuAdapterHasFeature(adapter, feature_name_native_multiview())
 }
 
 ///|

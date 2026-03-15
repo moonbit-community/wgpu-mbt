@@ -21,6 +21,166 @@
 
 WGPUSurface mbt_wgpu_null_surface(void) { return NULL; }
 
+typedef struct {
+  WGPUSurfaceDescriptor desc;
+  union {
+    WGPUSurfaceSourceMetalLayer metal_layer;
+    WGPUSurfaceSourceWaylandSurface wayland;
+    WGPUSurfaceSourceWindowsHWND windows_hwnd;
+    WGPUSurfaceSourceXCBWindow xcb;
+    WGPUSurfaceSourceXlibWindow xlib;
+    WGPUSurfaceSourceAndroidNativeWindow android_native_window;
+  } source;
+} mbt_surface_descriptor_owned_t;
+
+static WGPUSurfaceDescriptor *mbt_surface_descriptor_new_empty(void) {
+  mbt_surface_descriptor_owned_t *out =
+      (mbt_surface_descriptor_owned_t *)calloc(1, sizeof(mbt_surface_descriptor_owned_t));
+  if (!out) {
+    return NULL;
+  }
+  out->desc = (WGPUSurfaceDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+  return &out->desc;
+}
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_metal_layer_new(void *layer) {
+  if (!layer) {
+    return NULL;
+  }
+  WGPUSurfaceDescriptor *desc = mbt_surface_descriptor_new_empty();
+  if (!desc) {
+    return NULL;
+  }
+  mbt_surface_descriptor_owned_t *out = (mbt_surface_descriptor_owned_t *)desc;
+  out->source.metal_layer = (WGPUSurfaceSourceMetalLayer){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceMetalLayer,
+          },
+      .layer = layer,
+  };
+  out->desc.nextInChain = &out->source.metal_layer.chain;
+  return &out->desc;
+}
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_wayland_new(void *display, void *surface) {
+  if (!display || !surface) {
+    return NULL;
+  }
+  WGPUSurfaceDescriptor *desc = mbt_surface_descriptor_new_empty();
+  if (!desc) {
+    return NULL;
+  }
+  mbt_surface_descriptor_owned_t *out = (mbt_surface_descriptor_owned_t *)desc;
+  out->source.wayland = (WGPUSurfaceSourceWaylandSurface){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceWaylandSurface,
+          },
+      .display = display,
+      .surface = surface,
+  };
+  out->desc.nextInChain = &out->source.wayland.chain;
+  return &out->desc;
+}
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_windows_hwnd_new(void *hinstance,
+                                                                    void *hwnd) {
+  if (!hinstance || !hwnd) {
+    return NULL;
+  }
+  WGPUSurfaceDescriptor *desc = mbt_surface_descriptor_new_empty();
+  if (!desc) {
+    return NULL;
+  }
+  mbt_surface_descriptor_owned_t *out = (mbt_surface_descriptor_owned_t *)desc;
+  out->source.windows_hwnd = (WGPUSurfaceSourceWindowsHWND){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceWindowsHWND,
+          },
+      .hinstance = hinstance,
+      .hwnd = hwnd,
+  };
+  out->desc.nextInChain = &out->source.windows_hwnd.chain;
+  return &out->desc;
+}
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_xcb_new(void *connection, uint32_t window) {
+  if (!connection || window == 0u) {
+    return NULL;
+  }
+  WGPUSurfaceDescriptor *desc = mbt_surface_descriptor_new_empty();
+  if (!desc) {
+    return NULL;
+  }
+  mbt_surface_descriptor_owned_t *out = (mbt_surface_descriptor_owned_t *)desc;
+  out->source.xcb = (WGPUSurfaceSourceXCBWindow){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceXCBWindow,
+          },
+      .connection = connection,
+      .window = window,
+  };
+  out->desc.nextInChain = &out->source.xcb.chain;
+  return &out->desc;
+}
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_xlib_new(void *display, uint64_t window) {
+  if (!display || window == 0u) {
+    return NULL;
+  }
+  WGPUSurfaceDescriptor *desc = mbt_surface_descriptor_new_empty();
+  if (!desc) {
+    return NULL;
+  }
+  mbt_surface_descriptor_owned_t *out = (mbt_surface_descriptor_owned_t *)desc;
+  out->source.xlib = (WGPUSurfaceSourceXlibWindow){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceXlibWindow,
+          },
+      .display = display,
+      .window = window,
+  };
+  out->desc.nextInChain = &out->source.xlib.chain;
+  return &out->desc;
+}
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_android_native_window_new(void *window) {
+  if (!window) {
+    return NULL;
+  }
+  WGPUSurfaceDescriptor *desc = mbt_surface_descriptor_new_empty();
+  if (!desc) {
+    return NULL;
+  }
+  mbt_surface_descriptor_owned_t *out = (mbt_surface_descriptor_owned_t *)desc;
+  out->source.android_native_window = (WGPUSurfaceSourceAndroidNativeWindow){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceAndroidNativeWindow,
+          },
+      .window = window,
+  };
+  out->desc.nextInChain = &out->source.android_native_window.chain;
+  return &out->desc;
+}
+
+void mbt_wgpu_surface_descriptor_free(WGPUSurfaceDescriptor *desc) {
+  free(desc);
+}
+
 WGPURequestAdapterOptions *mbt_wgpu_request_adapter_options_new_u32(
     uint32_t feature_level_u32, uint32_t power_preference_u32,
     int32_t force_fallback_adapter,

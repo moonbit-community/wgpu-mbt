@@ -179,6 +179,79 @@ WGPUSurface mbt_wgpu_instance_create_surface_wayland(WGPUInstance instance,
   return wgpuInstanceCreateSurface(instance, &desc);
 }
 
+WGPUSurface mbt_wgpu_instance_create_surface_xcb(WGPUInstance instance,
+                                                 void *connection,
+                                                 uint32_t window) {
+  if (!instance || !connection || window == 0u) {
+    return NULL;
+  }
+
+  WGPUSurfaceSourceXCBWindow source = {
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceXCBWindow,
+          },
+      .connection = connection,
+      .window = window,
+  };
+
+  WGPUSurfaceDescriptor desc = {
+      .nextInChain = &source.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+
+  return wgpuInstanceCreateSurface(instance, &desc);
+}
+
+WGPUSurface mbt_wgpu_instance_create_surface_xlib(WGPUInstance instance,
+                                                  void *display,
+                                                  uint64_t window) {
+  if (!instance || !display || window == 0u) {
+    return NULL;
+  }
+
+  WGPUSurfaceSourceXlibWindow source = {
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceXlibWindow,
+          },
+      .display = display,
+      .window = window,
+  };
+
+  WGPUSurfaceDescriptor desc = {
+      .nextInChain = &source.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+
+  return wgpuInstanceCreateSurface(instance, &desc);
+}
+
+WGPUSurface mbt_wgpu_instance_create_surface_android_native_window(
+    WGPUInstance instance, void *window) {
+  if (!instance || !window) {
+    return NULL;
+  }
+
+  WGPUSurfaceSourceAndroidNativeWindow source = {
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = WGPUSType_SurfaceSourceAndroidNativeWindow,
+          },
+      .window = window,
+  };
+
+  WGPUSurfaceDescriptor desc = {
+      .nextInChain = &source.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+
+  return wgpuInstanceCreateSurface(instance, &desc);
+}
+
 // -----------------------------------------------------------------------------
 // Windows surface helper (HWND)
 // -----------------------------------------------------------------------------

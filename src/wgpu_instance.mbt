@@ -200,6 +200,83 @@ pub fn Instance::request_adapter_sync_options_surface_u32(
 }
 
 ///|
+pub fn Instance::request_adapter_future_id_u64(
+  self : Instance,
+  options? : @c.WGPURequestAdapterOptionsPtr = @c.null_request_adapter_options_ptr(),
+) -> UInt64 {
+  if !native_available() {
+    return 0UL
+  }
+  if !native_has_symbol("wgpuInstanceRequestAdapter") {
+    return 0UL
+  }
+  @c.instance_request_adapter_future_id_u64(self.raw, options)
+}
+
+///|
+pub fn Instance::request_adapter_async_status_u32(
+  self : Instance,
+  future_id : UInt64,
+) -> UInt {
+  let _ = self
+  @c.instance_request_adapter_async_status_u32(future_id)
+}
+
+///|
+pub fn Instance::request_adapter_async_adapter(
+  self : Instance,
+  future_id : UInt64,
+) -> Adapter {
+  let _ = self
+  Adapter::{ raw: @c.instance_request_adapter_async_adapter(future_id) }
+}
+
+///|
+pub fn Instance::request_adapter_async_message(
+  self : Instance,
+  future_id : UInt64,
+) -> String {
+  let _ = self
+  let len = @c.instance_request_adapter_async_message_utf8_len(future_id)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.instance_request_adapter_async_message_utf8(future_id, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
+pub fn Instance::request_adapter_async_clear(
+  self : Instance,
+  future_id : UInt64,
+) -> Unit {
+  let _ = self
+  @c.instance_request_adapter_async_clear(future_id)
+}
+
+///|
+pub fn Instance::request_adapter_async_take_or_raise(
+  self : Instance,
+  future_id : UInt64,
+) -> Adapter raise WgpuError {
+  let status = self.request_adapter_async_status_u32(future_id)
+  let adapter = self.request_adapter_async_adapter(future_id)
+  self.request_adapter_async_clear(future_id)
+  if status == REQUEST_ADAPTER_STATUS_SUCCESS &&
+    !@c.adapter_is_null(adapter.raw) {
+    adapter
+  } else {
+    raise WgpuRequestAdapterFailed(status)
+  }
+}
+
+///|
 pub fn Instance::process_events(self : Instance) -> Unit {
   @c.instance_process_events(self.raw)
 }
@@ -259,6 +336,44 @@ pub fn Instance::create_surface_wayland(
 ) -> Surface {
   Surface::{
     raw: @c.instance_create_surface_wayland(self.raw, display, surface),
+    layer: @c.null_opaque_ptr(),
+  }
+}
+
+///|
+/// Create a surface from XCB handles (`xcb_connection_t*`, `xcb_window_t`).
+pub fn Instance::create_surface_xcb(
+  self : Instance,
+  connection : @c.OpaquePtr,
+  window : UInt,
+) -> Surface {
+  Surface::{
+    raw: @c.instance_create_surface_xcb(self.raw, connection, window),
+    layer: @c.null_opaque_ptr(),
+  }
+}
+
+///|
+/// Create a surface from Xlib handles (`Display*`, `Window`).
+pub fn Instance::create_surface_xlib(
+  self : Instance,
+  display : @c.OpaquePtr,
+  window : UInt64,
+) -> Surface {
+  Surface::{
+    raw: @c.instance_create_surface_xlib(self.raw, display, window),
+    layer: @c.null_opaque_ptr(),
+  }
+}
+
+///|
+/// Create a surface from Android handle (`ANativeWindow*`).
+pub fn Instance::create_surface_android_native_window(
+  self : Instance,
+  window : @c.OpaquePtr,
+) -> Surface {
+  Surface::{
+    raw: @c.instance_create_surface_android_native_window(self.raw, window),
     layer: @c.null_opaque_ptr(),
   }
 }

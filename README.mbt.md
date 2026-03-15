@@ -103,6 +103,43 @@ surface.configure_with_or_raise(adapter, device, config)
 You can still use `configure_u32` / `configure_view_formats_u32` / `configure_best_effort`,
 and pass `desired_maximum_frame_latency` as an optional named parameter.
 
+## Surface Sources (All Common Native Sources)
+
+High-level constructors now cover all common native surface sources:
+
+- Metal: `Instance::create_surface_metal_layer()`
+- Wayland: `Instance::create_surface_wayland(display, surface)`
+- XCB: `Instance::create_surface_xcb(connection, window)`
+- Xlib: `Instance::create_surface_xlib(display, window)`
+- Windows HWND: `Instance::create_surface_windows_hwnd(hinstance, hwnd)`
+- Android: `Instance::create_surface_android_native_window(window)`
+
+You can also build source-chained descriptors and call
+`Instance::create_surface(descriptor)` directly:
+
+- `surface_descriptor_metal_layer_new`
+- `surface_descriptor_wayland_new`
+- `surface_descriptor_xcb_new`
+- `surface_descriptor_xlib_new`
+- `surface_descriptor_windows_hwnd_new`
+- `surface_descriptor_android_native_window_new`
+- `surface_descriptor_free`
+
+## Async Future APIs
+
+Besides sync helpers, the package now exposes non-blocking future-style APIs:
+
+- Adapter request:
+  - `Instance::request_adapter_future_id_u64(...)`
+  - `Instance::request_adapter_async_status_u32(...)`
+  - `Instance::request_adapter_async_take_or_raise(...)`
+- Device request:
+  - `Adapter::request_device_future_id_u64(...)`
+  - `Adapter::request_device_async_status_u32(...)`
+  - `Adapter::request_device_async_take_or_raise(...)`
+
+Drive completion with `Instance::process_events()` or `Instance::wait_any_one(...)`.
+
 ## Runtime Behavior
 
 - This package does **not** statically link `wgpu-native`; it loads the native library at runtime.
@@ -124,6 +161,10 @@ Some `wgpu-native` builds still have unimplemented or unstable entry points.
 - Shader compilation info is off by default
   - enable via `MBT_WGPU_ENABLE_COMPILATION_INFO=1` or `@wgpu.set_compilation_info_enabled(true)`
   - probe via `@wgpu.compilation_info_enabled()` / `@wgpu.compilation_info_available()`
+- Native features:
+  - clear texture: `@wgpu.NATIVE_FEATURE_CLEAR_TEXTURE`
+  - multiview: `@wgpu.NATIVE_FEATURE_MULTIVIEW`
+  - quick checks: `Adapter::has_feature_native_clear_texture()` / `Adapter::has_feature_native_multiview()`
 - Force-disable env vars always take precedence:
   - `MBT_WGPU_DISABLE_PIPELINE_ASYNC=1`
   - `MBT_WGPU_DISABLE_COMPILATION_INFO=1`

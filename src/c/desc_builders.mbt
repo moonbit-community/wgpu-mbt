@@ -44,6 +44,52 @@ pub extern "C" fn null_request_adapter_options_ptr() -> WGPURequestAdapterOption
 pub extern "C" fn null_surface() -> WGPUSurface = "mbt_wgpu_null_surface"
 
 ///|
+/// Build a `WGPUSurfaceDescriptor` for `WGPUSurfaceSourceMetalLayer`.
+pub extern "C" fn surface_descriptor_metal_layer_new(
+  layer : OpaquePtr,
+) -> WGPUSurfaceDescriptorPtr = "mbt_wgpu_surface_descriptor_metal_layer_new"
+
+///|
+/// Build a `WGPUSurfaceDescriptor` for `WGPUSurfaceSourceWaylandSurface`.
+pub extern "C" fn surface_descriptor_wayland_new(
+  display : OpaquePtr,
+  surface : OpaquePtr,
+) -> WGPUSurfaceDescriptorPtr = "mbt_wgpu_surface_descriptor_wayland_new"
+
+///|
+/// Build a `WGPUSurfaceDescriptor` for `WGPUSurfaceSourceWindowsHWND`.
+pub extern "C" fn surface_descriptor_windows_hwnd_new(
+  hinstance : OpaquePtr,
+  hwnd : OpaquePtr,
+) -> WGPUSurfaceDescriptorPtr = "mbt_wgpu_surface_descriptor_windows_hwnd_new"
+
+///|
+/// Build a `WGPUSurfaceDescriptor` for `WGPUSurfaceSourceXCBWindow`.
+pub extern "C" fn surface_descriptor_xcb_new(
+  connection : OpaquePtr,
+  window : UInt,
+) -> WGPUSurfaceDescriptorPtr = "mbt_wgpu_surface_descriptor_xcb_new"
+
+///|
+/// Build a `WGPUSurfaceDescriptor` for `WGPUSurfaceSourceXlibWindow`.
+pub extern "C" fn surface_descriptor_xlib_new(
+  display : OpaquePtr,
+  window : UInt64,
+) -> WGPUSurfaceDescriptorPtr = "mbt_wgpu_surface_descriptor_xlib_new"
+
+///|
+/// Build a `WGPUSurfaceDescriptor` for `WGPUSurfaceSourceAndroidNativeWindow`.
+pub extern "C" fn surface_descriptor_android_native_window_new(
+  window : OpaquePtr,
+) -> WGPUSurfaceDescriptorPtr = "mbt_wgpu_surface_descriptor_android_native_window_new"
+
+///|
+#borrow(desc)
+pub extern "C" fn surface_descriptor_free(
+  desc : WGPUSurfaceDescriptorPtr,
+) -> Unit = "mbt_wgpu_surface_descriptor_free"
+
+///|
 pub extern "C" fn request_adapter_options_new_u32(
   feature_level_u32 : UInt,
   power_preference_u32 : UInt,
@@ -603,6 +649,12 @@ pub extern "C" fn feature_name_native_push_constants() -> WGPUFeatureName = "mbt
 
 ///|
 pub extern "C" fn feature_name_native_pipeline_statistics_query() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_pipeline_statistics_query"
+
+///|
+pub extern "C" fn feature_name_native_clear_texture() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_clear_texture"
+
+///|
+pub extern "C" fn feature_name_native_multiview() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_multiview"
 
 ///|
 pub extern "C" fn feature_name_native_spirv_shader_passthrough() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_spirv_shader_passthrough"

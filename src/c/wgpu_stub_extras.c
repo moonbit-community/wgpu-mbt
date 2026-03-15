@@ -180,6 +180,176 @@ static bool mbt_wait_any_take_completed(uint64_t id, bool *completed_out) {
   return false;
 }
 
+static void mbt_wait_any_remove_id(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  for (size_t i = 0; i < g_wait_any_entries_len; i++) {
+    if (g_wait_any_entries[i].id == id) {
+      g_wait_any_entries[i] = g_wait_any_entries[g_wait_any_entries_len - 1];
+      g_wait_any_entries_len--;
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+}
+
+#define MBT_WGPU_ASYNC_MSG_MAX_LEN 1024u
+#define MBT_WGPU_ASYNC_SLOT_CAP 64u
+
+typedef struct {
+  uint64_t id;
+  _Atomic uint32_t done_u32;
+  uint32_t status_u32;
+  WGPUAdapter adapter;
+  uint64_t message_len_u64;
+  uint8_t message[MBT_WGPU_ASYNC_MSG_MAX_LEN];
+} mbt_async_request_adapter_slot_t;
+
+typedef struct {
+  uint64_t id;
+  _Atomic uint32_t done_u32;
+  uint32_t status_u32;
+  WGPUDevice device;
+  uint64_t message_len_u64;
+  uint8_t message[MBT_WGPU_ASYNC_MSG_MAX_LEN];
+} mbt_async_request_device_slot_t;
+
+static mbt_async_request_adapter_slot_t g_async_request_adapter_slots[MBT_WGPU_ASYNC_SLOT_CAP];
+static mbt_async_request_device_slot_t g_async_request_device_slots[MBT_WGPU_ASYNC_SLOT_CAP];
+
+static mbt_async_request_adapter_slot_t *mbt_async_request_adapter_slot_new(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  mbt_async_request_adapter_slot_t *slot = NULL;
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_request_adapter_slots[i].id == 0u) {
+      slot = &g_async_request_adapter_slots[i];
+      memset(slot, 0, sizeof(*slot));
+      slot->id = id;
+      atomic_store_explicit(&slot->done_u32, 0u, memory_order_relaxed);
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+  return slot;
+}
+
+static mbt_async_request_adapter_slot_t *mbt_async_request_adapter_slot_get(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  mbt_async_request_adapter_slot_t *slot = NULL;
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_request_adapter_slots[i].id == id) {
+      slot = &g_async_request_adapter_slots[i];
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+  return slot;
+}
+
+static void mbt_async_request_adapter_slot_clear(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_request_adapter_slots[i].id == id) {
+      memset(&g_async_request_adapter_slots[i], 0, sizeof(g_async_request_adapter_slots[i]));
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+}
+
+static mbt_async_request_device_slot_t *mbt_async_request_device_slot_new(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  mbt_async_request_device_slot_t *slot = NULL;
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_request_device_slots[i].id == 0u) {
+      slot = &g_async_request_device_slots[i];
+      memset(slot, 0, sizeof(*slot));
+      slot->id = id;
+      atomic_store_explicit(&slot->done_u32, 0u, memory_order_relaxed);
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+  return slot;
+}
+
+static mbt_async_request_device_slot_t *mbt_async_request_device_slot_get(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  mbt_async_request_device_slot_t *slot = NULL;
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_request_device_slots[i].id == id) {
+      slot = &g_async_request_device_slots[i];
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+  return slot;
+}
+
+static void mbt_async_request_device_slot_clear(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_request_device_slots[i].id == id) {
+      memset(&g_async_request_device_slots[i], 0, sizeof(g_async_request_device_slots[i]));
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+}
+
+static void mbt_wgpu_request_adapter_async_cb(WGPURequestAdapterStatus status,
+                                              WGPUAdapter adapter,
+                                              WGPUStringView message,
+                                              void *userdata1,
+                                              void *userdata2) {
+  (void)userdata2;
+  mbt_async_request_adapter_slot_t *slot = (mbt_async_request_adapter_slot_t *)userdata1;
+  if (!slot) {
+    return;
+  }
+  slot->status_u32 = (uint32_t)status;
+  slot->adapter = adapter;
+  slot->message_len_u64 = 0u;
+  if (message.data && message.length > 0u) {
+    size_t n = message.length;
+    if (n > MBT_WGPU_ASYNC_MSG_MAX_LEN) {
+      n = MBT_WGPU_ASYNC_MSG_MAX_LEN;
+    }
+    memcpy(slot->message, message.data, n);
+    slot->message_len_u64 = (uint64_t)n;
+  }
+  atomic_store_explicit(&slot->done_u32, 1u, memory_order_release);
+  if (slot->id != 0u) {
+    mbt_wait_any_mark_completed(slot->id);
+  }
+}
+
+static void mbt_wgpu_request_device_async_cb(WGPURequestDeviceStatus status,
+                                             WGPUDevice device,
+                                             WGPUStringView message,
+                                             void *userdata1,
+                                             void *userdata2) {
+  (void)userdata2;
+  mbt_async_request_device_slot_t *slot = (mbt_async_request_device_slot_t *)userdata1;
+  if (!slot) {
+    return;
+  }
+  slot->status_u32 = (uint32_t)status;
+  slot->device = device;
+  slot->message_len_u64 = 0u;
+  if (message.data && message.length > 0u) {
+    size_t n = message.length;
+    if (n > MBT_WGPU_ASYNC_MSG_MAX_LEN) {
+      n = MBT_WGPU_ASYNC_MSG_MAX_LEN;
+    }
+    memcpy(slot->message, message.data, n);
+    slot->message_len_u64 = (uint64_t)n;
+  }
+  atomic_store_explicit(&slot->done_u32, 1u, memory_order_release);
+  if (slot->id != 0u) {
+    mbt_wait_any_mark_completed(slot->id);
+  }
+}
+
 static void mbt_wgpu_queue_work_done_mark_completed_cb(WGPUQueueWorkDoneStatus status,
                                                       void *userdata1,
                                                       void *userdata2) {
@@ -208,6 +378,172 @@ uint64_t mbt_wgpu_queue_on_submitted_work_done_future_id_u64(WGPUQueue queue) {
   };
   (void)wgpuQueueOnSubmittedWorkDone(queue, cb);
   return id;
+}
+
+uint64_t mbt_wgpu_instance_request_adapter_future_id_u64(
+    WGPUInstance instance, const WGPURequestAdapterOptions *options) {
+  if (!instance) {
+    return 0u;
+  }
+  uint64_t id = mbt_wait_any_new_id();
+  if (id == 0u) {
+    return 0u;
+  }
+  mbt_async_request_adapter_slot_t *slot = mbt_async_request_adapter_slot_new(id);
+  if (!slot) {
+    mbt_wait_any_remove_id(id);
+    return 0u;
+  }
+
+  WGPURequestAdapterCallbackInfo cb = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_wgpu_request_adapter_async_cb,
+      .userdata1 = slot,
+      .userdata2 = NULL,
+  };
+  (void)wgpuInstanceRequestAdapter(instance, options, cb);
+  return id;
+}
+
+uint32_t mbt_wgpu_instance_request_adapter_async_status_u32(uint64_t future_id) {
+  mbt_async_request_adapter_slot_t *slot = mbt_async_request_adapter_slot_get(future_id);
+  if (!slot) {
+    return 0u;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return 0u;
+  }
+  return slot->status_u32;
+}
+
+WGPUAdapter mbt_wgpu_instance_request_adapter_async_adapter(uint64_t future_id) {
+  mbt_async_request_adapter_slot_t *slot = mbt_async_request_adapter_slot_get(future_id);
+  if (!slot) {
+    return NULL;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return NULL;
+  }
+  return slot->adapter;
+}
+
+uint64_t mbt_wgpu_instance_request_adapter_async_message_utf8_len(uint64_t future_id) {
+  mbt_async_request_adapter_slot_t *slot = mbt_async_request_adapter_slot_get(future_id);
+  if (!slot) {
+    return 0u;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return 0u;
+  }
+  return slot->message_len_u64;
+}
+
+int32_t mbt_wgpu_instance_request_adapter_async_message_utf8(uint64_t future_id,
+                                                            uint8_t *out,
+                                                            uint64_t out_len) {
+  mbt_async_request_adapter_slot_t *slot = mbt_async_request_adapter_slot_get(future_id);
+  if (!slot || !out) {
+    return false;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return false;
+  }
+  if (out_len < slot->message_len_u64) {
+    return false;
+  }
+  if (slot->message_len_u64 != 0u) {
+    memcpy(out, slot->message, (size_t)slot->message_len_u64);
+  }
+  return true;
+}
+
+void mbt_wgpu_instance_request_adapter_async_clear(uint64_t future_id) {
+  mbt_wait_any_remove_id(future_id);
+  mbt_async_request_adapter_slot_clear(future_id);
+}
+
+uint64_t mbt_wgpu_adapter_request_device_future_id_u64(
+    WGPUAdapter adapter, const WGPUDeviceDescriptor *descriptor) {
+  if (!adapter) {
+    return 0u;
+  }
+  uint64_t id = mbt_wait_any_new_id();
+  if (id == 0u) {
+    return 0u;
+  }
+  mbt_async_request_device_slot_t *slot = mbt_async_request_device_slot_new(id);
+  if (!slot) {
+    mbt_wait_any_remove_id(id);
+    return 0u;
+  }
+
+  WGPURequestDeviceCallbackInfo cb = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_wgpu_request_device_async_cb,
+      .userdata1 = slot,
+      .userdata2 = NULL,
+  };
+  (void)wgpuAdapterRequestDevice(adapter, descriptor, cb);
+  return id;
+}
+
+uint32_t mbt_wgpu_adapter_request_device_async_status_u32(uint64_t future_id) {
+  mbt_async_request_device_slot_t *slot = mbt_async_request_device_slot_get(future_id);
+  if (!slot) {
+    return 0u;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return 0u;
+  }
+  return slot->status_u32;
+}
+
+WGPUDevice mbt_wgpu_adapter_request_device_async_device(uint64_t future_id) {
+  mbt_async_request_device_slot_t *slot = mbt_async_request_device_slot_get(future_id);
+  if (!slot) {
+    return NULL;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return NULL;
+  }
+  return slot->device;
+}
+
+uint64_t mbt_wgpu_adapter_request_device_async_message_utf8_len(uint64_t future_id) {
+  mbt_async_request_device_slot_t *slot = mbt_async_request_device_slot_get(future_id);
+  if (!slot) {
+    return 0u;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return 0u;
+  }
+  return slot->message_len_u64;
+}
+
+int32_t mbt_wgpu_adapter_request_device_async_message_utf8(uint64_t future_id,
+                                                          uint8_t *out,
+                                                          uint64_t out_len) {
+  mbt_async_request_device_slot_t *slot = mbt_async_request_device_slot_get(future_id);
+  if (!slot || !out) {
+    return false;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return false;
+  }
+  if (out_len < slot->message_len_u64) {
+    return false;
+  }
+  if (slot->message_len_u64 != 0u) {
+    memcpy(out, slot->message, (size_t)slot->message_len_u64);
+  }
+  return true;
+}
+
+void mbt_wgpu_adapter_request_device_async_clear(uint64_t future_id) {
+  mbt_wait_any_remove_id(future_id);
+  mbt_async_request_device_slot_clear(future_id);
 }
 
 uint64_t mbt_wgpu_instance_wait_any_one_packed_u64(WGPUInstance instance,

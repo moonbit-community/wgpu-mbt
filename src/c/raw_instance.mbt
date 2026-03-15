@@ -36,6 +36,40 @@ pub extern "C" fn queue_on_submitted_work_done_future_id_u64(
 ) -> UInt64 = "mbt_wgpu_queue_on_submitted_work_done_future_id_u64"
 
 ///|
+pub extern "C" fn instance_request_adapter_future_id_u64(
+  instance : Instance,
+  options : WGPURequestAdapterOptionsPtr,
+) -> UInt64 = "mbt_wgpu_instance_request_adapter_future_id_u64"
+
+///|
+pub extern "C" fn instance_request_adapter_async_status_u32(
+  future_id : UInt64,
+) -> UInt = "mbt_wgpu_instance_request_adapter_async_status_u32"
+
+///|
+pub extern "C" fn instance_request_adapter_async_adapter(
+  future_id : UInt64,
+) -> WGPUAdapter = "mbt_wgpu_instance_request_adapter_async_adapter"
+
+///|
+pub extern "C" fn instance_request_adapter_async_message_utf8_len(
+  future_id : UInt64,
+) -> UInt64 = "mbt_wgpu_instance_request_adapter_async_message_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn instance_request_adapter_async_message_utf8(
+  future_id : UInt64,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_instance_request_adapter_async_message_utf8"
+
+///|
+pub extern "C" fn instance_request_adapter_async_clear(
+  future_id : UInt64,
+) -> Unit = "mbt_wgpu_instance_request_adapter_async_clear"
+
+///|
 pub extern "C" fn instance_enumerate_adapters_count_metal(
   instance : Instance,
 ) -> UInt64 = "mbt_wgpu_instance_enumerate_adapters_count_metal"
