@@ -59,8 +59,8 @@ test "surface configure_with validates desired_maximum_frame_latency" {
     1U,
     usage,
     fmt,
-    PRESENT_MODE_FIFO,
-    COMPOSITE_ALPHA_MODE_AUTO,
+    PresentMode::from_u32(PRESENT_MODE_FIFO),
+    CompositeAlphaMode::from_u32(COMPOSITE_ALPHA_MODE_AUTO),
   ).with_desired_maximum_frame_latency(0U)
   let ok = surface.configure_with(adapter, device, cfg)
   inspect(ok, content="false")
@@ -78,8 +78,8 @@ test "surface configure_with_or_raise validates desired_maximum_frame_latency" {
     1U,
     usage,
     fmt,
-    PRESENT_MODE_FIFO,
-    COMPOSITE_ALPHA_MODE_AUTO,
+    PresentMode::from_u32(PRESENT_MODE_FIFO),
+    CompositeAlphaMode::from_u32(COMPOSITE_ALPHA_MODE_AUTO),
   ).with_desired_maximum_frame_latency(0U)
   let msg : Ref[String] = @ref.new("")
   surface.configure_with_or_raise(adapter, device, cfg) catch {

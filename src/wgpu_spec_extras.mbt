@@ -42,7 +42,31 @@ declare pub fn set_pipeline_async_enabled(enabled : Bool) -> Unit
 
 ///|
 #declaration_only
+declare pub fn pipeline_async_enabled() -> Bool
+
+///|
+#declaration_only
+declare pub fn pipeline_async_availability_kind_u32() -> UInt
+
+///|
+#declaration_only
+declare pub fn pipeline_async_available() -> Bool
+
+///|
+#declaration_only
 declare pub fn set_compilation_info_enabled(enabled : Bool) -> Unit
+
+///|
+#declaration_only
+declare pub fn compilation_info_enabled() -> Bool
+
+///|
+#declaration_only
+declare pub fn compilation_info_availability_kind_u32() -> UInt
+
+///|
+#declaration_only
+declare pub fn compilation_info_available() -> Bool
 
 ///|
 #declaration_only
@@ -109,8 +133,8 @@ declare pub fn SurfaceConfiguration::new(
   height : UInt,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
+  present_mode : PresentMode,
+  alpha_mode : CompositeAlphaMode,
 ) -> SurfaceConfiguration
 
 ///|

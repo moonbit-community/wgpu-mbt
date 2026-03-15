@@ -113,10 +113,12 @@ pub fn Device::create_buffer_init(
       queue.write_buffer(buffer, 0UL, data)
     } else {
       let len = data.length()
-      let padded = Bytes::makei(padded_size.to_int(), i => if i < len {
-        data[i]
-      } else {
-        0
+      let padded = Bytes::makei(padded_size.to_int(), i => {
+        if i < len {
+          data[i]
+        } else {
+          0
+        }
       })
       queue.write_buffer(buffer, 0UL, padded)
     }

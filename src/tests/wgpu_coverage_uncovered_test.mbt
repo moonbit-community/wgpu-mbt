@@ -20,16 +20,18 @@ fn rgba_prefix_bytes(
   b : UInt,
   a : UInt,
 ) -> Bytes {
-  Bytes::makei(total, i => if i == 0 {
-    r.reinterpret_as_int().to_byte()
-  } else if i == 1 {
-    g.reinterpret_as_int().to_byte()
-  } else if i == 2 {
-    b.reinterpret_as_int().to_byte()
-  } else if i == 3 {
-    a.reinterpret_as_int().to_byte()
-  } else {
-    0
+  Bytes::makei(total, i => {
+    if i == 0 {
+      r.reinterpret_as_int().to_byte()
+    } else if i == 1 {
+      g.reinterpret_as_int().to_byte()
+    } else if i == 2 {
+      b.reinterpret_as_int().to_byte()
+    } else if i == 3 {
+      a.reinterpret_as_int().to_byte()
+    } else {
+      0
+    }
   })
 }
 

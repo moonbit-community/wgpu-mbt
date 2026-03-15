@@ -91,8 +91,8 @@ let config = @wgpu.SurfaceConfiguration::new(
   height,
   usage,
   format,
-  present_mode_u32,
-  alpha_mode_u32,
+  @wgpu.PresentMode::from_u32(present_mode_u32),
+  @wgpu.CompositeAlphaMode::from_u32(alpha_mode_u32),
 )
   .with_view_formats([format])
   .with_desired_maximum_frame_latency(2U)
@@ -120,8 +120,10 @@ Some `wgpu-native` builds still have unimplemented or unstable entry points.
   - enable via `@wgpu.set_debug_labels_enabled(true)` or `MBT_WGPU_DEBUG_LABELS=1`
 - Async pipeline creation is off by default
   - enable via `MBT_WGPU_ENABLE_PIPELINE_ASYNC=1` or `@wgpu.set_pipeline_async_enabled(true)`
+  - probe via `@wgpu.pipeline_async_enabled()` / `@wgpu.pipeline_async_available()`
 - Shader compilation info is off by default
   - enable via `MBT_WGPU_ENABLE_COMPILATION_INFO=1` or `@wgpu.set_compilation_info_enabled(true)`
+  - probe via `@wgpu.compilation_info_enabled()` / `@wgpu.compilation_info_available()`
 - Force-disable env vars always take precedence:
   - `MBT_WGPU_DISABLE_PIPELINE_ASYNC=1`
   - `MBT_WGPU_DISABLE_COMPILATION_INFO=1`

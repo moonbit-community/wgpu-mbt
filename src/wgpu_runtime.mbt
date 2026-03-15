@@ -142,8 +142,40 @@ pub fn set_pipeline_async_enabled(enabled : Bool) -> Unit {
 }
 
 ///|
+pub fn pipeline_async_enabled() -> Bool {
+  @c.pipeline_async_enabled_u32() != 0U
+}
+
+///|
+pub fn pipeline_async_availability_kind_u32() -> UInt {
+  @c.pipeline_async_availability_u32()
+}
+
+///|
+pub fn pipeline_async_available() -> Bool {
+  pipeline_async_availability_kind_u32() ==
+  OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE
+}
+
+///|
 pub fn set_compilation_info_enabled(enabled : Bool) -> Unit {
   @c.set_compilation_info_enabled(enabled)
+}
+
+///|
+pub fn compilation_info_enabled() -> Bool {
+  @c.compilation_info_enabled_u32() != 0U
+}
+
+///|
+pub fn compilation_info_availability_kind_u32() -> UInt {
+  @c.compilation_info_availability_u32()
+}
+
+///|
+pub fn compilation_info_available() -> Bool {
+  compilation_info_availability_kind_u32() ==
+  OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE
 }
 
 ///|

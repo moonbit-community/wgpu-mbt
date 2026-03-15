@@ -246,6 +246,10 @@ pub fn command_encoder_set_label_utf8(WGPUCommandEncoder, Bytes, UInt64) -> Unit
 
 pub fn command_encoder_write_timestamp(WGPUCommandEncoder, WGPUQuerySet, UInt) -> Unit
 
+pub fn compilation_info_availability_u32() -> UInt
+
+pub fn compilation_info_enabled_u32() -> UInt
+
 pub fn compilation_info_free(OpaquePtr) -> Unit
 
 pub fn compilation_info_last_error_kind_u32() -> UInt
@@ -641,6 +645,10 @@ pub fn null_uint_ptr() -> UIntPtr
 pub fn opaque_ptr_is_null(OpaquePtr) -> Bool
 
 pub fn optional_sym_present_utf8(Bytes, UInt64) -> Bool
+
+pub fn pipeline_async_availability_u32() -> UInt
+
+pub fn pipeline_async_enabled_u32() -> UInt
 
 pub fn pipeline_async_last_error_kind_u32() -> UInt
 

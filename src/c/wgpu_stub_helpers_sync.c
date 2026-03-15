@@ -200,6 +200,13 @@ static bool g_mbt_wgpu_pipeline_async_inited = false;
 static bool g_mbt_wgpu_compilation_info_enabled = false;
 static bool g_mbt_wgpu_compilation_info_inited = false;
 
+enum {
+  MBT_WGPU_OPTIONAL_AVAIL_AVAILABLE = 0u,
+  MBT_WGPU_OPTIONAL_AVAIL_NATIVE_UNAVAILABLE = 1u,
+  MBT_WGPU_OPTIONAL_AVAIL_MISSING_SYMBOL = 2u,
+  MBT_WGPU_OPTIONAL_AVAIL_DISABLED = 3u,
+};
+
 static bool mbt_wgpu_pipeline_async_enabled(void) {
   // Explicit disable always wins.
   if (mbt_wgpu_env_truthy("MBT_WGPU_DISABLE_PIPELINE_ASYNC")) {
@@ -235,6 +242,50 @@ void mbt_wgpu_set_pipeline_async_enabled(int32_t enabled) {
 void mbt_wgpu_set_compilation_info_enabled(int32_t enabled) {
   g_mbt_wgpu_compilation_info_enabled = enabled != 0;
   g_mbt_wgpu_compilation_info_inited = true;
+}
+
+uint32_t mbt_wgpu_pipeline_async_enabled_u32(void) {
+  return mbt_wgpu_pipeline_async_enabled() ? 1u : 0u;
+}
+
+uint32_t mbt_wgpu_compilation_info_enabled_u32(void) {
+  return mbt_wgpu_compilation_info_enabled() ? 1u : 0u;
+}
+
+uint32_t mbt_wgpu_pipeline_async_availability_u32(void) {
+  if (!mbt_wgpu_native_available_u32()) {
+    return MBT_WGPU_OPTIONAL_AVAIL_NATIVE_UNAVAILABLE;
+  }
+  if (!mbt_wgpu_pipeline_async_enabled()) {
+    return MBT_WGPU_OPTIONAL_AVAIL_DISABLED;
+  }
+  static bool checked = false;
+  static bool available = false;
+  if (!checked) {
+    void *compute_async = mbt_wgpu_optional_sym("wgpuDeviceCreateComputePipelineAsync");
+    void *render_async = mbt_wgpu_optional_sym("wgpuDeviceCreateRenderPipelineAsync");
+    available = (compute_async != NULL) && (render_async != NULL);
+    checked = true;
+  }
+  return available ? MBT_WGPU_OPTIONAL_AVAIL_AVAILABLE
+                   : MBT_WGPU_OPTIONAL_AVAIL_MISSING_SYMBOL;
+}
+
+uint32_t mbt_wgpu_compilation_info_availability_u32(void) {
+  if (!mbt_wgpu_native_available_u32()) {
+    return MBT_WGPU_OPTIONAL_AVAIL_NATIVE_UNAVAILABLE;
+  }
+  if (!mbt_wgpu_compilation_info_enabled()) {
+    return MBT_WGPU_OPTIONAL_AVAIL_DISABLED;
+  }
+  static bool checked = false;
+  static bool available = false;
+  if (!checked) {
+    available = mbt_wgpu_optional_sym("wgpuShaderModuleGetCompilationInfo") != NULL;
+    checked = true;
+  }
+  return available ? MBT_WGPU_OPTIONAL_AVAIL_AVAILABLE
+                   : MBT_WGPU_OPTIONAL_AVAIL_MISSING_SYMBOL;
 }
 
 void mbt_wgpu_set_uncaptured_error_stderr_enabled(int32_t enabled) {

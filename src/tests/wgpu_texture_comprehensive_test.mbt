@@ -166,40 +166,42 @@ test "wgpu texture: copy_buffer_to_texture_rgba8 2x2 upload layout" {
 
   // Build a 512-byte upload buffer matching bytesPerRow=256, with 2x2 pixels:
   // (red, green) / (blue, white)
-  let data = Bytes::makei(512, i => if i == 0 {
-    (255).to_byte()
-  } else if i == 1 {
-    (0).to_byte()
-  } else if i == 2 {
-    (0).to_byte()
-  } else if i == 3 {
-    (255).to_byte()
-  } else if i == 4 {
-    (0).to_byte()
-  } else if i == 5 {
-    (255).to_byte()
-  } else if i == 6 {
-    (0).to_byte()
-  } else if i == 7 {
-    (255).to_byte()
-  } else if i == 256 {
-    (0).to_byte()
-  } else if i == 257 {
-    (0).to_byte()
-  } else if i == 258 {
-    (255).to_byte()
-  } else if i == 259 {
-    (255).to_byte()
-  } else if i == 260 {
-    (255).to_byte()
-  } else if i == 261 {
-    (255).to_byte()
-  } else if i == 262 {
-    (255).to_byte()
-  } else if i == 263 {
-    (255).to_byte()
-  } else {
-    (0).to_byte()
+  let data = Bytes::makei(512, i => {
+    if i == 0 {
+      (255).to_byte()
+    } else if i == 1 {
+      (0).to_byte()
+    } else if i == 2 {
+      (0).to_byte()
+    } else if i == 3 {
+      (255).to_byte()
+    } else if i == 4 {
+      (0).to_byte()
+    } else if i == 5 {
+      (255).to_byte()
+    } else if i == 6 {
+      (0).to_byte()
+    } else if i == 7 {
+      (255).to_byte()
+    } else if i == 256 {
+      (0).to_byte()
+    } else if i == 257 {
+      (0).to_byte()
+    } else if i == 258 {
+      (255).to_byte()
+    } else if i == 259 {
+      (255).to_byte()
+    } else if i == 260 {
+      (255).to_byte()
+    } else if i == 261 {
+      (255).to_byte()
+    } else if i == 262 {
+      (255).to_byte()
+    } else if i == 263 {
+      (255).to_byte()
+    } else {
+      (0).to_byte()
+    }
   })
   queue.write_buffer(upload, 0UL, data)
   submit_empty(device, queue)

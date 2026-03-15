@@ -542,6 +542,14 @@ pub const OPTIONAL_BOOL_TRUE : UInt = 0x00000001
 
 pub const OPTIONAL_BOOL_UNDEFINED : UInt = 0x00000002
 
+pub const OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE : UInt = 0
+
+pub const OPTIONAL_SYMBOL_AVAILABILITY_DISABLED : UInt = 3
+
+pub const OPTIONAL_SYMBOL_AVAILABILITY_MISSING_SYMBOL : UInt = 2
+
+pub const OPTIONAL_SYMBOL_AVAILABILITY_NATIVE_UNAVAILABLE : UInt = 1
+
 pub const OPTIONAL_SYMBOL_ERROR_KIND_DISABLED : UInt = 3
 
 pub const OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL : UInt = 2
@@ -1178,6 +1186,12 @@ pub const WHOLE_MAP_SIZE : UInt64 = 0xFFFFFFFFFFFFFFFF
 
 pub const WHOLE_SIZE : UInt64 = 0xFFFFFFFFFFFFFFFF
 
+pub fn compilation_info_availability_kind_u32() -> UInt
+
+pub fn compilation_info_available() -> Bool
+
+pub fn compilation_info_enabled() -> Bool
+
 pub fn get_instance_capabilities() -> InstanceCapabilities
 
 pub fn get_version() -> UInt
@@ -1191,6 +1205,12 @@ pub fn native_available() -> Bool
 pub fn native_diagnostic() -> String
 
 pub fn native_has_symbol(String) -> Bool
+
+pub fn pipeline_async_availability_kind_u32() -> UInt
+
+pub fn pipeline_async_available() -> Bool
+
+pub fn pipeline_async_enabled() -> Bool
 
 pub fn platform_is_linux() -> Bool
 
@@ -1441,6 +1461,13 @@ pub struct CompilationMessage {
   text : String
 }
 
+pub struct CompositeAlphaMode {
+  raw : UInt
+}
+pub fn CompositeAlphaMode::from_u32(UInt) -> Self
+pub fn CompositeAlphaMode::to_u32(Self) -> UInt
+pub impl Eq for CompositeAlphaMode
+
 pub struct ComputePass {
   raw : @c.WGPUComputePassEncoder
 }
@@ -1685,6 +1712,13 @@ pub fn PipelineLayout::raw_handle(Self) -> @c.WGPUPipelineLayout
 pub fn PipelineLayout::release(Self) -> Unit
 pub fn PipelineLayout::release_raw(Self) -> Unit
 pub fn PipelineLayout::set_label(Self, String) -> Unit
+
+pub struct PresentMode {
+  raw : UInt
+}
+pub fn PresentMode::from_u32(UInt) -> Self
+pub fn PresentMode::to_u32(Self) -> UInt
+pub impl Eq for PresentMode
 
 pub struct QuerySet {
   raw : @c.WGPUQuerySet
@@ -1949,7 +1983,7 @@ pub struct SurfaceConfiguration {
   view_formats : Array[TextureFormat]
   desired_maximum_frame_latency : UInt
 }
-pub fn SurfaceConfiguration::new(UInt, UInt, TextureUsage, TextureFormat, UInt, UInt) -> Self
+pub fn SurfaceConfiguration::new(UInt, UInt, TextureUsage, TextureFormat, PresentMode, CompositeAlphaMode) -> Self
 pub fn SurfaceConfiguration::with_desired_maximum_frame_latency(Self, UInt) -> Self
 pub fn SurfaceConfiguration::with_view_formats(Self, Array[TextureFormat]) -> Self
 

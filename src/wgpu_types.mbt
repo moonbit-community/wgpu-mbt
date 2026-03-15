@@ -99,16 +99,16 @@ pub fn SurfaceConfiguration::new(
   height : UInt,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
+  present_mode : PresentMode,
+  alpha_mode : CompositeAlphaMode,
 ) -> SurfaceConfiguration {
   SurfaceConfiguration::{
     width,
     height,
     usage,
     format,
-    present_mode_u32,
-    alpha_mode_u32,
+    present_mode_u32: present_mode.raw,
+    alpha_mode_u32: alpha_mode.raw,
     view_formats: [],
     desired_maximum_frame_latency: SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
   }
@@ -146,6 +146,65 @@ pub fn SurfaceConfiguration::with_desired_maximum_frame_latency(
     view_formats: self.view_formats,
     desired_maximum_frame_latency,
   }
+}
+
+///|
+pub struct PresentMode {
+  raw : UInt
+}
+
+///|
+pub fn PresentMode::from_u32(raw : UInt) -> PresentMode {
+  PresentMode::{ raw, }
+}
+
+///|
+pub fn PresentMode::to_u32(self : PresentMode) -> UInt {
+  self.raw
+}
+
+///|
+pub impl Eq for PresentMode with equal(self : PresentMode, other : PresentMode) -> Bool {
+  self.raw == other.raw
+}
+
+///|
+pub impl Eq for PresentMode with not_equal(
+  self : PresentMode,
+  other : PresentMode,
+) -> Bool {
+  self.raw != other.raw
+}
+
+///|
+pub struct CompositeAlphaMode {
+  raw : UInt
+}
+
+///|
+pub fn CompositeAlphaMode::from_u32(raw : UInt) -> CompositeAlphaMode {
+  CompositeAlphaMode::{ raw, }
+}
+
+///|
+pub fn CompositeAlphaMode::to_u32(self : CompositeAlphaMode) -> UInt {
+  self.raw
+}
+
+///|
+pub impl Eq for CompositeAlphaMode with equal(
+  self : CompositeAlphaMode,
+  other : CompositeAlphaMode,
+) -> Bool {
+  self.raw == other.raw
+}
+
+///|
+pub impl Eq for CompositeAlphaMode with not_equal(
+  self : CompositeAlphaMode,
+  other : CompositeAlphaMode,
+) -> Bool {
+  self.raw != other.raw
 }
 
 ///|
@@ -512,6 +571,18 @@ pub const OPTIONAL_SYMBOL_ERROR_KIND_DISABLED : UInt = 3U
 
 ///|
 pub const OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED : UInt = 4U
+
+///|
+pub const OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE : UInt = 0U
+
+///|
+pub const OPTIONAL_SYMBOL_AVAILABILITY_NATIVE_UNAVAILABLE : UInt = 1U
+
+///|
+pub const OPTIONAL_SYMBOL_AVAILABILITY_MISSING_SYMBOL : UInt = 2U
+
+///|
+pub const OPTIONAL_SYMBOL_AVAILABILITY_DISABLED : UInt = 3U
 
 ///|
 pub fn OptionalSymbolError::kind_u32(self : OptionalSymbolError) -> UInt {

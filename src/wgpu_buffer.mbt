@@ -211,11 +211,12 @@ pub fn Buffer::map_write_sync(
   }
   let len = data.length()
   let prefix_i = prefix.to_int()
-  let padded = Bytes::makei(aligned_size.to_int(), i => if i >= prefix_i &&
-    i < prefix_i + len {
-    data[i - prefix_i]
-  } else {
-    0
+  let padded = Bytes::makei(aligned_size.to_int(), i => {
+    if i >= prefix_i && i < prefix_i + len {
+      data[i - prefix_i]
+    } else {
+      0
+    }
   })
   let _ = @c.buffer_map_write_sync(
     instance.raw,
@@ -224,7 +225,6 @@ pub fn Buffer::map_write_sync(
     padded,
     aligned_size,
   )
-
 }
 
 ///|
@@ -263,11 +263,12 @@ pub fn Buffer::map_write_sync_or_raise(
   }
   let len = data.length()
   let prefix_i = prefix.to_int()
-  let padded = Bytes::makei(aligned_size.to_int(), i => if i >= prefix_i &&
-    i < prefix_i + len {
-    data[i - prefix_i]
-  } else {
-    0
+  let padded = Bytes::makei(aligned_size.to_int(), i => {
+    if i >= prefix_i && i < prefix_i + len {
+      data[i - prefix_i]
+    } else {
+      0
+    }
   })
   let ok = @c.buffer_map_write_sync(
     instance.raw,

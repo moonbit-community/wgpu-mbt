@@ -80,10 +80,12 @@ pub fn Queue::write_buffer(
     @c.queue_write_buffer(self.raw, buffer.raw, buffer_offset, data, size)
   } else {
     let len = data.length()
-    let padded = Bytes::makei(padded_size.to_int(), i => if i < len {
-      data[i]
-    } else {
-      0
+    let padded = Bytes::makei(padded_size.to_int(), i => {
+      if i < len {
+        data[i]
+      } else {
+        0
+      }
     })
     @c.queue_write_buffer(
       self.raw,

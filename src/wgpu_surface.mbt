@@ -140,7 +140,12 @@ pub fn Surface::configure_u32(
   desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Bool {
   let config = SurfaceConfiguration::new(
-    width, height, usage, format, present_mode_u32, alpha_mode_u32,
+    width,
+    height,
+    usage,
+    format,
+    PresentMode::from_u32(present_mode_u32),
+    CompositeAlphaMode::from_u32(alpha_mode_u32),
   ).with_desired_maximum_frame_latency(desired_maximum_frame_latency)
   self.configure_with(adapter, device, config)
 }
@@ -159,7 +164,12 @@ pub fn Surface::configure_u32_or_raise(
   desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Unit raise SurfaceConfigureError {
   let config = SurfaceConfiguration::new(
-    width, height, usage, format, present_mode_u32, alpha_mode_u32,
+    width,
+    height,
+    usage,
+    format,
+    PresentMode::from_u32(present_mode_u32),
+    CompositeAlphaMode::from_u32(alpha_mode_u32),
   ).with_desired_maximum_frame_latency(desired_maximum_frame_latency)
   self.configure_with_or_raise(adapter, device, config)
 }
@@ -179,7 +189,12 @@ pub fn Surface::configure_view_formats_u32(
   desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Bool {
   let config = SurfaceConfiguration::new(
-      width, height, usage, format, present_mode_u32, alpha_mode_u32,
+      width,
+      height,
+      usage,
+      format,
+      PresentMode::from_u32(present_mode_u32),
+      CompositeAlphaMode::from_u32(alpha_mode_u32),
     )
     .with_view_formats(view_formats)
     .with_desired_maximum_frame_latency(desired_maximum_frame_latency)
@@ -201,7 +216,12 @@ pub fn Surface::configure_view_formats_u32_or_raise(
   desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Unit raise SurfaceConfigureError {
   let config = SurfaceConfiguration::new(
-      width, height, usage, format, present_mode_u32, alpha_mode_u32,
+      width,
+      height,
+      usage,
+      format,
+      PresentMode::from_u32(present_mode_u32),
+      CompositeAlphaMode::from_u32(alpha_mode_u32),
     )
     .with_view_formats(view_formats)
     .with_desired_maximum_frame_latency(desired_maximum_frame_latency)

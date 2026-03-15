@@ -108,6 +108,18 @@ jobs:
           set -euo pipefail
           moon test --target native --test-failure-json
 
+      - name: Run strict leak check
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon test --target native src/tests/wgpu_report_leak_check_test.mbt --test-failure-json
+
+      - name: Run benchmark suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon bench --target native -p Milky2018/wgpu_mbt/tests -f wgpu_perf_bench_test.mbt
+
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
         shell: bash
@@ -198,6 +210,18 @@ jobs:
         run: |
           set -euo pipefail
           moon test --target native --test-failure-json
+
+      - name: Run strict leak check
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon test --target native src/tests/wgpu_report_leak_check_test.mbt --test-failure-json
+
+      - name: Run benchmark suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon bench --target native -p Milky2018/wgpu_mbt/tests -f wgpu_perf_bench_test.mbt
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
@@ -372,6 +396,18 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           moon test --target native --test-failure-json
+
+      - name: Run strict leak check
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          moon test --target native src/tests/wgpu_report_leak_check_test.mbt --test-failure-json
+
+      - name: Run benchmark suite
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          moon bench --target native -p Milky2018/wgpu_mbt/tests -f wgpu_perf_bench_test.mbt
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()

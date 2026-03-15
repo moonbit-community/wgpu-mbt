@@ -13,6 +13,61 @@
 // limitations under the License.
 
 ///|
+test "optional symbol capability probes: kind/bool are coherent" {
+  let pa_kind = @wgpu.pipeline_async_availability_kind_u32()
+  let pa_ok = @wgpu.pipeline_async_available()
+  let ci_kind = @wgpu.compilation_info_availability_kind_u32()
+  let ci_ok = @wgpu.compilation_info_available()
+
+  let pa_kind_valid = pa_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE ||
+    pa_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_NATIVE_UNAVAILABLE ||
+    pa_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_MISSING_SYMBOL ||
+    pa_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_DISABLED
+  let ci_kind_valid = ci_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE ||
+    ci_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_NATIVE_UNAVAILABLE ||
+    ci_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_MISSING_SYMBOL ||
+    ci_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_DISABLED
+
+  inspect(pa_kind_valid, content="true")
+  inspect(ci_kind_valid, content="true")
+  inspect(
+    pa_ok == (pa_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE),
+    content="true",
+  )
+  inspect(
+    ci_ok == (ci_kind == @wgpu.OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE),
+    content="true",
+  )
+}
+
+///|
+test "optional symbol capability probes: disabled reflects in availability kind" {
+  @wgpu.set_pipeline_async_enabled(false)
+  @wgpu.set_compilation_info_enabled(false)
+  inspect(@wgpu.pipeline_async_enabled(), content="false")
+  inspect(@wgpu.compilation_info_enabled(), content="false")
+  if @wgpu.native_available() {
+    inspect(
+      @wgpu.pipeline_async_availability_kind_u32(),
+      content=@wgpu.OPTIONAL_SYMBOL_AVAILABILITY_DISABLED.to_string(),
+    )
+    inspect(
+      @wgpu.compilation_info_availability_kind_u32(),
+      content=@wgpu.OPTIONAL_SYMBOL_AVAILABILITY_DISABLED.to_string(),
+    )
+  } else {
+    inspect(
+      @wgpu.pipeline_async_availability_kind_u32(),
+      content=@wgpu.OPTIONAL_SYMBOL_AVAILABILITY_NATIVE_UNAVAILABLE.to_string(),
+    )
+    inspect(
+      @wgpu.compilation_info_availability_kind_u32(),
+      content=@wgpu.OPTIONAL_SYMBOL_AVAILABILITY_NATIVE_UNAVAILABLE.to_string(),
+    )
+  }
+}
+
+///|
 test "optional symbol or_raise: compilation info disabled => runtime fail" {
   skip_unless_linux(() => {
     @wgpu.set_compilation_info_enabled(false)

@@ -27,7 +27,14 @@ test "wgpu surface: configure_with typed configuration" {
     let fmt0 = surface.capabilities_format_u32_at(adapter, 0UL)
     let pm0 = surface.capabilities_present_mode_u32_at(adapter, 0UL)
     let am0 = surface.capabilities_alpha_mode_u32_at(adapter, 0UL)
-    let config = @wgpu.SurfaceConfiguration::new(1U, 1U, usage, fmt0, pm0, am0)
+    let config = @wgpu.SurfaceConfiguration::new(
+        1U,
+        1U,
+        usage,
+        fmt0,
+        @wgpu.PresentMode::from_u32(pm0),
+        @wgpu.CompositeAlphaMode::from_u32(am0),
+      )
       .with_view_formats([fmt0])
       .with_desired_maximum_frame_latency(2U)
     surface.configure_with_or_raise(adapter, device, config)

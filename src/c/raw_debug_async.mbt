@@ -28,6 +28,18 @@ pub extern "C" fn set_pipeline_async_enabled(enabled : Bool) -> Unit = "mbt_wgpu
 pub extern "C" fn set_compilation_info_enabled(enabled : Bool) -> Unit = "mbt_wgpu_set_compilation_info_enabled"
 
 ///|
+pub extern "C" fn pipeline_async_enabled_u32() -> UInt = "mbt_wgpu_pipeline_async_enabled_u32"
+
+///|
+pub extern "C" fn compilation_info_enabled_u32() -> UInt = "mbt_wgpu_compilation_info_enabled_u32"
+
+///|
+pub extern "C" fn pipeline_async_availability_u32() -> UInt = "mbt_wgpu_pipeline_async_availability_u32"
+
+///|
+pub extern "C" fn compilation_info_availability_u32() -> UInt = "mbt_wgpu_compilation_info_availability_u32"
+
+///|
 #borrow(label)
 pub extern "C" fn command_encoder_set_label_utf8(
   encoder : CommandEncoder,
