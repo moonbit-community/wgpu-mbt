@@ -139,7 +139,6 @@ You can also build source-chained descriptors and call
 
 You can create an instance with explicit native extras instead of defaults:
 
-- `Instance::create_with_extras_u32(backends_u64, flags_u32, dx12_shader_compiler_u32, gles3_minor_version_u32, gl_fence_behaviour_u32, dxc_max_shader_model_u32, dx12_presentation_system_u32)`
 - `Instance::create_with_extras_u32(backends_u64, flags_u32, dx12_shader_compiler_u32, gles3_minor_version_u32, gl_fence_behaviour_u32, dxc_max_shader_model_u32, dx12_presentation_system_u32, dxc_path)`
 
 This exposes backend/compiler knobs from `WGPUInstanceExtras`.
