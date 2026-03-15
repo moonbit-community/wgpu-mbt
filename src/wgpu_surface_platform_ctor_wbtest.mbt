@@ -33,6 +33,9 @@ test "surface platform constructors: null host handles are safe" {
   let surface_android = instance.create_surface_android_native_window(nullp)
   surface_android.release()
 
+  let surface_swap_chain_panel = instance.create_surface_swap_chain_panel(nullp)
+  surface_swap_chain_panel.release()
+
   let surface_hwnd = instance.create_surface_windows_hwnd(nullp, nullp)
   surface_hwnd.release()
 
@@ -50,6 +53,9 @@ test "surface platform constructors: null host handles are safe" {
 
   let desc_android = surface_descriptor_android_native_window_new(nullp)
   surface_descriptor_free(desc_android)
+
+  let desc_swap_chain_panel = surface_descriptor_swap_chain_panel_new(nullp)
+  surface_descriptor_free(desc_swap_chain_panel)
 
   let desc_hwnd = surface_descriptor_windows_hwnd_new(nullp, nullp)
   surface_descriptor_free(desc_hwnd)

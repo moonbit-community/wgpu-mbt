@@ -18,6 +18,17 @@ pub fn create_instance() -> Instance {
 }
 
 ///|
+pub extern "C" fn create_instance_with_extras_u32(
+  backends_u64 : UInt64,
+  flags_u32 : UInt,
+  dx12_shader_compiler_u32 : UInt,
+  gles3_minor_version_u32 : UInt,
+  gl_fence_behaviour_u32 : UInt,
+  dxc_max_shader_model_u32 : UInt,
+  dx12_presentation_system_u32 : UInt,
+) -> Instance = "mbt_wgpu_create_instance_with_extras_u32"
+
+///|
 pub extern "C" fn instance_capabilities_timed_wait_any_enable_u32() -> UInt = "mbt_wgpu_instance_capabilities_timed_wait_any_enable_u32"
 
 ///|

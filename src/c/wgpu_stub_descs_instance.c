@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "webgpu.h"
+#include "wgpu_native_shim.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -30,6 +30,7 @@ typedef struct {
     WGPUSurfaceSourceXCBWindow xcb;
     WGPUSurfaceSourceXlibWindow xlib;
     WGPUSurfaceSourceAndroidNativeWindow android_native_window;
+    WGPUSurfaceSourceSwapChainPanel swap_chain_panel;
   } source;
 } mbt_surface_descriptor_owned_t;
 
@@ -174,6 +175,28 @@ WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_android_native_window_new(voi
       .window = window,
   };
   out->desc.nextInChain = &out->source.android_native_window.chain;
+  return &out->desc;
+}
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_swap_chain_panel_new(
+    void *panel_native) {
+  if (!panel_native) {
+    return NULL;
+  }
+  WGPUSurfaceDescriptor *desc = mbt_surface_descriptor_new_empty();
+  if (!desc) {
+    return NULL;
+  }
+  mbt_surface_descriptor_owned_t *out = (mbt_surface_descriptor_owned_t *)desc;
+  out->source.swap_chain_panel = (WGPUSurfaceSourceSwapChainPanel){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_SurfaceSourceSwapChainPanel,
+          },
+      .panelNative = panel_native,
+  };
+  out->desc.nextInChain = &out->source.swap_chain_panel.chain;
   return &out->desc;
 }
 

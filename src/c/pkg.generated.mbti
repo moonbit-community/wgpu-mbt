@@ -338,6 +338,8 @@ pub fn compute_pipeline_set_label_utf8(WGPUComputePipeline, Bytes, UInt64) -> Un
 
 pub fn create_instance() -> WGPUInstance
 
+pub fn create_instance_with_extras_u32(UInt64, UInt, UInt, UInt, UInt, UInt, UInt) -> WGPUInstance
+
 pub fn device_create_bind_group_layout_sampler_filtering(WGPUDevice) -> WGPUBindGroupLayout
 
 pub fn device_create_bind_group_layout_sampler_texture_2d(WGPUDevice) -> WGPUBindGroupLayout
@@ -429,6 +431,8 @@ pub fn device_create_sampler_nearest_mirror_repeat(WGPUDevice) -> WGPUSampler
 pub fn device_create_sampler_nearest_repeat(WGPUDevice) -> WGPUSampler
 
 pub fn device_create_sampler_u32(WGPUDevice, UInt, UInt, UInt, UInt, UInt, UInt, Float, Float, UInt, UInt) -> WGPUSampler
+
+pub fn device_create_shader_module_glsl(WGPUDevice, UInt64, Bytes, UInt64) -> WGPUShaderModule
 
 pub fn device_create_shader_module_spirv(WGPUDevice, Bytes, UInt64) -> WGPUShaderModule
 
@@ -585,6 +589,8 @@ pub fn instance_capabilities_timed_wait_any_max_count_u64() -> UInt64
 pub fn instance_create_surface_android_native_window(WGPUInstance, OpaquePtr) -> WGPUSurface
 
 pub fn instance_create_surface_metal_layer(WGPUInstance, OpaquePtr) -> WGPUSurface
+
+pub fn instance_create_surface_swap_chain_panel(WGPUInstance, OpaquePtr) -> WGPUSurface
 
 pub fn instance_create_surface_wayland(WGPUInstance, OpaquePtr, OpaquePtr) -> WGPUSurface
 
@@ -870,6 +876,8 @@ pub fn render_pipeline_desc_builder_add_vertex_attribute(OpaquePtr, UInt, UInt64
 
 pub fn render_pipeline_desc_builder_add_vertex_buffer_layout(OpaquePtr, UInt64, UInt) -> UInt
 
+pub fn render_pipeline_desc_builder_clear_primitive_extras(OpaquePtr) -> UInt
+
 pub fn render_pipeline_desc_builder_disable_blend(OpaquePtr) -> UInt
 
 pub fn render_pipeline_desc_builder_enable_alpha_blend(OpaquePtr) -> UInt
@@ -896,9 +904,13 @@ pub fn render_pipeline_desc_builder_set_color_target_write_mask(OpaquePtr, UInt6
 
 pub fn render_pipeline_desc_builder_set_color_target_write_mask_at(OpaquePtr, UInt, UInt64) -> UInt
 
+pub fn render_pipeline_desc_builder_set_conservative(OpaquePtr, Bool) -> UInt
+
 pub fn render_pipeline_desc_builder_set_depth_stencil(OpaquePtr, UInt, Bool, UInt) -> UInt
 
 pub fn render_pipeline_desc_builder_set_entry_points_utf8(OpaquePtr, Bytes, UInt64, Bytes, UInt64) -> UInt
+
+pub fn render_pipeline_desc_builder_set_polygon_mode(OpaquePtr, UInt) -> UInt
 
 pub fn render_pipeline_desc_builder_set_topology(OpaquePtr, UInt) -> UInt
 
@@ -966,6 +978,8 @@ pub fn set_uncaptured_error_stderr_enabled(Bool) -> Unit
 
 pub fn shader_module_descriptor_free(WGPUShaderModuleDescriptorPtr) -> Unit
 
+pub fn shader_module_descriptor_glsl_new(UInt64, Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr
+
 pub fn shader_module_descriptor_wgsl_new(Bytes, UInt64) -> WGPUShaderModuleDescriptorPtr
 
 pub fn shader_module_get_compilation_info_sync_new(WGPUInstance, WGPUShaderModule) -> OpaquePtr
@@ -1005,6 +1019,8 @@ pub fn surface_descriptor_android_native_window_new(OpaquePtr) -> WGPUSurfaceDes
 pub fn surface_descriptor_free(WGPUSurfaceDescriptorPtr) -> Unit
 
 pub fn surface_descriptor_metal_layer_new(OpaquePtr) -> WGPUSurfaceDescriptorPtr
+
+pub fn surface_descriptor_swap_chain_panel_new(OpaquePtr) -> WGPUSurfaceDescriptorPtr
 
 pub fn surface_descriptor_wayland_new(OpaquePtr, OpaquePtr) -> WGPUSurfaceDescriptorPtr
 

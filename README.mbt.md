@@ -7,8 +7,9 @@ MoonBit bindings for the `wgpu-native` C API (WebGPU), targeting **native** back
 | Platform | Backend | Surface API |
 |---|---|---|
 | macOS | Metal | `Instance::create_surface_metal_layer()` |
-| Linux (experimental) | Vulkan | `Instance::create_surface_wayland()` |
-| Windows (experimental) | DX12 / Vulkan (via wgpu-native) | `Instance::create_surface_windows_hwnd()` |
+| Linux (experimental) | Vulkan | `Instance::create_surface_wayland()` / `create_surface_xcb()` / `create_surface_xlib()` |
+| Windows (experimental) | DX12 / Vulkan (via wgpu-native) | `Instance::create_surface_windows_hwnd()` / `create_surface_swap_chain_panel()` |
+| Android (experimental) | Vulkan/OpenGLES (depends on native build) | `Instance::create_surface_android_native_window()` |
 
 ## Install
 
@@ -112,6 +113,7 @@ High-level constructors now cover all common native surface sources:
 - XCB: `Instance::create_surface_xcb(connection, window)`
 - Xlib: `Instance::create_surface_xlib(display, window)`
 - Windows HWND: `Instance::create_surface_windows_hwnd(hinstance, hwnd)`
+- Windows SwapChainPanel: `Instance::create_surface_swap_chain_panel(panel_native)`
 - Android: `Instance::create_surface_android_native_window(window)`
 
 You can also build source-chained descriptors and call
@@ -122,8 +124,27 @@ You can also build source-chained descriptors and call
 - `surface_descriptor_xcb_new`
 - `surface_descriptor_xlib_new`
 - `surface_descriptor_windows_hwnd_new`
+- `surface_descriptor_swap_chain_panel_new`
 - `surface_descriptor_android_native_window_new`
 - `surface_descriptor_free`
+
+## Native Instance Extras
+
+You can create an instance with explicit native extras instead of defaults:
+
+- `Instance::create_with_extras_u32(backends_u64, flags_u32, dx12_shader_compiler_u32, gles3_minor_version_u32, gl_fence_behaviour_u32, dxc_max_shader_model_u32, dx12_presentation_system_u32)`
+
+This exposes backend/compiler knobs from `WGPUInstanceExtras` for advanced setups.
+
+## Shader / Pipeline Native Extras
+
+- GLSL shader module descriptor and helper:
+  - `@wgpu_c.shader_module_descriptor_glsl_new(stage_u64, code, code_len)`
+  - `Device::create_shader_module_glsl(stage_u64, code)`
+- Render pipeline primitive extras on builder:
+  - `RenderPipelineDescBuilder::set_polygon_mode_u32(...)`
+  - `RenderPipelineDescBuilder::set_conservative_rasterization(...)`
+  - `RenderPipelineDescBuilder::clear_primitive_extras()`
 
 ## Async Future APIs
 

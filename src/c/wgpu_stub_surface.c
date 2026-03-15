@@ -252,6 +252,29 @@ WGPUSurface mbt_wgpu_instance_create_surface_android_native_window(
   return wgpuInstanceCreateSurface(instance, &desc);
 }
 
+WGPUSurface mbt_wgpu_instance_create_surface_swap_chain_panel(
+    WGPUInstance instance, void *panel_native) {
+  if (!instance || !panel_native) {
+    return NULL;
+  }
+
+  WGPUSurfaceSourceSwapChainPanel source = {
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_SurfaceSourceSwapChainPanel,
+          },
+      .panelNative = panel_native,
+  };
+
+  WGPUSurfaceDescriptor desc = {
+      .nextInChain = &source.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+
+  return wgpuInstanceCreateSurface(instance, &desc);
+}
+
 // -----------------------------------------------------------------------------
 // Windows surface helper (HWND)
 // -----------------------------------------------------------------------------

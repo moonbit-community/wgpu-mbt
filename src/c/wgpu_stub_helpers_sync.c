@@ -918,6 +918,38 @@ WGPUInstance mbt_wgpu_create_instance(void) {
   return wgpuCreateInstance(&desc);
 }
 
+WGPUInstance mbt_wgpu_create_instance_with_extras_u32(
+    uint64_t backends_u64, uint32_t flags_u32, uint32_t dx12_shader_compiler_u32,
+    uint32_t gles3_minor_version_u32, uint32_t gl_fence_behaviour_u32,
+    uint32_t dxc_max_shader_model_u32, uint32_t dx12_presentation_system_u32) {
+  mbt_wgpu_stderr_unbuffered_if_debug();
+  if (mbt_wgpu_env_flag_enabled("MBT_WGPU_LOG_STDERR")) {
+    mbt_wgpu_set_log_callback_stderr_enabled(true);
+    wgpuSetLogLevel(mbt_wgpu_log_level_from_env());
+  }
+
+  WGPUInstanceExtras extras = {0};
+  extras.chain = (WGPUChainedStruct){
+      .next = NULL,
+      .sType = (WGPUSType)WGPUSType_InstanceExtras,
+  };
+  extras.backends = (WGPUInstanceBackend)backends_u64;
+  extras.flags = (WGPUInstanceFlag)flags_u32;
+  extras.dx12ShaderCompiler = (WGPUDx12Compiler)dx12_shader_compiler_u32;
+  extras.gles3MinorVersion = (WGPUGles3MinorVersion)gles3_minor_version_u32;
+  extras.glFenceBehaviour = (WGPUGLFenceBehaviour)gl_fence_behaviour_u32;
+  extras.dxcPath = (WGPUStringView){.data = NULL, .length = 0};
+  extras.dxcMaxShaderModel = (WGPUDxcMaxShaderModel)dxc_max_shader_model_u32;
+  extras.dx12PresentationSystem = (WGPUDx12SwapchainKind)dx12_presentation_system_u32;
+  extras.budgetForDeviceCreation = NULL;
+  extras.budgetForDeviceLoss = NULL;
+
+  WGPUInstanceDescriptor desc = {0};
+  desc.nextInChain = &extras.chain;
+  desc.features = (WGPUInstanceCapabilities){0};
+  return wgpuCreateInstance(&desc);
+}
+
 static MBT_WGPU_THREAD_LOCAL uint32_t g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
 static MBT_WGPU_THREAD_LOCAL uint32_t g_mbt_wgpu_last_request_device_status_u32 = 0u;
 

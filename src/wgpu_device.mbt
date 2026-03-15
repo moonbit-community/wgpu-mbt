@@ -184,6 +184,19 @@ pub fn Device::create_shader_module_wgsl(
 }
 
 ///|
+pub fn Device::create_shader_module_glsl(
+  self : Device,
+  stage_u64 : UInt64,
+  code : String,
+) -> ShaderModule {
+  let bytes = utf8_bytes(code)
+  let len = bytes.length().to_uint64()
+  ShaderModule::{
+    raw: @c.device_create_shader_module_glsl(self.raw, stage_u64, bytes, len),
+  }
+}
+
+///|
 pub fn Device::create_shader_module_spirv(
   self : Device,
   spirv_le_bytes : Bytes,

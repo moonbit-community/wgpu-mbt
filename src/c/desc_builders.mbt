@@ -84,6 +84,12 @@ pub extern "C" fn surface_descriptor_android_native_window_new(
 ) -> WGPUSurfaceDescriptorPtr = "mbt_wgpu_surface_descriptor_android_native_window_new"
 
 ///|
+/// Build a `WGPUSurfaceDescriptor` for `WGPUSurfaceSourceSwapChainPanel`.
+pub extern "C" fn surface_descriptor_swap_chain_panel_new(
+  panel_native : OpaquePtr,
+) -> WGPUSurfaceDescriptorPtr = "mbt_wgpu_surface_descriptor_swap_chain_panel_new"
+
+///|
 #borrow(desc)
 pub extern "C" fn surface_descriptor_free(
   desc : WGPUSurfaceDescriptorPtr,
@@ -294,6 +300,14 @@ pub extern "C" fn shader_module_descriptor_wgsl_new(
   code : Bytes,
   code_len : UInt64,
 ) -> WGPUShaderModuleDescriptorPtr = "mbt_wgpu_shader_module_descriptor_wgsl_new"
+
+///|
+#borrow(code)
+pub extern "C" fn shader_module_descriptor_glsl_new(
+  stage_u64 : UInt64,
+  code : Bytes,
+  code_len : UInt64,
+) -> WGPUShaderModuleDescriptorPtr = "mbt_wgpu_shader_module_descriptor_glsl_new"
 
 ///|
 #borrow(desc)

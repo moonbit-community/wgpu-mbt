@@ -307,6 +307,26 @@ pub extern "C" fn render_pipeline_desc_builder_set_topology(
 
 ///|
 #borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_polygon_mode(
+  builder : OpaquePtr,
+  polygon_mode_u32 : UInt,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_polygon_mode"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_conservative(
+  builder : OpaquePtr,
+  conservative : Bool,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_conservative"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_clear_primitive_extras(
+  builder : OpaquePtr,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_clear_primitive_extras"
+
+///|
+#borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_depth_stencil(
   builder : OpaquePtr,
   depth_format_u32 : UInt,

@@ -1246,6 +1246,8 @@ pub fn surface_descriptor_free(@c.WGPUSurfaceDescriptorPtr) -> Unit
 
 pub fn surface_descriptor_metal_layer_new(@c.OpaquePtr) -> @c.WGPUSurfaceDescriptorPtr
 
+pub fn surface_descriptor_swap_chain_panel_new(@c.OpaquePtr) -> @c.WGPUSurfaceDescriptorPtr
+
 pub fn surface_descriptor_wayland_new(@c.OpaquePtr, @c.OpaquePtr) -> @c.WGPUSurfaceDescriptorPtr
 
 pub fn surface_descriptor_windows_hwnd_new(@c.OpaquePtr, @c.OpaquePtr) -> @c.WGPUSurfaceDescriptorPtr
@@ -1612,6 +1614,7 @@ pub fn Device::create_sampler_nearest_repeat(Self) -> Sampler
 pub fn Device::create_sampler_ptr(Self, @c.WGPUSamplerDescriptorPtr) -> Sampler
 pub fn Device::create_sampler_u32(Self, UInt, UInt, UInt, UInt, UInt, UInt, lod_min_clamp_f32? : Float, lod_max_clamp_f32? : Float, compare_u32? : UInt, max_anisotropy_u32? : UInt) -> Sampler
 pub fn Device::create_shader_module(Self, @c.WGPUShaderModuleDescriptorPtr) -> ShaderModule
+pub fn Device::create_shader_module_glsl(Self, UInt64, String) -> ShaderModule
 pub fn Device::create_shader_module_ptr(Self, @c.WGPUShaderModuleDescriptorPtr) -> ShaderModule
 pub fn Device::create_shader_module_spir_v(Self, @c.WGPUShaderModuleDescriptorSpirVPtr) -> ShaderModule
 pub fn Device::create_shader_module_spirv(Self, Bytes) -> ShaderModule
@@ -1698,10 +1701,12 @@ pub fn Instance::create_ptr(@c.WGPUInstanceDescriptorPtr) -> Self raise WgpuErro
 pub fn Instance::create_surface(Self, @c.WGPUSurfaceDescriptorPtr) -> Surface
 pub fn Instance::create_surface_android_native_window(Self, @c.OpaquePtr) -> Surface
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
+pub fn Instance::create_surface_swap_chain_panel(Self, @c.OpaquePtr) -> Surface
 pub fn Instance::create_surface_wayland(Self, @c.OpaquePtr, @c.OpaquePtr) -> Surface
 pub fn Instance::create_surface_windows_hwnd(Self, @c.OpaquePtr, @c.OpaquePtr) -> Surface
 pub fn Instance::create_surface_xcb(Self, @c.OpaquePtr, UInt) -> Surface
 pub fn Instance::create_surface_xlib(Self, @c.OpaquePtr, UInt64) -> Surface
+pub fn Instance::create_with_extras_u32(backends_u64? : UInt64, flags_u32? : UInt, dx12_shader_compiler_u32? : UInt, gles3_minor_version_u32? : UInt, gl_fence_behaviour_u32? : UInt, dxc_max_shader_model_u32? : UInt, dx12_presentation_system_u32? : UInt) -> Self raise WgpuError
 pub fn Instance::enumerate_adapters(Self, @c.WGPUInstanceEnumerateAdapterOptionsPtr, @c.WGPUAdapterPtr) -> UInt64
 pub fn Instance::enumerate_adapters_count_metal(Self) -> UInt64
 pub fn Instance::enumerate_adapters_count_vulkan(Self) -> UInt64
@@ -1920,6 +1925,7 @@ pub struct RenderPipelineDescBuilder {
 }
 pub fn RenderPipelineDescBuilder::add_vertex_attribute(Self, UInt, UInt64, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(Self, UInt64, UInt) -> UInt raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::clear_primitive_extras(Self) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::create_pipeline(Self, Device) -> RenderPipeline raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::disable_blend(Self) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::enable_alpha_blend(Self) -> Unit raise RenderPipelineDescError
@@ -1933,8 +1939,10 @@ pub fn RenderPipelineDescBuilder::set_color_target_format(Self, TextureFormat) -
 pub fn RenderPipelineDescBuilder::set_color_target_format_at(Self, UInt, TextureFormat) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_color_target_write_mask(Self, UInt64) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_color_target_write_mask_at(Self, UInt, UInt64) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_conservative_rasterization(Self, Bool) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(Self, UInt64, UInt) -> Unit raise RenderPipelineDescError
 

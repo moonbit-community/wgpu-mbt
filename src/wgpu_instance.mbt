@@ -27,6 +27,25 @@ pub fn Instance::create_ptr(
 }
 
 ///|
+pub fn Instance::create_with_extras_u32(
+  backends_u64? : UInt64 = INSTANCE_BACKEND_ALL,
+  flags_u32? : UInt = INSTANCE_FLAG_DEFAULT,
+  dx12_shader_compiler_u32? : UInt = DX12_COMPILER_UNDEFINED,
+  gles3_minor_version_u32? : UInt = GLES3_MINOR_VERSION_AUTOMATIC,
+  gl_fence_behaviour_u32? : UInt = GL_FENCE_BEHAVIOUR_NORMAL,
+  dxc_max_shader_model_u32? : UInt = DXC_MAX_SHADER_MODEL_V6_0,
+  dx12_presentation_system_u32? : UInt = DX12_SWAPCHAIN_KIND_UNDEFINED,
+) -> Instance raise WgpuError {
+  require_native()
+  Instance::{
+    raw: @c.create_instance_with_extras_u32(
+      backends_u64, flags_u32, dx12_shader_compiler_u32, gles3_minor_version_u32,
+      gl_fence_behaviour_u32, dxc_max_shader_model_u32, dx12_presentation_system_u32,
+    ),
+  }
+}
+
+///|
 pub fn Instance::request_adapter_sync(
   self : Instance,
 ) -> Adapter raise WgpuError {
@@ -374,6 +393,18 @@ pub fn Instance::create_surface_android_native_window(
 ) -> Surface {
   Surface::{
     raw: @c.instance_create_surface_android_native_window(self.raw, window),
+    layer: @c.null_opaque_ptr(),
+  }
+}
+
+///|
+/// Create a surface from Windows XAML SwapChainPanel native handle.
+pub fn Instance::create_surface_swap_chain_panel(
+  self : Instance,
+  panel_native : @c.OpaquePtr,
+) -> Surface {
+  Surface::{
+    raw: @c.instance_create_surface_swap_chain_panel(self.raw, panel_native),
     layer: @c.null_opaque_ptr(),
   }
 }

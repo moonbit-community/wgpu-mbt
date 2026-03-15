@@ -45,6 +45,7 @@ options(
     "wgpu_linux_headless_smoke_test.mbt": [ "native" ],
     "wgpu_log_version_test.mbt": [ "native" ],
     "wgpu_multi_draw_indirect_test.mbt": [ "native" ],
+    "wgpu_native_api_completeness_test.mbt": [ "native" ],
     "wgpu_native_diagnostic_test.mbt": [ "native" ],
     "wgpu_native_feature_gap_test.mbt": [ "native" ],
     "wgpu_optional_symbol_or_raise_test.mbt": [ "native" ],

@@ -80,6 +80,18 @@ declare pub fn Instance::create_ptr(
 
 ///|
 #declaration_only
+declare pub fn Instance::create_with_extras_u32(
+  backends_u64? : UInt64 = INSTANCE_BACKEND_ALL,
+  flags_u32? : UInt = INSTANCE_FLAG_DEFAULT,
+  dx12_shader_compiler_u32? : UInt = DX12_COMPILER_UNDEFINED,
+  gles3_minor_version_u32? : UInt = GLES3_MINOR_VERSION_AUTOMATIC,
+  gl_fence_behaviour_u32? : UInt = GL_FENCE_BEHAVIOUR_NORMAL,
+  dxc_max_shader_model_u32? : UInt = DXC_MAX_SHADER_MODEL_V6_0,
+  dx12_presentation_system_u32? : UInt = DX12_SWAPCHAIN_KIND_UNDEFINED,
+) -> Instance raise WgpuError
+
+///|
+#declaration_only
 declare pub fn Instance::request_adapter_sync(
   self : Instance,
 ) -> Adapter raise WgpuError
@@ -198,6 +210,13 @@ declare pub fn Instance::create_surface_android_native_window(
 
 ///|
 #declaration_only
+declare pub fn Instance::create_surface_swap_chain_panel(
+  self : Instance,
+  panel_native : @c.OpaquePtr,
+) -> Surface
+
+///|
+#declaration_only
 declare pub fn Instance::create_surface_windows_hwnd(
   self : Instance,
   hinstance : @c.OpaquePtr,
@@ -240,6 +259,11 @@ declare pub fn surface_descriptor_xlib_new(
 ///|
 declare pub fn surface_descriptor_android_native_window_new(
   window : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr
+
+///|
+declare pub fn surface_descriptor_swap_chain_panel_new(
+  panel_native : @c.OpaquePtr,
 ) -> @c.WGPUSurfaceDescriptorPtr
 
 ///|
@@ -863,6 +887,14 @@ declare pub fn Device::create_shader_module_wgsl(
 
 ///|
 #declaration_only
+declare pub fn Device::create_shader_module_glsl(
+  self : Device,
+  stage_u64 : UInt64,
+  code : String,
+) -> ShaderModule
+
+///|
+#declaration_only
 declare pub fn Device::create_shader_module_spirv(
   self : Device,
   spirv_le_bytes : Bytes,
@@ -1468,6 +1500,26 @@ declare pub fn RenderPipelineDescBuilder::add_vertex_attribute(
 declare pub fn RenderPipelineDescBuilder::set_topology_u32(
   self : RenderPipelineDescBuilder,
   topology_u32 : UInt,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(
+  self : RenderPipelineDescBuilder,
+  polygon_mode_u32 : UInt,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_conservative_rasterization(
+  self : RenderPipelineDescBuilder,
+  conservative : Bool,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::clear_primitive_extras(
+  self : RenderPipelineDescBuilder,
 ) -> Unit raise RenderPipelineDescError
 
 ///|

@@ -66,6 +66,13 @@ pub fn surface_descriptor_android_native_window_new(
 }
 
 ///|
+pub fn surface_descriptor_swap_chain_panel_new(
+  panel_native : @c.OpaquePtr,
+) -> @c.WGPUSurfaceDescriptorPtr {
+  @c.surface_descriptor_swap_chain_panel_new(panel_native)
+}
+
+///|
 pub fn surface_descriptor_free(desc : @c.WGPUSurfaceDescriptorPtr) -> Unit {
   @c.surface_descriptor_free(desc)
 }

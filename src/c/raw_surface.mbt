@@ -65,6 +65,13 @@ pub extern "C" fn instance_create_surface_android_native_window(
 ) -> WGPUSurface = "mbt_wgpu_instance_create_surface_android_native_window"
 
 ///|
+/// SwapChainPanel surface helper (`IInspectable*` panel native pointer).
+pub extern "C" fn instance_create_surface_swap_chain_panel(
+  instance : Instance,
+  panel_native : OpaquePtr,
+) -> WGPUSurface = "mbt_wgpu_instance_create_surface_swap_chain_panel"
+
+///|
 /// Windows HWND surface helper (`HINSTANCE`, `HWND`).
 pub extern "C" fn instance_create_surface_windows_hwnd(
   instance : Instance,

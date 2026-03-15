@@ -490,6 +490,12 @@ typedef struct {
   char *code_copy;
 } mbt_shader_module_desc_wgsl_t;
 
+typedef struct {
+  WGPUShaderModuleDescriptor desc;
+  WGPUShaderSourceGLSL glsl;
+  char *code_copy;
+} mbt_shader_module_desc_glsl_t;
+
 WGPUShaderModuleDescriptor *mbt_wgpu_shader_module_descriptor_wgsl_new(
     const uint8_t *code, uint64_t code_len) {
   mbt_shader_module_desc_wgsl_t *out =
@@ -525,10 +531,66 @@ WGPUShaderModuleDescriptor *mbt_wgpu_shader_module_descriptor_wgsl_new(
   return &out->desc;
 }
 
+WGPUShaderModuleDescriptor *mbt_wgpu_shader_module_descriptor_glsl_new(
+    uint64_t stage_u64, const uint8_t *code, uint64_t code_len) {
+  mbt_shader_module_desc_glsl_t *out =
+      (mbt_shader_module_desc_glsl_t *)malloc(sizeof(mbt_shader_module_desc_glsl_t));
+  if (!out) {
+    return NULL;
+  }
+  out->code_copy = NULL;
+  if (code_len > 0) {
+    out->code_copy = (char *)malloc((size_t)code_len);
+    if (!out->code_copy) {
+      free(out);
+      return NULL;
+    }
+    memcpy(out->code_copy, code, (size_t)code_len);
+  }
+  out->glsl = (WGPUShaderSourceGLSL){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_ShaderSourceGLSL,
+          },
+      .stage = (WGPUShaderStage)stage_u64,
+      .code =
+          (WGPUStringView){
+              .data = (const char *)out->code_copy,
+              .length = (size_t)code_len,
+          },
+      .defineCount = 0u,
+      .defines = NULL,
+  };
+  out->desc = (WGPUShaderModuleDescriptor){
+      .nextInChain = &out->glsl.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+  };
+  return &out->desc;
+}
+
 void mbt_wgpu_shader_module_descriptor_free(WGPUShaderModuleDescriptor *desc) {
-  mbt_shader_module_desc_wgsl_t *out = (mbt_shader_module_desc_wgsl_t *)desc;
-  free(out->code_copy);
-  free(out);
+  if (!desc) {
+    return;
+  }
+  if (!desc->nextInChain) {
+    free(desc);
+    return;
+  }
+  WGPUSType s_type = desc->nextInChain->sType;
+  if (s_type == WGPUSType_ShaderSourceWGSL) {
+    mbt_shader_module_desc_wgsl_t *out = (mbt_shader_module_desc_wgsl_t *)desc;
+    free(out->code_copy);
+    free(out);
+    return;
+  }
+  if (s_type == (WGPUSType)WGPUSType_ShaderSourceGLSL) {
+    mbt_shader_module_desc_glsl_t *out = (mbt_shader_module_desc_glsl_t *)desc;
+    free(out->code_copy);
+    free(out);
+    return;
+  }
+  free(desc);
 }
 
 typedef struct {
@@ -1177,6 +1239,8 @@ typedef struct {
   WGPUColorTargetState color_targets[MBT_WGPU_RP_MAX_TARGETS];
   uint32_t color_target_count;
   WGPUPrimitiveState primitive;
+  WGPUPrimitiveStateExtras primitive_extras;
+  uint32_t primitive_extras_enabled;
   WGPUMultisampleState multisample;
 
   // Optional: alpha blending.
@@ -1209,6 +1273,16 @@ static void mbt_wgpu_rp_builder_clear_error(mbt_render_pipeline_desc_t *out) {
   out->last_error_b = 0u;
 }
 
+static void mbt_wgpu_rp_builder_apply_primitive_chain(mbt_render_pipeline_desc_t *out) {
+  if (out->primitive_extras_enabled != 0u) {
+    out->primitive.nextInChain = &out->primitive_extras.chain;
+    out->desc.primitive.nextInChain = &out->primitive_extras.chain;
+  } else {
+    out->primitive.nextInChain = NULL;
+    out->desc.primitive.nextInChain = NULL;
+  }
+}
+
 static uint32_t mbt_wgpu_rp_builder_set_error(mbt_render_pipeline_desc_t *out, uint32_t code,
                                               uint32_t a, uint32_t b) {
   out->last_error = code;
@@ -1233,6 +1307,7 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
   out->color_target_count = 1u;
   out->vbuf_count = 0u;
   out->current_vbuf = 0u;
+  out->primitive_extras_enabled = 0u;
   mbt_wgpu_rp_builder_clear_error(out);
   for (size_t i = 0; i < MBT_WGPU_RP_MAX_VBUFS; i++) {
     out->attr_counts[i] = 0u;
@@ -1329,6 +1404,15 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
       .cullMode = WGPUCullMode_None,
       .unclippedDepth = 0u,
   };
+  out->primitive_extras = (WGPUPrimitiveStateExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_PrimitiveStateExtras,
+          },
+      .polygonMode = WGPUPolygonMode_Fill,
+      .conservative = 0u,
+  };
 
   out->multisample = (WGPUMultisampleState){
       .nextInChain = NULL,
@@ -1347,6 +1431,7 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
       .multisample = out->multisample,
       .fragment = &out->fragment,
   };
+  mbt_wgpu_rp_builder_apply_primitive_chain(out);
 
   return &out->desc;
 }
@@ -1673,6 +1758,45 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_topology(void *builder, uint3
   mbt_wgpu_rp_builder_clear_error(out);
   out->primitive.topology = (WGPUPrimitiveTopology)topology_u32;
   out->desc.primitive.topology = (WGPUPrimitiveTopology)topology_u32;
+  return MBT_WGPU_RP_OK;
+}
+
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_polygon_mode(
+    void *builder, uint32_t polygon_mode_u32) {
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
+  out->primitive_extras.polygonMode = (WGPUPolygonMode)polygon_mode_u32;
+  out->primitive_extras_enabled = 1u;
+  mbt_wgpu_rp_builder_apply_primitive_chain(out);
+  return MBT_WGPU_RP_OK;
+}
+
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_conservative(
+    void *builder, bool conservative) {
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
+  out->primitive_extras.conservative = conservative ? 1u : 0u;
+  out->primitive_extras_enabled = 1u;
+  mbt_wgpu_rp_builder_apply_primitive_chain(out);
+  return MBT_WGPU_RP_OK;
+}
+
+uint32_t mbt_wgpu_render_pipeline_desc_builder_clear_primitive_extras(void *builder) {
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_wgpu_rp_builder_clear_error(out);
+  out->primitive_extras.polygonMode = WGPUPolygonMode_Fill;
+  out->primitive_extras.conservative = 0u;
+  out->primitive_extras_enabled = 0u;
+  mbt_wgpu_rp_builder_apply_primitive_chain(out);
   return MBT_WGPU_RP_OK;
 }
 

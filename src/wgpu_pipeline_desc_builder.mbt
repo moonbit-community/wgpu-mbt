@@ -243,6 +243,47 @@ pub fn RenderPipelineDescBuilder::set_topology_u32(
 }
 
 ///|
+pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(
+  self : RenderPipelineDescBuilder,
+  polygon_mode_u32 : UInt,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_polygon_mode(
+    self.raw,
+    polygon_mode_u32,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::set_conservative_rasterization(
+  self : RenderPipelineDescBuilder,
+  conservative : Bool,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_conservative(
+    self.raw,
+    conservative,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::clear_primitive_extras(
+  self : RenderPipelineDescBuilder,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_clear_primitive_extras(self.raw)
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
 pub fn RenderPipelineDescBuilder::set_depth_stencil(
   self : RenderPipelineDescBuilder,
   depth_format : TextureFormat,

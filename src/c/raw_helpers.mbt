@@ -49,6 +49,19 @@ pub fn device_create_shader_module_wgsl(
 }
 
 ///|
+pub fn device_create_shader_module_glsl(
+  device : Device,
+  stage_u64 : UInt64,
+  code : Bytes,
+  code_len : UInt64,
+) -> ShaderModule {
+  let desc = shader_module_descriptor_glsl_new(stage_u64, code, code_len)
+  let shader_module = wgpuDeviceCreateShaderModule(device, desc)
+  shader_module_descriptor_free(desc)
+  shader_module
+}
+
+///|
 #borrow(source)
 pub extern "C" fn device_create_shader_module_spirv(
   device : Device,
