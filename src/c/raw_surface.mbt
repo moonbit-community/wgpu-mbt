@@ -57,6 +57,7 @@ pub extern "C" fn surface_configure_default(
   width : UInt,
   height : UInt,
   usage : UInt64,
+  desired_maximum_frame_latency : UInt,
 ) -> UInt = "mbt_wgpu_surface_configure_default"
 
 ///|
@@ -69,7 +70,7 @@ pub extern "C" fn surface_configure_u32(
   usage : UInt64,
   format_u32 : UInt,
   present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
+  alpha_mode_and_desired_maximum_frame_latency_u64 : UInt64,
 ) -> Bool = "mbt_wgpu_surface_configure_u32"
 
 ///|
@@ -83,7 +84,7 @@ pub extern "C" fn surface_configure_view_formats_u32(
   usage : UInt64,
   format_u32 : UInt,
   present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
+  alpha_mode_and_desired_maximum_frame_latency_u64 : UInt64,
   view_format_count : UInt64,
   view_formats : FixedArray[UInt],
 ) -> Bool = "mbt_wgpu_surface_configure_view_formats_u32"

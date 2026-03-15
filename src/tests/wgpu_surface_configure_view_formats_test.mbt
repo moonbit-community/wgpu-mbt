@@ -37,6 +37,7 @@ test "wgpu surface configure_view_formats_u32" {
       pm0,
       am0,
       [fmt0],
+      desired_maximum_frame_latency=2U,
     )
     inspect(ok, content="true")
     let st = surface.get_current_texture()

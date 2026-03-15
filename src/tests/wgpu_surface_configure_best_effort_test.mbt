@@ -32,6 +32,7 @@ test "wgpu surface: configure_best_effort" {
       usage,
       prefer_srgb=true,
       vsync=true,
+      desired_maximum_frame_latency=2U,
     )
     inspect(ok, content="true")
     let st = surface.get_current_texture()

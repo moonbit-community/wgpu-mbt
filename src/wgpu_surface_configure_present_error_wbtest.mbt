@@ -46,3 +46,47 @@ test "surface configure_or_raise raises on null handles" {
   }
   inspect(raised1.val, content="true")
 }
+
+///|
+test "surface configure_with validates desired_maximum_frame_latency" {
+  let surface = Surface::{ raw: @c.null_surface(), layer: @c.null_opaque_ptr() }
+  let adapter = Adapter::{ raw: @c.null_adapter() }
+  let device = Device::{ raw: @c.null_device() }
+  let usage = TextureUsage::from_u64(TEXTURE_USAGE_RENDER_ATTACHMENT)
+  let fmt = TextureFormat::from_u32(TEXTURE_FORMAT_BGRA8_UNORM)
+  let cfg = SurfaceConfiguration::new(
+    1U,
+    1U,
+    usage,
+    fmt,
+    PRESENT_MODE_FIFO,
+    COMPOSITE_ALPHA_MODE_AUTO,
+  ).with_desired_maximum_frame_latency(0U)
+  let ok = surface.configure_with(adapter, device, cfg)
+  inspect(ok, content="false")
+}
+
+///|
+test "surface configure_with_or_raise validates desired_maximum_frame_latency" {
+  let surface = Surface::{ raw: @c.null_surface(), layer: @c.null_opaque_ptr() }
+  let adapter = Adapter::{ raw: @c.null_adapter() }
+  let device = Device::{ raw: @c.null_device() }
+  let usage = TextureUsage::from_u64(TEXTURE_USAGE_RENDER_ATTACHMENT)
+  let fmt = TextureFormat::from_u32(TEXTURE_FORMAT_BGRA8_UNORM)
+  let cfg = SurfaceConfiguration::new(
+    1U,
+    1U,
+    usage,
+    fmt,
+    PRESENT_MODE_FIFO,
+    COMPOSITE_ALPHA_MODE_AUTO,
+  ).with_desired_maximum_frame_latency(0U)
+  let msg : Ref[String] = @ref.new("")
+  surface.configure_with_or_raise(adapter, device, cfg) catch {
+    e => msg.val = e.message()
+  }
+  inspect(
+    msg.val,
+    content="surface configuration failed: desired_maximum_frame_latency must be >= 1 (got 0)",
+  )
+}

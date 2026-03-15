@@ -81,6 +81,28 @@ fn main {
 }
 ```
 
+## Surface Configuration (Frame Latency)
+
+`SurfaceConfiguration` now exposes `desired_maximum_frame_latency` through a typed API:
+
+```moonbit
+let config = @wgpu.SurfaceConfiguration::new(
+  width,
+  height,
+  usage,
+  format,
+  present_mode_u32,
+  alpha_mode_u32,
+)
+  .with_view_formats([format])
+  .with_desired_maximum_frame_latency(2U)
+
+surface.configure_with_or_raise(adapter, device, config)
+```
+
+You can still use `configure_u32` / `configure_view_formats_u32` / `configure_best_effort`,
+and pass `desired_maximum_frame_latency` as an optional named parameter.
+
 ## Runtime Behavior
 
 - This package does **not** statically link `wgpu-native`; it loads the native library at runtime.
@@ -111,4 +133,3 @@ If startup fails at the first WebGPU call, usually `libwgpu_native` is missing o
 - Check diagnostics: `@wgpu.native_diagnostic()`
 - Verify file path and filename for your platform
 - If using a custom location, set `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)`
-

@@ -104,6 +104,30 @@ declare pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface
 declare pub fn Instance::release(self : Instance) -> Unit
 
 ///|
+declare pub fn SurfaceConfiguration::new(
+  width : UInt,
+  height : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+) -> SurfaceConfiguration
+
+///|
+#declaration_only
+declare pub fn SurfaceConfiguration::with_view_formats(
+  self : SurfaceConfiguration,
+  view_formats : Array[TextureFormat],
+) -> SurfaceConfiguration
+
+///|
+#declaration_only
+declare pub fn SurfaceConfiguration::with_desired_maximum_frame_latency(
+  self : SurfaceConfiguration,
+  desired_maximum_frame_latency : UInt,
+) -> SurfaceConfiguration
+
+///|
 #declaration_only
 declare pub fn Surface::configure_default(
   self : Surface,
@@ -112,7 +136,26 @@ declare pub fn Surface::configure_default(
   width : UInt,
   height : UInt,
   usage : TextureUsage,
+  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> TextureFormat
+
+///|
+#declaration_only
+declare pub fn Surface::configure_with(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  config : SurfaceConfiguration,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Surface::configure_with_or_raise(
+  self : Surface,
+  adapter : Adapter,
+  device : Device,
+  config : SurfaceConfiguration,
+) -> Unit raise SurfaceConfigureError
 
 ///|
 #declaration_only
@@ -126,6 +169,7 @@ declare pub fn Surface::configure_u32(
   format : TextureFormat,
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
+  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Bool
 
 ///|
@@ -140,6 +184,7 @@ declare pub fn Surface::configure_u32_or_raise(
   format : TextureFormat,
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
+  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Unit raise SurfaceConfigureError
 
 ///|
@@ -155,6 +200,7 @@ declare pub fn Surface::configure_view_formats_u32(
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
   view_formats : Array[TextureFormat],
+  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Bool
 
 ///|
@@ -170,6 +216,7 @@ declare pub fn Surface::configure_view_formats_u32_or_raise(
   present_mode_u32 : UInt,
   alpha_mode_u32 : UInt,
   view_formats : Array[TextureFormat],
+  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Unit raise SurfaceConfigureError
 
 ///|

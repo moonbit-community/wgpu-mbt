@@ -1,4 +1,4 @@
-// Copyright 2025 International Digital Economy Academy
+// Copyright 2026 International Digital Economy Academy
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,39 +13,26 @@
 // limitations under the License.
 
 ///|
-test "wgpu surface configure_u32" {
+test "wgpu surface: configure_with typed configuration" {
   skip_unless_macos(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
     let surface = instance.create_surface_metal_layer()
-    let fmt0 = surface.capabilities_format_u32_at(adapter, 0UL)
-    let pm0 = surface.capabilities_present_mode_u32_at(adapter, 0UL)
-    let am0 = surface.capabilities_alpha_mode_u32_at(adapter, 0UL)
     let usage = @wgpu.TextureUsage::from_u64(
       @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT |
       @wgpu.TEXTURE_USAGE_COPY_SRC |
       @wgpu.TEXTURE_USAGE_COPY_DST,
     )
-    let ok = surface.configure_u32(
-      adapter,
-      device,
-      1U,
-      1U,
-      usage,
-      fmt0,
-      pm0,
-      am0,
-      desired_maximum_frame_latency=2U,
-    )
-    inspect(ok, content="true")
-    let st = surface.get_current_texture()
-    let status = st.status()
-    inspect(
-      status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_OPTIMAL ||
-      status == @wgpu.SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL,
-      content="true",
-    )
+    let fmt0 = surface.capabilities_format_u32_at(adapter, 0UL)
+    let pm0 = surface.capabilities_present_mode_u32_at(adapter, 0UL)
+    let am0 = surface.capabilities_alpha_mode_u32_at(adapter, 0UL)
+    let config = @wgpu.SurfaceConfiguration::new(1U, 1U, usage, fmt0, pm0, am0)
+      .with_view_formats([fmt0])
+      .with_desired_maximum_frame_latency(2U)
+    surface.configure_with_or_raise(adapter, device, config)
+    let st = surface.get_current_texture_or_raise()
+    inspect(st.is_success(), content="true")
     st.release()
     surface.unconfigure()
     surface.release()

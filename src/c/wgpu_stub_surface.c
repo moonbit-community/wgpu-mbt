@@ -223,10 +223,56 @@ WGPUSurface mbt_wgpu_instance_create_surface_windows_hwnd(WGPUInstance instance,
 
 #endif
 
+static int32_t mbt_wgpu_surface_apply_config(
+    WGPUSurface surface, WGPUDevice device, uint32_t width, uint32_t height, uint64_t usage,
+    WGPUTextureFormat format, WGPUPresentMode present_mode, WGPUCompositeAlphaMode alpha_mode,
+    uint32_t desired_maximum_frame_latency, uint64_t view_format_count,
+    const uint32_t *view_formats_u32) {
+  if (!surface || !device || width == 0u || height == 0u ||
+      desired_maximum_frame_latency == 0u) {
+    return false;
+  }
+  if (view_format_count > 0u && !view_formats_u32) {
+    return false;
+  }
+
+  WGPUSurfaceConfigurationExtras extras = {0};
+  extras.chain = (WGPUChainedStruct){
+      .next = NULL,
+      .sType = (WGPUSType)WGPUSType_SurfaceConfigurationExtras,
+  };
+  extras.desiredMaximumFrameLatency = desired_maximum_frame_latency;
+
+  WGPUSurfaceConfiguration config = {
+      .nextInChain = &extras.chain,
+      .device = device,
+      .format = format,
+      .usage = (WGPUTextureUsage)usage,
+      .width = width,
+      .height = height,
+      .viewFormatCount = (size_t)view_format_count,
+      .viewFormats = (const WGPUTextureFormat *)view_formats_u32,
+      .alphaMode = alpha_mode,
+      .presentMode = present_mode,
+  };
+  wgpuSurfaceConfigure(surface, &config);
+  return true;
+}
+
+static uint32_t mbt_wgpu_surface_alpha_mode_from_packed(uint64_t packed) {
+  return (uint32_t)(packed & 0xFFFFFFFFu);
+}
+
+static uint32_t mbt_wgpu_surface_desired_latency_from_packed(uint64_t packed) {
+  return (uint32_t)(packed >> 32);
+}
+
 uint32_t mbt_wgpu_surface_configure_default(WGPUSurface surface, WGPUAdapter adapter,
                                             WGPUDevice device, uint32_t width,
-                                            uint32_t height, uint64_t usage) {
-  if (!surface || !adapter || !device || width == 0u || height == 0u) {
+                                            uint32_t height, uint64_t usage,
+                                            uint32_t desired_maximum_frame_latency) {
+  if (!surface || !adapter || !device || width == 0u || height == 0u ||
+      desired_maximum_frame_latency == 0u) {
     return 0u;
   }
   WGPUSurfaceCapabilities caps = {0};
@@ -240,22 +286,14 @@ uint32_t mbt_wgpu_surface_configure_default(WGPUSurface surface, WGPUAdapter ada
   WGPUTextureFormat format = caps.formats[0];
   WGPUPresentMode present_mode = caps.presentModes[0];
   WGPUCompositeAlphaMode alpha_mode = caps.alphaModes[0];
-
-  WGPUSurfaceConfiguration config = {
-      .nextInChain = NULL,
-      .device = device,
-      .format = format,
-      .usage = (WGPUTextureUsage)usage,
-      .width = width,
-      .height = height,
-      .viewFormatCount = 0u,
-      .viewFormats = NULL,
-      .alphaMode = alpha_mode,
-      .presentMode = present_mode,
-  };
-  wgpuSurfaceConfigure(surface, &config);
+  int32_t ok = mbt_wgpu_surface_apply_config(surface, device, width, height, usage, format,
+                                             present_mode, alpha_mode,
+                                             desired_maximum_frame_latency, 0u, NULL);
 
   wgpuSurfaceCapabilitiesFreeMembers(caps);
+  if (!ok) {
+    return 0u;
+  }
   return (uint32_t)format;
 }
 
@@ -264,8 +302,13 @@ int32_t mbt_wgpu_surface_configure_u32(WGPUSurface surface, WGPUAdapter adapter,
                                        uint32_t height, uint64_t usage,
                                        uint32_t format_u32,
                                        uint32_t present_mode_u32,
-                                       uint32_t alpha_mode_u32) {
-  if (!surface || !adapter || !device || width == 0u || height == 0u) {
+                                       uint64_t alpha_mode_and_desired_maximum_frame_latency_u64) {
+  uint32_t alpha_mode_u32 = mbt_wgpu_surface_alpha_mode_from_packed(
+      alpha_mode_and_desired_maximum_frame_latency_u64);
+  uint32_t desired_maximum_frame_latency = mbt_wgpu_surface_desired_latency_from_packed(
+      alpha_mode_and_desired_maximum_frame_latency_u64);
+  if (!surface || !adapter || !device || width == 0u || height == 0u ||
+      desired_maximum_frame_latency == 0u) {
     return false;
   }
   WGPUSurfaceCapabilities caps = {0};
@@ -302,39 +345,32 @@ int32_t mbt_wgpu_surface_configure_u32(WGPUSurface surface, WGPUAdapter adapter,
     }
   }
 
-  if (!format_ok || !present_mode_ok || !alpha_mode_ok) {
-    wgpuSurfaceCapabilitiesFreeMembers(caps);
-    return false;
+  int32_t ok = false;
+  if (format_ok && present_mode_ok && alpha_mode_ok) {
+    ok = mbt_wgpu_surface_apply_config(surface, device, width, height, usage, format,
+                                       present_mode, alpha_mode,
+                                       desired_maximum_frame_latency, 0u, NULL);
   }
-
-  WGPUSurfaceConfiguration config = {
-      .nextInChain = NULL,
-      .device = device,
-      .format = format,
-      .usage = (WGPUTextureUsage)usage,
-      .width = width,
-      .height = height,
-      .viewFormatCount = 0u,
-      .viewFormats = NULL,
-      .alphaMode = alpha_mode,
-      .presentMode = present_mode,
-  };
-  wgpuSurfaceConfigure(surface, &config);
-
   wgpuSurfaceCapabilitiesFreeMembers(caps);
-  return true;
+  return ok;
 }
 
 int32_t mbt_wgpu_surface_configure_view_formats_u32(
     WGPUSurface surface, WGPUAdapter adapter, WGPUDevice device, uint32_t width,
     uint32_t height, uint64_t usage, uint32_t format_u32, uint32_t present_mode_u32,
-    uint32_t alpha_mode_u32, uint64_t view_format_count,
-    const uint32_t *view_formats_u32) {
+    uint64_t alpha_mode_and_desired_maximum_frame_latency_u64,
+    uint64_t view_format_count, const uint32_t *view_formats_u32) {
+  uint32_t alpha_mode_u32 = mbt_wgpu_surface_alpha_mode_from_packed(
+      alpha_mode_and_desired_maximum_frame_latency_u64);
+  uint32_t desired_maximum_frame_latency = mbt_wgpu_surface_desired_latency_from_packed(
+      alpha_mode_and_desired_maximum_frame_latency_u64);
   if (view_format_count == 0u) {
-    return mbt_wgpu_surface_configure_u32(surface, adapter, device, width, height, usage,
-                                         format_u32, present_mode_u32, alpha_mode_u32);
+    return mbt_wgpu_surface_configure_u32(
+        surface, adapter, device, width, height, usage, format_u32, present_mode_u32,
+        alpha_mode_and_desired_maximum_frame_latency_u64);
   }
-  if (!surface || !adapter || !device || width == 0u || height == 0u || !view_formats_u32) {
+  if (!surface || !adapter || !device || width == 0u || height == 0u ||
+      desired_maximum_frame_latency == 0u || !view_formats_u32) {
     return false;
   }
 
@@ -393,22 +429,12 @@ int32_t mbt_wgpu_surface_configure_view_formats_u32(
     }
   }
 
-  WGPUSurfaceConfiguration config = {
-      .nextInChain = NULL,
-      .device = device,
-      .format = format,
-      .usage = (WGPUTextureUsage)usage,
-      .width = width,
-      .height = height,
-      .viewFormatCount = (size_t)view_format_count,
-      .viewFormats = (const WGPUTextureFormat *)view_formats_u32,
-      .alphaMode = alpha_mode,
-      .presentMode = present_mode,
-  };
-  wgpuSurfaceConfigure(surface, &config);
-
+  int32_t ok = mbt_wgpu_surface_apply_config(surface, device, width, height, usage, format,
+                                             present_mode, alpha_mode,
+                                             desired_maximum_frame_latency,
+                                             view_format_count, view_formats_u32);
   wgpuSurfaceCapabilitiesFreeMembers(caps);
-  return true;
+  return ok;
 }
 
 typedef struct {

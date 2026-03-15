@@ -79,6 +79,76 @@ pub struct SurfaceFrame {
 }
 
 ///|
+pub const SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY : UInt = 2U
+
+///|
+pub struct SurfaceConfiguration {
+  width : UInt
+  height : UInt
+  usage : TextureUsage
+  format : TextureFormat
+  present_mode_u32 : UInt
+  alpha_mode_u32 : UInt
+  view_formats : Array[TextureFormat]
+  desired_maximum_frame_latency : UInt
+}
+
+///|
+pub fn SurfaceConfiguration::new(
+  width : UInt,
+  height : UInt,
+  usage : TextureUsage,
+  format : TextureFormat,
+  present_mode_u32 : UInt,
+  alpha_mode_u32 : UInt,
+) -> SurfaceConfiguration {
+  SurfaceConfiguration::{
+    width,
+    height,
+    usage,
+    format,
+    present_mode_u32,
+    alpha_mode_u32,
+    view_formats: [],
+    desired_maximum_frame_latency: SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  }
+}
+
+///|
+pub fn SurfaceConfiguration::with_view_formats(
+  self : SurfaceConfiguration,
+  view_formats : Array[TextureFormat],
+) -> SurfaceConfiguration {
+  SurfaceConfiguration::{
+    width: self.width,
+    height: self.height,
+    usage: self.usage,
+    format: self.format,
+    present_mode_u32: self.present_mode_u32,
+    alpha_mode_u32: self.alpha_mode_u32,
+    view_formats,
+    desired_maximum_frame_latency: self.desired_maximum_frame_latency,
+  }
+}
+
+///|
+pub fn SurfaceConfiguration::with_desired_maximum_frame_latency(
+  self : SurfaceConfiguration,
+  desired_maximum_frame_latency : UInt,
+) -> SurfaceConfiguration {
+  SurfaceConfiguration::{
+    width: self.width,
+    height: self.height,
+    usage: self.usage,
+    format: self.format,
+    present_mode_u32: self.present_mode_u32,
+    alpha_mode_u32: self.alpha_mode_u32,
+    view_formats: self.view_formats,
+    desired_maximum_frame_latency,
+  }
+}
+
+///|
 /// Type-safe wrappers for frequently-used numeric enums/flags.
 ///
 /// v0.4.0+ gradually moves public APIs away from raw `UInt`/`UInt64` for these.
@@ -546,32 +616,42 @@ pub fn BufferSyncError::message(self : BufferSyncError) -> String {
 
 ///|
 suberror SurfaceConfigureError {
-  SurfaceConfigureError(UInt, UInt, UInt64, UInt, UInt, UInt)
+  SurfaceConfigureInvalidDesiredMaximumFrameLatency(UInt)
+  SurfaceConfigureFailed(UInt, UInt, UInt64, UInt, UInt, UInt, UInt)
 }
 
 ///|
 pub fn SurfaceConfigureError::message(self : SurfaceConfigureError) -> String {
-  let SurfaceConfigureError(
-    width,
-    height,
-    usage,
-    format,
-    present_mode,
-    alpha_mode
-  ) = self
-  "surface configuration failed (width=" +
-  width.to_string() +
-  ", height=" +
-  height.to_string() +
-  ", usage_u64=" +
-  usage.to_string() +
-  ", format_u32=" +
-  format.to_string() +
-  ", present_mode_u32=" +
-  present_mode.to_string() +
-  ", alpha_mode_u32=" +
-  alpha_mode.to_string() +
-  ")"
+  match self {
+    SurfaceConfigureInvalidDesiredMaximumFrameLatency(latency) =>
+      "surface configuration failed: desired_maximum_frame_latency must be >= 1 (got " +
+      latency.to_string() +
+      ")"
+    SurfaceConfigureFailed(
+      width,
+      height,
+      usage,
+      format,
+      present_mode,
+      alpha_mode,
+      desired_maximum_frame_latency
+    ) =>
+      "surface configuration failed (width=" +
+      width.to_string() +
+      ", height=" +
+      height.to_string() +
+      ", usage_u64=" +
+      usage.to_string() +
+      ", format_u32=" +
+      format.to_string() +
+      ", present_mode_u32=" +
+      present_mode.to_string() +
+      ", alpha_mode_u32=" +
+      alpha_mode.to_string() +
+      ", desired_maximum_frame_latency=" +
+      desired_maximum_frame_latency.to_string() +
+      ")"
+  }
 }
 
 ///|

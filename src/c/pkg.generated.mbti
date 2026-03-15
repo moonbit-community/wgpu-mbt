@@ -944,11 +944,11 @@ pub fn surface_capabilities_present_modes_count_u64(WGPUSurface, WGPUAdapter) ->
 
 pub fn surface_capabilities_usages_u64(WGPUSurface, WGPUAdapter) -> UInt64
 
-pub fn surface_configure_default(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64) -> UInt
+pub fn surface_configure_default(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64, UInt) -> UInt
 
-pub fn surface_configure_u32(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64, UInt, UInt, UInt) -> Bool
+pub fn surface_configure_u32(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64, UInt, UInt, UInt64) -> Bool
 
-pub fn surface_configure_view_formats_u32(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64, UInt, UInt, UInt, UInt64, FixedArray[UInt]) -> Bool
+pub fn surface_configure_view_formats_u32(WGPUSurface, WGPUAdapter, WGPUDevice, UInt, UInt, UInt64, UInt, UInt, UInt64, UInt64, FixedArray[UInt]) -> Bool
 
 pub fn surface_present_u32(WGPUSurface) -> UInt
 

@@ -738,6 +738,8 @@ pub const STORE_OP_STORE : UInt = 0x00000001
 
 pub const STORE_OP_UNDEFINED : UInt = 0x00000000
 
+pub const SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY : UInt = 2
+
 pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_DEVICE_LOST : UInt = 0x00000007
 
 pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_ERROR : UInt = 0x00000008
@@ -1913,12 +1915,14 @@ pub fn Surface::capabilities_present_modes(Self, Adapter) -> Array[UInt]
 pub fn Surface::capabilities_present_modes_count_u64(Self, Adapter) -> UInt64
 pub fn Surface::capabilities_usages_u64(Self, Adapter) -> TextureUsage
 pub fn Surface::configure(Self, @c.WGPUSurfaceConfigurationPtr) -> Unit
-pub fn Surface::configure_best_effort(Self, Adapter, Device, UInt, UInt, TextureUsage, prefer_srgb? : Bool, vsync? : Bool) -> Bool
-pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, TextureUsage) -> TextureFormat
-pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt) -> Bool
-pub fn Surface::configure_u32_or_raise(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt) -> Unit raise SurfaceConfigureError
-pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat]) -> Bool
-pub fn Surface::configure_view_formats_u32_or_raise(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat]) -> Unit raise SurfaceConfigureError
+pub fn Surface::configure_best_effort(Self, Adapter, Device, UInt, UInt, TextureUsage, prefer_srgb? : Bool, vsync? : Bool, desired_maximum_frame_latency? : UInt) -> Bool
+pub fn Surface::configure_default(Self, Adapter, Device, UInt, UInt, TextureUsage, desired_maximum_frame_latency? : UInt) -> TextureFormat
+pub fn Surface::configure_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, desired_maximum_frame_latency? : UInt) -> Bool
+pub fn Surface::configure_u32_or_raise(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, desired_maximum_frame_latency? : UInt) -> Unit raise SurfaceConfigureError
+pub fn Surface::configure_view_formats_u32(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat], desired_maximum_frame_latency? : UInt) -> Bool
+pub fn Surface::configure_view_formats_u32_or_raise(Self, Adapter, Device, UInt, UInt, TextureUsage, TextureFormat, UInt, UInt, Array[TextureFormat], desired_maximum_frame_latency? : UInt) -> Unit raise SurfaceConfigureError
+pub fn Surface::configure_with(Self, Adapter, Device, SurfaceConfiguration) -> Bool
+pub fn Surface::configure_with_or_raise(Self, Adapter, Device, SurfaceConfiguration) -> Unit raise SurfaceConfigureError
 pub fn Surface::get_capabilities(Self, Adapter, @c.WGPUSurfaceCapabilitiesPtr) -> @c.WGPUStatus
 pub fn Surface::get_current_frame_or_raise(Self) -> SurfaceFrame raise SurfaceTextureError
 pub fn Surface::get_current_texture(Self) -> SurfaceTexture
@@ -1934,6 +1938,20 @@ pub fn Surface::release_raw(Self) -> Unit
 pub fn Surface::set_label(Self, String) -> Unit
 pub fn Surface::unconfigure(Self) -> Unit
 pub fn Surface::unconfigure_raw(Self) -> Unit
+
+pub struct SurfaceConfiguration {
+  width : UInt
+  height : UInt
+  usage : TextureUsage
+  format : TextureFormat
+  present_mode_u32 : UInt
+  alpha_mode_u32 : UInt
+  view_formats : Array[TextureFormat]
+  desired_maximum_frame_latency : UInt
+}
+pub fn SurfaceConfiguration::new(UInt, UInt, TextureUsage, TextureFormat, UInt, UInt) -> Self
+pub fn SurfaceConfiguration::with_desired_maximum_frame_latency(Self, UInt) -> Self
+pub fn SurfaceConfiguration::with_view_formats(Self, Array[TextureFormat]) -> Self
 
 pub struct SurfaceFrame {
   surface : Surface
