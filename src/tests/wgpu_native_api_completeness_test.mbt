@@ -103,7 +103,11 @@ test "wgpu native api: primitive extras builder calls" {
   skip_on_wgpu_error(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
+    let _ = adapter.limits_max_push_constant_size_u32()
+    let _ = adapter.limits_max_non_sampler_bindings_u32()
     let device = adapter.request_device_sync(instance)
+    let _ = device.limits_max_push_constant_size_u32()
+    let _ = device.limits_max_non_sampler_bindings_u32()
     let cfg = @wgpu.SurfaceConfiguration::new(
       1U,
       1U,

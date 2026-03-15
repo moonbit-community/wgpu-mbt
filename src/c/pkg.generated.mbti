@@ -50,6 +50,10 @@ pub fn adapter_limits_max_buffer_size_u64(WGPUAdapter) -> UInt64
 
 pub fn adapter_limits_max_compute_workgroup_size_x_u32(WGPUAdapter) -> UInt
 
+pub fn adapter_limits_max_non_sampler_bindings_u32(WGPUAdapter) -> UInt
+
+pub fn adapter_limits_max_push_constant_size_u32(WGPUAdapter) -> UInt
+
 pub fn adapter_limits_max_texture_dimension_2d_u32(WGPUAdapter) -> UInt
 
 pub fn adapter_release(WGPUAdapter) -> Unit
@@ -478,6 +482,10 @@ pub fn device_limits_max_bind_groups_u32(WGPUDevice) -> UInt
 
 pub fn device_limits_max_buffer_size_u64(WGPUDevice) -> UInt64
 
+pub fn device_limits_max_non_sampler_bindings_u32(WGPUDevice) -> UInt
+
+pub fn device_limits_max_push_constant_size_u32(WGPUDevice) -> UInt
+
 pub fn device_limits_max_texture_dimension_2d_u32(WGPUDevice) -> UInt
 
 pub fn device_poll(WGPUDevice, Bool, WGPUSubmissionIndexPtr) -> Bool
@@ -660,7 +668,7 @@ pub fn instance_wgsl_language_features_count_u64(WGPUInstance) -> UInt64
 
 pub fn limits_free(WGPULimitsPtr) -> Unit
 
-pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64) -> WGPULimitsPtr
+pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64, UInt, UInt) -> WGPULimitsPtr
 
 pub fn native_available_u32() -> UInt
 

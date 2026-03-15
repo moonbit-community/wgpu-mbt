@@ -604,6 +604,8 @@ declare pub fn Adapter::request_device_sync_with_features_and_limits(
   max_dynamic_uniform_buffers_u32? : UInt = 0U,
   max_uniform_buffer_binding_size? : UInt64 = 0UL,
   max_storage_buffer_binding_size? : UInt64 = 0UL,
+  max_push_constant_size_u32? : UInt = 0U,
+  max_non_sampler_bindings_u32? : UInt = 0U,
   label? : String = "",
   queue_label? : String = "",
   trace_path? : String = "",
@@ -808,6 +810,18 @@ declare pub fn Adapter::limits_max_buffer_size_u64(self : Adapter) -> UInt64
 
 ///|
 #declaration_only
+declare pub fn Adapter::limits_max_push_constant_size_u32(
+  self : Adapter,
+) -> UInt
+
+///|
+#declaration_only
+declare pub fn Adapter::limits_max_non_sampler_bindings_u32(
+  self : Adapter,
+) -> UInt
+
+///|
+#declaration_only
 declare pub fn Adapter::limits_max_compute_workgroup_size_x_u32(
   self : Adapter,
 ) -> UInt
@@ -883,6 +897,16 @@ declare pub fn Device::limits_max_bind_groups_u32(self : Device) -> UInt
 ///|
 #declaration_only
 declare pub fn Device::limits_max_buffer_size_u64(self : Device) -> UInt64
+
+///|
+#declaration_only
+declare pub fn Device::limits_max_push_constant_size_u32(self : Device) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::limits_max_non_sampler_bindings_u32(
+  self : Device,
+) -> UInt
 
 ///|
 #declaration_only

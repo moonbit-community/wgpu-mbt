@@ -76,6 +76,16 @@ pub fn Device::limits_max_buffer_size_u64(self : Device) -> UInt64 {
 }
 
 ///|
+pub fn Device::limits_max_push_constant_size_u32(self : Device) -> UInt {
+  @c.device_limits_max_push_constant_size_u32(self.raw)
+}
+
+///|
+pub fn Device::limits_max_non_sampler_bindings_u32(self : Device) -> UInt {
+  @c.device_limits_max_non_sampler_bindings_u32(self.raw)
+}
+
+///|
 pub fn Device::create_buffer(
   self : Device,
   size~ : UInt64,

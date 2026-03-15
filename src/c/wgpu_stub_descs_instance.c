@@ -495,37 +495,79 @@ void mbt_wgpu_device_descriptor_set_required_limits(WGPUDeviceDescriptor *desc,
   out->desc.requiredLimits = limits;
 }
 
+typedef struct {
+  WGPULimits limits;
+  WGPUNativeLimits native_limits;
+} mbt_limits_owned_t;
+
 WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
     WGPUAdapter adapter, uint32_t max_bind_groups, uint32_t max_dynamic_uniform_buffers,
-    uint64_t max_uniform_buffer_binding_size, uint64_t max_storage_buffer_binding_size) {
+    uint64_t max_uniform_buffer_binding_size, uint64_t max_storage_buffer_binding_size,
+    uint32_t max_push_constant_size, uint32_t max_non_sampler_bindings) {
   WGPULimits base = {0};
-  base.nextInChain = NULL;
+  WGPUNativeLimits native_base = {
+      .chain =
+          (WGPUChainedStructOut){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_NativeLimits,
+          },
+      .maxPushConstantSize = 0u,
+      .maxNonSamplerBindings = 0u,
+  };
+  base.nextInChain = &native_base.chain;
   WGPUStatus st = wgpuAdapterGetLimits(adapter, &base);
   if (st != WGPUStatus_Success) {
-    return NULL;
+    // Fallback for runtimes that do not accept a native limits out-chain.
+    base.nextInChain = NULL;
+    st = wgpuAdapterGetLimits(adapter, &base);
+    if (st != WGPUStatus_Success) {
+      return NULL;
+    }
   }
 
-  WGPULimits *out = (WGPULimits *)malloc(sizeof(WGPULimits));
+  mbt_limits_owned_t *out = (mbt_limits_owned_t *)malloc(sizeof(mbt_limits_owned_t));
   if (!out) {
     return NULL;
   }
-  *out = base;
-  out->nextInChain = NULL;
+  memset(out, 0, sizeof(*out));
+  out->limits = base;
+  out->limits.nextInChain = NULL;
 
   if (max_bind_groups != 0u) {
-    out->maxBindGroups = max_bind_groups;
+    out->limits.maxBindGroups = max_bind_groups;
   }
   if (max_dynamic_uniform_buffers != 0u) {
-    out->maxDynamicUniformBuffersPerPipelineLayout = max_dynamic_uniform_buffers;
+    out->limits.maxDynamicUniformBuffersPerPipelineLayout = max_dynamic_uniform_buffers;
   }
   if (max_uniform_buffer_binding_size != 0u) {
-    out->maxUniformBufferBindingSize = max_uniform_buffer_binding_size;
+    out->limits.maxUniformBufferBindingSize = max_uniform_buffer_binding_size;
   }
   if (max_storage_buffer_binding_size != 0u) {
-    out->maxStorageBufferBindingSize = max_storage_buffer_binding_size;
+    out->limits.maxStorageBufferBindingSize = max_storage_buffer_binding_size;
   }
 
-  return out;
+  if (max_push_constant_size != 0u || max_non_sampler_bindings != 0u) {
+    out->native_limits = (WGPUNativeLimits){
+        .chain =
+            (WGPUChainedStructOut){
+                .next = NULL,
+                .sType = (WGPUSType)WGPUSType_NativeLimits,
+            },
+        .maxPushConstantSize = native_base.maxPushConstantSize,
+        .maxNonSamplerBindings = native_base.maxNonSamplerBindings,
+    };
+    if (max_push_constant_size != 0u) {
+      out->native_limits.maxPushConstantSize = max_push_constant_size;
+    }
+    if (max_non_sampler_bindings != 0u) {
+      out->native_limits.maxNonSamplerBindings = max_non_sampler_bindings;
+    }
+    out->limits.nextInChain = &out->native_limits.chain;
+  }
+
+  return &out->limits;
 }
 
-void mbt_wgpu_limits_free(WGPULimits *limits) { free(limits); }
+void mbt_wgpu_limits_free(WGPULimits *limits) {
+  free((mbt_limits_owned_t *)limits);
+}

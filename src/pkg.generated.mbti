@@ -1317,6 +1317,8 @@ pub fn Adapter::info_vendor_id_u32(Self) -> UInt
 pub fn Adapter::limits_max_bind_groups_u32(Self) -> UInt
 pub fn Adapter::limits_max_buffer_size_u64(Self) -> UInt64
 pub fn Adapter::limits_max_compute_workgroup_size_x_u32(Self) -> UInt
+pub fn Adapter::limits_max_non_sampler_bindings_u32(Self) -> UInt
+pub fn Adapter::limits_max_push_constant_size_u32(Self) -> UInt
 pub fn Adapter::limits_max_texture_dimension_2d_u32(Self) -> UInt
 pub fn Adapter::raw_handle(Self) -> @c.WGPUAdapter
 pub fn Adapter::release(Self) -> Unit
@@ -1339,7 +1341,7 @@ pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device ra
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_with_features(Self, Instance, Array[UInt], label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
-pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, max_push_constant_size_u32? : UInt, max_non_sampler_bindings_u32? : UInt, label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
 pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64
@@ -1643,6 +1645,8 @@ pub fn Device::get_queue(Self) -> Queue
 pub fn Device::has_feature(Self, @c.WGPUFeatureName) -> Bool
 pub fn Device::limits_max_bind_groups_u32(Self) -> UInt
 pub fn Device::limits_max_buffer_size_u64(Self) -> UInt64
+pub fn Device::limits_max_non_sampler_bindings_u32(Self) -> UInt
+pub fn Device::limits_max_push_constant_size_u32(Self) -> UInt
 pub fn Device::limits_max_texture_dimension_2d_u32(Self) -> UInt
 pub fn Device::poll(Self, wait? : Bool) -> Bool
 pub fn Device::poll_raw(Self, Bool, @c.WGPUSubmissionIndexPtr) -> Bool

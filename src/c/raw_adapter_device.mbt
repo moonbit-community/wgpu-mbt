@@ -86,6 +86,16 @@ pub extern "C" fn adapter_limits_max_buffer_size_u64(
 ) -> UInt64 = "mbt_wgpu_adapter_limits_max_buffer_size_u64"
 
 ///|
+pub extern "C" fn adapter_limits_max_push_constant_size_u32(
+  adapter : Adapter,
+) -> UInt = "mbt_wgpu_adapter_limits_max_push_constant_size_u32"
+
+///|
+pub extern "C" fn adapter_limits_max_non_sampler_bindings_u32(
+  adapter : Adapter,
+) -> UInt = "mbt_wgpu_adapter_limits_max_non_sampler_bindings_u32"
+
+///|
 pub extern "C" fn device_limits_max_texture_dimension_2d_u32(
   device : Device,
 ) -> UInt = "mbt_wgpu_device_limits_max_texture_dimension_2d_u32"
@@ -95,6 +105,16 @@ pub extern "C" fn device_limits_max_bind_groups_u32(device : Device) -> UInt = "
 
 ///|
 pub extern "C" fn device_limits_max_buffer_size_u64(device : Device) -> UInt64 = "mbt_wgpu_device_limits_max_buffer_size_u64"
+
+///|
+pub extern "C" fn device_limits_max_push_constant_size_u32(
+  device : Device,
+) -> UInt = "mbt_wgpu_device_limits_max_push_constant_size_u32"
+
+///|
+pub extern "C" fn device_limits_max_non_sampler_bindings_u32(
+  device : Device,
+) -> UInt = "mbt_wgpu_device_limits_max_non_sampler_bindings_u32"
 
 ///|
 pub extern "C" fn adapter_limits_max_compute_workgroup_size_x_u32(

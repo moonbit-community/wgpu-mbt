@@ -902,6 +902,94 @@ uint64_t mbt_wgpu_device_limits_max_buffer_size_u64(WGPUDevice device) {
   return (uint64_t)limits.maxBufferSize;
 }
 
+uint32_t mbt_wgpu_adapter_limits_max_push_constant_size_u32(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  WGPUNativeLimits native_limits = {
+      .chain =
+          (WGPUChainedStructOut){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_NativeLimits,
+          },
+      .maxPushConstantSize = 0u,
+      .maxNonSamplerBindings = 0u,
+  };
+  limits.nextInChain = &native_limits.chain;
+  WGPUStatus st = wgpuAdapterGetLimits(adapter, &limits);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  return native_limits.maxPushConstantSize;
+}
+
+uint32_t mbt_wgpu_adapter_limits_max_non_sampler_bindings_u32(WGPUAdapter adapter) {
+  if (!adapter) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  WGPUNativeLimits native_limits = {
+      .chain =
+          (WGPUChainedStructOut){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_NativeLimits,
+          },
+      .maxPushConstantSize = 0u,
+      .maxNonSamplerBindings = 0u,
+  };
+  limits.nextInChain = &native_limits.chain;
+  WGPUStatus st = wgpuAdapterGetLimits(adapter, &limits);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  return native_limits.maxNonSamplerBindings;
+}
+
+uint32_t mbt_wgpu_device_limits_max_push_constant_size_u32(WGPUDevice device) {
+  if (!device) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  WGPUNativeLimits native_limits = {
+      .chain =
+          (WGPUChainedStructOut){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_NativeLimits,
+          },
+      .maxPushConstantSize = 0u,
+      .maxNonSamplerBindings = 0u,
+  };
+  limits.nextInChain = &native_limits.chain;
+  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  return native_limits.maxPushConstantSize;
+}
+
+uint32_t mbt_wgpu_device_limits_max_non_sampler_bindings_u32(WGPUDevice device) {
+  if (!device) {
+    return 0u;
+  }
+  WGPULimits limits = {0};
+  WGPUNativeLimits native_limits = {
+      .chain =
+          (WGPUChainedStructOut){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_NativeLimits,
+          },
+      .maxPushConstantSize = 0u,
+      .maxNonSamplerBindings = 0u,
+  };
+  limits.nextInChain = &native_limits.chain;
+  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
+  if (st != WGPUStatus_Success) {
+    return 0u;
+  }
+  return native_limits.maxNonSamplerBindings;
+}
+
 uint32_t mbt_wgpu_adapter_limits_max_compute_workgroup_size_x_u32(WGPUAdapter adapter) {
   if (!adapter) {
     return 0u;

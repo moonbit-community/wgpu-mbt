@@ -186,6 +186,8 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
   max_dynamic_uniform_buffers_u32? : UInt = 0U,
   max_uniform_buffer_binding_size? : UInt64 = 0UL,
   max_storage_buffer_binding_size? : UInt64 = 0UL,
+  max_push_constant_size_u32? : UInt = 0U,
+  max_non_sampler_bindings_u32? : UInt = 0U,
   label? : String = "",
   queue_label? : String = "",
   trace_path? : String = "",
@@ -198,6 +200,8 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
     max_dynamic_uniform_buffers_u32,
     max_uniform_buffer_binding_size,
     max_storage_buffer_binding_size,
+    max_push_constant_size_u32,
+    max_non_sampler_bindings_u32,
   )
   let label_bytes = utf8_bytes(label)
   let queue_label_bytes = utf8_bytes(queue_label)
@@ -561,6 +565,16 @@ pub fn Adapter::limits_max_bind_groups_u32(self : Adapter) -> UInt {
 ///|
 pub fn Adapter::limits_max_buffer_size_u64(self : Adapter) -> UInt64 {
   @c.adapter_limits_max_buffer_size_u64(self.raw)
+}
+
+///|
+pub fn Adapter::limits_max_push_constant_size_u32(self : Adapter) -> UInt {
+  @c.adapter_limits_max_push_constant_size_u32(self.raw)
+}
+
+///|
+pub fn Adapter::limits_max_non_sampler_bindings_u32(self : Adapter) -> UInt {
+  @c.adapter_limits_max_non_sampler_bindings_u32(self.raw)
 }
 
 ///|
