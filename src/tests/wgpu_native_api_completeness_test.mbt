@@ -15,7 +15,7 @@
 ///|
 test "wgpu native api: instance extras + descriptor coverage" {
   skip_on_wgpu_error(() => {
-    let instance = @wgpu.Instance::create_with_extras_u32()
+    let instance = @wgpu.Instance::create_with_extras_u32(dxc_path="_build/dxc")
     let nullp = @wgpu_c.null_opaque_ptr()
 
     let surface = instance.create_surface_swap_chain_panel(nullp)
@@ -82,6 +82,17 @@ test "wgpu native api: instance extras + descriptor coverage" {
     )
     @wgpu_c.query_set_descriptor_free(qs_desc)
 
+    let stages = FixedArray::from_array([
+      @wgpu.SHADER_STAGE_VERTEX | @wgpu.SHADER_STAGE_FRAGMENT,
+      @wgpu.SHADER_STAGE_COMPUTE,
+    ])
+    let starts = FixedArray::from_array([0U, 16U])
+    let ends = FixedArray::from_array([16U, 32U])
+    let pl_desc = @wgpu_c.pipeline_layout_descriptor_push_constants_many_new(
+      2UL, stages, starts, ends,
+    )
+    @wgpu_c.pipeline_layout_descriptor_free(pl_desc)
+
     instance.release()
     inspect("ok", content="ok")
   })
@@ -116,6 +127,14 @@ test "wgpu native api: primitive extras builder calls" {
       #|}
       #|
     let sm = device.create_shader_module_wgsl(wgsl)
+    let push_layout = device.create_pipeline_layout_push_constants_many(
+      @wgpu.ShaderStage::from_u64(
+        @wgpu.SHADER_STAGE_VERTEX | @wgpu.SHADER_STAGE_FRAGMENT,
+      ),
+      0U,
+      16U,
+      [(@wgpu.ShaderStage::from_u64(@wgpu.SHADER_STAGE_COMPUTE), 16U, 32U)],
+    )
     let builder = @wgpu.RenderPipelineDescBuilder::new(sm)
     builder.set_entry_points("vs_main", "fs_main")
     builder.set_color_target_format(
@@ -126,6 +145,7 @@ test "wgpu native api: primitive extras builder calls" {
     builder.clear_primitive_extras()
 
     builder.free()
+    push_layout.release()
     sm.release()
     device.release()
     adapter.release()

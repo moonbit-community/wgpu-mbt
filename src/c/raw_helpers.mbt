@@ -605,6 +605,35 @@ pub fn device_create_pipeline_layout_push_constants(
 }
 
 ///|
+pub fn device_create_pipeline_layout_push_constants_many(
+  device : Device,
+  first_stages : UInt64,
+  first_start : UInt,
+  first_end : UInt,
+  other_ranges : Array[(UInt64, UInt, UInt)],
+) -> PipelineLayout {
+  let stages_all : Array[UInt64] = [first_stages]
+  let starts_all : Array[UInt] = [first_start]
+  let ends_all : Array[UInt] = [first_end]
+  for i = 0; i < other_ranges.length(); i = i + 1 {
+    let (stages, start, end) = other_ranges[i]
+    stages_all.push(stages)
+    starts_all.push(start)
+    ends_all.push(end)
+  }
+  let range_count = stages_all.length().to_uint64()
+  let stages_fixed = FixedArray::from_array(stages_all[:])
+  let starts_fixed = FixedArray::from_array(starts_all[:])
+  let ends_fixed = FixedArray::from_array(ends_all[:])
+  let desc = pipeline_layout_descriptor_push_constants_many_new(
+    range_count, stages_fixed, starts_fixed, ends_fixed,
+  )
+  let layout = wgpuDeviceCreatePipelineLayout(device, desc)
+  pipeline_layout_descriptor_free(desc)
+  layout
+}
+
+///|
 pub fn device_create_render_bundle_encoder_rgba8(
   device : Device,
 ) -> WGPURenderBundleEncoder {

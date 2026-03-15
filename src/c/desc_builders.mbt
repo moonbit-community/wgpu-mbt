@@ -452,6 +452,15 @@ pub extern "C" fn pipeline_layout_descriptor_push_constants_new(
 ) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_push_constants_new"
 
 ///|
+#borrow(stages_u64, starts_u32, ends_u32)
+pub extern "C" fn pipeline_layout_descriptor_push_constants_many_new(
+  range_count : UInt64,
+  stages_u64 : FixedArray[UInt64],
+  starts_u32 : FixedArray[UInt],
+  ends_u32 : FixedArray[UInt],
+) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_push_constants_many_new"
+
+///|
 #borrow(desc)
 pub extern "C" fn pipeline_layout_descriptor_free(
   desc : WGPUPipelineLayoutDescriptorPtr,

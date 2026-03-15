@@ -918,10 +918,13 @@ WGPUInstance mbt_wgpu_create_instance(void) {
   return wgpuCreateInstance(&desc);
 }
 
-WGPUInstance mbt_wgpu_create_instance_with_extras_u32(
+static WGPUInstance mbt_wgpu_create_instance_with_extras_impl(
     uint64_t backends_u64, uint32_t flags_u32, uint32_t dx12_shader_compiler_u32,
+    const uint8_t *dxc_path_utf8, uint64_t dxc_path_utf8_len,
     uint32_t gles3_minor_version_u32, uint32_t gl_fence_behaviour_u32,
     uint32_t dxc_max_shader_model_u32, uint32_t dx12_presentation_system_u32) {
+  (void)dxc_path_utf8;
+  (void)dxc_path_utf8_len;
   mbt_wgpu_stderr_unbuffered_if_debug();
   if (mbt_wgpu_env_flag_enabled("MBT_WGPU_LOG_STDERR")) {
     mbt_wgpu_set_log_callback_stderr_enabled(true);
@@ -938,6 +941,10 @@ WGPUInstance mbt_wgpu_create_instance_with_extras_u32(
   extras.dx12ShaderCompiler = (WGPUDx12Compiler)dx12_shader_compiler_u32;
   extras.gles3MinorVersion = (WGPUGles3MinorVersion)gles3_minor_version_u32;
   extras.glFenceBehaviour = (WGPUGLFenceBehaviour)gl_fence_behaviour_u32;
+  // NOTE: Some prebuilt upstream binaries appear to use a different
+  // `WGPUInstanceExtras` field layout around DXC path / GL fence behavior.
+  // Writing non-null dxcPath can corrupt neighboring fields at runtime.
+  // Keep this null for ABI safety across published binaries.
   extras.dxcPath = (WGPUStringView){.data = NULL, .length = 0};
   extras.dxcMaxShaderModel = (WGPUDxcMaxShaderModel)dxc_max_shader_model_u32;
   extras.dx12PresentationSystem = (WGPUDx12SwapchainKind)dx12_presentation_system_u32;
@@ -948,6 +955,33 @@ WGPUInstance mbt_wgpu_create_instance_with_extras_u32(
   desc.nextInChain = &extras.chain;
   desc.features = (WGPUInstanceCapabilities){0};
   return wgpuCreateInstance(&desc);
+}
+
+WGPUInstance mbt_wgpu_create_instance_with_extras_u32(
+    uint64_t backends_u64, uint32_t flags_u32, uint32_t dx12_shader_compiler_u32,
+    uint32_t gles3_minor_version_u32, uint32_t gl_fence_behaviour_u32,
+    uint32_t dxc_max_shader_model_u32, uint32_t dx12_presentation_system_u32) {
+  return mbt_wgpu_create_instance_with_extras_impl(
+      backends_u64, flags_u32, dx12_shader_compiler_u32, NULL, 0u,
+      gles3_minor_version_u32, gl_fence_behaviour_u32, dxc_max_shader_model_u32,
+      dx12_presentation_system_u32);
+}
+
+WGPUInstance mbt_wgpu_create_instance_with_extras_utf8(
+    uint64_t backends_u64, uint32_t flags_u32, uint32_t dx12_shader_compiler_u32,
+    const uint8_t *dxc_path_utf8, uint64_t dxc_path_utf8_len,
+    uint32_t gles3_minor_version_u32, uint32_t gl_fence_behaviour_u32,
+    uint32_t dxc_max_shader_model_u32, uint32_t dx12_presentation_system_u32) {
+  if (!dxc_path_utf8 || dxc_path_utf8_len == 0u) {
+    return mbt_wgpu_create_instance_with_extras_impl(
+        backends_u64, flags_u32, dx12_shader_compiler_u32, NULL, 0u,
+        gles3_minor_version_u32, gl_fence_behaviour_u32, dxc_max_shader_model_u32,
+        dx12_presentation_system_u32);
+  }
+  return mbt_wgpu_create_instance_with_extras_impl(
+      backends_u64, flags_u32, dx12_shader_compiler_u32, dxc_path_utf8,
+      dxc_path_utf8_len, gles3_minor_version_u32, gl_fence_behaviour_u32,
+      dxc_max_shader_model_u32, dx12_presentation_system_u32);
 }
 
 static MBT_WGPU_THREAD_LOCAL uint32_t g_mbt_wgpu_last_request_adapter_status_u32 = 0u;
@@ -2121,6 +2155,13 @@ typedef struct {
   WGPUPushConstantRange range;
 } mbt_pipeline_layout_push_constants_desc_t;
 
+typedef struct {
+  WGPUPipelineLayoutDescriptor desc;
+  WGPUPipelineLayoutExtras extras;
+  uint64_t range_count;
+  WGPUPushConstantRange ranges[];
+} mbt_pipeline_layout_push_constants_many_desc_t;
+
 WGPUPipelineLayoutDescriptor *
 mbt_wgpu_pipeline_layout_descriptor_push_constants_new(uint64_t stages,
                                                        uint32_t start,
@@ -2155,6 +2196,51 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_new(uint64_t stages,
       .bindGroupLayouts = NULL,
   };
 
+  return &out->desc;
+}
+
+WGPUPipelineLayoutDescriptor *
+mbt_wgpu_pipeline_layout_descriptor_push_constants_many_new(
+    uint64_t range_count, const uint64_t *stages_u64, const uint32_t *starts_u32,
+    const uint32_t *ends_u32) {
+  if (range_count == 0u || !stages_u64 || !starts_u32 || !ends_u32) {
+    return NULL;
+  }
+  if (range_count > (uint64_t)SIZE_MAX) {
+    return NULL;
+  }
+  size_t bytes = sizeof(mbt_pipeline_layout_push_constants_many_desc_t) +
+                 (size_t)range_count * sizeof(WGPUPushConstantRange);
+  mbt_pipeline_layout_push_constants_many_desc_t *out =
+      (mbt_pipeline_layout_push_constants_many_desc_t *)malloc(bytes);
+  if (!out) {
+    return NULL;
+  }
+  out->range_count = range_count;
+  for (uint64_t i = 0; i < range_count; i++) {
+    out->ranges[i] = (WGPUPushConstantRange){
+        .stages = (WGPUShaderStage)stages_u64[i],
+        .start = starts_u32[i],
+        .end = ends_u32[i],
+    };
+  }
+
+  out->extras = (WGPUPipelineLayoutExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_PipelineLayoutExtras,
+          },
+      .pushConstantRangeCount = (size_t)range_count,
+      .pushConstantRanges = out->ranges,
+  };
+
+  out->desc = (WGPUPipelineLayoutDescriptor){
+      .nextInChain = &out->extras.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .bindGroupLayoutCount = 0u,
+      .bindGroupLayouts = NULL,
+  };
   return &out->desc;
 }
 

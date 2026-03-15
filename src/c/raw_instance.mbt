@@ -29,6 +29,20 @@ pub extern "C" fn create_instance_with_extras_u32(
 ) -> Instance = "mbt_wgpu_create_instance_with_extras_u32"
 
 ///|
+#borrow(dxc_path_utf8)
+pub extern "C" fn create_instance_with_extras_utf8(
+  backends_u64 : UInt64,
+  flags_u32 : UInt,
+  dx12_shader_compiler_u32 : UInt,
+  dxc_path_utf8 : Bytes,
+  dxc_path_utf8_len : UInt64,
+  gles3_minor_version_u32 : UInt,
+  gl_fence_behaviour_u32 : UInt,
+  dxc_max_shader_model_u32 : UInt,
+  dx12_presentation_system_u32 : UInt,
+) -> Instance = "mbt_wgpu_create_instance_with_extras_utf8"
+
+///|
 pub extern "C" fn instance_capabilities_timed_wait_any_enable_u32() -> UInt = "mbt_wgpu_instance_capabilities_timed_wait_any_enable_u32"
 
 ///|

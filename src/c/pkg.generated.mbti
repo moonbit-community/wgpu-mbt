@@ -340,6 +340,8 @@ pub fn create_instance() -> WGPUInstance
 
 pub fn create_instance_with_extras_u32(UInt64, UInt, UInt, UInt, UInt, UInt, UInt) -> WGPUInstance
 
+pub fn create_instance_with_extras_utf8(UInt64, UInt, UInt, Bytes, UInt64, UInt, UInt, UInt, UInt) -> WGPUInstance
+
 pub fn device_create_bind_group_layout_sampler_filtering(WGPUDevice) -> WGPUBindGroupLayout
 
 pub fn device_create_bind_group_layout_sampler_texture_2d(WGPUDevice) -> WGPUBindGroupLayout
@@ -385,6 +387,8 @@ pub fn device_create_pipeline_layout_1(WGPUDevice, WGPUBindGroupLayout) -> WGPUP
 pub fn device_create_pipeline_layout_2(WGPUDevice, WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayout
 
 pub fn device_create_pipeline_layout_push_constants(WGPUDevice, UInt64, UInt, UInt) -> WGPUPipelineLayout
+
+pub fn device_create_pipeline_layout_push_constants_many(WGPUDevice, UInt64, UInt, UInt, Array[(UInt64, UInt, UInt)]) -> WGPUPipelineLayout
 
 pub fn device_create_query_set(WGPUDevice, WGPUQuerySetDescriptorPtr) -> WGPUQuerySet
 
@@ -711,6 +715,8 @@ pub fn pipeline_layout_descriptor_1_new(WGPUBindGroupLayout) -> WGPUPipelineLayo
 pub fn pipeline_layout_descriptor_2_new(WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_descriptor_free(WGPUPipelineLayoutDescriptorPtr) -> Unit
+
+pub fn pipeline_layout_descriptor_push_constants_many_new(UInt64, FixedArray[UInt64], FixedArray[UInt], FixedArray[UInt]) -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_descriptor_push_constants_new(UInt64, UInt, UInt) -> WGPUPipelineLayoutDescriptorPtr
 

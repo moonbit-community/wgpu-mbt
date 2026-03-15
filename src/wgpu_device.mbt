@@ -855,6 +855,30 @@ pub fn Device::create_pipeline_layout_push_constants(
 }
 
 ///|
+pub fn Device::create_pipeline_layout_push_constants_many(
+  self : Device,
+  first_stages : ShaderStage,
+  first_start : UInt,
+  first_end : UInt,
+  other_ranges : Array[(ShaderStage, UInt, UInt)],
+) -> PipelineLayout {
+  let other_raw_ranges : Array[(UInt64, UInt, UInt)] = []
+  for i = 0; i < other_ranges.length(); i = i + 1 {
+    let (stages, start, end) = other_ranges[i]
+    other_raw_ranges.push((stages.raw, start, end))
+  }
+  PipelineLayout::{
+    raw: @c.device_create_pipeline_layout_push_constants_many(
+      self.raw,
+      first_stages.raw,
+      first_start,
+      first_end,
+      other_raw_ranges,
+    ),
+  }
+}
+
+///|
 pub fn Device::create_bind_group_storage_buffer(
   self : Device,
   bind_group_layout : BindGroupLayout,

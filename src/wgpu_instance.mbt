@@ -35,12 +35,21 @@ pub fn Instance::create_with_extras_u32(
   gl_fence_behaviour_u32? : UInt = GL_FENCE_BEHAVIOUR_NORMAL,
   dxc_max_shader_model_u32? : UInt = DXC_MAX_SHADER_MODEL_V6_0,
   dx12_presentation_system_u32? : UInt = DX12_SWAPCHAIN_KIND_UNDEFINED,
+  dxc_path? : String = "",
 ) -> Instance raise WgpuError {
   require_native()
+  let dxc_path_utf8 = utf8_bytes(dxc_path)
   Instance::{
-    raw: @c.create_instance_with_extras_u32(
-      backends_u64, flags_u32, dx12_shader_compiler_u32, gles3_minor_version_u32,
-      gl_fence_behaviour_u32, dxc_max_shader_model_u32, dx12_presentation_system_u32,
+    raw: @c.create_instance_with_extras_utf8(
+      backends_u64,
+      flags_u32,
+      dx12_shader_compiler_u32,
+      dxc_path_utf8,
+      dxc_path_utf8.length().to_uint64(),
+      gles3_minor_version_u32,
+      gl_fence_behaviour_u32,
+      dxc_max_shader_model_u32,
+      dx12_presentation_system_u32,
     ),
   }
 }

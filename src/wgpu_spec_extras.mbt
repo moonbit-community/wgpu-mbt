@@ -88,6 +88,7 @@ declare pub fn Instance::create_with_extras_u32(
   gl_fence_behaviour_u32? : UInt = GL_FENCE_BEHAVIOUR_NORMAL,
   dxc_max_shader_model_u32? : UInt = DXC_MAX_SHADER_MODEL_V6_0,
   dx12_presentation_system_u32? : UInt = DX12_SWAPCHAIN_KIND_UNDEFINED,
+  dxc_path? : String = "",
 ) -> Instance raise WgpuError
 
 ///|
@@ -1637,6 +1638,16 @@ declare pub fn Device::create_pipeline_layout_push_constants(
   stages : ShaderStage,
   start : UInt,
   end : UInt,
+) -> PipelineLayout
+
+///|
+#declaration_only
+declare pub fn Device::create_pipeline_layout_push_constants_many(
+  self : Device,
+  first_stages : ShaderStage,
+  first_start : UInt,
+  first_end : UInt,
+  other_ranges : Array[(ShaderStage, UInt, UInt)],
 ) -> PipelineLayout
 
 ///|

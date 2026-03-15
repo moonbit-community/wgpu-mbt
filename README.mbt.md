@@ -140,8 +140,10 @@ You can also build source-chained descriptors and call
 You can create an instance with explicit native extras instead of defaults:
 
 - `Instance::create_with_extras_u32(backends_u64, flags_u32, dx12_shader_compiler_u32, gles3_minor_version_u32, gl_fence_behaviour_u32, dxc_max_shader_model_u32, dx12_presentation_system_u32)`
+- `Instance::create_with_extras_u32(backends_u64, flags_u32, dx12_shader_compiler_u32, gles3_minor_version_u32, gl_fence_behaviour_u32, dxc_max_shader_model_u32, dx12_presentation_system_u32, dxc_path)`
 
-This exposes backend/compiler knobs from `WGPUInstanceExtras` for advanced setups.
+This exposes backend/compiler knobs from `WGPUInstanceExtras`.
+`dxc_path` is kept as a forward-compatible parameter but currently ignored for ABI safety across upstream binaries.
 
 For `WGPUDeviceExtras.tracePath`, you can set trace path on descriptor builders via:
 
@@ -155,6 +157,9 @@ For `WGPUDeviceExtras.tracePath`, you can set trace path on descriptor builders 
 - Query set descriptor extras with multiple pipeline statistics:
   - `@wgpu_c.query_set_descriptor_pipeline_statistics_many_new(...)`
   - `Device::create_query_set_pipeline_statistics_many(count, first_statistic_name_u32, other_statistic_names_u32)`
+- Pipeline layout extras with multiple push-constant ranges:
+  - `@wgpu_c.pipeline_layout_descriptor_push_constants_many_new(...)`
+  - `Device::create_pipeline_layout_push_constants_many(first_stages, first_start, first_end, other_ranges)`
 - Render pipeline primitive extras on builder:
   - `RenderPipelineDescBuilder::set_polygon_mode_u32(...)`
   - `RenderPipelineDescBuilder::set_conservative_rasterization(...)`
