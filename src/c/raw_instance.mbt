@@ -61,6 +61,16 @@ pub extern "C" fn queue_on_submitted_work_done_future_id_u64(
 ) -> UInt64 = "mbt_wgpu_queue_on_submitted_work_done_future_id_u64"
 
 ///|
+pub extern "C" fn queue_on_submitted_work_done_async_status_u32(
+  future_id : UInt64,
+) -> UInt = "mbt_wgpu_queue_on_submitted_work_done_async_status_u32"
+
+///|
+pub extern "C" fn queue_on_submitted_work_done_async_clear(
+  future_id : UInt64,
+) -> Unit = "mbt_wgpu_queue_on_submitted_work_done_async_clear"
+
+///|
 pub extern "C" fn instance_request_adapter_future_id_u64(
   instance : Instance,
   options : WGPURequestAdapterOptionsPtr,

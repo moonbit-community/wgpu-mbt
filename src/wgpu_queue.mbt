@@ -74,6 +74,36 @@ pub fn Queue::on_submitted_work_done_future_id_u64(self : Queue) -> UInt64 {
 }
 
 ///|
+pub fn Queue::on_submitted_work_done_async_status_u32(
+  self : Queue,
+  future_id : UInt64,
+) -> UInt {
+  let _ = self
+  @c.queue_on_submitted_work_done_async_status_u32(future_id)
+}
+
+///|
+pub fn Queue::on_submitted_work_done_async_clear(
+  self : Queue,
+  future_id : UInt64,
+) -> Unit {
+  let _ = self
+  @c.queue_on_submitted_work_done_async_clear(future_id)
+}
+
+///|
+pub fn Queue::on_submitted_work_done_async_take_or_raise(
+  self : Queue,
+  future_id : UInt64,
+) -> Unit raise QueueWorkDoneError {
+  let status = self.on_submitted_work_done_async_status_u32(future_id)
+  self.on_submitted_work_done_async_clear(future_id)
+  if status != QUEUE_WORK_DONE_STATUS_SUCCESS {
+    raise QueueWorkDoneError(status)
+  }
+}
+
+///|
 pub fn Queue::timestamp_period(self : Queue) -> Float {
   @c.queue_get_timestamp_period(self.raw)
 }

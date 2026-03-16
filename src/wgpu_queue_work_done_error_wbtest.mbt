@@ -20,3 +20,12 @@ test "queue work done error message includes status name" {
     content="wgpuQueueOnSubmittedWorkDone failed (status=InstanceDropped, u32=2)",
   )
 }
+
+///|
+test "queue work done error message handles pending status" {
+  let err = QueueWorkDoneError(0U)
+  inspect(
+    err.message(),
+    content="wgpuQueueOnSubmittedWorkDone failed (status=PendingOrInvalid, u32=0)",
+  )
+}

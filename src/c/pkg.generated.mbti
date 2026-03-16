@@ -892,6 +892,10 @@ pub fn query_type_timestamp() -> WGPUQueryType
 
 pub fn queue_get_timestamp_period(WGPUQueue) -> Float
 
+pub fn queue_on_submitted_work_done_async_clear(UInt64) -> Unit
+
+pub fn queue_on_submitted_work_done_async_status_u32(UInt64) -> UInt
+
 pub fn queue_on_submitted_work_done_future_id_u64(WGPUQueue) -> UInt64
 
 pub fn queue_on_submitted_work_done_sync(WGPUInstance, WGPUQueue) -> UInt

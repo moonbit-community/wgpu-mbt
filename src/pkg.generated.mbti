@@ -1947,6 +1947,9 @@ pub struct Queue {
 pub fn Queue::add_ref(Self) -> Self
 pub fn Queue::add_ref_raw(Self) -> Unit
 pub fn Queue::get_timestamp_period(Self) -> Float
+pub fn Queue::on_submitted_work_done_async_clear(Self, UInt64) -> Unit
+pub fn Queue::on_submitted_work_done_async_status_u32(Self, UInt64) -> UInt
+pub fn Queue::on_submitted_work_done_async_take_or_raise(Self, UInt64) -> Unit raise QueueWorkDoneError
 pub fn Queue::on_submitted_work_done_future_id_u64(Self) -> UInt64
 pub fn Queue::on_submitted_work_done_sync(Self, Instance) -> UInt
 pub fn Queue::on_submitted_work_done_sync_or_raise(Self, Instance) -> Unit raise QueueWorkDoneError

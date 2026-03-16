@@ -2624,6 +2624,27 @@ declare pub fn Queue::on_submitted_work_done_future_id_u64(
 
 ///|
 #declaration_only
+declare pub fn Queue::on_submitted_work_done_async_status_u32(
+  self : Queue,
+  future_id : UInt64,
+) -> UInt
+
+///|
+#declaration_only
+declare pub fn Queue::on_submitted_work_done_async_clear(
+  self : Queue,
+  future_id : UInt64,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn Queue::on_submitted_work_done_async_take_or_raise(
+  self : Queue,
+  future_id : UInt64,
+) -> Unit raise QueueWorkDoneError
+
+///|
+#declaration_only
 declare pub fn Queue::timestamp_period(self : Queue) -> Float
 
 ///|

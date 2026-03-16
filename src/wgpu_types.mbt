@@ -760,7 +760,9 @@ pub fn QueueWorkDoneError::status_u32(self : QueueWorkDoneError) -> UInt {
 
 ///|
 fn queue_work_done_status_name(status : UInt) -> String {
-  if status == QUEUE_WORK_DONE_STATUS_SUCCESS {
+  if status == 0U {
+    "PendingOrInvalid"
+  } else if status == QUEUE_WORK_DONE_STATUS_SUCCESS {
     "Success"
   } else if status == QUEUE_WORK_DONE_STATUS_INSTANCE_DROPPED {
     "InstanceDropped"

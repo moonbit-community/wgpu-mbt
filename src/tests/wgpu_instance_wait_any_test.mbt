@@ -29,6 +29,16 @@ test "wgpu instance.wait_any_one (queue work done)" {
   let res = instance.wait_any_one(future_id)
   let ok = res.completed && res.status == @wgpu.WAIT_STATUS_SUCCESS
   inspect(ok, content="true")
+  if res.completed {
+    let async_status = queue.on_submitted_work_done_async_status_u32(future_id)
+    inspect(
+      async_status == @wgpu.QUEUE_WORK_DONE_STATUS_SUCCESS,
+      content="true",
+    )
+    queue.on_submitted_work_done_async_take_or_raise(future_id)
+  } else {
+    queue.on_submitted_work_done_async_clear(future_id)
+  }
   cmd.release()
   encoder.release()
   queue.release()

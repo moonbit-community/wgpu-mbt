@@ -214,8 +214,15 @@ typedef struct {
   uint8_t message[MBT_WGPU_ASYNC_MSG_MAX_LEN];
 } mbt_async_request_device_slot_t;
 
+typedef struct {
+  uint64_t id;
+  _Atomic uint32_t done_u32;
+  uint32_t status_u32;
+} mbt_async_queue_work_done_slot_t;
+
 static mbt_async_request_adapter_slot_t g_async_request_adapter_slots[MBT_WGPU_ASYNC_SLOT_CAP];
 static mbt_async_request_device_slot_t g_async_request_device_slots[MBT_WGPU_ASYNC_SLOT_CAP];
+static mbt_async_queue_work_done_slot_t g_async_queue_work_done_slots[MBT_WGPU_ASYNC_SLOT_CAP];
 
 #define MBT_WGPU_DEVICE_INFO_CACHE_CAP 128u
 #define MBT_WGPU_DEVICE_INFO_STR_MAX 256u
@@ -398,6 +405,46 @@ static void mbt_async_request_device_slot_clear(uint64_t id) {
   mbt_wgpu_wait_any_mu_unlock();
 }
 
+static mbt_async_queue_work_done_slot_t *mbt_async_queue_work_done_slot_new(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  mbt_async_queue_work_done_slot_t *slot = NULL;
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_queue_work_done_slots[i].id == 0u) {
+      slot = &g_async_queue_work_done_slots[i];
+      memset(slot, 0, sizeof(*slot));
+      slot->id = id;
+      atomic_store_explicit(&slot->done_u32, 0u, memory_order_relaxed);
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+  return slot;
+}
+
+static mbt_async_queue_work_done_slot_t *mbt_async_queue_work_done_slot_get(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  mbt_async_queue_work_done_slot_t *slot = NULL;
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_queue_work_done_slots[i].id == id) {
+      slot = &g_async_queue_work_done_slots[i];
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+  return slot;
+}
+
+static void mbt_async_queue_work_done_slot_clear(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_queue_work_done_slots[i].id == id) {
+      memset(&g_async_queue_work_done_slots[i], 0, sizeof(g_async_queue_work_done_slots[i]));
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+}
+
 static void mbt_wgpu_request_adapter_async_cb(WGPURequestAdapterStatus status,
                                               WGPUAdapter adapter,
                                               WGPUStringView message,
@@ -455,11 +502,15 @@ static void mbt_wgpu_request_device_async_cb(WGPURequestDeviceStatus status,
 static void mbt_wgpu_queue_work_done_mark_completed_cb(WGPUQueueWorkDoneStatus status,
                                                       void *userdata1,
                                                       void *userdata2) {
-  (void)status;
   (void)userdata2;
-  uint64_t id = (uint64_t)(uintptr_t)userdata1;
-  if (id != 0u) {
-    mbt_wait_any_mark_completed(id);
+  mbt_async_queue_work_done_slot_t *slot = (mbt_async_queue_work_done_slot_t *)userdata1;
+  if (!slot) {
+    return;
+  }
+  slot->status_u32 = (uint32_t)status;
+  atomic_store_explicit(&slot->done_u32, 1u, memory_order_release);
+  if (slot->id != 0u) {
+    mbt_wait_any_mark_completed(slot->id);
   }
 }
 
@@ -471,15 +522,36 @@ uint64_t mbt_wgpu_queue_on_submitted_work_done_future_id_u64(WGPUQueue queue) {
   if (id == 0u) {
     return 0u;
   }
+  mbt_async_queue_work_done_slot_t *slot = mbt_async_queue_work_done_slot_new(id);
+  if (!slot) {
+    mbt_wait_any_remove_id(id);
+    return 0u;
+  }
   WGPUQueueWorkDoneCallbackInfo cb = {
       .nextInChain = NULL,
       .mode = WGPUCallbackMode_AllowProcessEvents,
       .callback = mbt_wgpu_queue_work_done_mark_completed_cb,
-      .userdata1 = (void *)(uintptr_t)id,
+      .userdata1 = slot,
       .userdata2 = NULL,
   };
   (void)wgpuQueueOnSubmittedWorkDone(queue, cb);
   return id;
+}
+
+uint32_t mbt_wgpu_queue_on_submitted_work_done_async_status_u32(uint64_t future_id) {
+  mbt_async_queue_work_done_slot_t *slot = mbt_async_queue_work_done_slot_get(future_id);
+  if (!slot) {
+    return 0u;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return 0u;
+  }
+  return slot->status_u32;
+}
+
+void mbt_wgpu_queue_on_submitted_work_done_async_clear(uint64_t future_id) {
+  mbt_wait_any_remove_id(future_id);
+  mbt_async_queue_work_done_slot_clear(future_id);
 }
 
 uint64_t mbt_wgpu_instance_request_adapter_future_id_u64(
