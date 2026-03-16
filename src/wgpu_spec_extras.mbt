@@ -160,6 +160,14 @@ declare pub fn Instance::wait_any_one(
 
 ///|
 #declaration_only
+declare pub fn Instance::wait_any_one_or_raise(
+  self : Instance,
+  future_id : UInt64,
+  timeout_ns? : UInt64 = 0UL,
+) -> WaitAnyResult raise WaitAnyError
+
+///|
+#declaration_only
 declare pub fn Instance::enumerate_adapters_count_metal(
   self : Instance,
 ) -> UInt64

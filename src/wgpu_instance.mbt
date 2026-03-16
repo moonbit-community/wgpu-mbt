@@ -326,6 +326,19 @@ pub fn Instance::wait_any_one(
 }
 
 ///|
+pub fn Instance::wait_any_one_or_raise(
+  self : Instance,
+  future_id : UInt64,
+  timeout_ns? : UInt64 = 0UL,
+) -> WaitAnyResult raise WaitAnyError {
+  let result = self.wait_any_one(future_id, timeout_ns~)
+  if result.status != WAIT_STATUS_SUCCESS {
+    raise WaitAnyError(result.status)
+  }
+  result
+}
+
+///|
 pub fn Instance::enumerate_adapters_count_metal(self : Instance) -> UInt64 {
   @c.instance_enumerate_adapters_count_metal(self.raw)
 }

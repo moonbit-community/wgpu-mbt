@@ -26,9 +26,9 @@ test "wgpu instance.wait_any_one (queue work done)" {
   // then observe it via wait_any.
   let status = queue.on_submitted_work_done_sync(instance)
   inspect(status == @wgpu.QUEUE_WORK_DONE_STATUS_SUCCESS, content="true")
-  let res = instance.wait_any_one(future_id)
-  let ok = res.completed && res.status == @wgpu.WAIT_STATUS_SUCCESS
-  inspect(ok, content="true")
+  let res = instance.wait_any_one_or_raise(future_id)
+  inspect(res.completed, content="true")
+  inspect(res.status == @wgpu.WAIT_STATUS_SUCCESS, content="true")
   if res.completed {
     let async_status = queue.on_submitted_work_done_async_status_u32(future_id)
     inspect(

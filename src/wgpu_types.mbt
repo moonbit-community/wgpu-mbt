@@ -786,6 +786,46 @@ pub fn QueueWorkDoneError::message(self : QueueWorkDoneError) -> String {
 }
 
 ///|
+suberror WaitAnyError {
+  WaitAnyError(UInt)
+}
+
+///|
+pub fn WaitAnyError::status_u32(self : WaitAnyError) -> UInt {
+  let WaitAnyError(status) = self
+  status
+}
+
+///|
+fn wait_status_name(status : UInt) -> String {
+  if status == 0U {
+    "PendingOrInvalid"
+  } else if status == WAIT_STATUS_SUCCESS {
+    "Success"
+  } else if status == WAIT_STATUS_TIMED_OUT {
+    "TimedOut"
+  } else if status == WAIT_STATUS_UNSUPPORTED_TIMEOUT {
+    "UnsupportedTimeout"
+  } else if status == WAIT_STATUS_UNSUPPORTED_COUNT {
+    "UnsupportedCount"
+  } else if status == WAIT_STATUS_UNSUPPORTED_MIXED_SOURCES {
+    "UnsupportedMixedSources"
+  } else {
+    "Unknown"
+  }
+}
+
+///|
+pub fn WaitAnyError::message(self : WaitAnyError) -> String {
+  let status = self.status_u32()
+  "wgpuInstanceWaitAny failed (status=" +
+  wait_status_name(status) +
+  ", u32=" +
+  status.to_string() +
+  ")"
+}
+
+///|
 pub struct PipelineLayout {
   raw : @c.PipelineLayout
 }

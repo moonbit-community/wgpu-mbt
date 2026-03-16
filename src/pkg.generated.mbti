@@ -1284,6 +1284,10 @@ pub fn SurfacePresentError::message(Self) -> String
 type SurfaceTextureError
 pub fn SurfaceTextureError::message(Self) -> String
 
+type WaitAnyError
+pub fn WaitAnyError::message(Self) -> String
+pub fn WaitAnyError::status_u32(Self) -> UInt
+
 pub suberror WgpuError {
   WgpuNativeUnavailable(String)
   WgpuNativeMissingSymbol(String, String)
@@ -1896,6 +1900,7 @@ pub fn Instance::request_adapter_sync_options_u32(Self, feature_level_u32? : UIn
 pub fn Instance::request_adapter_sync_ptr(Self, @c.WGPURequestAdapterOptionsPtr) -> Adapter raise WgpuError
 pub fn Instance::wait_any(Self, UInt64, @c.WGPUFutureWaitInfoPtr, UInt64) -> @c.WGPUWaitStatus
 pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult
+pub fn Instance::wait_any_one_or_raise(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult raise WaitAnyError
 pub fn Instance::wgpu_generate_report(Self, @c.WGPUGlobalReportPtr) -> Unit
 pub fn Instance::wgsl_language_features_count_u64(Self) -> UInt64
 
