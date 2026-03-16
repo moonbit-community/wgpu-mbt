@@ -718,11 +718,201 @@ declare pub fn Adapter::request_device_sync_spirv_shader_passthrough(
 
 ///|
 #declaration_only
+declare pub fn Adapter::request_device_sync_native_feature(
+  self : Adapter,
+  instance : Instance,
+  native_feature_u32 : UInt,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_buffer_binding_array(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_storage_resource_binding_array(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_partially_bound_binding_array(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_sampled_texture_and_storage_buffer_array_non_uniform_indexing(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_vertex_writable_storage(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_multi_draw_indirect_count(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_mappable_primary_buffers(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_texture_format16bit_norm(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_texture_compression_astc_hdr(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_polygon_mode_line(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_polygon_mode_point(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_conservative_rasterization(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_texture_format_nv12(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_vertex_attribute64bit(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_ray_query(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_shader_f64(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_shader_i16(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_shader_int64(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_shader_primitive_index(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_shader_early_depth_test(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_subgroup(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_subgroup_vertex(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_subgroup_barrier(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
+declare pub fn Adapter::request_device_sync_texture_adapter_specific_format_features(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
 declare pub fn Adapter::release(self : Adapter) -> Unit
 
 ///|
 #declaration_only
 declare pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_u32(
+  self : Adapter,
+  native_feature_u32 : UInt,
+) -> Bool
 
 ///|
 #declaration_only
@@ -759,6 +949,152 @@ declare pub fn Adapter::has_feature_native_multiview(self : Adapter) -> Bool
 ///|
 #declaration_only
 declare pub fn Adapter::has_feature_native_spirv_shader_passthrough(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_texture_binding_array(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_buffer_binding_array(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_storage_resource_binding_array(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_partially_bound_binding_array(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_sampled_texture_and_storage_buffer_array_non_uniform_indexing(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_vertex_writable_storage(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_multi_draw_indirect_count(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_mappable_primary_buffers(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_texture_format16bit_norm(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_texture_compression_astc_hdr(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_polygon_mode_line(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_polygon_mode_point(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_conservative_rasterization(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_texture_format_nv12(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_vertex_attribute64bit(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_ray_query(self : Adapter) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_shader_f64(self : Adapter) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_shader_i16(self : Adapter) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_shader_int64(self : Adapter) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_shader_primitive_index(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_shader_early_depth_test(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_subgroup(self : Adapter) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_subgroup_vertex(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_subgroup_barrier(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_texture_adapter_specific_format_features(
   self : Adapter,
 ) -> Bool
 

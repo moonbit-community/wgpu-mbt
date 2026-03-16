@@ -48,6 +48,7 @@ options(
     "wgpu_native_api_completeness_test.mbt": [ "native" ],
     "wgpu_native_diagnostic_test.mbt": [ "native" ],
     "wgpu_native_feature_gap_test.mbt": [ "native" ],
+    "wgpu_native_feature_wrappers_test.mbt": [ "native" ],
     "wgpu_optional_symbol_or_raise_test.mbt": [ "native" ],
     "wgpu_pass_ptr_test.mbt": [ "native" ],
     "wgpu_perf_bench_test.mbt": [ "native" ],

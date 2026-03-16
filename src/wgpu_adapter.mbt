@@ -421,8 +421,285 @@ pub fn Adapter::request_device_sync_spirv_shader_passthrough(
 }
 
 ///|
+pub fn Adapter::request_device_sync_native_feature(
+  self : Adapter,
+  instance : Instance,
+  native_feature_u32 : UInt,
+) -> Device raise WgpuError {
+  self.request_device_sync_with_features(instance, [native_feature_u32])
+}
+
+///|
+pub fn Adapter::request_device_sync_buffer_binding_array(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_BUFFER_BINDING_ARRAY,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_storage_resource_binding_array(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_STORAGE_RESOURCE_BINDING_ARRAY,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_partially_bound_binding_array(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_PARTIALLY_BOUND_BINDING_ARRAY,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_sampled_texture_and_storage_buffer_array_non_uniform_indexing(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_SAMPLED_TEXTURE_AND_STORAGE_BUFFER_ARRAY_NON_UNIFORM_INDEXING,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_vertex_writable_storage(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_VERTEX_WRITABLE_STORAGE,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_multi_draw_indirect_count(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_MULTI_DRAW_INDIRECT_COUNT,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_mappable_primary_buffers(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_MAPPABLE_PRIMARY_BUFFERS,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_texture_format16bit_norm(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_TEXTURE_FORMAT16BIT_NORM,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_texture_compression_astc_hdr(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_TEXTURE_COMPRESSION_ASTC_HDR,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_polygon_mode_line(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_POLYGON_MODE_LINE,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_polygon_mode_point(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_POLYGON_MODE_POINT,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_conservative_rasterization(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_CONSERVATIVE_RASTERIZATION,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_texture_format_nv12(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_TEXTURE_FORMAT_NV12,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_vertex_attribute64bit(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_VERTEX_ATTRIBUTE64BIT,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_ray_query(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(instance, NATIVE_FEATURE_RAY_QUERY)
+}
+
+///|
+pub fn Adapter::request_device_sync_shader_f64(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(instance, NATIVE_FEATURE_SHADER_F64)
+}
+
+///|
+pub fn Adapter::request_device_sync_shader_i16(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(instance, NATIVE_FEATURE_SHADER_I16)
+}
+
+///|
+pub fn Adapter::request_device_sync_shader_int64(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(instance, NATIVE_FEATURE_SHADER_INT64)
+}
+
+///|
+pub fn Adapter::request_device_sync_shader_primitive_index(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_SHADER_PRIMITIVE_INDEX,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_shader_early_depth_test(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_SHADER_EARLY_DEPTH_TEST,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_subgroup(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(instance, NATIVE_FEATURE_SUBGROUP)
+}
+
+///|
+pub fn Adapter::request_device_sync_subgroup_vertex(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_SUBGROUP_VERTEX,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_subgroup_barrier(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_SUBGROUP_BARRIER,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_texture_adapter_specific_format_features(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES,
+  )
+}
+
+///|
 pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool {
   @c.adapter_has_feature_timestamp_query(self.raw)
+}
+
+///|
+pub fn Adapter::has_feature_native_u32(
+  self : Adapter,
+  native_feature_u32 : UInt,
+) -> Bool {
+  self.supported_features_contains_u32(native_feature_u32)
 }
 
 ///|
@@ -466,6 +743,172 @@ pub fn Adapter::has_feature_native_spirv_shader_passthrough(
   self : Adapter,
 ) -> Bool {
   @c.adapter_has_feature_native_spirv_shader_passthrough(self.raw)
+}
+
+///|
+pub fn Adapter::has_feature_native_texture_binding_array(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_BINDING_ARRAY)
+}
+
+///|
+pub fn Adapter::has_feature_native_buffer_binding_array(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_BUFFER_BINDING_ARRAY)
+}
+
+///|
+pub fn Adapter::has_feature_native_storage_resource_binding_array(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_STORAGE_RESOURCE_BINDING_ARRAY)
+}
+
+///|
+pub fn Adapter::has_feature_native_partially_bound_binding_array(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_PARTIALLY_BOUND_BINDING_ARRAY)
+}
+
+///|
+pub fn Adapter::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(
+    NATIVE_FEATURE_UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
+  )
+}
+
+///|
+pub fn Adapter::has_feature_native_sampled_texture_and_storage_buffer_array_non_uniform_indexing(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(
+    NATIVE_FEATURE_SAMPLED_TEXTURE_AND_STORAGE_BUFFER_ARRAY_NON_UNIFORM_INDEXING,
+  )
+}
+
+///|
+pub fn Adapter::has_feature_native_vertex_writable_storage(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_VERTEX_WRITABLE_STORAGE)
+}
+
+///|
+pub fn Adapter::has_feature_native_multi_draw_indirect_count(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_MULTI_DRAW_INDIRECT_COUNT)
+}
+
+///|
+pub fn Adapter::has_feature_native_mappable_primary_buffers(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_MAPPABLE_PRIMARY_BUFFERS)
+}
+
+///|
+pub fn Adapter::has_feature_native_texture_format16bit_norm(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_FORMAT16BIT_NORM)
+}
+
+///|
+pub fn Adapter::has_feature_native_texture_compression_astc_hdr(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_COMPRESSION_ASTC_HDR)
+}
+
+///|
+pub fn Adapter::has_feature_native_polygon_mode_line(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_POLYGON_MODE_LINE)
+}
+
+///|
+pub fn Adapter::has_feature_native_polygon_mode_point(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_POLYGON_MODE_POINT)
+}
+
+///|
+pub fn Adapter::has_feature_native_conservative_rasterization(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_CONSERVATIVE_RASTERIZATION)
+}
+
+///|
+pub fn Adapter::has_feature_native_texture_format_nv12(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_FORMAT_NV12)
+}
+
+///|
+pub fn Adapter::has_feature_native_vertex_attribute64bit(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_VERTEX_ATTRIBUTE64BIT)
+}
+
+///|
+pub fn Adapter::has_feature_native_ray_query(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_RAY_QUERY)
+}
+
+///|
+pub fn Adapter::has_feature_native_shader_f64(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_F64)
+}
+
+///|
+pub fn Adapter::has_feature_native_shader_i16(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_I16)
+}
+
+///|
+pub fn Adapter::has_feature_native_shader_int64(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_INT64)
+}
+
+///|
+pub fn Adapter::has_feature_native_shader_primitive_index(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_PRIMITIVE_INDEX)
+}
+
+///|
+pub fn Adapter::has_feature_native_shader_early_depth_test(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_EARLY_DEPTH_TEST)
+}
+
+///|
+pub fn Adapter::has_feature_native_subgroup(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SUBGROUP)
+}
+
+///|
+pub fn Adapter::has_feature_native_subgroup_vertex(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SUBGROUP_VERTEX)
+}
+
+///|
+pub fn Adapter::has_feature_native_subgroup_barrier(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SUBGROUP_BARRIER)
+}
+
+///|
+pub fn Adapter::has_feature_native_texture_adapter_specific_format_features(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(
+    NATIVE_FEATURE_TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES,
+  )
 }
 
 ///|
