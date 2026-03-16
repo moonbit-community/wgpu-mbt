@@ -2611,6 +2611,13 @@ declare pub fn Queue::on_submitted_work_done_sync(
 
 ///|
 #declaration_only
+declare pub fn Queue::on_submitted_work_done_sync_or_raise(
+  self : Queue,
+  instance : Instance,
+) -> Unit raise QueueWorkDoneError
+
+///|
+#declaration_only
 declare pub fn Queue::on_submitted_work_done_future_id_u64(
   self : Queue,
 ) -> UInt64

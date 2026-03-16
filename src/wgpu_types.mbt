@@ -748,6 +748,42 @@ pub fn SurfacePresentError::message(self : SurfacePresentError) -> String {
 }
 
 ///|
+suberror QueueWorkDoneError {
+  QueueWorkDoneError(UInt)
+}
+
+///|
+pub fn QueueWorkDoneError::status_u32(self : QueueWorkDoneError) -> UInt {
+  let QueueWorkDoneError(status) = self
+  status
+}
+
+///|
+fn queue_work_done_status_name(status : UInt) -> String {
+  if status == QUEUE_WORK_DONE_STATUS_SUCCESS {
+    "Success"
+  } else if status == QUEUE_WORK_DONE_STATUS_INSTANCE_DROPPED {
+    "InstanceDropped"
+  } else if status == QUEUE_WORK_DONE_STATUS_ERROR {
+    "Error"
+  } else if status == QUEUE_WORK_DONE_STATUS_UNKNOWN {
+    "Unknown"
+  } else {
+    "Unknown"
+  }
+}
+
+///|
+pub fn QueueWorkDoneError::message(self : QueueWorkDoneError) -> String {
+  let status = self.status_u32()
+  "wgpuQueueOnSubmittedWorkDone failed (status=" +
+  queue_work_done_status_name(status) +
+  ", u32=" +
+  status.to_string() +
+  ")"
+}
+
+///|
 pub struct PipelineLayout {
   raw : @c.PipelineLayout
 }

@@ -1268,6 +1268,10 @@ type OptionalSymbolError
 pub fn OptionalSymbolError::kind_u32(Self) -> UInt
 pub fn OptionalSymbolError::message(Self) -> String
 
+type QueueWorkDoneError
+pub fn QueueWorkDoneError::message(Self) -> String
+pub fn QueueWorkDoneError::status_u32(Self) -> UInt
+
 type RenderPipelineDescError
 pub fn RenderPipelineDescError::message(Self) -> String
 
@@ -1945,6 +1949,7 @@ pub fn Queue::add_ref_raw(Self) -> Unit
 pub fn Queue::get_timestamp_period(Self) -> Float
 pub fn Queue::on_submitted_work_done_future_id_u64(Self) -> UInt64
 pub fn Queue::on_submitted_work_done_sync(Self, Instance) -> UInt
+pub fn Queue::on_submitted_work_done_sync_or_raise(Self, Instance) -> Unit raise QueueWorkDoneError
 pub fn Queue::raw_handle(Self) -> @c.WGPUQueue
 pub fn Queue::release(Self) -> Unit
 pub fn Queue::release_raw(Self) -> Unit

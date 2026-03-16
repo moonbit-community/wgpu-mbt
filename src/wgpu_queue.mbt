@@ -58,6 +58,17 @@ pub fn Queue::on_submitted_work_done_sync(
 }
 
 ///|
+pub fn Queue::on_submitted_work_done_sync_or_raise(
+  self : Queue,
+  instance : Instance,
+) -> Unit raise QueueWorkDoneError {
+  let status = self.on_submitted_work_done_sync(instance)
+  if status != QUEUE_WORK_DONE_STATUS_SUCCESS {
+    raise QueueWorkDoneError(status)
+  }
+}
+
+///|
 pub fn Queue::on_submitted_work_done_future_id_u64(self : Queue) -> UInt64 {
   @c.queue_on_submitted_work_done_future_id_u64(self.raw)
 }
