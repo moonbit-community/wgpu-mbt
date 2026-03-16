@@ -54,7 +54,7 @@ pub fn Adapter::request_device_future_id_u64(
   self : Adapter,
   descriptor? : @c.WGPUDeviceDescriptorPtr = @c.null_device_descriptor_ptr(),
 ) -> UInt64 {
-  if !native_available() {
+  if !native_available() || !native_supported() {
     return 0UL
   }
   if !native_has_symbol("wgpuAdapterRequestDevice") {

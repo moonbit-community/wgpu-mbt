@@ -120,6 +120,24 @@ jobs:
           set -euo pipefail
           moon bench --target native -p Milky2018/wgpu_mbt/tests -f wgpu_perf_bench_test.mbt
 
+      - name: Clean build artifacts (before static link verification)
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon clean
+
+      - name: Probe wgpu smoke (static link)
+        shell: bash
+        run: |
+          set -euo pipefail
+          MBT_WGPU_LINK_MODE=static moon run --target native src/cmd/main/main.mbt
+
+      - name: Run full test suite (static link)
+        shell: bash
+        run: |
+          set -euo pipefail
+          MBT_WGPU_LINK_MODE=static moon test --target native --test-failure-json
+
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
         shell: bash
@@ -129,8 +147,12 @@ jobs:
           MBT_WGPU_LOG_STDERR: "1"
           MBT_WGPU_LOG_LEVEL: "debug"
         run: |
-          set -euo pipefail
+          set +e
+          echo "[dynamic]"
           moon run --target native src/cmd/main/main.mbt
+          echo "[static]"
+          moon clean
+          MBT_WGPU_LINK_MODE=static moon run --target native src/cmd/main/main.mbt
 
       - name: Package contents sanity (exclude artifacts)
         shell: bash
@@ -223,6 +245,24 @@ jobs:
           set -euo pipefail
           moon bench --target native -p Milky2018/wgpu_mbt/tests -f wgpu_perf_bench_test.mbt
 
+      - name: Clean build artifacts (before static link verification)
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon clean
+
+      - name: Probe wgpu smoke (static link)
+        shell: bash
+        run: |
+          set -euo pipefail
+          MBT_WGPU_LINK_MODE=static moon run --target native src/cmd/main/main.mbt
+
+      - name: Run full test suite (static link)
+        shell: bash
+        run: |
+          set -euo pipefail
+          MBT_WGPU_LINK_MODE=static moon test --target native --test-failure-json
+
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
         shell: bash
@@ -232,8 +272,12 @@ jobs:
           MBT_WGPU_LOG_STDERR: "1"
           MBT_WGPU_LOG_LEVEL: "debug"
         run: |
-          set -euo pipefail
+          set +e
+          echo "[dynamic]"
           moon run --target native src/cmd/main/main.mbt
+          echo "[static]"
+          moon clean
+          MBT_WGPU_LINK_MODE=static moon run --target native src/cmd/main/main.mbt
 
   windows:
     name: Windows (Lavapipe Vulkan, full)
@@ -409,6 +453,26 @@ jobs:
           $ErrorActionPreference = "Stop"
           moon bench --target native -p Milky2018/wgpu_mbt/tests -f wgpu_perf_bench_test.mbt
 
+      - name: Clean build artifacts (before static link verification)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          moon clean
+
+      - name: Probe wgpu smoke (static link)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $env:MBT_WGPU_LINK_MODE = "static"
+          moon run --target native src/cmd/main/main.mbt
+
+      - name: Run full test suite (static link)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $env:MBT_WGPU_LINK_MODE = "static"
+          moon test --target native --test-failure-json
+
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
         shell: pwsh
@@ -419,5 +483,10 @@ jobs:
           MBT_WGPU_LOG_LEVEL: "debug"
           VK_LOADER_DEBUG: all
         run: |
-          $ErrorActionPreference = "Stop"
+          $ErrorActionPreference = "Continue"
+          Write-Host "[dynamic]"
+          moon run --target native src/cmd/main/main.mbt
+          Write-Host "[static]"
+          moon clean
+          $env:MBT_WGPU_LINK_MODE = "static"
           moon run --target native src/cmd/main/main.mbt

@@ -55,6 +55,22 @@ pub extern "C" fn platform_is_windows() -> Bool = "mbt_wgpu_platform_is_windows"
 pub extern "C" fn native_available_u32() -> UInt = "mbt_wgpu_native_available_u32"
 
 ///|
+pub extern "C" fn native_supported_u32() -> UInt = "mbt_wgpu_native_supported_u32"
+
+///|
+pub extern "C" fn native_static_linked_u32() -> UInt = "mbt_wgpu_native_static_linked_u32"
+
+///|
+pub extern "C" fn native_expected_tag_utf8_len() -> UInt64 = "mbt_wgpu_native_expected_tag_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn native_expected_tag_utf8(
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_native_expected_tag_utf8"
+
+///|
 pub extern "C" fn native_diagnostic_utf8_len() -> UInt64 = "mbt_wgpu_native_diagnostic_utf8_len"
 
 ///|

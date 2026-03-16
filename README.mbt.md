@@ -23,17 +23,26 @@ MoonBit bindings for the `wgpu-native` C API (WebGPU), targeting **native** back
 }
 ```
 
-2. Install a matching `libwgpu_native` binary from upstream release assets:
+2. Choose a link mode:
+
+- **Dynamic** (default): extract a matching upstream release archive
+- **Static**: set `MBT_WGPU_LINK_MODE=static` before `moon build` / `moon test`
+
+3. Dynamic mode uses the official upstream release assets:
 
 - <https://github.com/gfx-rs/wgpu-native/releases/tag/v27.0.4.0>
 
-3. Put the library in the default location (recommended):
+Recommended dynamic install: extract the archive into `$HOME/.local` (or `%USERPROFILE%\\.local` on Windows), so the release metadata is preserved:
 
 - macOS: `$HOME/.local/lib/libwgpu_native.dylib`
 - Linux: `$HOME/.local/lib/libwgpu_native.so`
 - Windows: `%USERPROFILE%\\.local\\lib\\wgpu_native.dll`
+- metadata tag: `.../wgpu-native-meta/wgpu-native-git-tag`
 
-Or set `MBT_WGPU_NATIVE_LIB` to an absolute path.
+Or set `MBT_WGPU_NATIVE_LIB` to an absolute library path inside an extracted upstream release tree.
+
+Static mode does not need any extra downstream link flags. The module prebuild hook downloads a
+verified upstream static archive for the current host platform and wires the link flags automatically.
 
 ## Quick Example
 
@@ -181,12 +190,17 @@ Drive completion with `Instance::process_events()` or `Instance::wait_any_one(..
 
 ## Runtime Behavior
 
-- This package does **not** statically link `wgpu-native`; it loads the native library at runtime.
-- Library lookup order:
+- Dynamic mode loads `libwgpu_native` at runtime.
+- Static mode links the verified upstream static library into the final native binary.
+- Dynamic library lookup order:
   1) `MBT_WGPU_NATIVE_LIB`
   2) default per-user path listed above
-- `@wgpu.native_available()` checks whether core symbols are loadable.
-- `@wgpu.native_diagnostic()` returns a loader diagnostic string.
+- `@wgpu.native_available()` checks whether the core library/symbols are loadable.
+- `@wgpu.native_supported()` checks whether the current runtime matches the supported upstream release.
+- `@wgpu.native_static_linked()` reports whether this build used static linking.
+- `@wgpu.native_expected_release_tag()` returns the supported upstream release tag.
+- `@wgpu.native_diagnostic()` returns a combined loader/support diagnostic string.
+- For custom dynamic builds without release metadata, set `MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1` to bypass strict release verification.
 
 ## Optional Feature Gates
 
@@ -208,10 +222,22 @@ Some `wgpu-native` builds still have unimplemented or unstable entry points.
   - `MBT_WGPU_DISABLE_PIPELINE_ASYNC=1`
   - `MBT_WGPU_DISABLE_COMPILATION_INFO=1`
 
+## Known Upstream Gaps
+
+These are still blocked by upstream `wgpu-native` headers/releases, so `wgpu_mbt` does not expose
+fake or unstable wrappers for them:
+
+- `AddressModeClampToZero`
+- `AddressModeClampToBorder`
+- native `ClearTexture`
+- native `Multiview`
+
 ## Troubleshooting
 
-If startup fails at the first WebGPU call, usually `libwgpu_native` is missing or not loadable.
+If startup fails at the first WebGPU call, usually `libwgpu_native` is missing, unsupported, or not loadable.
 
 - Check diagnostics: `@wgpu.native_diagnostic()`
+- Verify that you extracted the official upstream archive, not just the bare library file
 - Verify file path and filename for your platform
 - If using a custom location, set `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)`
+- For static mode, set `MBT_WGPU_LINK_MODE=static` before building the downstream binary/test target

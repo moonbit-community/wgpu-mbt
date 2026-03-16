@@ -65,7 +65,7 @@ pub fn ShaderModule::get_compilation_info_sync_or_raise(
   self : ShaderModule,
   instance : Instance,
 ) -> CompilationInfo raise OptionalSymbolError {
-  if !native_available() {
+  if !native_available() || !native_supported() {
     raise OptionalSymbolNativeUnavailable(native_diagnostic())
   }
   if !native_has_symbol("wgpuShaderModuleGetCompilationInfo") {

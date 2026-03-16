@@ -43,60 +43,73 @@ pub fn get_version() -> UInt {
 }
 
 ///|
+fn read_utf8_via(
+  len_fn : () -> UInt64,
+  read_fn : (Bytes, UInt64) -> Bool,
+) -> String {
+  let len = len_fn()
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = read_fn(out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
 pub fn native_available() -> Bool {
   @c.native_available_u32() != 0U
 }
 
 ///|
+pub fn native_supported() -> Bool {
+  @c.native_supported_u32() != 0U
+}
+
+///|
+pub fn native_static_linked() -> Bool {
+  @c.native_static_linked_u32() != 0U
+}
+
+///|
+pub fn native_expected_release_tag() -> String {
+  read_utf8_via(@c.native_expected_tag_utf8_len, @c.native_expected_tag_utf8)
+}
+
+///|
 pub fn native_diagnostic() -> String {
-  let len = @c.native_diagnostic_utf8_len()
-  if len == 0UL {
-    ""
-  } else {
-    let out = Bytes::new(len.to_int())
-    let ok = @c.native_diagnostic_utf8(out, len)
-    if ok {
-      @utf8.decode_lossy(out[:], ignore_bom=true)
-    } else {
-      ""
-    }
-  }
+  read_utf8_via(@c.native_diagnostic_utf8_len, @c.native_diagnostic_utf8)
 }
 
 ///|
 pub fn last_request_adapter_message() -> String {
-  let len = @c.instance_request_adapter_sync_last_message_utf8_len()
-  if len == 0UL {
-    ""
-  } else {
-    let out = Bytes::new(len.to_int())
-    let ok = @c.instance_request_adapter_sync_last_message_utf8(out, len)
-    if ok {
-      @utf8.decode_lossy(out[:], ignore_bom=true)
-    } else {
-      ""
-    }
-  }
+  read_utf8_via(
+    @c.instance_request_adapter_sync_last_message_utf8_len, @c.instance_request_adapter_sync_last_message_utf8,
+  )
 }
 
 ///|
 pub fn last_request_device_message() -> String {
-  let len = @c.adapter_request_device_sync_last_message_utf8_len()
-  if len == 0UL {
-    ""
-  } else {
-    let out = Bytes::new(len.to_int())
-    let ok = @c.adapter_request_device_sync_last_message_utf8(out, len)
-    if ok {
-      @utf8.decode_lossy(out[:], ignore_bom=true)
-    } else {
-      ""
-    }
-  }
+  read_utf8_via(
+    @c.adapter_request_device_sync_last_message_utf8_len, @c.adapter_request_device_sync_last_message_utf8,
+  )
+}
+
+///|
+fn native_ready() -> Bool {
+  native_available() && native_supported()
 }
 
 ///|
 pub fn native_has_symbol(name : String) -> Bool {
+  if !native_ready() {
+    return false
+  }
   let b = utf8_bytes(name)
   @c.optional_sym_present_utf8(b, b.length().to_uint64())
 }
@@ -105,6 +118,9 @@ pub fn native_has_symbol(name : String) -> Bool {
 pub fn require_native() -> Unit raise WgpuError {
   if !native_available() {
     raise WgpuNativeUnavailable(native_diagnostic())
+  }
+  if !native_supported() {
+    raise WgpuNativeUnsupported(native_diagnostic())
   }
 }
 

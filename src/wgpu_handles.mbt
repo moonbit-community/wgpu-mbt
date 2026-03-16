@@ -448,7 +448,7 @@ pub fn Device::create_compute_pipeline_async_sync_ptr_or_raise(
   instance : Instance,
   descriptor : @c.WGPUComputePipelineDescriptorPtr,
 ) -> ComputePipeline raise OptionalSymbolError {
-  if !native_available() {
+  if !native_available() || !native_supported() {
     raise OptionalSymbolNativeUnavailable(native_diagnostic())
   }
   if !native_has_symbol("wgpuDeviceCreateComputePipelineAsync") {
@@ -554,7 +554,7 @@ pub fn Device::create_render_pipeline_async_sync_ptr_or_raise(
   instance : Instance,
   descriptor : @c.WGPURenderPipelineDescriptorPtr,
 ) -> RenderPipeline raise OptionalSymbolError {
-  if !native_available() {
+  if !native_available() || !native_supported() {
     raise OptionalSymbolNativeUnavailable(native_diagnostic())
   }
   if !native_has_symbol("wgpuDeviceCreateRenderPipelineAsync") {

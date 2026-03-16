@@ -22,6 +22,18 @@ declare pub fn native_available() -> Bool
 
 ///|
 #declaration_only
+declare pub fn native_supported() -> Bool
+
+///|
+#declaration_only
+declare pub fn native_static_linked() -> Bool
+
+///|
+#declaration_only
+declare pub fn native_expected_release_tag() -> String
+
+///|
+#declaration_only
 declare pub fn native_diagnostic() -> String
 
 ///|

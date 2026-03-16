@@ -15,6 +15,8 @@
 #include "wgpu_native_shim.h"
 #include "wgpu_dynload.h"
 
+#if !MBT_WGPU_STATIC_LINK
+
 static void *mbt_wgpu_sym(const char *name) {
   return mbt_wgpu_native_sym_required(name);
 }
@@ -1715,3 +1717,5 @@ void wgpuRenderPassEncoderWriteTimestamp(WGPURenderPassEncoder renderPassEncoder
   }
   mbt_real_wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder, querySet, queryIndex);
 }
+
+#endif

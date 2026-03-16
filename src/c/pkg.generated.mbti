@@ -810,6 +810,14 @@ pub fn native_diagnostic_utf8(Bytes, UInt64) -> Bool
 
 pub fn native_diagnostic_utf8_len() -> UInt64
 
+pub fn native_expected_tag_utf8(Bytes, UInt64) -> Bool
+
+pub fn native_expected_tag_utf8_len() -> UInt64
+
+pub fn native_static_linked_u32() -> UInt
+
+pub fn native_supported_u32() -> UInt
+
 pub fn null_adapter() -> WGPUAdapter
 
 pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr

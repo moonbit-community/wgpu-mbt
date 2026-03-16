@@ -480,6 +480,7 @@ suberror RenderPipelineDescError {
 ///|
 pub suberror WgpuError {
   WgpuNativeUnavailable(String)
+  WgpuNativeUnsupported(String)
   WgpuNativeMissingSymbol(String, String)
   WgpuRequestAdapterFailed(UInt)
   WgpuRequestDeviceFailed(UInt)
@@ -521,6 +522,7 @@ fn request_device_status_name(status : UInt) -> String {
 pub fn WgpuError::message(self : WgpuError) -> String {
   match self {
     WgpuNativeUnavailable(diag) => "native library is unavailable\n" + diag
+    WgpuNativeUnsupported(diag) => "native library is unsupported\n" + diag
     WgpuNativeMissingSymbol(sym, diag) =>
       "native library is missing symbol: " + sym + "\n" + diag
     WgpuRequestAdapterFailed(status) => {

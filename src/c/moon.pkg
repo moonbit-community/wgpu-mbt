@@ -2,6 +2,7 @@ import {
 }
 
 options(
+  link: { "native": { "stub-cc-flags": "${build.WGPU_MBT_C_STUB_CC_FLAGS}" } },
   "native-stub": [
     "wgpu_dynload.c",
     "wgpu_dyn.c",

@@ -232,7 +232,7 @@ pub fn Instance::request_adapter_future_id_u64(
   self : Instance,
   options? : @c.WGPURequestAdapterOptionsPtr = @c.null_request_adapter_options_ptr(),
 ) -> UInt64 {
-  if !native_available() {
+  if !native_available() || !native_supported() {
     return 0UL
   }
   if !native_has_symbol("wgpuInstanceRequestAdapter") {

@@ -1,8 +1,10 @@
 // Shared helper for locating/loading `libwgpu_native` and resolving symbols.
 //
-// This is compiled into our native-stub archive. Both the generated `wgpu_dyn.c`
-// and hand-written optional symbol probes should go through this helper so the
-// lib path and loader behavior stay consistent.
+// This is compiled into our native-stub archive. In dynamic mode, both the
+// generated `wgpu_dyn.c` and hand-written optional symbol probes go through this
+// helper so lib path, version gating and loader behavior stay consistent.
+// In static mode, this helper reports build-time verified support information
+// and resolves the small set of optional symbols we intentionally gate.
 
 #pragma once
 
@@ -35,6 +37,17 @@ void *mbt_wgpu_native_sym_optional(const char *name);
 // Returns 1 if we can open `libwgpu_native` and resolve a core symbol.
 // Never aborts.
 uint32_t mbt_wgpu_native_available_u32(void);
+
+// Returns 1 if the currently configured/loaded native runtime is from a known
+// supported release (or a caller explicitly overrides verification).
+uint32_t mbt_wgpu_native_supported_u32(void);
+
+// Returns 1 when `MBT_WGPU_LINK_MODE=static` was used at build time.
+uint32_t mbt_wgpu_native_static_linked_u32(void);
+
+// Returns the expected upstream release tag compiled into this build.
+uint64_t mbt_wgpu_native_expected_tag_utf8_len(void);
+int32_t mbt_wgpu_native_expected_tag_utf8(uint8_t *out, uint64_t out_len);
 
 // Returns a diagnostic message about how wgpu-native would be located/loaded.
 // This function never aborts.

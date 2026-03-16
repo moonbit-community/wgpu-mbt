@@ -17,6 +17,9 @@ fn main {
   try {
     println("native diagnostic:")
     println(@wgpu.native_diagnostic())
+    println("native supported: " + @wgpu.native_supported().to_string())
+    println("native static linked: " + @wgpu.native_static_linked().to_string())
+    println("expected release tag: " + @wgpu.native_expected_release_tag())
     println("wgpuGetVersion: " + @wgpu_c.wgpuGetVersion().to_string())
     let instance = @wgpu.Instance::create()
     if @wgpu.platform_is_linux() {
