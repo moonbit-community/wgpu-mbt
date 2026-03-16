@@ -209,6 +209,7 @@ typedef struct {
   _Atomic uint32_t done_u32;
   uint32_t status_u32;
   WGPUDevice device;
+  WGPUAdapter adapter;
   uint64_t message_len_u64;
   uint8_t message[MBT_WGPU_ASYNC_MSG_MAX_LEN];
 } mbt_async_request_device_slot_t;
@@ -578,6 +579,7 @@ uint64_t mbt_wgpu_adapter_request_device_future_id_u64(
     mbt_wait_any_remove_id(id);
     return 0u;
   }
+  slot->adapter = adapter;
 
   WGPURequestDeviceCallbackInfo cb = {
       .nextInChain = NULL,
@@ -608,6 +610,9 @@ WGPUDevice mbt_wgpu_adapter_request_device_async_device(uint64_t future_id) {
   }
   if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
     return NULL;
+  }
+  if (slot->device && slot->adapter) {
+    mbt_wgpu_device_info_cache_register(slot->device, slot->adapter);
   }
   return slot->device;
 }

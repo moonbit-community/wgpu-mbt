@@ -57,6 +57,10 @@ test "wgpu async future API: request adapter and device" {
     }
 
     let device = adapter.request_device_async_take_or_raise(device_future)
+    let backend = device.info_backend_type_u32()
+    inspect(backend != @wgpu.BACKEND_TYPE_NULL, content="true")
+    let vendor = device.info_vendor()
+    ignore(vendor.length())
     let queue = device.queue()
     queue.release()
     device.release()
