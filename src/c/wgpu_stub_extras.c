@@ -839,75 +839,30 @@ int32_t mbt_wgpu_adapter_info_description_utf8(WGPUAdapter adapter, uint8_t *out
   return true;
 }
 
-uint32_t mbt_wgpu_adapter_limits_max_texture_dimension_2d_u32(WGPUAdapter adapter) {
-  if (!adapter) {
-    return 0u;
+static bool mbt_wgpu_adapter_get_limits_base(WGPUAdapter adapter, WGPULimits *out) {
+  if (!adapter || !out) {
+    return false;
   }
-  WGPULimits limits = {0};
-  (void)wgpuAdapterGetLimits(adapter, &limits);
-  return limits.maxTextureDimension2D;
+  *out = (WGPULimits){0};
+  return wgpuAdapterGetLimits(adapter, out) == WGPUStatus_Success;
 }
 
-uint32_t mbt_wgpu_device_limits_max_texture_dimension_2d_u32(WGPUDevice device) {
-  if (!device) {
-    return 0u;
+static bool mbt_wgpu_device_get_limits_base(WGPUDevice device, WGPULimits *out) {
+  if (!device || !out) {
+    return false;
   }
-  WGPULimits limits = {0};
-  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
-  if (st != WGPUStatus_Success) {
-    return 0u;
-  }
-  return limits.maxTextureDimension2D;
+  *out = (WGPULimits){0};
+  return wgpuDeviceGetLimits(device, out) == WGPUStatus_Success;
 }
 
-uint32_t mbt_wgpu_adapter_limits_max_bind_groups_u32(WGPUAdapter adapter) {
-  if (!adapter) {
-    return 0u;
+static bool mbt_wgpu_adapter_get_limits_with_native(WGPUAdapter adapter,
+                                                     WGPULimits *limits_out,
+                                                     WGPUNativeLimits *native_out) {
+  if (!adapter || !limits_out || !native_out) {
+    return false;
   }
-  WGPULimits limits = {0};
-  (void)wgpuAdapterGetLimits(adapter, &limits);
-  return limits.maxBindGroups;
-}
-
-uint32_t mbt_wgpu_device_limits_max_bind_groups_u32(WGPUDevice device) {
-  if (!device) {
-    return 0u;
-  }
-  WGPULimits limits = {0};
-  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
-  if (st != WGPUStatus_Success) {
-    return 0u;
-  }
-  return limits.maxBindGroups;
-}
-
-uint64_t mbt_wgpu_adapter_limits_max_buffer_size_u64(WGPUAdapter adapter) {
-  if (!adapter) {
-    return 0u;
-  }
-  WGPULimits limits = {0};
-  (void)wgpuAdapterGetLimits(adapter, &limits);
-  return (uint64_t)limits.maxBufferSize;
-}
-
-uint64_t mbt_wgpu_device_limits_max_buffer_size_u64(WGPUDevice device) {
-  if (!device) {
-    return 0u;
-  }
-  WGPULimits limits = {0};
-  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
-  if (st != WGPUStatus_Success) {
-    return 0u;
-  }
-  return (uint64_t)limits.maxBufferSize;
-}
-
-uint32_t mbt_wgpu_adapter_limits_max_push_constant_size_u32(WGPUAdapter adapter) {
-  if (!adapter) {
-    return 0u;
-  }
-  WGPULimits limits = {0};
-  WGPUNativeLimits native_limits = {
+  *limits_out = (WGPULimits){0};
+  *native_out = (WGPUNativeLimits){
       .chain =
           (WGPUChainedStructOut){
               .next = NULL,
@@ -916,88 +871,269 @@ uint32_t mbt_wgpu_adapter_limits_max_push_constant_size_u32(WGPUAdapter adapter)
       .maxPushConstantSize = 0u,
       .maxNonSamplerBindings = 0u,
   };
-  limits.nextInChain = &native_limits.chain;
-  WGPUStatus st = wgpuAdapterGetLimits(adapter, &limits);
-  if (st != WGPUStatus_Success) {
+  limits_out->nextInChain = &native_out->chain;
+  if (wgpuAdapterGetLimits(adapter, limits_out) == WGPUStatus_Success) {
+    return true;
+  }
+  // Fallback for runtimes that reject the native out-chain.
+  limits_out->nextInChain = NULL;
+  return wgpuAdapterGetLimits(adapter, limits_out) == WGPUStatus_Success;
+}
+
+static bool mbt_wgpu_device_get_limits_with_native(WGPUDevice device,
+                                                    WGPULimits *limits_out,
+                                                    WGPUNativeLimits *native_out) {
+  if (!device || !limits_out || !native_out) {
+    return false;
+  }
+  *limits_out = (WGPULimits){0};
+  *native_out = (WGPUNativeLimits){
+      .chain =
+          (WGPUChainedStructOut){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_NativeLimits,
+          },
+      .maxPushConstantSize = 0u,
+      .maxNonSamplerBindings = 0u,
+  };
+  limits_out->nextInChain = &native_out->chain;
+  if (wgpuDeviceGetLimits(device, limits_out) == WGPUStatus_Success) {
+    return true;
+  }
+  // Fallback for runtimes that reject the native out-chain.
+  limits_out->nextInChain = NULL;
+  return wgpuDeviceGetLimits(device, limits_out) == WGPUStatus_Success;
+}
+
+#define MBT_DEFINE_ADAPTER_LIMIT_U32(FN_NAME, FIELD_NAME)    \
+  uint32_t FN_NAME(WGPUAdapter adapter) {                    \
+    WGPULimits limits = {0};                                 \
+    if (!mbt_wgpu_adapter_get_limits_base(adapter, &limits)) \
+      return 0u;                                             \
+    return limits.FIELD_NAME;                                \
+  }
+
+#define MBT_DEFINE_DEVICE_LIMIT_U32(FN_NAME, FIELD_NAME)    \
+  uint32_t FN_NAME(WGPUDevice device) {                     \
+    WGPULimits limits = {0};                                \
+    if (!mbt_wgpu_device_get_limits_base(device, &limits))  \
+      return 0u;                                            \
+    return limits.FIELD_NAME;                               \
+  }
+
+#define MBT_DEFINE_ADAPTER_LIMIT_U64(FN_NAME, FIELD_NAME)    \
+  uint64_t FN_NAME(WGPUAdapter adapter) {                    \
+    WGPULimits limits = {0};                                 \
+    if (!mbt_wgpu_adapter_get_limits_base(adapter, &limits)) \
+      return 0u;                                             \
+    return (uint64_t)limits.FIELD_NAME;                      \
+  }
+
+#define MBT_DEFINE_DEVICE_LIMIT_U64(FN_NAME, FIELD_NAME)    \
+  uint64_t FN_NAME(WGPUDevice device) {                     \
+    WGPULimits limits = {0};                                \
+    if (!mbt_wgpu_device_get_limits_base(device, &limits))  \
+      return 0u;                                            \
+    return (uint64_t)limits.FIELD_NAME;                     \
+  }
+
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_texture_dimension_1d_u32,
+                             maxTextureDimension1D)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_texture_dimension_1d_u32,
+                            maxTextureDimension1D)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_texture_dimension_2d_u32,
+                             maxTextureDimension2D)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_texture_dimension_2d_u32,
+                            maxTextureDimension2D)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_texture_dimension_3d_u32,
+                             maxTextureDimension3D)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_texture_dimension_3d_u32,
+                            maxTextureDimension3D)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_texture_array_layers_u32,
+                             maxTextureArrayLayers)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_texture_array_layers_u32,
+                            maxTextureArrayLayers)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_bind_groups_u32,
+                             maxBindGroups)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_bind_groups_u32,
+                            maxBindGroups)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_bind_groups_plus_vertex_buffers_u32,
+    maxBindGroupsPlusVertexBuffers)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_bind_groups_plus_vertex_buffers_u32,
+    maxBindGroupsPlusVertexBuffers)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_bindings_per_bind_group_u32,
+                             maxBindingsPerBindGroup)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_bindings_per_bind_group_u32,
+                            maxBindingsPerBindGroup)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32,
+    maxDynamicUniformBuffersPerPipelineLayout)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32,
+    maxDynamicUniformBuffersPerPipelineLayout)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_dynamic_storage_buffers_per_pipeline_layout_u32,
+    maxDynamicStorageBuffersPerPipelineLayout)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_dynamic_storage_buffers_per_pipeline_layout_u32,
+    maxDynamicStorageBuffersPerPipelineLayout)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_sampled_textures_per_shader_stage_u32,
+    maxSampledTexturesPerShaderStage)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_sampled_textures_per_shader_stage_u32,
+    maxSampledTexturesPerShaderStage)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_samplers_per_shader_stage_u32,
+                             maxSamplersPerShaderStage)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_samplers_per_shader_stage_u32,
+                            maxSamplersPerShaderStage)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_storage_buffers_per_shader_stage_u32,
+    maxStorageBuffersPerShaderStage)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_storage_buffers_per_shader_stage_u32,
+    maxStorageBuffersPerShaderStage)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_storage_textures_per_shader_stage_u32,
+    maxStorageTexturesPerShaderStage)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_storage_textures_per_shader_stage_u32,
+    maxStorageTexturesPerShaderStage)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_uniform_buffers_per_shader_stage_u32,
+    maxUniformBuffersPerShaderStage)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_uniform_buffers_per_shader_stage_u32,
+    maxUniformBuffersPerShaderStage)
+MBT_DEFINE_ADAPTER_LIMIT_U64(
+    mbt_wgpu_adapter_limits_max_uniform_buffer_binding_size_u64,
+    maxUniformBufferBindingSize)
+MBT_DEFINE_DEVICE_LIMIT_U64(
+    mbt_wgpu_device_limits_max_uniform_buffer_binding_size_u64,
+    maxUniformBufferBindingSize)
+MBT_DEFINE_ADAPTER_LIMIT_U64(
+    mbt_wgpu_adapter_limits_max_storage_buffer_binding_size_u64,
+    maxStorageBufferBindingSize)
+MBT_DEFINE_DEVICE_LIMIT_U64(
+    mbt_wgpu_device_limits_max_storage_buffer_binding_size_u64,
+    maxStorageBufferBindingSize)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_min_uniform_buffer_offset_alignment_u32,
+    minUniformBufferOffsetAlignment)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_min_uniform_buffer_offset_alignment_u32,
+    minUniformBufferOffsetAlignment)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_min_storage_buffer_offset_alignment_u32,
+    minStorageBufferOffsetAlignment)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_min_storage_buffer_offset_alignment_u32,
+    minStorageBufferOffsetAlignment)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_vertex_buffers_u32,
+                             maxVertexBuffers)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_vertex_buffers_u32,
+                            maxVertexBuffers)
+MBT_DEFINE_ADAPTER_LIMIT_U64(mbt_wgpu_adapter_limits_max_buffer_size_u64, maxBufferSize)
+MBT_DEFINE_DEVICE_LIMIT_U64(mbt_wgpu_device_limits_max_buffer_size_u64, maxBufferSize)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_vertex_attributes_u32,
+                             maxVertexAttributes)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_vertex_attributes_u32,
+                            maxVertexAttributes)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_vertex_buffer_array_stride_u32,
+    maxVertexBufferArrayStride)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_vertex_buffer_array_stride_u32,
+    maxVertexBufferArrayStride)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_inter_stage_shader_variables_u32,
+    maxInterStageShaderVariables)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_inter_stage_shader_variables_u32,
+    maxInterStageShaderVariables)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_color_attachments_u32,
+                             maxColorAttachments)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_color_attachments_u32,
+                            maxColorAttachments)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_color_attachment_bytes_per_sample_u32,
+    maxColorAttachmentBytesPerSample)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_color_attachment_bytes_per_sample_u32,
+    maxColorAttachmentBytesPerSample)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_compute_workgroup_storage_size_u32,
+    maxComputeWorkgroupStorageSize)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_compute_workgroup_storage_size_u32,
+    maxComputeWorkgroupStorageSize)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_compute_invocations_per_workgroup_u32,
+    maxComputeInvocationsPerWorkgroup)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_compute_invocations_per_workgroup_u32,
+    maxComputeInvocationsPerWorkgroup)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_compute_workgroup_size_x_u32,
+                             maxComputeWorkgroupSizeX)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_compute_workgroup_size_x_u32,
+                            maxComputeWorkgroupSizeX)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_compute_workgroup_size_y_u32,
+                             maxComputeWorkgroupSizeY)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_compute_workgroup_size_y_u32,
+                            maxComputeWorkgroupSizeY)
+MBT_DEFINE_ADAPTER_LIMIT_U32(mbt_wgpu_adapter_limits_max_compute_workgroup_size_z_u32,
+                             maxComputeWorkgroupSizeZ)
+MBT_DEFINE_DEVICE_LIMIT_U32(mbt_wgpu_device_limits_max_compute_workgroup_size_z_u32,
+                            maxComputeWorkgroupSizeZ)
+MBT_DEFINE_ADAPTER_LIMIT_U32(
+    mbt_wgpu_adapter_limits_max_compute_workgroups_per_dimension_u32,
+    maxComputeWorkgroupsPerDimension)
+MBT_DEFINE_DEVICE_LIMIT_U32(
+    mbt_wgpu_device_limits_max_compute_workgroups_per_dimension_u32,
+    maxComputeWorkgroupsPerDimension)
+
+uint32_t mbt_wgpu_adapter_limits_max_push_constant_size_u32(WGPUAdapter adapter) {
+  WGPULimits limits = {0};
+  WGPUNativeLimits native_limits = {0};
+  if (!mbt_wgpu_adapter_get_limits_with_native(adapter, &limits, &native_limits)) {
     return 0u;
   }
   return native_limits.maxPushConstantSize;
 }
 
 uint32_t mbt_wgpu_adapter_limits_max_non_sampler_bindings_u32(WGPUAdapter adapter) {
-  if (!adapter) {
-    return 0u;
-  }
   WGPULimits limits = {0};
-  WGPUNativeLimits native_limits = {
-      .chain =
-          (WGPUChainedStructOut){
-              .next = NULL,
-              .sType = (WGPUSType)WGPUSType_NativeLimits,
-          },
-      .maxPushConstantSize = 0u,
-      .maxNonSamplerBindings = 0u,
-  };
-  limits.nextInChain = &native_limits.chain;
-  WGPUStatus st = wgpuAdapterGetLimits(adapter, &limits);
-  if (st != WGPUStatus_Success) {
+  WGPUNativeLimits native_limits = {0};
+  if (!mbt_wgpu_adapter_get_limits_with_native(adapter, &limits, &native_limits)) {
     return 0u;
   }
   return native_limits.maxNonSamplerBindings;
 }
 
 uint32_t mbt_wgpu_device_limits_max_push_constant_size_u32(WGPUDevice device) {
-  if (!device) {
-    return 0u;
-  }
   WGPULimits limits = {0};
-  WGPUNativeLimits native_limits = {
-      .chain =
-          (WGPUChainedStructOut){
-              .next = NULL,
-              .sType = (WGPUSType)WGPUSType_NativeLimits,
-          },
-      .maxPushConstantSize = 0u,
-      .maxNonSamplerBindings = 0u,
-  };
-  limits.nextInChain = &native_limits.chain;
-  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
-  if (st != WGPUStatus_Success) {
+  WGPUNativeLimits native_limits = {0};
+  if (!mbt_wgpu_device_get_limits_with_native(device, &limits, &native_limits)) {
     return 0u;
   }
   return native_limits.maxPushConstantSize;
 }
 
 uint32_t mbt_wgpu_device_limits_max_non_sampler_bindings_u32(WGPUDevice device) {
-  if (!device) {
-    return 0u;
-  }
   WGPULimits limits = {0};
-  WGPUNativeLimits native_limits = {
-      .chain =
-          (WGPUChainedStructOut){
-              .next = NULL,
-              .sType = (WGPUSType)WGPUSType_NativeLimits,
-          },
-      .maxPushConstantSize = 0u,
-      .maxNonSamplerBindings = 0u,
-  };
-  limits.nextInChain = &native_limits.chain;
-  WGPUStatus st = wgpuDeviceGetLimits(device, &limits);
-  if (st != WGPUStatus_Success) {
+  WGPUNativeLimits native_limits = {0};
+  if (!mbt_wgpu_device_get_limits_with_native(device, &limits, &native_limits)) {
     return 0u;
   }
   return native_limits.maxNonSamplerBindings;
 }
 
-uint32_t mbt_wgpu_adapter_limits_max_compute_workgroup_size_x_u32(WGPUAdapter adapter) {
-  if (!adapter) {
-    return 0u;
-  }
-  WGPULimits limits = {0};
-  (void)wgpuAdapterGetLimits(adapter, &limits);
-  return limits.maxComputeWorkgroupSizeX;
-}
+#undef MBT_DEFINE_ADAPTER_LIMIT_U32
+#undef MBT_DEFINE_DEVICE_LIMIT_U32
+#undef MBT_DEFINE_ADAPTER_LIMIT_U64
+#undef MBT_DEFINE_DEVICE_LIMIT_U64
 
 uint64_t mbt_wgpu_adapter_supported_features_count(WGPUAdapter adapter) {
   if (!adapter) {
