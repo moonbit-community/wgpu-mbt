@@ -16,6 +16,8 @@ jobs:
   linux:
     name: Linux Vulkan (full)
     runs-on: ubuntu-latest
+    env:
+      MBT_WGPU_LINK_MODE: dynamic
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -169,6 +171,8 @@ jobs:
   macos:
     name: macOS Metal (full)
     runs-on: macos-latest
+    env:
+      MBT_WGPU_LINK_MODE: dynamic
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -282,6 +286,8 @@ jobs:
   windows:
     name: Windows (Lavapipe Vulkan, full)
     runs-on: windows-latest
+    env:
+      MBT_WGPU_LINK_MODE: dynamic
     steps:
       - name: Checkout
         uses: actions/checkout@v4

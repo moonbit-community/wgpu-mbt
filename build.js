@@ -5,7 +5,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const MODULE_NAME = 'Milky2018/wgpu_mbt';
-const LINK_MODE = (process.env.MBT_WGPU_LINK_MODE || 'dynamic').trim().toLowerCase();
+const LINK_MODE = (process.env.MBT_WGPU_LINK_MODE || 'static').trim().toLowerCase();
 
 const SUPPORTED_RELEASE = {
   repo: 'gfx-rs/wgpu-native',

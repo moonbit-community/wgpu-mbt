@@ -25,8 +25,8 @@ MoonBit bindings for the `wgpu-native` C API (WebGPU), targeting **native** back
 
 2. Choose a link mode:
 
-- **Dynamic** (default): extract a matching upstream release archive
-- **Static**: set `MBT_WGPU_LINK_MODE=static` before `moon build` / `moon test`
+- **Static** (default): no extra downstream link flags; the prebuild hook downloads and links a verified upstream static archive automatically
+- **Dynamic**: set `MBT_WGPU_LINK_MODE=dynamic` before `moon build` / `moon test`, then extract a matching upstream release archive
 
 3. Dynamic mode uses the official upstream release assets:
 
@@ -40,9 +40,6 @@ Recommended dynamic install: extract the archive into `$HOME/.local` (or `%USERP
 - metadata tag: `.../wgpu-native-meta/wgpu-native-git-tag`
 
 Or set `MBT_WGPU_NATIVE_LIB` to an absolute library path inside an extracted upstream release tree.
-
-Static mode does not need any extra downstream link flags. The module prebuild hook downloads a
-verified upstream static archive for the current host platform and wires the link flags automatically.
 
 ## Quick Example
 
@@ -190,8 +187,8 @@ Drive completion with `Instance::process_events()` or `Instance::wait_any_one(..
 
 ## Runtime Behavior
 
-- Dynamic mode loads `libwgpu_native` at runtime.
-- Static mode links the verified upstream static library into the final native binary.
+- Static mode is the default and links the verified upstream static library into the final native binary.
+- Dynamic mode is opt-in and loads `libwgpu_native` at runtime.
 - Dynamic library lookup order:
   1) `MBT_WGPU_NATIVE_LIB`
   2) default per-user path listed above
@@ -201,6 +198,7 @@ Drive completion with `Instance::process_events()` or `Instance::wait_any_one(..
 - `@wgpu.native_expected_release_tag()` returns the supported upstream release tag.
 - `@wgpu.native_diagnostic()` returns a combined loader/support diagnostic string.
 - For custom dynamic builds without release metadata, set `MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1` to bypass strict release verification.
+- To force dynamic mode in a downstream project, export `MBT_WGPU_LINK_MODE=dynamic` for `moon check` / `moon build` / `moon test`.
 
 ## Optional Feature Gates
 
@@ -239,5 +237,5 @@ If startup fails at the first WebGPU call, usually `libwgpu_native` is missing, 
 - Check diagnostics: `@wgpu.native_diagnostic()`
 - Verify that you extracted the official upstream archive, not just the bare library file
 - Verify file path and filename for your platform
-- If using a custom location, set `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)`
-- For static mode, set `MBT_WGPU_LINK_MODE=static` before building the downstream binary/test target
+- If using dynamic mode, set `MBT_WGPU_LINK_MODE=dynamic`
+- If using a custom dynamic library location, set `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)`
