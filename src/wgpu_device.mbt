@@ -61,6 +61,227 @@ pub fn Device::supported_feature_u32_at(self : Device, index : UInt64) -> UInt {
 }
 
 ///|
+pub fn Device::has_feature_u32(self : Device, feature_u32 : UInt) -> Bool {
+  self.supported_features_contains_u32(feature_u32)
+}
+
+///|
+pub fn Device::has_feature_timestamp_query(self : Device) -> Bool {
+  self.has_feature_u32(FEATURE_NAME_TIMESTAMP_QUERY)
+}
+
+///|
+pub fn Device::has_feature_native_u32(
+  self : Device,
+  native_feature_u32 : UInt,
+) -> Bool {
+  self.supported_features_contains_u32(native_feature_u32)
+}
+
+///|
+pub fn Device::has_feature_native_timestamp_query_inside_encoders(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TIMESTAMP_QUERY_INSIDE_ENCODERS)
+}
+
+///|
+pub fn Device::has_feature_native_timestamp_query_inside_passes(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TIMESTAMP_QUERY_INSIDE_PASSES)
+}
+
+///|
+pub fn Device::has_feature_native_push_constants(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_PUSH_CONSTANTS)
+}
+
+///|
+pub fn Device::has_feature_native_pipeline_statistics_query(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_PIPELINE_STATISTICS_QUERY)
+}
+
+///|
+pub fn Device::has_feature_native_clear_texture(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_CLEAR_TEXTURE)
+}
+
+///|
+pub fn Device::has_feature_native_multiview(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_MULTIVIEW)
+}
+
+///|
+pub fn Device::has_feature_native_spirv_shader_passthrough(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SPIRV_SHADER_PASSTHROUGH)
+}
+
+///|
+pub fn Device::has_feature_native_texture_binding_array(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_BINDING_ARRAY)
+}
+
+///|
+pub fn Device::has_feature_native_buffer_binding_array(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_BUFFER_BINDING_ARRAY)
+}
+
+///|
+pub fn Device::has_feature_native_storage_resource_binding_array(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_STORAGE_RESOURCE_BINDING_ARRAY)
+}
+
+///|
+pub fn Device::has_feature_native_partially_bound_binding_array(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_PARTIALLY_BOUND_BINDING_ARRAY)
+}
+
+///|
+pub fn Device::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(
+    NATIVE_FEATURE_UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
+  )
+}
+
+///|
+pub fn Device::has_feature_native_sampled_texture_and_storage_buffer_array_non_uniform_indexing(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(
+    NATIVE_FEATURE_SAMPLED_TEXTURE_AND_STORAGE_BUFFER_ARRAY_NON_UNIFORM_INDEXING,
+  )
+}
+
+///|
+pub fn Device::has_feature_native_vertex_writable_storage(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_VERTEX_WRITABLE_STORAGE)
+}
+
+///|
+pub fn Device::has_feature_native_multi_draw_indirect_count(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_MULTI_DRAW_INDIRECT_COUNT)
+}
+
+///|
+pub fn Device::has_feature_native_mappable_primary_buffers(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_MAPPABLE_PRIMARY_BUFFERS)
+}
+
+///|
+pub fn Device::has_feature_native_texture_format16bit_norm(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_FORMAT16BIT_NORM)
+}
+
+///|
+pub fn Device::has_feature_native_texture_compression_astc_hdr(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_COMPRESSION_ASTC_HDR)
+}
+
+///|
+pub fn Device::has_feature_native_polygon_mode_line(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_POLYGON_MODE_LINE)
+}
+
+///|
+pub fn Device::has_feature_native_polygon_mode_point(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_POLYGON_MODE_POINT)
+}
+
+///|
+pub fn Device::has_feature_native_conservative_rasterization(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_CONSERVATIVE_RASTERIZATION)
+}
+
+///|
+pub fn Device::has_feature_native_texture_format_nv12(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_FORMAT_NV12)
+}
+
+///|
+pub fn Device::has_feature_native_vertex_attribute64bit(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_VERTEX_ATTRIBUTE64BIT)
+}
+
+///|
+pub fn Device::has_feature_native_ray_query(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_RAY_QUERY)
+}
+
+///|
+pub fn Device::has_feature_native_shader_f64(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_F64)
+}
+
+///|
+pub fn Device::has_feature_native_shader_i16(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_I16)
+}
+
+///|
+pub fn Device::has_feature_native_shader_int64(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_INT64)
+}
+
+///|
+pub fn Device::has_feature_native_shader_primitive_index(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_PRIMITIVE_INDEX)
+}
+
+///|
+pub fn Device::has_feature_native_shader_early_depth_test(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_EARLY_DEPTH_TEST)
+}
+
+///|
+pub fn Device::has_feature_native_subgroup(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SUBGROUP)
+}
+
+///|
+pub fn Device::has_feature_native_subgroup_vertex(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SUBGROUP_VERTEX)
+}
+
+///|
+pub fn Device::has_feature_native_subgroup_barrier(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SUBGROUP_BARRIER)
+}
+
+///|
+pub fn Device::has_feature_native_texture_adapter_specific_format_features(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(
+    NATIVE_FEATURE_TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES,
+  )
+}
+
+///|
 pub fn Device::info_backend_type_u32(self : Device) -> UInt {
   @c.device_info_backend_type_u32(self.raw)
 }

@@ -1723,6 +1723,42 @@ pub fn Device::get_limits(Self, @c.WGPULimitsPtr) -> @c.WGPUStatus
 pub fn Device::get_lost_future(Self) -> @c.WGPUFuture
 pub fn Device::get_queue(Self) -> Queue
 pub fn Device::has_feature(Self, @c.WGPUFeatureName) -> Bool
+pub fn Device::has_feature_native_buffer_binding_array(Self) -> Bool
+pub fn Device::has_feature_native_clear_texture(Self) -> Bool
+pub fn Device::has_feature_native_conservative_rasterization(Self) -> Bool
+pub fn Device::has_feature_native_mappable_primary_buffers(Self) -> Bool
+pub fn Device::has_feature_native_multi_draw_indirect_count(Self) -> Bool
+pub fn Device::has_feature_native_multiview(Self) -> Bool
+pub fn Device::has_feature_native_partially_bound_binding_array(Self) -> Bool
+pub fn Device::has_feature_native_pipeline_statistics_query(Self) -> Bool
+pub fn Device::has_feature_native_polygon_mode_line(Self) -> Bool
+pub fn Device::has_feature_native_polygon_mode_point(Self) -> Bool
+pub fn Device::has_feature_native_push_constants(Self) -> Bool
+pub fn Device::has_feature_native_ray_query(Self) -> Bool
+pub fn Device::has_feature_native_sampled_texture_and_storage_buffer_array_non_uniform_indexing(Self) -> Bool
+pub fn Device::has_feature_native_shader_early_depth_test(Self) -> Bool
+pub fn Device::has_feature_native_shader_f64(Self) -> Bool
+pub fn Device::has_feature_native_shader_i16(Self) -> Bool
+pub fn Device::has_feature_native_shader_int64(Self) -> Bool
+pub fn Device::has_feature_native_shader_primitive_index(Self) -> Bool
+pub fn Device::has_feature_native_spirv_shader_passthrough(Self) -> Bool
+pub fn Device::has_feature_native_storage_resource_binding_array(Self) -> Bool
+pub fn Device::has_feature_native_subgroup(Self) -> Bool
+pub fn Device::has_feature_native_subgroup_barrier(Self) -> Bool
+pub fn Device::has_feature_native_subgroup_vertex(Self) -> Bool
+pub fn Device::has_feature_native_texture_adapter_specific_format_features(Self) -> Bool
+pub fn Device::has_feature_native_texture_binding_array(Self) -> Bool
+pub fn Device::has_feature_native_texture_compression_astc_hdr(Self) -> Bool
+pub fn Device::has_feature_native_texture_format16bit_norm(Self) -> Bool
+pub fn Device::has_feature_native_texture_format_nv12(Self) -> Bool
+pub fn Device::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
+pub fn Device::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
+pub fn Device::has_feature_native_u32(Self, UInt) -> Bool
+pub fn Device::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(Self) -> Bool
+pub fn Device::has_feature_native_vertex_attribute64bit(Self) -> Bool
+pub fn Device::has_feature_native_vertex_writable_storage(Self) -> Bool
+pub fn Device::has_feature_timestamp_query(Self) -> Bool
+pub fn Device::has_feature_u32(Self, UInt) -> Bool
 pub fn Device::info_adapter_type_u32(Self) -> UInt
 pub fn Device::info_architecture(Self) -> String
 pub fn Device::info_backend_type_u32(Self) -> UInt

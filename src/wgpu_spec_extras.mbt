@@ -1377,6 +1377,204 @@ declare pub fn Device::supported_feature_u32_at(
 
 ///|
 #declaration_only
+declare pub fn Device::has_feature_u32(
+  self : Device,
+  feature_u32 : UInt,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_timestamp_query(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_u32(
+  self : Device,
+  native_feature_u32 : UInt,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_timestamp_query_inside_encoders(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_timestamp_query_inside_passes(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_push_constants(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_pipeline_statistics_query(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_clear_texture(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_multiview(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_spirv_shader_passthrough(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_texture_binding_array(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_buffer_binding_array(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_storage_resource_binding_array(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_partially_bound_binding_array(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_sampled_texture_and_storage_buffer_array_non_uniform_indexing(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_vertex_writable_storage(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_multi_draw_indirect_count(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_mappable_primary_buffers(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_texture_format16bit_norm(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_texture_compression_astc_hdr(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_polygon_mode_line(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_polygon_mode_point(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_conservative_rasterization(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_texture_format_nv12(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_vertex_attribute64bit(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_ray_query(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_shader_f64(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_shader_i16(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_shader_int64(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_shader_primitive_index(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_shader_early_depth_test(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_subgroup(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_subgroup_vertex(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_subgroup_barrier(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_texture_adapter_specific_format_features(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
 declare pub fn Device::info_backend_type_u32(self : Device) -> UInt
 
 ///|
