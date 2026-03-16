@@ -1040,6 +1040,39 @@ declare pub fn Device::supported_feature_u32_at(
 ) -> UInt
 
 ///|
+#declaration_only
+declare pub fn Device::info_backend_type_u32(self : Device) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::info_adapter_type_u32(self : Device) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::info_vendor_id_u32(self : Device) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::info_device_id_u32(self : Device) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::info_vendor(self : Device) -> String
+
+///|
+#declaration_only
+declare pub fn Device::info_architecture(self : Device) -> String
+
+///|
+#declaration_only
+declare pub fn Device::info_device(self : Device) -> String
+
+///|
+#declaration_only
+declare pub fn Device::info_description(self : Device) -> String
+
+///|
+#declaration_only
 declare pub fn Device::limits_max_texture_dimension_1d_u32(
   self : Device,
 ) -> UInt

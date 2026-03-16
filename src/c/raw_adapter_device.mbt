@@ -73,6 +73,62 @@ pub extern "C" fn adapter_info_description_utf8(
 ) -> Bool = "mbt_wgpu_adapter_info_description_utf8"
 
 ///|
+pub extern "C" fn device_info_backend_type_u32(device : Device) -> UInt = "mbt_wgpu_device_info_backend_type_u32"
+
+///|
+pub extern "C" fn device_info_adapter_type_u32(device : Device) -> UInt = "mbt_wgpu_device_info_adapter_type_u32"
+
+///|
+pub extern "C" fn device_info_vendor_id_u32(device : Device) -> UInt = "mbt_wgpu_device_info_vendor_id_u32"
+
+///|
+pub extern "C" fn device_info_device_id_u32(device : Device) -> UInt = "mbt_wgpu_device_info_device_id_u32"
+
+///|
+pub extern "C" fn device_info_vendor_utf8_len(device : Device) -> UInt64 = "mbt_wgpu_device_info_vendor_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn device_info_vendor_utf8(
+  device : Device,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_device_info_vendor_utf8"
+
+///|
+pub extern "C" fn device_info_architecture_utf8_len(device : Device) -> UInt64 = "mbt_wgpu_device_info_architecture_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn device_info_architecture_utf8(
+  device : Device,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_device_info_architecture_utf8"
+
+///|
+pub extern "C" fn device_info_device_utf8_len(device : Device) -> UInt64 = "mbt_wgpu_device_info_device_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn device_info_device_utf8(
+  device : Device,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_device_info_device_utf8"
+
+///|
+pub extern "C" fn device_info_description_utf8_len(device : Device) -> UInt64 = "mbt_wgpu_device_info_description_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn device_info_description_utf8(
+  device : Device,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_device_info_description_utf8"
+
+///|
 pub extern "C" fn adapter_limits_max_texture_dimension_1d_u32(
   adapter : Adapter,
 ) -> UInt = "mbt_wgpu_adapter_limits_max_texture_dimension_1d_u32"

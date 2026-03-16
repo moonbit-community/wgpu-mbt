@@ -530,6 +530,30 @@ pub fn device_destroy_record_lost(WGPUDevice) -> Unit
 
 pub fn device_get_queue(WGPUDevice) -> WGPUQueue
 
+pub fn device_info_adapter_type_u32(WGPUDevice) -> UInt
+
+pub fn device_info_architecture_utf8(WGPUDevice, Bytes, UInt64) -> Bool
+
+pub fn device_info_architecture_utf8_len(WGPUDevice) -> UInt64
+
+pub fn device_info_backend_type_u32(WGPUDevice) -> UInt
+
+pub fn device_info_description_utf8(WGPUDevice, Bytes, UInt64) -> Bool
+
+pub fn device_info_description_utf8_len(WGPUDevice) -> UInt64
+
+pub fn device_info_device_id_u32(WGPUDevice) -> UInt
+
+pub fn device_info_device_utf8(WGPUDevice, Bytes, UInt64) -> Bool
+
+pub fn device_info_device_utf8_len(WGPUDevice) -> UInt64
+
+pub fn device_info_vendor_id_u32(WGPUDevice) -> UInt
+
+pub fn device_info_vendor_utf8(WGPUDevice, Bytes, UInt64) -> Bool
+
+pub fn device_info_vendor_utf8_len(WGPUDevice) -> UInt64
+
 pub fn device_is_null(WGPUDevice) -> Bool
 
 pub fn device_limits_max_bind_groups_plus_vertex_buffers_u32(WGPUDevice) -> UInt

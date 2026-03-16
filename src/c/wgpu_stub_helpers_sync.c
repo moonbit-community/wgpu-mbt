@@ -23,6 +23,7 @@
 
 // Implemented in wgpu_stub_extras.c.
 void mbt_wgpu_set_log_callback_stderr_enabled(int32_t enabled);
+void mbt_wgpu_device_info_cache_register(WGPUDevice device, WGPUAdapter adapter);
 
 static bool mbt_wgpu_env_flag_enabled(const char *name);
 static bool mbt_wgpu_debug_take(const char *env_name);
@@ -1158,6 +1159,14 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync(WGPUInstance instance) {
   return mbt_wgpu_instance_request_adapter_sync_ptr(instance, NULL);
 }
 
+static WGPUDevice mbt_wgpu_device_register_info_and_return(WGPUDevice device,
+                                                            WGPUAdapter adapter) {
+  if (device && adapter) {
+    mbt_wgpu_device_info_cache_register(device, adapter);
+  }
+  return device;
+}
+
 WGPUDevice mbt_wgpu_adapter_request_device_sync_ptr(
     WGPUInstance instance, WGPUAdapter adapter, const WGPUDeviceDescriptor *desc_in) {
   g_mbt_wgpu_last_request_device_status_u32 = 0u;
@@ -1238,7 +1247,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_ptr(
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync(WGPUInstance instance,
@@ -1682,7 +1691,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query(
@@ -1738,7 +1747,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query(
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders(
@@ -1795,7 +1804,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_encoders(
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes(
@@ -1852,7 +1861,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes(
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance instance,
@@ -1922,7 +1931,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance inst
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_texture_binding_array(
@@ -1978,7 +1987,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_texture_binding_array(
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_clear_texture(
@@ -2034,7 +2043,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_clear_texture(
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_multiview(
@@ -2090,7 +2099,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_multiview(
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
@@ -2146,7 +2155,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
   if (out.status != WGPURequestDeviceStatus_Success) {
     return NULL;
   }
-  return out.device;
+  return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
 typedef struct {

@@ -216,6 +216,107 @@ typedef struct {
 static mbt_async_request_adapter_slot_t g_async_request_adapter_slots[MBT_WGPU_ASYNC_SLOT_CAP];
 static mbt_async_request_device_slot_t g_async_request_device_slots[MBT_WGPU_ASYNC_SLOT_CAP];
 
+#define MBT_WGPU_DEVICE_INFO_CACHE_CAP 128u
+#define MBT_WGPU_DEVICE_INFO_STR_MAX 256u
+
+typedef struct {
+  WGPUDevice device;
+  uint32_t backend_type_u32;
+  uint32_t adapter_type_u32;
+  uint32_t vendor_id_u32;
+  uint32_t device_id_u32;
+  uint64_t vendor_len_u64;
+  uint64_t architecture_len_u64;
+  uint64_t device_len_u64;
+  uint64_t description_len_u64;
+  uint8_t vendor_utf8[MBT_WGPU_DEVICE_INFO_STR_MAX];
+  uint8_t architecture_utf8[MBT_WGPU_DEVICE_INFO_STR_MAX];
+  uint8_t device_utf8[MBT_WGPU_DEVICE_INFO_STR_MAX];
+  uint8_t description_utf8[MBT_WGPU_DEVICE_INFO_STR_MAX];
+} mbt_device_info_cache_entry_t;
+
+static mbt_device_info_cache_entry_t g_device_info_cache[MBT_WGPU_DEVICE_INFO_CACHE_CAP];
+static uint32_t g_device_info_cache_next_slot_u32 = 0u;
+
+static uint64_t mbt_wgpu_copy_string_view_capped(WGPUStringView view, uint8_t *out) {
+  if (!out) {
+    return 0u;
+  }
+  size_t n = view.length;
+  if (n > MBT_WGPU_DEVICE_INFO_STR_MAX) {
+    n = MBT_WGPU_DEVICE_INFO_STR_MAX;
+  }
+  if (n != 0u && view.data) {
+    memcpy(out, view.data, n);
+  }
+  return (uint64_t)n;
+}
+
+void mbt_wgpu_device_info_cache_register(WGPUDevice device, WGPUAdapter adapter) {
+  if (!device || !adapter) {
+    return;
+  }
+  WGPUAdapterInfo info = {0};
+  if (wgpuAdapterGetInfo(adapter, &info) != WGPUStatus_Success) {
+    return;
+  }
+
+  mbt_device_info_cache_entry_t next = {0};
+  next.device = device;
+  next.backend_type_u32 = (uint32_t)info.backendType;
+  next.adapter_type_u32 = (uint32_t)info.adapterType;
+  next.vendor_id_u32 = info.vendorID;
+  next.device_id_u32 = info.deviceID;
+  next.vendor_len_u64 = mbt_wgpu_copy_string_view_capped(info.vendor, next.vendor_utf8);
+  next.architecture_len_u64 =
+      mbt_wgpu_copy_string_view_capped(info.architecture, next.architecture_utf8);
+  next.device_len_u64 = mbt_wgpu_copy_string_view_capped(info.device, next.device_utf8);
+  next.description_len_u64 =
+      mbt_wgpu_copy_string_view_capped(info.description, next.description_utf8);
+  wgpuAdapterInfoFreeMembers(info);
+
+  mbt_wgpu_wait_any_mu_lock();
+  size_t slot = (size_t)-1;
+  for (size_t i = 0; i < MBT_WGPU_DEVICE_INFO_CACHE_CAP; i++) {
+    if (g_device_info_cache[i].device == device) {
+      slot = i;
+      break;
+    }
+  }
+  if (slot == (size_t)-1) {
+    for (size_t i = 0; i < MBT_WGPU_DEVICE_INFO_CACHE_CAP; i++) {
+      if (!g_device_info_cache[i].device) {
+        slot = i;
+        break;
+      }
+    }
+  }
+  if (slot == (size_t)-1) {
+    slot = (size_t)(g_device_info_cache_next_slot_u32 % MBT_WGPU_DEVICE_INFO_CACHE_CAP);
+    g_device_info_cache_next_slot_u32++;
+  }
+  g_device_info_cache[slot] = next;
+  mbt_wgpu_wait_any_mu_unlock();
+}
+
+static bool mbt_wgpu_device_info_cache_get(WGPUDevice device,
+                                           mbt_device_info_cache_entry_t *out) {
+  if (!device || !out) {
+    return false;
+  }
+  mbt_wgpu_wait_any_mu_lock();
+  bool ok = false;
+  for (size_t i = 0; i < MBT_WGPU_DEVICE_INFO_CACHE_CAP; i++) {
+    if (g_device_info_cache[i].device == device) {
+      *out = g_device_info_cache[i];
+      ok = true;
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+  return ok;
+}
+
 static mbt_async_request_adapter_slot_t *mbt_async_request_adapter_slot_new(uint64_t id) {
   mbt_wgpu_wait_any_mu_lock();
   mbt_async_request_adapter_slot_t *slot = NULL;
@@ -836,6 +937,134 @@ int32_t mbt_wgpu_adapter_info_description_utf8(WGPUAdapter adapter, uint8_t *out
     memcpy(out, info.description.data, (size_t)len);
   }
   wgpuAdapterInfoFreeMembers(info);
+  return true;
+}
+
+uint32_t mbt_wgpu_device_info_backend_type_u32(WGPUDevice device) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return 0u;
+  }
+  return cached.backend_type_u32;
+}
+
+uint32_t mbt_wgpu_device_info_adapter_type_u32(WGPUDevice device) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return 0u;
+  }
+  return cached.adapter_type_u32;
+}
+
+uint32_t mbt_wgpu_device_info_vendor_id_u32(WGPUDevice device) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return 0u;
+  }
+  return cached.vendor_id_u32;
+}
+
+uint32_t mbt_wgpu_device_info_device_id_u32(WGPUDevice device) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return 0u;
+  }
+  return cached.device_id_u32;
+}
+
+uint64_t mbt_wgpu_device_info_vendor_utf8_len(WGPUDevice device) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return 0u;
+  }
+  return cached.vendor_len_u64;
+}
+
+int32_t mbt_wgpu_device_info_vendor_utf8(WGPUDevice device, uint8_t *out,
+                                         uint64_t out_len) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!out || !mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return false;
+  }
+  uint64_t len = cached.vendor_len_u64;
+  if (len > out_len) {
+    return false;
+  }
+  if (len != 0u) {
+    memcpy(out, cached.vendor_utf8, (size_t)len);
+  }
+  return true;
+}
+
+uint64_t mbt_wgpu_device_info_architecture_utf8_len(WGPUDevice device) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return 0u;
+  }
+  return cached.architecture_len_u64;
+}
+
+int32_t mbt_wgpu_device_info_architecture_utf8(WGPUDevice device, uint8_t *out,
+                                               uint64_t out_len) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!out || !mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return false;
+  }
+  uint64_t len = cached.architecture_len_u64;
+  if (len > out_len) {
+    return false;
+  }
+  if (len != 0u) {
+    memcpy(out, cached.architecture_utf8, (size_t)len);
+  }
+  return true;
+}
+
+uint64_t mbt_wgpu_device_info_device_utf8_len(WGPUDevice device) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return 0u;
+  }
+  return cached.device_len_u64;
+}
+
+int32_t mbt_wgpu_device_info_device_utf8(WGPUDevice device, uint8_t *out,
+                                         uint64_t out_len) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!out || !mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return false;
+  }
+  uint64_t len = cached.device_len_u64;
+  if (len > out_len) {
+    return false;
+  }
+  if (len != 0u) {
+    memcpy(out, cached.device_utf8, (size_t)len);
+  }
+  return true;
+}
+
+uint64_t mbt_wgpu_device_info_description_utf8_len(WGPUDevice device) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return 0u;
+  }
+  return cached.description_len_u64;
+}
+
+int32_t mbt_wgpu_device_info_description_utf8(WGPUDevice device, uint8_t *out,
+                                              uint64_t out_len) {
+  mbt_device_info_cache_entry_t cached = {0};
+  if (!out || !mbt_wgpu_device_info_cache_get(device, &cached)) {
+    return false;
+  }
+  uint64_t len = cached.description_len_u64;
+  if (len > out_len) {
+    return false;
+  }
+  if (len != 0u) {
+    memcpy(out, cached.description_utf8, (size_t)len);
+  }
   return true;
 }
 

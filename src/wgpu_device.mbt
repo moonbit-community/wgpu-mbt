@@ -61,6 +61,90 @@ pub fn Device::supported_feature_u32_at(self : Device, index : UInt64) -> UInt {
 }
 
 ///|
+pub fn Device::info_backend_type_u32(self : Device) -> UInt {
+  @c.device_info_backend_type_u32(self.raw)
+}
+
+///|
+pub fn Device::info_adapter_type_u32(self : Device) -> UInt {
+  @c.device_info_adapter_type_u32(self.raw)
+}
+
+///|
+pub fn Device::info_vendor_id_u32(self : Device) -> UInt {
+  @c.device_info_vendor_id_u32(self.raw)
+}
+
+///|
+pub fn Device::info_device_id_u32(self : Device) -> UInt {
+  @c.device_info_device_id_u32(self.raw)
+}
+
+///|
+pub fn Device::info_vendor(self : Device) -> String {
+  let len = @c.device_info_vendor_utf8_len(self.raw)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.device_info_vendor_utf8(self.raw, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
+pub fn Device::info_architecture(self : Device) -> String {
+  let len = @c.device_info_architecture_utf8_len(self.raw)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.device_info_architecture_utf8(self.raw, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
+pub fn Device::info_device(self : Device) -> String {
+  let len = @c.device_info_device_utf8_len(self.raw)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.device_info_device_utf8(self.raw, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
+pub fn Device::info_description(self : Device) -> String {
+  let len = @c.device_info_description_utf8_len(self.raw)
+  if len == 0UL {
+    ""
+  } else {
+    let out = Bytes::new(len.to_int())
+    let ok = @c.device_info_description_utf8(self.raw, out, len)
+    if ok {
+      @utf8.decode_lossy(out[:], ignore_bom=true)
+    } else {
+      ""
+    }
+  }
+}
+
+///|
 pub fn Device::limits_max_texture_dimension_1d_u32(self : Device) -> UInt {
   @c.device_limits_max_texture_dimension_1d_u32(self.raw)
 }

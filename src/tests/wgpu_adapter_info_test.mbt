@@ -47,3 +47,40 @@ test "wgpu adapter info (numeric)" {
   adapter.release()
   instance.release()
 }
+
+///|
+test "wgpu device info (numeric)" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let backend = device.info_backend_type_u32()
+  let backend_ok = if @wgpu.platform_is_macos() {
+    backend == @wgpu.BACKEND_TYPE_METAL
+  } else if @wgpu.platform_is_windows() {
+    backend == @wgpu.BACKEND_TYPE_D3_D12 ||
+    backend == @wgpu.BACKEND_TYPE_D3_D11 ||
+    backend == @wgpu.BACKEND_TYPE_VULKAN ||
+    backend == @wgpu.BACKEND_TYPE_OPEN_GL ||
+    backend == @wgpu.BACKEND_TYPE_OPEN_GLES
+  } else if @wgpu.platform_is_linux() {
+    backend == @wgpu.BACKEND_TYPE_VULKAN ||
+    backend == @wgpu.BACKEND_TYPE_OPEN_GL ||
+    backend == @wgpu.BACKEND_TYPE_OPEN_GLES
+  } else {
+    backend != @wgpu.BACKEND_TYPE_NULL
+  }
+  inspect(backend_ok, content="true")
+  let ty = device.info_adapter_type_u32()
+  let ty_ok = ty == @wgpu.ADAPTER_TYPE_DISCRETE_GPU ||
+    ty == @wgpu.ADAPTER_TYPE_INTEGRATED_GPU ||
+    ty == @wgpu.ADAPTER_TYPE_CPU ||
+    ty == @wgpu.ADAPTER_TYPE_UNKNOWN
+  inspect(ty_ok, content="true")
+
+  let _vendor_id = device.info_vendor_id_u32()
+  let _device_id = device.info_device_id_u32()
+  inspect(true, content="true")
+  device.release()
+  adapter.release()
+  instance.release()
+}

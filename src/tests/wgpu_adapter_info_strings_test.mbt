@@ -28,3 +28,22 @@ test "wgpu adapter info strings smoke" {
   instance.release()
   inspect("ok", content="ok")
 }
+
+///|
+test "wgpu device info strings smoke" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let vendor = device.info_vendor()
+  let arch = device.info_architecture()
+  let dev = device.info_device()
+  let desc = device.info_description()
+  ignore(vendor.length())
+  ignore(arch.length())
+  ignore(dev.length())
+  ignore(desc.length())
+  device.release()
+  adapter.release()
+  instance.release()
+  inspect("ok", content="ok")
+}

@@ -1670,6 +1670,14 @@ pub fn Device::get_limits(Self, @c.WGPULimitsPtr) -> @c.WGPUStatus
 pub fn Device::get_lost_future(Self) -> @c.WGPUFuture
 pub fn Device::get_queue(Self) -> Queue
 pub fn Device::has_feature(Self, @c.WGPUFeatureName) -> Bool
+pub fn Device::info_adapter_type_u32(Self) -> UInt
+pub fn Device::info_architecture(Self) -> String
+pub fn Device::info_backend_type_u32(Self) -> UInt
+pub fn Device::info_description(Self) -> String
+pub fn Device::info_device(Self) -> String
+pub fn Device::info_device_id_u32(Self) -> UInt
+pub fn Device::info_vendor(Self) -> String
+pub fn Device::info_vendor_id_u32(Self) -> UInt
 pub fn Device::limits_max_bind_groups_plus_vertex_buffers_u32(Self) -> UInt
 pub fn Device::limits_max_bind_groups_u32(Self) -> UInt
 pub fn Device::limits_max_bindings_per_bind_group_u32(Self) -> UInt
