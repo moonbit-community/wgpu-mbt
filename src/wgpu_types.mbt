@@ -826,6 +826,33 @@ pub fn WaitAnyError::message(self : WaitAnyError) -> String {
 }
 
 ///|
+suberror QueueWorkDoneWaitError {
+  QueueWorkDoneWaitFutureUnavailable
+  QueueWorkDoneWaitAnyFailed(UInt)
+  QueueWorkDoneWaitStatusFailed(UInt)
+}
+
+///|
+pub fn QueueWorkDoneWaitError::message(self : QueueWorkDoneWaitError) -> String {
+  match self {
+    QueueWorkDoneWaitFutureUnavailable =>
+      "queue submitted-work future creation failed (queue is null or async slot unavailable)"
+    QueueWorkDoneWaitAnyFailed(status) =>
+      "queue submitted-work wait_any failed (status=" +
+      wait_status_name(status) +
+      ", u32=" +
+      status.to_string() +
+      ")"
+    QueueWorkDoneWaitStatusFailed(status) =>
+      "queue submitted-work completion failed (status=" +
+      queue_work_done_status_name(status) +
+      ", u32=" +
+      status.to_string() +
+      ")"
+  }
+}
+
+///|
 pub struct PipelineLayout {
   raw : @c.PipelineLayout
 }

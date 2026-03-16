@@ -2653,6 +2653,14 @@ declare pub fn Queue::on_submitted_work_done_async_take_or_raise(
 
 ///|
 #declaration_only
+declare pub fn Queue::on_submitted_work_done_wait_or_raise(
+  self : Queue,
+  instance : Instance,
+  timeout_ns? : UInt64 = 0UL,
+) -> Unit raise QueueWorkDoneWaitError
+
+///|
+#declaration_only
 declare pub fn Queue::timestamp_period(self : Queue) -> Float
 
 ///|

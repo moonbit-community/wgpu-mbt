@@ -1272,6 +1272,9 @@ type QueueWorkDoneError
 pub fn QueueWorkDoneError::message(Self) -> String
 pub fn QueueWorkDoneError::status_u32(Self) -> UInt
 
+type QueueWorkDoneWaitError
+pub fn QueueWorkDoneWaitError::message(Self) -> String
+
 type RenderPipelineDescError
 pub fn RenderPipelineDescError::message(Self) -> String
 
@@ -1958,6 +1961,7 @@ pub fn Queue::on_submitted_work_done_async_take_or_raise(Self, UInt64) -> Unit r
 pub fn Queue::on_submitted_work_done_future_id_u64(Self) -> UInt64
 pub fn Queue::on_submitted_work_done_sync(Self, Instance) -> UInt
 pub fn Queue::on_submitted_work_done_sync_or_raise(Self, Instance) -> Unit raise QueueWorkDoneError
+pub fn Queue::on_submitted_work_done_wait_or_raise(Self, Instance, timeout_ns? : UInt64) -> Unit raise QueueWorkDoneWaitError
 pub fn Queue::raw_handle(Self) -> @c.WGPUQueue
 pub fn Queue::release(Self) -> Unit
 pub fn Queue::release_raw(Self) -> Unit

@@ -31,6 +31,27 @@ test "wgpu queue.on_submitted_work_done_sync" {
   queue.submit_one(cmd2)
   queue.on_submitted_work_done_sync_or_raise(instance)
 
+  let encoder3 = device.create_command_encoder()
+  let cmd3 = encoder3.finish()
+  queue.submit_one(cmd3)
+  queue.on_submitted_work_done_wait_or_raise(instance)
+
+  let encoder4 = device.create_command_encoder()
+  let cmd4 = encoder4.finish()
+  queue.submit_one(cmd4)
+  let timeout_raised_msg : Ref[String] = @ref.new("")
+  queue.on_submitted_work_done_wait_or_raise(instance, timeout_ns=1UL) catch {
+    e => timeout_raised_msg.val = e.message()
+  }
+  inspect(
+    timeout_raised_msg.val.contains("UnsupportedTimeout"[:]),
+    content="true",
+  )
+
+  cmd4.release()
+  encoder4.release()
+  cmd3.release()
+  encoder3.release()
   cmd2.release()
   encoder2.release()
   cmd.release()

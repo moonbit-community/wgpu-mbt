@@ -104,6 +104,35 @@ pub fn Queue::on_submitted_work_done_async_take_or_raise(
 }
 
 ///|
+pub fn Queue::on_submitted_work_done_wait_or_raise(
+  self : Queue,
+  instance : Instance,
+  timeout_ns? : UInt64 = 0UL,
+) -> Unit raise QueueWorkDoneWaitError {
+  if timeout_ns == 0UL {
+    let status = self.on_submitted_work_done_sync(instance)
+    if status != QUEUE_WORK_DONE_STATUS_SUCCESS {
+      raise QueueWorkDoneWaitStatusFailed(status)
+    }
+    return
+  }
+  let future_id = self.on_submitted_work_done_future_id_u64()
+  if future_id == 0UL {
+    raise QueueWorkDoneWaitFutureUnavailable
+  }
+  let wait = instance.wait_any_one(future_id, timeout_ns~)
+  if wait.status != WAIT_STATUS_SUCCESS {
+    self.on_submitted_work_done_async_clear(future_id)
+    raise QueueWorkDoneWaitAnyFailed(wait.status)
+  }
+  let status = self.on_submitted_work_done_async_status_u32(future_id)
+  self.on_submitted_work_done_async_clear(future_id)
+  if status != QUEUE_WORK_DONE_STATUS_SUCCESS {
+    raise QueueWorkDoneWaitStatusFailed(status)
+  }
+}
+
+///|
 pub fn Queue::timestamp_period(self : Queue) -> Float {
   @c.queue_get_timestamp_period(self.raw)
 }
