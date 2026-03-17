@@ -511,10 +511,57 @@ pub extern "C" fn render_bundle_descriptor_free(
 ) -> Unit = "mbt_wgpu_render_bundle_descriptor_free"
 
 ///|
+pub type ComputePipelineDescBuilderObj
+
+///|
 pub extern "C" fn compute_pipeline_descriptor_new(
   layout : WGPUPipelineLayout,
   shader_module : WGPUShaderModule,
 ) -> WGPUComputePipelineDescriptorPtr = "mbt_wgpu_compute_pipeline_descriptor_new"
+
+///|
+pub extern "C" fn compute_pipeline_desc_builder_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+) -> ComputePipelineDescBuilderObj = "mbt_wgpu_compute_pipeline_desc_builder_new"
+
+///|
+#borrow(builder)
+pub extern "C" fn compute_pipeline_desc_builder_is_null(
+  builder : ComputePipelineDescBuilderObj,
+) -> Bool = "mbt_wgpu_compute_pipeline_desc_builder_is_null"
+
+///|
+#borrow(builder, entry_point)
+pub extern "C" fn compute_pipeline_desc_builder_set_entry_point_utf8(
+  builder : ComputePipelineDescBuilderObj,
+  entry_point : Bytes,
+  entry_point_len : UInt64,
+) -> UInt = "mbt_wgpu_compute_pipeline_desc_builder_set_entry_point_utf8"
+
+///|
+#borrow(builder)
+pub extern "C" fn compute_pipeline_desc_builder_last_error_u32(
+  builder : ComputePipelineDescBuilderObj,
+) -> UInt = "mbt_wgpu_compute_pipeline_desc_builder_last_error_u32"
+
+///|
+#borrow(builder)
+pub extern "C" fn compute_pipeline_desc_builder_last_error_args_u64(
+  builder : ComputePipelineDescBuilderObj,
+) -> UInt64 = "mbt_wgpu_compute_pipeline_desc_builder_last_error_args_u64"
+
+///|
+#borrow(builder)
+pub extern "C" fn compute_pipeline_desc_builder_take_descriptor(
+  builder : ComputePipelineDescBuilderObj,
+) -> WGPUComputePipelineDescriptorPtr = "mbt_wgpu_compute_pipeline_desc_builder_take_descriptor"
+
+///|
+#borrow(builder)
+pub extern "C" fn compute_pipeline_desc_builder_free(
+  builder : ComputePipelineDescBuilderObj,
+) -> Unit = "mbt_wgpu_compute_pipeline_desc_builder_free"
 
 ///|
 #borrow(desc, entry_point)

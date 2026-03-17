@@ -16,8 +16,11 @@
 test "wgpu builders: free without finish" {
   let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=1UL)
   bglb.free()
+  bglb.free()
   let empty_bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=0UL)
   empty_bglb.free()
+  empty_bglb.free()
   let bgb = @wgpu.BindGroupBuilder::new(max_entries=1UL)
+  bgb.free()
   bgb.free()
 }

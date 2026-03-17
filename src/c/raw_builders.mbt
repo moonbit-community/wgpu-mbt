@@ -14,18 +14,29 @@
 
 ///|
 /// BindGroupLayout / BindGroup builders (for constructing arbitrary entries).
+pub type BindGroupLayoutBuilderObj
+
+///|
+pub type BindGroupBuilderObj
+
+///|
+pub type RenderPipelineDescBuilderObj
+
+///|
 pub extern "C" fn bind_group_layout_builder_new(
   max_entries : UInt64,
-) -> OpaquePtr = "mbt_wgpu_bind_group_layout_builder_new"
+) -> BindGroupLayoutBuilderObj = "mbt_wgpu_bind_group_layout_builder_new"
 
 ///|
 #borrow(builder)
-pub extern "C" fn bind_group_layout_builder_free(builder : OpaquePtr) -> Unit = "mbt_wgpu_bind_group_layout_builder_free"
+pub extern "C" fn bind_group_layout_builder_free(
+  builder : BindGroupLayoutBuilderObj,
+) -> Unit = "mbt_wgpu_bind_group_layout_builder_free"
 
 ///|
 #borrow(builder)
 extern "C" fn bind_group_layout_builder_add_buffer_packed(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
@@ -35,7 +46,7 @@ extern "C" fn bind_group_layout_builder_add_buffer_packed(
 
 ///|
 pub fn bind_group_layout_builder_add_buffer(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
@@ -59,7 +70,7 @@ pub fn bind_group_layout_builder_add_buffer(
 ///|
 #borrow(builder)
 extern "C" fn bind_group_layout_builder_add_buffer_array_packed(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
@@ -70,7 +81,7 @@ extern "C" fn bind_group_layout_builder_add_buffer_array_packed(
 
 ///|
 pub fn bind_group_layout_builder_add_buffer_array(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
@@ -96,7 +107,7 @@ pub fn bind_group_layout_builder_add_buffer_array(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_sampler(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
@@ -105,7 +116,7 @@ pub extern "C" fn bind_group_layout_builder_add_sampler(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_sampler_array(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
@@ -115,7 +126,7 @@ pub extern "C" fn bind_group_layout_builder_add_sampler_array(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_texture(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   sample_type_u32 : UInt,
@@ -126,7 +137,7 @@ pub extern "C" fn bind_group_layout_builder_add_texture(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_texture_array(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   sample_type_u32 : UInt,
@@ -138,7 +149,7 @@ pub extern "C" fn bind_group_layout_builder_add_texture_array(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_storage_texture(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   access_u32 : UInt,
@@ -149,7 +160,7 @@ pub extern "C" fn bind_group_layout_builder_add_storage_texture(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_layout_builder_add_storage_texture_array(
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   binding : UInt,
   visibility : UInt64,
   access_u32 : UInt,
@@ -162,22 +173,26 @@ pub extern "C" fn bind_group_layout_builder_add_storage_texture_array(
 #borrow(builder, label)
 pub extern "C" fn bind_group_layout_builder_finish(
   device : Device,
-  builder : OpaquePtr,
+  builder : BindGroupLayoutBuilderObj,
   label : Bytes,
   label_len : UInt64,
 ) -> BindGroupLayout = "mbt_wgpu_bind_group_layout_builder_finish"
 
 ///|
-pub extern "C" fn bind_group_builder_new(max_entries : UInt64) -> OpaquePtr = "mbt_wgpu_bind_group_builder_new"
+pub extern "C" fn bind_group_builder_new(
+  max_entries : UInt64,
+) -> BindGroupBuilderObj = "mbt_wgpu_bind_group_builder_new"
 
 ///|
 #borrow(builder)
-pub extern "C" fn bind_group_builder_free(builder : OpaquePtr) -> Unit = "mbt_wgpu_bind_group_builder_free"
+pub extern "C" fn bind_group_builder_free(
+  builder : BindGroupBuilderObj,
+) -> Unit = "mbt_wgpu_bind_group_builder_free"
 
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_builder_add_buffer(
-  builder : OpaquePtr,
+  builder : BindGroupBuilderObj,
   binding : UInt,
   buffer : Buffer,
   offset : UInt64,
@@ -187,7 +202,7 @@ pub extern "C" fn bind_group_builder_add_buffer(
 ///|
 #borrow(builder, buffers)
 pub extern "C" fn bind_group_builder_add_buffer_array(
-  builder : OpaquePtr,
+  builder : BindGroupBuilderObj,
   binding : UInt,
   buffer_count : UInt64,
   buffers : FixedArray[Buffer],
@@ -198,7 +213,7 @@ pub extern "C" fn bind_group_builder_add_buffer_array(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_builder_add_sampler(
-  builder : OpaquePtr,
+  builder : BindGroupBuilderObj,
   binding : UInt,
   sampler : Sampler,
 ) -> Bool = "mbt_wgpu_bind_group_builder_add_sampler"
@@ -206,7 +221,7 @@ pub extern "C" fn bind_group_builder_add_sampler(
 ///|
 #borrow(builder, samplers)
 pub extern "C" fn bind_group_builder_add_sampler_array(
-  builder : OpaquePtr,
+  builder : BindGroupBuilderObj,
   binding : UInt,
   sampler_count : UInt64,
   samplers : FixedArray[Sampler],
@@ -215,7 +230,7 @@ pub extern "C" fn bind_group_builder_add_sampler_array(
 ///|
 #borrow(builder)
 pub extern "C" fn bind_group_builder_add_texture_view(
-  builder : OpaquePtr,
+  builder : BindGroupBuilderObj,
   binding : UInt,
   view : TextureView,
 ) -> Bool = "mbt_wgpu_bind_group_builder_add_texture_view"
@@ -223,7 +238,7 @@ pub extern "C" fn bind_group_builder_add_texture_view(
 ///|
 #borrow(builder, views)
 pub extern "C" fn bind_group_builder_add_texture_view_array(
-  builder : OpaquePtr,
+  builder : BindGroupBuilderObj,
   binding : UInt,
   view_count : UInt64,
   views : FixedArray[TextureView],
@@ -234,7 +249,7 @@ pub extern "C" fn bind_group_builder_add_texture_view_array(
 pub extern "C" fn bind_group_builder_finish(
   device : Device,
   layout : BindGroupLayout,
-  builder : OpaquePtr,
+  builder : BindGroupBuilderObj,
   label : Bytes,
   label_len : UInt64,
 ) -> BindGroup = "mbt_wgpu_bind_group_builder_finish"
@@ -242,18 +257,25 @@ pub extern "C" fn bind_group_builder_finish(
 ///|
 /// RenderPipelineDescriptor arena builder (MVP).
 ///
-/// Note: the finished descriptor pointer aliases the builder allocation. Free
-/// it with `render_pipeline_descriptor_free(desc)` (from `desc_builders.mbt`),
-/// or abandon the builder early with `render_pipeline_desc_builder_free`.
+/// The builder is MoonBit-managed. `render_pipeline_desc_builder_finish`
+/// detaches the descriptor allocation from the builder; free the returned
+/// descriptor with `render_pipeline_descriptor_free(desc)` from
+/// `desc_builders.mbt` if you take it out explicitly.
 pub extern "C" fn render_pipeline_desc_builder_new(
   layout : PipelineLayout,
   shader_module : ShaderModule,
-) -> OpaquePtr = "mbt_wgpu_render_pipeline_desc_builder_new"
+) -> RenderPipelineDescBuilderObj = "mbt_wgpu_render_pipeline_desc_builder_new"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_is_null(
+  builder : RenderPipelineDescBuilderObj,
+) -> Bool = "mbt_wgpu_render_pipeline_desc_builder_is_null"
 
 ///|
 #borrow(builder, vs_entry, fs_entry)
 pub extern "C" fn render_pipeline_desc_builder_set_entry_points_utf8(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   vs_entry : Bytes,
   vs_entry_len : UInt64,
   fs_entry : Bytes,
@@ -263,21 +285,21 @@ pub extern "C" fn render_pipeline_desc_builder_set_entry_points_utf8(
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_color_target_format(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   format_u32 : UInt,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_format"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_color_target_count(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   count_u32 : UInt,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_count"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_color_target_format_at(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   index_u32 : UInt,
   format_u32 : UInt,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at"
@@ -285,14 +307,14 @@ pub extern "C" fn render_pipeline_desc_builder_set_color_target_format_at(
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_color_target_write_mask(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   write_mask_u64 : UInt64,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_write_mask"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_color_target_write_mask_at(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   index_u32 : UInt,
   write_mask_u64 : UInt64,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_write_mask_at"
@@ -300,7 +322,7 @@ pub extern "C" fn render_pipeline_desc_builder_set_color_target_write_mask_at(
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_blend_components(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   color_src_factor_u32 : UInt,
   color_dst_factor_u32 : UInt,
   color_operation_u32 : UInt,
@@ -312,19 +334,19 @@ pub extern "C" fn render_pipeline_desc_builder_set_blend_components(
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_enable_alpha_blend(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_disable_blend(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_disable_blend"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_vertex_buffer_layout(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   array_stride : UInt64,
   step_mode_u32 : UInt,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout"
@@ -332,7 +354,7 @@ pub extern "C" fn render_pipeline_desc_builder_set_vertex_buffer_layout(
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_add_vertex_attribute(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   format_u32 : UInt,
   offset : UInt64,
   shader_location : UInt,
@@ -341,7 +363,7 @@ pub extern "C" fn render_pipeline_desc_builder_add_vertex_attribute(
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_add_vertex_buffer_layout(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   array_stride : UInt64,
   step_mode_u32 : UInt,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_add_vertex_buffer_layout"
@@ -349,34 +371,34 @@ pub extern "C" fn render_pipeline_desc_builder_add_vertex_buffer_layout(
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_topology(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   topology_u32 : UInt,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_topology"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_polygon_mode(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   polygon_mode_u32 : UInt,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_polygon_mode"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_conservative(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   conservative : Bool,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_conservative"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_clear_primitive_extras(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_clear_primitive_extras"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_depth_stencil(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
   depth_format_u32 : UInt,
   depth_write_enabled : Bool,
   depth_compare_u32 : UInt,
@@ -385,23 +407,23 @@ pub extern "C" fn render_pipeline_desc_builder_set_depth_stencil(
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_finish(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
 ) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_desc_builder_finish"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_last_error_u32(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_last_error_u32"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_last_error_args_u64(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
 ) -> UInt64 = "mbt_wgpu_render_pipeline_desc_builder_last_error_args_u64"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_free(
-  builder : OpaquePtr,
+  builder : RenderPipelineDescBuilderObj,
 ) -> Unit = "mbt_wgpu_render_pipeline_desc_builder_free"

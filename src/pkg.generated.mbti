@@ -1466,7 +1466,7 @@ pub fn BindGroup::release_raw(Self) -> Unit
 pub fn BindGroup::set_label(Self, String) -> Unit
 
 pub struct BindGroupBuilder {
-  raw : @c.OpaquePtr
+  raw : @c.BindGroupBuilderObj
 }
 pub fn BindGroupBuilder::add_buffer(Self, UInt, Buffer, offset? : UInt64, size? : UInt64) -> Bool
 pub fn BindGroupBuilder::add_buffer_array(Self, UInt, Array[Buffer], offset? : UInt64, size? : UInt64) -> Bool
@@ -1489,7 +1489,7 @@ pub fn BindGroupLayout::release_raw(Self) -> Unit
 pub fn BindGroupLayout::set_label(Self, String) -> Unit
 
 pub struct BindGroupLayoutBuilder {
-  raw : @c.OpaquePtr
+  raw : @c.BindGroupLayoutBuilderObj
 }
 pub fn BindGroupLayoutBuilder::add_buffer(Self, UInt, ShaderStage, UInt, has_dynamic_offset? : Bool, min_binding_size? : UInt64, count? : UInt) -> Bool
 pub fn BindGroupLayoutBuilder::add_sampler(Self, UInt, ShaderStage, UInt, count? : UInt) -> Bool
@@ -1659,7 +1659,7 @@ pub fn ComputePipeline::release_raw(Self) -> Unit
 pub fn ComputePipeline::set_label(Self, String) -> Unit
 
 pub struct ComputePipelineDescBuilder {
-  raw : @c.WGPUComputePipelineDescriptorPtr
+  raw : @c.ComputePipelineDescBuilderObj
 }
 pub fn ComputePipelineDescBuilder::create_pipeline(Self, Device) -> ComputePipeline raise ComputePipelineDescError
 pub fn ComputePipelineDescBuilder::finish_descriptor_ptr(Self) -> @c.WGPUComputePipelineDescriptorPtr raise ComputePipelineDescError
@@ -2133,7 +2133,7 @@ pub fn RenderPipeline::release_raw(Self) -> Unit
 pub fn RenderPipeline::set_label(Self, String) -> Unit
 
 pub struct RenderPipelineDescBuilder {
-  raw : @c.OpaquePtr
+  raw : @c.RenderPipelineDescBuilderObj
 }
 pub fn RenderPipelineDescBuilder::add_vertex_attribute(Self, UInt, UInt64, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(Self, UInt64, UInt) -> UInt raise RenderPipelineDescError

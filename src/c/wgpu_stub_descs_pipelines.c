@@ -1356,6 +1356,109 @@ void mbt_wgpu_compute_pipeline_descriptor_free(WGPUComputePipelineDescriptor *de
   free(desc);
 }
 
+typedef struct {
+  mbt_compute_pipeline_desc_t *desc;
+} mbt_compute_pipeline_desc_builder_t;
+
+static void mbt_wgpu_compute_pipeline_desc_builder_drop(
+    mbt_compute_pipeline_desc_builder_t *builder) {
+  if (!builder || !builder->desc) {
+    return;
+  }
+  free(builder->desc);
+  builder->desc = NULL;
+}
+
+static void mbt_wgpu_compute_pipeline_desc_builder_finalize(void *self) {
+  mbt_wgpu_compute_pipeline_desc_builder_drop(
+      (mbt_compute_pipeline_desc_builder_t *)self);
+}
+
+static mbt_compute_pipeline_desc_builder_t *
+mbt_wgpu_compute_pipeline_desc_builder_handle(void *builder) {
+  return (mbt_compute_pipeline_desc_builder_t *)builder;
+}
+
+static mbt_compute_pipeline_desc_t *
+mbt_wgpu_compute_pipeline_desc_builder_unwrap(void *builder) {
+  mbt_compute_pipeline_desc_builder_t *handle =
+      mbt_wgpu_compute_pipeline_desc_builder_handle(builder);
+  if (!handle) {
+    return NULL;
+  }
+  return handle->desc;
+}
+
+void *mbt_wgpu_compute_pipeline_desc_builder_new(WGPUPipelineLayout layout,
+                                                 WGPUShaderModule shader_module) {
+  mbt_compute_pipeline_desc_t *desc =
+      (mbt_compute_pipeline_desc_t *)mbt_wgpu_compute_pipeline_descriptor_new(
+          layout, shader_module);
+  if (!desc) {
+    return NULL;
+  }
+  mbt_compute_pipeline_desc_builder_t *builder =
+      (mbt_compute_pipeline_desc_builder_t *)moonbit_make_external_object(
+          mbt_wgpu_compute_pipeline_desc_builder_finalize,
+          sizeof(mbt_compute_pipeline_desc_builder_t));
+  if (!builder) {
+    free(desc);
+    return NULL;
+  }
+  builder->desc = desc;
+  return builder;
+}
+
+int32_t mbt_wgpu_compute_pipeline_desc_builder_is_null(void *builder) {
+  return mbt_wgpu_compute_pipeline_desc_builder_unwrap(builder) == NULL;
+}
+
+uint32_t mbt_wgpu_compute_pipeline_desc_builder_set_entry_point_utf8(
+    void *builder, const uint8_t *entry_point, uint64_t entry_point_len) {
+  mbt_compute_pipeline_desc_t *desc =
+      mbt_wgpu_compute_pipeline_desc_builder_unwrap(builder);
+  if (!desc) {
+    return MBT_WGPU_CP_ERR_NULL_DESCRIPTOR;
+  }
+  return mbt_wgpu_compute_pipeline_descriptor_set_entry_point_utf8(
+      &desc->desc, entry_point, entry_point_len);
+}
+
+uint32_t mbt_wgpu_compute_pipeline_desc_builder_last_error_u32(void *builder) {
+  mbt_compute_pipeline_desc_t *desc =
+      mbt_wgpu_compute_pipeline_desc_builder_unwrap(builder);
+  if (!desc) {
+    return MBT_WGPU_CP_ERR_NULL_DESCRIPTOR;
+  }
+  return desc->last_error;
+}
+
+uint64_t mbt_wgpu_compute_pipeline_desc_builder_last_error_args_u64(void *builder) {
+  mbt_compute_pipeline_desc_t *desc =
+      mbt_wgpu_compute_pipeline_desc_builder_unwrap(builder);
+  if (!desc) {
+    return 0u;
+  }
+  return ((uint64_t)desc->last_error_a << 32) | (uint64_t)desc->last_error_b;
+}
+
+WGPUComputePipelineDescriptor *
+mbt_wgpu_compute_pipeline_desc_builder_take_descriptor(void *builder) {
+  mbt_compute_pipeline_desc_builder_t *handle =
+      mbt_wgpu_compute_pipeline_desc_builder_handle(builder);
+  if (!handle || !handle->desc) {
+    return NULL;
+  }
+  mbt_compute_pipeline_desc_t *desc = handle->desc;
+  handle->desc = NULL;
+  return &desc->desc;
+}
+
+void mbt_wgpu_compute_pipeline_desc_builder_free(void *builder) {
+  mbt_wgpu_compute_pipeline_desc_builder_drop(
+      mbt_wgpu_compute_pipeline_desc_builder_handle(builder));
+}
+
 #define MBT_WGPU_RP_MAX_ATTRS 16u
 #define MBT_WGPU_RP_MAX_VBUFS 4u
 #define MBT_WGPU_RP_MAX_TARGETS 4u
@@ -1579,20 +1682,69 @@ mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(WGPUPipelineLayout layout,
 }
 
 // -----------------------------------------------------------------------------
-// RenderPipelineDescriptor arena builder (MVP)
+// RenderPipelineDescriptor arena builder (MVP).
 //
-// The returned builder pointer aliases the descriptor allocation: it is safe to
-// free the finished descriptor via `mbt_wgpu_render_pipeline_descriptor_free()`,
-// because `desc` is the first field in the allocation.
+// The MoonBit-visible builder is an external object that owns an inner
+// descriptor arena allocation. `finish` detaches that allocation from the
+// builder so the caller can free the returned descriptor pointer explicitly.
 // -----------------------------------------------------------------------------
+
+typedef struct {
+  mbt_render_pipeline_desc_t *builder;
+} mbt_render_pipeline_desc_builder_handle_t;
+
+static void mbt_wgpu_render_pipeline_desc_builder_drop(
+    mbt_render_pipeline_desc_builder_handle_t *handle) {
+  if (!handle || !handle->builder) {
+    return;
+  }
+  free(handle->builder);
+  handle->builder = NULL;
+}
+
+static void mbt_wgpu_render_pipeline_desc_builder_finalize(void *self) {
+  mbt_wgpu_render_pipeline_desc_builder_drop(
+      (mbt_render_pipeline_desc_builder_handle_t *)self);
+}
+
+static mbt_render_pipeline_desc_t *
+mbt_wgpu_render_pipeline_desc_builder_unwrap(void *builder) {
+  mbt_render_pipeline_desc_builder_handle_t *handle =
+      (mbt_render_pipeline_desc_builder_handle_t *)builder;
+  if (!handle) {
+    return NULL;
+  }
+  return handle->builder;
+}
 
 void *mbt_wgpu_render_pipeline_desc_builder_new(WGPUPipelineLayout layout,
                                                 WGPUShaderModule shader_module) {
-  return (void *)mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
-      layout, shader_module, false, false, false);
+  mbt_render_pipeline_desc_t *inner =
+      (mbt_render_pipeline_desc_t *)mbt_wgpu_render_pipeline_descriptor_rgba8_common_new(
+          layout, shader_module, false, false, false);
+  if (!inner) {
+    return NULL;
+  }
+  mbt_render_pipeline_desc_builder_handle_t *handle =
+      (mbt_render_pipeline_desc_builder_handle_t *)moonbit_make_external_object(
+          mbt_wgpu_render_pipeline_desc_builder_finalize,
+          sizeof(mbt_render_pipeline_desc_builder_handle_t));
+  if (!handle) {
+    free(inner);
+    return NULL;
+  }
+  handle->builder = inner;
+  return handle;
 }
 
-void mbt_wgpu_render_pipeline_desc_builder_free(void *builder) { free(builder); }
+int32_t mbt_wgpu_render_pipeline_desc_builder_is_null(void *builder) {
+  return mbt_wgpu_render_pipeline_desc_builder_unwrap(builder) == NULL;
+}
+
+void mbt_wgpu_render_pipeline_desc_builder_free(void *builder) {
+  mbt_wgpu_render_pipeline_desc_builder_drop(
+      (mbt_render_pipeline_desc_builder_handle_t *)builder);
+}
 
 uint32_t mbt_wgpu_render_pipeline_desc_builder_set_entry_points_utf8(
     void *builder, const uint8_t *vs_entry, uint64_t vs_entry_len,
@@ -1600,7 +1752,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_entry_points_utf8(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   if (!vs_entry || !fs_entry || vs_entry_len == 0u || fs_entry_len == 0u) {
     return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_ENTRY_EMPTY,
@@ -1634,7 +1790,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_format(void *bui
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   out->color_targets[0].format = (WGPUTextureFormat)format;
   return MBT_WGPU_RP_OK;
@@ -1645,7 +1805,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_count(void *buil
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
 
   uint32_t count = count_u32;
@@ -1688,7 +1852,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_format_at(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   uint32_t idx = index_u32;
   if (idx >= out->color_target_count) {
@@ -1704,7 +1872,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_write_mask(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   out->color_targets[0].writeMask = (WGPUColorWriteMask)(uint32_t)write_mask_u64;
   return MBT_WGPU_RP_OK;
@@ -1715,7 +1887,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_color_target_write_mask_at(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   uint32_t idx = index_u32;
   if (idx >= out->color_target_count) {
@@ -1733,7 +1909,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_blend_components(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   out->blend_color = (WGPUBlendComponent){
       .operation = (WGPUBlendOperation)color_operation_u32,
@@ -1763,7 +1943,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_enable_alpha_blend(void *builder)
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   out->blend_color = (WGPUBlendComponent){
       .operation = WGPUBlendOperation_Add,
@@ -1794,7 +1978,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_disable_blend(void *builder) {
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   uint32_t n = out->color_target_count;
   if (n > MBT_WGPU_RP_MAX_TARGETS) {
@@ -1811,7 +1999,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_vertex_buffer_layout(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   out->vbuf_count = 1u;
   out->current_vbuf = 0u;
@@ -1835,7 +2027,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_add_vertex_buffer_layout(
   if (!builder) {
     return 0xFFFFFFFFu;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return 0xFFFFFFFFu;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   if (out->vbuf_count >= MBT_WGPU_RP_MAX_VBUFS) {
     mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_VERTEX_BUFFER_LAYOUT_EXCEEDS_MAX,
@@ -1867,7 +2063,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_add_vertex_attribute(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   if (out->vbuf_count == 0u) {
     return mbt_wgpu_rp_builder_set_error(out, MBT_WGPU_RP_ERR_NO_VERTEX_BUFFER_LAYOUT, 0u,
@@ -1896,7 +2096,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_topology(void *builder, uint3
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   out->primitive.topology = (WGPUPrimitiveTopology)topology_u32;
   out->desc.primitive.topology = (WGPUPrimitiveTopology)topology_u32;
@@ -1908,7 +2112,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_polygon_mode(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   out->primitive_extras.polygonMode = (WGPUPolygonMode)polygon_mode_u32;
   out->primitive_extras_enabled = 1u;
@@ -1921,7 +2129,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_conservative(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   out->primitive_extras.conservative = conservative ? 1u : 0u;
   out->primitive_extras_enabled = 1u;
@@ -1933,7 +2145,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_clear_primitive_extras(void *buil
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
   out->primitive_extras.polygonMode = WGPUPolygonMode_Fill;
   out->primitive_extras.conservative = 0u;
@@ -1948,7 +2164,11 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil(
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
   mbt_wgpu_rp_builder_clear_error(out);
 
   out->stencil = (WGPUStencilFaceState){
@@ -1975,29 +2195,38 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil(
 }
 
 WGPURenderPipelineDescriptor *mbt_wgpu_render_pipeline_desc_builder_finish(void *builder) {
-  if (!builder) {
+  mbt_render_pipeline_desc_builder_handle_t *handle =
+      (mbt_render_pipeline_desc_builder_handle_t *)builder;
+  if (!handle) {
     return NULL;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return NULL;
+  }
   if (out->last_error != MBT_WGPU_RP_OK) {
     return NULL;
   }
-  return (WGPURenderPipelineDescriptor *)builder;
+  handle->builder = NULL;
+  return &out->desc;
 }
 
 uint32_t mbt_wgpu_render_pipeline_desc_builder_last_error_u32(void *builder) {
-  if (!builder) {
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
   return out->last_error;
 }
 
 uint64_t mbt_wgpu_render_pipeline_desc_builder_last_error_args_u64(void *builder) {
-  if (!builder) {
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
     return 0ull;
   }
-  mbt_render_pipeline_desc_t *out = (mbt_render_pipeline_desc_t *)builder;
   return (((uint64_t)out->last_error_a) << 32) | (uint64_t)out->last_error_b;
 }
 
@@ -3379,26 +3608,52 @@ typedef struct {
   WGPUBindGroupLayoutEntryExtras **extras;
 } mbt_bind_group_layout_builder_t;
 
+static void mbt_wgpu_bind_group_layout_builder_drop(
+    mbt_bind_group_layout_builder_t *b) {
+  if (!b) {
+    return;
+  }
+  if (b->extras) {
+    for (uint64_t i = 0; i < b->len; i++) {
+      free(b->extras[i]);
+    }
+  }
+  free(b->entries);
+  free(b->extras);
+  b->entries = NULL;
+  b->extras = NULL;
+  b->capacity = 0u;
+  b->len = 0u;
+}
+
+static void mbt_wgpu_bind_group_layout_builder_finalize(void *self) {
+  mbt_wgpu_bind_group_layout_builder_drop((mbt_bind_group_layout_builder_t *)self);
+}
+
 void *mbt_wgpu_bind_group_layout_builder_new(uint64_t max_entries) {
   mbt_bind_group_layout_builder_t *b =
-      (mbt_bind_group_layout_builder_t *)malloc(sizeof(mbt_bind_group_layout_builder_t));
+      (mbt_bind_group_layout_builder_t *)moonbit_make_external_object(
+          mbt_wgpu_bind_group_layout_builder_finalize,
+          sizeof(mbt_bind_group_layout_builder_t));
   if (!b) {
     return NULL;
   }
+  b->capacity = 0u;
+  b->len = 0u;
   b->entries = NULL;
   b->extras = NULL;
   if (max_entries != 0u) {
     b->entries = (WGPUBindGroupLayoutEntry *)calloc((size_t)max_entries,
                                                    sizeof(WGPUBindGroupLayoutEntry));
     if (!b->entries) {
-      free(b);
+      moonbit_decref(b);
       return NULL;
     }
     b->extras = (WGPUBindGroupLayoutEntryExtras **)calloc(
         (size_t)max_entries, sizeof(WGPUBindGroupLayoutEntryExtras *));
     if (!b->extras) {
-      free(b->entries);
-      free(b);
+      mbt_wgpu_bind_group_layout_builder_drop(b);
+      moonbit_decref(b);
       return NULL;
     }
   }
@@ -3408,18 +3663,8 @@ void *mbt_wgpu_bind_group_layout_builder_new(uint64_t max_entries) {
 }
 
 void mbt_wgpu_bind_group_layout_builder_free(void *builder) {
-  if (!builder) {
-    return;
-  }
-  mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
-  if (b->extras) {
-    for (uint64_t i = 0; i < b->len; i++) {
-      free(b->extras[i]);
-    }
-  }
-  free(b->entries);
-  free(b->extras);
-  free(b);
+  mbt_wgpu_bind_group_layout_builder_drop(
+      (mbt_bind_group_layout_builder_t *)builder);
 }
 
 static bool mbt_wgpu_bind_group_layout_builder_push(mbt_bind_group_layout_builder_t *b,
@@ -3708,7 +3953,9 @@ WGPUBindGroupLayout mbt_wgpu_bind_group_layout_builder_finish(WGPUDevice device,
       .entryCount = (size_t)b->len,
       .entries = b->len == 0u ? NULL : b->entries,
   };
-  return wgpuDeviceCreateBindGroupLayout(device, &desc);
+  WGPUBindGroupLayout out = wgpuDeviceCreateBindGroupLayout(device, &desc);
+  mbt_wgpu_bind_group_layout_builder_drop(b);
+  return out;
 }
 
 typedef struct {
@@ -3718,38 +3965,10 @@ typedef struct {
   WGPUBindGroupEntryExtras **extras;
 } mbt_bind_group_builder_t;
 
-void *mbt_wgpu_bind_group_builder_new(uint64_t max_entries) {
-  if (max_entries == 0u) {
-    return NULL;
-  }
-  mbt_bind_group_builder_t *b =
-      (mbt_bind_group_builder_t *)malloc(sizeof(mbt_bind_group_builder_t));
+static void mbt_wgpu_bind_group_builder_drop(mbt_bind_group_builder_t *b) {
   if (!b) {
-    return NULL;
-  }
-  b->entries =
-      (WGPUBindGroupEntry *)calloc((size_t)max_entries, sizeof(WGPUBindGroupEntry));
-  if (!b->entries) {
-    free(b);
-    return NULL;
-  }
-  b->extras = (WGPUBindGroupEntryExtras **)calloc((size_t)max_entries,
-                                                 sizeof(WGPUBindGroupEntryExtras *));
-  if (!b->extras) {
-    free(b->entries);
-    free(b);
-    return NULL;
-  }
-  b->capacity = max_entries;
-  b->len = 0u;
-  return (void *)b;
-}
-
-void mbt_wgpu_bind_group_builder_free(void *builder) {
-  if (!builder) {
     return;
   }
-  mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
   if (b->extras) {
     for (uint64_t i = 0; i < b->len; i++) {
       WGPUBindGroupEntryExtras *ex = b->extras[i];
@@ -3764,7 +3983,51 @@ void mbt_wgpu_bind_group_builder_free(void *builder) {
   }
   free(b->entries);
   free(b->extras);
-  free(b);
+  b->entries = NULL;
+  b->extras = NULL;
+  b->capacity = 0u;
+  b->len = 0u;
+}
+
+static void mbt_wgpu_bind_group_builder_finalize(void *self) {
+  mbt_wgpu_bind_group_builder_drop((mbt_bind_group_builder_t *)self);
+}
+
+void *mbt_wgpu_bind_group_builder_new(uint64_t max_entries) {
+  if (max_entries == 0u) {
+    return NULL;
+  }
+  mbt_bind_group_builder_t *b =
+      (mbt_bind_group_builder_t *)moonbit_make_external_object(
+          mbt_wgpu_bind_group_builder_finalize,
+          sizeof(mbt_bind_group_builder_t));
+  if (!b) {
+    return NULL;
+  }
+  b->capacity = 0u;
+  b->len = 0u;
+  b->entries = NULL;
+  b->extras = NULL;
+  b->entries =
+      (WGPUBindGroupEntry *)calloc((size_t)max_entries, sizeof(WGPUBindGroupEntry));
+  if (!b->entries) {
+    moonbit_decref(b);
+    return NULL;
+  }
+  b->extras = (WGPUBindGroupEntryExtras **)calloc((size_t)max_entries,
+                                                 sizeof(WGPUBindGroupEntryExtras *));
+  if (!b->extras) {
+    mbt_wgpu_bind_group_builder_drop(b);
+    moonbit_decref(b);
+    return NULL;
+  }
+  b->capacity = max_entries;
+  b->len = 0u;
+  return (void *)b;
+}
+
+void mbt_wgpu_bind_group_builder_free(void *builder) {
+  mbt_wgpu_bind_group_builder_drop((mbt_bind_group_builder_t *)builder);
 }
 
 static bool mbt_wgpu_bind_group_builder_push(mbt_bind_group_builder_t *b,
@@ -3992,5 +4255,7 @@ WGPUBindGroup mbt_wgpu_bind_group_builder_finish(WGPUDevice device,
       .entryCount = (size_t)b->len,
       .entries = b->entries,
   };
-  return wgpuDeviceCreateBindGroup(device, &desc);
+  WGPUBindGroup out = wgpuDeviceCreateBindGroup(device, &desc);
+  mbt_wgpu_bind_group_builder_drop(b);
+  return out;
 }

@@ -459,22 +459,22 @@ pub struct BindGroup {
 
 ///|
 pub struct BindGroupLayoutBuilder {
-  raw : @c.OpaquePtr
+  raw : @c.BindGroupLayoutBuilderObj
 }
 
 ///|
 pub struct BindGroupBuilder {
-  raw : @c.OpaquePtr
+  raw : @c.BindGroupBuilderObj
 }
 
 ///|
 pub struct RenderPipelineDescBuilder {
-  raw : @c.OpaquePtr
+  raw : @c.RenderPipelineDescBuilderObj
 }
 
 ///|
 pub struct ComputePipelineDescBuilder {
-  raw : @c.WGPUComputePipelineDescriptorPtr
+  raw : @c.ComputePipelineDescBuilderObj
 }
 
 ///|

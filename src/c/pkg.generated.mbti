@@ -160,23 +160,23 @@ pub fn adapter_supported_features_count_u64(WGPUAdapter) -> UInt64
 
 pub fn bind_group_add_ref(WGPUBindGroup) -> Unit
 
-pub fn bind_group_builder_add_buffer(OpaquePtr, UInt, WGPUBuffer, UInt64, UInt64) -> Bool
+pub fn bind_group_builder_add_buffer(BindGroupBuilderObj, UInt, WGPUBuffer, UInt64, UInt64) -> Bool
 
-pub fn bind_group_builder_add_buffer_array(OpaquePtr, UInt, UInt64, FixedArray[WGPUBuffer], UInt64, UInt64) -> Bool
+pub fn bind_group_builder_add_buffer_array(BindGroupBuilderObj, UInt, UInt64, FixedArray[WGPUBuffer], UInt64, UInt64) -> Bool
 
-pub fn bind_group_builder_add_sampler(OpaquePtr, UInt, WGPUSampler) -> Bool
+pub fn bind_group_builder_add_sampler(BindGroupBuilderObj, UInt, WGPUSampler) -> Bool
 
-pub fn bind_group_builder_add_sampler_array(OpaquePtr, UInt, UInt64, FixedArray[WGPUSampler]) -> Bool
+pub fn bind_group_builder_add_sampler_array(BindGroupBuilderObj, UInt, UInt64, FixedArray[WGPUSampler]) -> Bool
 
-pub fn bind_group_builder_add_texture_view(OpaquePtr, UInt, WGPUTextureView) -> Bool
+pub fn bind_group_builder_add_texture_view(BindGroupBuilderObj, UInt, WGPUTextureView) -> Bool
 
-pub fn bind_group_builder_add_texture_view_array(OpaquePtr, UInt, UInt64, FixedArray[WGPUTextureView]) -> Bool
+pub fn bind_group_builder_add_texture_view_array(BindGroupBuilderObj, UInt, UInt64, FixedArray[WGPUTextureView]) -> Bool
 
-pub fn bind_group_builder_finish(WGPUDevice, WGPUBindGroupLayout, OpaquePtr, Bytes, UInt64) -> WGPUBindGroup
+pub fn bind_group_builder_finish(WGPUDevice, WGPUBindGroupLayout, BindGroupBuilderObj, Bytes, UInt64) -> WGPUBindGroup
 
-pub fn bind_group_builder_free(OpaquePtr) -> Unit
+pub fn bind_group_builder_free(BindGroupBuilderObj) -> Unit
 
-pub fn bind_group_builder_new(UInt64) -> OpaquePtr
+pub fn bind_group_builder_new(UInt64) -> BindGroupBuilderObj
 
 pub fn bind_group_descriptor_free(WGPUBindGroupDescriptorPtr) -> Unit
 
@@ -196,27 +196,27 @@ pub fn bind_group_descriptor_uniform_buffer_new(WGPUBindGroupLayout, WGPUBuffer)
 
 pub fn bind_group_layout_add_ref(WGPUBindGroupLayout) -> Unit
 
-pub fn bind_group_layout_builder_add_buffer(OpaquePtr, UInt, UInt64, UInt, Bool, UInt64) -> Bool
+pub fn bind_group_layout_builder_add_buffer(BindGroupLayoutBuilderObj, UInt, UInt64, UInt, Bool, UInt64) -> Bool
 
-pub fn bind_group_layout_builder_add_buffer_array(OpaquePtr, UInt, UInt64, UInt, Bool, UInt64, UInt) -> Bool
+pub fn bind_group_layout_builder_add_buffer_array(BindGroupLayoutBuilderObj, UInt, UInt64, UInt, Bool, UInt64, UInt) -> Bool
 
-pub fn bind_group_layout_builder_add_sampler(OpaquePtr, UInt, UInt64, UInt) -> Bool
+pub fn bind_group_layout_builder_add_sampler(BindGroupLayoutBuilderObj, UInt, UInt64, UInt) -> Bool
 
-pub fn bind_group_layout_builder_add_sampler_array(OpaquePtr, UInt, UInt64, UInt, UInt) -> Bool
+pub fn bind_group_layout_builder_add_sampler_array(BindGroupLayoutBuilderObj, UInt, UInt64, UInt, UInt) -> Bool
 
-pub fn bind_group_layout_builder_add_storage_texture(OpaquePtr, UInt, UInt64, UInt, UInt, UInt) -> Bool
+pub fn bind_group_layout_builder_add_storage_texture(BindGroupLayoutBuilderObj, UInt, UInt64, UInt, UInt, UInt) -> Bool
 
-pub fn bind_group_layout_builder_add_storage_texture_array(OpaquePtr, UInt, UInt64, UInt, UInt, UInt, UInt) -> Bool
+pub fn bind_group_layout_builder_add_storage_texture_array(BindGroupLayoutBuilderObj, UInt, UInt64, UInt, UInt, UInt, UInt) -> Bool
 
-pub fn bind_group_layout_builder_add_texture(OpaquePtr, UInt, UInt64, UInt, UInt, Bool) -> Bool
+pub fn bind_group_layout_builder_add_texture(BindGroupLayoutBuilderObj, UInt, UInt64, UInt, UInt, Bool) -> Bool
 
-pub fn bind_group_layout_builder_add_texture_array(OpaquePtr, UInt, UInt64, UInt, UInt, Bool, UInt) -> Bool
+pub fn bind_group_layout_builder_add_texture_array(BindGroupLayoutBuilderObj, UInt, UInt64, UInt, UInt, Bool, UInt) -> Bool
 
-pub fn bind_group_layout_builder_finish(WGPUDevice, OpaquePtr, Bytes, UInt64) -> WGPUBindGroupLayout
+pub fn bind_group_layout_builder_finish(WGPUDevice, BindGroupLayoutBuilderObj, Bytes, UInt64) -> WGPUBindGroupLayout
 
-pub fn bind_group_layout_builder_free(OpaquePtr) -> Unit
+pub fn bind_group_layout_builder_free(BindGroupLayoutBuilderObj) -> Unit
 
-pub fn bind_group_layout_builder_new(UInt64) -> OpaquePtr
+pub fn bind_group_layout_builder_new(UInt64) -> BindGroupLayoutBuilderObj
 
 pub fn bind_group_layout_descriptor_empty_new() -> WGPUBindGroupLayoutDescriptorPtr
 
@@ -393,6 +393,20 @@ pub fn compute_pass_set_pipeline(WGPUComputePassEncoder, WGPUComputePipeline) ->
 pub fn compute_pass_set_push_constants_bytes(WGPUComputePassEncoder, UInt, Bytes, UInt64) -> Unit
 
 pub fn compute_pass_write_timestamp(WGPUComputePassEncoder, WGPUQuerySet, UInt) -> Unit
+
+pub fn compute_pipeline_desc_builder_free(ComputePipelineDescBuilderObj) -> Unit
+
+pub fn compute_pipeline_desc_builder_is_null(ComputePipelineDescBuilderObj) -> Bool
+
+pub fn compute_pipeline_desc_builder_last_error_args_u64(ComputePipelineDescBuilderObj) -> UInt64
+
+pub fn compute_pipeline_desc_builder_last_error_u32(ComputePipelineDescBuilderObj) -> UInt
+
+pub fn compute_pipeline_desc_builder_new(WGPUPipelineLayout, WGPUShaderModule) -> ComputePipelineDescBuilderObj
+
+pub fn compute_pipeline_desc_builder_set_entry_point_utf8(ComputePipelineDescBuilderObj, Bytes, UInt64) -> UInt
+
+pub fn compute_pipeline_desc_builder_take_descriptor(ComputePipelineDescBuilderObj) -> WGPUComputePipelineDescriptorPtr
 
 pub fn compute_pipeline_descriptor_free(WGPUComputePipelineDescriptorPtr) -> Unit
 
@@ -1064,49 +1078,51 @@ pub fn render_pass_set_viewport(WGPURenderPassEncoder, Float, Float, Float, Floa
 
 pub fn render_pass_write_timestamp(WGPURenderPassEncoder, WGPUQuerySet, UInt) -> Unit
 
-pub fn render_pipeline_desc_builder_add_vertex_attribute(OpaquePtr, UInt, UInt64, UInt) -> UInt
+pub fn render_pipeline_desc_builder_add_vertex_attribute(RenderPipelineDescBuilderObj, UInt, UInt64, UInt) -> UInt
 
-pub fn render_pipeline_desc_builder_add_vertex_buffer_layout(OpaquePtr, UInt64, UInt) -> UInt
+pub fn render_pipeline_desc_builder_add_vertex_buffer_layout(RenderPipelineDescBuilderObj, UInt64, UInt) -> UInt
 
-pub fn render_pipeline_desc_builder_clear_primitive_extras(OpaquePtr) -> UInt
+pub fn render_pipeline_desc_builder_clear_primitive_extras(RenderPipelineDescBuilderObj) -> UInt
 
-pub fn render_pipeline_desc_builder_disable_blend(OpaquePtr) -> UInt
+pub fn render_pipeline_desc_builder_disable_blend(RenderPipelineDescBuilderObj) -> UInt
 
-pub fn render_pipeline_desc_builder_enable_alpha_blend(OpaquePtr) -> UInt
+pub fn render_pipeline_desc_builder_enable_alpha_blend(RenderPipelineDescBuilderObj) -> UInt
 
-pub fn render_pipeline_desc_builder_finish(OpaquePtr) -> WGPURenderPipelineDescriptorPtr
+pub fn render_pipeline_desc_builder_finish(RenderPipelineDescBuilderObj) -> WGPURenderPipelineDescriptorPtr
 
-pub fn render_pipeline_desc_builder_free(OpaquePtr) -> Unit
+pub fn render_pipeline_desc_builder_free(RenderPipelineDescBuilderObj) -> Unit
 
-pub fn render_pipeline_desc_builder_last_error_args_u64(OpaquePtr) -> UInt64
+pub fn render_pipeline_desc_builder_is_null(RenderPipelineDescBuilderObj) -> Bool
 
-pub fn render_pipeline_desc_builder_last_error_u32(OpaquePtr) -> UInt
+pub fn render_pipeline_desc_builder_last_error_args_u64(RenderPipelineDescBuilderObj) -> UInt64
 
-pub fn render_pipeline_desc_builder_new(WGPUPipelineLayout, WGPUShaderModule) -> OpaquePtr
+pub fn render_pipeline_desc_builder_last_error_u32(RenderPipelineDescBuilderObj) -> UInt
 
-pub fn render_pipeline_desc_builder_set_blend_components(OpaquePtr, UInt, UInt, UInt, UInt, UInt, UInt) -> UInt
+pub fn render_pipeline_desc_builder_new(WGPUPipelineLayout, WGPUShaderModule) -> RenderPipelineDescBuilderObj
 
-pub fn render_pipeline_desc_builder_set_color_target_count(OpaquePtr, UInt) -> UInt
+pub fn render_pipeline_desc_builder_set_blend_components(RenderPipelineDescBuilderObj, UInt, UInt, UInt, UInt, UInt, UInt) -> UInt
 
-pub fn render_pipeline_desc_builder_set_color_target_format(OpaquePtr, UInt) -> UInt
+pub fn render_pipeline_desc_builder_set_color_target_count(RenderPipelineDescBuilderObj, UInt) -> UInt
 
-pub fn render_pipeline_desc_builder_set_color_target_format_at(OpaquePtr, UInt, UInt) -> UInt
+pub fn render_pipeline_desc_builder_set_color_target_format(RenderPipelineDescBuilderObj, UInt) -> UInt
 
-pub fn render_pipeline_desc_builder_set_color_target_write_mask(OpaquePtr, UInt64) -> UInt
+pub fn render_pipeline_desc_builder_set_color_target_format_at(RenderPipelineDescBuilderObj, UInt, UInt) -> UInt
 
-pub fn render_pipeline_desc_builder_set_color_target_write_mask_at(OpaquePtr, UInt, UInt64) -> UInt
+pub fn render_pipeline_desc_builder_set_color_target_write_mask(RenderPipelineDescBuilderObj, UInt64) -> UInt
 
-pub fn render_pipeline_desc_builder_set_conservative(OpaquePtr, Bool) -> UInt
+pub fn render_pipeline_desc_builder_set_color_target_write_mask_at(RenderPipelineDescBuilderObj, UInt, UInt64) -> UInt
 
-pub fn render_pipeline_desc_builder_set_depth_stencil(OpaquePtr, UInt, Bool, UInt) -> UInt
+pub fn render_pipeline_desc_builder_set_conservative(RenderPipelineDescBuilderObj, Bool) -> UInt
 
-pub fn render_pipeline_desc_builder_set_entry_points_utf8(OpaquePtr, Bytes, UInt64, Bytes, UInt64) -> UInt
+pub fn render_pipeline_desc_builder_set_depth_stencil(RenderPipelineDescBuilderObj, UInt, Bool, UInt) -> UInt
 
-pub fn render_pipeline_desc_builder_set_polygon_mode(OpaquePtr, UInt) -> UInt
+pub fn render_pipeline_desc_builder_set_entry_points_utf8(RenderPipelineDescBuilderObj, Bytes, UInt64, Bytes, UInt64) -> UInt
 
-pub fn render_pipeline_desc_builder_set_topology(OpaquePtr, UInt) -> UInt
+pub fn render_pipeline_desc_builder_set_polygon_mode(RenderPipelineDescBuilderObj, UInt) -> UInt
 
-pub fn render_pipeline_desc_builder_set_vertex_buffer_layout(OpaquePtr, UInt64, UInt) -> UInt
+pub fn render_pipeline_desc_builder_set_topology(RenderPipelineDescBuilderObj, UInt) -> UInt
+
+pub fn render_pipeline_desc_builder_set_vertex_buffer_layout(RenderPipelineDescBuilderObj, UInt64, UInt) -> UInt
 
 pub fn render_pipeline_descriptor_color_format_alpha_blend_new(WGPUPipelineLayout, WGPUShaderModule, UInt) -> WGPURenderPipelineDescriptorPtr
 
@@ -1755,8 +1771,16 @@ pub fn wgpuTextureViewSetLabel(WGPUTextureView, WGPUStringView) -> Unit
 // Errors
 
 // Types and methods
+pub type BindGroupBuilderObj
+
+pub type BindGroupLayoutBuilderObj
+
+pub type ComputePipelineDescBuilderObj
+
 #external
 pub type OpaquePtr
+
+pub type RenderPipelineDescBuilderObj
 
 #external
 pub type UIntPtr

@@ -15,15 +15,15 @@
 ///|
 /// ComputePipelineDescriptor builder.
 ///
-/// The builder owns the final `WGPUComputePipelineDescriptor`. If you call
-/// `finish_descriptor_ptr`, you must free the returned pointer via
-/// `@c.compute_pipeline_descriptor_free(desc)`.
+/// The builder is MoonBit-managed. If you call `finish_descriptor_ptr`, it
+/// transfers the underlying descriptor out of the builder, and you must free
+/// the returned pointer via `@c.compute_pipeline_descriptor_free(desc)`.
 pub fn ComputePipelineDescBuilder::new(
   shader_module : ShaderModule,
   layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
 ) -> ComputePipelineDescBuilder raise ComputePipelineDescError {
-  let raw = @c.compute_pipeline_descriptor_new(layout.raw, shader_module.raw)
-  if @c.compute_pipeline_descriptor_ptr_is_null(raw) {
+  let raw = @c.compute_pipeline_desc_builder_new(layout.raw, shader_module.raw)
+  if @c.compute_pipeline_desc_builder_is_null(raw) {
     raise ComputePipelineDescError(COMPUTE_PIPELINE_DESC_ERR_OOM, 0U, 0U)
   }
   ComputePipelineDescBuilder::{ raw, }
@@ -35,7 +35,7 @@ pub fn ComputePipelineDescBuilder::set_entry_point(
   entry_point : String,
 ) -> Unit raise ComputePipelineDescError {
   let entry_bytes = utf8_bytes(entry_point)
-  let err = @c.compute_pipeline_descriptor_set_entry_point_utf8(
+  let err = @c.compute_pipeline_desc_builder_set_entry_point_utf8(
     self.raw,
     entry_bytes,
     entry_bytes.length().to_uint64(),
@@ -50,14 +50,15 @@ pub fn ComputePipelineDescBuilder::set_entry_point(
 pub fn ComputePipelineDescBuilder::finish_descriptor_ptr(
   self : ComputePipelineDescBuilder,
 ) -> @c.WGPUComputePipelineDescriptorPtr raise ComputePipelineDescError {
-  if @c.compute_pipeline_descriptor_ptr_is_null(self.raw) {
+  let desc = @c.compute_pipeline_desc_builder_take_descriptor(self.raw)
+  if @c.compute_pipeline_descriptor_ptr_is_null(desc) {
     raise ComputePipelineDescError(
       COMPUTE_PIPELINE_DESC_ERR_NULL_DESCRIPTOR,
       0U,
       0U,
     )
   }
-  self.raw
+  desc
 }
 
 ///|
@@ -75,15 +76,15 @@ pub fn ComputePipelineDescBuilder::create_pipeline(
 pub fn ComputePipelineDescBuilder::free(
   self : ComputePipelineDescBuilder,
 ) -> Unit {
-  @c.compute_pipeline_descriptor_free(self.raw)
+  @c.compute_pipeline_desc_builder_free(self.raw)
 }
 
 ///|
 pub fn ComputePipelineDescBuilder::last_error(
   self : ComputePipelineDescBuilder,
 ) -> ComputePipelineDescError {
-  let code = @c.compute_pipeline_descriptor_last_error_u32(self.raw)
-  let args = @c.compute_pipeline_descriptor_last_error_args_u64(self.raw)
+  let code = @c.compute_pipeline_desc_builder_last_error_u32(self.raw)
+  let args = @c.compute_pipeline_desc_builder_last_error_args_u64(self.raw)
   let a = (args >> 32).to_uint()
   let b = (args & 0xFFFFFFFFUL).to_uint()
   ComputePipelineDescError(code, a, b)
@@ -122,15 +123,15 @@ pub const COMPUTE_PIPELINE_DESC_ERR_OOM : UInt = 4U
 ///|
 /// RenderPipelineDescriptor arena builder (MVP).
 ///
-/// The builder is backed by a single C allocation that also contains the final
-/// `WGPURenderPipelineDescriptor`. If you call `finish_descriptor_ptr`, you must
-/// free the returned pointer via `@c.render_pipeline_descriptor_free(desc)`.
+/// The builder is MoonBit-managed. If you call `finish_descriptor_ptr`, it
+/// transfers the underlying descriptor allocation out of the builder, and you
+/// must free the returned pointer via `@c.render_pipeline_descriptor_free(desc)`.
 pub fn RenderPipelineDescBuilder::new(
   shader_module : ShaderModule,
   layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
 ) -> RenderPipelineDescBuilder raise RenderPipelineDescError {
   let raw = @c.render_pipeline_desc_builder_new(layout.raw, shader_module.raw)
-  if @c.opaque_ptr_is_null(raw) {
+  if @c.render_pipeline_desc_builder_is_null(raw) {
     raise RenderPipelineDescError(RENDER_PIPELINE_DESC_ERR_OOM, 0U, 0U)
   }
   RenderPipelineDescBuilder::{ raw, }
