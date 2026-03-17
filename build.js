@@ -106,6 +106,8 @@ const SUPPORTED_RELEASE = {
         '-luuid',
         '-ladvapi32',
         '-lbcrypt',
+        '-lntdll',
+        '-luserenv',
         '-ldxgi',
         '-ld3d12',
         '-ldxguid',
