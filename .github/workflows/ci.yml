@@ -377,20 +377,49 @@ jobs:
           if ([string]::IsNullOrEmpty($sdkRoot)) {
             throw "VULKAN_SDK not set by install-vulkan-sdk-action"
           }
-          $sdkBase = $sdkRoot
-          $runtimeDir = Join-Path $sdkBase "runtime\\x64"
-          if (!(Test-Path (Join-Path $runtimeDir "vulkan-1.dll")) -and ![string]::IsNullOrEmpty($sdkVer)) {
-            $candidateBase = Join-Path $sdkRoot $sdkVer
-            $candidateRuntimeDir = Join-Path $candidateBase "runtime\\x64"
-            if (Test-Path (Join-Path $candidateRuntimeDir "vulkan-1.dll")) {
-              $sdkBase = $candidateBase
-              $runtimeDir = $candidateRuntimeDir
+          $candidateSdkBases = @($sdkRoot)
+          if (![string]::IsNullOrEmpty($sdkVer)) {
+            $candidateSdkBases += Join-Path $sdkRoot $sdkVer
+          }
+          $candidateSdkBases = $candidateSdkBases | Where-Object { ![string]::IsNullOrEmpty($_) } | Select-Object -Unique
+
+          $sdkBase = $null
+          $runtimeDir = $null
+          foreach ($base in $candidateSdkBases) {
+            foreach ($dir in @((Join-Path $base "runtime\\x64"), (Join-Path $base "Bin"))) {
+              if (Test-Path (Join-Path $dir "vulkan-1.dll")) {
+                $sdkBase = $base
+                $runtimeDir = $dir
+                break
+              }
+            }
+            if ($runtimeDir) {
+              break
+            }
+            if (Test-Path $base) {
+              $foundVkDll = Get-ChildItem -Path $base -Recurse -Filter "vulkan-1.dll" -File -ErrorAction SilentlyContinue | Select-Object -First 1
+              if ($foundVkDll) {
+                $sdkBase = $base
+                $runtimeDir = Split-Path $foundVkDll.FullName -Parent
+                break
+              }
             }
           }
-          $vkDll = Join-Path $runtimeDir "vulkan-1.dll"
-          if (!(Test-Path $vkDll)) {
-            Write-Host "Vulkan loader not found at: $vkDll"
-            Get-ChildItem -Path $runtimeDir -ErrorAction SilentlyContinue | Out-Host
+          if ([string]::IsNullOrEmpty($runtimeDir)) {
+            $systemVkDll = (& where.exe vulkan-1.dll 2>$null | Select-Object -First 1)
+            if (![string]::IsNullOrWhiteSpace($systemVkDll)) {
+              $runtimeDir = Split-Path $systemVkDll.Trim() -Parent
+              Write-Host "Using Vulkan loader from PATH: $systemVkDll"
+            }
+          }
+          if ([string]::IsNullOrEmpty($runtimeDir)) {
+            Write-Host "Vulkan loader not found under candidate SDK bases:"
+            $candidateSdkBases | ForEach-Object { Write-Host "  - $_" }
+            foreach ($base in $candidateSdkBases) {
+              if (Test-Path $base) {
+                Get-ChildItem -Path $base -Recurse -Filter "vulkan-1.dll" -ErrorAction SilentlyContinue | Select-Object -First 50 | Out-Host
+              }
+            }
             throw "vulkan-1.dll missing"
           }
           # Also add Lavapipe's bin dir so its dependent DLLs resolve.
@@ -410,8 +439,23 @@ jobs:
           $lavapipeBin | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
 
           "VK_ICD_FILENAMES=$vkIcd" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-          $vulkanImportLib = Join-Path (Join-Path $sdkBase "Lib") "vulkan-1.lib"
-          if (Test-Path $vulkanImportLib) {
+          $vulkanImportLib = $null
+          foreach ($base in $candidateSdkBases) {
+            if (!(Test-Path $base)) {
+              continue
+            }
+            $candidateImportLib = Join-Path (Join-Path $base "Lib") "vulkan-1.lib"
+            if (Test-Path $candidateImportLib) {
+              $vulkanImportLib = $candidateImportLib
+              break
+            }
+            $foundImportLib = Get-ChildItem -Path $base -Recurse -Filter "vulkan-1.lib" -File -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($foundImportLib) {
+              $vulkanImportLib = $foundImportLib.FullName
+              break
+            }
+          }
+          if (![string]::IsNullOrEmpty($vulkanImportLib) -and (Test-Path $vulkanImportLib)) {
             "MBT_WGPU_VULKAN_LIB=$vulkanImportLib" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           } else {
             Write-Host "warning: Vulkan import lib not found at $vulkanImportLib"
