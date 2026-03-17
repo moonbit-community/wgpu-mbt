@@ -109,7 +109,6 @@ const SUPPORTED_RELEASE = {
         '-ld3d12',
         '-ldxguid',
         '-lopengl32',
-        '-lvulkan-1',
       ],
       pipelineAsync: true,
       compilationInfo: true,
@@ -131,7 +130,6 @@ const SUPPORTED_RELEASE = {
         '-ld3d12',
         '-ldxguid',
         '-lopengl32',
-        '-lvulkan-1',
       ],
       pipelineAsync: true,
       compilationInfo: true,
@@ -309,7 +307,27 @@ function staticLinkFlags(baseDir, asset) {
   const staticLibPath = path.join(baseDir, asset.staticLibRel);
   const normalizedStaticLibPath =
     os.platform() === 'win32' ? staticLibPath.replace(/\\/g, '/') : staticLibPath;
-  return [quoteArg(normalizedStaticLibPath), ...asset.linkFlags].join(' ');
+  const flags = [quoteArg(normalizedStaticLibPath), ...asset.linkFlags];
+  if (os.platform() === 'win32') {
+    const sdkRoot = process.env.VULKAN_SDK || '';
+    const sdkVersion = process.env.VULKAN_VERSION || '';
+    const candidates = [];
+    if (sdkRoot.length !== 0) {
+      if (sdkVersion.length !== 0) {
+        candidates.push(path.join(sdkRoot, sdkVersion, 'Lib', 'vulkan-1.lib'));
+      }
+      candidates.push(path.join(sdkRoot, 'Lib', 'vulkan-1.lib'));
+    }
+    let vulkanImportLib = null;
+    for (const candidate of candidates) {
+      if (fs.existsSync(candidate)) {
+        vulkanImportLib = candidate.replace(/\\/g, '/');
+        break;
+      }
+    }
+    flags.push(vulkanImportLib ? quoteArg(vulkanImportLib) : '-lvulkan-1');
+  }
+  return flags.join(' ');
 }
 
 function main() {
