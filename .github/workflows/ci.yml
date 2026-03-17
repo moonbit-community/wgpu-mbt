@@ -374,10 +374,19 @@ jobs:
           # Ensure the Vulkan loader (vulkan-1.dll) is discoverable.
           $sdkRoot = $env:VULKAN_SDK
           $sdkVer = $env:VULKAN_VERSION
-          if ([string]::IsNullOrEmpty($sdkRoot) -or [string]::IsNullOrEmpty($sdkVer)) {
-            throw "VULKAN_SDK/VULKAN_VERSION not set by install-vulkan-sdk-action"
+          if ([string]::IsNullOrEmpty($sdkRoot)) {
+            throw "VULKAN_SDK not set by install-vulkan-sdk-action"
           }
-          $runtimeDir = Join-Path (Join-Path $sdkRoot $sdkVer) "runtime\\x64"
+          $sdkBase = $sdkRoot
+          $runtimeDir = Join-Path $sdkBase "runtime\\x64"
+          if (!(Test-Path (Join-Path $runtimeDir "vulkan-1.dll")) -and ![string]::IsNullOrEmpty($sdkVer)) {
+            $candidateBase = Join-Path $sdkRoot $sdkVer
+            $candidateRuntimeDir = Join-Path $candidateBase "runtime\\x64"
+            if (Test-Path (Join-Path $candidateRuntimeDir "vulkan-1.dll")) {
+              $sdkBase = $candidateBase
+              $runtimeDir = $candidateRuntimeDir
+            }
+          }
           $vkDll = Join-Path $runtimeDir "vulkan-1.dll"
           if (!(Test-Path $vkDll)) {
             Write-Host "Vulkan loader not found at: $vkDll"
@@ -401,7 +410,7 @@ jobs:
           $lavapipeBin | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
 
           "VK_ICD_FILENAMES=$vkIcd" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-          $vulkanImportLib = Join-Path (Join-Path (Join-Path $sdkRoot $sdkVer) "Lib") "vulkan-1.lib"
+          $vulkanImportLib = Join-Path (Join-Path $sdkBase "Lib") "vulkan-1.lib"
           if (Test-Path $vulkanImportLib) {
             "MBT_WGPU_VULKAN_LIB=$vulkanImportLib" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           } else {
