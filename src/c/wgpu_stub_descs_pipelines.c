@@ -2210,8 +2210,8 @@ WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color_depth_u32_new(
     uint32_t color_store_op_u32, float color_clear_r_f32, float color_clear_g_f32,
     float color_clear_b_f32, float color_clear_a_f32, WGPUTextureView depth_view,
     uint32_t depth_load_op_u32, uint32_t depth_store_op_u32,
-    float depth_clear_value_f32, bool depth_read_only, uint32_t stencil_load_op_u32,
-    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32,
+    float depth_clear_value_f32, uint32_t stencil_load_op_u32,
+    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32, bool depth_read_only,
     bool stencil_read_only);
 
 WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color2_depth_u32_new(
@@ -2222,8 +2222,8 @@ WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color2_depth_u32_new(
     float color1_clear_r_f32, float color1_clear_g_f32, float color1_clear_b_f32,
     float color1_clear_a_f32, WGPUTextureView depth_view,
     uint32_t depth_load_op_u32, uint32_t depth_store_op_u32,
-    float depth_clear_value_f32, bool depth_read_only, uint32_t stencil_load_op_u32,
-    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32,
+    float depth_clear_value_f32, uint32_t stencil_load_op_u32,
+    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32, bool depth_read_only,
     bool stencil_read_only);
 
 WGPURenderPassDescriptor *
@@ -2300,8 +2300,8 @@ mbt_wgpu_render_pass_descriptor_color2_depth_new(WGPUTextureView color0_view,
       color0_view, (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 0.0f,
       0.0f, 0.0f, 1.0f, color1_view, (uint32_t)WGPULoadOp_Clear,
       (uint32_t)WGPUStoreOp_Store, 0.0f, 0.0f, 0.0f, 1.0f, depth_view,
-      (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 1.0f, false,
-      (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 0u, true);
+      (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 1.0f,
+      (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 0u, false, true);
 }
 
 WGPURenderPassDescriptor *
@@ -2313,8 +2313,8 @@ mbt_wgpu_render_pass_descriptor_color2_depth_u32_new(
     float color1_clear_r_f32, float color1_clear_g_f32, float color1_clear_b_f32,
     float color1_clear_a_f32, WGPUTextureView depth_view,
     uint32_t depth_load_op_u32, uint32_t depth_store_op_u32,
-    float depth_clear_value_f32, bool depth_read_only, uint32_t stencil_load_op_u32,
-    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32,
+    float depth_clear_value_f32, uint32_t stencil_load_op_u32,
+    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32, bool depth_read_only,
     bool stencil_read_only) {
   mbt_render_pass_desc_color2_depth_t *out =
       (mbt_render_pass_desc_color2_depth_t *)malloc(
@@ -2367,6 +2367,28 @@ mbt_wgpu_render_pass_descriptor_color2_depth_u32_new(
       .timestampWrites = NULL,
   };
   return &out->desc;
+}
+
+WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color2_depth_u32_packed_new(
+    WGPUTextureView color0_view, WGPUTextureView color1_view, WGPUTextureView depth_view,
+    const uint32_t *color_load_ops_u32, const uint32_t *color_store_ops_u32,
+    const float *color_clears_rgba_f32, uint32_t depth_load_op_u32,
+    uint32_t depth_store_op_u32, float depth_clear_value_f32,
+    uint32_t stencil_load_op_u32, uint32_t stencil_store_op_u32,
+    uint32_t stencil_clear_value_u32, uint32_t depth_read_only_u32,
+    uint32_t stencil_read_only_u32) {
+  if (!color_load_ops_u32 || !color_store_ops_u32 || !color_clears_rgba_f32) {
+    return NULL;
+  }
+  return mbt_wgpu_render_pass_descriptor_color2_depth_u32_new(
+      color0_view, color_load_ops_u32[0], color_store_ops_u32[0],
+      color_clears_rgba_f32[0], color_clears_rgba_f32[1], color_clears_rgba_f32[2],
+      color_clears_rgba_f32[3], color1_view, color_load_ops_u32[1],
+      color_store_ops_u32[1], color_clears_rgba_f32[4], color_clears_rgba_f32[5],
+      color_clears_rgba_f32[6], color_clears_rgba_f32[7], depth_view, depth_load_op_u32,
+      depth_store_op_u32, depth_clear_value_f32, stencil_load_op_u32,
+      stencil_store_op_u32, stencil_clear_value_u32, depth_read_only_u32 != 0u,
+      stencil_read_only_u32 != 0u);
 }
 
 WGPURenderPassDescriptor *
@@ -2460,8 +2482,8 @@ mbt_wgpu_render_pass_descriptor_color_depth_new(WGPUTextureView color_view,
   return mbt_wgpu_render_pass_descriptor_color_depth_u32_new(
       color_view, (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 0.0f,
       0.0f, 0.0f, 1.0f, depth_view, (uint32_t)WGPULoadOp_Clear,
-      (uint32_t)WGPUStoreOp_Store, 1.0f, false, (uint32_t)WGPULoadOp_Clear,
-      (uint32_t)WGPUStoreOp_Store, 0u, true);
+      (uint32_t)WGPUStoreOp_Store, 1.0f, (uint32_t)WGPULoadOp_Clear,
+      (uint32_t)WGPUStoreOp_Store, 0u, false, true);
 }
 
 WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color_depth_u32_new(
@@ -2469,8 +2491,8 @@ WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color_depth_u32_new(
     uint32_t color_store_op_u32, float color_clear_r_f32, float color_clear_g_f32,
     float color_clear_b_f32, float color_clear_a_f32, WGPUTextureView depth_view,
     uint32_t depth_load_op_u32, uint32_t depth_store_op_u32,
-    float depth_clear_value_f32, bool depth_read_only, uint32_t stencil_load_op_u32,
-    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32,
+    float depth_clear_value_f32, uint32_t stencil_load_op_u32,
+    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32, bool depth_read_only,
     bool stencil_read_only) {
   mbt_render_pass_desc_color_depth_t *out =
       (mbt_render_pass_desc_color_depth_t *)malloc(

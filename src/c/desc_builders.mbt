@@ -611,7 +611,26 @@ pub extern "C" fn render_pass_descriptor_color2_depth_new(
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color2_depth_new"
 
 ///|
-pub extern "C" fn render_pass_descriptor_color2_depth_u32_new(
+#borrow(color_load_ops_u32, color_store_ops_u32, color_clears_rgba_f32)
+extern "C" fn render_pass_descriptor_color2_depth_u32_packed_new(
+  color0_view : WGPUTextureView,
+  color1_view : WGPUTextureView,
+  depth_view : WGPUTextureView,
+  color_load_ops_u32 : FixedArray[UInt],
+  color_store_ops_u32 : FixedArray[UInt],
+  color_clears_rgba_f32 : FixedArray[Float],
+  depth_load_op_u32 : UInt,
+  depth_store_op_u32 : UInt,
+  depth_clear_value_f32 : Float,
+  stencil_load_op_u32 : UInt,
+  stencil_store_op_u32 : UInt,
+  stencil_clear_value_u32 : UInt,
+  depth_read_only_u32 : UInt,
+  stencil_read_only_u32 : UInt,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color2_depth_u32_packed_new"
+
+///|
+pub fn render_pass_descriptor_color2_depth_u32_new(
   color0_view : WGPUTextureView,
   color0_load_op_u32 : UInt,
   color0_store_op_u32 : UInt,
@@ -630,12 +649,30 @@ pub extern "C" fn render_pass_descriptor_color2_depth_u32_new(
   depth_load_op_u32 : UInt,
   depth_store_op_u32 : UInt,
   depth_clear_value_f32 : Float,
-  depth_read_only : Bool,
   stencil_load_op_u32 : UInt,
   stencil_store_op_u32 : UInt,
   stencil_clear_value_u32 : UInt,
+  depth_read_only : Bool,
   stencil_read_only : Bool,
-) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color2_depth_u32_new"
+) -> WGPURenderPassDescriptorPtr {
+  let color_load_ops = FixedArray::from_array([
+    color0_load_op_u32, color1_load_op_u32,
+  ])
+  let color_store_ops = FixedArray::from_array([
+    color0_store_op_u32, color1_store_op_u32,
+  ])
+  let color_clears = FixedArray::from_array([
+    color0_clear_r_f32, color0_clear_g_f32, color0_clear_b_f32, color0_clear_a_f32,
+    color1_clear_r_f32, color1_clear_g_f32, color1_clear_b_f32, color1_clear_a_f32,
+  ])
+  let depth_read_only_u32 = if depth_read_only { 1U } else { 0U }
+  let stencil_read_only_u32 = if stencil_read_only { 1U } else { 0U }
+  render_pass_descriptor_color2_depth_u32_packed_new(
+    color0_view, color1_view, depth_view, color_load_ops, color_store_ops, color_clears,
+    depth_load_op_u32, depth_store_op_u32, depth_clear_value_f32, stencil_load_op_u32,
+    stencil_store_op_u32, stencil_clear_value_u32, depth_read_only_u32, stencil_read_only_u32,
+  )
+}
 
 ///|
 pub extern "C" fn render_pass_descriptor_color_clear_default_occlusion_new(
@@ -676,10 +713,10 @@ pub extern "C" fn render_pass_descriptor_color_depth_u32_new(
   depth_load_op_u32 : UInt,
   depth_store_op_u32 : UInt,
   depth_clear_value_f32 : Float,
-  depth_read_only : Bool,
   stencil_load_op_u32 : UInt,
   stencil_store_op_u32 : UInt,
   stencil_clear_value_u32 : UInt,
+  depth_read_only : Bool,
   stencil_read_only : Bool,
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_depth_u32_new"
 

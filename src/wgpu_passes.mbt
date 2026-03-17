@@ -381,7 +381,14 @@ pub fn CommandEncoder::begin_render_pass_color2_depth(
   color1_view : TextureView,
   depth_view : TextureView,
 ) -> RenderPass {
-  self.begin_render_pass_color2_depth_u32(color0_view, color1_view, depth_view)
+  RenderPass::{
+    raw: @c.command_encoder_begin_render_pass_color2_depth(
+      self.raw,
+      color0_view.raw,
+      color1_view.raw,
+      depth_view.raw,
+    ),
+  }
 }
 
 ///|
@@ -432,10 +439,10 @@ pub fn CommandEncoder::begin_render_pass_color2_depth_u32(
       depth_load_op_u32,
       depth_store_op_u32,
       depth_clear_value_f32,
-      depth_read_only,
       stencil_load_op_u32,
       stencil_store_op_u32,
       stencil_clear_value_u32,
+      depth_read_only,
       stencil_read_only,
     ),
   }
@@ -530,10 +537,10 @@ pub fn CommandEncoder::begin_render_pass_color_depth_u32(
       depth_load_op_u32,
       depth_store_op_u32,
       depth_clear_value_f32,
-      depth_read_only,
       stencil_load_op_u32,
       stencil_store_op_u32,
       stencil_clear_value_u32,
+      depth_read_only,
       stencil_read_only,
     ),
   }
