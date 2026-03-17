@@ -30,6 +30,11 @@ int32_t mbt_wgpu_render_pipeline_descriptor_ptr_is_null(
   return p == NULL;
 }
 
+int32_t mbt_wgpu_compute_pipeline_descriptor_ptr_is_null(
+    WGPUComputePipelineDescriptor *p) {
+  return p == NULL;
+}
+
 int32_t mbt_wgpu_adapter_is_null(WGPUAdapter adapter) { return adapter == NULL; }
 int32_t mbt_wgpu_device_is_null(WGPUDevice device) { return device == NULL; }
 

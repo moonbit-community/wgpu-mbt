@@ -493,6 +493,26 @@ pub extern "C" fn compute_pipeline_descriptor_new(
 ) -> WGPUComputePipelineDescriptorPtr = "mbt_wgpu_compute_pipeline_descriptor_new"
 
 ///|
+#borrow(desc, entry_point)
+pub extern "C" fn compute_pipeline_descriptor_set_entry_point_utf8(
+  desc : WGPUComputePipelineDescriptorPtr,
+  entry_point : Bytes,
+  entry_point_len : UInt64,
+) -> UInt = "mbt_wgpu_compute_pipeline_descriptor_set_entry_point_utf8"
+
+///|
+#borrow(desc)
+pub extern "C" fn compute_pipeline_descriptor_last_error_u32(
+  desc : WGPUComputePipelineDescriptorPtr,
+) -> UInt = "mbt_wgpu_compute_pipeline_descriptor_last_error_u32"
+
+///|
+#borrow(desc)
+pub extern "C" fn compute_pipeline_descriptor_last_error_args_u64(
+  desc : WGPUComputePipelineDescriptorPtr,
+) -> UInt64 = "mbt_wgpu_compute_pipeline_descriptor_last_error_args_u64"
+
+///|
 #borrow(desc)
 pub extern "C" fn compute_pipeline_descriptor_free(
   desc : WGPUComputePipelineDescriptorPtr,

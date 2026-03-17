@@ -1,0 +1,97 @@
+// Copyright 2026 International Digital Economy Academy
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+///|
+fn readback_u32_le_entry_test(bytes : Bytes) -> UInt {
+  if bytes.length() < 4 {
+    return 0U
+  }
+  bytes[0].to_uint() |
+  (bytes[1].to_uint() << 8) |
+  (bytes[2].to_uint() << 16) |
+  (bytes[3].to_uint() << 24)
+}
+
+///|
+fn run_custom_compute_entry_path(mode : UInt) -> UInt raise Error {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let queue = device.queue()
+  let storage_usage = @wgpu.BUFFER_USAGE_STORAGE | @wgpu.BUFFER_USAGE_COPY_SRC
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let storage_buf = device.create_buffer(size=4UL, usage=bu(storage_usage))
+  let readback_buf = device.create_buffer(size=4UL, usage=bu(readback_usage))
+  let bgl = device.create_bind_group_layout_storage_buffer()
+  let pl = device.create_pipeline_layout_1(bgl)
+  let bg = device.create_bind_group_storage_buffer(bgl, storage_buf)
+  let wgsl : String =
+    #|@group(0) @binding(0)
+    #|var<storage, read_write> data: array<u32>;
+    #|
+    #|@compute @workgroup_size(1)
+    #|fn main() {
+    #|  data[0] = 7u;
+    #|}
+    #|
+    #|@compute @workgroup_size(1)
+    #|fn cs_custom() {
+    #|  data[0] = 42u;
+    #|}
+    #|
+  let sm = device.create_shader_module_wgsl(wgsl)
+  let pipeline = if mode == 0U {
+    device.create_compute_pipeline_with_layout_entry(pl, sm, "cs_custom")
+  } else {
+    let builder = @wgpu.ComputePipelineDescBuilder::new(sm, layout=pl)
+    builder.set_entry_point("cs_custom")
+    builder.create_pipeline(device)
+  }
+  let encoder = device.create_command_encoder()
+  let pass = encoder.begin_compute_pass()
+  pass.set_pipeline(pipeline)
+  pass.set_bind_group0(bg)
+  pass.dispatch_workgroups(1U, 1U, 1U)
+  pass.end()
+  pass.release()
+  encoder.copy_buffer_to_buffer(storage_buf, 0UL, readback_buf, 0UL, 4UL)
+  let cmd = encoder.finish()
+  queue.submit_one(cmd)
+  let out = readback_buf.readback(instance, 0UL, 4UL)
+  let value = readback_u32_le_entry_test(out)
+  cmd.release()
+  encoder.release()
+  bg.release()
+  pl.release()
+  bgl.release()
+  pipeline.release()
+  sm.release()
+  readback_buf.release()
+  storage_buf.release()
+  queue.release()
+  device.release()
+  adapter.release()
+  instance.release()
+  value
+}
+
+///|
+test "wgpu compute pipeline: custom entry point via device helper" {
+  inspect(run_custom_compute_entry_path(0U), content="42")
+}
+
+///|
+test "wgpu compute pipeline: custom entry point via descriptor builder" {
+  inspect(run_custom_compute_entry_path(1U), content="42")
+}

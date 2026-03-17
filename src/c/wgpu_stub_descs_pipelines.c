@@ -1145,8 +1145,55 @@ void mbt_wgpu_render_bundle_descriptor_free(WGPURenderBundleDescriptor *desc) {
 typedef struct {
   WGPUComputePipelineDescriptor desc;
   WGPUProgrammableStageDescriptor stage;
-  char entry[4];
+  char entry[64];
+  uint32_t last_error;
+  uint32_t last_error_a;
+  uint32_t last_error_b;
 } mbt_compute_pipeline_desc_t;
+
+typedef enum {
+  MBT_WGPU_CP_OK = 0u,
+  MBT_WGPU_CP_ERR_NULL_DESCRIPTOR = 1u,
+  MBT_WGPU_CP_ERR_ENTRY_EMPTY = 2u,
+  MBT_WGPU_CP_ERR_ENTRY_TOO_LONG = 3u,
+} mbt_wgpu_cp_err_t;
+
+static void mbt_wgpu_cp_desc_clear_error(mbt_compute_pipeline_desc_t *out) {
+  out->last_error = MBT_WGPU_CP_OK;
+  out->last_error_a = 0u;
+  out->last_error_b = 0u;
+}
+
+static uint32_t mbt_wgpu_cp_desc_set_error(mbt_compute_pipeline_desc_t *out,
+                                           uint32_t code, uint32_t a,
+                                           uint32_t b) {
+  out->last_error = code;
+  out->last_error_a = a;
+  out->last_error_b = b;
+  return code;
+}
+
+static uint32_t mbt_wgpu_compute_pipeline_descriptor_apply_entry_point(
+    mbt_compute_pipeline_desc_t *out, const uint8_t *entry_point,
+    uint64_t entry_point_len) {
+  mbt_wgpu_cp_desc_clear_error(out);
+  if (!entry_point || entry_point_len == 0u) {
+    return mbt_wgpu_cp_desc_set_error(out, MBT_WGPU_CP_ERR_ENTRY_EMPTY,
+                                      (uint32_t)entry_point_len, 0u);
+  }
+  if (entry_point_len > sizeof(out->entry)) {
+    return mbt_wgpu_cp_desc_set_error(out, MBT_WGPU_CP_ERR_ENTRY_TOO_LONG,
+                                      (uint32_t)entry_point_len,
+                                      (uint32_t)sizeof(out->entry));
+  }
+
+  memset(out->entry, 0, sizeof(out->entry));
+  memcpy(out->entry, entry_point, (size_t)entry_point_len);
+  out->stage.entryPoint =
+      (WGPUStringView){.data = out->entry, .length = (size_t)entry_point_len};
+  out->desc.compute.entryPoint = out->stage.entryPoint;
+  return MBT_WGPU_CP_OK;
+}
 
 WGPUQueryType mbt_wgpu_query_type_pipeline_statistics(void) {
   return (WGPUQueryType)WGPUNativeQueryType_PipelineStatistics;
@@ -1237,11 +1284,11 @@ mbt_wgpu_compute_pipeline_descriptor_new(WGPUPipelineLayout layout,
   if (!out) {
     return NULL;
   }
-  memcpy(out->entry, "main", 4);
+  memset(out->entry, 0, sizeof(out->entry));
   out->stage = (WGPUProgrammableStageDescriptor){
       .nextInChain = NULL,
       .module = shader_module,
-      .entryPoint = (WGPUStringView){.data = out->entry, .length = 4},
+      .entryPoint = (WGPUStringView){.data = NULL, .length = 0},
       .constantCount = 0,
       .constants = NULL,
   };
@@ -1251,7 +1298,39 @@ mbt_wgpu_compute_pipeline_descriptor_new(WGPUPipelineLayout layout,
       .layout = layout,
       .compute = out->stage,
   };
+  mbt_wgpu_cp_desc_clear_error(out);
+  mbt_wgpu_compute_pipeline_descriptor_apply_entry_point(
+      out, (const uint8_t *)"main", 4u);
   return &out->desc;
+}
+
+uint32_t mbt_wgpu_compute_pipeline_descriptor_set_entry_point_utf8(
+    WGPUComputePipelineDescriptor *desc, const uint8_t *entry_point,
+    uint64_t entry_point_len) {
+  if (!desc) {
+    return MBT_WGPU_CP_ERR_NULL_DESCRIPTOR;
+  }
+  mbt_compute_pipeline_desc_t *out = (mbt_compute_pipeline_desc_t *)desc;
+  return mbt_wgpu_compute_pipeline_descriptor_apply_entry_point(
+      out, entry_point, entry_point_len);
+}
+
+uint32_t mbt_wgpu_compute_pipeline_descriptor_last_error_u32(
+    WGPUComputePipelineDescriptor *desc) {
+  if (!desc) {
+    return MBT_WGPU_CP_ERR_NULL_DESCRIPTOR;
+  }
+  mbt_compute_pipeline_desc_t *out = (mbt_compute_pipeline_desc_t *)desc;
+  return out->last_error;
+}
+
+uint64_t mbt_wgpu_compute_pipeline_descriptor_last_error_args_u64(
+    WGPUComputePipelineDescriptor *desc) {
+  if (!desc) {
+    return 0u;
+  }
+  mbt_compute_pipeline_desc_t *out = (mbt_compute_pipeline_desc_t *)desc;
+  return ((uint64_t)out->last_error_a << 32) | (uint64_t)out->last_error_b;
 }
 
 void mbt_wgpu_compute_pipeline_descriptor_free(WGPUComputePipelineDescriptor *desc) {

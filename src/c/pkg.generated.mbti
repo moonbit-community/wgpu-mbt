@@ -388,7 +388,15 @@ pub fn compute_pass_write_timestamp(WGPUComputePassEncoder, WGPUQuerySet, UInt) 
 
 pub fn compute_pipeline_descriptor_free(WGPUComputePipelineDescriptorPtr) -> Unit
 
+pub fn compute_pipeline_descriptor_last_error_args_u64(WGPUComputePipelineDescriptorPtr) -> UInt64
+
+pub fn compute_pipeline_descriptor_last_error_u32(WGPUComputePipelineDescriptorPtr) -> UInt
+
 pub fn compute_pipeline_descriptor_new(WGPUPipelineLayout, WGPUShaderModule) -> WGPUComputePipelineDescriptorPtr
+
+pub fn compute_pipeline_descriptor_ptr_is_null(WGPUComputePipelineDescriptorPtr) -> Bool
+
+pub fn compute_pipeline_descriptor_set_entry_point_utf8(WGPUComputePipelineDescriptorPtr, Bytes, UInt64) -> UInt
 
 pub fn compute_pipeline_release(WGPUComputePipeline) -> Unit
 
@@ -823,6 +831,8 @@ pub fn null_adapter() -> WGPUAdapter
 pub fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescriptorPtr
 
 pub fn null_command_encoder_descriptor_ptr() -> WGPUCommandEncoderDescriptorPtr
+
+pub fn null_compute_pipeline_descriptor_ptr() -> WGPUComputePipelineDescriptorPtr
 
 pub fn null_device() -> WGPUDevice
 

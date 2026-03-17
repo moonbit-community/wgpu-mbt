@@ -212,6 +212,14 @@ pub const COMPOSITE_ALPHA_MODE_PREMULTIPLIED : UInt = 0x00000002
 
 pub const COMPOSITE_ALPHA_MODE_UNPREMULTIPLIED : UInt = 0x00000003
 
+pub const COMPUTE_PIPELINE_DESC_ERR_ENTRY_EMPTY : UInt = 2
+
+pub const COMPUTE_PIPELINE_DESC_ERR_ENTRY_TOO_LONG : UInt = 3
+
+pub const COMPUTE_PIPELINE_DESC_ERR_NULL_DESCRIPTOR : UInt = 1
+
+pub const COMPUTE_PIPELINE_DESC_ERR_OOM : UInt = 4
+
 pub const COPY_STRIDE_UNDEFINED : UInt = 0xFFFFFFFF
 
 pub const CREATE_PIPELINE_ASYNC_STATUS_FORCE32 : UInt = 0x7FFFFFFF
@@ -1270,6 +1278,9 @@ pub fn surface_descriptor_xlib_new(@c.OpaquePtr, UInt64) -> @c.WGPUSurfaceDescri
 type BufferSyncError
 pub fn BufferSyncError::message(Self) -> String
 
+type ComputePipelineDescError
+pub fn ComputePipelineDescError::message(Self) -> String
+
 type OptionalSymbolError
 pub fn OptionalSymbolError::kind_u32(Self) -> UInt
 pub fn OptionalSymbolError::message(Self) -> String
@@ -1645,6 +1656,16 @@ pub fn ComputePipeline::release(Self) -> Unit
 pub fn ComputePipeline::release_raw(Self) -> Unit
 pub fn ComputePipeline::set_label(Self, String) -> Unit
 
+pub struct ComputePipelineDescBuilder {
+  raw : @c.WGPUComputePipelineDescriptorPtr
+}
+pub fn ComputePipelineDescBuilder::create_pipeline(Self, Device) -> ComputePipeline raise ComputePipelineDescError
+pub fn ComputePipelineDescBuilder::finish_descriptor_ptr(Self) -> @c.WGPUComputePipelineDescriptorPtr raise ComputePipelineDescError
+pub fn ComputePipelineDescBuilder::free(Self) -> Unit
+pub fn ComputePipelineDescBuilder::last_error(Self) -> ComputePipelineDescError
+pub fn ComputePipelineDescBuilder::new(ShaderModule, layout? : PipelineLayout) -> Self raise ComputePipelineDescError
+pub fn ComputePipelineDescBuilder::set_entry_point(Self, String) -> Unit raise ComputePipelineDescError
+
 pub struct Device {
   raw : @c.WGPUDevice
 }
@@ -1678,9 +1699,11 @@ pub fn Device::create_command_encoder_raw(Self, @c.WGPUCommandEncoderDescriptorP
 pub fn Device::create_compute_pipeline(Self, ShaderModule) -> ComputePipeline
 pub fn Device::create_compute_pipeline_async_sync_ptr(Self, Instance, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline
 pub fn Device::create_compute_pipeline_async_sync_ptr_or_raise(Self, Instance, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline raise OptionalSymbolError
+pub fn Device::create_compute_pipeline_entry(Self, ShaderModule, String) -> ComputePipeline raise ComputePipelineDescError
 pub fn Device::create_compute_pipeline_ptr(Self, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline
 pub fn Device::create_compute_pipeline_raw(Self, @c.WGPUComputePipelineDescriptorPtr) -> ComputePipeline
 pub fn Device::create_compute_pipeline_with_layout(Self, PipelineLayout, ShaderModule) -> ComputePipeline
+pub fn Device::create_compute_pipeline_with_layout_entry(Self, PipelineLayout, ShaderModule, String) -> ComputePipeline raise ComputePipelineDescError
 pub fn Device::create_pipeline_layout(Self, @c.WGPUPipelineLayoutDescriptorPtr) -> PipelineLayout
 pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_2(Self, BindGroupLayout, BindGroupLayout) -> PipelineLayout

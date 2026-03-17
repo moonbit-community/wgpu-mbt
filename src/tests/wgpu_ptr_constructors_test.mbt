@@ -49,6 +49,9 @@ test "wgpu ptr-based constructors + raw handles" {
     #|@compute @workgroup_size(1)
     #|fn main() {}
     #|
+    #|@compute @workgroup_size(1)
+    #|fn cs_alt() {}
+    #|
   let wgsl_bytes = @utf8.encode(wgsl[:], bom=false)
   let sm_desc = @wgpu_c.shader_module_descriptor_wgsl_new(
     wgsl_bytes,
@@ -59,6 +62,15 @@ test "wgpu ptr-based constructors + raw handles" {
   let cp_desc = @wgpu_c.compute_pipeline_descriptor_new(
     pipeline_layout.raw_handle(),
     sm.raw_handle(),
+  )
+  let cp_entry_bytes = @utf8.encode("cs_alt"[:], bom=false)
+  inspect(
+    @wgpu_c.compute_pipeline_descriptor_set_entry_point_utf8(
+      cp_desc,
+      cp_entry_bytes,
+      cp_entry_bytes.length().to_uint64(),
+    ),
+    content="0",
   )
   let cp = device.create_compute_pipeline_ptr(cp_desc)
   @wgpu_c.compute_pipeline_descriptor_free(cp_desc)

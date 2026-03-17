@@ -473,8 +473,18 @@ pub struct RenderPipelineDescBuilder {
 }
 
 ///|
+pub struct ComputePipelineDescBuilder {
+  raw : @c.WGPUComputePipelineDescriptorPtr
+}
+
+///|
 suberror RenderPipelineDescError {
   RenderPipelineDescError(UInt, UInt, UInt)
+}
+
+///|
+suberror ComputePipelineDescError {
+  ComputePipelineDescError(UInt, UInt, UInt)
 }
 
 ///|

@@ -13,6 +13,113 @@
 // limitations under the License.
 
 ///|
+/// ComputePipelineDescriptor builder.
+///
+/// The builder owns the final `WGPUComputePipelineDescriptor`. If you call
+/// `finish_descriptor_ptr`, you must free the returned pointer via
+/// `@c.compute_pipeline_descriptor_free(desc)`.
+pub fn ComputePipelineDescBuilder::new(
+  shader_module : ShaderModule,
+  layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
+) -> ComputePipelineDescBuilder raise ComputePipelineDescError {
+  let raw = @c.compute_pipeline_descriptor_new(layout.raw, shader_module.raw)
+  if @c.compute_pipeline_descriptor_ptr_is_null(raw) {
+    raise ComputePipelineDescError(COMPUTE_PIPELINE_DESC_ERR_OOM, 0U, 0U)
+  }
+  ComputePipelineDescBuilder::{ raw, }
+}
+
+///|
+pub fn ComputePipelineDescBuilder::set_entry_point(
+  self : ComputePipelineDescBuilder,
+  entry_point : String,
+) -> Unit raise ComputePipelineDescError {
+  let entry_bytes = utf8_bytes(entry_point)
+  let err = @c.compute_pipeline_descriptor_set_entry_point_utf8(
+    self.raw,
+    entry_bytes,
+    entry_bytes.length().to_uint64(),
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn ComputePipelineDescBuilder::finish_descriptor_ptr(
+  self : ComputePipelineDescBuilder,
+) -> @c.WGPUComputePipelineDescriptorPtr raise ComputePipelineDescError {
+  if @c.compute_pipeline_descriptor_ptr_is_null(self.raw) {
+    raise ComputePipelineDescError(
+      COMPUTE_PIPELINE_DESC_ERR_NULL_DESCRIPTOR,
+      0U,
+      0U,
+    )
+  }
+  self.raw
+}
+
+///|
+pub fn ComputePipelineDescBuilder::create_pipeline(
+  self : ComputePipelineDescBuilder,
+  device : Device,
+) -> ComputePipeline raise ComputePipelineDescError {
+  let desc = self.finish_descriptor_ptr()
+  let pipeline = device.create_compute_pipeline_ptr(desc)
+  @c.compute_pipeline_descriptor_free(desc)
+  pipeline
+}
+
+///|
+pub fn ComputePipelineDescBuilder::free(
+  self : ComputePipelineDescBuilder,
+) -> Unit {
+  @c.compute_pipeline_descriptor_free(self.raw)
+}
+
+///|
+pub fn ComputePipelineDescBuilder::last_error(
+  self : ComputePipelineDescBuilder,
+) -> ComputePipelineDescError {
+  let code = @c.compute_pipeline_descriptor_last_error_u32(self.raw)
+  let args = @c.compute_pipeline_descriptor_last_error_args_u64(self.raw)
+  let a = (args >> 32).to_uint()
+  let b = (args & 0xFFFFFFFFUL).to_uint()
+  ComputePipelineDescError(code, a, b)
+}
+
+///|
+pub fn ComputePipelineDescError::message(
+  self : ComputePipelineDescError,
+) -> String {
+  let ComputePipelineDescError(code, _, _) = self
+  if code == COMPUTE_PIPELINE_DESC_ERR_NULL_DESCRIPTOR {
+    "descriptor is NULL"
+  } else if code == COMPUTE_PIPELINE_DESC_ERR_ENTRY_EMPTY {
+    "entry point is empty"
+  } else if code == COMPUTE_PIPELINE_DESC_ERR_ENTRY_TOO_LONG {
+    "entry point too long"
+  } else if code == COMPUTE_PIPELINE_DESC_ERR_OOM {
+    "allocation failed"
+  } else {
+    "unknown error"
+  }
+}
+
+///|
+pub const COMPUTE_PIPELINE_DESC_ERR_NULL_DESCRIPTOR : UInt = 1U
+
+///|
+pub const COMPUTE_PIPELINE_DESC_ERR_ENTRY_EMPTY : UInt = 2U
+
+///|
+pub const COMPUTE_PIPELINE_DESC_ERR_ENTRY_TOO_LONG : UInt = 3U
+
+///|
+pub const COMPUTE_PIPELINE_DESC_ERR_OOM : UInt = 4U
+
+///|
 /// RenderPipelineDescriptor arena builder (MVP).
 ///
 /// The builder is backed by a single C allocation that also contains the final

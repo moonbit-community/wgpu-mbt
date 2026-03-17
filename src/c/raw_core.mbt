@@ -108,6 +108,14 @@ pub extern "C" fn render_pipeline_descriptor_ptr_is_null(
 ) -> Bool = "mbt_wgpu_render_pipeline_descriptor_ptr_is_null"
 
 ///|
+pub extern "C" fn null_compute_pipeline_descriptor_ptr() -> WGPUComputePipelineDescriptorPtr = "mbt_wgpu_null_ptr"
+
+///|
+pub extern "C" fn compute_pipeline_descriptor_ptr_is_null(
+  p : WGPUComputePipelineDescriptorPtr,
+) -> Bool = "mbt_wgpu_compute_pipeline_descriptor_ptr_is_null"
+
+///|
 fn align_up_u32(value : UInt, align : UInt) -> UInt {
   let rem = value % align
   if rem == 0U {

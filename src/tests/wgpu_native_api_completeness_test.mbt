@@ -147,7 +147,13 @@ test "wgpu native api: primitive extras builder calls" {
     builder.set_polygon_mode_u32(@wgpu.POLYGON_MODE_FILL)
     builder.set_conservative_rasterization(false)
     builder.clear_primitive_extras()
+    let cp_builder = @wgpu.ComputePipelineDescBuilder::new(
+      sm,
+      layout=push_layout,
+    )
+    cp_builder.set_entry_point("cs_main")
 
+    cp_builder.free()
     builder.free()
     push_layout.release()
     sm.release()

@@ -730,6 +730,25 @@ pub fn Device::create_compute_pipeline(
 }
 
 ///|
+pub fn Device::create_compute_pipeline_entry(
+  self : Device,
+  shader_module : ShaderModule,
+  entry_point : String,
+) -> ComputePipeline raise ComputePipelineDescError {
+  let builder = ComputePipelineDescBuilder::new(shader_module)
+  builder.set_entry_point(entry_point) catch {
+    e => {
+      builder.free()
+      raise e
+    }
+  }
+  let desc = builder.finish_descriptor_ptr()
+  let pipeline = self.create_compute_pipeline_ptr(desc)
+  @c.compute_pipeline_descriptor_free(desc)
+  pipeline
+}
+
+///|
 pub fn Device::create_compute_pipeline_ptr(
   self : Device,
   descriptor : @c.WGPUComputePipelineDescriptorPtr,
@@ -1408,6 +1427,26 @@ pub fn Device::create_compute_pipeline_with_layout(
       shader_module.raw,
     ),
   }
+}
+
+///|
+pub fn Device::create_compute_pipeline_with_layout_entry(
+  self : Device,
+  layout : PipelineLayout,
+  shader_module : ShaderModule,
+  entry_point : String,
+) -> ComputePipeline raise ComputePipelineDescError {
+  let builder = ComputePipelineDescBuilder::new(shader_module, layout~)
+  builder.set_entry_point(entry_point) catch {
+    e => {
+      builder.free()
+      raise e
+    }
+  }
+  let desc = builder.finish_descriptor_ptr()
+  let pipeline = self.create_compute_pipeline_ptr(desc)
+  @c.compute_pipeline_descriptor_free(desc)
+  pipeline
 }
 
 ///|

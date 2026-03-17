@@ -1890,11 +1890,28 @@ declare pub fn Device::create_compute_pipeline(
 
 ///|
 #declaration_only
+declare pub fn Device::create_compute_pipeline_entry(
+  self : Device,
+  shader_module : ShaderModule,
+  entry_point : String,
+) -> ComputePipeline raise ComputePipelineDescError
+
+///|
+#declaration_only
 declare pub fn Device::create_compute_pipeline_with_layout(
   self : Device,
   layout : PipelineLayout,
   shader_module : ShaderModule,
 ) -> ComputePipeline
+
+///|
+#declaration_only
+declare pub fn Device::create_compute_pipeline_with_layout_entry(
+  self : Device,
+  layout : PipelineLayout,
+  shader_module : ShaderModule,
+  entry_point : String,
+) -> ComputePipeline raise ComputePipelineDescError
 
 ///|
 #declaration_only
@@ -2374,6 +2391,51 @@ declare pub fn BindGroupBuilder::finish(
 ///|
 #declaration_only
 declare pub fn BindGroupBuilder::free(self : BindGroupBuilder) -> Unit
+
+///|
+#declaration_only
+declare pub fn ComputePipelineDescBuilder::new(
+  shader_module : ShaderModule,
+  layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
+) -> ComputePipelineDescBuilder raise ComputePipelineDescError
+
+///|
+#declaration_only
+declare pub fn ComputePipelineDescBuilder::set_entry_point(
+  self : ComputePipelineDescBuilder,
+  entry_point : String,
+) -> Unit raise ComputePipelineDescError
+
+///|
+#declaration_only
+declare pub fn ComputePipelineDescBuilder::finish_descriptor_ptr(
+  self : ComputePipelineDescBuilder,
+) -> @c.WGPUComputePipelineDescriptorPtr raise ComputePipelineDescError
+
+///|
+#declaration_only
+declare pub fn ComputePipelineDescBuilder::create_pipeline(
+  self : ComputePipelineDescBuilder,
+  device : Device,
+) -> ComputePipeline raise ComputePipelineDescError
+
+///|
+#declaration_only
+declare pub fn ComputePipelineDescBuilder::free(
+  self : ComputePipelineDescBuilder,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn ComputePipelineDescBuilder::last_error(
+  self : ComputePipelineDescBuilder,
+) -> ComputePipelineDescError
+
+///|
+#declaration_only
+declare pub fn ComputePipelineDescError::message(
+  self : ComputePipelineDescError,
+) -> String
 
 ///|
 #declaration_only
