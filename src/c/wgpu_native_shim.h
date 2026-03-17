@@ -56,7 +56,7 @@ typedef enum WGPUNativeFeature {
   WGPUNativeFeature_MappablePrimaryBuffers = 0x0003000E,
   WGPUNativeFeature_BufferBindingArray = 0x0003000F,
   WGPUNativeFeature_UniformBufferAndStorageTextureArrayNonUniformIndexing = 0x00030010,
-  // TODO: requires wgpu.h api change
+  // TODO: requires upstream C header and sampler border-color api
   // WGPUNativeFeature_AddressModeClampToZero = 0x00030011,
   // WGPUNativeFeature_AddressModeClampToBorder = 0x00030012,
   WGPUNativeFeature_PolygonModeLine = 0x00030013,

@@ -129,13 +129,34 @@ pub extern "C" fn surface_configuration_free(
 ) -> Unit = "mbt_wgpu_surface_configuration_free"
 
 ///|
-pub extern "C" fn request_adapter_options_new_u32(
+extern "C" fn request_adapter_options_new_u32_packed(
+  feature_level_u32 : UInt,
+  power_preference_u32 : UInt,
+  force_fallback_adapter_u32 : UInt,
+  backend_type_u32 : UInt,
+  compatible_surface : WGPUSurface,
+) -> WGPURequestAdapterOptionsPtr = "mbt_wgpu_request_adapter_options_new_u32"
+
+///|
+pub fn request_adapter_options_new_u32(
   feature_level_u32 : UInt,
   power_preference_u32 : UInt,
   force_fallback_adapter : Bool,
   backend_type_u32 : UInt,
   compatible_surface : WGPUSurface,
-) -> WGPURequestAdapterOptionsPtr = "mbt_wgpu_request_adapter_options_new_u32"
+) -> WGPURequestAdapterOptionsPtr {
+  request_adapter_options_new_u32_packed(
+    feature_level_u32,
+    power_preference_u32,
+    if force_fallback_adapter {
+      1U
+    } else {
+      0U
+    },
+    backend_type_u32,
+    compatible_surface,
+  )
+}
 
 ///|
 #borrow(options)
@@ -540,7 +561,20 @@ pub extern "C" fn render_pipeline_descriptor_color_format_alpha_blend_new(
 
 ///|
 #borrow(vs_entry, fs_entry)
-pub extern "C" fn render_pipeline_descriptor_color_format_entries_u32_new(
+extern "C" fn render_pipeline_descriptor_color_format_entries_u32_packed_new(
+  layout : WGPUPipelineLayout,
+  shader_module : WGPUShaderModule,
+  format_u32 : UInt,
+  color_write_mask_u32 : UInt,
+  flags_u32 : UInt,
+  vs_entry : Bytes,
+  vs_entry_len : UInt64,
+  fs_entry : Bytes,
+  fs_entry_len : UInt64,
+) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_color_format_entries_u32_packed_new"
+
+///|
+pub fn render_pipeline_descriptor_color_format_entries_u32_new(
   layout : WGPUPipelineLayout,
   shader_module : WGPUShaderModule,
   format_u32 : UInt,
@@ -551,7 +585,14 @@ pub extern "C" fn render_pipeline_descriptor_color_format_entries_u32_new(
   vs_entry_len : UInt64,
   fs_entry : Bytes,
   fs_entry_len : UInt64,
-) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_color_format_entries_u32_new"
+) -> WGPURenderPipelineDescriptorPtr {
+  let flags_u32 = (if alpha_blend { 1U } else { 0U }) |
+    (if depth { 2U } else { 0U })
+  render_pipeline_descriptor_color_format_entries_u32_packed_new(
+    layout, shader_module, format_u32, color_write_mask_u32, flags_u32, vs_entry,
+    vs_entry_len, fs_entry, fs_entry_len,
+  )
+}
 
 ///|
 pub extern "C" fn render_pipeline_descriptor_rgba8_alpha_blend_new(
@@ -701,7 +742,23 @@ pub extern "C" fn render_pass_descriptor_color_depth_new(
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_depth_new"
 
 ///|
-pub extern "C" fn render_pass_descriptor_color_depth_u32_new(
+#borrow(color_ops_u32, color_clear_rgba_f32)
+extern "C" fn render_pass_descriptor_color_depth_u32_packed_new(
+  color_view : WGPUTextureView,
+  color_ops_u32 : FixedArray[UInt],
+  color_clear_rgba_f32 : FixedArray[Float],
+  depth_view : WGPUTextureView,
+  depth_load_op_u32 : UInt,
+  depth_store_op_u32 : UInt,
+  depth_clear_value_f32 : Float,
+  stencil_load_op_u32 : UInt,
+  stencil_store_op_u32 : UInt,
+  stencil_clear_value_u32 : UInt,
+  flags_u32 : UInt,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_depth_u32_packed_new"
+
+///|
+pub fn render_pass_descriptor_color_depth_u32_new(
   color_view : WGPUTextureView,
   color_load_op_u32 : UInt,
   color_store_op_u32 : UInt,
@@ -718,7 +775,21 @@ pub extern "C" fn render_pass_descriptor_color_depth_u32_new(
   stencil_clear_value_u32 : UInt,
   depth_read_only : Bool,
   stencil_read_only : Bool,
-) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_depth_u32_new"
+) -> WGPURenderPassDescriptorPtr {
+  let color_ops_u32 = FixedArray::make(2, color_load_op_u32)
+  color_ops_u32[1] = color_store_op_u32
+  let color_clear_rgba_f32 = FixedArray::make(4, color_clear_r_f32)
+  color_clear_rgba_f32[1] = color_clear_g_f32
+  color_clear_rgba_f32[2] = color_clear_b_f32
+  color_clear_rgba_f32[3] = color_clear_a_f32
+  let flags_u32 = (if depth_read_only { 1U } else { 0U }) |
+    (if stencil_read_only { 2U } else { 0U })
+  render_pass_descriptor_color_depth_u32_packed_new(
+    color_view, color_ops_u32, color_clear_rgba_f32, depth_view, depth_load_op_u32,
+    depth_store_op_u32, depth_clear_value_f32, stencil_load_op_u32, stencil_store_op_u32,
+    stencil_clear_value_u32, flags_u32,
+  )
+}
 
 ///|
 #borrow(desc)

@@ -2010,10 +2010,12 @@ mbt_wgpu_render_pipeline_descriptor_color_format_alpha_blend_new(
 }
 
 WGPURenderPipelineDescriptor *
-mbt_wgpu_render_pipeline_descriptor_color_format_entries_u32_new(
+mbt_wgpu_render_pipeline_descriptor_color_format_entries_u32_packed_new(
     WGPUPipelineLayout layout, WGPUShaderModule shader_module, uint32_t format,
-    uint32_t color_write_mask_u32, bool alpha_blend, bool depth, const uint8_t *vs_entry,
+    uint32_t color_write_mask_u32, uint32_t flags_u32, const uint8_t *vs_entry,
     uint64_t vs_entry_len, const uint8_t *fs_entry, uint64_t fs_entry_len) {
+  bool alpha_blend = (flags_u32 & 1u) != 0u;
+  bool depth = (flags_u32 & 2u) != 0u;
   if (!vs_entry || !fs_entry || vs_entry_len == 0u || fs_entry_len == 0u) {
     return NULL;
   }
@@ -2213,6 +2215,15 @@ WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color_depth_u32_new(
     float depth_clear_value_f32, uint32_t stencil_load_op_u32,
     uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32, bool depth_read_only,
     bool stencil_read_only);
+
+WGPURenderPassDescriptor *
+mbt_wgpu_render_pass_descriptor_color_depth_u32_packed_new(
+    WGPUTextureView color_view, const uint32_t *color_ops_u32,
+    const float *color_clear_rgba_f32, WGPUTextureView depth_view,
+    uint32_t depth_load_op_u32, uint32_t depth_store_op_u32,
+    float depth_clear_value_f32, uint32_t stencil_load_op_u32,
+    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32,
+    uint32_t flags_u32);
 
 WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color2_depth_u32_new(
     WGPUTextureView color0_view, uint32_t color0_load_op_u32,
@@ -2479,11 +2490,34 @@ WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color_clear_new(
 WGPURenderPassDescriptor *
 mbt_wgpu_render_pass_descriptor_color_depth_new(WGPUTextureView color_view,
                                                 WGPUTextureView depth_view) {
+  static const uint32_t color_ops_u32[2] = {
+      (uint32_t)WGPULoadOp_Clear,
+      (uint32_t)WGPUStoreOp_Store,
+  };
+  static const float color_clear_rgba_f32[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+  return mbt_wgpu_render_pass_descriptor_color_depth_u32_packed_new(
+      color_view, color_ops_u32, color_clear_rgba_f32, depth_view,
+      (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 1.0f,
+      (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 0u, 2u);
+}
+
+WGPURenderPassDescriptor *
+mbt_wgpu_render_pass_descriptor_color_depth_u32_packed_new(
+    WGPUTextureView color_view, const uint32_t *color_ops_u32,
+    const float *color_clear_rgba_f32, WGPUTextureView depth_view,
+    uint32_t depth_load_op_u32, uint32_t depth_store_op_u32,
+    float depth_clear_value_f32, uint32_t stencil_load_op_u32,
+    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32,
+    uint32_t flags_u32) {
+  if (!color_ops_u32 || !color_clear_rgba_f32) {
+    return NULL;
+  }
   return mbt_wgpu_render_pass_descriptor_color_depth_u32_new(
-      color_view, (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 0.0f,
-      0.0f, 0.0f, 1.0f, depth_view, (uint32_t)WGPULoadOp_Clear,
-      (uint32_t)WGPUStoreOp_Store, 1.0f, (uint32_t)WGPULoadOp_Clear,
-      (uint32_t)WGPUStoreOp_Store, 0u, false, true);
+      color_view, color_ops_u32[0], color_ops_u32[1], color_clear_rgba_f32[0],
+      color_clear_rgba_f32[1], color_clear_rgba_f32[2], color_clear_rgba_f32[3],
+      depth_view, depth_load_op_u32, depth_store_op_u32, depth_clear_value_f32,
+      stencil_load_op_u32, stencil_store_op_u32, stencil_clear_value_u32,
+      (flags_u32 & 1u) != 0u, (flags_u32 & 2u) != 0u);
 }
 
 WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color_depth_u32_new(

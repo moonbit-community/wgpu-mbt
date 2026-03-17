@@ -24,18 +24,52 @@ pub extern "C" fn bind_group_layout_builder_free(builder : OpaquePtr) -> Unit = 
 
 ///|
 #borrow(builder)
-pub extern "C" fn bind_group_layout_builder_add_buffer(
+extern "C" fn bind_group_layout_builder_add_buffer_packed(
+  builder : OpaquePtr,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+  has_dynamic_offset_u32 : UInt,
+  min_binding_size : UInt64,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_buffer"
+
+///|
+pub fn bind_group_layout_builder_add_buffer(
   builder : OpaquePtr,
   binding : UInt,
   visibility : UInt64,
   type_u32 : UInt,
   has_dynamic_offset : Bool,
   min_binding_size : UInt64,
-) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_buffer"
+) -> Bool {
+  bind_group_layout_builder_add_buffer_packed(
+    builder,
+    binding,
+    visibility,
+    type_u32,
+    if has_dynamic_offset {
+      1U
+    } else {
+      0U
+    },
+    min_binding_size,
+  )
+}
 
 ///|
 #borrow(builder)
-pub extern "C" fn bind_group_layout_builder_add_buffer_array(
+extern "C" fn bind_group_layout_builder_add_buffer_array_packed(
+  builder : OpaquePtr,
+  binding : UInt,
+  visibility : UInt64,
+  type_u32 : UInt,
+  has_dynamic_offset_u32 : UInt,
+  min_binding_size : UInt64,
+  count_u32 : UInt,
+) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_buffer_array"
+
+///|
+pub fn bind_group_layout_builder_add_buffer_array(
   builder : OpaquePtr,
   binding : UInt,
   visibility : UInt64,
@@ -43,7 +77,21 @@ pub extern "C" fn bind_group_layout_builder_add_buffer_array(
   has_dynamic_offset : Bool,
   min_binding_size : UInt64,
   count_u32 : UInt,
-) -> Bool = "mbt_wgpu_bind_group_layout_builder_add_buffer_array"
+) -> Bool {
+  bind_group_layout_builder_add_buffer_array_packed(
+    builder,
+    binding,
+    visibility,
+    type_u32,
+    if has_dynamic_offset {
+      1U
+    } else {
+      0U
+    },
+    min_binding_size,
+    count_u32,
+  )
+}
 
 ///|
 #borrow(builder)

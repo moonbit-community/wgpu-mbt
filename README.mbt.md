@@ -227,8 +227,10 @@ fake or unstable wrappers for them:
 
 - `AddressModeClampToZero`
 - `AddressModeClampToBorder`
-- native `ClearTexture`
-- native `Multiview`
+
+`ClearTexture` and `Multiview` are already exposed by `wgpu_mbt` through local native-feature
+shims. The remaining blocker is sampler clamp-to-zero/border support: current upstream C headers
+still do not expose the required address-mode and border-color API surface.
 
 ## Troubleshooting
 
