@@ -2160,6 +2160,12 @@ declare pub fn Device::create_render_pipeline_rgba8_pos2_with_layout(
 
 ///|
 #declaration_only
+declare pub fn Device::create_bind_group_layout_empty(
+  self : Device,
+) -> BindGroupLayout
+
+///|
+#declaration_only
 declare pub fn Device::create_bind_group_layout_uniform_buffer(
   self : Device,
 ) -> BindGroupLayout

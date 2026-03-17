@@ -37,6 +37,12 @@ int32_t mbt_wgpu_compute_pipeline_descriptor_ptr_is_null(
 
 int32_t mbt_wgpu_adapter_is_null(WGPUAdapter adapter) { return adapter == NULL; }
 int32_t mbt_wgpu_device_is_null(WGPUDevice device) { return device == NULL; }
+int32_t mbt_wgpu_bind_group_layout_is_null(WGPUBindGroupLayout bind_group_layout) {
+  return bind_group_layout == NULL;
+}
+int32_t mbt_wgpu_pipeline_layout_is_null(WGPUPipelineLayout pipeline_layout) {
+  return pipeline_layout == NULL;
+}
 
 int32_t mbt_wgpu_platform_is_macos(void) {
 #if defined(__APPLE__)

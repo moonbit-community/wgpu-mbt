@@ -600,8 +600,27 @@ typedef struct {
 
 typedef struct {
   WGPUBindGroupLayoutDescriptor desc;
+} mbt_bind_group_layout_desc_0_t;
+
+typedef struct {
+  WGPUBindGroupLayoutDescriptor desc;
   WGPUBindGroupLayoutEntry entry;
 } mbt_bind_group_layout_desc_1_t;
+
+WGPUBindGroupLayoutDescriptor *mbt_wgpu_bind_group_layout_descriptor_empty_new(void) {
+  mbt_bind_group_layout_desc_0_t *out =
+      (mbt_bind_group_layout_desc_0_t *)malloc(sizeof(mbt_bind_group_layout_desc_0_t));
+  if (!out) {
+    return NULL;
+  }
+  out->desc = (WGPUBindGroupLayoutDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .entryCount = 0u,
+      .entries = NULL,
+  };
+  return &out->desc;
+}
 
 WGPUBindGroupLayoutDescriptor *
 mbt_wgpu_bind_group_layout_descriptor_sampler_texture_2d_new(void) {
@@ -3361,26 +3380,27 @@ typedef struct {
 } mbt_bind_group_layout_builder_t;
 
 void *mbt_wgpu_bind_group_layout_builder_new(uint64_t max_entries) {
-  if (max_entries == 0u) {
-    return NULL;
-  }
   mbt_bind_group_layout_builder_t *b =
       (mbt_bind_group_layout_builder_t *)malloc(sizeof(mbt_bind_group_layout_builder_t));
   if (!b) {
     return NULL;
   }
-  b->entries = (WGPUBindGroupLayoutEntry *)calloc((size_t)max_entries,
-                                                 sizeof(WGPUBindGroupLayoutEntry));
-  if (!b->entries) {
-    free(b);
-    return NULL;
-  }
-  b->extras = (WGPUBindGroupLayoutEntryExtras **)calloc(
-      (size_t)max_entries, sizeof(WGPUBindGroupLayoutEntryExtras *));
-  if (!b->extras) {
-    free(b->entries);
-    free(b);
-    return NULL;
+  b->entries = NULL;
+  b->extras = NULL;
+  if (max_entries != 0u) {
+    b->entries = (WGPUBindGroupLayoutEntry *)calloc((size_t)max_entries,
+                                                   sizeof(WGPUBindGroupLayoutEntry));
+    if (!b->entries) {
+      free(b);
+      return NULL;
+    }
+    b->extras = (WGPUBindGroupLayoutEntryExtras **)calloc(
+        (size_t)max_entries, sizeof(WGPUBindGroupLayoutEntryExtras *));
+    if (!b->extras) {
+      free(b->entries);
+      free(b);
+      return NULL;
+    }
   }
   b->capacity = max_entries;
   b->len = 0u;
@@ -3405,10 +3425,13 @@ void mbt_wgpu_bind_group_layout_builder_free(void *builder) {
 static bool mbt_wgpu_bind_group_layout_builder_push(mbt_bind_group_layout_builder_t *b,
                                                    WGPUBindGroupLayoutEntry entry,
                                                    WGPUBindGroupLayoutEntryExtras *extras) {
-  if (!b || !b->entries) {
+  if (!b) {
     return false;
   }
   if (b->len >= b->capacity) {
+    return false;
+  }
+  if (!b->entries || !b->extras) {
     return false;
   }
   b->extras[b->len] = extras;
@@ -3673,14 +3696,17 @@ WGPUBindGroupLayout mbt_wgpu_bind_group_layout_builder_finish(WGPUDevice device,
                                                              const uint8_t *label,
                                                              uint64_t label_len) {
   mbt_bind_group_layout_builder_t *b = (mbt_bind_group_layout_builder_t *)builder;
-  if (!device || !b || !b->entries || b->len == 0u) {
+  if (!device || !b) {
+    return NULL;
+  }
+  if (b->len != 0u && !b->entries) {
     return NULL;
   }
   WGPUBindGroupLayoutDescriptor desc = {
       .nextInChain = NULL,
       .label = mbt_wgpu_string_view(label, label_len),
       .entryCount = (size_t)b->len,
-      .entries = b->entries,
+      .entries = b->len == 0u ? NULL : b->entries,
   };
   return wgpuDeviceCreateBindGroupLayout(device, &desc);
 }

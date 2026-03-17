@@ -1098,6 +1098,11 @@ pub fn Device::create_bind_group_ptr(
 }
 
 ///|
+pub fn Device::create_bind_group_layout_empty(self : Device) -> BindGroupLayout {
+  BindGroupLayout::{ raw: @c.device_create_bind_group_layout_empty(self.raw) }
+}
+
+///|
 pub fn Device::create_bind_group_layout_uniform_buffer(
   self : Device,
 ) -> BindGroupLayout {

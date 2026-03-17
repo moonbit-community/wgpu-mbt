@@ -381,6 +381,9 @@ pub extern "C" fn shader_module_descriptor_free(
 ) -> Unit = "mbt_wgpu_shader_module_descriptor_free"
 
 ///|
+pub extern "C" fn bind_group_layout_descriptor_empty_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_empty_new"
+
+///|
 pub extern "C" fn bind_group_layout_descriptor_sampler_texture_2d_new() -> WGPUBindGroupLayoutDescriptorPtr = "mbt_wgpu_bind_group_layout_descriptor_sampler_texture_2d_new"
 
 ///|

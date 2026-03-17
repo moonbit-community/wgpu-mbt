@@ -361,6 +361,16 @@ pub fn device_create_render_pipeline_rgba8_pos2_with_layout(
 }
 
 ///|
+pub fn device_create_bind_group_layout_empty(
+  device : Device,
+) -> BindGroupLayout {
+  let desc = bind_group_layout_descriptor_empty_new()
+  let bgl = wgpuDeviceCreateBindGroupLayout(device, desc)
+  bind_group_layout_descriptor_free(desc)
+  bgl
+}
+
+///|
 pub fn device_create_bind_group_layout_uniform_buffer(
   device : Device,
 ) -> BindGroupLayout {

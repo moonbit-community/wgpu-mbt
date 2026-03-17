@@ -218,6 +218,8 @@ pub fn bind_group_layout_builder_free(OpaquePtr) -> Unit
 
 pub fn bind_group_layout_builder_new(UInt64) -> OpaquePtr
 
+pub fn bind_group_layout_descriptor_empty_new() -> WGPUBindGroupLayoutDescriptorPtr
+
 pub fn bind_group_layout_descriptor_free(WGPUBindGroupLayoutDescriptorPtr) -> Unit
 
 pub fn bind_group_layout_descriptor_sampler_filtering_new() -> WGPUBindGroupLayoutDescriptorPtr
@@ -233,6 +235,8 @@ pub fn bind_group_layout_descriptor_texture_2d_float_new() -> WGPUBindGroupLayou
 pub fn bind_group_layout_descriptor_uniform_buffer_dynamic_new() -> WGPUBindGroupLayoutDescriptorPtr
 
 pub fn bind_group_layout_descriptor_uniform_buffer_new() -> WGPUBindGroupLayoutDescriptorPtr
+
+pub fn bind_group_layout_is_null(WGPUBindGroupLayout) -> Bool
 
 pub fn bind_group_layout_release(WGPUBindGroupLayout) -> Unit
 
@@ -411,6 +415,8 @@ pub fn create_instance() -> WGPUInstance
 pub fn create_instance_with_extras_u32(UInt64, UInt, UInt, UInt, UInt, UInt, UInt) -> WGPUInstance
 
 pub fn create_instance_with_extras_utf8(UInt64, UInt, UInt, Bytes, UInt64, UInt, UInt, UInt, UInt) -> WGPUInstance
+
+pub fn device_create_bind_group_layout_empty(WGPUDevice) -> WGPUBindGroupLayout
 
 pub fn device_create_bind_group_layout_sampler_filtering(WGPUDevice) -> WGPUBindGroupLayout
 
@@ -883,6 +889,8 @@ pub fn pipeline_layout_descriptor_free(WGPUPipelineLayoutDescriptorPtr) -> Unit
 pub fn pipeline_layout_descriptor_push_constants_many_new(UInt64, FixedArray[UInt64], FixedArray[UInt], FixedArray[UInt]) -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_descriptor_push_constants_new(UInt64, UInt, UInt) -> WGPUPipelineLayoutDescriptorPtr
+
+pub fn pipeline_layout_is_null(WGPUPipelineLayout) -> Bool
 
 pub fn pipeline_layout_release(WGPUPipelineLayout) -> Unit
 

@@ -1675,6 +1675,7 @@ pub fn Device::add_ref(Self) -> Self
 pub fn Device::add_ref_raw(Self) -> Unit
 pub fn Device::create_bind_group(Self, @c.WGPUBindGroupDescriptorPtr) -> BindGroup
 pub fn Device::create_bind_group_layout(Self, @c.WGPUBindGroupLayoutDescriptorPtr) -> BindGroupLayout
+pub fn Device::create_bind_group_layout_empty(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_ptr(Self, @c.WGPUBindGroupLayoutDescriptorPtr) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_sampler_filtering(Self) -> BindGroupLayout
 pub fn Device::create_bind_group_layout_sampler_texture_2d(Self) -> BindGroupLayout

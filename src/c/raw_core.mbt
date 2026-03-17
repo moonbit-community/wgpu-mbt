@@ -100,6 +100,16 @@ pub extern "C" fn adapter_is_null(adapter : WGPUAdapter) -> Bool = "mbt_wgpu_ada
 pub extern "C" fn device_is_null(device : WGPUDevice) -> Bool = "mbt_wgpu_device_is_null"
 
 ///|
+pub extern "C" fn bind_group_layout_is_null(
+  bind_group_layout : WGPUBindGroupLayout,
+) -> Bool = "mbt_wgpu_bind_group_layout_is_null"
+
+///|
+pub extern "C" fn pipeline_layout_is_null(
+  pipeline_layout : WGPUPipelineLayout,
+) -> Bool = "mbt_wgpu_pipeline_layout_is_null"
+
+///|
 pub extern "C" fn null_render_pipeline_descriptor_ptr() -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_null_ptr"
 
 ///|
