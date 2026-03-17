@@ -299,10 +299,10 @@ jobs:
           choco install -y llvm
           "LIBCLANG_PATH=C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
       
-      - name: Install Vulkan Runtime + Lavapipe (software Vulkan)
+      - name: Install Vulkan SDK + Lavapipe (software Vulkan)
         uses: jakoch/install-vulkan-sdk-action@v1
         with:
-          install_runtime_only: true
+          install_runtime_only: false
           install_lavapipe: true
           cache: true
           stripdown: true
@@ -401,6 +401,12 @@ jobs:
           $lavapipeBin | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
 
           "VK_ICD_FILENAMES=$vkIcd" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          $vulkanImportLib = Join-Path (Join-Path (Join-Path $sdkRoot $sdkVer) "Lib") "vulkan-1.lib"
+          if (Test-Path $vulkanImportLib) {
+            "MBT_WGPU_VULKAN_LIB=$vulkanImportLib" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          } else {
+            Write-Host "warning: Vulkan import lib not found at $vulkanImportLib"
+          }
 
       - name: Install wgpu-native prebuilt (Vulkan)
         shell: pwsh

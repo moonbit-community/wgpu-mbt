@@ -309,9 +309,13 @@ function staticLinkFlags(baseDir, asset) {
     os.platform() === 'win32' ? staticLibPath.replace(/\\/g, '/') : staticLibPath;
   const flags = [quoteArg(normalizedStaticLibPath), ...asset.linkFlags];
   if (os.platform() === 'win32') {
+    const explicitVulkanImportLib = process.env.MBT_WGPU_VULKAN_LIB || '';
     const sdkRoot = process.env.VULKAN_SDK || '';
     const sdkVersion = process.env.VULKAN_VERSION || '';
     const candidates = [];
+    if (explicitVulkanImportLib.length !== 0) {
+      candidates.push(explicitVulkanImportLib);
+    }
     if (sdkRoot.length !== 0) {
       if (sdkVersion.length !== 0) {
         candidates.push(path.join(sdkRoot, sdkVersion, 'Lib', 'vulkan-1.lib'));
