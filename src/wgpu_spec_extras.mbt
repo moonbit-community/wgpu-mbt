@@ -2831,6 +2831,44 @@ declare pub fn CommandEncoder::begin_render_pass_color2(
 
 ///|
 #declaration_only
+declare pub fn CommandEncoder::begin_render_pass_color2_depth(
+  self : CommandEncoder,
+  color0_view : TextureView,
+  color1_view : TextureView,
+  depth_view : TextureView,
+) -> RenderPass
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::begin_render_pass_color2_depth_u32(
+  self : CommandEncoder,
+  color0_view : TextureView,
+  color1_view : TextureView,
+  depth_view : TextureView,
+  color0_load_op_u32? : UInt,
+  color0_store_op_u32? : UInt,
+  color0_clear_r_f32? : Float,
+  color0_clear_g_f32? : Float,
+  color0_clear_b_f32? : Float,
+  color0_clear_a_f32? : Float,
+  color1_load_op_u32? : UInt,
+  color1_store_op_u32? : UInt,
+  color1_clear_r_f32? : Float,
+  color1_clear_g_f32? : Float,
+  color1_clear_b_f32? : Float,
+  color1_clear_a_f32? : Float,
+  depth_load_op_u32? : UInt,
+  depth_store_op_u32? : UInt,
+  depth_clear_value_f32? : Float,
+  depth_read_only? : Bool,
+  stencil_load_op_u32? : UInt,
+  stencil_store_op_u32? : UInt,
+  stencil_clear_value_u32? : UInt,
+  stencil_read_only? : Bool,
+) -> RenderPass
+
+///|
+#declaration_only
 declare pub fn CommandEncoder::begin_render_pass_color_occlusion(
   self : CommandEncoder,
   view : TextureView,
@@ -2861,6 +2899,28 @@ declare pub fn CommandEncoder::begin_render_pass_color_depth(
   self : CommandEncoder,
   color_view : TextureView,
   depth_view : TextureView,
+) -> RenderPass
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::begin_render_pass_color_depth_u32(
+  self : CommandEncoder,
+  color_view : TextureView,
+  depth_view : TextureView,
+  color_load_op_u32? : UInt,
+  color_store_op_u32? : UInt,
+  color_clear_r_f32? : Float,
+  color_clear_g_f32? : Float,
+  color_clear_b_f32? : Float,
+  color_clear_a_f32? : Float,
+  depth_load_op_u32? : UInt,
+  depth_store_op_u32? : UInt,
+  depth_clear_value_f32? : Float,
+  depth_read_only? : Bool,
+  stencil_load_op_u32? : UInt,
+  stencil_store_op_u32? : UInt,
+  stencil_clear_value_u32? : UInt,
+  stencil_read_only? : Bool,
 ) -> RenderPass
 
 ///|

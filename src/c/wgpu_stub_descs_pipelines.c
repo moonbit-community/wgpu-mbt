@@ -2199,10 +2199,28 @@ typedef struct {
   WGPURenderPassDepthStencilAttachment depth;
 } mbt_render_pass_desc_color_depth_t;
 
+typedef struct {
+  WGPURenderPassDescriptor desc;
+  WGPURenderPassColorAttachment colors[2];
+  WGPURenderPassDepthStencilAttachment depth;
+} mbt_render_pass_desc_color2_depth_t;
+
 WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color_depth_u32_new(
     WGPUTextureView color_view, uint32_t color_load_op_u32,
     uint32_t color_store_op_u32, float color_clear_r_f32, float color_clear_g_f32,
     float color_clear_b_f32, float color_clear_a_f32, WGPUTextureView depth_view,
+    uint32_t depth_load_op_u32, uint32_t depth_store_op_u32,
+    float depth_clear_value_f32, bool depth_read_only, uint32_t stencil_load_op_u32,
+    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32,
+    bool stencil_read_only);
+
+WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_color2_depth_u32_new(
+    WGPUTextureView color0_view, uint32_t color0_load_op_u32,
+    uint32_t color0_store_op_u32, float color0_clear_r_f32, float color0_clear_g_f32,
+    float color0_clear_b_f32, float color0_clear_a_f32, WGPUTextureView color1_view,
+    uint32_t color1_load_op_u32, uint32_t color1_store_op_u32,
+    float color1_clear_r_f32, float color1_clear_g_f32, float color1_clear_b_f32,
+    float color1_clear_a_f32, WGPUTextureView depth_view,
     uint32_t depth_load_op_u32, uint32_t depth_store_op_u32,
     float depth_clear_value_f32, bool depth_read_only, uint32_t stencil_load_op_u32,
     uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32,
@@ -2268,6 +2286,83 @@ mbt_wgpu_render_pass_descriptor_color2_clear_default_new(WGPUTextureView view0,
       .colorAttachmentCount = 2u,
       .colorAttachments = out->colors,
       .depthStencilAttachment = NULL,
+      .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+  return &out->desc;
+}
+
+WGPURenderPassDescriptor *
+mbt_wgpu_render_pass_descriptor_color2_depth_new(WGPUTextureView color0_view,
+                                                 WGPUTextureView color1_view,
+                                                 WGPUTextureView depth_view) {
+  return mbt_wgpu_render_pass_descriptor_color2_depth_u32_new(
+      color0_view, (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 0.0f,
+      0.0f, 0.0f, 1.0f, color1_view, (uint32_t)WGPULoadOp_Clear,
+      (uint32_t)WGPUStoreOp_Store, 0.0f, 0.0f, 0.0f, 1.0f, depth_view,
+      (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 1.0f, false,
+      (uint32_t)WGPULoadOp_Clear, (uint32_t)WGPUStoreOp_Store, 0u, true);
+}
+
+WGPURenderPassDescriptor *
+mbt_wgpu_render_pass_descriptor_color2_depth_u32_new(
+    WGPUTextureView color0_view, uint32_t color0_load_op_u32,
+    uint32_t color0_store_op_u32, float color0_clear_r_f32, float color0_clear_g_f32,
+    float color0_clear_b_f32, float color0_clear_a_f32, WGPUTextureView color1_view,
+    uint32_t color1_load_op_u32, uint32_t color1_store_op_u32,
+    float color1_clear_r_f32, float color1_clear_g_f32, float color1_clear_b_f32,
+    float color1_clear_a_f32, WGPUTextureView depth_view,
+    uint32_t depth_load_op_u32, uint32_t depth_store_op_u32,
+    float depth_clear_value_f32, bool depth_read_only, uint32_t stencil_load_op_u32,
+    uint32_t stencil_store_op_u32, uint32_t stencil_clear_value_u32,
+    bool stencil_read_only) {
+  mbt_render_pass_desc_color2_depth_t *out =
+      (mbt_render_pass_desc_color2_depth_t *)malloc(
+          sizeof(mbt_render_pass_desc_color2_depth_t));
+  if (!out) {
+    return NULL;
+  }
+  out->colors[0] = (WGPURenderPassColorAttachment){
+      .nextInChain = NULL,
+      .view = color0_view,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = (WGPULoadOp)color0_load_op_u32,
+      .storeOp = (WGPUStoreOp)color0_store_op_u32,
+      .clearValue = (WGPUColor){.r = color0_clear_r_f32,
+                                .g = color0_clear_g_f32,
+                                .b = color0_clear_b_f32,
+                                .a = color0_clear_a_f32},
+  };
+  out->colors[1] = (WGPURenderPassColorAttachment){
+      .nextInChain = NULL,
+      .view = color1_view,
+      .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+      .resolveTarget = NULL,
+      .loadOp = (WGPULoadOp)color1_load_op_u32,
+      .storeOp = (WGPUStoreOp)color1_store_op_u32,
+      .clearValue = (WGPUColor){.r = color1_clear_r_f32,
+                                .g = color1_clear_g_f32,
+                                .b = color1_clear_b_f32,
+                                .a = color1_clear_a_f32},
+  };
+  out->depth = (WGPURenderPassDepthStencilAttachment){
+      .view = depth_view,
+      .depthLoadOp = (WGPULoadOp)depth_load_op_u32,
+      .depthStoreOp = (WGPUStoreOp)depth_store_op_u32,
+      .depthClearValue = depth_clear_value_f32,
+      .depthReadOnly = depth_read_only ? 1u : 0u,
+      .stencilLoadOp = (WGPULoadOp)stencil_load_op_u32,
+      .stencilStoreOp = (WGPUStoreOp)stencil_store_op_u32,
+      .stencilClearValue = stencil_clear_value_u32,
+      .stencilReadOnly = stencil_read_only ? 1u : 0u,
+  };
+  out->desc = (WGPURenderPassDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = 2u,
+      .colorAttachments = out->colors,
+      .depthStencilAttachment = &out->depth,
       .occlusionQuerySet = NULL,
       .timestampWrites = NULL,
   };

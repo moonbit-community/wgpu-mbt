@@ -797,6 +797,60 @@ pub fn command_encoder_begin_render_pass_color2(
 }
 
 ///|
+pub fn command_encoder_begin_render_pass_color2_depth(
+  encoder : CommandEncoder,
+  color0_view : TextureView,
+  color1_view : TextureView,
+  depth_view : TextureView,
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_color2_depth_new(
+    color0_view, color1_view, depth_view,
+  )
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
+
+///|
+pub fn command_encoder_begin_render_pass_color2_depth_u32(
+  encoder : CommandEncoder,
+  color0_view : TextureView,
+  color1_view : TextureView,
+  depth_view : TextureView,
+  color0_load_op_u32 : UInt,
+  color0_store_op_u32 : UInt,
+  color0_clear_r_f32 : Float,
+  color0_clear_g_f32 : Float,
+  color0_clear_b_f32 : Float,
+  color0_clear_a_f32 : Float,
+  color1_load_op_u32 : UInt,
+  color1_store_op_u32 : UInt,
+  color1_clear_r_f32 : Float,
+  color1_clear_g_f32 : Float,
+  color1_clear_b_f32 : Float,
+  color1_clear_a_f32 : Float,
+  depth_load_op_u32 : UInt,
+  depth_store_op_u32 : UInt,
+  depth_clear_value_f32 : Float,
+  depth_read_only : Bool,
+  stencil_load_op_u32 : UInt,
+  stencil_store_op_u32 : UInt,
+  stencil_clear_value_u32 : UInt,
+  stencil_read_only : Bool,
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_color2_depth_u32_new(
+    color0_view, color0_load_op_u32, color0_store_op_u32, color0_clear_r_f32, color0_clear_g_f32,
+    color0_clear_b_f32, color0_clear_a_f32, color1_view, color1_load_op_u32, color1_store_op_u32,
+    color1_clear_r_f32, color1_clear_g_f32, color1_clear_b_f32, color1_clear_a_f32,
+    depth_view, depth_load_op_u32, depth_store_op_u32, depth_clear_value_f32, depth_read_only,
+    stencil_load_op_u32, stencil_store_op_u32, stencil_clear_value_u32, stencil_read_only,
+  )
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
+
+///|
 pub fn command_encoder_begin_render_pass_color_occlusion(
   encoder : CommandEncoder,
   view : TextureView,

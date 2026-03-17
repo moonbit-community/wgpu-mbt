@@ -604,6 +604,40 @@ pub extern "C" fn render_pass_descriptor_color2_clear_default_new(
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color2_clear_default_new"
 
 ///|
+pub extern "C" fn render_pass_descriptor_color2_depth_new(
+  color0_view : WGPUTextureView,
+  color1_view : WGPUTextureView,
+  depth_view : WGPUTextureView,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color2_depth_new"
+
+///|
+pub extern "C" fn render_pass_descriptor_color2_depth_u32_new(
+  color0_view : WGPUTextureView,
+  color0_load_op_u32 : UInt,
+  color0_store_op_u32 : UInt,
+  color0_clear_r_f32 : Float,
+  color0_clear_g_f32 : Float,
+  color0_clear_b_f32 : Float,
+  color0_clear_a_f32 : Float,
+  color1_view : WGPUTextureView,
+  color1_load_op_u32 : UInt,
+  color1_store_op_u32 : UInt,
+  color1_clear_r_f32 : Float,
+  color1_clear_g_f32 : Float,
+  color1_clear_b_f32 : Float,
+  color1_clear_a_f32 : Float,
+  depth_view : WGPUTextureView,
+  depth_load_op_u32 : UInt,
+  depth_store_op_u32 : UInt,
+  depth_clear_value_f32 : Float,
+  depth_read_only : Bool,
+  stencil_load_op_u32 : UInt,
+  stencil_store_op_u32 : UInt,
+  stencil_clear_value_u32 : UInt,
+  stencil_read_only : Bool,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color2_depth_u32_new"
+
+///|
 pub extern "C" fn render_pass_descriptor_color_clear_default_occlusion_new(
   view : WGPUTextureView,
   query_set : WGPUQuerySet,

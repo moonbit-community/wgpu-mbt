@@ -375,6 +375,73 @@ pub fn CommandEncoder::begin_render_pass_color2(
 }
 
 ///|
+pub fn CommandEncoder::begin_render_pass_color2_depth(
+  self : CommandEncoder,
+  color0_view : TextureView,
+  color1_view : TextureView,
+  depth_view : TextureView,
+) -> RenderPass {
+  self.begin_render_pass_color2_depth_u32(color0_view, color1_view, depth_view)
+}
+
+///|
+pub fn CommandEncoder::begin_render_pass_color2_depth_u32(
+  self : CommandEncoder,
+  color0_view : TextureView,
+  color1_view : TextureView,
+  depth_view : TextureView,
+  color0_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  color0_store_op_u32? : UInt = STORE_OP_STORE,
+  color0_clear_r_f32? : Float = 0.0,
+  color0_clear_g_f32? : Float = 0.0,
+  color0_clear_b_f32? : Float = 0.0,
+  color0_clear_a_f32? : Float = 1.0,
+  color1_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  color1_store_op_u32? : UInt = STORE_OP_STORE,
+  color1_clear_r_f32? : Float = 0.0,
+  color1_clear_g_f32? : Float = 0.0,
+  color1_clear_b_f32? : Float = 0.0,
+  color1_clear_a_f32? : Float = 1.0,
+  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  depth_store_op_u32? : UInt = STORE_OP_STORE,
+  depth_clear_value_f32? : Float = 1.0,
+  depth_read_only? : Bool = false,
+  stencil_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  stencil_store_op_u32? : UInt = STORE_OP_STORE,
+  stencil_clear_value_u32? : UInt = 0U,
+  stencil_read_only? : Bool = true,
+) -> RenderPass {
+  RenderPass::{
+    raw: @c.command_encoder_begin_render_pass_color2_depth_u32(
+      self.raw,
+      color0_view.raw,
+      color1_view.raw,
+      depth_view.raw,
+      color0_load_op_u32,
+      color0_store_op_u32,
+      color0_clear_r_f32,
+      color0_clear_g_f32,
+      color0_clear_b_f32,
+      color0_clear_a_f32,
+      color1_load_op_u32,
+      color1_store_op_u32,
+      color1_clear_r_f32,
+      color1_clear_g_f32,
+      color1_clear_b_f32,
+      color1_clear_a_f32,
+      depth_load_op_u32,
+      depth_store_op_u32,
+      depth_clear_value_f32,
+      depth_read_only,
+      stencil_load_op_u32,
+      stencil_store_op_u32,
+      stencil_clear_value_u32,
+      stencil_read_only,
+    ),
+  }
+}
+
+///|
 pub fn CommandEncoder::begin_render_pass_color_occlusion(
   self : CommandEncoder,
   view : TextureView,
