@@ -429,7 +429,7 @@ jobs:
           }
           gh release download -R gfx-rs/wgpu-native $env:WGPU_NATIVE_TAG -p $asset -D $artifactRoot
           Expand-Archive -Path (Join-Path $artifactRoot $asset) -DestinationPath $artifactRoot -Force
-          $dllPath = Join-Path $artifactRoot "lib\\wgpu_native.dll"
+          $dllPath = Join-Path (Join-Path $artifactRoot "lib") "wgpu_native.dll"
           if (!(Test-Path $dllPath)) {
             throw "Missing wgpu_native.dll at $dllPath"
           }

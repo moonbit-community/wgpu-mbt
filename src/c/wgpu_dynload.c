@@ -82,6 +82,27 @@ static void mbt_wgpu_trim_ascii(char *s) {
   }
 }
 
+static bool mbt_wgpu_is_sep(char ch) { return ch == '/' || ch == '\\'; }
+
+static void mbt_wgpu_trim_trailing_seps(char *s) {
+  if (!s) {
+    return;
+  }
+  size_t len = strlen(s);
+  while (len > 0u && mbt_wgpu_is_sep(s[len - 1u])) {
+    if (len == 1u) {
+      break;
+    }
+#if defined(_WIN32)
+    if (len == 3u && s[1] == ':' && mbt_wgpu_is_sep(s[2])) {
+      break;
+    }
+#endif
+    s[len - 1u] = '\0';
+    len--;
+  }
+}
+
 static bool mbt_wgpu_copy_cstr_utf8(uint8_t *out, uint64_t out_len,
                                     const char *s) {
   if (!out || out_len == 0u || !s) {
@@ -281,6 +302,7 @@ static bool mbt_wgpu_parent_dir(const char *path, char *out, size_t out_len) {
     return false;
   }
   memcpy(out, path, len + 1u);
+  mbt_wgpu_trim_trailing_seps(out);
   char *slash = strrchr(out, '/');
   char *bslash = strrchr(out, '\\');
   char *sep = slash;
@@ -291,6 +313,7 @@ static bool mbt_wgpu_parent_dir(const char *path, char *out, size_t out_len) {
     return false;
   }
   *sep = '\0';
+  mbt_wgpu_trim_trailing_seps(out);
   return true;
 }
 

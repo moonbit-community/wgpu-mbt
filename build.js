@@ -98,18 +98,18 @@ const SUPPORTED_RELEASE = {
       staticLibRel: path.join('lib', 'wgpu_native.lib'),
       dynamicLibRel: path.join('lib', 'wgpu_native.dll'),
       linkFlags: [
-        'user32.lib',
-        'gdi32.lib',
-        'ole32.lib',
-        'shell32.lib',
-        'uuid.lib',
-        'advapi32.lib',
-        'bcrypt.lib',
-        'dxgi.lib',
-        'd3d12.lib',
-        'dxguid.lib',
-        'opengl32.lib',
-        'vulkan-1.lib',
+        '-luser32',
+        '-lgdi32',
+        '-lole32',
+        '-lshell32',
+        '-luuid',
+        '-ladvapi32',
+        '-lbcrypt',
+        '-ldxgi',
+        '-ld3d12',
+        '-ldxguid',
+        '-lopengl32',
+        '-lvulkan-1',
       ],
       pipelineAsync: true,
       compilationInfo: true,
@@ -120,18 +120,18 @@ const SUPPORTED_RELEASE = {
       staticLibRel: path.join('lib', 'wgpu_native.lib'),
       dynamicLibRel: path.join('lib', 'wgpu_native.dll'),
       linkFlags: [
-        'user32.lib',
-        'gdi32.lib',
-        'ole32.lib',
-        'shell32.lib',
-        'uuid.lib',
-        'advapi32.lib',
-        'bcrypt.lib',
-        'dxgi.lib',
-        'd3d12.lib',
-        'dxguid.lib',
-        'opengl32.lib',
-        'vulkan-1.lib',
+        '-luser32',
+        '-lgdi32',
+        '-lole32',
+        '-lshell32',
+        '-luuid',
+        '-ladvapi32',
+        '-lbcrypt',
+        '-ldxgi',
+        '-ld3d12',
+        '-ldxguid',
+        '-lopengl32',
+        '-lvulkan-1',
       ],
       pipelineAsync: true,
       compilationInfo: true,
@@ -307,7 +307,9 @@ function ensureStaticArtifact(asset) {
 
 function staticLinkFlags(baseDir, asset) {
   const staticLibPath = path.join(baseDir, asset.staticLibRel);
-  return [quoteArg(staticLibPath), ...asset.linkFlags].join(' ');
+  const normalizedStaticLibPath =
+    os.platform() === 'win32' ? staticLibPath.replace(/\\/g, '/') : staticLibPath;
+  return [quoteArg(normalizedStaticLibPath), ...asset.linkFlags].join(' ');
 }
 
 function main() {
