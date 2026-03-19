@@ -16,9 +16,9 @@ As of this pass, the file exports **161** generated methods.
 
 ## Summary
 
-- `Direct`: 6
-- `Indirect`: 124
-- `Uncovered`: 31
+- `Direct`: 8
+- `Indirect`: 143
+- `Uncovered`: 10
 
 ## Matrix
 
@@ -26,8 +26,7 @@ As of this pass, the file exports **161** generated methods.
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `get_features`, `get_info`, `get_limits`, `has_feature`, `release_raw` | `wgpu_adapter_info_test.mbt`, `wgpu_adapter_limits_test.mbt`, `wgpu_supported_features_test.mbt`, `wgpu_native_feature_wrappers_test.mbt` |
-| Uncovered | `add_ref_raw` | No `adapter.add_ref()` behavior test exists in `src/tests`. |
+| Indirect | `add_ref_raw`, `get_features`, `get_info`, `get_limits`, `has_feature`, `release_raw` | `wgpu_adapter_info_test.mbt`, `wgpu_adapter_limits_test.mbt`, `wgpu_supported_features_test.mbt`, `wgpu_native_feature_wrappers_test.mbt`, `wgpu_generated_handle_gaps_test.mbt` |
 
 ### BindGroup
 
@@ -45,117 +44,106 @@ As of this pass, the file exports **161** generated methods.
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `destroy_raw`, `get_size`, `get_usage`, `release_raw`, `unmap_raw` | `wgpu_ptr_constructors_test.mbt`, `wgpu_smoke_test.mbt`, `wgpu_buffer_usage_test.mbt`, `wgpu_buffer_comprehensive_test.mbt`, `wgpu_spec_buffer_map_test.mbt`. |
-| Uncovered | `add_ref_raw`, `get_map_state` | No explicit `buffer.add_ref()` test, and no behavior test asserts `get_map_state()` results. |
+| Indirect | `add_ref_raw`, `destroy_raw`, `get_size`, `get_usage`, `release_raw`, `unmap_raw` | `wgpu_ptr_constructors_test.mbt`, `wgpu_smoke_test.mbt`, `wgpu_buffer_usage_test.mbt`, `wgpu_buffer_comprehensive_test.mbt`, `wgpu_spec_buffer_map_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
+| Uncovered | `get_map_state` | Direct exploratory coverage hit an upstream `unimplemented` abort on the current supported native release, so the repo still lacks a stable checked-in behavior contract for this method. |
 
 ### CommandBuffer
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `release_raw` | Many render/compute tests finish encoders and release command buffers. |
-| Uncovered | `add_ref_raw` | No `command_buffer.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `release_raw` | Many render/compute tests finish encoders and release command buffers; `wgpu_generated_handle_gaps_test.mbt` now exercises `add_ref()` by submitting a cloned command buffer. |
 
 ### CommandEncoder
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `begin_compute_pass_raw`, `begin_render_pass`, `clear_buffer_raw`, `copy_buffer_to_buffer_raw`, `copy_buffer_to_texture`, `copy_texture_to_buffer`, `copy_texture_to_texture`, `finish_raw`, `pop_debug_group_raw`, `release_raw`, `resolve_query_set_raw`, `write_timestamp_raw` | `wgpu_pass_ptr_test.mbt`, `wgpu_copy_ptr_test.mbt`, `wgpu_clear_buffer_test.mbt`, `wgpu_buffer_comprehensive_test.mbt`, `wgpu_texture_comprehensive_test.mbt`, `wgpu_timestamp_query_test.mbt`, `wgpu_label_helpers_test.mbt`. |
-| Uncovered | `add_ref_raw` | No `command_encoder.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `begin_compute_pass_raw`, `begin_render_pass`, `clear_buffer_raw`, `copy_buffer_to_buffer_raw`, `copy_buffer_to_texture`, `copy_texture_to_buffer`, `copy_texture_to_texture`, `finish_raw`, `pop_debug_group_raw`, `release_raw`, `resolve_query_set_raw`, `write_timestamp_raw` | `wgpu_pass_ptr_test.mbt`, `wgpu_copy_ptr_test.mbt`, `wgpu_clear_buffer_test.mbt`, `wgpu_buffer_comprehensive_test.mbt`, `wgpu_texture_comprehensive_test.mbt`, `wgpu_timestamp_query_test.mbt`, `wgpu_label_helpers_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
 
 ### ComputePass
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `begin_pipeline_statistics_query_raw`, `dispatch_workgroups_raw`, `dispatch_workgroups_indirect_raw`, `end_raw`, `end_pipeline_statistics_query_raw`, `pop_debug_group_raw`, `release_raw`, `set_pipeline_raw`, `write_timestamp_raw` | `wgpu_compute_test.mbt`, `wgpu_compute_dispatch_indirect_test.mbt`, `wgpu_pipeline_statistics_query_test.mbt`, `wgpu_timestamp_query_inside_passes_test.mbt`, `wgpu_label_helpers_test.mbt`. |
-| Uncovered | `add_ref_raw` | No `compute_pass.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `begin_pipeline_statistics_query_raw`, `dispatch_workgroups_raw`, `dispatch_workgroups_indirect_raw`, `end_raw`, `end_pipeline_statistics_query_raw`, `pop_debug_group_raw`, `release_raw`, `set_pipeline_raw`, `write_timestamp_raw` | `wgpu_compute_test.mbt`, `wgpu_compute_dispatch_indirect_test.mbt`, `wgpu_pipeline_statistics_query_test.mbt`, `wgpu_timestamp_query_inside_passes_test.mbt`, `wgpu_label_helpers_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
 
 ### ComputePipeline
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `get_bind_group_layout_raw`, `release_raw` | `wgpu_pipeline_async_sync_test.mbt`, `wgpu_ptr_constructors_test.mbt`, plus general release paths. |
-| Uncovered | `add_ref_raw` | No `compute_pipeline.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `get_bind_group_layout_raw`, `release_raw` | `wgpu_pipeline_async_sync_test.mbt`, `wgpu_ptr_constructors_test.mbt`, plus general release paths and `wgpu_generated_handle_gaps_test.mbt`. |
 
 ### Device
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
 | Direct | `create_compute_pipeline_async_sync_ptr`, `create_compute_pipeline_async_sync_ptr_or_raise`, `create_render_pipeline_async_sync_ptr` | Called directly in `wgpu_pipeline_async_sync_test.mbt` and `wgpu_optional_symbol_or_raise_test.mbt`. |
-| Indirect | `create_bind_group`, `create_bind_group_layout`, `create_buffer_raw`, `create_command_encoder_raw`, `create_compute_pipeline_raw`, `create_pipeline_layout`, `create_query_set`, `create_render_bundle_encoder`, `create_render_pipeline`, `create_sampler`, `create_shader_module`, `create_shader_module_spir_v`, `create_texture`, `destroy_raw`, `get_adapter_info`, `get_features`, `get_limits`, `get_lost_future`, `get_queue`, `has_feature`, `poll_raw`, `push_error_scope_raw`, `release_raw` | Covered through ptr/convenience helpers and behavior suites such as `wgpu_ptr_constructors_test.mbt`, `wgpu_shader_module_spirv_test.mbt`, `wgpu_device_lost_test.mbt`, `wgpu_error_scope_test.mbt`, `wgpu_device_limits_test.mbt`, and the render/compute smoke tests. |
-| Uncovered | `add_ref_raw`, `create_render_pipeline_async_sync_ptr_or_raise` | No `device.add_ref()` test exists, and there is no direct behavior test for the render async `*_or_raise` variant. |
+| Indirect | `add_ref_raw`, `create_bind_group`, `create_bind_group_layout`, `create_buffer_raw`, `create_command_encoder_raw`, `create_compute_pipeline_raw`, `create_pipeline_layout`, `create_query_set`, `create_render_bundle_encoder`, `create_render_pipeline`, `create_sampler`, `create_shader_module`, `create_shader_module_spir_v`, `create_texture`, `destroy_raw`, `get_adapter_info`, `get_features`, `get_limits`, `get_lost_future`, `get_queue`, `has_feature`, `poll_raw`, `push_error_scope_raw`, `release_raw` | Covered through ptr/convenience helpers and behavior suites such as `wgpu_ptr_constructors_test.mbt`, `wgpu_shader_module_spirv_test.mbt`, `wgpu_device_lost_test.mbt`, `wgpu_error_scope_test.mbt`, `wgpu_device_limits_test.mbt`, the render/compute smoke tests, and `wgpu_generated_handle_gaps_test.mbt`. |
+| Uncovered | `create_render_pipeline_async_sync_ptr_or_raise` | Direct exploratory coverage hit an upstream `wgpuDeviceCreateRenderPipelineAsync` `unimplemented` abort on the current supported native release, so the repo still lacks a stable checked-in contract for this method. |
 
 ### Instance
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
 | Direct | `create_surface` | Called directly in `wgpu_surface_descriptor_metal_test.mbt`. |
-| Indirect | `wgpu_generate_report`, `enumerate_adapters`, `get_wgsl_language_features`, `process_events_raw`, `release_raw`, `wait_any` | `wgpu_generate_report_test.mbt`, `wgpu_enumerate_adapters_test.mbt`, `wgpu_wgsl_language_features_test.mbt`, `wgpu_spec_instance_process_events_test.mbt`, `wgpu_instance_wait_any_test.mbt`. |
-| Uncovered | `add_ref_raw`, `has_wgsl_language_feature` | No `instance.add_ref()` test exists, and the repo only tests the count-based WGSL-language-feature wrapper today. |
+| Indirect | `add_ref_raw`, `wgpu_generate_report`, `enumerate_adapters`, `get_wgsl_language_features`, `process_events_raw`, `release_raw`, `wait_any` | `wgpu_generate_report_test.mbt`, `wgpu_enumerate_adapters_test.mbt`, `wgpu_wgsl_language_features_test.mbt`, `wgpu_spec_instance_process_events_test.mbt`, `wgpu_instance_wait_any_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
+| Uncovered | `has_wgsl_language_feature` | Direct exploratory coverage hit an upstream `unimplemented` abort on the current supported native release, so the repo still lacks a stable checked-in contract for this method. |
 
 ### PipelineLayout
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `release_raw` | Pipeline layout release paths are exercised across pipeline and leak tests. |
-| Uncovered | `add_ref_raw` | No `pipeline_layout.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `release_raw` | Pipeline layout release paths are exercised across pipeline and leak tests; `wgpu_generated_handle_gaps_test.mbt` now clones a layout before building a compute pipeline. |
 
 ### QuerySet
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Direct | `destroy` | Called directly in `wgpu_destroy_test.mbt`, `wgpu_device_lost_test.mbt`, and other query-path tests. |
-| Indirect | `release_raw` | Release paths are exercised by query and leak tests. |
-| Uncovered | `add_ref_raw`, `get_count`, `get_type` | No `query_set.add_ref()` test exists, and no behavior test asserts `get_count()` / `get_type()`. |
+| Direct | `destroy`, `get_count`, `get_type` | `destroy` is called directly in `wgpu_destroy_test.mbt`, `wgpu_device_lost_test.mbt`, and other query-path tests; `wgpu_generated_handle_gaps_test.mbt` now directly asserts `get_count()` and round-trips `get_type()` through `query_set_descriptor_new(...)`. |
+| Indirect | `add_ref_raw`, `release_raw` | Release paths are exercised by query and leak tests, and `wgpu_generated_handle_gaps_test.mbt` now exercises `add_ref()`. |
 
 ### Queue
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `get_timestamp_period`, `release_raw`, `submit_raw`, `submit_for_index_raw` | `wgpu_device_poll_test.mbt`, `wgpu_buffer_comprehensive_test.mbt`, `wgpu_spec_queue_submit_multi_test.mbt`, `wgpu_queue_work_done_test.mbt`. |
-| Uncovered | `add_ref_raw` | No `queue.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `get_timestamp_period`, `release_raw`, `submit_raw`, `submit_for_index_raw` | `wgpu_device_poll_test.mbt`, `wgpu_buffer_comprehensive_test.mbt`, `wgpu_spec_queue_submit_multi_test.mbt`, `wgpu_queue_work_done_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
 
 ### RenderBundle
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `release_raw` | Render-bundle release is exercised in `wgpu_render_bundle_test.mbt`. |
-| Uncovered | `add_ref_raw` | No `render_bundle.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `release_raw` | Render-bundle release is exercised in `wgpu_render_bundle_test.mbt`, and `wgpu_generated_handle_gaps_test.mbt` now clones a bundle before execution. |
 
 ### RenderBundleEncoder
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `draw_raw`, `draw_indexed_raw`, `finish_raw`, `pop_debug_group_raw`, `release_raw`, `set_index_buffer`, `set_pipeline_raw` | `wgpu_render_bundle_test.mbt`, `wgpu_ptr_constructors_test.mbt`, `wgpu_label_helpers_test.mbt`. |
-| Uncovered | `add_ref_raw`, `draw_indexed_indirect_raw`, `draw_indirect_raw`, `set_vertex_buffer_raw` | No `add_ref()` test exists, and the repo has no render-bundle indirect-draw or vertex-buffer behavior test yet. |
+| Indirect | `add_ref_raw`, `draw_raw`, `draw_indexed_raw`, `finish_raw`, `pop_debug_group_raw`, `release_raw`, `set_index_buffer`, `set_pipeline_raw`, `set_vertex_buffer_raw` | `wgpu_render_bundle_test.mbt`, `wgpu_ptr_constructors_test.mbt`, `wgpu_label_helpers_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
+| Uncovered | `draw_indexed_indirect_raw`, `draw_indirect_raw` | The repo still has no render-bundle indirect-draw behavior test. |
 
 ### RenderPass
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `begin_occlusion_query_raw`, `begin_pipeline_statistics_query_raw`, `draw_raw`, `draw_indexed_raw`, `draw_indirect_raw`, `end_raw`, `end_occlusion_query_raw`, `end_pipeline_statistics_query_raw`, `execute_bundles_raw`, `multi_draw_indirect_raw`, `pop_debug_group_raw`, `release_raw`, `set_blend_constant`, `set_index_buffer`, `set_pipeline_raw`, `set_scissor_rect_raw`, `set_vertex_buffer_raw`, `set_viewport_raw`, `write_timestamp_raw` | `wgpu_render_draw_indirect_test.mbt`, `wgpu_render_index_buffer_test.mbt`, `wgpu_render_bundle_test.mbt`, `wgpu_multi_draw_indirect_test.mbt`, `wgpu_render_occlusion_query_test.mbt`, `wgpu_pipeline_statistics_query_test.mbt`, `wgpu_render_blend_test.mbt`, `wgpu_render_viewport_scissor_test.mbt`, `wgpu_timestamp_query_inside_passes_test.mbt`, `wgpu_label_helpers_test.mbt`. |
-| Uncovered | `add_ref_raw`, `draw_indexed_indirect_raw`, `multi_draw_indexed_indirect_count_raw`, `multi_draw_indexed_indirect_raw`, `multi_draw_indirect_count_raw`, `set_stencil_reference_raw` | No `add_ref()` test exists, there is no indexed-indirect / count-path render-pass test, and no behavior test currently calls `set_stencil_reference()`. |
+| Indirect | `add_ref_raw`, `begin_occlusion_query_raw`, `begin_pipeline_statistics_query_raw`, `draw_raw`, `draw_indexed_raw`, `draw_indirect_raw`, `end_raw`, `end_occlusion_query_raw`, `end_pipeline_statistics_query_raw`, `execute_bundles_raw`, `multi_draw_indirect_raw`, `pop_debug_group_raw`, `release_raw`, `set_blend_constant`, `set_index_buffer`, `set_pipeline_raw`, `set_scissor_rect_raw`, `set_vertex_buffer_raw`, `set_viewport_raw`, `write_timestamp_raw` | `wgpu_render_draw_indirect_test.mbt`, `wgpu_render_index_buffer_test.mbt`, `wgpu_render_bundle_test.mbt`, `wgpu_multi_draw_indirect_test.mbt`, `wgpu_render_occlusion_query_test.mbt`, `wgpu_pipeline_statistics_query_test.mbt`, `wgpu_render_blend_test.mbt`, `wgpu_render_viewport_scissor_test.mbt`, `wgpu_timestamp_query_inside_passes_test.mbt`, `wgpu_label_helpers_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
+| Uncovered | `draw_indexed_indirect_raw`, `multi_draw_indexed_indirect_count_raw`, `multi_draw_indexed_indirect_raw`, `multi_draw_indirect_count_raw`, `set_stencil_reference_raw` | The repo still lacks indexed-indirect / count-path render-pass tests, and no behavior test currently calls `set_stencil_reference()`. |
 
 ### RenderPipeline
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `get_bind_group_layout_raw`, `release_raw` | `wgpu_pipeline_async_sync_test.mbt` plus normal release paths. |
-| Uncovered | `add_ref_raw` | No `render_pipeline.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `get_bind_group_layout_raw`, `release_raw` | `wgpu_pipeline_async_sync_test.mbt` plus normal release paths and `wgpu_generated_handle_gaps_test.mbt`. |
 
 ### Sampler
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `release_raw` | Sampler release is exercised across sampler and render-texture-sampling tests. |
-| Uncovered | `add_ref_raw` | No `sampler.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `release_raw` | Sampler release is exercised across sampler and render-texture-sampling tests, and `wgpu_generated_handle_gaps_test.mbt` now clones a sampler before creating a bind group. |
 
 ### ShaderModule
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
 | Direct | `get_compilation_info_sync_status_u32` | Called directly in `wgpu_pipeline_async_sync_test.mbt`. |
-| Indirect | `release_raw` | Shader-module release is exercised across shader and pipeline tests. |
-| Uncovered | `add_ref_raw` | No `shader_module.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `release_raw` | Shader-module release is exercised across shader and pipeline tests, and `wgpu_generated_handle_gaps_test.mbt` now clones shader modules on both compute and render paths. |
 
 ### Surface
 
@@ -173,17 +161,15 @@ As of this pass, the file exports **161** generated methods.
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Indirect | `release_raw` | Texture-view release is exercised in render/surface/leak tests. |
-| Uncovered | `add_ref_raw` | No `texture_view.add_ref()` behavior test exists. |
+| Indirect | `add_ref_raw`, `release_raw` | Texture-view release is exercised in render/surface/leak tests, and `wgpu_generated_handle_gaps_test.mbt` now clones a texture view before starting a render pass. |
 
 ## Follow-up Candidates
 
-- Add targeted reference-count tests for the currently uncovered `add_ref_raw`
-  family.
 - Add direct coverage for render-pass and render-bundle indirect-draw variants
   that still have no behavior tests.
-- Add small getter-focused tests for `QuerySet::get_count`,
-  `QuerySet::get_type`, `Buffer::get_map_state`, and
-  `Instance::has_wgsl_language_feature`.
-- Decide whether `Device::create_render_pipeline_async_sync_ptr_or_raise`
-  should mirror the compute-side direct test coverage.
+- Add a repo-safe contract for `Buffer::get_map_state`,
+  `Instance::has_wgsl_language_feature`, and
+  `Device::create_render_pipeline_async_sync_ptr_or_raise`, which currently hit
+  upstream `unimplemented` aborts in direct exploratory coverage against the
+  supported native release.
+- Add behavior coverage for `RenderPass::set_stencil_reference_raw`.

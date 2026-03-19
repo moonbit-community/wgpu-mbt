@@ -40,6 +40,7 @@ options(
     "wgpu_enumerate_adapters_test.mbt": [ "native" ],
     "wgpu_error_scope_test.mbt": [ "native" ],
     "wgpu_generate_report_test.mbt": [ "native" ],
+    "wgpu_generated_handle_gaps_test.mbt": [ "native" ],
     "wgpu_instance_capabilities_test.mbt": [ "native" ],
     "wgpu_instance_wait_any_test.mbt": [ "native" ],
     "wgpu_label_helpers_test.mbt": [ "native" ],
