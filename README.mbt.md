@@ -46,47 +46,45 @@ Or set `MBT_WGPU_NATIVE_LIB` to an absolute library path inside an extracted ups
 ```moonbit
 fn main {
   try {
-    let instance = @wgpu.Instance::create()
-    let adapter = instance.request_adapter_sync()
-    let device = adapter.request_device_sync(instance)
-    let queue = device.queue()
+    @wgpu.with_default_device_queue_sync((instance, device, queue) => {
+      let _ = instance
+      let buf = device.create_buffer(
+        size=4UL,
+        usage=@wgpu.BufferUsage::from_u64(@wgpu.BUFFER_USAGE_COPY_DST),
+      )
+      ignore(buf.size())
 
-    let buf = device.create_buffer(
-      size=4UL,
-      usage=@wgpu.BufferUsage::from_u64(@wgpu.BUFFER_USAGE_COPY_DST),
-    )
-    ignore(buf.size())
+      let shader = device.create_shader_module_wgsl(
+        #|@compute @workgroup_size(1)
+        #|fn main() {}
+        #|,
+      )
+      let pipeline = device.create_compute_pipeline(shader)
+      let encoder = device.create_command_encoder()
+      let pass = encoder.begin_compute_pass()
+      pass.set_pipeline(pipeline)
+      pass.dispatch_workgroups(1U, 1U, 1U)
+      pass.end()
+      pass.release()
 
-    let shader = device.create_shader_module_wgsl(
-      #|@compute @workgroup_size(1)
-      #|fn main() {}
-      #|,
-    )
-    let pipeline = device.create_compute_pipeline(shader)
-    let encoder = device.create_command_encoder()
-    let pass = encoder.begin_compute_pass()
-    pass.set_pipeline(pipeline)
-    pass.dispatch_workgroups(1U, 1U, 1U)
-    pass.end()
-    pass.release()
+      let cmd = encoder.finish()
+      queue.submit_one(cmd)
 
-    let cmd = encoder.finish()
-    queue.submit_one(cmd)
-
-    cmd.release()
-    encoder.release()
-    pipeline.release()
-    shader.release()
-    buf.release()
-    queue.release()
-    device.release()
-    adapter.release()
-    instance.release()
+      cmd.release()
+      encoder.release()
+      pipeline.release()
+      shader.release()
+      buf.release()
+    })
   } catch {
     e => println(e.message())
   }
 }
 ```
+
+`with_default_device_queue_sync` is the recommended high-level path for smoke
+tests, examples, and short-lived tools. It auto-releases the default
+instance/adapter/device/queue stack after the callback returns or raises.
 
 ## Surface Configuration (Frame Latency)
 

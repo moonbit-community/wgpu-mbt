@@ -1274,6 +1274,8 @@ pub fn surface_descriptor_xcb_new(@c.OpaquePtr, UInt) -> @c.WGPUSurfaceDescripto
 
 pub fn surface_descriptor_xlib_new(@c.OpaquePtr, UInt64) -> @c.WGPUSurfaceDescriptorPtr
 
+pub fn with_default_device_queue_sync((Instance, Device, Queue) -> Unit raise) -> Unit raise
+
 // Errors
 type BufferSyncError
 pub fn BufferSyncError::message(Self) -> String
@@ -1939,6 +1941,7 @@ pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResu
 pub fn Instance::wait_any_one_or_raise(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult raise WaitAnyError
 pub fn Instance::wgpu_generate_report(Self, @c.WGPUGlobalReportPtr) -> Unit
 pub fn Instance::wgsl_language_features_count_u64(Self) -> UInt64
+pub fn Instance::with_device_queue_sync(Self, (Device, Queue) -> Unit raise) -> Unit raise
 
 pub struct InstanceCapabilities {
   timed_wait_any_enable : Bool

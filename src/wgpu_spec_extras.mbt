@@ -118,6 +118,19 @@ declare pub fn Instance::request_adapter_sync_ptr(
 
 ///|
 #declaration_only
+declare pub fn Instance::with_device_queue_sync(
+  self : Instance,
+  run : (Device, Queue) -> Unit raise Error,
+) -> Unit raise Error
+
+///|
+#declaration_only
+declare pub fn with_default_device_queue_sync(
+  run : (Instance, Device, Queue) -> Unit raise Error,
+) -> Unit raise Error
+
+///|
+#declaration_only
 declare pub fn Instance::request_adapter_future_id_u64(
   self : Instance,
   options? : @c.WGPURequestAdapterOptionsPtr = @c.null_request_adapter_options_ptr(),
