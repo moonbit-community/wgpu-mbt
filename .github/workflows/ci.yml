@@ -16,6 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Audit native test registration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_native_test_suite.py --check-moon-pkg
+
       - name: Install system deps (Vulkan + bindgen)
         shell: bash
         run: |

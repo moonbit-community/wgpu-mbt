@@ -14,7 +14,7 @@
 
 ///|
 test "wgpu smoke" {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)

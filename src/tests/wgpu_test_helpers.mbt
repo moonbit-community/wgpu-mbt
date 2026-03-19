@@ -143,6 +143,19 @@ pub fn skip_on_wgpu_error(run : () -> Unit raise Error) -> Unit raise Error {
 }
 
 ///|
+pub fn run_on_supported_native_platform(
+  run : () -> Unit raise Error,
+) -> Unit raise Error {
+  if !@wgpu.platform_is_macos() &&
+    !@wgpu.platform_is_linux() &&
+    !@wgpu.platform_is_windows() {
+    inspect("unsupported platform", content="unsupported platform")
+  } else {
+    run()
+  }
+}
+
+///|
 pub fn skip_unless_macos(run : () -> Unit raise Error) -> Unit raise Error {
   if !@wgpu.platform_is_macos() {
     inspect("skipped (macOS only)", content="skipped (macOS only)")

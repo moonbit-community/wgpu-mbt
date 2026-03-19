@@ -14,7 +14,7 @@
 
 ///|
 test "wgpu async future API: request adapter and device" {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter_future = instance.request_adapter_future_id_u64()
     assert_eq(adapter_future == 0UL, false)
