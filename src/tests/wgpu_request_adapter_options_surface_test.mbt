@@ -13,16 +13,11 @@
 // limitations under the License.
 
 ///|
-test "wgpu request_adapter options: compatibleSurface (Metal-only best-effort)" {
+test "wgpu request_adapter options: compatibleSurface (Metal contract)" {
   skip_unless_macos(() => {
     let instance = @wgpu.Instance::create()
     let metal_count = instance.enumerate_adapters_count_metal()
-    if metal_count == 0UL {
-      // Best-effort: some setups may not expose a Metal adapter.
-      inspect(true, content="true")
-      instance.release()
-      return
-    }
+    inspect(metal_count > 0UL, content="true")
     let surface = instance.create_surface_metal_layer()
     let adapter = instance.request_adapter_sync_options_surface_u32(
       surface,
@@ -31,7 +26,19 @@ test "wgpu request_adapter options: compatibleSurface (Metal-only best-effort)" 
     )
     let device = adapter.request_device_sync(instance)
     let queue = device.queue()
-    inspect(true, content="true")
+    inspect(
+      device.info_backend_type_u32(),
+      content=@wgpu.BACKEND_TYPE_METAL.to_string(),
+    )
+    let usage = @wgpu.TextureUsage::from_u64(
+      @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+    )
+    let format = surface.configure_default(adapter, device, 1U, 1U, usage)
+    inspect(format.raw == 0U, content="false")
+    let st = surface.get_current_texture_or_raise()
+    inspect(st.is_success(), content="true")
+    st.release()
+    surface.unconfigure()
     queue.release()
     device.release()
     adapter.release()

@@ -27,6 +27,11 @@ pub fn Instance::create_ptr(
 }
 
 ///|
+/// Create an instance with explicit native extras.
+///
+/// `dxc_path` is currently reserved and behaves as a documented no-op because
+/// published upstream binaries do not share a stable `WGPUInstanceExtras`
+/// layout for that field yet.
 pub fn Instance::create_with_extras_u32(
   backends_u64? : UInt64 = INSTANCE_BACKEND_ALL,
   flags_u32? : UInt = INSTANCE_FLAG_DEFAULT,

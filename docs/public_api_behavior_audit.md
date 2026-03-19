@@ -40,7 +40,7 @@ The checklist below therefore groups the API by exported capability family.
 | --- | --- | --- | --- | --- |
 | Runtime diagnostics and support probes | `native_available`, `native_supported`, `native_static_linked`, `native_expected_release_tag`, `native_diagnostic` | [`README.mbt.md`](../README.mbt.md), [`src/tests/wgpu_native_diagnostic_test.mbt`](../src/tests/wgpu_native_diagnostic_test.mbt), [`src/wgpu_runtime_support_wbtest.mbt`](../src/wgpu_runtime_support_wbtest.mbt) | Covered | Build/deploy UX issues are tracked separately in `wgpu_mbt-66w.4` |
 | Instance creation, adapter enumeration, report APIs | `Instance::create`, `enumerate_adapters_count_*`, `generate_report`, `wgsl_language_features_count_u64` | [`src/tests/wgpu_enumerate_adapters_test.mbt`](../src/tests/wgpu_enumerate_adapters_test.mbt), [`src/tests/wgpu_generate_report_test.mbt`](../src/tests/wgpu_generate_report_test.mbt), [`src/tests/wgpu_wgsl_language_features_test.mbt`](../src/tests/wgpu_wgsl_language_features_test.mbt) | Partial | Raw handle methods such as `get_wgsl_language_features` / `has_wgsl_language_feature` fall under the generated-handle gap below |
-| Adapter request paths and async futures | `request_adapter_sync*`, `request_adapter_future_id_u64`, `wait_any_one`, `process_events`, `request_device_future_id_u64` | [`src/tests/wgpu_async_future_api_test.mbt`](../src/tests/wgpu_async_future_api_test.mbt), [`src/tests/wgpu_request_adapter_options_test.mbt`](../src/tests/wgpu_request_adapter_options_test.mbt) | Partial | Surface-compatible adapter selection is still Metal-only best-effort; see the surface rows |
+| Adapter request paths and async futures | `request_adapter_sync*`, `request_adapter_future_id_u64`, `wait_any_one`, `process_events`, `request_device_future_id_u64` | [`src/tests/wgpu_async_future_api_test.mbt`](../src/tests/wgpu_async_future_api_test.mbt), [`src/tests/wgpu_request_adapter_options_test.mbt`](../src/tests/wgpu_request_adapter_options_test.mbt), [`src/tests/wgpu_request_adapter_options_surface_test.mbt`](../src/tests/wgpu_request_adapter_options_surface_test.mbt) | Partial | Surface-compatible adapter selection now has a Metal contract test, but non-macOS paths remain partial |
 | Adapter/device limits, supported features, native feature wrappers | `supported_features_*`, `supported_feature_u32_at`, `has_feature_*`, `has_feature_native_*`, `request_device_sync_*` native helpers | [`src/tests/wgpu_supported_features_test.mbt`](../src/tests/wgpu_supported_features_test.mbt), [`src/tests/wgpu_supported_features_items_test.mbt`](../src/tests/wgpu_supported_features_items_test.mbt), [`src/tests/wgpu_native_feature_wrappers_test.mbt`](../src/tests/wgpu_native_feature_wrappers_test.mbt), [`src/tests/wgpu_native_feature_gap_test.mbt`](../src/tests/wgpu_native_feature_gap_test.mbt) | Covered | Keep aligned with upstream feature additions |
 | Buffer, queue I/O, and sync helpers | `create_buffer*`, `create_buffer_init`, `map_read_sync*`, `map_write_sync*`, `readback*`, `Queue::write_buffer`, `Queue::write_texture_*`, `Queue::on_submitted_work_done_*` | [`src/tests/wgpu_buffer_comprehensive_test.mbt`](../src/tests/wgpu_buffer_comprehensive_test.mbt), [`src/tests/wgpu_buffer_sync_or_raise_test.mbt`](../src/tests/wgpu_buffer_sync_or_raise_test.mbt), [`src/tests/wgpu_queue_write_buffer_test.mbt`](../src/tests/wgpu_queue_write_buffer_test.mbt), [`src/tests/wgpu_queue_write_texture_ptr_test.mbt`](../src/tests/wgpu_queue_write_texture_ptr_test.mbt), [`src/tests/wgpu_queue_work_done_test.mbt`](../src/tests/wgpu_queue_work_done_test.mbt) | Covered | Lifecycle ergonomics still tracked in `wgpu_mbt-66w.2.*` |
 | Compute/render pipelines, passes, bundles, queries | `create_compute_pipeline*`, `create_render_pipeline*`, `create_command_encoder`, pass/bundle APIs, query set helpers | [`src/tests/wgpu_compute_test.mbt`](../src/tests/wgpu_compute_test.mbt), [`src/tests/wgpu_compute_readback_test.mbt`](../src/tests/wgpu_compute_readback_test.mbt), [`src/tests/wgpu_render_offscreen_test.mbt`](../src/tests/wgpu_render_offscreen_test.mbt), [`src/tests/wgpu_render_bundle_test.mbt`](../src/tests/wgpu_render_bundle_test.mbt), [`src/tests/wgpu_pipeline_statistics_query_test.mbt`](../src/tests/wgpu_pipeline_statistics_query_test.mbt), [`src/tests/wgpu_push_constants_test.mbt`](../src/tests/wgpu_push_constants_test.mbt) | Covered, gated | Feature-gated coverage now includes multi-range push constants and multi-stat query-set helpers |
@@ -57,15 +57,15 @@ pass.
 1. `Instance::create_with_extras_u32(..., dxc_path)` exposes a public parameter
    that is intentionally ignored today.
    Source: [`README.mbt.md`](../README.mbt.md) states that `dxc_path` is
-   "currently ignored for ABI safety across upstream binaries".
+   a documented no-op for ABI safety across upstream binaries.
    Current evidence: only constructor smoke in
    [`src/tests/wgpu_native_api_completeness_test.mbt`](../src/tests/wgpu_native_api_completeness_test.mbt).
 
 2. `Instance::request_adapter_sync_options_surface_u32(...)` and the public
-   surface/present flow are still validated as platform-scoped best effort,
-   not as a repo-wide behavior contract.
-   Current evidence: Metal-only best-effort in
+   surface/present flow still lack a repo-wide behavior contract.
+   Current evidence: a stronger Metal contract now exists in
    [`src/tests/wgpu_request_adapter_options_surface_test.mbt`](../src/tests/wgpu_request_adapter_options_surface_test.mbt),
+   but other surface-path evidence is still platform-scoped in
    [`src/tests/wgpu_surface_present_test.mbt`](../src/tests/wgpu_surface_present_test.mbt),
    and [`src/tests/wgpu_surface_configure_best_effort_test.mbt`](../src/tests/wgpu_surface_configure_best_effort_test.mbt).
 

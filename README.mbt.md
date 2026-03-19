@@ -148,7 +148,9 @@ You can create an instance with explicit native extras instead of defaults:
 - `Instance::create_with_extras_u32(backends_u64, flags_u32, dx12_shader_compiler_u32, gles3_minor_version_u32, gl_fence_behaviour_u32, dxc_max_shader_model_u32, dx12_presentation_system_u32, dxc_path)`
 
 This exposes backend/compiler knobs from `WGPUInstanceExtras`.
-`dxc_path` is kept as a forward-compatible parameter but currently ignored for ABI safety across upstream binaries.
+`dxc_path` is kept as a forward-compatible parameter but is currently a no-op for ABI
+safety across upstream binaries. Do not rely on it until upstream instance-extras ABI
+compatibility is resolved.
 
 For `WGPUDeviceExtras.tracePath`, you can set trace path on descriptor builders via:
 
