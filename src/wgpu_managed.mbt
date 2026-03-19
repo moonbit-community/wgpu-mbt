@@ -29,6 +29,17 @@ pub struct ManagedBuffer {
 }
 
 ///|
+pub struct ManagedTexture {
+  priv raw : Texture
+  priv pool : AutoReleasePool
+}
+
+///|
+pub struct ManagedTextureView {
+  priv raw : TextureView
+}
+
+///|
 pub struct ManagedShaderModule {
   priv raw : ShaderModule
 }
@@ -36,6 +47,11 @@ pub struct ManagedShaderModule {
 ///|
 pub struct ManagedComputePipeline {
   priv raw : ComputePipeline
+}
+
+///|
+pub struct ManagedRenderPipeline {
+  priv raw : RenderPipeline
 }
 
 ///|
@@ -55,6 +71,11 @@ pub struct ManagedComputePass {
 }
 
 ///|
+pub struct ManagedRenderPass {
+  priv raw : RenderPass
+}
+
+///|
 fn wrap_managed_device(raw : Device, pool : AutoReleasePool) -> ManagedDevice {
   { raw, pool }
 }
@@ -70,6 +91,19 @@ fn wrap_managed_buffer(raw : Buffer) -> ManagedBuffer {
 }
 
 ///|
+fn wrap_managed_texture(
+  raw : Texture,
+  pool : AutoReleasePool,
+) -> ManagedTexture {
+  { raw, pool }
+}
+
+///|
+fn wrap_managed_texture_view(raw : TextureView) -> ManagedTextureView {
+  { raw, }
+}
+
+///|
 fn wrap_managed_shader_module(raw : ShaderModule) -> ManagedShaderModule {
   { raw, }
 }
@@ -78,6 +112,11 @@ fn wrap_managed_shader_module(raw : ShaderModule) -> ManagedShaderModule {
 fn wrap_managed_compute_pipeline(
   raw : ComputePipeline,
 ) -> ManagedComputePipeline {
+  { raw, }
+}
+
+///|
+fn wrap_managed_render_pipeline(raw : RenderPipeline) -> ManagedRenderPipeline {
   { raw, }
 }
 
@@ -96,6 +135,11 @@ fn wrap_managed_command_buffer(raw : CommandBuffer) -> ManagedCommandBuffer {
 
 ///|
 fn wrap_managed_compute_pass(raw : ComputePass) -> ManagedComputePass {
+  { raw, }
+}
+
+///|
+fn wrap_managed_render_pass(raw : RenderPass) -> ManagedRenderPass {
   { raw, }
 }
 
@@ -147,6 +191,18 @@ pub fn ManagedDevice::create_shader_module_wgsl(
 }
 
 ///|
+pub fn ManagedDevice::create_texture_rgba8_2d(
+  self : ManagedDevice,
+  width : UInt,
+  height : UInt,
+) -> ManagedTexture {
+  wrap_managed_texture(
+    self.pool.track_texture(self.raw.create_texture_rgba8_2d(width, height)),
+    self.pool,
+  )
+}
+
+///|
 pub fn ManagedDevice::create_compute_pipeline(
   self : ManagedDevice,
   shader_module : ManagedShaderModule,
@@ -154,6 +210,18 @@ pub fn ManagedDevice::create_compute_pipeline(
   wrap_managed_compute_pipeline(
     self.pool.track_compute_pipeline(
       self.raw.create_compute_pipeline(shader_module.raw),
+    ),
+  )
+}
+
+///|
+pub fn ManagedDevice::create_render_pipeline_rgba8(
+  self : ManagedDevice,
+  shader_module : ManagedShaderModule,
+) -> ManagedRenderPipeline {
+  wrap_managed_render_pipeline(
+    self.pool.track_render_pipeline(
+      self.raw.create_render_pipeline_rgba8(shader_module.raw),
     ),
   )
 }
@@ -179,6 +247,23 @@ pub fn ManagedBuffer::size(self : ManagedBuffer) -> UInt64 {
 }
 
 ///|
+pub fn ManagedBuffer::readback(
+  self : ManagedBuffer,
+  instance : Instance,
+  offset : UInt64,
+  size : UInt64,
+) -> Bytes {
+  self.raw.readback(instance, offset, size)
+}
+
+///|
+pub fn ManagedTexture::create_view(self : ManagedTexture) -> ManagedTextureView {
+  wrap_managed_texture_view(
+    self.pool.track_texture_view(self.raw.create_view()),
+  )
+}
+
+///|
 pub fn ManagedQueue::submit_one(
   self : ManagedQueue,
   cmd : ManagedCommandBuffer,
@@ -193,6 +278,27 @@ pub fn ManagedCommandEncoder::begin_compute_pass(
   wrap_managed_compute_pass(
     self.pool.track_compute_pass(self.raw.begin_compute_pass()),
   )
+}
+
+///|
+pub fn ManagedCommandEncoder::begin_render_pass_color(
+  self : ManagedCommandEncoder,
+  view : ManagedTextureView,
+) -> ManagedRenderPass {
+  wrap_managed_render_pass(
+    self.pool.track_render_pass(self.raw.begin_render_pass_color(view.raw)),
+  )
+}
+
+///|
+pub fn ManagedCommandEncoder::copy_texture_to_buffer_rgba8(
+  self : ManagedCommandEncoder,
+  texture : ManagedTexture,
+  buffer : ManagedBuffer,
+  width : UInt,
+  height : UInt,
+) -> Unit {
+  self.raw.copy_texture_to_buffer_rgba8(texture.raw, buffer.raw, width, height)
 }
 
 ///|
@@ -222,5 +328,29 @@ pub fn ManagedComputePass::dispatch_workgroups(
 
 ///|
 pub fn ManagedComputePass::end(self : ManagedComputePass) -> Unit {
+  self.raw.end()
+}
+
+///|
+pub fn ManagedRenderPass::set_pipeline(
+  self : ManagedRenderPass,
+  pipeline : ManagedRenderPipeline,
+) -> Unit {
+  self.raw.set_pipeline(pipeline.raw)
+}
+
+///|
+pub fn ManagedRenderPass::draw(
+  self : ManagedRenderPass,
+  vertex_count : UInt,
+  instance_count : UInt,
+  first_vertex : UInt,
+  first_instance : UInt,
+) -> Unit {
+  self.raw.draw(vertex_count, instance_count, first_vertex, first_instance)
+}
+
+///|
+pub fn ManagedRenderPass::end(self : ManagedRenderPass) -> Unit {
   self.raw.end()
 }

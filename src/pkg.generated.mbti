@@ -1985,6 +1985,7 @@ pub struct InstanceCapabilities {
 pub struct ManagedBuffer {
   // private fields
 }
+pub fn ManagedBuffer::readback(Self, Instance, UInt64, UInt64) -> Bytes
 pub fn ManagedBuffer::size(Self) -> UInt64
 
 pub struct ManagedCommandBuffer {
@@ -1995,6 +1996,8 @@ pub struct ManagedCommandEncoder {
   // private fields
 }
 pub fn ManagedCommandEncoder::begin_compute_pass(Self) -> ManagedComputePass
+pub fn ManagedCommandEncoder::begin_render_pass_color(Self, ManagedTextureView) -> ManagedRenderPass
+pub fn ManagedCommandEncoder::copy_texture_to_buffer_rgba8(Self, ManagedTexture, ManagedBuffer, UInt, UInt) -> Unit
 pub fn ManagedCommandEncoder::finish(Self) -> ManagedCommandBuffer
 
 pub struct ManagedComputePass {
@@ -2014,7 +2017,9 @@ pub struct ManagedDevice {
 pub fn ManagedDevice::create_buffer(Self, size~ : UInt64, usage~ : BufferUsage, mapped_at_creation? : Bool) -> ManagedBuffer
 pub fn ManagedDevice::create_command_encoder(Self) -> ManagedCommandEncoder
 pub fn ManagedDevice::create_compute_pipeline(Self, ManagedShaderModule) -> ManagedComputePipeline
+pub fn ManagedDevice::create_render_pipeline_rgba8(Self, ManagedShaderModule) -> ManagedRenderPipeline
 pub fn ManagedDevice::create_shader_module_wgsl(Self, String) -> ManagedShaderModule
+pub fn ManagedDevice::create_texture_rgba8_2d(Self, UInt, UInt) -> ManagedTexture
 pub fn ManagedDevice::poll(Self, wait? : Bool) -> Bool
 
 pub struct ManagedQueue {
@@ -2022,7 +2027,27 @@ pub struct ManagedQueue {
 }
 pub fn ManagedQueue::submit_one(Self, ManagedCommandBuffer) -> Unit
 
+pub struct ManagedRenderPass {
+  // private fields
+}
+pub fn ManagedRenderPass::draw(Self, UInt, UInt, UInt, UInt) -> Unit
+pub fn ManagedRenderPass::end(Self) -> Unit
+pub fn ManagedRenderPass::set_pipeline(Self, ManagedRenderPipeline) -> Unit
+
+pub struct ManagedRenderPipeline {
+  // private fields
+}
+
 pub struct ManagedShaderModule {
+  // private fields
+}
+
+pub struct ManagedTexture {
+  // private fields
+}
+pub fn ManagedTexture::create_view(Self) -> ManagedTextureView
+
+pub struct ManagedTextureView {
   // private fields
 }
 

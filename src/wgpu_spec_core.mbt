@@ -92,11 +92,23 @@ pub type ManagedBuffer
 
 ///|
 #declaration_only
+pub type ManagedTexture
+
+///|
+#declaration_only
+pub type ManagedTextureView
+
+///|
+#declaration_only
 pub type ManagedShaderModule
 
 ///|
 #declaration_only
 pub type ManagedComputePipeline
+
+///|
+#declaration_only
+pub type ManagedRenderPipeline
 
 ///|
 #declaration_only
@@ -109,6 +121,10 @@ pub type ManagedCommandBuffer
 ///|
 #declaration_only
 pub type ManagedComputePass
+
+///|
+#declaration_only
+pub type ManagedRenderPass
 
 ///|
 #declaration_only

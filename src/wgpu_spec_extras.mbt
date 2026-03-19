@@ -315,10 +315,25 @@ declare pub fn ManagedDevice::create_shader_module_wgsl(
 
 ///|
 #declaration_only
+declare pub fn ManagedDevice::create_texture_rgba8_2d(
+  self : ManagedDevice,
+  width : UInt,
+  height : UInt,
+) -> ManagedTexture
+
+///|
+#declaration_only
 declare pub fn ManagedDevice::create_compute_pipeline(
   self : ManagedDevice,
   shader_module : ManagedShaderModule,
 ) -> ManagedComputePipeline
+
+///|
+#declaration_only
+declare pub fn ManagedDevice::create_render_pipeline_rgba8(
+  self : ManagedDevice,
+  shader_module : ManagedShaderModule,
+) -> ManagedRenderPipeline
 
 ///|
 #declaration_only
@@ -339,6 +354,21 @@ declare pub fn ManagedBuffer::size(self : ManagedBuffer) -> UInt64
 
 ///|
 #declaration_only
+declare pub fn ManagedBuffer::readback(
+  self : ManagedBuffer,
+  instance : Instance,
+  offset : UInt64,
+  size : UInt64,
+) -> Bytes
+
+///|
+#declaration_only
+declare pub fn ManagedTexture::create_view(
+  self : ManagedTexture,
+) -> ManagedTextureView
+
+///|
+#declaration_only
 declare pub fn ManagedQueue::submit_one(
   self : ManagedQueue,
   cmd : ManagedCommandBuffer,
@@ -349,6 +379,23 @@ declare pub fn ManagedQueue::submit_one(
 declare pub fn ManagedCommandEncoder::begin_compute_pass(
   self : ManagedCommandEncoder,
 ) -> ManagedComputePass
+
+///|
+#declaration_only
+declare pub fn ManagedCommandEncoder::begin_render_pass_color(
+  self : ManagedCommandEncoder,
+  view : ManagedTextureView,
+) -> ManagedRenderPass
+
+///|
+#declaration_only
+declare pub fn ManagedCommandEncoder::copy_texture_to_buffer_rgba8(
+  self : ManagedCommandEncoder,
+  texture : ManagedTexture,
+  buffer : ManagedBuffer,
+  width : UInt,
+  height : UInt,
+) -> Unit
 
 ///|
 #declaration_only
@@ -375,6 +422,27 @@ declare pub fn ManagedComputePass::dispatch_workgroups(
 ///|
 #declaration_only
 declare pub fn ManagedComputePass::end(self : ManagedComputePass) -> Unit
+
+///|
+#declaration_only
+declare pub fn ManagedRenderPass::set_pipeline(
+  self : ManagedRenderPass,
+  pipeline : ManagedRenderPipeline,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn ManagedRenderPass::draw(
+  self : ManagedRenderPass,
+  vertex_count : UInt,
+  instance_count : UInt,
+  first_vertex : UInt,
+  first_instance : UInt,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn ManagedRenderPass::end(self : ManagedRenderPass) -> Unit
 
 ///|
 #declaration_only

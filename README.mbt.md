@@ -113,14 +113,19 @@ fn main {
 `with_default_device_queue_managed` is the strongest high-level path for smoke
 tests, examples, and short-lived tools. It auto-releases the default
 instance/adapter/device/queue stack and only exposes managed wrappers for the
-most common compute flow, so there is no `release()` method to call by mistake
-inside the callback.
+common compute path plus a minimal offscreen render path
+(`Texture`/`TextureView`/`RenderPipeline`/`RenderPass`/copy-to-buffer), so
+there is no `release()` method to call by mistake inside the callback.
 
 For broader high-level coverage, `with_default_device_queue_auto_release` still
 exposes the lower-level `AutoReleasePool`. That path supports more resource
 types, but tracked resources remain borrowed for the callback scope. Keep
 `release()` / `add_ref()` for raw interop or deterministic ownership management
 outside these managed helpers.
+
+Lifecycle validation details, including `GlobalReport` delta checks and the
+native ASan helper script, live in
+[`docs/lifecycle_validation.md`](docs/lifecycle_validation.md).
 
 ## Surface Configuration (Frame Latency)
 

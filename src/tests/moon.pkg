@@ -53,6 +53,7 @@ options(
     "wgpu_lifecycle_helper_test.mbt": [ "native" ],
     "wgpu_log_callback_test.mbt": [ "native" ],
     "wgpu_log_version_test.mbt": [ "native" ],
+    "wgpu_managed_lifecycle_test.mbt": [ "native" ],
     "wgpu_multi_draw_indirect_test.mbt": [ "native" ],
     "wgpu_native_api_completeness_test.mbt": [ "native" ],
     "wgpu_native_diagnostic_test.mbt": [ "native" ],

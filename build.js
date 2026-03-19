@@ -7,6 +7,7 @@ const { SUPPORTED_RELEASE, releaseAssetFor } = require('./scripts/wgpu_native_re
 
 const MODULE_NAME = 'Milky2018/wgpu_mbt';
 const LINK_MODE = (process.env.MBT_WGPU_LINK_MODE || 'static').trim().toLowerCase();
+const SANITIZE_MODE = (process.env.MBT_WGPU_NATIVE_SANITIZE || '').trim().toLowerCase();
 
 function pkg(pathSuffix) {
   return pathSuffix.length === 0 ? MODULE_NAME : `${MODULE_NAME}/${pathSuffix}`;
@@ -57,6 +58,26 @@ function escapeDefineString(value) {
   return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
+function sanitizerCompileFlags() {
+  if (SANITIZE_MODE.length === 0) {
+    return [];
+  }
+  if (SANITIZE_MODE !== 'address') {
+    throw new Error(`unsupported MBT_WGPU_NATIVE_SANITIZE: ${SANITIZE_MODE}`);
+  }
+  return ['-fsanitize=address', '-fno-omit-frame-pointer'];
+}
+
+function sanitizerLinkFlags() {
+  if (SANITIZE_MODE.length === 0) {
+    return [];
+  }
+  if (SANITIZE_MODE !== 'address') {
+    throw new Error(`unsupported MBT_WGPU_NATIVE_SANITIZE: ${SANITIZE_MODE}`);
+  }
+  return ['-fsanitize=address'];
+}
+
 function stubCcFlags({ staticLink, asset }) {
   const flags = [
     `-DMBT_WGPU_STATIC_LINK=${staticLink ? '1' : '0'}`,
@@ -72,6 +93,7 @@ function stubCcFlags({ staticLink, asset }) {
     flags.push('-DMBT_WGPU_STATIC_HAS_COMPILATION_INFO=0');
     flags.push('-DMBT_WGPU_STATIC_ARCHIVE=\\\"\\\"');
   }
+  flags.push(...sanitizerCompileFlags());
   return flags.join(' ');
 }
 
@@ -230,6 +252,7 @@ function staticLinkFlags(baseDir, asset) {
     }
     flags.push(vulkanImportLib ? quoteArg(vulkanImportLib) : '-lvulkan-1');
   }
+  flags.push(...sanitizerLinkFlags());
   return flags.join(' ');
 }
 
@@ -250,6 +273,11 @@ function main() {
     linkConfigs.push({
       package: pkg('c'),
       link_flags: staticLinkFlags(baseDir, asset),
+    });
+  } else if (SANITIZE_MODE.length !== 0) {
+    linkConfigs.push({
+      package: pkg('c'),
+      link_flags: sanitizerLinkFlags().join(' '),
     });
   }
 
