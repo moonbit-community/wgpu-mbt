@@ -18,6 +18,8 @@
 /// The builder is MoonBit-managed. If you call `finish_descriptor_ptr`, it
 /// transfers the underlying descriptor out of the builder, and you must free
 /// the returned pointer via `@c.compute_pipeline_descriptor_free(desc)`.
+/// `create_pipeline(device)` is the consuming high-level path and frees the
+/// builder automatically.
 pub fn ComputePipelineDescBuilder::new(
   shader_module : ShaderModule,
   layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
@@ -66,10 +68,18 @@ pub fn ComputePipelineDescBuilder::create_pipeline(
   self : ComputePipelineDescBuilder,
   device : Device,
 ) -> ComputePipeline raise ComputePipelineDescError {
-  let desc = self.finish_descriptor_ptr()
-  let pipeline = device.create_compute_pipeline_ptr(desc)
-  @c.compute_pipeline_descriptor_free(desc)
-  pipeline
+  try {
+    let desc = self.finish_descriptor_ptr()
+    let pipeline = device.create_compute_pipeline_ptr(desc)
+    @c.compute_pipeline_descriptor_free(desc)
+    self.free()
+    pipeline
+  } catch {
+    e => {
+      self.free()
+      raise e
+    }
+  }
 }
 
 ///|
@@ -126,6 +136,8 @@ pub const COMPUTE_PIPELINE_DESC_ERR_OOM : UInt = 4U
 /// The builder is MoonBit-managed. If you call `finish_descriptor_ptr`, it
 /// transfers the underlying descriptor allocation out of the builder, and you
 /// must free the returned pointer via `@c.render_pipeline_descriptor_free(desc)`.
+/// `create_pipeline(device)` is the consuming high-level path and frees the
+/// builder automatically.
 pub fn RenderPipelineDescBuilder::new(
   shader_module : ShaderModule,
   layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
@@ -426,10 +438,18 @@ pub fn RenderPipelineDescBuilder::create_pipeline(
   self : RenderPipelineDescBuilder,
   device : Device,
 ) -> RenderPipeline raise RenderPipelineDescError {
-  let desc = self.finish_descriptor_ptr()
-  let pipeline = device.create_render_pipeline_ptr(desc)
-  @c.render_pipeline_descriptor_free(desc)
-  pipeline
+  try {
+    let desc = self.finish_descriptor_ptr()
+    let pipeline = device.create_render_pipeline_ptr(desc)
+    @c.render_pipeline_descriptor_free(desc)
+    self.free()
+    pipeline
+  } catch {
+    e => {
+      self.free()
+      raise e
+    }
+  }
 }
 
 ///|

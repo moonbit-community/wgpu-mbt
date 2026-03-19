@@ -77,3 +77,49 @@ test "wgpu builders: descriptor builders support detach and abandon" {
   adapter.release()
   instance.release()
 }
+
+///|
+test "wgpu builders: create_pipeline consumes pipeline builders" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let render_shader_wgsl =
+    #|@vertex
+    #|fn vs_main() -> @builtin(position) vec4f {
+    #|  vec4f(0.0, 0.0, 0.0, 1.0)
+    #|}
+    #|
+    #|@fragment
+    #|fn fs_main() -> @location(0) vec4f {
+    #|  vec4f(0.0, 1.0, 0.0, 1.0)
+    #|}
+    #|
+  let render_shader = device.create_shader_module_wgsl(render_shader_wgsl)
+  let render_builder = @wgpu.RenderPipelineDescBuilder::new(render_shader)
+  render_builder.set_entry_points("vs_main", "fs_main")
+  render_builder.set_color_target_format(
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
+  )
+  let render_pipeline = render_builder.create_pipeline(device)
+  render_builder.free()
+  render_builder.free()
+
+  let compute_shader_wgsl =
+    #|@compute @workgroup_size(1)
+    #|fn main() {}
+    #|
+  let compute_shader = device.create_shader_module_wgsl(compute_shader_wgsl)
+  let compute_builder = @wgpu.ComputePipelineDescBuilder::new(compute_shader)
+  compute_builder.set_entry_point("main")
+  let compute_pipeline = compute_builder.create_pipeline(device)
+  compute_builder.free()
+  compute_builder.free()
+
+  compute_pipeline.release()
+  render_pipeline.release()
+  compute_shader.release()
+  render_shader.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}
