@@ -519,6 +519,12 @@ jobs:
           $ErrorActionPreference = "Stop"
           moon test --target native src/tests --test-failure-json
 
+      - name: Run Windows-only native test suite
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          moon test --target native src/tests_windows --test-failure-json
+
       - name: Run strict leak check
         shell: pwsh
         run: |
@@ -556,6 +562,16 @@ jobs:
           Remove-Item Env:MBT_WGPU_NATIVE_ROOT -ErrorAction SilentlyContinue
           $env:MBT_WGPU_LINK_MODE = "static"
           moon test --target native src/tests --test-failure-json
+
+      - name: Run Windows-only native test suite (static link)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          Remove-Item Env:MBT_WGPU_NATIVE_ROOT -ErrorAction SilentlyContinue
+          $env:MBT_WGPU_LINK_MODE = "static"
+          moon test --target native src/tests_windows --test-failure-json
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()

@@ -4,12 +4,15 @@ MoonBit bindings for the `wgpu-native` C API (WebGPU), targeting **native** back
 
 ## Supported Platforms
 
-| Platform | Backend | Surface API |
-|---|---|---|
-| macOS | Metal | `Instance::create_surface_metal_layer()` |
-| Linux (experimental) | Vulkan | `Instance::create_surface_wayland()` / `create_surface_xcb()` / `create_surface_xlib()` |
-| Windows (experimental) | DX12 / Vulkan (via wgpu-native) | `Instance::create_surface_windows_hwnd()` / `create_surface_swap_chain_panel()` |
-| Android (experimental) | Vulkan/OpenGLES (depends on native build) | `Instance::create_surface_android_native_window()` |
+| Platform | Status | Validated in repo | Surface API |
+|---|---|---|---|
+| macOS | supported | Metal runtime + host-backed surface tests in CI | `Instance::create_surface_metal_layer()` |
+| Linux | experimental | Vulkan headless runtime + Linux descriptor/input validation in CI | `Instance::create_surface_wayland()` / `create_surface_xcb()` / `create_surface_xlib()` |
+| Windows | experimental | Vulkan headless runtime + Windows descriptor/input validation in CI | `Instance::create_surface_windows_hwnd()` / `create_surface_swap_chain_panel()` |
+| Android | unsupported by repo build matrix | API only; no pinned build path or runtime validation | `Instance::create_surface_android_native_window()` |
+
+Detailed evidence and current boundaries live in
+[`docs/platform_support_status.md`](docs/platform_support_status.md).
 
 ## Install
 
@@ -162,10 +165,17 @@ High-level constructors now cover all common native surface sources:
 Current contract:
 
 - The checked-in host-integration behavior tests are for macOS/Metal.
+- Linux and Windows now have checked-in descriptor/input-validation tests for
+  their platform surface entry points.
 - Off-target constructors are explicitly gated in the native stubs and return a
   null `Surface` instead of attempting a best-effort host integration path.
-- Linux/Windows/Android host integration remains experimental until the
-  platform-support tasks add real host-backed behavior coverage.
+- Linux/Windows host-backed presentation paths remain experimental until the
+  project has real window-system integration evidence.
+- Android remains API-only in this repository until the build/deployment story
+  and on-device validation exist.
+
+See [`docs/platform_support_status.md`](docs/platform_support_status.md) for the
+current support boundary per platform.
 
 You can also build source-chained descriptors and call
 `Instance::create_surface(descriptor)` directly:

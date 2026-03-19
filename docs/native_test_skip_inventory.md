@@ -11,10 +11,12 @@ suite and tracks the elimination waves still required to remove them.
   - [`src/tests`](../src/tests)
   - [`src/tests_macos`](../src/tests_macos)
   - [`src/tests_linux`](../src/tests_linux)
+  - [`src/tests_windows`](../src/tests_windows)
 - registration sources:
   - [`src/tests/moon.pkg`](../src/tests/moon.pkg)
   - [`src/tests_macos/moon.pkg`](../src/tests_macos/moon.pkg)
   - [`src/tests_linux/moon.pkg`](../src/tests_linux/moon.pkg)
+  - [`src/tests_windows/moon.pkg`](../src/tests_windows/moon.pkg)
 - audit script: [`scripts/audit_native_test_suite.py`](../scripts/audit_native_test_suite.py)
 - CI matrix: Linux, macOS, Windows in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
 
@@ -36,9 +38,9 @@ python3 scripts/audit_native_test_suite.py
 
 Current audit totals:
 
-- test packages: 3
-- test files: 116
-- moon.pkg native entries: 116
+- test packages: 4
+- test files: 119
+- moon.pkg native entries: 119
 - missing moon.pkg entries: 0
 - stale moon.pkg entries: 0
 
@@ -54,7 +56,7 @@ Current skip buckets:
 Registration baseline:
 
 - every checked-in native `_test.mbt` file is now explicitly registered
-- the audit script validates all three native test packages
+- the audit script validates all four native test packages
 - CI runs the audit step before the native suites
 
 Runtime strictness:
@@ -79,6 +81,7 @@ Platform partitioning:
 - the common cross-platform native suite now lives in [`src/tests`](../src/tests)
 - macOS-only coverage now lives in [`src/tests_macos`](../src/tests_macos)
 - Linux-only coverage now lives in [`src/tests_linux`](../src/tests_linux)
+- Windows-only coverage now lives in [`src/tests_windows`](../src/tests_windows)
 - CI runs the common suite plus the current runner's platform-specific suite
   instead of relying on `skip_unless_*` inside one broad package
 - local native verification should use package-scoped commands such as

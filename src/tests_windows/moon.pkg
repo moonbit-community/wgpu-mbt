@@ -1,0 +1,12 @@
+import {
+  "Milky2018/wgpu_mbt" @wgpu,
+  "Milky2018/wgpu_mbt/c" @wgpu_c,
+} for "test"
+
+options(
+  link: { },
+  targets: {
+    "wgpu_windows_headless_smoke_test.mbt": [ "native" ],
+    "wgpu_windows_surface_contract_test.mbt": [ "native" ],
+  },
+)

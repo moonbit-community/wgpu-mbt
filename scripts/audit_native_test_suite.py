@@ -14,6 +14,7 @@ TEST_PACKAGES = [
     ("common", ROOT / "src" / "tests"),
     ("macos", ROOT / "src" / "tests_macos"),
     ("linux", ROOT / "src" / "tests_linux"),
+    ("windows", ROOT / "src" / "tests_windows"),
 ]
 
 SKIP_PATTERNS = [
