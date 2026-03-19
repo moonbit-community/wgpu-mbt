@@ -68,6 +68,8 @@ WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_metal_layer_new(void *layer) 
   return &out->desc;
 }
 
+#if defined(__linux__) && !defined(__ANDROID__)
+
 WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_wayland_new(void *display, void *surface) {
   if (!display || !surface) {
     return NULL;
@@ -89,6 +91,18 @@ WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_wayland_new(void *display, vo
   out->desc.nextInChain = &out->source.wayland.chain;
   return &out->desc;
 }
+
+#else
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_wayland_new(void *display, void *surface) {
+  (void)display;
+  (void)surface;
+  return NULL;
+}
+
+#endif
+
+#if defined(_WIN32)
 
 WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_windows_hwnd_new(void *hinstance,
                                                                     void *hwnd) {
@@ -113,6 +127,19 @@ WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_windows_hwnd_new(void *hinsta
   return &out->desc;
 }
 
+#else
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_windows_hwnd_new(void *hinstance,
+                                                                    void *hwnd) {
+  (void)hinstance;
+  (void)hwnd;
+  return NULL;
+}
+
+#endif
+
+#if defined(__linux__) && !defined(__ANDROID__)
+
 WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_xcb_new(void *connection, uint32_t window) {
   if (!connection || window == 0u) {
     return NULL;
@@ -134,6 +161,18 @@ WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_xcb_new(void *connection, uin
   out->desc.nextInChain = &out->source.xcb.chain;
   return &out->desc;
 }
+
+#else
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_xcb_new(void *connection, uint32_t window) {
+  (void)connection;
+  (void)window;
+  return NULL;
+}
+
+#endif
+
+#if defined(__linux__) && !defined(__ANDROID__)
 
 WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_xlib_new(void *display, uint64_t window) {
   if (!display || window == 0u) {
@@ -157,6 +196,18 @@ WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_xlib_new(void *display, uint6
   return &out->desc;
 }
 
+#else
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_xlib_new(void *display, uint64_t window) {
+  (void)display;
+  (void)window;
+  return NULL;
+}
+
+#endif
+
+#if defined(__ANDROID__)
+
 WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_android_native_window_new(void *window) {
   if (!window) {
     return NULL;
@@ -177,6 +228,17 @@ WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_android_native_window_new(voi
   out->desc.nextInChain = &out->source.android_native_window.chain;
   return &out->desc;
 }
+
+#else
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_android_native_window_new(void *window) {
+  (void)window;
+  return NULL;
+}
+
+#endif
+
+#if defined(_WIN32)
 
 WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_swap_chain_panel_new(
     void *panel_native) {
@@ -199,6 +261,16 @@ WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_swap_chain_panel_new(
   out->desc.nextInChain = &out->source.swap_chain_panel.chain;
   return &out->desc;
 }
+
+#else
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_swap_chain_panel_new(
+    void *panel_native) {
+  (void)panel_native;
+  return NULL;
+}
+
+#endif
 
 void mbt_wgpu_surface_descriptor_free(WGPUSurfaceDescriptor *desc) {
   free(desc);

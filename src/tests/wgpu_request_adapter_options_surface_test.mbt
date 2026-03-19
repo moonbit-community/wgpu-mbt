@@ -46,3 +46,26 @@ test "wgpu request_adapter options: compatibleSurface (Metal contract)" {
     instance.release()
   })
 }
+
+///|
+test "wgpu request_adapter options: compatibleSurface rejects backend mismatch (Metal contract)" {
+  skip_unless_macos(() => {
+    let instance = @wgpu.Instance::create()
+    let surface = instance.create_surface_metal_layer()
+    let failed : Ref[Bool] = @ref.new(false)
+    try {
+      let adapter = instance.request_adapter_sync_options_surface_u32(
+        surface,
+        feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
+        backend_type_u32=@wgpu.BACKEND_TYPE_D3_D12,
+      )
+      adapter.release()
+    } catch {
+      @wgpu.WgpuRequestAdapterFailed(_) => failed.val = true
+      e => raise e
+    }
+    inspect(failed.val, content="true")
+    surface.release()
+    instance.release()
+  })
+}

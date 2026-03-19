@@ -16,6 +16,10 @@
 
 void *mbt_wgpu_null_ptr(void) { return NULL; }
 void *mbt_wgpu_null_uint_ptr(void) { return NULL; }
+void *mbt_wgpu_dummy_opaque_ptr(void) {
+  static int sentinel = 0;
+  return &sentinel;
+}
 WGPUAdapter mbt_wgpu_null_adapter(void) { return NULL; }
 WGPUDevice mbt_wgpu_null_device(void) { return NULL; }
 

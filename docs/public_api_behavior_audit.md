@@ -39,39 +39,21 @@ The checklist below therefore groups the API by exported capability family.
 | Capability family | Representative public APIs | Evidence | Status | Follow-up |
 | --- | --- | --- | --- | --- |
 | Runtime diagnostics and support probes | `native_available`, `native_supported`, `native_static_linked`, `native_expected_release_tag`, `native_diagnostic` | [`README.mbt.md`](../README.mbt.md), [`src/tests/wgpu_native_diagnostic_test.mbt`](../src/tests/wgpu_native_diagnostic_test.mbt), [`src/wgpu_runtime_support_wbtest.mbt`](../src/wgpu_runtime_support_wbtest.mbt) | Covered | Build/deploy UX issues are tracked separately in `wgpu_mbt-66w.4` |
-| Instance creation, adapter enumeration, report APIs | `Instance::create`, `enumerate_adapters_count_*`, `generate_report`, `wgsl_language_features_count_u64` | [`src/tests/wgpu_enumerate_adapters_test.mbt`](../src/tests/wgpu_enumerate_adapters_test.mbt), [`src/tests/wgpu_generate_report_test.mbt`](../src/tests/wgpu_generate_report_test.mbt), [`src/tests/wgpu_wgsl_language_features_test.mbt`](../src/tests/wgpu_wgsl_language_features_test.mbt) | Partial | Raw handle methods such as `get_wgsl_language_features` / `has_wgsl_language_feature` fall under the generated-handle gap below |
-| Adapter request paths and async futures | `request_adapter_sync*`, `request_adapter_future_id_u64`, `wait_any_one`, `process_events`, `request_device_future_id_u64` | [`src/tests/wgpu_async_future_api_test.mbt`](../src/tests/wgpu_async_future_api_test.mbt), [`src/tests/wgpu_request_adapter_options_test.mbt`](../src/tests/wgpu_request_adapter_options_test.mbt), [`src/tests/wgpu_request_adapter_options_surface_test.mbt`](../src/tests/wgpu_request_adapter_options_surface_test.mbt) | Partial | Surface-compatible adapter selection now has a Metal contract test, but non-macOS paths remain partial |
+| Instance creation, adapter enumeration, report APIs | `Instance::create`, `create_with_extras_u32`, `enumerate_adapters_count_*`, `generate_report`, `wgsl_language_features_count_u64` | [`src/tests/wgpu_enumerate_adapters_test.mbt`](../src/tests/wgpu_enumerate_adapters_test.mbt), [`src/tests/wgpu_generate_report_test.mbt`](../src/tests/wgpu_generate_report_test.mbt), [`src/tests/wgpu_instance_extras_dxc_path_test.mbt`](../src/tests/wgpu_instance_extras_dxc_path_test.mbt), [`src/tests/wgpu_wgsl_language_features_test.mbt`](../src/tests/wgpu_wgsl_language_features_test.mbt) | Covered | `dxc_path` is now explicitly tested as a no-op contract, and the raw-handle WGSL feature helpers are covered in the generated-handle matrix |
+| Adapter request paths and async futures | `request_adapter_sync*`, `request_adapter_future_id_u64`, `wait_any_one`, `process_events`, `request_device_future_id_u64` | [`src/tests/wgpu_async_future_api_test.mbt`](../src/tests/wgpu_async_future_api_test.mbt), [`src/tests/wgpu_request_adapter_options_test.mbt`](../src/tests/wgpu_request_adapter_options_test.mbt), [`src/tests/wgpu_request_adapter_options_surface_test.mbt`](../src/tests/wgpu_request_adapter_options_surface_test.mbt) | Covered, gated | Surface-compatible adapter selection now has an explicit Metal success contract plus a backend-mismatch failure contract; other host-backed surface sources are platform-gated until platform work lands |
 | Adapter/device limits, supported features, native feature wrappers | `supported_features_*`, `supported_feature_u32_at`, `has_feature_*`, `has_feature_native_*`, `request_device_sync_*` native helpers | [`src/tests/wgpu_supported_features_test.mbt`](../src/tests/wgpu_supported_features_test.mbt), [`src/tests/wgpu_supported_features_items_test.mbt`](../src/tests/wgpu_supported_features_items_test.mbt), [`src/tests/wgpu_native_feature_wrappers_test.mbt`](../src/tests/wgpu_native_feature_wrappers_test.mbt), [`src/tests/wgpu_native_feature_gap_test.mbt`](../src/tests/wgpu_native_feature_gap_test.mbt) | Covered | Keep aligned with upstream feature additions |
 | Buffer, queue I/O, and sync helpers | `create_buffer*`, `create_buffer_init`, `map_read_sync*`, `map_write_sync*`, `readback*`, `Queue::write_buffer`, `Queue::write_texture_*`, `Queue::on_submitted_work_done_*` | [`src/tests/wgpu_buffer_comprehensive_test.mbt`](../src/tests/wgpu_buffer_comprehensive_test.mbt), [`src/tests/wgpu_buffer_sync_or_raise_test.mbt`](../src/tests/wgpu_buffer_sync_or_raise_test.mbt), [`src/tests/wgpu_queue_write_buffer_test.mbt`](../src/tests/wgpu_queue_write_buffer_test.mbt), [`src/tests/wgpu_queue_write_texture_ptr_test.mbt`](../src/tests/wgpu_queue_write_texture_ptr_test.mbt), [`src/tests/wgpu_queue_work_done_test.mbt`](../src/tests/wgpu_queue_work_done_test.mbt) | Covered | Lifecycle ergonomics still tracked in `wgpu_mbt-66w.2.*` |
 | Compute/render pipelines, passes, bundles, queries | `create_compute_pipeline*`, `create_render_pipeline*`, `create_command_encoder`, pass/bundle APIs, query set helpers | [`src/tests/wgpu_compute_test.mbt`](../src/tests/wgpu_compute_test.mbt), [`src/tests/wgpu_compute_readback_test.mbt`](../src/tests/wgpu_compute_readback_test.mbt), [`src/tests/wgpu_render_offscreen_test.mbt`](../src/tests/wgpu_render_offscreen_test.mbt), [`src/tests/wgpu_render_bundle_test.mbt`](../src/tests/wgpu_render_bundle_test.mbt), [`src/tests/wgpu_pipeline_statistics_query_test.mbt`](../src/tests/wgpu_pipeline_statistics_query_test.mbt), [`src/tests/wgpu_push_constants_test.mbt`](../src/tests/wgpu_push_constants_test.mbt) | Covered, gated | Feature-gated coverage now includes multi-range push constants and multi-stat query-set helpers |
 | Shader modules, async pipeline sync, optional symbol behavior | `create_shader_module_wgsl`, `create_shader_module_glsl`, `create_render_pipeline_async_sync_ptr*`, `create_compute_pipeline_async_sync_ptr*`, `get_compilation_info_sync*`, optional symbol probes | [`README.mbt.md`](../README.mbt.md), [`src/tests/wgpu_pipeline_async_sync_test.mbt`](../src/tests/wgpu_pipeline_async_sync_test.mbt), [`src/tests/wgpu_optional_symbol_or_raise_test.mbt`](../src/tests/wgpu_optional_symbol_or_raise_test.mbt), [`src/tests/wgpu_shader_module_glsl_test.mbt`](../src/tests/wgpu_shader_module_glsl_test.mbt) | Covered, gated | Keep feature-gate behavior explicit in docs/tests |
-| Surface configuration and presentation helpers | `SurfaceConfiguration`, `Surface::configure*`, `get_current_texture`, `present`, capability/item helpers | [`src/tests/wgpu_surface_configuration_struct_test.mbt`](../src/tests/wgpu_surface_configuration_struct_test.mbt), [`src/tests/wgpu_surface_capabilities_test.mbt`](../src/tests/wgpu_surface_capabilities_test.mbt), [`src/tests/wgpu_surface_capabilities_items_test.mbt`](../src/tests/wgpu_surface_capabilities_items_test.mbt), [`src/tests/wgpu_surface_present_test.mbt`](../src/tests/wgpu_surface_present_test.mbt), [`src/tests/wgpu_surface_configure_best_effort_test.mbt`](../src/tests/wgpu_surface_configure_best_effort_test.mbt) | Partial | Current behavior evidence is heavily macOS/Metal-biased and includes best-effort paths |
-| Platform surface constructors and descriptor builders | `create_surface_metal_layer`, `create_surface_wayland`, `create_surface_xcb`, `create_surface_xlib`, `create_surface_windows_hwnd`, `create_surface_swap_chain_panel`, `create_surface_android_native_window`, `surface_descriptor_*_new` | [`README.mbt.md`](../README.mbt.md), [`src/wgpu_surface_platform_ctor_wbtest.mbt`](../src/wgpu_surface_platform_ctor_wbtest.mbt), [`src/tests/wgpu_native_api_completeness_test.mbt`](../src/tests/wgpu_native_api_completeness_test.mbt), [`src/tests/wgpu_surface_descriptor_metal_test.mbt`](../src/tests/wgpu_surface_descriptor_metal_test.mbt) | Partial | Metal descriptor-path coverage now exists; non-Metal host integration is still missing |
+| Surface configuration and presentation helpers | `SurfaceConfiguration`, `Surface::configure*`, `get_current_texture`, `present`, capability/item helpers | [`src/tests/wgpu_surface_configuration_struct_test.mbt`](../src/tests/wgpu_surface_configuration_struct_test.mbt), [`src/tests/wgpu_surface_capabilities_test.mbt`](../src/tests/wgpu_surface_capabilities_test.mbt), [`src/tests/wgpu_surface_capabilities_items_test.mbt`](../src/tests/wgpu_surface_capabilities_items_test.mbt), [`src/tests/wgpu_surface_present_test.mbt`](../src/tests/wgpu_surface_present_test.mbt), [`src/tests/wgpu_surface_configure_best_effort_test.mbt`](../src/tests/wgpu_surface_configure_best_effort_test.mbt) | Covered, gated | The live host-backed behavior contract is now explicit for macOS/Metal, including `SurfaceFrame` helpers; off-target surface sources are null-gated instead of best-effort |
+| Platform surface constructors and descriptor builders | `create_surface_metal_layer`, `create_surface_wayland`, `create_surface_xcb`, `create_surface_xlib`, `create_surface_windows_hwnd`, `create_surface_swap_chain_panel`, `create_surface_android_native_window`, `surface_descriptor_*_new` | [`README.mbt.md`](../README.mbt.md), [`src/tests/wgpu_surface_platform_gating_test.mbt`](../src/tests/wgpu_surface_platform_gating_test.mbt), [`src/tests/wgpu_surface_descriptor_metal_test.mbt`](../src/tests/wgpu_surface_descriptor_metal_test.mbt) | Covered, gated | Metal host integration is covered directly; off-target constructors/descriptors now return null handles instead of attempting unsupported host integration |
 | Generated raw-handle mirror API | `Adapter::*`, `Device::*`, `Buffer::*`, `Surface::*`, and other direct wrappers emitted in [`src/wgpu_handles.mbt`](../src/wgpu_handles.mbt) | [`docs/generated_handle_behavior_matrix.md`](./generated_handle_behavior_matrix.md), plus the tests cited there | Covered, gated | The explicit matrix now closes the generated-handle family; the remaining caveats are feature-gated multi-draw paths and repo-safe placeholder contracts where upstream still lacks a safe implementation |
 
 ## Open Repo-Controlled Gaps
 
-These are the repo-owned gaps that remain open after the first `wgpu_mbt-66w.1.2`
-pass.
-
-1. `Instance::create_with_extras_u32(..., dxc_path)` exposes a public parameter
-   that is intentionally ignored today.
-   Source: [`README.mbt.md`](../README.mbt.md) states that `dxc_path` is
-   a documented no-op for ABI safety across upstream binaries.
-   Current evidence: only constructor smoke in
-   [`src/tests/wgpu_native_api_completeness_test.mbt`](../src/tests/wgpu_native_api_completeness_test.mbt).
-
-2. `Instance::request_adapter_sync_options_surface_u32(...)` and the public
-   surface/present flow still lack a repo-wide behavior contract.
-   Current evidence: a stronger Metal contract now exists in
-   [`src/tests/wgpu_request_adapter_options_surface_test.mbt`](../src/tests/wgpu_request_adapter_options_surface_test.mbt),
-   but other surface-path evidence is still platform-scoped in
-   [`src/tests/wgpu_surface_present_test.mbt`](../src/tests/wgpu_surface_present_test.mbt),
-   and [`src/tests/wgpu_surface_configure_best_effort_test.mbt`](../src/tests/wgpu_surface_configure_best_effort_test.mbt).
-
-3. Non-Metal platform surface constructors and descriptor builders currently
-   have null-host-handle safety coverage, not real host integration coverage.
-   Current evidence: [`src/wgpu_surface_platform_ctor_wbtest.mbt`](../src/wgpu_surface_platform_ctor_wbtest.mbt).
+None at the current audit granularity. Remaining follow-up is quality- and
+platform-confidence work (`wgpu_mbt-66w.3.*`, `wgpu_mbt-66w.5.*`), not an
+unclassified public API behavior gap.
 
 ## Repo Gaps Closed In This Pass
 
@@ -115,6 +97,21 @@ pass:
    [`src/tests/wgpu_optional_symbol_or_raise_test.mbt`](../src/tests/wgpu_optional_symbol_or_raise_test.mbt),
    and [`docs/generated_handle_behavior_matrix.md`](./generated_handle_behavior_matrix.md).
 
+8. Surface-compatible adapter selection and surface presentation now have
+   explicit Metal contracts for both success and failure modes. Evidence:
+   [`src/tests/wgpu_request_adapter_options_surface_test.mbt`](../src/tests/wgpu_request_adapter_options_surface_test.mbt)
+   and [`src/tests/wgpu_surface_present_test.mbt`](../src/tests/wgpu_surface_present_test.mbt).
+
+9. Off-target platform surface constructors and descriptor builders are now
+   explicitly gated to null handles rather than relying on null-host-handle
+   smoke coverage. Evidence:
+   [`src/tests/wgpu_surface_platform_gating_test.mbt`](../src/tests/wgpu_surface_platform_gating_test.mbt)
+   and [`README.mbt.md`](../README.mbt.md).
+
+10. `Instance::create_with_extras_u32(..., dxc_path)` is now backed by an
+    explicit no-op behavior test rather than only README text. Evidence:
+    [`src/tests/wgpu_instance_extras_dxc_path_test.mbt`](../src/tests/wgpu_instance_extras_dxc_path_test.mbt).
+
 ## Upstream-Blocked Gaps
 
 These should feed `wgpu_mbt-66w.1.3` instead of being mixed into repo work.
@@ -138,5 +135,5 @@ Use this audit as the entry gate for the next public-API closure pass:
 
 - close repo-controlled behavior gaps first
 - keep upstream-blocked items documented, not half-implemented
-- treat the remaining generated-handle coverage and surface host integration as
-  first-class work, not background cleanup
+- treat platform confidence and skip-elimination work as follow-on quality tasks
+  now that the public API contract is explicitly gated

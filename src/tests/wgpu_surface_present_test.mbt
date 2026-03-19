@@ -92,3 +92,30 @@ test "wgpu surface present (CAMetalLayer)" {
     instance.release()
   })
 }
+
+///|
+test "wgpu surface frame helpers (CAMetalLayer)" {
+  skip_unless_macos(() => {
+    let instance = @wgpu.Instance::create()
+    let surface = instance.create_surface_metal_layer()
+    let adapter = instance.request_adapter_sync_options_surface_u32(
+      surface,
+      feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
+      backend_type_u32=@wgpu.BACKEND_TYPE_METAL,
+    )
+    let device = adapter.request_device_sync(instance)
+    let usage = @wgpu.TextureUsage::from_u64(
+      @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+    )
+    let format = surface.configure_default(adapter, device, 1U, 1U, usage)
+    inspect(format.raw == 0U, content="false")
+    let frame = surface.get_current_frame_or_raise()
+    frame.present_or_raise()
+    frame.release()
+    surface.unconfigure()
+    device.release()
+    adapter.release()
+    surface.release()
+    instance.release()
+  })
+}

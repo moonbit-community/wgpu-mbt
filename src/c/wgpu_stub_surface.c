@@ -154,6 +154,8 @@ WGPUSurface mbt_wgpu_instance_create_surface_metal_layer(WGPUInstance instance,
 // they can be used without depending on platform window system headers.
 // -----------------------------------------------------------------------------
 
+#if defined(__linux__) && !defined(__ANDROID__)
+
 WGPUSurface mbt_wgpu_instance_create_surface_wayland(WGPUInstance instance,
                                                      void *display,
                                                      void *surface) {
@@ -178,6 +180,21 @@ WGPUSurface mbt_wgpu_instance_create_surface_wayland(WGPUInstance instance,
 
   return wgpuInstanceCreateSurface(instance, &desc);
 }
+
+#else
+
+WGPUSurface mbt_wgpu_instance_create_surface_wayland(WGPUInstance instance,
+                                                     void *display,
+                                                     void *surface) {
+  (void)instance;
+  (void)display;
+  (void)surface;
+  return NULL;
+}
+
+#endif
+
+#if defined(__linux__) && !defined(__ANDROID__)
 
 WGPUSurface mbt_wgpu_instance_create_surface_xcb(WGPUInstance instance,
                                                  void *connection,
@@ -204,6 +221,21 @@ WGPUSurface mbt_wgpu_instance_create_surface_xcb(WGPUInstance instance,
   return wgpuInstanceCreateSurface(instance, &desc);
 }
 
+#else
+
+WGPUSurface mbt_wgpu_instance_create_surface_xcb(WGPUInstance instance,
+                                                 void *connection,
+                                                 uint32_t window) {
+  (void)instance;
+  (void)connection;
+  (void)window;
+  return NULL;
+}
+
+#endif
+
+#if defined(__linux__) && !defined(__ANDROID__)
+
 WGPUSurface mbt_wgpu_instance_create_surface_xlib(WGPUInstance instance,
                                                   void *display,
                                                   uint64_t window) {
@@ -229,6 +261,21 @@ WGPUSurface mbt_wgpu_instance_create_surface_xlib(WGPUInstance instance,
   return wgpuInstanceCreateSurface(instance, &desc);
 }
 
+#else
+
+WGPUSurface mbt_wgpu_instance_create_surface_xlib(WGPUInstance instance,
+                                                  void *display,
+                                                  uint64_t window) {
+  (void)instance;
+  (void)display;
+  (void)window;
+  return NULL;
+}
+
+#endif
+
+#if defined(__ANDROID__)
+
 WGPUSurface mbt_wgpu_instance_create_surface_android_native_window(
     WGPUInstance instance, void *window) {
   if (!instance || !window) {
@@ -252,6 +299,19 @@ WGPUSurface mbt_wgpu_instance_create_surface_android_native_window(
   return wgpuInstanceCreateSurface(instance, &desc);
 }
 
+#else
+
+WGPUSurface mbt_wgpu_instance_create_surface_android_native_window(
+    WGPUInstance instance, void *window) {
+  (void)instance;
+  (void)window;
+  return NULL;
+}
+
+#endif
+
+#if defined(_WIN32)
+
 WGPUSurface mbt_wgpu_instance_create_surface_swap_chain_panel(
     WGPUInstance instance, void *panel_native) {
   if (!instance || !panel_native) {
@@ -274,6 +334,17 @@ WGPUSurface mbt_wgpu_instance_create_surface_swap_chain_panel(
 
   return wgpuInstanceCreateSurface(instance, &desc);
 }
+
+#else
+
+WGPUSurface mbt_wgpu_instance_create_surface_swap_chain_panel(
+    WGPUInstance instance, void *panel_native) {
+  (void)instance;
+  (void)panel_native;
+  return NULL;
+}
+
+#endif
 
 // -----------------------------------------------------------------------------
 // Windows surface helper (HWND)

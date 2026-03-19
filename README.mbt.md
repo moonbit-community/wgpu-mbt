@@ -159,6 +159,14 @@ High-level constructors now cover all common native surface sources:
 - Windows SwapChainPanel: `Instance::create_surface_swap_chain_panel(panel_native)`
 - Android: `Instance::create_surface_android_native_window(window)`
 
+Current contract:
+
+- The checked-in host-integration behavior tests are for macOS/Metal.
+- Off-target constructors are explicitly gated in the native stubs and return a
+  null `Surface` instead of attempting a best-effort host integration path.
+- Linux/Windows/Android host integration remains experimental until the
+  platform-support tasks add real host-backed behavior coverage.
+
 You can also build source-chained descriptors and call
 `Instance::create_surface(descriptor)` directly:
 
@@ -170,6 +178,10 @@ You can also build source-chained descriptors and call
 - `surface_descriptor_swap_chain_panel_new`
 - `surface_descriptor_android_native_window_new`
 - `surface_descriptor_free`
+
+Off-target descriptor builders follow the same rule and return `null`
+descriptors rather than packaging unsupported source chains on the wrong host
+OS.
 
 ## Native Instance Extras
 
