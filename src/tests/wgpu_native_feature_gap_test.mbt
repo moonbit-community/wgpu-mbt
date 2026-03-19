@@ -13,7 +13,10 @@
 // limitations under the License.
 
 ///|
-test "native feature gap APIs: clear texture and multiview" {
+// This file only covers native extras that are already exposed by this repo.
+// Sampler clamp-to-zero / clamp-to-border remain upstream-blocked; see
+// wgpu_mbt-jyd.
+test "native feature wrappers: repo-exposed extras remain callable" {
   skip_on_wgpu_error(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()

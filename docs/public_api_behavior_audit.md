@@ -47,7 +47,7 @@ The checklist below therefore groups the API by exported capability family.
 | Shader modules, async pipeline sync, optional symbol behavior | `create_shader_module_wgsl`, `create_shader_module_glsl`, `create_render_pipeline_async_sync_ptr*`, `create_compute_pipeline_async_sync_ptr*`, `get_compilation_info_sync*`, optional symbol probes | [`README.mbt.md`](../README.mbt.md), [`src/tests/wgpu_pipeline_async_sync_test.mbt`](../src/tests/wgpu_pipeline_async_sync_test.mbt), [`src/tests/wgpu_optional_symbol_or_raise_test.mbt`](../src/tests/wgpu_optional_symbol_or_raise_test.mbt), [`src/tests/wgpu_shader_module_glsl_test.mbt`](../src/tests/wgpu_shader_module_glsl_test.mbt) | Covered, gated | Keep feature-gate behavior explicit in docs/tests |
 | Surface configuration and presentation helpers | `SurfaceConfiguration`, `Surface::configure*`, `get_current_texture`, `present`, capability/item helpers | [`src/tests/wgpu_surface_configuration_struct_test.mbt`](../src/tests/wgpu_surface_configuration_struct_test.mbt), [`src/tests/wgpu_surface_capabilities_test.mbt`](../src/tests/wgpu_surface_capabilities_test.mbt), [`src/tests/wgpu_surface_capabilities_items_test.mbt`](../src/tests/wgpu_surface_capabilities_items_test.mbt), [`src/tests/wgpu_surface_present_test.mbt`](../src/tests/wgpu_surface_present_test.mbt), [`src/tests/wgpu_surface_configure_best_effort_test.mbt`](../src/tests/wgpu_surface_configure_best_effort_test.mbt) | Partial | Current behavior evidence is heavily macOS/Metal-biased and includes best-effort paths |
 | Platform surface constructors and descriptor builders | `create_surface_metal_layer`, `create_surface_wayland`, `create_surface_xcb`, `create_surface_xlib`, `create_surface_windows_hwnd`, `create_surface_swap_chain_panel`, `create_surface_android_native_window`, `surface_descriptor_*_new` | [`README.mbt.md`](../README.mbt.md), [`src/wgpu_surface_platform_ctor_wbtest.mbt`](../src/wgpu_surface_platform_ctor_wbtest.mbt), [`src/tests/wgpu_native_api_completeness_test.mbt`](../src/tests/wgpu_native_api_completeness_test.mbt), [`src/tests/wgpu_surface_descriptor_metal_test.mbt`](../src/tests/wgpu_surface_descriptor_metal_test.mbt) | Partial | Metal descriptor-path coverage now exists; non-Metal host integration is still missing |
-| Generated raw-handle mirror API | `Adapter::*`, `Device::*`, `Buffer::*`, `Surface::*`, and other direct wrappers emitted in [`src/wgpu_handles.mbt`](../src/wgpu_handles.mbt) | Inference from [`src/wgpu_handles.mbt`](../src/wgpu_handles.mbt), [`src/pkg.generated.mbti`](../src/pkg.generated.mbti), and current test inventory | Repo gap | Build an explicit coverage map for exported handle methods, then backfill missing tests |
+| Generated raw-handle mirror API | `Adapter::*`, `Device::*`, `Buffer::*`, `Surface::*`, and other direct wrappers emitted in [`src/wgpu_handles.mbt`](../src/wgpu_handles.mbt) | Inference from [`src/wgpu_handles.mbt`](../src/wgpu_handles.mbt), [`src/pkg.generated.mbti`](../src/pkg.generated.mbti), and current test inventory | Repo gap | Build an explicit coverage map for exported handle methods, then backfill missing tests (`wgpu_mbt-66w.1.4`) |
 
 ## Open Repo-Controlled Gaps
 
@@ -103,6 +103,8 @@ pass:
 ## Upstream-Blocked Gaps
 
 These should feed `wgpu_mbt-66w.1.3` instead of being mixed into repo work.
+The shared tracker for the remaining sampler clamp-mode blocker is
+`wgpu_mbt-jyd` ("Await upstream sampler clamp-mode C API").
 
 1. `AddressModeClampToZero`
 2. `AddressModeClampToBorder`
@@ -111,9 +113,13 @@ Source: [`README.mbt.md`](../README.mbt.md) documents both as blocked by
 upstream `wgpu-native` headers/releases, and explicitly avoids exposing fake or
 unstable wrappers.
 
+Test stance: [`src/tests/wgpu_native_feature_gap_test.mbt`](../src/tests/wgpu_native_feature_gap_test.mbt)
+only covers repo-exposed native extras (`ClearTexture`, `Multiview`). It is not
+evidence that sampler clamp-mode blockers are repo-owned or locally solvable.
+
 ## Recommended Next Step
 
-Use this audit as the entry gate for `wgpu_mbt-66w.1.2`:
+Use this audit as the entry gate for the next public-API closure pass:
 
 - close repo-controlled behavior gaps first
 - keep upstream-blocked items documented, not half-implemented
