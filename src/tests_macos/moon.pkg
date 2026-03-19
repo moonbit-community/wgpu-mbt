@@ -1,0 +1,23 @@
+import {
+  "Milky2018/wgpu_mbt" @wgpu,
+  "Milky2018/wgpu_mbt/c" @wgpu_c,
+  "Milky2018/wgpu_mbt/tests" @test_helpers,
+  "moonbitlang/core/ref",
+} for "test"
+
+options(
+  link: { },
+  targets: {
+    "wgpu_request_adapter_options_surface_test.mbt": [ "native" ],
+    "wgpu_surface_capabilities_arrays_test.mbt": [ "native" ],
+    "wgpu_surface_capabilities_items_test.mbt": [ "native" ],
+    "wgpu_surface_capabilities_test.mbt": [ "native" ],
+    "wgpu_surface_configuration_struct_test.mbt": [ "native" ],
+    "wgpu_surface_configure_best_effort_test.mbt": [ "native" ],
+    "wgpu_surface_configure_custom_test.mbt": [ "native" ],
+    "wgpu_surface_configure_view_formats_test.mbt": [ "native" ],
+    "wgpu_surface_descriptor_metal_test.mbt": [ "native" ],
+    "wgpu_surface_present_test.mbt": [ "native" ],
+    "wgpu_surface_texture_bind_group_api_test.mbt": [ "native" ],
+  },
+)

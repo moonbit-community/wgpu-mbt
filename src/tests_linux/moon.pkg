@@ -1,0 +1,14 @@
+import {
+  "Milky2018/wgpu_mbt" @wgpu,
+  "Milky2018/wgpu_mbt/c" @wgpu_c,
+  "moonbitlang/core/ref",
+} for "test"
+
+options(
+  link: { },
+  targets: {
+    "wgpu_buffer_sync_or_raise_test.mbt": [ "native" ],
+    "wgpu_linux_headless_smoke_test.mbt": [ "native" ],
+    "wgpu_optional_symbol_or_raise_test.mbt": [ "native" ],
+  },
+)

@@ -5,12 +5,16 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-TESTS_DIR = ROOT / "src" / "tests"
-MOON_PKG = TESTS_DIR / "moon.pkg"
+TEST_PACKAGES = [
+    ("common", ROOT / "src" / "tests"),
+    ("macos", ROOT / "src" / "tests_macos"),
+    ("linux", ROOT / "src" / "tests_linux"),
+]
 
 SKIP_PATTERNS = [
     ("skip_on_wgpu_error", re.compile(r"\bskip_on_wgpu_error\s*\(")),
@@ -23,48 +27,84 @@ SKIP_PATTERNS = [
 ]
 
 
-def listed_tests() -> set[str]:
-    text = MOON_PKG.read_text()
+@dataclass(frozen=True)
+class PackageAudit:
+    name: str
+    directory: Path
+    listed: set[str]
+    files: set[str]
+
+    @property
+    def missing(self) -> list[str]:
+        return sorted(self.files - self.listed)
+
+    @property
+    def extra(self) -> list[str]:
+        return sorted(self.listed - self.files)
+
+
+def listed_tests(moon_pkg: Path) -> set[str]:
+    text = moon_pkg.read_text()
     return set(re.findall(r'"([^"]+_test\.mbt)"\s*:\s*\[\s*"native"\s*\]', text))
 
 
-def test_files() -> set[str]:
-    return {path.name for path in TESTS_DIR.glob("*_test.mbt")}
+def test_files(directory: Path) -> set[str]:
+    return {path.name for path in directory.glob("*_test.mbt")}
+
+
+def package_audits() -> list[PackageAudit]:
+    return [
+        PackageAudit(
+            name=name,
+            directory=directory,
+            listed=listed_tests(directory / "moon.pkg"),
+            files=test_files(directory),
+        )
+        for name, directory in TEST_PACKAGES
+    ]
 
 
 def skip_inventory() -> list[tuple[str, int, list[tuple[str, int]]]]:
     out: list[tuple[str, int, list[tuple[str, int]]]] = []
-    files = sorted(TESTS_DIR.glob("*_test.mbt"))
     for name, pattern in SKIP_PATTERNS:
         hits: list[tuple[str, int]] = []
         total = 0
-        for path in files:
-            count = len(pattern.findall(path.read_text()))
-            if count:
-                hits.append((path.name, count))
-                total += count
+        for _, directory in TEST_PACKAGES:
+            for path in sorted(directory.glob("*_test.mbt")):
+                count = len(pattern.findall(path.read_text()))
+                if count:
+                    hits.append((str(path.relative_to(ROOT)), count))
+                    total += count
         out.append((name, total, hits))
     return out
 
 
 def print_report() -> int:
-    listed = listed_tests()
-    files = test_files()
-    missing = sorted(files - listed)
-    extra = sorted(listed - files)
+    audits = package_audits()
+    total_listed = sum(len(audit.listed) for audit in audits)
+    total_files = sum(len(audit.files) for audit in audits)
+    total_missing = sum(len(audit.missing) for audit in audits)
+    total_extra = sum(len(audit.extra) for audit in audits)
 
     print("# Native Test Suite Audit")
     print()
-    print(f"- test files: {len(files)}")
-    print(f"- moon.pkg native entries: {len(listed)}")
-    print(f"- missing moon.pkg entries: {len(missing)}")
-    print(f"- stale moon.pkg entries: {len(extra)}")
-    if missing:
-        for name in missing:
-            print(f"  - missing: {name}")
-    if extra:
-        for name in extra:
-            print(f"  - stale: {name}")
+    print(f"- test packages: {len(audits)}")
+    print(f"- test files: {total_files}")
+    print(f"- moon.pkg native entries: {total_listed}")
+    print(f"- missing moon.pkg entries: {total_missing}")
+    print(f"- stale moon.pkg entries: {total_extra}")
+
+    print()
+    print("## Package Registration")
+    for audit in audits:
+        print(
+            f"- {audit.name}: {audit.directory.relative_to(ROOT)} "
+            f"({len(audit.files)} files, {len(audit.listed)} native entries)"
+        )
+        for name in audit.missing:
+            print(f"  - missing: {audit.directory.relative_to(ROOT) / name}")
+        for name in audit.extra:
+            print(f"  - stale: {audit.directory.relative_to(ROOT) / name}")
 
     print()
     print("## Skip Inventory")
@@ -73,7 +113,8 @@ def print_report() -> int:
         for file_name, count in hits:
             print(f"  - {file_name}: {count}")
 
-    return 1 if missing or extra else 0
+    has_registration_gap = any(audit.missing or audit.extra for audit in audits)
+    return 1 if has_registration_gap else 0
 
 
 def main() -> int:

@@ -1,0 +1,89 @@
+// Copyright 2026 International Digital Economy Academy
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+///|
+test "wgpu surface descriptor metal layer path" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let queue = device.queue()
+  let layer = @wgpu_c.cametallayer_new()
+  inspect(@wgpu_c.opaque_ptr_is_null(layer), content="false")
+  let desc = @wgpu.surface_descriptor_metal_layer_new(layer)
+  let surface = instance.create_surface(desc)
+  @wgpu.surface_descriptor_free(desc)
+  let usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+  )
+  let format = surface.configure_default(adapter, device, 1U, 1U, usage)
+  inspect(format.raw == 0U, content="false")
+  let st = surface.get_current_texture_or_raise()
+  inspect(st.is_success(), content="true")
+  let tex = st.take_texture()
+  st.release()
+  let view = tex.create_view()
+  let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
+  let readback_buf = device.create_buffer(
+    size=256UL,
+    usage=@wgpu.BufferUsage::from_u64(readback_usage),
+  )
+  let wgsl : String =
+    #|struct VSOut { @builtin(position) pos: vec4<f32> };
+    #|
+    #|@vertex
+    #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+    #|  var positions = array<vec2<f32>, 3>(
+    #|    vec2<f32>(-1.0, -1.0),
+    #|    vec2<f32>( 3.0, -1.0),
+    #|    vec2<f32>(-1.0,  3.0),
+    #|  );
+    #|  var out: VSOut;
+    #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
+    #|  return out;
+    #|}
+    #|
+    #|@fragment
+    #|fn fs_main() -> @location(0) vec4<f32> {
+    #|  return vec4<f32>(0.0, 1.0, 0.0, 1.0);
+    #|}
+    #|
+  let sm = device.create_shader_module_wgsl(wgsl)
+  let pipeline = device.create_render_pipeline_color_format(sm, format)
+  let encoder = device.create_command_encoder()
+  let pass = encoder.begin_render_pass_color_clear(view, 0.0, 0.0, 0.0, 1.0)
+  pass.set_pipeline(pipeline)
+  pass.draw(3U, 1U, 0U, 0U)
+  pass.end()
+  pass.release()
+  encoder.copy_texture_to_buffer_rgba8(tex, readback_buf, 1U, 1U)
+  let cmd = encoder.finish()
+  queue.submit_one(cmd)
+  surface.present_or_raise()
+  let out = readback_buf.readback(instance, 0UL, 256UL)
+  let rgba = @test_helpers.read_rgba8_from_copy_out(out, 0U, 0U)
+  inspect(rgba, content="[0, 255, 0, 255]")
+  cmd.release()
+  encoder.release()
+  pipeline.release()
+  sm.release()
+  readback_buf.release()
+  view.release()
+  tex.release()
+  surface.release()
+  @wgpu_c.cametallayer_release(layer)
+  queue.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}

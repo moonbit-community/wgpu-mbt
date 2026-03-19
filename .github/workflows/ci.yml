@@ -99,11 +99,17 @@ jobs:
           set -euo pipefail
           moon run --target native src/cmd/main/main.mbt
 
-      - name: Run full test suite
+      - name: Run common native test suite
         shell: bash
         run: |
           set -euo pipefail
-          moon test --target native --test-failure-json
+          moon test --target native src/tests --test-failure-json
+
+      - name: Run Linux-only native test suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon test --target native src/tests_linux --test-failure-json
 
       - name: Run strict leak check
         shell: bash
@@ -129,11 +135,17 @@ jobs:
           set -euo pipefail
           MBT_WGPU_LINK_MODE=static moon run --target native src/cmd/main/main.mbt
 
-      - name: Run full test suite (static link)
+      - name: Run common native test suite (static link)
         shell: bash
         run: |
           set -euo pipefail
-          MBT_WGPU_LINK_MODE=static moon test --target native --test-failure-json
+          MBT_WGPU_LINK_MODE=static moon test --target native src/tests --test-failure-json
+
+      - name: Run Linux-only native test suite (static link)
+        shell: bash
+        run: |
+          set -euo pipefail
+          MBT_WGPU_LINK_MODE=static moon test --target native src/tests_linux --test-failure-json
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
@@ -221,11 +233,17 @@ jobs:
           unzip -q -o "$artifact_root/$asset" -d "$artifact_root"
           echo "MBT_WGPU_NATIVE_ROOT=$artifact_root" >> "$GITHUB_ENV"
 
-      - name: Run full test suite
+      - name: Run common native test suite
         shell: bash
         run: |
           set -euo pipefail
-          moon test --target native --test-failure-json
+          moon test --target native src/tests --test-failure-json
+
+      - name: Run macOS-only native test suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          moon test --target native src/tests_macos --test-failure-json
 
       - name: Run strict leak check
         shell: bash
@@ -251,11 +269,17 @@ jobs:
           set -euo pipefail
           MBT_WGPU_LINK_MODE=static moon run --target native src/cmd/main/main.mbt
 
-      - name: Run full test suite (static link)
+      - name: Run common native test suite (static link)
         shell: bash
         run: |
           set -euo pipefail
-          MBT_WGPU_LINK_MODE=static moon test --target native --test-failure-json
+          MBT_WGPU_LINK_MODE=static moon test --target native src/tests --test-failure-json
+
+      - name: Run macOS-only native test suite (static link)
+        shell: bash
+        run: |
+          set -euo pipefail
+          MBT_WGPU_LINK_MODE=static moon test --target native src/tests_macos --test-failure-json
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
@@ -489,11 +513,11 @@ jobs:
           $ErrorActionPreference = "Stop"
           moon run --target native src/cmd/main/main.mbt
 
-      - name: Run full test suite
+      - name: Run common native test suite
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          moon test --target native --test-failure-json
+          moon test --target native src/tests --test-failure-json
 
       - name: Run strict leak check
         shell: pwsh
@@ -520,12 +544,12 @@ jobs:
           $env:MBT_WGPU_LINK_MODE = "static"
           moon run --target native src/cmd/main/main.mbt
 
-      - name: Run full test suite (static link)
+      - name: Run common native test suite (static link)
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
           $env:MBT_WGPU_LINK_MODE = "static"
-          moon test --target native --test-failure-json
+          moon test --target native src/tests --test-failure-json
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
