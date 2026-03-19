@@ -47,7 +47,7 @@ The checklist below therefore groups the API by exported capability family.
 | Shader modules, async pipeline sync, optional symbol behavior | `create_shader_module_wgsl`, `create_shader_module_glsl`, `create_render_pipeline_async_sync_ptr*`, `create_compute_pipeline_async_sync_ptr*`, `get_compilation_info_sync*`, optional symbol probes | [`README.mbt.md`](../README.mbt.md), [`src/tests/wgpu_pipeline_async_sync_test.mbt`](../src/tests/wgpu_pipeline_async_sync_test.mbt), [`src/tests/wgpu_optional_symbol_or_raise_test.mbt`](../src/tests/wgpu_optional_symbol_or_raise_test.mbt), [`src/tests/wgpu_shader_module_glsl_test.mbt`](../src/tests/wgpu_shader_module_glsl_test.mbt) | Covered, gated | Keep feature-gate behavior explicit in docs/tests |
 | Surface configuration and presentation helpers | `SurfaceConfiguration`, `Surface::configure*`, `get_current_texture`, `present`, capability/item helpers | [`src/tests/wgpu_surface_configuration_struct_test.mbt`](../src/tests/wgpu_surface_configuration_struct_test.mbt), [`src/tests/wgpu_surface_capabilities_test.mbt`](../src/tests/wgpu_surface_capabilities_test.mbt), [`src/tests/wgpu_surface_capabilities_items_test.mbt`](../src/tests/wgpu_surface_capabilities_items_test.mbt), [`src/tests/wgpu_surface_present_test.mbt`](../src/tests/wgpu_surface_present_test.mbt), [`src/tests/wgpu_surface_configure_best_effort_test.mbt`](../src/tests/wgpu_surface_configure_best_effort_test.mbt) | Partial | Current behavior evidence is heavily macOS/Metal-biased and includes best-effort paths |
 | Platform surface constructors and descriptor builders | `create_surface_metal_layer`, `create_surface_wayland`, `create_surface_xcb`, `create_surface_xlib`, `create_surface_windows_hwnd`, `create_surface_swap_chain_panel`, `create_surface_android_native_window`, `surface_descriptor_*_new` | [`README.mbt.md`](../README.mbt.md), [`src/wgpu_surface_platform_ctor_wbtest.mbt`](../src/wgpu_surface_platform_ctor_wbtest.mbt), [`src/tests/wgpu_native_api_completeness_test.mbt`](../src/tests/wgpu_native_api_completeness_test.mbt), [`src/tests/wgpu_surface_descriptor_metal_test.mbt`](../src/tests/wgpu_surface_descriptor_metal_test.mbt) | Partial | Metal descriptor-path coverage now exists; non-Metal host integration is still missing |
-| Generated raw-handle mirror API | `Adapter::*`, `Device::*`, `Buffer::*`, `Surface::*`, and other direct wrappers emitted in [`src/wgpu_handles.mbt`](../src/wgpu_handles.mbt) | Inference from [`src/wgpu_handles.mbt`](../src/wgpu_handles.mbt), [`src/pkg.generated.mbti`](../src/pkg.generated.mbti), and current test inventory | Repo gap | Build an explicit coverage map for exported handle methods, then backfill missing tests (`wgpu_mbt-66w.1.4`) |
+| Generated raw-handle mirror API | `Adapter::*`, `Device::*`, `Buffer::*`, `Surface::*`, and other direct wrappers emitted in [`src/wgpu_handles.mbt`](../src/wgpu_handles.mbt) | [`docs/generated_handle_behavior_matrix.md`](./generated_handle_behavior_matrix.md), plus the tests cited there | Partial | The explicit matrix now exists; follow-up is to backfill the uncovered `add_ref_raw`, getter, and indirect-draw clusters identified in the matrix |
 
 ## Open Repo-Controlled Gaps
 
@@ -73,11 +73,6 @@ pass.
    have null-host-handle safety coverage, not real host integration coverage.
    Current evidence: [`src/wgpu_surface_platform_ctor_wbtest.mbt`](../src/wgpu_surface_platform_ctor_wbtest.mbt).
 
-4. The generated raw-handle layer is part of the public API, but the repo does
-   not yet maintain an auditable method-by-method behavior matrix for it.
-   This is an inference from public surface size plus the current test layout,
-   not a claim that every handle method is broken.
-
 ## Repo Gaps Closed In This Pass
 
 The following audit items were closed during the current `wgpu_mbt-66w.1.2`
@@ -99,6 +94,10 @@ pass:
    `Instance::create_surface(descriptor)` now has a real Metal render/present
    behavior test in
    [`src/tests/wgpu_surface_descriptor_metal_test.mbt`](../src/tests/wgpu_surface_descriptor_metal_test.mbt).
+
+5. The generated raw-handle layer now has an explicit behavior coverage matrix
+   in [`docs/generated_handle_behavior_matrix.md`](./generated_handle_behavior_matrix.md),
+   including direct, indirect, and currently uncovered method buckets.
 
 ## Upstream-Blocked Gaps
 
