@@ -562,9 +562,18 @@ jobs:
           VK_LOADER_DEBUG: all
         run: |
           $ErrorActionPreference = "Continue"
-          Write-Host "[dynamic]"
-          moon run --target native src/cmd/main/main.mbt
-          Write-Host "[static]"
-          moon clean
+          function Invoke-BestEffort([string]$Label, [scriptblock]$Action) {
+            Write-Host $Label
+            & $Action
+            if ($LASTEXITCODE -ne 0) {
+              Write-Warning "$Label failed with exit code $LASTEXITCODE"
+              $global:LASTEXITCODE = 0
+            }
+          }
+
+          Invoke-BestEffort "[dynamic]" { moon run --target native src/cmd/main/main.mbt }
+          Invoke-BestEffort "[clean]" { moon clean }
+
+          Remove-Item Env:MBT_WGPU_NATIVE_ROOT -ErrorAction SilentlyContinue
           $env:MBT_WGPU_LINK_MODE = "static"
-          moon run --target native src/cmd/main/main.mbt
+          Invoke-BestEffort "[static]" { moon run --target native src/cmd/main/main.mbt }

@@ -47,6 +47,8 @@ static WGPUSurfaceDescriptor *mbt_surface_descriptor_new_empty(void) {
   return &out->desc;
 }
 
+#if defined(__APPLE__)
+
 WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_metal_layer_new(void *layer) {
   if (!layer) {
     return NULL;
@@ -67,6 +69,15 @@ WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_metal_layer_new(void *layer) 
   out->desc.nextInChain = &out->source.metal_layer.chain;
   return &out->desc;
 }
+
+#else
+
+WGPUSurfaceDescriptor *mbt_wgpu_surface_descriptor_metal_layer_new(void *layer) {
+  (void)layer;
+  return NULL;
+}
+
+#endif
 
 #if defined(__linux__) && !defined(__ANDROID__)
 
