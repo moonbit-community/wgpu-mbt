@@ -246,15 +246,21 @@ pub fn bind_group_release(WGPUBindGroup) -> Unit
 
 pub fn bind_group_set_label_utf8(WGPUBindGroup, Bytes, UInt64) -> Unit
 
+pub fn buffer_add_ref_tracked(WGPUBuffer) -> Unit
+
 pub fn buffer_descriptor_free(WGPUBufferDescriptorPtr) -> Unit
 
 pub fn buffer_descriptor_new(UInt64, UInt64, Bool) -> WGPUBufferDescriptorPtr
 
 pub fn buffer_destroy(WGPUBuffer) -> Unit
 
+pub fn buffer_get_map_state_tracked(WGPUBuffer) -> WGPUBufferMapState
+
 pub fn buffer_get_size(WGPUBuffer) -> UInt64
 
 pub fn buffer_map_read_sync(WGPUInstance, WGPUBuffer, UInt64, UInt64, Bytes, UInt64) -> Bool
+
+pub fn buffer_map_state_u32(WGPUBufferMapState) -> UInt
 
 pub fn buffer_map_write_sync(WGPUInstance, WGPUBuffer, UInt64, Bytes, UInt64) -> Bool
 
@@ -461,6 +467,8 @@ pub fn device_create_bind_group_uniform_buffer(WGPUDevice, WGPUBindGroupLayout, 
 pub fn device_create_bind_group_uniform_buffer_16(WGPUDevice, WGPUBindGroupLayout, WGPUBuffer) -> WGPUBindGroup
 
 pub fn device_create_buffer(WGPUDevice, UInt64, UInt64, Bool) -> WGPUBuffer
+
+pub fn device_create_buffer_ptr_tracked(WGPUDevice, WGPUBufferDescriptorPtr) -> WGPUBuffer
 
 pub fn device_create_command_encoder(WGPUDevice) -> WGPUCommandEncoder
 
@@ -799,6 +807,10 @@ pub fn instance_enumerate_adapters_count_metal(WGPUInstance) -> UInt64
 pub fn instance_enumerate_adapters_count_vulkan(WGPUInstance) -> UInt64
 
 pub fn instance_generate_report_new(WGPUInstance) -> WGPUGlobalReportPtr
+
+pub fn instance_get_wgsl_language_features_safe(WGPUInstance, WGPUSupportedWGSLLanguageFeaturesPtr) -> WGPUStatus
+
+pub fn instance_has_wgsl_language_feature_safe(WGPUInstance, WGPUWGSLLanguageFeatureName) -> Bool
 
 pub fn instance_process_events(WGPUInstance) -> Unit
 
@@ -1775,6 +1787,8 @@ pub fn wgpuTextureViewAddRef(WGPUTextureView) -> Unit
 pub fn wgpuTextureViewRelease(WGPUTextureView) -> Unit
 
 pub fn wgpuTextureViewSetLabel(WGPUTextureView, WGPUStringView) -> Unit
+
+pub fn wgsl_language_feature_name_from_u32(UInt) -> WGPUWGSLLanguageFeatureName
 
 // Errors
 

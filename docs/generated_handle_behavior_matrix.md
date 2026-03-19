@@ -16,9 +16,9 @@ As of this pass, the file exports **161** generated methods.
 
 ## Summary
 
-- `Direct`: 8
+- `Direct`: 11
 - `Indirect`: 143
-- `Uncovered`: 10
+- `Uncovered`: 7
 
 ## Matrix
 
@@ -44,8 +44,8 @@ As of this pass, the file exports **161** generated methods.
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
+| Direct | `get_map_state` | `wgpu_generated_handle_gaps_test.mbt` now asserts the repo-managed map-state contract across mapped-at-creation, `map_write_sync(...)`, `unmap()`, and `unmap_raw()`. |
 | Indirect | `add_ref_raw`, `destroy_raw`, `get_size`, `get_usage`, `release_raw`, `unmap_raw` | `wgpu_ptr_constructors_test.mbt`, `wgpu_smoke_test.mbt`, `wgpu_buffer_usage_test.mbt`, `wgpu_buffer_comprehensive_test.mbt`, `wgpu_spec_buffer_map_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
-| Uncovered | `get_map_state` | Direct exploratory coverage hit an upstream `unimplemented` abort on the current supported native release, so the repo still lacks a stable checked-in behavior contract for this method. |
 
 ### CommandBuffer
 
@@ -75,17 +75,16 @@ As of this pass, the file exports **161** generated methods.
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
-| Direct | `create_compute_pipeline_async_sync_ptr`, `create_compute_pipeline_async_sync_ptr_or_raise`, `create_render_pipeline_async_sync_ptr` | Called directly in `wgpu_pipeline_async_sync_test.mbt` and `wgpu_optional_symbol_or_raise_test.mbt`. |
+| Direct | `create_compute_pipeline_async_sync_ptr`, `create_compute_pipeline_async_sync_ptr_or_raise`, `create_render_pipeline_async_sync_ptr`, `create_render_pipeline_async_sync_ptr_or_raise` | Called directly in `wgpu_pipeline_async_sync_test.mbt` and `wgpu_optional_symbol_or_raise_test.mbt`; the render `or_raise` path now has a checked-in repo-gated runtime-failure contract instead of hitting the upstream aborting entry point. |
 | Indirect | `add_ref_raw`, `create_bind_group`, `create_bind_group_layout`, `create_buffer_raw`, `create_command_encoder_raw`, `create_compute_pipeline_raw`, `create_pipeline_layout`, `create_query_set`, `create_render_bundle_encoder`, `create_render_pipeline`, `create_sampler`, `create_shader_module`, `create_shader_module_spir_v`, `create_texture`, `destroy_raw`, `get_adapter_info`, `get_features`, `get_limits`, `get_lost_future`, `get_queue`, `has_feature`, `poll_raw`, `push_error_scope_raw`, `release_raw` | Covered through ptr/convenience helpers and behavior suites such as `wgpu_ptr_constructors_test.mbt`, `wgpu_shader_module_spirv_test.mbt`, `wgpu_device_lost_test.mbt`, `wgpu_error_scope_test.mbt`, `wgpu_device_limits_test.mbt`, the render/compute smoke tests, and `wgpu_generated_handle_gaps_test.mbt`. |
-| Uncovered | `create_render_pipeline_async_sync_ptr_or_raise` | Direct exploratory coverage hit an upstream `wgpuDeviceCreateRenderPipelineAsync` `unimplemented` abort on the current supported native release, so the repo still lacks a stable checked-in contract for this method. |
 
 ### Instance
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
 | Direct | `create_surface` | Called directly in `wgpu_surface_descriptor_metal_test.mbt`. |
-| Indirect | `add_ref_raw`, `wgpu_generate_report`, `enumerate_adapters`, `get_wgsl_language_features`, `process_events_raw`, `release_raw`, `wait_any` | `wgpu_generate_report_test.mbt`, `wgpu_enumerate_adapters_test.mbt`, `wgpu_wgsl_language_features_test.mbt`, `wgpu_spec_instance_process_events_test.mbt`, `wgpu_instance_wait_any_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
-| Uncovered | `has_wgsl_language_feature` | Direct exploratory coverage hit an upstream `unimplemented` abort on the current supported native release, so the repo still lacks a stable checked-in contract for this method. |
+| Direct | `has_wgsl_language_feature` | `wgpu_generated_handle_gaps_test.mbt` now exercises the repo-safe placeholder contract directly. |
+| Indirect | `add_ref_raw`, `wgpu_generate_report`, `enumerate_adapters`, `get_wgsl_language_features`, `process_events_raw`, `release_raw`, `wait_any` | `wgpu_generate_report_test.mbt`, `wgpu_enumerate_adapters_test.mbt`, `wgpu_wgsl_language_features_test.mbt`, `wgpu_spec_instance_process_events_test.mbt`, `wgpu_instance_wait_any_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. `get_wgsl_language_features(...)` now shares the same repo-safe empty-feature placeholder as `wgsl_language_features_count_u64()`. |
 
 ### PipelineLayout
 
@@ -167,9 +166,4 @@ As of this pass, the file exports **161** generated methods.
 
 - Add direct coverage for render-pass and render-bundle indirect-draw variants
   that still have no behavior tests.
-- Add a repo-safe contract for `Buffer::get_map_state`,
-  `Instance::has_wgsl_language_feature`, and
-  `Device::create_render_pipeline_async_sync_ptr_or_raise`, which currently hit
-  upstream `unimplemented` aborts in direct exploratory coverage against the
-  supported native release.
 - Add behavior coverage for `RenderPass::set_stencil_reference_raw`.

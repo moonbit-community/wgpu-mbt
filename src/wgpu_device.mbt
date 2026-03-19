@@ -579,7 +579,7 @@ pub fn Device::create_buffer_ptr(
   self : Device,
   descriptor : @c.WGPUBufferDescriptorPtr,
 ) -> Buffer {
-  Buffer::{ raw: @c.wgpuDeviceCreateBuffer(self.raw, descriptor) }
+  Buffer::{ raw: @c.device_create_buffer_ptr_tracked(self.raw, descriptor) }
 }
 
 ///|

@@ -490,6 +490,18 @@ pub extern "C" fn instance_wgsl_language_features_count_u64(
 ) -> UInt64 = "mbt_wgpu_instance_wgsl_language_features_count"
 
 ///|
+pub extern "C" fn instance_get_wgsl_language_features_safe(
+  instance : Instance,
+  features : WGPUSupportedWGSLLanguageFeaturesPtr,
+) -> WGPUStatus = "mbt_wgpu_instance_get_wgsl_language_features_safe"
+
+///|
+pub extern "C" fn instance_has_wgsl_language_feature_safe(
+  instance : Instance,
+  feature : WGPUWGSLLanguageFeatureName,
+) -> Bool = "mbt_wgpu_instance_has_wgsl_language_feature_safe"
+
+///|
 pub extern "C" fn instance_generate_report_new(
   instance : Instance,
 ) -> WGPUGlobalReportPtr = "mbt_wgpu_instance_generate_report_new"

@@ -52,6 +52,14 @@ pub extern "C" fn platform_is_linux() -> Bool = "mbt_wgpu_platform_is_linux"
 pub extern "C" fn platform_is_windows() -> Bool = "mbt_wgpu_platform_is_windows"
 
 ///|
+pub extern "C" fn buffer_map_state_u32(state : WGPUBufferMapState) -> UInt = "mbt_wgpu_buffer_map_state_u32"
+
+///|
+pub extern "C" fn wgsl_language_feature_name_from_u32(
+  raw : UInt,
+) -> WGPUWGSLLanguageFeatureName = "mbt_wgpu_wgsl_language_feature_name_from_u32"
+
+///|
 pub extern "C" fn native_available_u32() -> UInt = "mbt_wgpu_native_available_u32"
 
 ///|

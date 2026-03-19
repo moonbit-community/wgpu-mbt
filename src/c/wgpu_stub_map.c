@@ -14,6 +14,144 @@
 
 #include "wgpu_stub.h"
 
+typedef struct mbt_buffer_track_entry {
+  WGPUBuffer buffer;
+  uint32_t refcount;
+  WGPUBufferMapState state;
+  struct mbt_buffer_track_entry *next;
+} mbt_buffer_track_entry_t;
+
+static mbt_buffer_track_entry_t *g_mbt_buffer_track_head = NULL;
+
+static mbt_buffer_track_entry_t *mbt_buffer_track_find(WGPUBuffer buffer) {
+  for (mbt_buffer_track_entry_t *it = g_mbt_buffer_track_head; it; it = it->next) {
+    if (it->buffer == buffer) {
+      return it;
+    }
+  }
+  return NULL;
+}
+
+static mbt_buffer_track_entry_t *mbt_buffer_track_insert(WGPUBuffer buffer,
+                                                         uint32_t refcount,
+                                                         WGPUBufferMapState state) {
+  mbt_buffer_track_entry_t *entry =
+      (mbt_buffer_track_entry_t *)calloc(1, sizeof(mbt_buffer_track_entry_t));
+  if (!entry) {
+    return NULL;
+  }
+  entry->buffer = buffer;
+  entry->refcount = refcount;
+  entry->state = state;
+  entry->next = g_mbt_buffer_track_head;
+  g_mbt_buffer_track_head = entry;
+  return entry;
+}
+
+static void mbt_buffer_track_register_new(WGPUBuffer buffer, bool mapped) {
+  if (!buffer) {
+    return;
+  }
+  mbt_buffer_track_entry_t *entry = mbt_buffer_track_find(buffer);
+  if (!entry) {
+    (void)mbt_buffer_track_insert(
+        buffer, 1u,
+        mapped ? WGPUBufferMapState_Mapped : WGPUBufferMapState_Unmapped);
+    return;
+  }
+  entry->refcount = 1u;
+  entry->state = mapped ? WGPUBufferMapState_Mapped : WGPUBufferMapState_Unmapped;
+}
+
+static void mbt_buffer_track_add_ref(WGPUBuffer buffer) {
+  if (!buffer) {
+    return;
+  }
+  mbt_buffer_track_entry_t *entry = mbt_buffer_track_find(buffer);
+  if (!entry) {
+    (void)mbt_buffer_track_insert(buffer, 2u, WGPUBufferMapState_Unmapped);
+    return;
+  }
+  entry->refcount += 1u;
+}
+
+static void mbt_buffer_track_release(WGPUBuffer buffer) {
+  if (!buffer) {
+    return;
+  }
+  mbt_buffer_track_entry_t *prev = NULL;
+  for (mbt_buffer_track_entry_t *it = g_mbt_buffer_track_head; it; prev = it, it = it->next) {
+    if (it->buffer != buffer) {
+      continue;
+    }
+    if (it->refcount > 1u) {
+      it->refcount -= 1u;
+      return;
+    }
+    if (prev) {
+      prev->next = it->next;
+    } else {
+      g_mbt_buffer_track_head = it->next;
+    }
+    free(it);
+    return;
+  }
+}
+
+static void mbt_buffer_track_set_state(WGPUBuffer buffer, WGPUBufferMapState state) {
+  if (!buffer) {
+    return;
+  }
+  mbt_buffer_track_entry_t *entry = mbt_buffer_track_find(buffer);
+  if (!entry) {
+    entry = mbt_buffer_track_insert(buffer, 1u, state);
+    if (!entry) {
+      return;
+    }
+  }
+  entry->state = state;
+}
+
+static WGPUBufferMapState mbt_buffer_track_get_state(WGPUBuffer buffer) {
+  mbt_buffer_track_entry_t *entry = mbt_buffer_track_find(buffer);
+  if (!entry) {
+    return WGPUBufferMapState_Unmapped;
+  }
+  return entry->state;
+}
+
+WGPUBuffer mbt_wgpu_device_create_buffer_ptr_tracked(
+    WGPUDevice device, const WGPUBufferDescriptor *descriptor) {
+  WGPUBuffer buffer = wgpuDeviceCreateBuffer(device, descriptor);
+  mbt_buffer_track_register_new(
+      buffer, descriptor && descriptor->mappedAtCreation != 0);
+  return buffer;
+}
+
+void mbt_wgpu_buffer_add_ref_tracked(WGPUBuffer buffer) {
+  wgpuBufferAddRef(buffer);
+  mbt_buffer_track_add_ref(buffer);
+}
+
+WGPUBufferMapState mbt_wgpu_buffer_get_map_state_tracked(WGPUBuffer buffer) {
+  return mbt_buffer_track_get_state(buffer);
+}
+
+void mbt_wgpu_buffer_destroy_tracked(WGPUBuffer buffer) {
+  wgpuBufferDestroy(buffer);
+  mbt_buffer_track_set_state(buffer, WGPUBufferMapState_Unmapped);
+}
+
+void mbt_wgpu_buffer_release_tracked(WGPUBuffer buffer) {
+  wgpuBufferRelease(buffer);
+  mbt_buffer_track_release(buffer);
+}
+
+void mbt_wgpu_buffer_unmap_tracked(WGPUBuffer buffer) {
+  wgpuBufferUnmap(buffer);
+  mbt_buffer_track_set_state(buffer, WGPUBufferMapState_Unmapped);
+}
+
 typedef struct {
   WGPUMapAsyncStatus status;
 } mbt_map_result2_t;
@@ -53,6 +191,7 @@ int32_t mbt_wgpu_buffer_map_read_sync(WGPUInstance instance, WGPUBuffer buffer,
     return false;
   }
   memcpy(out, mapped, (size_t)size);
+  mbt_buffer_track_set_state(buffer, WGPUBufferMapState_Mapped);
   return true;
 }
 
@@ -80,6 +219,7 @@ int32_t mbt_wgpu_buffer_map_write_sync(WGPUInstance instance, WGPUBuffer buffer,
     return false;
   }
   memcpy(mapped, data, (size_t)data_len);
+  mbt_buffer_track_set_state(buffer, WGPUBufferMapState_Mapped);
   return true;
 }
 

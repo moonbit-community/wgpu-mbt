@@ -169,3 +169,77 @@ test "optional symbol or_raise: pipeline async disabled => disabled error" {
     instance.release()
   })
 }
+
+///|
+test "optional symbol or_raise: render pipeline async strict path is repo-gated" {
+  skip_unless_linux(() => {
+    @wgpu.set_pipeline_async_enabled(true)
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync_options_u32(
+      feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
+      power_preference_u32=@wgpu.POWER_PREFERENCE_UNDEFINED,
+      backend_type_u32=@wgpu.BACKEND_TYPE_VULKAN,
+    )
+    let device = adapter.request_device_sync(instance)
+    let wgsl_render : String =
+      #|struct VSOut { @builtin(position) pos: vec4<f32> };
+      #|
+      #|@vertex
+      #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+      #|  var positions = array<vec2<f32>, 3>(
+      #|    vec2<f32>(-1.0, -1.0),
+      #|    vec2<f32>( 3.0, -1.0),
+      #|    vec2<f32>(-1.0,  3.0),
+      #|  );
+      #|  var out: VSOut;
+      #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
+      #|  return out;
+      #|}
+      #|
+      #|@fragment
+      #|fn fs_main() -> @location(0) vec4<f32> {
+      #|  return vec4<f32>(0.0, 1.0, 0.0, 1.0);
+      #|}
+      #|
+    let sm = device.create_shader_module_wgsl(wgsl_render)
+    let bgl = device.create_bind_group_layout_empty()
+    let pl = device.create_pipeline_layout_1(bgl)
+    let rp_desc = @wgpu_c.render_pipeline_descriptor_rgba8_new(
+      pl.raw_handle(),
+      sm.raw_handle(),
+    )
+    let outcome : Ref[String] = @ref.new("unreached")
+    try {
+      let rp = device.create_render_pipeline_async_sync_ptr_or_raise(
+        instance, rp_desc,
+      )
+      rp.release()
+      outcome.val = "unexpected_success"
+    } catch {
+      e => {
+        let kind = e.kind_u32()
+        if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL ||
+          kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE {
+          outcome.val = "skipped (missing optional symbol)"
+        } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED ||
+          kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_DISABLED {
+          outcome.val = "expected"
+        } else {
+          outcome.val = "unexpected_kind"
+        }
+      }
+    }
+    if outcome.val == "skipped (missing optional symbol)" {
+      inspect(outcome.val, content="skipped (missing optional symbol)")
+    } else {
+      inspect(outcome.val, content="expected")
+    }
+    @wgpu_c.render_pipeline_descriptor_free(rp_desc)
+    pl.release()
+    bgl.release()
+    sm.release()
+    device.release()
+    adapter.release()
+    instance.release()
+  })
+}

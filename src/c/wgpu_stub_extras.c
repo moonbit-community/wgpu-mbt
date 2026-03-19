@@ -1534,6 +1534,34 @@ uint64_t mbt_wgpu_instance_wgsl_language_features_count(WGPUInstance instance) {
   return 0u;
 }
 
+WGPUStatus mbt_wgpu_instance_get_wgsl_language_features_safe(
+    WGPUInstance instance, WGPUSupportedWGSLLanguageFeatures *features) {
+  // Keep the public contract non-crashing until upstream exposes a stable
+  // implementation on the supported native release.
+  (void)instance;
+  if (!features) {
+    return WGPUStatus_Error;
+  }
+  *features = (WGPUSupportedWGSLLanguageFeatures){0};
+  return WGPUStatus_Success;
+}
+
+int32_t mbt_wgpu_instance_has_wgsl_language_feature_safe(
+    WGPUInstance instance, WGPUWGSLLanguageFeatureName feature) {
+  (void)instance;
+  (void)feature;
+  return false;
+}
+
+uint32_t mbt_wgpu_buffer_map_state_u32(WGPUBufferMapState state) {
+  return (uint32_t)state;
+}
+
+WGPUWGSLLanguageFeatureName mbt_wgpu_wgsl_language_feature_name_from_u32(
+    uint32_t raw) {
+  return (WGPUWGSLLanguageFeatureName)raw;
+}
+
 uint64_t mbt_wgpu_surface_capabilities_formats_count(WGPUSurface surface,
                                                      WGPUAdapter adapter) {
   if (!surface || !adapter) {

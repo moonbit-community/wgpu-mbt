@@ -31,7 +31,7 @@ pub fn device_create_buffer(
   mapped_at_creation : Bool,
 ) -> Buffer {
   let desc = buffer_descriptor_new(size, usage, mapped_at_creation)
-  let buffer = wgpuDeviceCreateBuffer(device, desc)
+  let buffer = device_create_buffer_ptr_tracked(device, desc)
   buffer_descriptor_free(desc)
   buffer
 }
@@ -1588,13 +1588,27 @@ pub extern "C" fn command_encoder_release(
 ) -> Unit = "wgpuCommandEncoderRelease"
 
 ///|
+pub extern "C" fn device_create_buffer_ptr_tracked(
+  device : Device,
+  descriptor : WGPUBufferDescriptorPtr,
+) -> Buffer = "mbt_wgpu_device_create_buffer_ptr_tracked"
+
+///|
+pub extern "C" fn buffer_add_ref_tracked(buffer : Buffer) -> Unit = "mbt_wgpu_buffer_add_ref_tracked"
+
+///|
 pub extern "C" fn buffer_get_size(buffer : Buffer) -> UInt64 = "wgpuBufferGetSize"
 
 ///|
-pub extern "C" fn buffer_destroy(buffer : Buffer) -> Unit = "wgpuBufferDestroy"
+pub extern "C" fn buffer_get_map_state_tracked(
+  buffer : Buffer,
+) -> WGPUBufferMapState = "mbt_wgpu_buffer_get_map_state_tracked"
 
 ///|
-pub extern "C" fn buffer_release(buffer : Buffer) -> Unit = "wgpuBufferRelease"
+pub extern "C" fn buffer_destroy(buffer : Buffer) -> Unit = "mbt_wgpu_buffer_destroy_tracked"
+
+///|
+pub extern "C" fn buffer_release(buffer : Buffer) -> Unit = "mbt_wgpu_buffer_release_tracked"
 
 ///|
 #borrow(out)
@@ -1618,7 +1632,7 @@ pub extern "C" fn buffer_map_write_sync(
 ) -> Bool = "mbt_wgpu_buffer_map_write_sync"
 
 ///|
-pub extern "C" fn buffer_unmap(buffer : Buffer) -> Unit = "wgpuBufferUnmap"
+pub extern "C" fn buffer_unmap(buffer : Buffer) -> Unit = "mbt_wgpu_buffer_unmap_tracked"
 
 ///|
 #borrow(out)

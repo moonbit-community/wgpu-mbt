@@ -20,6 +20,12 @@ test "wgpu generated handles: safe getters round-trip through raw descriptors" {
 
   let wgsl_feature_count = instance.wgsl_language_features_count_u64()
   inspect(wgsl_feature_count >= 0UL, content="true")
+  inspect(
+    instance.has_wgsl_language_feature(
+      @wgpu_c.wgsl_language_feature_name_from_u32(4U),
+    ),
+    content="false",
+  )
 
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
@@ -44,6 +50,31 @@ test "wgpu generated handles: safe getters round-trip through raw descriptors" {
   device.release()
   adapter.release()
   instance.release()
+}
+
+///|
+test "wgpu generated handles: buffer map_state follows repo-managed mapping" {
+  skip_on_wgpu_error(() => {
+    let instance = @wgpu.Instance::create()
+    let adapter = instance.request_adapter_sync()
+    let device = adapter.request_device_sync(instance)
+    let buffer = device.create_buffer(
+      size=8UL,
+      usage=bu(@wgpu.BUFFER_USAGE_MAP_WRITE | @wgpu.BUFFER_USAGE_COPY_SRC),
+      mapped_at_creation=true,
+    )
+    inspect(@wgpu_c.buffer_map_state_u32(buffer.get_map_state()), content="3")
+    buffer.unmap()
+    inspect(@wgpu_c.buffer_map_state_u32(buffer.get_map_state()), content="1")
+    buffer.map_write_sync(instance, 0UL, rgba_bytes(1U, 2U, 3U, 4U))
+    inspect(@wgpu_c.buffer_map_state_u32(buffer.get_map_state()), content="3")
+    buffer.unmap_raw()
+    inspect(@wgpu_c.buffer_map_state_u32(buffer.get_map_state()), content="1")
+    buffer.release()
+    device.release()
+    adapter.release()
+    instance.release()
+  })
 }
 
 ///|

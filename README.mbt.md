@@ -244,6 +244,7 @@ Some `wgpu-native` builds still have unimplemented or unstable entry points.
 - Async pipeline creation is off by default
   - enable via `MBT_WGPU_ENABLE_PIPELINE_ASYNC=1` or `@wgpu.set_pipeline_async_enabled(true)`
   - probe via `@wgpu.pipeline_async_enabled()` / `@wgpu.pipeline_async_available()`
+  - `Device::create_render_pipeline_async_sync_ptr_or_raise(...)` is conservatively repo-gated on the supported native release and raises an explicit runtime error; use `create_render_pipeline_async_sync_ptr(...)` for the safe fallback helper
 - Shader compilation info is off by default
   - enable via `MBT_WGPU_ENABLE_COMPILATION_INFO=1` or `@wgpu.set_compilation_info_enabled(true)`
   - probe via `@wgpu.compilation_info_enabled()` / `@wgpu.compilation_info_available()`
@@ -267,6 +268,11 @@ fake or unstable wrappers for them:
 shims. The remaining blocker is sampler clamp-to-zero/border support: current upstream C headers
 still do not expose the required address-mode and border-color API surface.
 Tracker: `wgpu_mbt-jyd` ("Await upstream sampler clamp-mode C API").
+
+The supported release also still lacks a stable upstream WGSL-language-feature query.
+`wgpu_mbt` therefore keeps `Instance::get_wgsl_language_features(...)` /
+`has_wgsl_language_feature(...)` on a safe empty/false placeholder contract
+instead of calling the aborting upstream entry points directly.
 
 ## Troubleshooting
 

@@ -83,17 +83,17 @@ pub fn BindGroup::release_raw(self : BindGroup) -> Unit {
 
 ///|
 pub fn Buffer::add_ref_raw(self : Buffer) -> Unit {
-  @c.wgpuBufferAddRef(self.raw)
+  @c.buffer_add_ref_tracked(self.raw)
 }
 
 ///|
 pub fn Buffer::destroy_raw(self : Buffer) -> Unit {
-  @c.wgpuBufferDestroy(self.raw)
+  @c.buffer_destroy(self.raw)
 }
 
 ///|
 pub fn Buffer::get_map_state(self : Buffer) -> @c.WGPUBufferMapState {
-  @c.wgpuBufferGetMapState(self.raw)
+  @c.buffer_get_map_state_tracked(self.raw)
 }
 
 ///|
@@ -108,12 +108,12 @@ pub fn Buffer::get_usage(self : Buffer) -> @c.WGPUBufferUsage {
 
 ///|
 pub fn Buffer::release_raw(self : Buffer) -> Unit {
-  @c.wgpuBufferRelease(self.raw)
+  @c.buffer_release(self.raw)
 }
 
 ///|
 pub fn Buffer::unmap_raw(self : Buffer) -> Unit {
-  @c.wgpuBufferUnmap(self.raw)
+  @c.buffer_unmap(self.raw)
 }
 
 ///|
@@ -404,7 +404,7 @@ pub fn Device::create_buffer_raw(
   self : Device,
   descriptor : @c.WGPUBufferDescriptorPtr,
 ) -> Buffer {
-  Buffer::{ raw: @c.wgpuDeviceCreateBuffer(self.raw, descriptor) }
+  Buffer::{ raw: @c.device_create_buffer_ptr_tracked(self.raw, descriptor) }
 }
 
 ///|
@@ -563,42 +563,15 @@ pub fn Device::create_render_pipeline_async_sync_ptr_or_raise(
       native_diagnostic(),
     )
   }
-  let raw = @c.device_create_render_pipeline_async_sync_ptr_strict(
-    instance.raw,
-    self.raw,
-    descriptor,
-  )
-  let kind = @c.pipeline_async_last_error_kind_u32()
-  let status = @c.pipeline_async_last_status_u32()
-  if kind != 0U {
-    if kind == 1U {
-      raise OptionalSymbolDisabled("pipeline_async")
-    } else if kind == 2U {
-      raise OptionalSymbolMissingSymbol(
-        "wgpuDeviceCreateRenderPipelineAsync",
-        native_diagnostic(),
-      )
-    } else if kind == 3U {
-      raise OptionalSymbolRuntimeFailed(
-        "pipeline_async", "timed out while waiting for async pipeline callback",
-      )
-    } else if kind == 4U {
-      raise OptionalSymbolRuntimeFailed(
-        "pipeline_async",
-        "async pipeline creation failed (status_u32=" + status.to_string() + ")",
-      )
-    } else {
-      raise OptionalSymbolRuntimeFailed(
-        "pipeline_async",
-        "invalid input or unknown failure (kind_u32=" +
-        kind.to_string() +
-        ", status_u32=" +
-        status.to_string() +
-        ")",
-      )
-    }
+  if !pipeline_async_enabled() {
+    raise OptionalSymbolDisabled("pipeline_async")
   }
-  RenderPipeline::{ raw, }
+  ignore(self)
+  ignore(instance)
+  ignore(descriptor)
+  raise OptionalSymbolRuntimeFailed(
+    "pipeline_async", "render pipeline async strict path is not repo-enabled on the supported native release; use create_render_pipeline_async_sync_ptr(...) instead",
+  )
 }
 
 ///|
@@ -736,7 +709,7 @@ pub fn Instance::get_wgsl_language_features(
   self : Instance,
   features : @c.WGPUSupportedWGSLLanguageFeaturesPtr,
 ) -> @c.WGPUStatus {
-  @c.wgpuInstanceGetWGSLLanguageFeatures(self.raw, features)
+  @c.instance_get_wgsl_language_features_safe(self.raw, features)
 }
 
 ///|
@@ -744,7 +717,7 @@ pub fn Instance::has_wgsl_language_feature(
   self : Instance,
   feature : @c.WGPUWGSLLanguageFeatureName,
 ) -> Bool {
-  @c.wgpuInstanceHasWGSLLanguageFeature(self.raw, feature)
+  @c.instance_has_wgsl_language_feature_safe(self.raw, feature)
 }
 
 ///|

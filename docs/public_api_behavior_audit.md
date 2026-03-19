@@ -73,16 +73,6 @@ pass.
    have null-host-handle safety coverage, not real host integration coverage.
    Current evidence: [`src/wgpu_surface_platform_ctor_wbtest.mbt`](../src/wgpu_surface_platform_ctor_wbtest.mbt).
 
-4. A small remaining subset of the generated raw-handle public API is still not
-   safe to treat as behavior-covered on the supported release. During the
-   current closure pass, direct exploratory calls to
-   `Buffer::get_map_state`, `Instance::has_wgsl_language_feature`, and
-   `Device::create_render_pipeline_async_sync_ptr_or_raise` hit upstream
-   `unimplemented` aborts, so the repo still needs a gating or wrapper strategy
-   instead of naïvely adding direct tests.
-   Current evidence: [`docs/generated_handle_behavior_matrix.md`](./generated_handle_behavior_matrix.md)
-   and [`src/tests/wgpu_generated_handle_gaps_test.mbt`](../src/tests/wgpu_generated_handle_gaps_test.mbt).
-
 ## Repo Gaps Closed In This Pass
 
 The following audit items were closed during the current `wgpu_mbt-66w.1.2`
@@ -114,6 +104,17 @@ pass:
    getter coverage, in
    [`src/tests/wgpu_generated_handle_gaps_test.mbt`](../src/tests/wgpu_generated_handle_gaps_test.mbt).
 
+7. The previously aborting generated-handle trio now has repo-safe contracts:
+   `Buffer::get_map_state` is backed by repo-managed sync map-state tracking,
+   `Instance::get_wgsl_language_features` / `has_wgsl_language_feature` now
+   share the existing safe empty-feature placeholder, and
+   `Device::create_render_pipeline_async_sync_ptr_or_raise` now returns an
+   explicit repo-gated runtime error instead of entering the known-upstream
+   aborting strict path. Evidence:
+   [`src/tests/wgpu_generated_handle_gaps_test.mbt`](../src/tests/wgpu_generated_handle_gaps_test.mbt),
+   [`src/tests/wgpu_optional_symbol_or_raise_test.mbt`](../src/tests/wgpu_optional_symbol_or_raise_test.mbt),
+   and [`docs/generated_handle_behavior_matrix.md`](./generated_handle_behavior_matrix.md).
+
 ## Upstream-Blocked Gaps
 
 These should feed `wgpu_mbt-66w.1.3` instead of being mixed into repo work.
@@ -137,5 +138,5 @@ Use this audit as the entry gate for the next public-API closure pass:
 
 - close repo-controlled behavior gaps first
 - keep upstream-blocked items documented, not half-implemented
-- treat generated-handle coverage and surface host integration as first-class
-  work, not background cleanup
+- treat the remaining generated-handle coverage and surface host integration as
+  first-class work, not background cleanup
