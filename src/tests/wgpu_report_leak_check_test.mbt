@@ -180,3 +180,143 @@ test "wgpu GlobalReport leak check (buffers/textures/pipelines)" {
   adapter.release()
   instance.release()
 }
+
+///|
+test "wgpu GlobalReport leak check (lifecycle helper and builder ergonomics)" {
+  let instance = @wgpu.Instance::create()
+  let report0 = instance.generate_report()
+  let kept0_devices = report0.hub_devices_num_kept_from_user()
+  let rel0_devices = report0.hub_devices_num_released_from_user()
+  let kept0_queues = report0.hub_queues_num_kept_from_user()
+  let rel0_queues = report0.hub_queues_num_released_from_user()
+  let kept0_buffers = report0.hub_buffers_num_kept_from_user()
+  let rel0_buffers = report0.hub_buffers_num_released_from_user()
+  let kept0_textures = report0.hub_textures_num_kept_from_user()
+  let rel0_textures = report0.hub_textures_num_released_from_user()
+  let kept0_views = report0.hub_texture_views_num_kept_from_user()
+  let rel0_views = report0.hub_texture_views_num_released_from_user()
+  let kept0_shaders = report0.hub_shader_modules_num_kept_from_user()
+  let rel0_shaders = report0.hub_shader_modules_num_released_from_user()
+  let kept0_cmds = report0.hub_command_buffers_num_kept_from_user()
+  let rel0_cmds = report0.hub_command_buffers_num_released_from_user()
+  let kept0_rps = report0.hub_render_pipelines_num_kept_from_user()
+  let rel0_rps = report0.hub_render_pipelines_num_released_from_user()
+  let kept0_cps = report0.hub_compute_pipelines_num_kept_from_user()
+  let rel0_cps = report0.hub_compute_pipelines_num_released_from_user()
+  report0.release()
+
+  instance.with_device_queue_sync((device, queue) => {
+    let scratch = device.create_buffer(
+      size=4UL,
+      usage=bu(@wgpu.BUFFER_USAGE_COPY_DST),
+    )
+    let tex = device.create_texture_rgba8_2d(1U, 1U)
+    let view = tex.create_view()
+
+    let render_shader_wgsl =
+      #|struct VSOut { @builtin(position) pos: vec4<f32> };
+      #|
+      #|@vertex
+      #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+      #|  var positions = array<vec2<f32>, 3>(
+      #|    vec2<f32>(-1.0, -1.0),
+      #|    vec2<f32>( 3.0, -1.0),
+      #|    vec2<f32>(-1.0,  3.0),
+      #|  );
+      #|  var out: VSOut;
+      #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
+      #|  return out;
+      #|}
+      #|
+      #|@fragment
+      #|fn fs_main() -> @location(0) vec4<f32> {
+      #|  return vec4<f32>(1.0, 0.0, 0.0, 1.0);
+      #|}
+      #|
+    let render_shader = device.create_shader_module_wgsl(render_shader_wgsl)
+    let render_builder = @wgpu.RenderPipelineDescBuilder::new(render_shader)
+    render_builder.set_entry_points("vs_main", "fs_main")
+    render_builder.set_color_target_format(
+      @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
+    )
+    let render_pipeline = render_builder.create_pipeline(device)
+    render_builder.free()
+    render_builder.free()
+
+    let compute_shader_wgsl =
+      #|@compute @workgroup_size(1)
+      #|fn main() {}
+      #|
+    let compute_shader = device.create_shader_module_wgsl(compute_shader_wgsl)
+    let compute_builder = @wgpu.ComputePipelineDescBuilder::new(compute_shader)
+    compute_builder.set_entry_point("main")
+    let compute_pipeline = compute_builder.create_pipeline(device)
+    compute_builder.free()
+    compute_builder.free()
+
+    let encoder = device.create_command_encoder()
+    let render_pass = encoder.begin_render_pass_color(view)
+    render_pass.set_pipeline(render_pipeline)
+    render_pass.draw(3U, 1U, 0U, 0U)
+    render_pass.end()
+    render_pass.release()
+
+    let compute_pass = encoder.begin_compute_pass()
+    compute_pass.set_pipeline(compute_pipeline)
+    compute_pass.dispatch_workgroups(1U, 1U, 1U)
+    compute_pass.end()
+    compute_pass.release()
+
+    let cmd = encoder.finish()
+    queue.submit_one(cmd)
+    let _done = device.poll(wait=true)
+
+    cmd.release()
+    encoder.release()
+    compute_pipeline.release()
+    compute_shader.release()
+    render_pipeline.release()
+    render_shader.release()
+    view.release()
+    tex.release()
+    scratch.release()
+  })
+
+  instance.process_events()
+  let report1 = instance.generate_report()
+  assert_eq(report1.hub_devices_num_kept_from_user(), kept0_devices)
+  assert_eq(report1.hub_queues_num_kept_from_user(), kept0_queues)
+  assert_eq(report1.hub_buffers_num_kept_from_user(), kept0_buffers)
+  assert_eq(report1.hub_textures_num_kept_from_user(), kept0_textures)
+  assert_eq(report1.hub_texture_views_num_kept_from_user(), kept0_views)
+  assert_eq(report1.hub_shader_modules_num_kept_from_user(), kept0_shaders)
+  assert_eq(report1.hub_command_buffers_num_kept_from_user(), kept0_cmds)
+  assert_eq(report1.hub_render_pipelines_num_kept_from_user(), kept0_rps)
+  assert_eq(report1.hub_compute_pipelines_num_kept_from_user(), kept0_cps)
+  assert_eq(report1.hub_devices_num_released_from_user() > rel0_devices, true)
+  assert_eq(report1.hub_queues_num_released_from_user() > rel0_queues, true)
+  assert_eq(report1.hub_buffers_num_released_from_user() > rel0_buffers, true)
+  assert_eq(report1.hub_textures_num_released_from_user() > rel0_textures, true)
+  assert_eq(
+    report1.hub_texture_views_num_released_from_user() > rel0_views,
+    true,
+  )
+  assert_eq(
+    report1.hub_shader_modules_num_released_from_user() > rel0_shaders,
+    true,
+  )
+  assert_eq(
+    report1.hub_command_buffers_num_released_from_user() > rel0_cmds,
+    true,
+  )
+  assert_eq(
+    report1.hub_render_pipelines_num_released_from_user() > rel0_rps,
+    true,
+  )
+  assert_eq(
+    report1.hub_compute_pipelines_num_released_from_user() > rel0_cps,
+    true,
+  )
+  report1.release()
+  instance.release()
+}
