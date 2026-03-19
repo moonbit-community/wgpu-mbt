@@ -18,7 +18,7 @@ if [[ "$MBT_WGPU_NATIVE_SANITIZE" != "address" ]]; then
   exit 1
 fi
 
-ARTIFACT_JSON="$(moon test --build-only "$TARGET")"
+ARTIFACT_JSON="$(moon test --target native --build-only "$TARGET")"
 RSPFILE="$(
   ARTIFACT_JSON="$ARTIFACT_JSON" python3 - <<'PY'
 import json

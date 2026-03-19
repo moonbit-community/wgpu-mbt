@@ -36,6 +36,10 @@ The script:
 - recompiles that driver with `clang -fsanitize=address`
 - executes only the requested test selectors
 
+The macOS CI job runs this script against the managed lifecycle regressions, so
+changes to lifecycle helpers or related FFI code now have a sanitizer-backed
+gate in the checked-in workflow.
+
 On macOS, the script automatically forces `ASAN_OPTIONS=detect_leaks=0` because
 LeakSanitizer is not supported there.
 
