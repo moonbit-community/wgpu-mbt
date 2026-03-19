@@ -21,6 +21,7 @@ test "wgpu native diagnostic is non-empty" {
 ///|
 test "wgpu native diagnostic reports loader context" {
   let s = @wgpu.native_diagnostic()
+  inspect(s.contains("MBT_WGPU_NATIVE_ROOT="[:]), content="true")
   inspect(s.contains("path_source="[:]), content="true")
   inspect(s.contains("resolved_path="[:]), content="true")
   inspect(s.contains("verification_mode="[:]), content="true")

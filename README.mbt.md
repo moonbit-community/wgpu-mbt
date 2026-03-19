@@ -53,7 +53,21 @@ Recommended dynamic install: extract that archive into `$HOME/.local` (or `%USER
 - Windows: `%USERPROFILE%\\.local\\lib\\wgpu_native.dll`
 - metadata tag: `.../wgpu-native-meta/wgpu-native-git-tag`
 
+Reusable preseeded install: extract the official release anywhere stable and
+set `MBT_WGPU_NATIVE_ROOT` to the extracted root. Both link modes can reuse the
+same tree:
+
+- Dynamic mode resolves `lib/libwgpu_native.(dylib|so)` on macOS/Linux or
+  `lib/wgpu_native.dll` on Windows from `MBT_WGPU_NATIVE_ROOT`
+- Static mode reuses `lib/libwgpu_native.a` (or `lib/wgpu_native.lib` on
+  Windows arm64) from `MBT_WGPU_NATIVE_ROOT` instead of downloading again
+- Example extracted roots:
+  - macOS/Linux: `/opt/wgpu-native/wgpu-linux-x86_64-release`
+  - Windows: `C:\\wgpu-native\\wgpu-windows-x86_64-msvc-release`
+
 Or set `MBT_WGPU_NATIVE_LIB` to an absolute library path inside an extracted upstream release tree.
+If you want the automatic static downloader to populate a reusable cache when no
+preseeded root is supplied, set `MBT_WGPU_NATIVE_CACHE_DIR`.
 
 Static mode uses the same pinned upstream release model, but on Windows x64 it intentionally
 downloads `wgpu-windows-x86_64-gnu-release.zip` for the static link step because that package
@@ -209,7 +223,8 @@ Drive completion with `Instance::process_events()` or `Instance::wait_any_one(..
 - Dynamic mode is opt-in and loads `libwgpu_native` at runtime.
 - Dynamic library lookup order:
   1) `MBT_WGPU_NATIVE_LIB`
-  2) default per-user path listed above
+  2) `MBT_WGPU_NATIVE_ROOT`
+  3) default per-user path listed above
 - `@wgpu.native_available()` checks whether the core library/symbols are loadable.
 - `@wgpu.native_supported()` checks whether the current runtime matches the supported upstream release.
 - `@wgpu.native_static_linked()` reports whether this build used static linking.
@@ -264,5 +279,6 @@ If startup fails at the first WebGPU call, usually `libwgpu_native` is missing, 
 - Verify file path and filename for your platform
 - On Windows x64, use the `msvc` archive for dynamic installs; the `gnu` archive is only for the automatic static link path
 - If using dynamic mode, set `MBT_WGPU_LINK_MODE=dynamic`
+- If you have a pre-extracted official release tree, set `MBT_WGPU_NATIVE_ROOT=/absolute/path/to/extracted/root`
 - If using a custom dynamic library location, set `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)`
 - If you are using a trusted custom build, `MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1` only skips the metadata/tag gate; it does not make an unloadable or symbol-incomplete library work

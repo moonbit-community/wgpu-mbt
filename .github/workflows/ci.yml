@@ -72,7 +72,6 @@ jobs:
           tag="$(node scripts/wgpu_native_release.js meta --field tag)"
           rev="$(node scripts/wgpu_native_release.js meta --field rev)"
           asset="$(node scripts/wgpu_native_release.js asset --platform "$RUNNER_OS" --arch "$(uname -m)" --link-mode dynamic --field archive)"
-          lib_rel="$(node scripts/wgpu_native_release.js asset --platform "$RUNNER_OS" --arch "$(uname -m)" --link-mode dynamic --field dynamicLibRel)"
           artifact_root="$RUNNER_TEMP/wgpu-native-prebuilt"
           rm -rf "$artifact_root"
           mkdir -p "$artifact_root"
@@ -86,7 +85,7 @@ jobs:
 
           gh release download -R "$repo" "$tag" -p "$asset" -D "$artifact_root"
           unzip -q -o "$artifact_root/$asset" -d "$artifact_root"
-          echo "MBT_WGPU_NATIVE_LIB=$artifact_root/$lib_rel" >> "$GITHUB_ENV"
+          echo "MBT_WGPU_NATIVE_ROOT=$artifact_root" >> "$GITHUB_ENV"
 
       - name: Probe wgpu smoke (diagnostic)
         shell: bash
@@ -201,7 +200,6 @@ jobs:
           tag="$(node scripts/wgpu_native_release.js meta --field tag)"
           rev="$(node scripts/wgpu_native_release.js meta --field rev)"
           asset="$(node scripts/wgpu_native_release.js asset --platform "$RUNNER_OS" --arch "$(uname -m)" --link-mode dynamic --field archive)"
-          lib_rel="$(node scripts/wgpu_native_release.js asset --platform "$RUNNER_OS" --arch "$(uname -m)" --link-mode dynamic --field dynamicLibRel)"
           artifact_root="$RUNNER_TEMP/wgpu-native-prebuilt"
           rm -rf "$artifact_root"
           mkdir -p "$artifact_root"
@@ -215,7 +213,7 @@ jobs:
 
           gh release download -R "$repo" "$tag" -p "$asset" -D "$artifact_root"
           unzip -q -o "$artifact_root/$asset" -d "$artifact_root"
-          echo "MBT_WGPU_NATIVE_LIB=$artifact_root/$lib_rel" >> "$GITHUB_ENV"
+          echo "MBT_WGPU_NATIVE_ROOT=$artifact_root" >> "$GITHUB_ENV"
 
       - name: Run full test suite
         shell: bash
@@ -471,14 +469,13 @@ jobs:
             throw "PROCESSOR_ARCHITECTURE is empty"
           }
           $asset = node scripts/wgpu_native_release.js asset --platform $env:RUNNER_OS --arch $arch --link-mode dynamic --field archive
-          $libRel = node scripts/wgpu_native_release.js asset --platform $env:RUNNER_OS --arch $arch --link-mode dynamic --field dynamicLibRel
           gh release download -R $repo $tag -p $asset -D $artifactRoot
           Expand-Archive -Path (Join-Path $artifactRoot $asset) -DestinationPath $artifactRoot -Force
-          $dllPath = Join-Path $artifactRoot ($libRel -replace '/', [IO.Path]::DirectorySeparatorChar)
+          $dllPath = Join-Path $artifactRoot "lib\\wgpu_native.dll"
           if (!(Test-Path $dllPath)) {
             throw "Missing wgpu_native.dll at $dllPath"
           }
-          "MBT_WGPU_NATIVE_LIB=$dllPath" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "MBT_WGPU_NATIVE_ROOT=$artifactRoot" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Probe wgpu smoke (diagnostic)
         shell: pwsh

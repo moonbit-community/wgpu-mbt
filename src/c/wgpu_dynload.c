@@ -128,6 +128,8 @@ int32_t mbt_wgpu_native_expected_tag_utf8(uint8_t *out, uint64_t out_len) {
   return mbt_wgpu_copy_cstr_utf8(out, out_len, MBT_WGPU_SUPPORTED_TAG) ? 1 : 0;
 }
 
+#if MBT_WGPU_STATIC_LINK
+
 uint64_t mbt_wgpu_native_resolved_lib_path_utf8_len(void) { return 0u; }
 
 int32_t mbt_wgpu_native_resolved_lib_path_utf8(uint8_t *out, uint64_t out_len) {
@@ -135,8 +137,6 @@ int32_t mbt_wgpu_native_resolved_lib_path_utf8(uint8_t *out, uint64_t out_len) {
   (void)out_len;
   return false;
 }
-
-#if MBT_WGPU_STATIC_LINK
 
 static void mbt_wgpu_die(const char *what) {
   fprintf(stderr, "wgpu-mbt: %s\n", what);
@@ -426,9 +426,13 @@ mbt_wgpu_native_support_status(const char *lib_path, char *tag_buf,
 }
 
 static const char *mbt_wgpu_native_path_source(const char *override,
+                                               const char *root,
                                                const char *resolved_path) {
   if (override && override[0]) {
     return "env_override";
+  }
+  if (root && root[0]) {
+    return "env_root";
   }
   if (resolved_path && resolved_path[0]) {
     return "default_user_path";
@@ -443,7 +447,7 @@ static const char *mbt_wgpu_support_note(mbt_wgpu_support_status_t status) {
   case MBT_WGPU_SUPPORT_OVERRIDE:
     return "MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1 bypasses release metadata checks only; loader failures and missing symbols still fail";
   case MBT_WGPU_SUPPORT_NO_PATH:
-    return "no dynamic library path could be resolved from MBT_WGPU_NATIVE_LIB or the default per-user install location";
+    return "no dynamic library path could be resolved from MBT_WGPU_NATIVE_LIB, MBT_WGPU_NATIVE_ROOT, or the default per-user install location";
   case MBT_WGPU_SUPPORT_META_MISSING:
     return "the library was found, but the release metadata file wgpu-native-meta/wgpu-native-git-tag was not found next to the extracted release tree";
   case MBT_WGPU_SUPPORT_TAG_MISMATCH:
@@ -471,18 +475,18 @@ static uint64_t mbt_wgpu_native_recovery_hint_dynamic_impl(
   case MBT_WGPU_SUPPORT_NO_PATH:
     n = mbt_wgpu_appendf(
         out, out_len, n,
-        "set MBT_WGPU_NATIVE_LIB to the library inside an extracted upstream release tree, or extract the supported release under %s",
+        "set MBT_WGPU_NATIVE_LIB to the library inside an extracted upstream release tree, set MBT_WGPU_NATIVE_ROOT to an extracted release root, or extract the supported release under %s",
         (default_path && default_path[0]) ? default_path : "<the default per-user install root>");
     break;
   case MBT_WGPU_SUPPORT_META_MISSING:
     n = mbt_wgpu_appendf(
         out, out_len, n,
-        "point MBT_WGPU_NATIVE_LIB at a library inside an extracted official release tree so wgpu-native-meta/wgpu-native-git-tag is present, or set MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1 for a trusted custom build");
+        "point MBT_WGPU_NATIVE_LIB at a library inside an extracted official release tree, set MBT_WGPU_NATIVE_ROOT to the extracted root so wgpu-native-meta/wgpu-native-git-tag is present, or set MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1 for a trusted custom build");
     break;
   case MBT_WGPU_SUPPORT_TAG_MISMATCH:
     n = mbt_wgpu_appendf(
         out, out_len, n,
-        "install the supported release tag %s, or point MBT_WGPU_NATIVE_LIB at a matching extracted tree; only trusted custom builds should use MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1",
+        "install the supported release tag %s, point MBT_WGPU_NATIVE_LIB at a matching extracted tree, or set MBT_WGPU_NATIVE_ROOT to one; only trusted custom builds should use MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1",
         MBT_WGPU_SUPPORTED_TAG);
     break;
   default:
@@ -554,6 +558,16 @@ static void mbt_wgpu_die(const char *what) {
 
 const char *mbt_wgpu_native_lib_filename(void) { return "wgpu_native.dll"; }
 
+static const char *mbt_wgpu_native_root_lib_path(const char *root, char *buf,
+                                                 size_t buflen) {
+  if (!root || !root[0]) {
+    return NULL;
+  }
+  (void)snprintf(buf, buflen, "%s\\lib\\%s", root,
+                 mbt_wgpu_native_lib_filename());
+  return buf;
+}
+
 static const char *mbt_wgpu_native_default_lib_path(char *buf, size_t buflen) {
   const char *home = getenv("USERPROFILE");
   if (!home || !home[0]) {
@@ -568,6 +582,10 @@ const char *mbt_wgpu_native_resolve_lib_path(char *buf, size_t buflen) {
   const char *override = getenv("MBT_WGPU_NATIVE_LIB");
   if (override && override[0]) {
     return override;
+  }
+  const char *root = getenv("MBT_WGPU_NATIVE_ROOT");
+  if (root && root[0]) {
+    return mbt_wgpu_native_root_lib_path(root, buf, buflen);
   }
   return mbt_wgpu_native_default_lib_path(buf, buflen);
 }
@@ -611,8 +629,9 @@ static HMODULE mbt_wgpu_native_open_impl(int required) {
     }
     char msg[512];
     (void)snprintf(msg, sizeof(msg),
-                   "cannot locate %s (set MBT_WGPU_NATIVE_LIB or extract the "
-                   "upstream release under %%USERPROFILE%%\\.local)",
+                   "cannot locate %s (set MBT_WGPU_NATIVE_LIB, set "
+                   "MBT_WGPU_NATIVE_ROOT, or extract the upstream release "
+                   "under %%USERPROFILE%%\\.local)",
                    mbt_wgpu_native_lib_filename());
     mbt_wgpu_die(msg);
   }
@@ -743,6 +762,7 @@ int32_t mbt_wgpu_native_recovery_hint_utf8(uint8_t *out, uint64_t out_len) {
 static uint64_t mbt_wgpu_native_diagnostic_impl(char *out, size_t out_len) {
   size_t n = 0u;
   const char *override = getenv("MBT_WGPU_NATIVE_LIB");
+  const char *root = getenv("MBT_WGPU_NATIVE_ROOT");
   n = mbt_wgpu_appendf(out, out_len, n, "link_mode=dynamic\n");
   n = mbt_wgpu_appendf(out, out_len, n, "expected_tag=%s\n",
                        MBT_WGPU_SUPPORTED_TAG);
@@ -750,6 +770,8 @@ static uint64_t mbt_wgpu_native_diagnostic_impl(char *out, size_t out_len) {
                        MBT_WGPU_SUPPORTED_REV);
   n = mbt_wgpu_appendf(out, out_len, n, "MBT_WGPU_NATIVE_LIB=%s\n",
                        (override && override[0]) ? override : "<unset>");
+  n = mbt_wgpu_appendf(out, out_len, n, "MBT_WGPU_NATIVE_ROOT=%s\n",
+                       (root && root[0]) ? root : "<unset>");
   n = mbt_wgpu_appendf(
       out, out_len, n, "MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=%s\n",
       mbt_wgpu_env_truthy("MBT_WGPU_NATIVE_ALLOW_UNVERIFIED") ? "1" : "0");
@@ -764,7 +786,7 @@ static uint64_t mbt_wgpu_native_diagnostic_impl(char *out, size_t out_len) {
                        (default_path && default_path[0]) ? default_path
                                                          : "<none>");
   n = mbt_wgpu_appendf(out, out_len, n, "path_source=%s\n",
-                       mbt_wgpu_native_path_source(override, path));
+                       mbt_wgpu_native_path_source(override, root, path));
   n = mbt_wgpu_appendf(out, out_len, n, "resolved_path=%s\n",
                        (path && path[0]) ? path : "<none>");
   n = mbt_wgpu_appendf(
@@ -896,10 +918,24 @@ static const char *mbt_wgpu_native_default_lib_path(char *buf, size_t buflen) {
   return buf;
 }
 
+static const char *mbt_wgpu_native_root_lib_path(const char *root, char *buf,
+                                                 size_t buflen) {
+  if (!root || !root[0]) {
+    return NULL;
+  }
+  (void)snprintf(buf, buflen, "%s/lib/%s", root,
+                 mbt_wgpu_native_lib_filename());
+  return buf;
+}
+
 const char *mbt_wgpu_native_resolve_lib_path(char *buf, size_t buflen) {
   const char *override = getenv("MBT_WGPU_NATIVE_LIB");
   if (override && override[0]) {
     return override;
+  }
+  const char *root = getenv("MBT_WGPU_NATIVE_ROOT");
+  if (root && root[0]) {
+    return mbt_wgpu_native_root_lib_path(root, buf, buflen);
   }
   return mbt_wgpu_native_default_lib_path(buf, buflen);
 }
@@ -923,8 +959,9 @@ static void *mbt_wgpu_native_open_impl(int required) {
     char msg[512];
     (void)snprintf(
         msg, sizeof(msg),
-        "cannot locate %s (set MBT_WGPU_NATIVE_LIB or extract the upstream "
-        "release under ~/.local)",
+        "cannot locate %s (set MBT_WGPU_NATIVE_LIB, set "
+        "MBT_WGPU_NATIVE_ROOT, or extract the upstream release under "
+        "~/.local)",
         mbt_wgpu_native_lib_filename());
     mbt_wgpu_die(msg);
   }
@@ -1056,6 +1093,7 @@ int32_t mbt_wgpu_native_recovery_hint_utf8(uint8_t *out, uint64_t out_len) {
 static uint64_t mbt_wgpu_native_diagnostic_impl(char *out, size_t out_len) {
   size_t n = 0u;
   const char *override = getenv("MBT_WGPU_NATIVE_LIB");
+  const char *root = getenv("MBT_WGPU_NATIVE_ROOT");
   n = mbt_wgpu_appendf(out, out_len, n, "link_mode=dynamic\n");
   n = mbt_wgpu_appendf(out, out_len, n, "expected_tag=%s\n",
                        MBT_WGPU_SUPPORTED_TAG);
@@ -1063,6 +1101,8 @@ static uint64_t mbt_wgpu_native_diagnostic_impl(char *out, size_t out_len) {
                        MBT_WGPU_SUPPORTED_REV);
   n = mbt_wgpu_appendf(out, out_len, n, "MBT_WGPU_NATIVE_LIB=%s\n",
                        (override && override[0]) ? override : "<unset>");
+  n = mbt_wgpu_appendf(out, out_len, n, "MBT_WGPU_NATIVE_ROOT=%s\n",
+                       (root && root[0]) ? root : "<unset>");
   n = mbt_wgpu_appendf(
       out, out_len, n, "MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=%s\n",
       mbt_wgpu_env_truthy("MBT_WGPU_NATIVE_ALLOW_UNVERIFIED") ? "1" : "0");
@@ -1077,7 +1117,7 @@ static uint64_t mbt_wgpu_native_diagnostic_impl(char *out, size_t out_len) {
                        (default_path && default_path[0]) ? default_path
                                                          : "<none>");
   n = mbt_wgpu_appendf(out, out_len, n, "path_source=%s\n",
-                       mbt_wgpu_native_path_source(override, path));
+                       mbt_wgpu_native_path_source(override, root, path));
   n = mbt_wgpu_appendf(out, out_len, n, "resolved_path=%s\n",
                        (path && path[0]) ? path : "<none>");
   n = mbt_wgpu_appendf(

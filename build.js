@@ -38,6 +38,14 @@ function cacheRoot() {
   return path.join(os.homedir(), '.cache', 'wgpu_mbt');
 }
 
+function extractedRootOverride() {
+  const override = process.env.MBT_WGPU_NATIVE_ROOT;
+  if (!override || override.length === 0) {
+    return '';
+  }
+  return path.resolve(override);
+}
+
 function quoteArg(value) {
   if (!value.includes(' ') && !value.includes('\t')) {
     return value;
@@ -86,6 +94,28 @@ function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
 
+function validateExtractedReleaseRoot(rootDir, libRel) {
+  const libPath = path.join(rootDir, libRel);
+  const tagPath = path.join(rootDir, 'wgpu-native-meta', 'wgpu-native-git-tag');
+  if (!fs.existsSync(libPath)) {
+    throw new Error(
+      `MBT_WGPU_NATIVE_ROOT is missing ${libRel}: ${libPath}`,
+    );
+  }
+  if (!fs.existsSync(tagPath)) {
+    throw new Error(
+      `MBT_WGPU_NATIVE_ROOT is missing release metadata: ${tagPath}`,
+    );
+  }
+  const tag = fs.readFileSync(tagPath, 'utf8').trim();
+  if (tag !== SUPPORTED_RELEASE.tag) {
+    throw new Error(
+      `MBT_WGPU_NATIVE_ROOT tag mismatch: expected ${SUPPORTED_RELEASE.tag}, got ${tag}`,
+    );
+  }
+  return rootDir;
+}
+
 function downloadFile(url, outPath) {
   const headers = [];
   const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '';
@@ -115,6 +145,11 @@ function extractZip(zipPath, outDir) {
 }
 
 function ensureStaticArtifact(asset) {
+  const preseededRoot = extractedRootOverride();
+  if (preseededRoot.length !== 0) {
+    return validateExtractedReleaseRoot(preseededRoot, asset.staticLibRel);
+  }
+
   const baseDir = path.join(
     cacheRoot(),
     'wgpu-native',
