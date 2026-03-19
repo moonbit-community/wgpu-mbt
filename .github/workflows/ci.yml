@@ -539,15 +539,21 @@ jobs:
 
       - name: Probe wgpu smoke (static link)
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
+          Remove-Item Env:MBT_WGPU_NATIVE_ROOT -ErrorAction SilentlyContinue
           $env:MBT_WGPU_LINK_MODE = "static"
           moon run --target native src/cmd/main/main.mbt
 
       - name: Run common native test suite (static link)
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
+          Remove-Item Env:MBT_WGPU_NATIVE_ROOT -ErrorAction SilentlyContinue
           $env:MBT_WGPU_LINK_MODE = "static"
           moon test --target native src/tests --test-failure-json
 
@@ -555,6 +561,7 @@ jobs:
         if: failure()
         shell: pwsh
         env:
+          GH_TOKEN: ${{ github.token }}
           MBT_WGPU_DEBUG_REQUEST_ADAPTER: "1"
           MBT_WGPU_DEBUG_REQUEST_DEVICE: "1"
           MBT_WGPU_LOG_STDERR: "1"
