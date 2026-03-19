@@ -28,11 +28,25 @@ MoonBit bindings for the `wgpu-native` C API (WebGPU), targeting **native** back
 - **Static** (default): no extra downstream link flags; the prebuild hook downloads and links a verified upstream static archive automatically
 - **Dynamic**: set `MBT_WGPU_LINK_MODE=dynamic` before `moon build` / `moon test`, then extract a matching upstream release archive
 
-3. Dynamic mode uses the official upstream release assets:
+3. This repo is pinned to one official upstream release:
 
-- <https://github.com/gfx-rs/wgpu-native/releases/tag/v27.0.4.0>
+- repo: `gfx-rs/wgpu-native`
+- tag: `v27.0.4.0`
+- commit: `768f15f6ace8e4ec8e8720d5732b29e0b34250a8`
+- release page: <https://github.com/gfx-rs/wgpu-native/releases/tag/v27.0.4.0>
 
-Recommended dynamic install: extract the archive into `$HOME/.local` (or `%USERPROFILE%\\.local` on Windows), so the release metadata is preserved:
+4. Dynamic mode should use the matching extracted upstream release tree:
+
+| Platform / Arch | Dynamic archive | Library inside archive |
+|---|---|---|
+| macOS x64 | `wgpu-macos-x86_64-release.zip` | `lib/libwgpu_native.dylib` |
+| macOS arm64 | `wgpu-macos-aarch64-release.zip` | `lib/libwgpu_native.dylib` |
+| Linux x64 | `wgpu-linux-x86_64-release.zip` | `lib/libwgpu_native.so` |
+| Linux arm64 | `wgpu-linux-aarch64-release.zip` | `lib/libwgpu_native.so` |
+| Windows x64 | `wgpu-windows-x86_64-msvc-release.zip` | `lib/wgpu_native.dll` |
+| Windows arm64 | `wgpu-windows-aarch64-msvc-release.zip` | `lib/wgpu_native.dll` |
+
+Recommended dynamic install: extract that archive into `$HOME/.local` (or `%USERPROFILE%\\.local` on Windows), so the release metadata is preserved:
 
 - macOS: `$HOME/.local/lib/libwgpu_native.dylib`
 - Linux: `$HOME/.local/lib/libwgpu_native.so`
@@ -40,6 +54,10 @@ Recommended dynamic install: extract the archive into `$HOME/.local` (or `%USERP
 - metadata tag: `.../wgpu-native-meta/wgpu-native-git-tag`
 
 Or set `MBT_WGPU_NATIVE_LIB` to an absolute library path inside an extracted upstream release tree.
+
+Static mode uses the same pinned upstream release model, but on Windows x64 it intentionally
+downloads `wgpu-windows-x86_64-gnu-release.zip` for the static link step because that package
+contains `libwgpu_native.a`, which matches the current linker configuration in `build.js`.
 
 ## Quick Example
 
@@ -239,5 +257,6 @@ If startup fails at the first WebGPU call, usually `libwgpu_native` is missing, 
 - Check diagnostics: `@wgpu.native_diagnostic()`
 - Verify that you extracted the official upstream archive, not just the bare library file
 - Verify file path and filename for your platform
+- On Windows x64, use the `msvc` archive for dynamic installs; the `gnu` archive is only for the automatic static link path
 - If using dynamic mode, set `MBT_WGPU_LINK_MODE=dynamic`
 - If using a custom dynamic library location, set `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)`

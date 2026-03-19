@@ -3,163 +3,21 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { SUPPORTED_RELEASE, releaseAssetFor } = require('./scripts/wgpu_native_release');
 
 const MODULE_NAME = 'Milky2018/wgpu_mbt';
 const LINK_MODE = (process.env.MBT_WGPU_LINK_MODE || 'static').trim().toLowerCase();
-
-const SUPPORTED_RELEASE = {
-  repo: 'gfx-rs/wgpu-native',
-  tag: 'v27.0.4.0',
-  rev: '768f15f6ace8e4ec8e8720d5732b29e0b34250a8',
-  assets: {
-    'linux:x64': {
-      archive: 'wgpu-linux-x86_64-release.zip',
-      sha256: '271481ef76fbf3ea09631a6079e9493636ecf813cd9c92306c44a1a452991ba1',
-      staticLibRel: path.join('lib', 'libwgpu_native.a'),
-      dynamicLibRel: path.join('lib', 'libwgpu_native.so'),
-      linkFlags: ['-ldl', '-lm', '-pthread'],
-      pipelineAsync: true,
-      compilationInfo: true,
-    },
-    'linux:arm64': {
-      archive: 'wgpu-linux-aarch64-release.zip',
-      sha256: 'a2f22248200997b69373273b10d50a58164f6ed840877289f3e46bff317b134e',
-      staticLibRel: path.join('lib', 'libwgpu_native.a'),
-      dynamicLibRel: path.join('lib', 'libwgpu_native.so'),
-      linkFlags: ['-ldl', '-lm', '-pthread'],
-      pipelineAsync: true,
-      compilationInfo: true,
-    },
-    'darwin:x64': {
-      archive: 'wgpu-macos-x86_64-release.zip',
-      sha256: '660fe9be59b555ec1d7c839e5cf8b6c71762938af61ab444a7a58dd87970dba2',
-      staticLibRel: path.join('lib', 'libwgpu_native.a'),
-      dynamicLibRel: path.join('lib', 'libwgpu_native.dylib'),
-      linkFlags: [
-        '-framework',
-        'Metal',
-        '-framework',
-        'QuartzCore',
-        '-framework',
-        'Foundation',
-        '-framework',
-        'CoreFoundation',
-        '-framework',
-        'Cocoa',
-        '-framework',
-        'IOKit',
-        '-framework',
-        'IOSurface',
-        '-framework',
-        'CoreVideo',
-        '-framework',
-        'CoreGraphics',
-        '-framework',
-        'AppKit',
-        '-pthread',
-      ],
-      pipelineAsync: true,
-      compilationInfo: true,
-    },
-    'darwin:arm64': {
-      archive: 'wgpu-macos-aarch64-release.zip',
-      sha256: '15367c26fdbe6892db35007d39f3883593384e777360b70e6bd704cb5dedde53',
-      staticLibRel: path.join('lib', 'libwgpu_native.a'),
-      dynamicLibRel: path.join('lib', 'libwgpu_native.dylib'),
-      linkFlags: [
-        '-framework',
-        'Metal',
-        '-framework',
-        'QuartzCore',
-        '-framework',
-        'Foundation',
-        '-framework',
-        'CoreFoundation',
-        '-framework',
-        'Cocoa',
-        '-framework',
-        'IOKit',
-        '-framework',
-        'IOSurface',
-        '-framework',
-        'CoreVideo',
-        '-framework',
-        'CoreGraphics',
-        '-framework',
-        'AppKit',
-        '-pthread',
-      ],
-      pipelineAsync: true,
-      compilationInfo: true,
-    },
-    'win32:x64': {
-      archive: 'wgpu-windows-x86_64-gnu-release.zip',
-      sha256: 'c0c2dbcef3c6a9933a1a1bf7cbdaaebed61a33c833bacb0269662f91536be8bd',
-      staticLibRel: path.join('lib', 'libwgpu_native.a'),
-      dynamicLibRel: path.join('lib', 'wgpu_native.dll'),
-      linkFlags: [
-        '-luser32',
-        '-lgdi32',
-        '-lole32',
-        '-loleaut32',
-        '-lshell32',
-        '-luuid',
-        '-ladvapi32',
-        '-lbcrypt',
-        '-lntdll',
-        '-luserenv',
-        '-ldxgi',
-        '-ld3d12',
-        '-ldxguid',
-        '-lopengl32',
-        '-lpropsys',
-        '-lruntimeobject',
-        '-lws2_32',
-      ],
-      pipelineAsync: true,
-      compilationInfo: true,
-    },
-    'win32:arm64': {
-      archive: 'wgpu-windows-aarch64-msvc-release.zip',
-      sha256: '71271c3671bbcbb8935211dc18bfc1f765326d72f6d1710c93afb0d597000aa9',
-      staticLibRel: path.join('lib', 'wgpu_native.lib'),
-      dynamicLibRel: path.join('lib', 'wgpu_native.dll'),
-      linkFlags: [
-        '-luser32',
-        '-lgdi32',
-        '-lole32',
-        '-lshell32',
-        '-luuid',
-        '-ladvapi32',
-        '-lbcrypt',
-        '-ldxgi',
-        '-ld3d12',
-        '-ldxguid',
-        '-lopengl32',
-      ],
-      pipelineAsync: true,
-      compilationInfo: true,
-    },
-  },
-};
 
 function pkg(pathSuffix) {
   return pathSuffix.length === 0 ? MODULE_NAME : `${MODULE_NAME}/${pathSuffix}`;
 }
 
-function archKey() {
-  switch (os.arch()) {
-    case 'x64':
-      return 'x64';
-    case 'arm64':
-      return 'arm64';
-    default:
-      return os.arch();
-  }
-}
-
 function releaseAsset() {
-  return SUPPORTED_RELEASE.assets[`${os.platform()}:${archKey()}`] || null;
+  return releaseAssetFor({
+    platform: os.platform(),
+    arch: os.arch(),
+    linkMode: 'static',
+  });
 }
 
 function cacheRoot() {
