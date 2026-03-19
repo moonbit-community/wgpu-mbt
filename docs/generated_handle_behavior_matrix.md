@@ -16,9 +16,9 @@ As of this pass, the file exports **161** generated methods.
 
 ## Summary
 
-- `Direct`: 11
+- `Direct`: 18
 - `Indirect`: 143
-- `Uncovered`: 7
+- `Uncovered`: 0
 
 ## Matrix
 
@@ -115,15 +115,15 @@ As of this pass, the file exports **161** generated methods.
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
+| Direct | `draw_indexed_indirect_raw`, `draw_indirect_raw` | `wgpu_generated_handle_render_gaps_test.mbt` directly records both indirect bundle draw commands in a bundle that renders a checked pixel. |
 | Indirect | `add_ref_raw`, `draw_raw`, `draw_indexed_raw`, `finish_raw`, `pop_debug_group_raw`, `release_raw`, `set_index_buffer`, `set_pipeline_raw`, `set_vertex_buffer_raw` | `wgpu_render_bundle_test.mbt`, `wgpu_ptr_constructors_test.mbt`, `wgpu_label_helpers_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
-| Uncovered | `draw_indexed_indirect_raw`, `draw_indirect_raw` | The repo still has no render-bundle indirect-draw behavior test. |
 
 ### RenderPass
 
 | Status | Methods | Evidence |
 | --- | --- | --- |
+| Direct | `draw_indexed_indirect_raw`, `multi_draw_indexed_indirect_count_raw`, `multi_draw_indexed_indirect_raw`, `multi_draw_indirect_count_raw`, `set_stencil_reference_raw` | `wgpu_generated_handle_render_gaps_test.mbt` directly exercises indexed-indirect draw, stencil-reference, and the remaining multi-draw raw entry points. The multi-draw raw paths are feature-gated through `Adapter::has_feature_native_multi_draw_indirect_count()` / `request_device_sync_multi_draw_indirect_count(...)` and validate via occlusion-query counts when available. |
 | Indirect | `add_ref_raw`, `begin_occlusion_query_raw`, `begin_pipeline_statistics_query_raw`, `draw_raw`, `draw_indexed_raw`, `draw_indirect_raw`, `end_raw`, `end_occlusion_query_raw`, `end_pipeline_statistics_query_raw`, `execute_bundles_raw`, `multi_draw_indirect_raw`, `pop_debug_group_raw`, `release_raw`, `set_blend_constant`, `set_index_buffer`, `set_pipeline_raw`, `set_scissor_rect_raw`, `set_vertex_buffer_raw`, `set_viewport_raw`, `write_timestamp_raw` | `wgpu_render_draw_indirect_test.mbt`, `wgpu_render_index_buffer_test.mbt`, `wgpu_render_bundle_test.mbt`, `wgpu_multi_draw_indirect_test.mbt`, `wgpu_render_occlusion_query_test.mbt`, `wgpu_pipeline_statistics_query_test.mbt`, `wgpu_render_blend_test.mbt`, `wgpu_render_viewport_scissor_test.mbt`, `wgpu_timestamp_query_inside_passes_test.mbt`, `wgpu_label_helpers_test.mbt`, `wgpu_generated_handle_gaps_test.mbt`. |
-| Uncovered | `draw_indexed_indirect_raw`, `multi_draw_indexed_indirect_count_raw`, `multi_draw_indexed_indirect_raw`, `multi_draw_indirect_count_raw`, `set_stencil_reference_raw` | The repo still lacks indexed-indirect / count-path render-pass tests, and no behavior test currently calls `set_stencil_reference()`. |
 
 ### RenderPipeline
 
@@ -164,6 +164,4 @@ As of this pass, the file exports **161** generated methods.
 
 ## Follow-up Candidates
 
-- Add direct coverage for render-pass and render-bundle indirect-draw variants
-  that still have no behavior tests.
-- Add behavior coverage for `RenderPass::set_stencil_reference_raw`.
+- Keep this matrix in sync as newly generated handle methods are added.
