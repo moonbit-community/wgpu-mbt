@@ -117,16 +117,6 @@ jobs:
           set -euo pipefail
           moon test --target native src/tests/wgpu_report_leak_check_test.mbt --test-failure-json
 
-      - name: Run lifecycle ASan validation
-        shell: bash
-        run: |
-          set -euo pipefail
-          scripts/run_native_asan_tests.sh src/tests/wgpu_managed_lifecycle_test.mbt
-          scripts/run_native_asan_tests.sh \
-            src/tests/wgpu_lifecycle_helper_test.mbt \
-            'wgpu_lifecycle_helper_test.mbt:0-6' \
-            'wgpu_report_leak_check_test.mbt:1-4'
-
       - name: Run benchmark suite
         shell: bash
         run: |
@@ -260,6 +250,16 @@ jobs:
         run: |
           set -euo pipefail
           moon test --target native src/tests/wgpu_report_leak_check_test.mbt --test-failure-json
+
+      - name: Run lifecycle ASan validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          scripts/run_native_asan_tests.sh src/tests/wgpu_managed_lifecycle_test.mbt
+          scripts/run_native_asan_tests.sh \
+            src/tests/wgpu_lifecycle_helper_test.mbt \
+            'wgpu_lifecycle_helper_test.mbt:0-6' \
+            'wgpu_report_leak_check_test.mbt:1-4'
 
       - name: Run benchmark suite
         shell: bash
