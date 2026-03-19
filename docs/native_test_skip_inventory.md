@@ -47,11 +47,7 @@ Current skip buckets:
 - `skip_on_wgpu_error`: 0 occurrences across 0 files
 - `skip_unless_macos`: 0 occurrences across 0 files
 - `skip_unless_linux`: 0 occurrences across 0 files
-- `"skipped (missing optional symbol)"`: 9 occurrences across 1 file
-
-The remaining skip-like text is isolated to:
-
-- [`src/tests_linux/wgpu_optional_symbol_or_raise_test.mbt`](../src/tests_linux/wgpu_optional_symbol_or_raise_test.mbt)
+- `"skipped (missing optional symbol)"`: 0 occurrences across 0 files
 
 ## What Already Landed
 
@@ -88,6 +84,13 @@ Platform partitioning:
 - local native verification should use package-scoped commands such as
   `moon test --target native src/tests` and
   `moon test --target native src/tests_macos`
+
+Optional-symbol policy:
+
+- [`src/tests_linux/wgpu_optional_symbol_or_raise_test.mbt`](../src/tests_linux/wgpu_optional_symbol_or_raise_test.mbt)
+  no longer treats `missing symbol` or `native unavailable` as passing paths
+- the Linux optional-symbol suite now expects explicit `disabled` /
+  `runtime_failed` behavior from the supported runtime contract
 
 ## Elimination Waves
 
@@ -140,6 +143,10 @@ Goal:
   either the supported matrix requires the symbol and fails if missing, or the
   test moves into a clearly labeled probe-only bucket that does not masquerade
   as ordinary success
+
+Status:
+
+- closed
 
 ## Exit Criteria For `wgpu_mbt-66w.5`
 

@@ -13,6 +13,37 @@
 // limitations under the License.
 
 ///|
+fn array_contains_u32(xs : Array[UInt], v : UInt) -> Bool {
+  let n = xs.length()
+  for i = 0; i < n; i = i + 1 {
+    if xs[i] == v {
+      return true
+    }
+  }
+  false
+}
+
+///|
+fn classify_optional_symbol_error_kind(
+  kind : UInt,
+  accepted : Array[UInt],
+) -> String {
+  if array_contains_u32(accepted, kind) {
+    "expected"
+  } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL {
+    "unexpected_missing_symbol"
+  } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE {
+    "unexpected_native_unavailable"
+  } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_DISABLED {
+    "unexpected_disabled"
+  } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED {
+    "unexpected_runtime_failed"
+  } else {
+    "unexpected_kind_" + kind.to_string()
+  }
+}
+
+///|
 test "optional symbol capability probes: kind/bool are coherent" {
   let pa_kind = @wgpu.pipeline_async_availability_kind_u32()
   let pa_ok = @wgpu.pipeline_async_available()
@@ -87,24 +118,13 @@ test "optional symbol or_raise: compilation info disabled => runtime fail" {
     let _ = sm.get_compilation_info_sync_or_raise(instance)
     outcome.val = "unexpected_success"
   } catch {
-    e => {
-      let kind = e.kind_u32()
-      if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL ||
-        kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE {
-        outcome.val = "skipped (missing optional symbol)"
-      } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED ||
-        kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_DISABLED {
-        outcome.val = "expected"
-      } else {
-        outcome.val = "unexpected_kind"
-      }
-    }
+    e =>
+      outcome.val = classify_optional_symbol_error_kind(e.kind_u32(), [
+        @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED,
+        @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_DISABLED,
+      ])
   }
-  if outcome.val == "skipped (missing optional symbol)" {
-    inspect(outcome.val, content="skipped (missing optional symbol)")
-  } else {
-    inspect(outcome.val, content="expected")
-  }
+  inspect(outcome.val, content="expected")
   sm.release()
   device.release()
   adapter.release()
@@ -140,23 +160,12 @@ test "optional symbol or_raise: pipeline async disabled => disabled error" {
     cp.release()
     outcome.val = "unexpected_success"
   } catch {
-    e => {
-      let kind = e.kind_u32()
-      if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL ||
-        kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE {
-        outcome.val = "skipped (missing optional symbol)"
-      } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_DISABLED {
-        outcome.val = "expected"
-      } else {
-        outcome.val = "unexpected_kind"
-      }
-    }
+    e =>
+      outcome.val = classify_optional_symbol_error_kind(e.kind_u32(), [
+        @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_DISABLED,
+      ])
   }
-  if outcome.val == "skipped (missing optional symbol)" {
-    inspect(outcome.val, content="skipped (missing optional symbol)")
-  } else {
-    inspect(outcome.val, content="expected")
-  }
+  inspect(outcome.val, content="expected")
   @wgpu_c.compute_pipeline_descriptor_free(cp_desc)
   pl.release()
   bgl.release()
@@ -211,24 +220,13 @@ test "optional symbol or_raise: render pipeline async strict path is repo-gated"
     rp.release()
     outcome.val = "unexpected_success"
   } catch {
-    e => {
-      let kind = e.kind_u32()
-      if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL ||
-        kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE {
-        outcome.val = "skipped (missing optional symbol)"
-      } else if kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED ||
-        kind == @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_DISABLED {
-        outcome.val = "expected"
-      } else {
-        outcome.val = "unexpected_kind"
-      }
-    }
+    e =>
+      outcome.val = classify_optional_symbol_error_kind(e.kind_u32(), [
+        @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED,
+        @wgpu.OPTIONAL_SYMBOL_ERROR_KIND_DISABLED,
+      ])
   }
-  if outcome.val == "skipped (missing optional symbol)" {
-    inspect(outcome.val, content="skipped (missing optional symbol)")
-  } else {
-    inspect(outcome.val, content="expected")
-  }
+  inspect(outcome.val, content="expected")
   @wgpu_c.render_pipeline_descriptor_free(rp_desc)
   pl.release()
   bgl.release()
