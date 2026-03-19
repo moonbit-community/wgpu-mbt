@@ -846,6 +846,14 @@ pub fn native_expected_tag_utf8(Bytes, UInt64) -> Bool
 
 pub fn native_expected_tag_utf8_len() -> UInt64
 
+pub fn native_recovery_hint_utf8(Bytes, UInt64) -> Bool
+
+pub fn native_recovery_hint_utf8_len() -> UInt64
+
+pub fn native_resolved_lib_path_utf8(Bytes, UInt64) -> Bool
+
+pub fn native_resolved_lib_path_utf8_len() -> UInt64
+
 pub fn native_static_linked_u32() -> UInt
 
 pub fn native_supported_u32() -> UInt

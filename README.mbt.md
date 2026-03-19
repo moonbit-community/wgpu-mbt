@@ -214,8 +214,10 @@ Drive completion with `Instance::process_events()` or `Instance::wait_any_one(..
 - `@wgpu.native_supported()` checks whether the current runtime matches the supported upstream release.
 - `@wgpu.native_static_linked()` reports whether this build used static linking.
 - `@wgpu.native_expected_release_tag()` returns the supported upstream release tag.
+- `@wgpu.native_resolved_lib_path()` returns the currently resolved dynamic library path, or `""` in static mode / when no path can be resolved.
 - `@wgpu.native_diagnostic()` returns a combined loader/support diagnostic string.
-- For custom dynamic builds without release metadata, set `MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1` to bypass strict release verification.
+- `@wgpu.native_recovery_hint()` returns the next recommended recovery step for the current loader state.
+- For custom dynamic builds without release metadata, set `MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1` to bypass release-metadata verification only. It does not bypass library load failures or missing symbols.
 - To force dynamic mode in a downstream project, export `MBT_WGPU_LINK_MODE=dynamic` for `moon check` / `moon build` / `moon test`.
 
 ## Optional Feature Gates
@@ -255,8 +257,11 @@ still do not expose the required address-mode and border-color API surface.
 If startup fails at the first WebGPU call, usually `libwgpu_native` is missing, unsupported, or not loadable.
 
 - Check diagnostics: `@wgpu.native_diagnostic()`
+- Check the exact chosen path: `@wgpu.native_resolved_lib_path()`
+- Check the next action directly: `@wgpu.native_recovery_hint()`
 - Verify that you extracted the official upstream archive, not just the bare library file
 - Verify file path and filename for your platform
 - On Windows x64, use the `msvc` archive for dynamic installs; the `gnu` archive is only for the automatic static link path
 - If using dynamic mode, set `MBT_WGPU_LINK_MODE=dynamic`
 - If using a custom dynamic library location, set `MBT_WGPU_NATIVE_LIB=/absolute/path/to/libwgpu_native.(dylib|so|dll)`
+- If you are using a trusted custom build, `MBT_WGPU_NATIVE_ALLOW_UNVERIFIED=1` only skips the metadata/tag gate; it does not make an unloadable or symbol-incomplete library work

@@ -82,8 +82,20 @@ pub fn native_expected_release_tag() -> String {
 }
 
 ///|
+pub fn native_resolved_lib_path() -> String {
+  read_utf8_via(
+    @c.native_resolved_lib_path_utf8_len, @c.native_resolved_lib_path_utf8,
+  )
+}
+
+///|
 pub fn native_diagnostic() -> String {
   read_utf8_via(@c.native_diagnostic_utf8_len, @c.native_diagnostic_utf8)
+}
+
+///|
+pub fn native_recovery_hint() -> String {
+  read_utf8_via(@c.native_recovery_hint_utf8_len, @c.native_recovery_hint_utf8)
 }
 
 ///|

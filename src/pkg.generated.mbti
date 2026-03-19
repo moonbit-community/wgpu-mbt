@@ -1220,6 +1220,10 @@ pub fn native_expected_release_tag() -> String
 
 pub fn native_has_symbol(String) -> Bool
 
+pub fn native_recovery_hint() -> String
+
+pub fn native_resolved_lib_path() -> String
+
 pub fn native_static_linked() -> Bool
 
 pub fn native_supported() -> Bool

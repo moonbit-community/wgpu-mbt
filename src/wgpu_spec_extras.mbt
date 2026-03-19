@@ -34,7 +34,15 @@ declare pub fn native_expected_release_tag() -> String
 
 ///|
 #declaration_only
+declare pub fn native_resolved_lib_path() -> String
+
+///|
+#declaration_only
 declare pub fn native_diagnostic() -> String
+
+///|
+#declaration_only
+declare pub fn native_recovery_hint() -> String
 
 ///|
 #declaration_only

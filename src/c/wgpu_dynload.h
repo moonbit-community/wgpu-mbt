@@ -49,7 +49,17 @@ uint32_t mbt_wgpu_native_static_linked_u32(void);
 uint64_t mbt_wgpu_native_expected_tag_utf8_len(void);
 int32_t mbt_wgpu_native_expected_tag_utf8(uint8_t *out, uint64_t out_len);
 
+// Returns the currently resolved dynamic library path, or an empty string when
+// static linking is in use or no dynamic path can be resolved.
+uint64_t mbt_wgpu_native_resolved_lib_path_utf8_len(void);
+int32_t mbt_wgpu_native_resolved_lib_path_utf8(uint8_t *out, uint64_t out_len);
+
 // Returns a diagnostic message about how wgpu-native would be located/loaded.
 // This function never aborts.
 uint64_t mbt_wgpu_native_diagnostic_utf8_len(void);
 int32_t mbt_wgpu_native_diagnostic_utf8(uint8_t *out, uint64_t out_len);
+
+// Returns the next recommended recovery step for the current native loader
+// state. This function never aborts.
+uint64_t mbt_wgpu_native_recovery_hint_utf8_len(void);
+int32_t mbt_wgpu_native_recovery_hint_utf8(uint8_t *out, uint64_t out_len);

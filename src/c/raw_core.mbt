@@ -71,11 +71,31 @@ pub extern "C" fn native_expected_tag_utf8(
 ) -> Bool = "mbt_wgpu_native_expected_tag_utf8"
 
 ///|
+pub extern "C" fn native_resolved_lib_path_utf8_len() -> UInt64 = "mbt_wgpu_native_resolved_lib_path_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn native_resolved_lib_path_utf8(
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_native_resolved_lib_path_utf8"
+
+///|
 pub extern "C" fn native_diagnostic_utf8_len() -> UInt64 = "mbt_wgpu_native_diagnostic_utf8_len"
 
 ///|
 #borrow(out)
 pub extern "C" fn native_diagnostic_utf8(out : Bytes, out_len : UInt64) -> Bool = "mbt_wgpu_native_diagnostic_utf8"
+
+///|
+#borrow(out)
+pub extern "C" fn native_recovery_hint_utf8(
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_native_recovery_hint_utf8"
+
+///|
+pub extern "C" fn native_recovery_hint_utf8_len() -> UInt64 = "mbt_wgpu_native_recovery_hint_utf8_len"
 
 ///|
 #borrow(name)
