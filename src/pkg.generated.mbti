@@ -1278,6 +1278,8 @@ pub fn surface_descriptor_xcb_new(@c.OpaquePtr, UInt) -> @c.WGPUSurfaceDescripto
 
 pub fn surface_descriptor_xlib_new(@c.OpaquePtr, UInt64) -> @c.WGPUSurfaceDescriptorPtr
 
+pub fn with_default_device_queue_auto_release((Instance, Device, Queue, AutoReleasePool) -> Unit raise) -> Unit raise
+
 pub fn with_default_device_queue_sync((Instance, Device, Queue) -> Unit raise) -> Unit raise
 
 // Errors
@@ -1460,6 +1462,30 @@ pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Arr
 pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64
+
+pub struct AutoReleasePool {
+  // private fields
+}
+pub fn AutoReleasePool::new() -> Self
+pub fn AutoReleasePool::release(Self) -> Unit
+pub fn AutoReleasePool::track_bind_group(Self, BindGroup) -> BindGroup
+pub fn AutoReleasePool::track_bind_group_layout(Self, BindGroupLayout) -> BindGroupLayout
+pub fn AutoReleasePool::track_buffer(Self, Buffer) -> Buffer
+pub fn AutoReleasePool::track_command_buffer(Self, CommandBuffer) -> CommandBuffer
+pub fn AutoReleasePool::track_command_encoder(Self, CommandEncoder) -> CommandEncoder
+pub fn AutoReleasePool::track_compute_pass(Self, ComputePass) -> ComputePass
+pub fn AutoReleasePool::track_compute_pipeline(Self, ComputePipeline) -> ComputePipeline
+pub fn AutoReleasePool::track_pipeline_layout(Self, PipelineLayout) -> PipelineLayout
+pub fn AutoReleasePool::track_query_set(Self, QuerySet) -> QuerySet
+pub fn AutoReleasePool::track_render_bundle(Self, RenderBundle) -> RenderBundle
+pub fn AutoReleasePool::track_render_bundle_encoder(Self, RenderBundleEncoder) -> RenderBundleEncoder
+pub fn AutoReleasePool::track_render_pass(Self, RenderPass) -> RenderPass
+pub fn AutoReleasePool::track_render_pipeline(Self, RenderPipeline) -> RenderPipeline
+pub fn AutoReleasePool::track_sampler(Self, Sampler) -> Sampler
+pub fn AutoReleasePool::track_shader_module(Self, ShaderModule) -> ShaderModule
+pub fn AutoReleasePool::track_surface(Self, Surface) -> Surface
+pub fn AutoReleasePool::track_texture(Self, Texture) -> Texture
+pub fn AutoReleasePool::track_texture_view(Self, TextureView) -> TextureView
 
 pub struct BindGroup {
   raw : @c.WGPUBindGroup
@@ -1945,6 +1971,7 @@ pub fn Instance::wait_any_one(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResu
 pub fn Instance::wait_any_one_or_raise(Self, UInt64, timeout_ns? : UInt64) -> WaitAnyResult raise WaitAnyError
 pub fn Instance::wgpu_generate_report(Self, @c.WGPUGlobalReportPtr) -> Unit
 pub fn Instance::wgsl_language_features_count_u64(Self) -> UInt64
+pub fn Instance::with_device_queue_auto_release(Self, (Device, Queue, AutoReleasePool) -> Unit raise) -> Unit raise
 pub fn Instance::with_device_queue_sync(Self, (Device, Queue) -> Unit raise) -> Unit raise
 
 pub struct InstanceCapabilities {

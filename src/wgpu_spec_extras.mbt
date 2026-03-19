@@ -133,9 +133,156 @@ declare pub fn Instance::with_device_queue_sync(
 
 ///|
 #declaration_only
+declare pub fn Instance::with_device_queue_auto_release(
+  self : Instance,
+  run : (Device, Queue, AutoReleasePool) -> Unit raise Error,
+) -> Unit raise Error
+
+///|
+#declaration_only
 declare pub fn with_default_device_queue_sync(
   run : (Instance, Device, Queue) -> Unit raise Error,
 ) -> Unit raise Error
+
+///|
+#declaration_only
+declare pub fn with_default_device_queue_auto_release(
+  run : (Instance, Device, Queue, AutoReleasePool) -> Unit raise Error,
+) -> Unit raise Error
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::new() -> AutoReleasePool
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::release(self : AutoReleasePool) -> Unit
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_buffer(
+  self : AutoReleasePool,
+  buffer : Buffer,
+) -> Buffer
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_shader_module(
+  self : AutoReleasePool,
+  shader : ShaderModule,
+) -> ShaderModule
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_compute_pipeline(
+  self : AutoReleasePool,
+  pipeline : ComputePipeline,
+) -> ComputePipeline
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_texture(
+  self : AutoReleasePool,
+  texture : Texture,
+) -> Texture
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_texture_view(
+  self : AutoReleasePool,
+  view : TextureView,
+) -> TextureView
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_surface(
+  self : AutoReleasePool,
+  surface : Surface,
+) -> Surface
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_sampler(
+  self : AutoReleasePool,
+  sampler : Sampler,
+) -> Sampler
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_render_pipeline(
+  self : AutoReleasePool,
+  pipeline : RenderPipeline,
+) -> RenderPipeline
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_render_bundle_encoder(
+  self : AutoReleasePool,
+  encoder : RenderBundleEncoder,
+) -> RenderBundleEncoder
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_render_bundle(
+  self : AutoReleasePool,
+  bundle : RenderBundle,
+) -> RenderBundle
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_bind_group_layout(
+  self : AutoReleasePool,
+  layout : BindGroupLayout,
+) -> BindGroupLayout
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_bind_group(
+  self : AutoReleasePool,
+  group : BindGroup,
+) -> BindGroup
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_pipeline_layout(
+  self : AutoReleasePool,
+  layout : PipelineLayout,
+) -> PipelineLayout
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_query_set(
+  self : AutoReleasePool,
+  query_set : QuerySet,
+) -> QuerySet
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_command_encoder(
+  self : AutoReleasePool,
+  encoder : CommandEncoder,
+) -> CommandEncoder
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_command_buffer(
+  self : AutoReleasePool,
+  command_buffer : CommandBuffer,
+) -> CommandBuffer
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_compute_pass(
+  self : AutoReleasePool,
+  pass : ComputePass,
+) -> ComputePass
+
+///|
+#declaration_only
+declare pub fn AutoReleasePool::track_render_pass(
+  self : AutoReleasePool,
+  pass : RenderPass,
+) -> RenderPass
 
 ///|
 #declaration_only

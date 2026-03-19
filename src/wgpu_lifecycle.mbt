@@ -53,6 +53,15 @@ fn release_instance_and_raise(
 }
 
 ///|
+fn release_auto_release_pool_and_raise(
+  pool : AutoReleasePool,
+  err : Error,
+) -> Unit raise Error {
+  pool.release()
+  raise err
+}
+
+///|
 /// Request a default adapter/device/queue stack for the duration of `run`.
 ///
 /// The `Device` and `Queue` passed to `run` are borrowed for the callback
@@ -74,6 +83,25 @@ pub fn Instance::with_device_queue_sync(
 }
 
 ///|
+/// Request a default adapter/device/queue stack and an auto-release pool.
+///
+/// Resources tracked in `pool` are borrowed for the callback scope. Do not
+/// release them manually; the helper releases the pool before unwinding or
+/// returning to the caller.
+pub fn Instance::with_device_queue_auto_release(
+  self : Instance,
+  run : (Device, Queue, AutoReleasePool) -> Unit raise Error,
+) -> Unit raise Error {
+  self.with_device_queue_sync((device, queue) => {
+    let pool = AutoReleasePool::new()
+    run(device, queue, pool) catch {
+      err => release_auto_release_pool_and_raise(pool, err)
+    }
+    pool.release()
+  })
+}
+
+///|
 /// Create a default instance/device/queue stack for the duration of `run`.
 ///
 /// The `Instance`, `Device`, and `Queue` passed to `run` are borrowed for the
@@ -89,4 +117,21 @@ pub fn with_default_device_queue_sync(
     err => release_instance_and_raise(instance, err)
   }
   instance.release()
+}
+
+///|
+/// Create a default instance/device/queue stack and an auto-release pool.
+///
+/// The `Instance`, `Device`, `Queue`, and tracked resources are all borrowed
+/// for the callback scope. Do not retain or release them manually.
+pub fn with_default_device_queue_auto_release(
+  run : (Instance, Device, Queue, AutoReleasePool) -> Unit raise Error,
+) -> Unit raise Error {
+  with_default_device_queue_sync((instance, device, queue) => {
+    let pool = AutoReleasePool::new()
+    run(instance, device, queue, pool) catch {
+      err => release_auto_release_pool_and_raise(pool, err)
+    }
+    pool.release()
+  })
 }

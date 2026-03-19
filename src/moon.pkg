@@ -9,6 +9,7 @@ options(
     "consts.mbt": [ "native" ],
     "wgpu.mbt": [ "native" ],
     "wgpu_adapter.mbt": [ "native" ],
+    "wgpu_auto_release.mbt": [ "native" ],
     "wgpu_bind_groups.mbt": [ "native" ],
     "wgpu_buffer.mbt": [ "native" ],
     "wgpu_device.mbt": [ "native" ],

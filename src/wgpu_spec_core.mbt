@@ -76,6 +76,10 @@ pub type SurfaceTexture
 
 ///|
 #declaration_only
+pub type AutoReleasePool
+
+///|
+#declaration_only
 pub type TextureFormat
 
 ///|

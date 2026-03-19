@@ -81,35 +81,28 @@ contains `libwgpu_native.a`, which matches the current linker configuration in `
 ```moonbit
 fn main {
   try {
-    @wgpu.with_default_device_queue_sync((instance, device, queue) => {
+    @wgpu.with_default_device_queue_auto_release((instance, device, queue, pool) => {
       let _ = instance
-      let buf = device.create_buffer(
+      let buf = pool.track_buffer(device.create_buffer(
         size=4UL,
         usage=@wgpu.BufferUsage::from_u64(@wgpu.BUFFER_USAGE_COPY_DST),
-      )
+      ))
       ignore(buf.size())
 
-      let shader = device.create_shader_module_wgsl(
+      let shader = pool.track_shader_module(device.create_shader_module_wgsl(
         #|@compute @workgroup_size(1)
         #|fn main() {}
         #|,
-      )
-      let pipeline = device.create_compute_pipeline(shader)
-      let encoder = device.create_command_encoder()
-      let pass = encoder.begin_compute_pass()
+      ))
+      let pipeline = pool.track_compute_pipeline(device.create_compute_pipeline(shader))
+      let encoder = pool.track_command_encoder(device.create_command_encoder())
+      let pass = pool.track_compute_pass(encoder.begin_compute_pass())
       pass.set_pipeline(pipeline)
       pass.dispatch_workgroups(1U, 1U, 1U)
       pass.end()
-      pass.release()
 
-      let cmd = encoder.finish()
+      let cmd = pool.track_command_buffer(encoder.finish())
       queue.submit_one(cmd)
-
-      cmd.release()
-      encoder.release()
-      pipeline.release()
-      shader.release()
-      buf.release()
     })
   } catch {
     e => println(e.message())
@@ -117,9 +110,14 @@ fn main {
 }
 ```
 
-`with_default_device_queue_sync` is the recommended high-level path for smoke
-tests, examples, and short-lived tools. It auto-releases the default
-instance/adapter/device/queue stack after the callback returns or raises.
+`with_default_device_queue_auto_release` is the recommended high-level path for
+smoke tests, examples, and short-lived tools. It auto-releases the default
+instance/adapter/device/queue stack and every resource tracked in the callback
+pool after the callback returns or raises.
+
+Tracked resources are borrowed for the callback scope. Do not call `release()`
+on a handle after handing it to the pool. Keep `release()` / `add_ref()` for
+raw interop or deterministic ownership management outside this high-level path.
 
 ## Surface Configuration (Frame Latency)
 
