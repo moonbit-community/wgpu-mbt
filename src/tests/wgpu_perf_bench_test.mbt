@@ -14,7 +14,7 @@
 
 ///|
 test "bench wgpu: api buffer create+release" (b : @bench.T) {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -34,7 +34,7 @@ test "bench wgpu: api buffer create+release" (b : @bench.T) {
 
 ///|
 test "bench wgpu: api texture/view/sampler create+release" (b : @bench.T) {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -54,7 +54,7 @@ test "bench wgpu: api texture/view/sampler create+release" (b : @bench.T) {
 
 ///|
 test "bench wgpu: api shader+compute pipeline create+release" (b : @bench.T) {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -76,7 +76,7 @@ test "bench wgpu: api shader+compute pipeline create+release" (b : @bench.T) {
 
 ///|
 test "bench wgpu: gpu pipeline create+first submit" (b : @bench.T) {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -134,7 +134,7 @@ test "bench wgpu: gpu pipeline create+first submit" (b : @bench.T) {
 
 ///|
 test "bench wgpu: gpu encode+submit+readback compute" (b : @bench.T) {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)

@@ -17,7 +17,7 @@
 // Sampler clamp-to-zero / clamp-to-border remain upstream-blocked; see
 // wgpu_mbt-jyd.
 test "native feature wrappers: repo-exposed extras remain callable" {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
 

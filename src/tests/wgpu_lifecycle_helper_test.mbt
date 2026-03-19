@@ -19,7 +19,7 @@ suberror LifecycleHelperTestError {
 
 ///|
 test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases stack" {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let report0 = instance.generate_report()
     let kept0_devices = report0.hub_devices_num_kept_from_user()
@@ -58,7 +58,7 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases stack" {
 
 ///|
 test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases on callback error" {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let report0 = instance.generate_report()
     let kept0_devices = report0.hub_devices_num_kept_from_user()
@@ -91,7 +91,7 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases on callb
 
 ///|
 test "wgpu lifecycle helpers: with_default_device_queue_sync runs a smoke flow" {
-  skip_on_wgpu_error(() => {
+  run_on_supported_native_platform(() => {
     @wgpu.with_default_device_queue_sync((instance, device, queue) => {
       let _ = instance
       let wgsl =

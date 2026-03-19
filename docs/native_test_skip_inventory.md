@@ -32,10 +32,10 @@ The current skip inventory is produced by:
 python3 scripts/audit_native_test_suite.py
 ```
 
-After the first `wgpu_mbt-66w.5` pass, the suite currently has these
+After the current `wgpu_mbt-66w.5` passes, the suite currently has these
 categories:
 
-- `skip_on_wgpu_error`: 15 occurrences across 8 files
+- `skip_on_wgpu_error`: 0 occurrences across 0 files
 - `skip_unless_macos`: 13 occurrences across 11 files
 - `skip_unless_linux`: 5 occurrences across 3 files
 - `"skipped (missing optional symbol)"`: 9 occurrences in 1 file
@@ -45,9 +45,17 @@ Reduction already landed in this pass:
 - `wgpu_smoke_test.mbt`
 - `wgpu_render_offscreen_test.mbt`
 - `wgpu_async_future_api_test.mbt`
+- `wgpu_lifecycle_helper_test.mbt`
+- `wgpu_queue_write_buffer_test.mbt`
+- `wgpu_shader_module_glsl_test.mbt`
+- `wgpu_spec_buffer_map_test.mbt`
+- `wgpu_generated_handle_gaps_test.mbt`
+- `wgpu_native_api_completeness_test.mbt`
+- `wgpu_native_feature_gap_test.mbt`
+- `wgpu_perf_bench_test.mbt`
 
-These three foundational tests no longer downgrade runtime failures to
-`"skipped (wgpu error)"` on supported desktop platforms.
+These tests no longer downgrade runtime failures to `"skipped (wgpu error)"`
+on supported desktop platforms, so the runtime skip bucket is now empty.
 
 ## Registration Gap Closed In This Pass
 
@@ -86,7 +94,7 @@ Goal:
 
 Status:
 
-- started in this pass
+- closed in this pass
 
 ### Wave 2: Core Runtime Tests Must Fail, Not Skip
 
@@ -105,6 +113,10 @@ Goal:
 
 - for the supported CI/runtime matrix, runtime bring-up failures become hard
   failures in foundational coverage instead of `"skipped (wgpu error)"`
+
+Status:
+
+- closed in this pass
 
 ### Wave 3: Separate Platform-Scoped Surface Coverage From Global Green
 
