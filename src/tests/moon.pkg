@@ -76,6 +76,7 @@ options(
     "wgpu_report_leak_check_test.mbt": [ "native" ],
     "wgpu_sampler_address_modes_test.mbt": [ "native" ],
     "wgpu_sampler_comprehensive_test.mbt": [ "native" ],
+    "wgpu_shader_module_glsl_test.mbt": [ "native" ],
     "wgpu_shader_module_spirv_test.mbt": [ "native" ],
     "wgpu_smoke_matrix_test.mbt": [ "native" ],
     "wgpu_smoke_test.mbt": [ "native" ],

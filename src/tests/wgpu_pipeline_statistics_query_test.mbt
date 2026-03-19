@@ -83,3 +83,88 @@ test "wgpu pipeline statistics query (feature-gated)" {
   adapter.release()
   instance.release()
 }
+
+///|
+test "wgpu pipeline statistics query many (feature-gated)" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  if !adapter.has_feature_native_pipeline_statistics_query() {
+    inspect("unsupported", content="unsupported")
+    adapter.release()
+    instance.release()
+    return
+  }
+  let device = adapter.request_device_sync_pipeline_statistics_query(instance)
+  let queue = device.queue()
+  let qs = device.create_query_set_pipeline_statistics_many(
+    1U,
+    @wgpu.PIPELINE_STATISTIC_NAME_VERTEX_SHADER_INVOCATIONS,
+    [@wgpu.PIPELINE_STATISTIC_NAME_FRAGMENT_SHADER_INVOCATIONS],
+  )
+  let tex = device.create_texture_rgba8_2d(1U, 1U)
+  let view = tex.create_view()
+  let resolve = device.create_buffer(
+    size=16UL,
+    usage=bu(
+      @wgpu.BUFFER_USAGE_COPY_SRC |
+      @wgpu.BUFFER_USAGE_COPY_DST |
+      @wgpu.BUFFER_USAGE_QUERY_RESOLVE,
+    ),
+  )
+  let readback = device.create_buffer(
+    size=16UL,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+  )
+  let wgsl : String =
+    #|struct VSOut { @builtin(position) pos: vec4<f32> };
+    #|
+    #|@vertex
+    #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+    #|  var positions = array<vec2<f32>, 3>(
+    #|    vec2<f32>(-1.0, -1.0),
+    #|    vec2<f32>( 3.0, -1.0),
+    #|    vec2<f32>(-1.0,  3.0),
+    #|  );
+    #|  var out: VSOut;
+    #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
+    #|  return out;
+    #|}
+    #|
+    #|@fragment
+    #|fn fs_main() -> @location(0) vec4<f32> {
+    #|  return vec4<f32>(0.0, 1.0, 0.0, 1.0);
+    #|}
+    #|
+  let sm = device.create_shader_module_wgsl(wgsl)
+  let pipeline = device.create_render_pipeline_rgba8(sm)
+  let encoder = device.create_command_encoder()
+  let pass = encoder.begin_render_pass_color(view)
+  pass.set_pipeline(pipeline)
+  pass.begin_pipeline_statistics_query(qs, 0U)
+  pass.draw(3U, 1U, 0U, 0U)
+  pass.end_pipeline_statistics_query()
+  pass.end()
+  pass.release()
+  encoder.resolve_query_set(qs, 0U, 1U, resolve, 0UL)
+  encoder.copy_buffer_to_buffer(resolve, 0UL, readback, 0UL, 16UL)
+  let cmd = encoder.finish()
+  queue.submit_one(cmd)
+  let out = readback.readback(instance, 0UL, 16UL)
+  let vertex_invocations = u64le_at(out, 0)
+  let fragment_invocations = u64le_at(out, 8)
+  inspect(vertex_invocations > 0UL, content="true")
+  inspect(fragment_invocations > 0UL, content="true")
+  cmd.release()
+  encoder.release()
+  pipeline.release()
+  sm.release()
+  readback.release()
+  resolve.release()
+  view.release()
+  tex.release()
+  qs.release()
+  queue.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}
