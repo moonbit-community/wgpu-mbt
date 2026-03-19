@@ -81,27 +81,27 @@ contains `libwgpu_native.a`, which matches the current linker configuration in `
 ```moonbit
 fn main {
   try {
-    @wgpu.with_default_device_queue_auto_release((instance, device, queue, pool) => {
+    @wgpu.with_default_device_queue_managed((instance, device, queue) => {
       let _ = instance
-      let buf = pool.track_buffer(device.create_buffer(
+      let buf = device.create_buffer(
         size=4UL,
         usage=@wgpu.BufferUsage::from_u64(@wgpu.BUFFER_USAGE_COPY_DST),
-      ))
+      )
       ignore(buf.size())
 
-      let shader = pool.track_shader_module(device.create_shader_module_wgsl(
+      let shader = device.create_shader_module_wgsl(
         #|@compute @workgroup_size(1)
         #|fn main() {}
         #|,
-      ))
-      let pipeline = pool.track_compute_pipeline(device.create_compute_pipeline(shader))
-      let encoder = pool.track_command_encoder(device.create_command_encoder())
-      let pass = pool.track_compute_pass(encoder.begin_compute_pass())
+      )
+      let pipeline = device.create_compute_pipeline(shader)
+      let encoder = device.create_command_encoder()
+      let pass = encoder.begin_compute_pass()
       pass.set_pipeline(pipeline)
       pass.dispatch_workgroups(1U, 1U, 1U)
       pass.end()
 
-      let cmd = pool.track_command_buffer(encoder.finish())
+      let cmd = encoder.finish()
       queue.submit_one(cmd)
     })
   } catch {
@@ -110,14 +110,17 @@ fn main {
 }
 ```
 
-`with_default_device_queue_auto_release` is the recommended high-level path for
-smoke tests, examples, and short-lived tools. It auto-releases the default
-instance/adapter/device/queue stack and every resource tracked in the callback
-pool after the callback returns or raises.
+`with_default_device_queue_managed` is the strongest high-level path for smoke
+tests, examples, and short-lived tools. It auto-releases the default
+instance/adapter/device/queue stack and only exposes managed wrappers for the
+most common compute flow, so there is no `release()` method to call by mistake
+inside the callback.
 
-Tracked resources are borrowed for the callback scope. Do not call `release()`
-on a handle after handing it to the pool. Keep `release()` / `add_ref()` for
-raw interop or deterministic ownership management outside this high-level path.
+For broader high-level coverage, `with_default_device_queue_auto_release` still
+exposes the lower-level `AutoReleasePool`. That path supports more resource
+types, but tracked resources remain borrowed for the callback scope. Keep
+`release()` / `add_ref()` for raw interop or deterministic ownership management
+outside these managed helpers.
 
 ## Surface Configuration (Frame Latency)
 

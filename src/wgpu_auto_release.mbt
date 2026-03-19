@@ -59,14 +59,19 @@ fn release_auto_release_entry(entry : AutoReleaseEntry) -> Unit {
 }
 
 ///|
+priv struct AutoReleasePoolState {
+  mut entries : Array[AutoReleaseEntry]
+  mut released : Bool
+}
+
+///|
 pub struct AutoReleasePool {
-  priv mut entries : Array[AutoReleaseEntry]
-  priv mut released : Bool
+  priv state : Ref[AutoReleasePoolState]
 }
 
 ///|
 pub fn AutoReleasePool::new() -> AutoReleasePool {
-  { entries: [], released: false }
+  { state: @ref.new({ entries: [], released: false }) }
 }
 
 ///|
@@ -74,20 +79,22 @@ fn AutoReleasePool::push(
   self : AutoReleasePool,
   entry : AutoReleaseEntry,
 ) -> Unit {
-  guard !self.released else { abort("AutoReleasePool already released") }
-  self.entries.push(entry)
+  guard !self.state.val.released else {
+    abort("AutoReleasePool already released")
+  }
+  self.state.val.entries.push(entry)
 }
 
 ///|
 pub fn AutoReleasePool::release(self : AutoReleasePool) -> Unit {
-  if self.released {
+  if self.state.val.released {
     return
   }
-  for i = self.entries.length() - 1; i >= 0; i = i - 1 {
-    release_auto_release_entry(self.entries[i])
+  for i = self.state.val.entries.length() - 1; i >= 0; i = i - 1 {
+    release_auto_release_entry(self.state.val.entries[i])
   }
-  self.entries = []
-  self.released = true
+  self.state.val.entries = []
+  self.state.val.released = true
 }
 
 ///|

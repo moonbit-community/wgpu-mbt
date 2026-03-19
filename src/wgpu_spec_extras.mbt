@@ -152,6 +152,19 @@ declare pub fn with_default_device_queue_auto_release(
 
 ///|
 #declaration_only
+declare pub fn Instance::with_device_queue_managed(
+  self : Instance,
+  run : (ManagedDevice, ManagedQueue) -> Unit raise Error,
+) -> Unit raise Error
+
+///|
+#declaration_only
+declare pub fn with_default_device_queue_managed(
+  run : (Instance, ManagedDevice, ManagedQueue) -> Unit raise Error,
+) -> Unit raise Error
+
+///|
+#declaration_only
 declare pub fn AutoReleasePool::new() -> AutoReleasePool
 
 ///|
@@ -283,6 +296,85 @@ declare pub fn AutoReleasePool::track_render_pass(
   self : AutoReleasePool,
   pass : RenderPass,
 ) -> RenderPass
+
+///|
+#declaration_only
+declare pub fn ManagedDevice::create_buffer(
+  self : ManagedDevice,
+  size~ : UInt64,
+  usage~ : BufferUsage,
+  mapped_at_creation? : Bool = false,
+) -> ManagedBuffer
+
+///|
+#declaration_only
+declare pub fn ManagedDevice::create_shader_module_wgsl(
+  self : ManagedDevice,
+  code : String,
+) -> ManagedShaderModule
+
+///|
+#declaration_only
+declare pub fn ManagedDevice::create_compute_pipeline(
+  self : ManagedDevice,
+  shader_module : ManagedShaderModule,
+) -> ManagedComputePipeline
+
+///|
+#declaration_only
+declare pub fn ManagedDevice::create_command_encoder(
+  self : ManagedDevice,
+) -> ManagedCommandEncoder
+
+///|
+#declaration_only
+declare pub fn ManagedDevice::poll(
+  self : ManagedDevice,
+  wait? : Bool = false,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn ManagedBuffer::size(self : ManagedBuffer) -> UInt64
+
+///|
+#declaration_only
+declare pub fn ManagedQueue::submit_one(
+  self : ManagedQueue,
+  cmd : ManagedCommandBuffer,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn ManagedCommandEncoder::begin_compute_pass(
+  self : ManagedCommandEncoder,
+) -> ManagedComputePass
+
+///|
+#declaration_only
+declare pub fn ManagedCommandEncoder::finish(
+  self : ManagedCommandEncoder,
+) -> ManagedCommandBuffer
+
+///|
+#declaration_only
+declare pub fn ManagedComputePass::set_pipeline(
+  self : ManagedComputePass,
+  pipeline : ManagedComputePipeline,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn ManagedComputePass::dispatch_workgroups(
+  self : ManagedComputePass,
+  x : UInt,
+  y : UInt,
+  z : UInt,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn ManagedComputePass::end(self : ManagedComputePass) -> Unit
 
 ///|
 #declaration_only

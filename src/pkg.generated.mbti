@@ -1280,6 +1280,8 @@ pub fn surface_descriptor_xlib_new(@c.OpaquePtr, UInt64) -> @c.WGPUSurfaceDescri
 
 pub fn with_default_device_queue_auto_release((Instance, Device, Queue, AutoReleasePool) -> Unit raise) -> Unit raise
 
+pub fn with_default_device_queue_managed((Instance, ManagedDevice, ManagedQueue) -> Unit raise) -> Unit raise
+
 pub fn with_default_device_queue_sync((Instance, Device, Queue) -> Unit raise) -> Unit raise
 
 // Errors
@@ -1972,11 +1974,56 @@ pub fn Instance::wait_any_one_or_raise(Self, UInt64, timeout_ns? : UInt64) -> Wa
 pub fn Instance::wgpu_generate_report(Self, @c.WGPUGlobalReportPtr) -> Unit
 pub fn Instance::wgsl_language_features_count_u64(Self) -> UInt64
 pub fn Instance::with_device_queue_auto_release(Self, (Device, Queue, AutoReleasePool) -> Unit raise) -> Unit raise
+pub fn Instance::with_device_queue_managed(Self, (ManagedDevice, ManagedQueue) -> Unit raise) -> Unit raise
 pub fn Instance::with_device_queue_sync(Self, (Device, Queue) -> Unit raise) -> Unit raise
 
 pub struct InstanceCapabilities {
   timed_wait_any_enable : Bool
   timed_wait_any_max_count : UInt64
+}
+
+pub struct ManagedBuffer {
+  // private fields
+}
+pub fn ManagedBuffer::size(Self) -> UInt64
+
+pub struct ManagedCommandBuffer {
+  // private fields
+}
+
+pub struct ManagedCommandEncoder {
+  // private fields
+}
+pub fn ManagedCommandEncoder::begin_compute_pass(Self) -> ManagedComputePass
+pub fn ManagedCommandEncoder::finish(Self) -> ManagedCommandBuffer
+
+pub struct ManagedComputePass {
+  // private fields
+}
+pub fn ManagedComputePass::dispatch_workgroups(Self, UInt, UInt, UInt) -> Unit
+pub fn ManagedComputePass::end(Self) -> Unit
+pub fn ManagedComputePass::set_pipeline(Self, ManagedComputePipeline) -> Unit
+
+pub struct ManagedComputePipeline {
+  // private fields
+}
+
+pub struct ManagedDevice {
+  // private fields
+}
+pub fn ManagedDevice::create_buffer(Self, size~ : UInt64, usage~ : BufferUsage, mapped_at_creation? : Bool) -> ManagedBuffer
+pub fn ManagedDevice::create_command_encoder(Self) -> ManagedCommandEncoder
+pub fn ManagedDevice::create_compute_pipeline(Self, ManagedShaderModule) -> ManagedComputePipeline
+pub fn ManagedDevice::create_shader_module_wgsl(Self, String) -> ManagedShaderModule
+pub fn ManagedDevice::poll(Self, wait? : Bool) -> Bool
+
+pub struct ManagedQueue {
+  // private fields
+}
+pub fn ManagedQueue::submit_one(Self, ManagedCommandBuffer) -> Unit
+
+pub struct ManagedShaderModule {
+  // private fields
 }
 
 pub struct MapMode {

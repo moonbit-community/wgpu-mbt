@@ -80,6 +80,38 @@ pub type AutoReleasePool
 
 ///|
 #declaration_only
+pub type ManagedDevice
+
+///|
+#declaration_only
+pub type ManagedQueue
+
+///|
+#declaration_only
+pub type ManagedBuffer
+
+///|
+#declaration_only
+pub type ManagedShaderModule
+
+///|
+#declaration_only
+pub type ManagedComputePipeline
+
+///|
+#declaration_only
+pub type ManagedCommandEncoder
+
+///|
+#declaration_only
+pub type ManagedCommandBuffer
+
+///|
+#declaration_only
+pub type ManagedComputePass
+
+///|
+#declaration_only
 pub type TextureFormat
 
 ///|

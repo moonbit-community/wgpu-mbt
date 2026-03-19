@@ -179,3 +179,26 @@ test "wgpu lifecycle helpers: with_default_device_queue_auto_release runs a smok
     inspect("ok", content="ok")
   })
 }
+
+///|
+test "wgpu lifecycle helpers: with_default_device_queue_managed runs a smoke flow" {
+  run_on_supported_native_platform(() => {
+    @wgpu.with_default_device_queue_managed((instance, device, queue) => {
+      let _ = instance
+      let wgsl =
+        #|@compute @workgroup_size(1)
+        #|fn main() {}
+        #|
+      let shader = device.create_shader_module_wgsl(wgsl)
+      let pipeline = device.create_compute_pipeline(shader)
+      let encoder = device.create_command_encoder()
+      let pass = encoder.begin_compute_pass()
+      pass.set_pipeline(pipeline)
+      pass.dispatch_workgroups(1U, 1U, 1U)
+      pass.end()
+      let cmd = encoder.finish()
+      queue.submit_one(cmd)
+    })
+    inspect("ok", content="ok")
+  })
+}

@@ -391,3 +391,71 @@ test "wgpu GlobalReport leak check (auto-release pool helper)" {
   report1.release()
   instance.release()
 }
+
+///|
+test "wgpu GlobalReport leak check (managed helper)" {
+  let instance = @wgpu.Instance::create()
+  let report0 = instance.generate_report()
+  let kept0_devices = report0.hub_devices_num_kept_from_user()
+  let rel0_devices = report0.hub_devices_num_released_from_user()
+  let kept0_queues = report0.hub_queues_num_kept_from_user()
+  let rel0_queues = report0.hub_queues_num_released_from_user()
+  let kept0_buffers = report0.hub_buffers_num_kept_from_user()
+  let rel0_buffers = report0.hub_buffers_num_released_from_user()
+  let kept0_shaders = report0.hub_shader_modules_num_kept_from_user()
+  let rel0_shaders = report0.hub_shader_modules_num_released_from_user()
+  let kept0_cmds = report0.hub_command_buffers_num_kept_from_user()
+  let rel0_cmds = report0.hub_command_buffers_num_released_from_user()
+  let kept0_cps = report0.hub_compute_pipelines_num_kept_from_user()
+  let rel0_cps = report0.hub_compute_pipelines_num_released_from_user()
+  report0.release()
+
+  instance.with_device_queue_managed((device, queue) => {
+    let scratch = device.create_buffer(
+      size=4UL,
+      usage=bu(@wgpu.BUFFER_USAGE_COPY_DST),
+    )
+    ignore(scratch.size())
+
+    let compute_shader_wgsl =
+      #|@compute @workgroup_size(1)
+      #|fn main() {}
+      #|
+    let shader = device.create_shader_module_wgsl(compute_shader_wgsl)
+    let pipeline = device.create_compute_pipeline(shader)
+    let encoder = device.create_command_encoder()
+    let pass = encoder.begin_compute_pass()
+    pass.set_pipeline(pipeline)
+    pass.dispatch_workgroups(1U, 1U, 1U)
+    pass.end()
+    let cmd = encoder.finish()
+    queue.submit_one(cmd)
+    let _done = device.poll(wait=true)
+  })
+
+  instance.process_events()
+  let report1 = instance.generate_report()
+  assert_eq(report1.hub_devices_num_kept_from_user(), kept0_devices)
+  assert_eq(report1.hub_queues_num_kept_from_user(), kept0_queues)
+  assert_eq(report1.hub_buffers_num_kept_from_user(), kept0_buffers)
+  assert_eq(report1.hub_shader_modules_num_kept_from_user(), kept0_shaders)
+  assert_eq(report1.hub_command_buffers_num_kept_from_user(), kept0_cmds)
+  assert_eq(report1.hub_compute_pipelines_num_kept_from_user(), kept0_cps)
+  assert_eq(report1.hub_devices_num_released_from_user() > rel0_devices, true)
+  assert_eq(report1.hub_queues_num_released_from_user() > rel0_queues, true)
+  assert_eq(report1.hub_buffers_num_released_from_user() > rel0_buffers, true)
+  assert_eq(
+    report1.hub_shader_modules_num_released_from_user() > rel0_shaders,
+    true,
+  )
+  assert_eq(
+    report1.hub_command_buffers_num_released_from_user() > rel0_cmds,
+    true,
+  )
+  assert_eq(
+    report1.hub_compute_pipelines_num_released_from_user() > rel0_cps,
+    true,
+  )
+  report1.release()
+  instance.release()
+}
