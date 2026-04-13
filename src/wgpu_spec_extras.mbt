@@ -1031,6 +1031,13 @@ declare pub fn Adapter::request_device_sync_push_constants(
 
 ///|
 #declaration_only
+declare pub fn Adapter::request_device_sync_immediates(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError
+
+///|
+#declaration_only
 declare pub fn Adapter::request_device_sync_texture_binding_array(
   self : Adapter,
   instance : Instance,
@@ -1279,6 +1286,10 @@ declare pub fn Adapter::has_feature_native_timestamp_query_inside_passes(
 declare pub fn Adapter::has_feature_native_push_constants(
   self : Adapter,
 ) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_native_immediates(self : Adapter) -> Bool
 
 ///|
 #declaration_only
@@ -1637,6 +1648,10 @@ declare pub fn Adapter::limits_max_push_constant_size_u32(
 
 ///|
 #declaration_only
+declare pub fn Adapter::limits_max_immediate_size_u32(self : Adapter) -> UInt
+
+///|
+#declaration_only
 declare pub fn Adapter::limits_max_compute_workgroup_size_x_u32(
   self : Adapter,
 ) -> UInt
@@ -1756,6 +1771,10 @@ declare pub fn Device::has_feature_native_timestamp_query_inside_passes(
 ///|
 #declaration_only
 declare pub fn Device::has_feature_native_push_constants(self : Device) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_native_immediates(self : Device) -> Bool
 
 ///|
 #declaration_only
@@ -2108,6 +2127,10 @@ declare pub fn Device::limits_max_compute_invocations_per_workgroup_u32(
 ///|
 #declaration_only
 declare pub fn Device::limits_max_push_constant_size_u32(self : Device) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::limits_max_immediate_size_u32(self : Device) -> UInt
 
 ///|
 #declaration_only
@@ -2965,7 +2988,26 @@ declare pub fn Device::create_pipeline_layout_push_constants(
 
 ///|
 #declaration_only
+declare pub fn Device::create_pipeline_layout_immediates(
+  self : Device,
+  stages : ShaderStage,
+  start : UInt,
+  end : UInt,
+) -> PipelineLayout
+
+///|
+#declaration_only
 declare pub fn Device::create_pipeline_layout_push_constants_many(
+  self : Device,
+  first_stages : ShaderStage,
+  first_start : UInt,
+  first_end : UInt,
+  other_ranges : Array[(ShaderStage, UInt, UInt)],
+) -> PipelineLayout
+
+///|
+#declaration_only
+declare pub fn Device::create_pipeline_layout_immediates_many(
   self : Device,
   first_stages : ShaderStage,
   first_start : UInt,
@@ -3420,6 +3462,14 @@ declare pub fn ComputePass::set_push_constants(
 
 ///|
 #declaration_only
+declare pub fn ComputePass::set_immediates(
+  self : ComputePass,
+  offset : UInt,
+  data : Bytes,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn ComputePass::set_bind_group0(
   self : ComputePass,
   group : BindGroup,
@@ -3516,6 +3566,15 @@ declare pub fn RenderPass::set_pipeline(
 ///|
 #declaration_only
 declare pub fn RenderPass::set_push_constants(
+  self : RenderPass,
+  stages : ShaderStage,
+  offset : UInt,
+  data : Bytes,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPass::set_immediates(
   self : RenderPass,
   stages : ShaderStage,
   offset : UInt,
@@ -3872,6 +3931,15 @@ declare pub fn RenderBundleEncoder::set_pipeline(
 ///|
 #declaration_only
 declare pub fn RenderBundleEncoder::set_push_constants(
+  self : RenderBundleEncoder,
+  stages : ShaderStage,
+  offset : UInt,
+  data : Bytes,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderBundleEncoder::set_immediates(
   self : RenderBundleEncoder,
   stages : ShaderStage,
   offset : UInt,

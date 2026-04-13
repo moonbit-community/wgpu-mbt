@@ -22,7 +22,7 @@ test "wgpu push constants (feature-gated)" {
     instance.release()
     return
   }
-  let device = adapter.request_device_sync_push_constants(instance)
+  let device = adapter.request_device_sync_immediates(instance)
   let queue = device.queue()
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
@@ -49,7 +49,7 @@ test "wgpu push constants (feature-gated)" {
     #|}
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
-  let layout = device.create_pipeline_layout_push_constants(
+  let layout = device.create_pipeline_layout_immediates(
     ss(@wgpu.SHADER_STAGE_FRAGMENT),
     0U,
     4U,
@@ -58,7 +58,7 @@ test "wgpu push constants (feature-gated)" {
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color_clear(view, 0.0, 0.0, 0.0, 1.0)
   pass.set_pipeline(pipeline)
-  pass.set_push_constants(
+  pass.set_immediates(
     ss(@wgpu.SHADER_STAGE_FRAGMENT),
     0U,
     rgba_bytes(1U, 2U, 3U, 4U),
@@ -101,7 +101,7 @@ test "wgpu push constants many ranges (feature-gated)" {
     instance.release()
     return
   }
-  let device = adapter.request_device_sync_push_constants(instance)
+  let device = adapter.request_device_sync_immediates(instance)
   let queue = device.queue()
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
@@ -140,7 +140,7 @@ test "wgpu push constants many ranges (feature-gated)" {
     #|}
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
-  let layout = device.create_pipeline_layout_push_constants_many(
+  let layout = device.create_pipeline_layout_immediates_many(
     ss(@wgpu.SHADER_STAGE_VERTEX),
     0U,
     4U,
@@ -150,8 +150,8 @@ test "wgpu push constants many ranges (feature-gated)" {
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color_clear(view, 0.0, 0.0, 0.0, 1.0)
   pass.set_pipeline(pipeline)
-  pass.set_push_constants(ss(@wgpu.SHADER_STAGE_VERTEX), 0U, u32le_pack([1U]))
-  pass.set_push_constants(ss(@wgpu.SHADER_STAGE_FRAGMENT), 4U, u32le_pack([1U]))
+  pass.set_immediates(ss(@wgpu.SHADER_STAGE_VERTEX), 0U, u32le_pack([1U]))
+  pass.set_immediates(ss(@wgpu.SHADER_STAGE_FRAGMENT), 4U, u32le_pack([1U]))
   pass.draw(3U, 1U, 0U, 0U)
   pass.end()
   pass.release()

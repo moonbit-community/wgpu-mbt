@@ -46,29 +46,34 @@ LICENSE_HEADER = """// Copyright 2025 International Digital Economy Academy
 // limitations under the License.
 """
 
-# WGPU handle types already exposed by `src/c/raw.mbt`.
-# We keep those names working by exporting them as aliases to the official
-# WebGPU C API handle types (WGPU*).
+# Keep generated bindings focused on canonical `WGPU*` C API names.
+# Short aliases (Adapter/Device/Texture/...) are maintained in
+# `src/c/handle_aliases.mbt`.
+# For opaque handle-like types we still alias to `UnitPtr` so existing pointer-
+# shaped interop helpers keep working as before.
 HANDLE_TYPE_ALIASES: dict[str, str] = {
-    "WGPUInstance": "Instance",
-    "WGPUAdapter": "Adapter",
-    "WGPUDevice": "Device",
-    "WGPUQueue": "Queue",
-    "WGPUBuffer": "Buffer",
-    "WGPUShaderModule": "ShaderModule",
-    "WGPUComputePipeline": "ComputePipeline",
-    "WGPUComputePassEncoder": "ComputePassEncoder",
-    "WGPURenderPipeline": "RenderPipeline",
-    "WGPURenderPassEncoder": "RenderPassEncoder",
-    "WGPUTexture": "Texture",
-    "WGPUTextureView": "TextureView",
-    "WGPUBindGroupLayout": "BindGroupLayout",
-    "WGPUBindGroup": "BindGroup",
-    "WGPUPipelineLayout": "PipelineLayout",
-    "WGPUCommandEncoder": "CommandEncoder",
-    "WGPUCommandBuffer": "CommandBuffer",
-    "WGPUSampler": "Sampler",
-    "WGPUQuerySet": "QuerySet",
+    "WGPUAdapter": "UnitPtr",
+    "WGPUBindGroup": "UnitPtr",
+    "WGPUBindGroupLayout": "UnitPtr",
+    "WGPUBuffer": "UnitPtr",
+    "WGPUCommandBuffer": "UnitPtr",
+    "WGPUCommandEncoder": "UnitPtr",
+    "WGPUComputePassEncoder": "UnitPtr",
+    "WGPUComputePipeline": "UnitPtr",
+    "WGPUDevice": "UnitPtr",
+    "WGPUInstance": "UnitPtr",
+    "WGPUPipelineLayout": "UnitPtr",
+    "WGPUQuerySet": "UnitPtr",
+    "WGPUQueue": "UnitPtr",
+    "WGPURenderBundle": "UnitPtr",
+    "WGPURenderBundleEncoder": "UnitPtr",
+    "WGPURenderPassEncoder": "UnitPtr",
+    "WGPURenderPipeline": "UnitPtr",
+    "WGPUSampler": "UnitPtr",
+    "WGPUShaderModule": "UnitPtr",
+    "WGPUSurface": "UnitPtr",
+    "WGPUTexture": "UnitPtr",
+    "WGPUTextureView": "UnitPtr",
 }
 
 
@@ -360,6 +365,28 @@ def write_webgpu_consts() -> None:
             continue
         seen.add(name)
         uniq.append((name, ty, val))
+
+    # Compatibility aliases:
+    # - wgpu-native renamed push constants to immediates in newer releases.
+    # - WebGPU header uses `Subgroups` while many users expect `Subgroup`.
+    by_name: dict[str, tuple[str, int]] = {name: (ty, val) for name, ty, val in uniq}
+
+    def add_alias(alias: str, target: str) -> None:
+        if alias in by_name:
+            return
+        base = by_name.get(target)
+        if base is None:
+            return
+        by_name[alias] = base
+        uniq.append((alias, base[0], base[1]))
+
+    add_alias("WGPUNativeFeature_Immediates", "WGPUNativeFeature_PushConstants")
+    add_alias("WGPUNativeFeature_PushConstants", "WGPUNativeFeature_Immediates")
+    add_alias("WGPUFeatureName_Subgroup", "WGPUNativeFeature_Subgroup")
+    add_alias("WGPUFeatureName_Subgroup", "WGPUFeatureName_Subgroups")
+    add_alias("WGPUFeatureName_Subgroups", "WGPUFeatureName_Subgroup")
+    add_alias("WGPUFeatureName_ShaderInt64", "WGPUNativeFeature_ShaderInt64")
+    add_alias("WGPUFeatureName_Immediates", "WGPUNativeFeature_Immediates")
 
     uniq.sort(key=lambda t: t[0])
 

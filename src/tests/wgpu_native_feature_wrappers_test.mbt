@@ -23,6 +23,16 @@ test "native feature wrapper APIs smoke" {
     content="true",
   )
   inspect(
+    adapter.has_feature_native_u32(@wgpu.NATIVE_FEATURE_IMMEDIATES) ==
+    adapter.has_feature_native_immediates(),
+    content="true",
+  )
+  inspect(
+    adapter.has_feature_native_immediates() ==
+    adapter.has_feature_native_push_constants(),
+    content="true",
+  )
+  inspect(
     adapter.has_feature_native_u32(@wgpu.NATIVE_FEATURE_TEXTURE_BINDING_ARRAY) ==
     adapter.has_feature_native_texture_binding_array(),
     content="true",
@@ -32,6 +42,7 @@ test "native feature wrapper APIs smoke" {
     adapter.has_feature_native_timestamp_query_inside_encoders(),
     adapter.has_feature_native_timestamp_query_inside_passes(),
     adapter.has_feature_native_push_constants(),
+    adapter.has_feature_native_immediates(),
     adapter.has_feature_native_pipeline_statistics_query(),
     adapter.has_feature_native_clear_texture(),
     adapter.has_feature_native_multiview(),
@@ -63,7 +74,7 @@ test "native feature wrapper APIs smoke" {
     adapter.has_feature_native_subgroup_barrier(),
     adapter.has_feature_native_texture_adapter_specific_format_features(),
   ]
-  inspect(flags.length() == 33, content="true")
+  inspect(flags.length() == 34, content="true")
 
   adapter.release()
   instance.release()
@@ -77,6 +88,16 @@ test "native feature wrapper APIs smoke (device)" {
 
   inspect(
     device.has_feature_native_u32(@wgpu.NATIVE_FEATURE_PUSH_CONSTANTS) ==
+    device.has_feature_native_push_constants(),
+    content="true",
+  )
+  inspect(
+    device.has_feature_native_u32(@wgpu.NATIVE_FEATURE_IMMEDIATES) ==
+    device.has_feature_native_immediates(),
+    content="true",
+  )
+  inspect(
+    device.has_feature_native_immediates() ==
     device.has_feature_native_push_constants(),
     content="true",
   )
@@ -95,6 +116,7 @@ test "native feature wrapper APIs smoke (device)" {
     device.has_feature_native_timestamp_query_inside_encoders(),
     device.has_feature_native_timestamp_query_inside_passes(),
     device.has_feature_native_push_constants(),
+    device.has_feature_native_immediates(),
     device.has_feature_native_pipeline_statistics_query(),
     device.has_feature_native_clear_texture(),
     device.has_feature_native_multiview(),
@@ -126,7 +148,7 @@ test "native feature wrapper APIs smoke (device)" {
     device.has_feature_native_subgroup_barrier(),
     device.has_feature_native_texture_adapter_specific_format_features(),
   ]
-  inspect(flags.length() == 33, content="true")
+  inspect(flags.length() == 34, content="true")
 
   device.release()
   adapter.release()

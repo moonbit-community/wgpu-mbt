@@ -98,6 +98,11 @@ pub fn Device::has_feature_native_push_constants(self : Device) -> Bool {
 }
 
 ///|
+pub fn Device::has_feature_native_immediates(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_IMMEDIATES)
+}
+
+///|
 pub fn Device::has_feature_native_pipeline_statistics_query(
   self : Device,
 ) -> Bool {
@@ -555,6 +560,11 @@ pub fn Device::limits_max_compute_workgroups_per_dimension_u32(
 ///|
 pub fn Device::limits_max_push_constant_size_u32(self : Device) -> UInt {
   @c.device_limits_max_push_constant_size_u32(self.raw)
+}
+
+///|
+pub fn Device::limits_max_immediate_size_u32(self : Device) -> UInt {
+  self.limits_max_push_constant_size_u32()
 }
 
 ///|
@@ -1366,6 +1376,16 @@ pub fn Device::create_pipeline_layout_push_constants(
 }
 
 ///|
+pub fn Device::create_pipeline_layout_immediates(
+  self : Device,
+  stages : ShaderStage,
+  start : UInt,
+  end : UInt,
+) -> PipelineLayout {
+  self.create_pipeline_layout_push_constants(stages, start, end)
+}
+
+///|
 pub fn Device::create_pipeline_layout_push_constants_many(
   self : Device,
   first_stages : ShaderStage,
@@ -1387,6 +1407,19 @@ pub fn Device::create_pipeline_layout_push_constants_many(
       other_raw_ranges,
     ),
   }
+}
+
+///|
+pub fn Device::create_pipeline_layout_immediates_many(
+  self : Device,
+  first_stages : ShaderStage,
+  first_start : UInt,
+  first_end : UInt,
+  other_ranges : Array[(ShaderStage, UInt, UInt)],
+) -> PipelineLayout {
+  self.create_pipeline_layout_push_constants_many(
+    first_stages, first_start, first_end, other_ranges,
+  )
 }
 
 ///|

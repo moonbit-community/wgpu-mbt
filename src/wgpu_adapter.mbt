@@ -326,6 +326,14 @@ pub fn Adapter::request_device_sync_push_constants(
 }
 
 ///|
+pub fn Adapter::request_device_sync_immediates(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_push_constants(instance)
+}
+
+///|
 pub fn Adapter::request_device_sync_texture_binding_array(
   self : Adapter,
   instance : Instance,
@@ -719,6 +727,11 @@ pub fn Adapter::has_feature_native_timestamp_query_inside_passes(
 ///|
 pub fn Adapter::has_feature_native_push_constants(self : Adapter) -> Bool {
   @c.adapter_has_feature_native_push_constants(self.raw)
+}
+
+///|
+pub fn Adapter::has_feature_native_immediates(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_IMMEDIATES)
 }
 
 ///|
@@ -1193,6 +1206,11 @@ pub fn Adapter::limits_max_compute_workgroups_per_dimension_u32(
 ///|
 pub fn Adapter::limits_max_push_constant_size_u32(self : Adapter) -> UInt {
   @c.adapter_limits_max_push_constant_size_u32(self.raw)
+}
+
+///|
+pub fn Adapter::limits_max_immediate_size_u32(self : Adapter) -> UInt {
+  self.limits_max_push_constant_size_u32()
 }
 
 ///|

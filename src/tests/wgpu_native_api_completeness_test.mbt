@@ -104,10 +104,36 @@ test "wgpu native api: primitive extras builder calls" {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let _ = adapter.limits_max_push_constant_size_u32()
+    let _ = adapter.limits_max_immediate_size_u32()
     let _ = adapter.limits_max_non_sampler_bindings_u32()
+    inspect(
+      adapter.has_feature_native_push_constants() ==
+      adapter.has_feature_native_immediates(),
+      content="true",
+    )
+    inspect(
+      adapter.limits_max_push_constant_size_u32() ==
+      adapter.limits_max_immediate_size_u32(),
+      content="true",
+    )
+    if adapter.has_feature_native_immediates() {
+      let immediate_device = adapter.request_device_sync_immediates(instance)
+      immediate_device.release()
+    }
     let device = adapter.request_device_sync(instance)
     let _ = device.limits_max_push_constant_size_u32()
+    let _ = device.limits_max_immediate_size_u32()
     let _ = device.limits_max_non_sampler_bindings_u32()
+    inspect(
+      device.has_feature_native_push_constants() ==
+      device.has_feature_native_immediates(),
+      content="true",
+    )
+    inspect(
+      device.limits_max_push_constant_size_u32() ==
+      device.limits_max_immediate_size_u32(),
+      content="true",
+    )
     let cfg = @wgpu.SurfaceConfiguration::new(
       1U,
       1U,
@@ -139,6 +165,19 @@ test "wgpu native api: primitive extras builder calls" {
       16U,
       [(@wgpu.ShaderStage::from_u64(@wgpu.SHADER_STAGE_COMPUTE), 16U, 32U)],
     )
+    let immediate_layout = device.create_pipeline_layout_immediates_many(
+      @wgpu.ShaderStage::from_u64(
+        @wgpu.SHADER_STAGE_VERTEX | @wgpu.SHADER_STAGE_FRAGMENT,
+      ),
+      0U,
+      16U,
+      [(@wgpu.ShaderStage::from_u64(@wgpu.SHADER_STAGE_COMPUTE), 16U, 32U)],
+    )
+    let immediate_layout_1 = device.create_pipeline_layout_immediates(
+      @wgpu.ShaderStage::from_u64(@wgpu.SHADER_STAGE_FRAGMENT),
+      0U,
+      4U,
+    )
     let builder = @wgpu.RenderPipelineDescBuilder::new(sm)
     builder.set_entry_points("vs_main", "fs_main")
     builder.set_color_target_format(
@@ -155,6 +194,8 @@ test "wgpu native api: primitive extras builder calls" {
 
     cp_builder.free()
     builder.free()
+    immediate_layout_1.release()
+    immediate_layout.release()
     push_layout.release()
     sm.release()
     device.release()

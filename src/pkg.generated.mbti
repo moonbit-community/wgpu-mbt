@@ -330,11 +330,19 @@ pub const FEATURE_NAME_FLOAT32_FILTERABLE : UInt = 0x0000000D
 
 pub const FEATURE_NAME_FORCE32 : UInt = 0x7FFFFFFF
 
+pub const FEATURE_NAME_IMMEDIATES : UInt = 0x00030001
+
 pub const FEATURE_NAME_INDIRECT_FIRST_INSTANCE : UInt = 0x00000009
 
 pub const FEATURE_NAME_RG11_B10_UFLOAT_RENDERABLE : UInt = 0x0000000B
 
 pub const FEATURE_NAME_SHADER_F16 : UInt = 0x0000000A
+
+pub const FEATURE_NAME_SHADER_INT64 : UInt = 0x00030026
+
+pub const FEATURE_NAME_SUBGROUP : UInt = 0x00030021
+
+pub const FEATURE_NAME_SUBGROUPS : UInt = 0x00030021
 
 pub const FEATURE_NAME_TEXTURE_COMPRESSION_ASTC : UInt = 0x00000007
 
@@ -463,6 +471,8 @@ pub const NATIVE_FEATURE_CLEAR_TEXTURE : UInt = 0x00030016
 pub const NATIVE_FEATURE_CONSERVATIVE_RASTERIZATION : UInt = 0x00030015
 
 pub const NATIVE_FEATURE_FORCE32 : UInt = 0x7FFFFFFF
+
+pub const NATIVE_FEATURE_IMMEDIATES : UInt = 0x00030001
 
 pub const NATIVE_FEATURE_MAPPABLE_PRIMARY_BUFFERS : UInt = 0x0003000E
 
@@ -1340,6 +1350,7 @@ pub fn Adapter::has_feature(Self, @c.WGPUFeatureName) -> Bool
 pub fn Adapter::has_feature_native_buffer_binding_array(Self) -> Bool
 pub fn Adapter::has_feature_native_clear_texture(Self) -> Bool
 pub fn Adapter::has_feature_native_conservative_rasterization(Self) -> Bool
+pub fn Adapter::has_feature_native_immediates(Self) -> Bool
 pub fn Adapter::has_feature_native_mappable_primary_buffers(Self) -> Bool
 pub fn Adapter::has_feature_native_multi_draw_indirect_count(Self) -> Bool
 pub fn Adapter::has_feature_native_multiview(Self) -> Bool
@@ -1394,6 +1405,7 @@ pub fn Adapter::limits_max_compute_workgroup_storage_size_u32(Self) -> UInt
 pub fn Adapter::limits_max_compute_workgroups_per_dimension_u32(Self) -> UInt
 pub fn Adapter::limits_max_dynamic_storage_buffers_per_pipeline_layout_u32(Self) -> UInt
 pub fn Adapter::limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(Self) -> UInt
+pub fn Adapter::limits_max_immediate_size_u32(Self) -> UInt
 pub fn Adapter::limits_max_inter_stage_shader_variables_u32(Self) -> UInt
 pub fn Adapter::limits_max_non_sampler_bindings_u32(Self) -> UInt
 pub fn Adapter::limits_max_push_constant_size_u32(Self) -> UInt
@@ -1426,6 +1438,7 @@ pub fn Adapter::request_device_sync(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_buffer_binding_array(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_clear_texture(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_conservative_rasterization(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_immediates(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_mappable_primary_buffers(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_multi_draw_indirect_count(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_multiview(Self, Instance) -> Device raise WgpuError
@@ -1673,6 +1686,7 @@ pub fn ComputePass::release(Self) -> Unit
 pub fn ComputePass::release_raw(Self) -> Unit
 pub fn ComputePass::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn ComputePass::set_bind_group0(Self, BindGroup) -> Unit
+pub fn ComputePass::set_immediates(Self, UInt, Bytes) -> Unit
 pub fn ComputePass::set_label(Self, String) -> Unit
 pub fn ComputePass::set_pipeline(Self, ComputePipeline) -> Unit
 pub fn ComputePass::set_pipeline_raw(Self, ComputePipeline) -> Unit
@@ -1744,6 +1758,8 @@ pub fn Device::create_compute_pipeline_with_layout_entry(Self, PipelineLayout, S
 pub fn Device::create_pipeline_layout(Self, @c.WGPUPipelineLayoutDescriptorPtr) -> PipelineLayout
 pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_2(Self, BindGroupLayout, BindGroupLayout) -> PipelineLayout
+pub fn Device::create_pipeline_layout_immediates(Self, ShaderStage, UInt, UInt) -> PipelineLayout
+pub fn Device::create_pipeline_layout_immediates_many(Self, ShaderStage, UInt, UInt, Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
 pub fn Device::create_pipeline_layout_ptr(Self, @c.WGPUPipelineLayoutDescriptorPtr) -> PipelineLayout
 pub fn Device::create_pipeline_layout_push_constants(Self, ShaderStage, UInt, UInt) -> PipelineLayout
 pub fn Device::create_pipeline_layout_push_constants_many(Self, ShaderStage, UInt, UInt, Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
@@ -1804,6 +1820,7 @@ pub fn Device::has_feature(Self, @c.WGPUFeatureName) -> Bool
 pub fn Device::has_feature_native_buffer_binding_array(Self) -> Bool
 pub fn Device::has_feature_native_clear_texture(Self) -> Bool
 pub fn Device::has_feature_native_conservative_rasterization(Self) -> Bool
+pub fn Device::has_feature_native_immediates(Self) -> Bool
 pub fn Device::has_feature_native_mappable_primary_buffers(Self) -> Bool
 pub fn Device::has_feature_native_multi_draw_indirect_count(Self) -> Bool
 pub fn Device::has_feature_native_multiview(Self) -> Bool
@@ -1859,6 +1876,7 @@ pub fn Device::limits_max_compute_workgroup_storage_size_u32(Self) -> UInt
 pub fn Device::limits_max_compute_workgroups_per_dimension_u32(Self) -> UInt
 pub fn Device::limits_max_dynamic_storage_buffers_per_pipeline_layout_u32(Self) -> UInt
 pub fn Device::limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(Self) -> UInt
+pub fn Device::limits_max_immediate_size_u32(Self) -> UInt
 pub fn Device::limits_max_inter_stage_shader_variables_u32(Self) -> UInt
 pub fn Device::limits_max_non_sampler_bindings_u32(Self) -> UInt
 pub fn Device::limits_max_push_constant_size_u32(Self) -> UInt
@@ -2154,6 +2172,7 @@ pub fn RenderBundleEncoder::release(Self) -> Unit
 pub fn RenderBundleEncoder::release_raw(Self) -> Unit
 pub fn RenderBundleEncoder::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn RenderBundleEncoder::set_bind_group0(Self, BindGroup) -> Unit
+pub fn RenderBundleEncoder::set_immediates(Self, ShaderStage, UInt, Bytes) -> Unit
 pub fn RenderBundleEncoder::set_index_buffer(Self, Buffer, @c.WGPUIndexFormat, UInt64, UInt64) -> Unit
 pub fn RenderBundleEncoder::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderBundleEncoder::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
@@ -2208,6 +2227,7 @@ pub fn RenderPass::set_bind_group(Self, UInt, BindGroup, Array[UInt]) -> Unit
 pub fn RenderPass::set_bind_group0(Self, BindGroup) -> Unit
 pub fn RenderPass::set_blend_constant(Self, @c.WGPUColorPtr) -> Unit
 pub fn RenderPass::set_blend_constant_rgba(Self, Double, Double, Double, Double) -> Unit
+pub fn RenderPass::set_immediates(Self, ShaderStage, UInt, Bytes) -> Unit
 pub fn RenderPass::set_index_buffer(Self, Buffer, @c.WGPUIndexFormat, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_index_buffer_u16(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit

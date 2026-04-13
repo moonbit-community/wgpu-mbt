@@ -569,6 +569,15 @@ pub fn ComputePass::set_push_constants(
 }
 
 ///|
+pub fn ComputePass::set_immediates(
+  self : ComputePass,
+  offset : UInt,
+  data : Bytes,
+) -> Unit {
+  self.set_push_constants(offset, data)
+}
+
+///|
 pub fn ComputePass::dispatch_workgroups(
   self : ComputePass,
   x : UInt,
@@ -705,6 +714,16 @@ pub fn RenderPass::set_push_constants(
     data,
     data.length().to_uint64(),
   )
+}
+
+///|
+pub fn RenderPass::set_immediates(
+  self : RenderPass,
+  stages : ShaderStage,
+  offset : UInt,
+  data : Bytes,
+) -> Unit {
+  self.set_push_constants(stages, offset, data)
 }
 
 ///|
@@ -1058,6 +1077,16 @@ pub fn RenderBundleEncoder::set_push_constants(
     data,
     data.length().to_uint64(),
   )
+}
+
+///|
+pub fn RenderBundleEncoder::set_immediates(
+  self : RenderBundleEncoder,
+  stages : ShaderStage,
+  offset : UInt,
+  data : Bytes,
+) -> Unit {
+  self.set_push_constants(stages, offset, data)
 }
 
 ///|
