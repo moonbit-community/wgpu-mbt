@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MBT_WGPU_LINK_MODE: dynamic
+      MBT_WGPU_PLATFORM_TEST_DIR: src/tests_linux
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -105,11 +106,11 @@ jobs:
           set -euo pipefail
           moon test --target native src/tests --test-failure-json
 
-      - name: Run Linux-only native test suite
+      - name: Run platform-only native test suite (Linux)
         shell: bash
         run: |
           set -euo pipefail
-          moon test --target native src/tests_linux --test-failure-json
+          moon test --target native "$MBT_WGPU_PLATFORM_TEST_DIR" --test-failure-json
 
       - name: Run strict leak check
         shell: bash
@@ -141,11 +142,11 @@ jobs:
           set -euo pipefail
           MBT_WGPU_LINK_MODE=static moon test --target native src/tests --test-failure-json
 
-      - name: Run Linux-only native test suite (static link)
+      - name: Run platform-only native test suite (Linux, static link)
         shell: bash
         run: |
           set -euo pipefail
-          MBT_WGPU_LINK_MODE=static moon test --target native src/tests_linux --test-failure-json
+          MBT_WGPU_LINK_MODE=static moon test --target native "$MBT_WGPU_PLATFORM_TEST_DIR" --test-failure-json
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
@@ -180,6 +181,7 @@ jobs:
     runs-on: macos-latest
     env:
       MBT_WGPU_LINK_MODE: dynamic
+      MBT_WGPU_PLATFORM_TEST_DIR: src/tests_macos
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -239,11 +241,11 @@ jobs:
           set -euo pipefail
           moon test --target native src/tests --test-failure-json
 
-      - name: Run macOS-only native test suite
+      - name: Run platform-only native test suite (macOS)
         shell: bash
         run: |
           set -euo pipefail
-          moon test --target native src/tests_macos --test-failure-json
+          moon test --target native "$MBT_WGPU_PLATFORM_TEST_DIR" --test-failure-json
 
       - name: Run strict leak check
         shell: bash
@@ -285,11 +287,11 @@ jobs:
           set -euo pipefail
           MBT_WGPU_LINK_MODE=static moon test --target native src/tests --test-failure-json
 
-      - name: Run macOS-only native test suite (static link)
+      - name: Run platform-only native test suite (macOS, static link)
         shell: bash
         run: |
           set -euo pipefail
-          MBT_WGPU_LINK_MODE=static moon test --target native src/tests_macos --test-failure-json
+          MBT_WGPU_LINK_MODE=static moon test --target native "$MBT_WGPU_PLATFORM_TEST_DIR" --test-failure-json
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
@@ -312,6 +314,7 @@ jobs:
     runs-on: windows-latest
     env:
       MBT_WGPU_LINK_MODE: dynamic
+      MBT_WGPU_PLATFORM_TEST_DIR: src/tests_windows
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -529,11 +532,11 @@ jobs:
           $ErrorActionPreference = "Stop"
           moon test --target native src/tests --test-failure-json
 
-      - name: Run Windows-only native test suite
+      - name: Run platform-only native test suite (Windows)
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          moon test --target native src/tests_windows --test-failure-json
+          moon test --target native $env:MBT_WGPU_PLATFORM_TEST_DIR --test-failure-json
 
       - name: Run strict leak check
         shell: pwsh
@@ -573,7 +576,7 @@ jobs:
           $env:MBT_WGPU_LINK_MODE = "static"
           moon test --target native src/tests --test-failure-json
 
-      - name: Run Windows-only native test suite (static link)
+      - name: Run platform-only native test suite (Windows, static link)
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
@@ -581,7 +584,7 @@ jobs:
           $ErrorActionPreference = "Stop"
           Remove-Item Env:MBT_WGPU_NATIVE_ROOT -ErrorAction SilentlyContinue
           $env:MBT_WGPU_LINK_MODE = "static"
-          moon test --target native src/tests_windows --test-failure-json
+          moon test --target native $env:MBT_WGPU_PLATFORM_TEST_DIR --test-failure-json
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
