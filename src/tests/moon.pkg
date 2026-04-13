@@ -88,6 +88,7 @@ options(
     "wgpu_report_leak_check_test.mbt": [ "native" ],
     "wgpu_request_adapter_options_test.mbt": [ "native" ],
     "wgpu_required_limits_builder_test.mbt": [ "native" ],
+    "wgpu_rust_features_test.mbt": [ "native" ],
     "wgpu_sampler_address_modes_test.mbt": [ "native" ],
     "wgpu_sampler_comprehensive_test.mbt": [ "native" ],
     "wgpu_shader_module_glsl_test.mbt": [ "native" ],
