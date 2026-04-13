@@ -98,6 +98,11 @@ ASAN_OPTS="${ASAN_OPTIONS:-abort_on_error=1}"
 if [[ "$(uname -s)" == "Darwin" && "$ASAN_OPTS" != *detect_leaks=* ]]; then
   ASAN_OPTS="${ASAN_OPTS}:detect_leaks=0"
 fi
+if [[ "$(uname -s)" == "Darwin" && "$ASAN_OPTS" != *verify_asan_link_order=* ]]; then
+  # Some CI images still report late interceptor initialization even with
+  # DYLD_INSERT_LIBRARIES explicitly configured.
+  ASAN_OPTS="${ASAN_OPTS}:verify_asan_link_order=0"
+fi
 
 DARWIN_DYLD_INSERT_LIBRARIES="${DYLD_INSERT_LIBRARIES:-}"
 if [[ "$(uname -s)" == "Darwin" && -z "$DARWIN_DYLD_INSERT_LIBRARIES" ]]; then
