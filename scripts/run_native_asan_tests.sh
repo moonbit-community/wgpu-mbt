@@ -18,6 +18,9 @@ if [[ "$MBT_WGPU_NATIVE_SANITIZE" != "address" ]]; then
   exit 1
 fi
 
+# Keep compile and runtime discovery on the same clang toolchain.
+ASAN_CLANG="${MBT_WGPU_ASAN_CLANG:-${CC:-clang}}"
+
 ARTIFACT_JSON="$(moon test --target native --build-only "$TARGET")"
 RSPFILE="$(
   ARTIFACT_JSON="$ARTIFACT_JSON" python3 - <<'PY'
@@ -87,7 +90,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-clang \
+"$ASAN_CLANG" \
   "${COMPILE_ARGS[@]}" \
   -fsanitize=address \
   -fno-omit-frame-pointer \
@@ -106,7 +109,7 @@ fi
 
 DARWIN_DYLD_INSERT_LIBRARIES="${DYLD_INSERT_LIBRARIES:-}"
 if [[ "$(uname -s)" == "Darwin" && -z "$DARWIN_DYLD_INSERT_LIBRARIES" ]]; then
-  CLANG_RESOURCE_DIR="$(clang --print-resource-dir)"
+  CLANG_RESOURCE_DIR="$("$ASAN_CLANG" --print-resource-dir)"
   ASAN_RUNTIME_DYLIB="$CLANG_RESOURCE_DIR/lib/darwin/libclang_rt.asan_osx_dynamic.dylib"
   if [[ ! -f "$ASAN_RUNTIME_DYLIB" ]]; then
     echo "failed to locate ASan runtime dylib at: $ASAN_RUNTIME_DYLIB" >&2
