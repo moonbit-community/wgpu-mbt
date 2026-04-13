@@ -257,6 +257,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          asan_dylib="$(ls -1 "$(brew --prefix llvm)/lib/clang/"*/lib/darwin/libclang_rt.asan_osx_dynamic.dylib | head -n 1)"
+          if [ -z "$asan_dylib" ] || [ ! -f "$asan_dylib" ]; then
+            echo "failed to locate Homebrew ASan runtime dylib"
+            exit 1
+          fi
+          export DYLD_INSERT_LIBRARIES="$asan_dylib"
           scripts/run_native_asan_tests.sh src/tests/wgpu_managed_lifecycle_test.mbt
           scripts/run_native_asan_tests.sh \
             src/tests/wgpu_lifecycle_helper_test.mbt \
