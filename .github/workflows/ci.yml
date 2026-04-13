@@ -264,7 +264,6 @@ jobs:
             echo "failed to locate Xcode ASan runtime dylib: $asan_dylib"
             exit 1
           fi
-          export MBT_WGPU_ASAN_CLANG="$asan_clang"
           export DYLD_INSERT_LIBRARIES="$asan_dylib"
           scripts/run_native_asan_tests.sh src/tests/wgpu_managed_lifecycle_test.mbt
           scripts/run_native_asan_tests.sh \
