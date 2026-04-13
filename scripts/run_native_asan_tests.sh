@@ -99,4 +99,22 @@ if [[ "$(uname -s)" == "Darwin" && "$ASAN_OPTS" != *detect_leaks=* ]]; then
   ASAN_OPTS="${ASAN_OPTS}:detect_leaks=0"
 fi
 
-ASAN_OPTIONS="$ASAN_OPTS" "$BIN" "$SELECTOR"
+DARWIN_DYLD_INSERT_LIBRARIES="${DYLD_INSERT_LIBRARIES:-}"
+if [[ "$(uname -s)" == "Darwin" && -z "$DARWIN_DYLD_INSERT_LIBRARIES" ]]; then
+  CLANG_RESOURCE_DIR="$(clang --print-resource-dir)"
+  ASAN_RUNTIME_DYLIB="$CLANG_RESOURCE_DIR/lib/darwin/libclang_rt.asan_osx_dynamic.dylib"
+  if [[ ! -f "$ASAN_RUNTIME_DYLIB" ]]; then
+    echo "failed to locate ASan runtime dylib at: $ASAN_RUNTIME_DYLIB" >&2
+    echo "set DYLD_INSERT_LIBRARIES explicitly before running this script" >&2
+    exit 1
+  fi
+  DARWIN_DYLD_INSERT_LIBRARIES="$ASAN_RUNTIME_DYLIB"
+fi
+
+if [[ -n "$DARWIN_DYLD_INSERT_LIBRARIES" ]]; then
+  ASAN_OPTIONS="$ASAN_OPTS" \
+    DYLD_INSERT_LIBRARIES="$DARWIN_DYLD_INSERT_LIBRARIES" \
+    "$BIN" "$SELECTOR"
+else
+  ASAN_OPTIONS="$ASAN_OPTS" "$BIN" "$SELECTOR"
+fi
