@@ -90,6 +90,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
+if [[ "$(uname -s)" == "Darwin" && -n "${SDKROOT:-}" ]]; then
+  COMPILE_ARGS+=("-isysroot" "$SDKROOT")
+fi
+
 "$ASAN_CLANG" \
   "${COMPILE_ARGS[@]}" \
   -fsanitize=address \
