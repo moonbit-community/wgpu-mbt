@@ -312,6 +312,8 @@ pub const FEATURES_DEPTH_CLIP_CONTROL : UInt64 = 0x0000000000000001
 
 pub const FEATURES_PUSH_CONSTANTS : UInt64 = 0x0000000000010000
 
+pub const FEATURES_QUERYABLE_MASK : UInt64 = 0x0000006000010001
+
 pub const FEATURES_SHADER_INT64 : UInt64 = 0x0000002000000000
 
 pub const FEATURES_SUBGROUP : UInt64 = 0x0000004000000000
@@ -1437,6 +1439,7 @@ pub fn Adapter::limits_max_vertex_buffer_array_stride_u32(Self) -> UInt
 pub fn Adapter::limits_max_vertex_buffers_u32(Self) -> UInt
 pub fn Adapter::limits_min_storage_buffer_offset_alignment_u32(Self) -> UInt
 pub fn Adapter::limits_min_uniform_buffer_offset_alignment_u32(Self) -> UInt
+pub fn Adapter::missing_known_rust_features_u64(Self, UInt64) -> UInt64
 pub fn Adapter::missing_rust_features_u64(Self, UInt64) -> UInt64
 pub fn Adapter::raw_handle(Self) -> @c.WGPUAdapter
 pub fn Adapter::release(Self) -> Unit
@@ -1490,7 +1493,10 @@ pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Arr
 pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64
+pub fn Adapter::supported_rust_features_u64(Self) -> UInt64
+pub fn Adapter::supports_known_rust_features_u64(Self, UInt64) -> Bool
 pub fn Adapter::supports_rust_features_u64(Self, UInt64) -> Bool
+pub fn Adapter::unknown_rust_features_u64(Self, UInt64) -> UInt64
 
 pub struct AutoReleasePool {
   // private fields
@@ -1910,6 +1916,7 @@ pub fn Device::limits_max_vertex_buffer_array_stride_u32(Self) -> UInt
 pub fn Device::limits_max_vertex_buffers_u32(Self) -> UInt
 pub fn Device::limits_min_storage_buffer_offset_alignment_u32(Self) -> UInt
 pub fn Device::limits_min_uniform_buffer_offset_alignment_u32(Self) -> UInt
+pub fn Device::missing_known_rust_features_u64(Self, UInt64) -> UInt64
 pub fn Device::missing_rust_features_u64(Self, UInt64) -> UInt64
 pub fn Device::poll(Self, wait? : Bool) -> Bool
 pub fn Device::poll_raw(Self, Bool, @c.WGPUSubmissionIndexPtr) -> Bool
@@ -1924,8 +1931,11 @@ pub fn Device::set_label(Self, String) -> Unit
 pub fn Device::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Device::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Device::supported_features_count_u64(Self) -> UInt64
+pub fn Device::supported_rust_features_u64(Self) -> UInt64
+pub fn Device::supports_known_rust_features_u64(Self, UInt64) -> Bool
 pub fn Device::supports_rust_features_u64(Self, UInt64) -> Bool
 pub fn Device::take_lost_reason(Self) -> UInt
+pub fn Device::unknown_rust_features_u64(Self, UInt64) -> UInt64
 pub fn Device::wait_lost_reason_sync(Self, Instance) -> UInt
 
 pub struct GlobalReport {

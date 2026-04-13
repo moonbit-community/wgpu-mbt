@@ -13,51 +13,52 @@
 // limitations under the License.
 
 ///|
-fn clear_supported_feature_bit(
-  missing : Ref[UInt64],
-  required_features_u64 : UInt64,
-  feature_bit_u64 : UInt64,
-  supported : Bool,
-) -> Unit {
-  if supported && (required_features_u64 & feature_bit_u64) != 0UL {
-    missing.val = missing.val ^ feature_bit_u64
-  }
-}
-
-///|
-fn missing_rust_features_mask_u64(
-  required_features_u64 : UInt64,
+fn compose_supported_rust_features_u64(
   has_depth_clip_control : Bool,
   has_push_constants : Bool,
   has_shader_int64 : Bool,
   has_subgroup : Bool,
 ) -> UInt64 {
-  let missing : Ref[UInt64] = @ref.new(required_features_u64)
-  clear_supported_feature_bit(
-    missing,
-    required_features_u64,
-    FEATURES_DEPTH_CLIP_CONTROL,
-    has_depth_clip_control,
-  )
-  clear_supported_feature_bit(
-    missing,
-    required_features_u64,
-    FEATURES_PUSH_CONSTANTS,
-    has_push_constants,
-  )
-  clear_supported_feature_bit(
-    missing,
-    required_features_u64,
-    FEATURES_SHADER_INT64,
-    has_shader_int64,
-  )
-  clear_supported_feature_bit(
-    missing,
-    required_features_u64,
-    FEATURES_SUBGROUP,
-    has_subgroup,
-  )
-  missing.val
+  let supported : Ref[UInt64] = @ref.new(0UL)
+  if has_depth_clip_control {
+    supported.val = supported.val | FEATURES_DEPTH_CLIP_CONTROL
+  }
+  if has_push_constants {
+    supported.val = supported.val | FEATURES_PUSH_CONSTANTS
+  }
+  if has_shader_int64 {
+    supported.val = supported.val | FEATURES_SHADER_INT64
+  }
+  if has_subgroup {
+    supported.val = supported.val | FEATURES_SUBGROUP
+  }
+  supported.val
+}
+
+///|
+fn compute_unknown_rust_features_u64(required_features_u64 : UInt64) -> UInt64 {
+  let queryable = required_features_u64 & FEATURES_QUERYABLE_MASK
+  required_features_u64 ^ queryable
+}
+
+///|
+fn compute_missing_known_rust_features_u64(
+  required_features_u64 : UInt64,
+  supported_features_u64 : UInt64,
+) -> UInt64 {
+  let queryable = required_features_u64 & FEATURES_QUERYABLE_MASK
+  queryable ^ (queryable & supported_features_u64)
+}
+
+///|
+fn missing_rust_features_mask_u64(
+  required_features_u64 : UInt64,
+  supported_features_u64 : UInt64,
+) -> UInt64 {
+  compute_missing_known_rust_features_u64(
+    required_features_u64, supported_features_u64,
+  ) |
+  compute_unknown_rust_features_u64(required_features_u64)
 }
 
 ///|
@@ -71,11 +72,46 @@ pub fn Adapter::missing_rust_features_u64(
 ) -> UInt64 {
   missing_rust_features_mask_u64(
     required_features_u64,
+    self.supported_rust_features_u64(),
+  )
+}
+
+///|
+pub fn Adapter::supported_rust_features_u64(self : Adapter) -> UInt64 {
+  compose_supported_rust_features_u64(
     self.supported_features_contains_u32(FEATURE_NAME_DEPTH_CLIP_CONTROL),
     self.has_feature_native_push_constants(),
     self.has_feature_native_shader_int64(),
     self.has_feature_native_subgroup(),
   )
+}
+
+///|
+pub fn Adapter::missing_known_rust_features_u64(
+  self : Adapter,
+  required_features_u64 : UInt64,
+) -> UInt64 {
+  compute_missing_known_rust_features_u64(
+    required_features_u64,
+    self.supported_rust_features_u64(),
+  )
+}
+
+///|
+pub fn Adapter::unknown_rust_features_u64(
+  self : Adapter,
+  required_features_u64 : UInt64,
+) -> UInt64 {
+  let _ = self
+  compute_unknown_rust_features_u64(required_features_u64)
+}
+
+///|
+pub fn Adapter::supports_known_rust_features_u64(
+  self : Adapter,
+  required_features_u64 : UInt64,
+) -> Bool {
+  self.missing_known_rust_features_u64(required_features_u64) == 0UL
 }
 
 ///|
@@ -97,11 +133,46 @@ pub fn Device::missing_rust_features_u64(
 ) -> UInt64 {
   missing_rust_features_mask_u64(
     required_features_u64,
+    self.supported_rust_features_u64(),
+  )
+}
+
+///|
+pub fn Device::supported_rust_features_u64(self : Device) -> UInt64 {
+  compose_supported_rust_features_u64(
     self.has_feature_u32(FEATURE_NAME_DEPTH_CLIP_CONTROL),
     self.has_feature_native_push_constants(),
     self.has_feature_native_shader_int64(),
     self.has_feature_native_subgroup(),
   )
+}
+
+///|
+pub fn Device::missing_known_rust_features_u64(
+  self : Device,
+  required_features_u64 : UInt64,
+) -> UInt64 {
+  compute_missing_known_rust_features_u64(
+    required_features_u64,
+    self.supported_rust_features_u64(),
+  )
+}
+
+///|
+pub fn Device::unknown_rust_features_u64(
+  self : Device,
+  required_features_u64 : UInt64,
+) -> UInt64 {
+  let _ = self
+  compute_unknown_rust_features_u64(required_features_u64)
+}
+
+///|
+pub fn Device::supports_known_rust_features_u64(
+  self : Device,
+  required_features_u64 : UInt64,
+) -> Bool {
+  self.missing_known_rust_features_u64(required_features_u64) == 0UL
 }
 
 ///|

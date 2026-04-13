@@ -26,6 +26,16 @@ test "rust feature bit constants align with wgpu" {
     @wgpu.FEATURES_TEXTURE_INT64_ATOMIC == 0x0000400000000000UL,
     content="true",
   )
+  inspect(
+    @wgpu.FEATURES_QUERYABLE_MASK ==
+    (
+      @wgpu.FEATURES_DEPTH_CLIP_CONTROL |
+      @wgpu.FEATURES_PUSH_CONSTANTS |
+      @wgpu.FEATURES_SHADER_INT64 |
+      @wgpu.FEATURES_SUBGROUP
+    ),
+    content="true",
+  )
 }
 
 ///|
@@ -40,31 +50,55 @@ test "rust feature mask helpers report missing bits" {
       @wgpu.FEATURES_SHADER_INT64 |
       @wgpu.FEATURES_SUBGROUP |
       @wgpu.FEATURES_TEXTURE_INT64_ATOMIC
+    let required_known = required & @wgpu.FEATURES_QUERYABLE_MASK
+    let required_unknown = required ^ required_known
 
-    let expected_adapter_missing : Ref[UInt64] = @ref.new(required)
+    let expected_adapter_supported : Ref[UInt64] = @ref.new(0UL)
     if adapter.supported_features_contains_u32(
         @wgpu.FEATURE_NAME_DEPTH_CLIP_CONTROL,
       ) {
-      expected_adapter_missing.val = expected_adapter_missing.val ^
+      expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_DEPTH_CLIP_CONTROL
     }
     if adapter.has_feature_native_push_constants() {
-      expected_adapter_missing.val = expected_adapter_missing.val ^
+      expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_PUSH_CONSTANTS
     }
     if adapter.has_feature_native_shader_int64() {
-      expected_adapter_missing.val = expected_adapter_missing.val ^
+      expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_SHADER_INT64
     }
     if adapter.has_feature_native_subgroup() {
-      expected_adapter_missing.val = expected_adapter_missing.val ^
+      expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_SUBGROUP
     }
+    inspect(
+      adapter.supported_rust_features_u64() == expected_adapter_supported.val,
+      content="true",
+    )
+    let expected_adapter_missing_known = required_known ^
+      (required_known & expected_adapter_supported.val)
+    let expected_adapter_missing = expected_adapter_missing_known |
+      required_unknown
     let adapter_missing = adapter.missing_rust_features_u64(required)
-    inspect(adapter_missing == expected_adapter_missing.val, content="true")
+    inspect(adapter_missing == expected_adapter_missing, content="true")
+    inspect(
+      adapter.missing_known_rust_features_u64(required) ==
+      expected_adapter_missing_known,
+      content="true",
+    )
+    inspect(
+      adapter.unknown_rust_features_u64(required) == required_unknown,
+      content="true",
+    )
+    inspect(
+      adapter.supports_known_rust_features_u64(required) ==
+      (expected_adapter_missing_known == 0UL),
+      content="true",
+    )
     inspect(
       adapter.supports_rust_features_u64(required) ==
-      (expected_adapter_missing.val == 0UL),
+      (expected_adapter_missing == 0UL),
       content="true",
     )
     inspect(
@@ -76,28 +110,50 @@ test "rust feature mask helpers report missing bits" {
       content="true",
     )
 
-    let expected_device_missing : Ref[UInt64] = @ref.new(required)
+    let expected_device_supported : Ref[UInt64] = @ref.new(0UL)
     if device.has_feature_u32(@wgpu.FEATURE_NAME_DEPTH_CLIP_CONTROL) {
-      expected_device_missing.val = expected_device_missing.val ^
+      expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_DEPTH_CLIP_CONTROL
     }
     if device.has_feature_native_push_constants() {
-      expected_device_missing.val = expected_device_missing.val ^
+      expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_PUSH_CONSTANTS
     }
     if device.has_feature_native_shader_int64() {
-      expected_device_missing.val = expected_device_missing.val ^
+      expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_SHADER_INT64
     }
     if device.has_feature_native_subgroup() {
-      expected_device_missing.val = expected_device_missing.val ^
+      expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_SUBGROUP
     }
+    inspect(
+      device.supported_rust_features_u64() == expected_device_supported.val,
+      content="true",
+    )
+    let expected_device_missing_known = required_known ^
+      (required_known & expected_device_supported.val)
+    let expected_device_missing = expected_device_missing_known |
+      required_unknown
     let device_missing = device.missing_rust_features_u64(required)
-    inspect(device_missing == expected_device_missing.val, content="true")
+    inspect(device_missing == expected_device_missing, content="true")
+    inspect(
+      device.missing_known_rust_features_u64(required) ==
+      expected_device_missing_known,
+      content="true",
+    )
+    inspect(
+      device.unknown_rust_features_u64(required) == required_unknown,
+      content="true",
+    )
+    inspect(
+      device.supports_known_rust_features_u64(required) ==
+      (expected_device_missing_known == 0UL),
+      content="true",
+    )
     inspect(
       device.supports_rust_features_u64(required) ==
-      (expected_device_missing.val == 0UL),
+      (expected_device_missing == 0UL),
       content="true",
     )
     inspect(
