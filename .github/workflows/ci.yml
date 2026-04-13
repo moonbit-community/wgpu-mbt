@@ -257,14 +257,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          asan_clang="$(xcrun -f clang)"
-          asan_resource_dir="$("$asan_clang" --print-resource-dir)"
-          asan_dylib="$asan_resource_dir/lib/darwin/libclang_rt.asan_osx_dynamic.dylib"
-          if [ ! -f "$asan_dylib" ]; then
-            echo "failed to locate Xcode ASan runtime dylib: $asan_dylib"
-            exit 1
-          fi
-          export DYLD_INSERT_LIBRARIES="$asan_dylib"
+          # Keep DYLD injection scoped to the test binary inside the helper script.
+          # Exporting DYLD_INSERT_LIBRARIES at step scope can break arm64e shell startup.
           scripts/run_native_asan_tests.sh src/tests/wgpu_managed_lifecycle_test.mbt
           scripts/run_native_asan_tests.sh \
             src/tests/wgpu_lifecycle_helper_test.mbt \

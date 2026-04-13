@@ -107,13 +107,13 @@ if [[ "$(uname -s)" == "Darwin" && "$ASAN_OPTS" != *verify_asan_link_order=* ]];
   ASAN_OPTS="${ASAN_OPTS}:verify_asan_link_order=0"
 fi
 
-DARWIN_DYLD_INSERT_LIBRARIES="${DYLD_INSERT_LIBRARIES:-}"
+DARWIN_DYLD_INSERT_LIBRARIES="${MBT_WGPU_ASAN_DYLD_INSERT_LIBRARIES:-${DYLD_INSERT_LIBRARIES:-}}"
 if [[ "$(uname -s)" == "Darwin" && -z "$DARWIN_DYLD_INSERT_LIBRARIES" ]]; then
   CLANG_RESOURCE_DIR="$("$ASAN_CLANG" --print-resource-dir)"
   ASAN_RUNTIME_DYLIB="$CLANG_RESOURCE_DIR/lib/darwin/libclang_rt.asan_osx_dynamic.dylib"
   if [[ ! -f "$ASAN_RUNTIME_DYLIB" ]]; then
     echo "failed to locate ASan runtime dylib at: $ASAN_RUNTIME_DYLIB" >&2
-    echo "set DYLD_INSERT_LIBRARIES explicitly before running this script" >&2
+    echo "set MBT_WGPU_ASAN_DYLD_INSERT_LIBRARIES (or DYLD_INSERT_LIBRARIES) explicitly before running this script" >&2
     exit 1
   fi
   DARWIN_DYLD_INSERT_LIBRARIES="$ASAN_RUNTIME_DYLIB"
