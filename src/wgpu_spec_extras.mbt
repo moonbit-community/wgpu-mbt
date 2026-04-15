@@ -2044,6 +2044,20 @@ declare pub fn Device::limits_max_storage_buffers_per_shader_stage_u32(
 
 ///|
 #declaration_only
+declare pub fn Device::supports_read_only_storage_buffer_binding(
+  self : Device,
+  required_storage_buffers_per_shader_stage : UInt,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::get_supported_read_only_binding_type_u32(
+  self : Device,
+  required_storage_buffers_per_shader_stage : UInt,
+) -> UInt
+
+///|
+#declaration_only
 declare pub fn Device::limits_max_storage_textures_per_shader_stage_u32(
   self : Device,
 ) -> UInt

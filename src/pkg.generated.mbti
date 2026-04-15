@@ -1836,6 +1836,7 @@ pub fn Device::get_features(Self, @c.WGPUSupportedFeaturesPtr) -> Unit
 pub fn Device::get_limits(Self, @c.WGPULimitsPtr) -> @c.WGPUStatus
 pub fn Device::get_lost_future(Self) -> @c.WGPUFuture
 pub fn Device::get_queue(Self) -> Queue
+pub fn Device::get_supported_read_only_binding_type_u32(Self, UInt) -> UInt
 pub fn Device::has_feature(Self, @c.WGPUFeatureName) -> Bool
 pub fn Device::has_feature_native_buffer_binding_array(Self) -> Bool
 pub fn Device::has_feature_native_clear_texture(Self) -> Bool
@@ -1933,6 +1934,7 @@ pub fn Device::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Device::supported_features_count_u64(Self) -> UInt64
 pub fn Device::supported_rust_features_u64(Self) -> UInt64
 pub fn Device::supports_known_rust_features_u64(Self, UInt64) -> Bool
+pub fn Device::supports_read_only_storage_buffer_binding(Self, UInt) -> Bool
 pub fn Device::supports_rust_features_u64(Self, UInt64) -> Bool
 pub fn Device::take_lost_reason(Self) -> UInt
 pub fn Device::unknown_rust_features_u64(Self, UInt64) -> UInt64

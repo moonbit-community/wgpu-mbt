@@ -441,6 +441,29 @@ pub fn Device::limits_max_storage_buffers_per_shader_stage_u32(
 }
 
 ///|
+pub fn Device::supports_read_only_storage_buffer_binding(
+  self : Device,
+  required_storage_buffers_per_shader_stage : UInt,
+) -> Bool {
+  self.limits_max_storage_buffers_per_shader_stage_u32() >=
+  required_storage_buffers_per_shader_stage
+}
+
+///|
+pub fn Device::get_supported_read_only_binding_type_u32(
+  self : Device,
+  required_storage_buffers_per_shader_stage : UInt,
+) -> UInt {
+  if self.supports_read_only_storage_buffer_binding(
+      required_storage_buffers_per_shader_stage,
+    ) {
+    BUFFER_BINDING_TYPE_READ_ONLY_STORAGE
+  } else {
+    BUFFER_BINDING_TYPE_UNIFORM
+  }
+}
+
+///|
 pub fn Device::limits_max_storage_textures_per_shader_stage_u32(
   self : Device,
 ) -> UInt {
