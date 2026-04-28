@@ -1922,6 +1922,7 @@ pub fn Device::missing_rust_features_u64(Self, UInt64) -> UInt64
 pub fn Device::poll(Self, wait? : Bool) -> Bool
 pub fn Device::poll_raw(Self, Bool, @c.WGPUSubmissionIndexPtr) -> Bool
 pub fn Device::pop_error_scope_sync(Self, Instance) -> UInt
+pub fn Device::pop_error_scope_sync_result(Self, Instance) -> ErrorScopeResult
 pub fn Device::push_error_scope(Self, UInt) -> Unit
 pub fn Device::push_error_scope_raw(Self, @c.WGPUErrorFilter) -> Unit
 pub fn Device::queue(Self) -> Queue
@@ -1939,6 +1940,11 @@ pub fn Device::supports_rust_features_u64(Self, UInt64) -> Bool
 pub fn Device::take_lost_reason(Self) -> UInt
 pub fn Device::unknown_rust_features_u64(Self, UInt64) -> UInt64
 pub fn Device::wait_lost_reason_sync(Self, Instance) -> UInt
+
+pub struct ErrorScopeResult {
+  error_type : UInt
+  message : String
+}
 
 pub struct GlobalReport {
   raw : @c.WGPUGlobalReportPtr

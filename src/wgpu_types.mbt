@@ -401,6 +401,12 @@ pub struct CompilationInfo {
 }
 
 ///|
+pub struct ErrorScopeResult {
+  error_type : UInt
+  message : String
+}
+
+///|
 pub fn platform_is_macos() -> Bool {
   @c.platform_is_macos()
 }

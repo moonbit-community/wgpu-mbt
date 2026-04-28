@@ -43,6 +43,20 @@ pub fn Device::pop_error_scope_sync(self : Device, instance : Instance) -> UInt 
 }
 
 ///|
+pub fn Device::pop_error_scope_sync_result(
+  self : Device,
+  instance : Instance,
+) -> ErrorScopeResult {
+  let error_type = self.pop_error_scope_sync(instance)
+  ErrorScopeResult::{
+    error_type,
+    message: read_utf8_via(
+      @c.device_pop_error_scope_sync_last_message_utf8_len, @c.device_pop_error_scope_sync_last_message_utf8,
+    ),
+  }
+}
+
+///|
 pub fn Device::supported_features_count_u64(self : Device) -> UInt64 {
   @c.device_supported_features_count_u64(self.raw)
 }

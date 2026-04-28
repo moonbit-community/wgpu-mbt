@@ -715,6 +715,16 @@ pub extern "C" fn device_pop_error_scope_sync_u32(
 ) -> UInt = "mbt_wgpu_device_pop_error_scope_sync"
 
 ///|
+pub extern "C" fn device_pop_error_scope_sync_last_message_utf8_len() -> UInt64 = "mbt_wgpu_device_pop_error_scope_sync_last_message_utf8_len"
+
+///|
+#borrow(out)
+pub extern "C" fn device_pop_error_scope_sync_last_message_utf8(
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_device_pop_error_scope_sync_last_message_utf8"
+
+///|
 pub extern "C" fn adapter_request_device_sync(
   instance : Instance,
   adapter : WGPUAdapter,

@@ -20,6 +20,16 @@
 #include <string.h>
 #include <stdatomic.h>
 
+#if defined(_WIN32)
+#define MBT_WGPU_THREAD_LOCAL __declspec(thread)
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+#define MBT_WGPU_THREAD_LOCAL _Thread_local
+#elif defined(__GNUC__) || defined(__clang__)
+#define MBT_WGPU_THREAD_LOCAL __thread
+#else
+#define MBT_WGPU_THREAD_LOCAL
+#endif
+
 static _Atomic uint32_t g_mbt_wgpu_debug_budget_u32 = 64u;
 
 static bool mbt_wgpu_debug_take(const char *env_name) {
@@ -1926,19 +1936,39 @@ void mbt_wgpu_device_push_error_scope_u32(WGPUDevice device, uint32_t filter_u32
 typedef struct {
   WGPUPopErrorScopeStatus status;
   WGPUErrorType type;
+  uint8_t *message;
+  uint64_t message_len_u64;
 } mbt_pop_error_scope_result_t;
+
+static MBT_WGPU_THREAD_LOCAL uint8_t *g_mbt_wgpu_last_pop_error_scope_message = NULL;
+static MBT_WGPU_THREAD_LOCAL uint64_t g_mbt_wgpu_last_pop_error_scope_message_len_u64 = 0u;
+
+static void mbt_wgpu_pop_error_scope_clear_last_message(void) {
+  free(g_mbt_wgpu_last_pop_error_scope_message);
+  g_mbt_wgpu_last_pop_error_scope_message = NULL;
+  g_mbt_wgpu_last_pop_error_scope_message_len_u64 = 0u;
+}
 
 static void mbt_pop_error_scope_cb(WGPUPopErrorScopeStatus status, WGPUErrorType type,
                                    WGPUStringView message, void *userdata1,
                                    void *userdata2) {
-  (void)message;
   (void)userdata2;
   mbt_pop_error_scope_result_t *out = (mbt_pop_error_scope_result_t *)userdata1;
   out->status = status;
   out->type = type;
+  out->message = NULL;
+  out->message_len_u64 = 0u;
+  if (message.data && message.length > 0u) {
+    out->message = (uint8_t *)malloc(message.length);
+    if (out->message) {
+      memcpy(out->message, message.data, message.length);
+      out->message_len_u64 = (uint64_t)message.length;
+    }
+  }
 }
 
 uint32_t mbt_wgpu_device_pop_error_scope_sync(WGPUInstance instance, WGPUDevice device) {
+  mbt_wgpu_pop_error_scope_clear_last_message();
   if (!instance || !device) {
     return 0u;
   }
@@ -1955,9 +1985,32 @@ uint32_t mbt_wgpu_device_pop_error_scope_sync(WGPUInstance instance, WGPUDevice 
     wgpuInstanceProcessEvents(instance);
   }
   if (out.status != WGPUPopErrorScopeStatus_Success) {
+    free(out.message);
     return 0u;
   }
+  g_mbt_wgpu_last_pop_error_scope_message = out.message;
+  g_mbt_wgpu_last_pop_error_scope_message_len_u64 = out.message_len_u64;
+  out.message = NULL;
   return (uint32_t)out.type;
+}
+
+uint64_t mbt_wgpu_device_pop_error_scope_sync_last_message_utf8_len(void) {
+  return g_mbt_wgpu_last_pop_error_scope_message_len_u64;
+}
+
+int32_t mbt_wgpu_device_pop_error_scope_sync_last_message_utf8(uint8_t *out,
+                                                               uint64_t out_len) {
+  if (!out) {
+    return 0;
+  }
+  if (out_len < g_mbt_wgpu_last_pop_error_scope_message_len_u64) {
+    return 0;
+  }
+  if (g_mbt_wgpu_last_pop_error_scope_message_len_u64 != 0u) {
+    memcpy(out, g_mbt_wgpu_last_pop_error_scope_message,
+           (size_t)g_mbt_wgpu_last_pop_error_scope_message_len_u64);
+  }
+  return 1;
 }
 
 void mbt_wgpu_command_encoder_set_label_utf8(WGPUCommandEncoder encoder,

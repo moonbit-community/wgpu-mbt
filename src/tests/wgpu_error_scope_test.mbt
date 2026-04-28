@@ -24,3 +24,19 @@ test "wgpu device error scopes (validation)" {
   adapter.release()
   instance.release()
 }
+
+///|
+test "wgpu device error scope result exposes validation message" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  device.push_error_scope(@wgpu.ERROR_FILTER_VALIDATION)
+  let shader = device.create_shader_module_wgsl("fn")
+  let result = device.pop_error_scope_sync_result(instance)
+  inspect(result.error_type == @wgpu.ERROR_TYPE_VALIDATION, content="true")
+  inspect(result.message.length() > 0, content="true")
+  shader.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}
