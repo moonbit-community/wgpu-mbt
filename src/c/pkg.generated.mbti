@@ -664,6 +664,10 @@ pub fn device_limits_min_uniform_buffer_offset_alignment_u32(WGPUDevice) -> UInt
 
 pub fn device_poll(WGPUDevice, Bool, WGPUSubmissionIndexPtr) -> Bool
 
+pub fn device_pop_error_scope_sync_last_message_utf8(Bytes, UInt64) -> Bool
+
+pub fn device_pop_error_scope_sync_last_message_utf8_len() -> UInt64
+
 pub fn device_pop_error_scope_sync_u32(WGPUInstance, WGPUDevice) -> UInt
 
 pub fn device_push_error_scope_u32(WGPUDevice, UInt) -> Unit

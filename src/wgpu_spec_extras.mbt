@@ -1722,6 +1722,13 @@ declare pub fn Device::pop_error_scope_sync(
 
 ///|
 #declaration_only
+declare pub fn Device::pop_error_scope_sync_result(
+  self : Device,
+  instance : Instance,
+) -> ErrorScopeResult
+
+///|
+#declaration_only
 declare pub fn Device::supported_features_count_u64(self : Device) -> UInt64
 
 ///|
