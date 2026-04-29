@@ -3994,9 +3994,6 @@ static void mbt_wgpu_bind_group_builder_finalize(void *self) {
 }
 
 void *mbt_wgpu_bind_group_builder_new(uint64_t max_entries) {
-  if (max_entries == 0u) {
-    return NULL;
-  }
   mbt_bind_group_builder_t *b =
       (mbt_bind_group_builder_t *)moonbit_make_external_object(
           mbt_wgpu_bind_group_builder_finalize,
@@ -4008,6 +4005,9 @@ void *mbt_wgpu_bind_group_builder_new(uint64_t max_entries) {
   b->len = 0u;
   b->entries = NULL;
   b->extras = NULL;
+  if (max_entries == 0u) {
+    return (void *)b;
+  }
   b->entries =
       (WGPUBindGroupEntry *)calloc((size_t)max_entries, sizeof(WGPUBindGroupEntry));
   if (!b->entries) {
@@ -4245,7 +4245,10 @@ WGPUBindGroup mbt_wgpu_bind_group_builder_finish(WGPUDevice device,
                                                 void *builder, const uint8_t *label,
                                                 uint64_t label_len) {
   mbt_bind_group_builder_t *b = (mbt_bind_group_builder_t *)builder;
-  if (!device || !layout || !b || !b->entries || b->len == 0u) {
+  if (!device || !layout || !b) {
+    return NULL;
+  }
+  if (b->len != 0u && !b->entries) {
     return NULL;
   }
   WGPUBindGroupDescriptor desc = {
@@ -4253,7 +4256,7 @@ WGPUBindGroup mbt_wgpu_bind_group_builder_finish(WGPUDevice device,
       .label = mbt_wgpu_string_view(label, label_len),
       .layout = layout,
       .entryCount = (size_t)b->len,
-      .entries = b->entries,
+      .entries = b->len == 0u ? NULL : b->entries,
   };
   WGPUBindGroup out = wgpuDeviceCreateBindGroup(device, &desc);
   mbt_wgpu_bind_group_builder_drop(b);
