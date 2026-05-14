@@ -121,7 +121,7 @@ test "wgpu sampler: linear vs nearest produces different mid-sample" {
   let r1 = bytes1[0].to_uint()
   inspect(
     [classify_0_255_mid(r0), classify_0_255_mid(r1)],
-    content="[\"zero\", \"mid\"]",
+    content="[zero, mid]",
   )
   cmd1.release()
   encoder1.release()

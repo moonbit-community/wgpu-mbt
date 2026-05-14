@@ -110,7 +110,7 @@ test "wgpu render: alpha blending over loaded color" {
   let b = out[2].to_uint()
   inspect(
     [bucket_half_u8(r), bucket_half_u8(g), bucket_half_u8(b)],
-    content="[\"half\", \"half\", \"zero\"]",
+    content="[half, half, zero]",
   )
   cmd1.release()
   encoder1.release()
@@ -228,7 +228,7 @@ test "wgpu render: alpha blending + arbitrary format pipeline (BGRA8Unorm)" {
   let r = out[2].to_uint()
   inspect(
     [bucket_half_u8(r), bucket_half_u8(g), bucket_half_u8(b)],
-    content="[\"half\", \"half\", \"zero\"]",
+    content="[half, half, zero]",
   )
   cmd1.release()
   encoder1.release()
@@ -347,7 +347,7 @@ test "wgpu render pipeline desc builder: pos2 + alpha blend + arbitrary format (
   let r = out[2].to_uint()
   inspect(
     [bucket_half_u8(r), bucket_half_u8(g), bucket_half_u8(b)],
-    content="[\"half\", \"half\", \"zero\"]",
+    content="[half, half, zero]",
   )
   cmd1.release()
   encoder1.release()
@@ -459,7 +459,7 @@ test "wgpu render pipeline desc builder: custom blend components" {
   let a = out[3].to_uint()
   inspect(
     [bucket_half_u8(r), bucket_half_u8(g), bucket_half_u8(b), bucket_half_u8(a)],
-    content="[\"half\", \"half\", \"zero\", \"zero\"]",
+    content="[half, half, zero, zero]",
   )
   cmd1.release()
   encoder1.release()
@@ -564,7 +564,7 @@ test "wgpu render pipeline desc builder: color target write mask setters" {
   let a = out[3].to_uint()
   inspect(
     [bucket_half_u8(r), bucket_half_u8(g), bucket_half_u8(b), bucket_half_u8(a)],
-    content="[\"zero\", \"full\", \"zero\", \"full\"]",
+    content="[zero, full, zero, full]",
   )
   cmd1.release()
   encoder1.release()
@@ -668,7 +668,7 @@ test "wgpu render pipeline desc builder: disable blend after enable" {
   let a = out[3].to_uint()
   inspect(
     [bucket_half_u8(r), bucket_half_u8(g), bucket_half_u8(b), bucket_half_u8(a)],
-    content="[\"full\", \"zero\", \"zero\", \"half\"]",
+    content="[full, zero, zero, half]",
   )
   cmd1.release()
   encoder1.release()
