@@ -371,6 +371,27 @@ pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
 }
 
 ///|
+/// Create a macOS Metal surface from an `NSView*`.
+///
+/// The view remains host-owned. The returned `Surface` retains the attached
+/// `CAMetalLayer` and releases that retain in `Surface::release`.
+pub fn Instance::create_surface_macos_ns_view(
+  self : Instance,
+  ns_view : @c.OpaquePtr,
+) -> Surface raise SurfaceCreateError {
+  let layer = @c.macos_ns_view_prepare_metal_layer(ns_view)
+  if @c.opaque_ptr_is_null(layer) {
+    raise SurfaceCreateError(@c.macos_surface_last_status_u32())
+  }
+  let surface = @c.instance_create_surface_metal_layer(self.raw, layer)
+  if @c.surface_is_null(surface) {
+    @c.cametallayer_release(layer)
+    raise SurfaceCreateError(SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED)
+  }
+  Surface::{ raw: surface, layer }
+}
+
+///|
 /// Create a surface from Wayland handles (`wl_display*`, `wl_surface*`).
 ///
 /// This is intended for Linux + Vulkan setups. The pointers are passed through

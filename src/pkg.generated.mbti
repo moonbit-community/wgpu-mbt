@@ -782,6 +782,26 @@ pub const STORE_OP_STORE : UInt = 0x00000001
 
 pub const STORE_OP_UNDEFINED : UInt = 0x00000000
 
+pub const SURFACE_CREATE_STATUS_APPKIT_UNAVAILABLE : UInt = 4
+
+pub const SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED : UInt = 9
+
+pub const SURFACE_CREATE_STATUS_INVALID_METAL_LAYER : UInt = 7
+
+pub const SURFACE_CREATE_STATUS_INVALID_NS_VIEW : UInt = 2
+
+pub const SURFACE_CREATE_STATUS_METAL_LAYER_UNAVAILABLE : UInt = 6
+
+pub const SURFACE_CREATE_STATUS_NOT_MAIN_THREAD : UInt = 5
+
+pub const SURFACE_CREATE_STATUS_OBJC_UNAVAILABLE : UInt = 3
+
+pub const SURFACE_CREATE_STATUS_SUCCESS : UInt = 0
+
+pub const SURFACE_CREATE_STATUS_UNSUPPORTED_PLATFORM : UInt = 1
+
+pub const SURFACE_CREATE_STATUS_ZERO_DRAWABLE_SIZE : UInt = 8
+
 pub const SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY : UInt = 2
 
 pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_DEVICE_LOST : UInt = 0x00000007
@@ -1331,6 +1351,9 @@ pub fn RenderPipelineDescError::message(Self) -> String
 
 type SurfaceConfigureError
 pub fn SurfaceConfigureError::message(Self) -> String
+
+type SurfaceCreateError
+pub fn SurfaceCreateError::message(Self) -> String
 
 type SurfacePresentError
 pub fn SurfacePresentError::message(Self) -> String
@@ -1995,6 +2018,7 @@ pub fn Instance::create() -> Self raise WgpuError
 pub fn Instance::create_ptr(@c.WGPUInstanceDescriptorPtr) -> Self raise WgpuError
 pub fn Instance::create_surface(Self, @c.WGPUSurfaceDescriptorPtr) -> Surface
 pub fn Instance::create_surface_android_native_window(Self, @c.OpaquePtr) -> Surface
+pub fn Instance::create_surface_macos_ns_view(Self, @c.OpaquePtr) -> Surface raise SurfaceCreateError
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
 pub fn Instance::create_surface_swap_chain_panel(Self, @c.OpaquePtr) -> Surface
 pub fn Instance::create_surface_wayland(Self, @c.OpaquePtr, @c.OpaquePtr) -> Surface
@@ -2396,6 +2420,7 @@ pub fn Surface::raw_handle(Self) -> @c.WGPUSurface
 pub fn Surface::release(Self) -> Unit
 pub fn Surface::release_raw(Self) -> Unit
 pub fn Surface::set_label(Self, String) -> Unit
+pub fn Surface::sync_macos_ns_view_layer(Self, @c.OpaquePtr) -> Unit raise SurfaceCreateError
 pub fn Surface::unconfigure(Self) -> Unit
 pub fn Surface::unconfigure_raw(Self) -> Unit
 

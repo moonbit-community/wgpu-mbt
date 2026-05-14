@@ -161,6 +161,7 @@ the package now also exposes pointer builders that include
 High-level constructors now cover all common native surface sources:
 
 - Metal: `Instance::create_surface_metal_layer()`
+- macOS AppKit: `Instance::create_surface_macos_ns_view(ns_view)`
 - Wayland: `Instance::create_surface_wayland(display, surface)`
 - XCB: `Instance::create_surface_xcb(connection, window)`
 - Xlib: `Instance::create_surface_xlib(display, window)`
@@ -171,6 +172,10 @@ High-level constructors now cover all common native surface sources:
 Current contract:
 
 - The checked-in host-integration behavior tests are for macOS/Metal.
+- `create_surface_macos_ns_view` accepts an AppKit `NSView*`, installs or reuses
+  a `CAMetalLayer`, synchronizes its drawable size from the view's backing
+  coordinates, and returns a `Surface` that retains the layer. Call
+  `Surface::sync_macos_ns_view_layer(ns_view)` after host-side view resizes.
 - Linux and Windows now have checked-in descriptor/input-validation tests for
   their platform surface entry points.
 - Off-target constructors are explicitly gated in the native stubs and return a

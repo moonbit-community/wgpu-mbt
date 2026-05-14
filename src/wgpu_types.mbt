@@ -94,6 +94,36 @@ pub struct SurfaceConfiguration {
 }
 
 ///|
+pub const SURFACE_CREATE_STATUS_SUCCESS : UInt = 0U
+
+///|
+pub const SURFACE_CREATE_STATUS_UNSUPPORTED_PLATFORM : UInt = 1U
+
+///|
+pub const SURFACE_CREATE_STATUS_INVALID_NS_VIEW : UInt = 2U
+
+///|
+pub const SURFACE_CREATE_STATUS_OBJC_UNAVAILABLE : UInt = 3U
+
+///|
+pub const SURFACE_CREATE_STATUS_APPKIT_UNAVAILABLE : UInt = 4U
+
+///|
+pub const SURFACE_CREATE_STATUS_NOT_MAIN_THREAD : UInt = 5U
+
+///|
+pub const SURFACE_CREATE_STATUS_METAL_LAYER_UNAVAILABLE : UInt = 6U
+
+///|
+pub const SURFACE_CREATE_STATUS_INVALID_METAL_LAYER : UInt = 7U
+
+///|
+pub const SURFACE_CREATE_STATUS_ZERO_DRAWABLE_SIZE : UInt = 8U
+
+///|
+pub const SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED : UInt = 9U
+
+///|
 pub fn SurfaceConfiguration::new(
   width : UInt,
   height : UInt,
@@ -632,6 +662,44 @@ pub fn OptionalSymbolError::message(self : OptionalSymbolError) -> String {
 ///|
 suberror SurfaceTextureError {
   SurfaceTextureError(UInt)
+}
+
+///|
+suberror SurfaceCreateError {
+  SurfaceCreateError(UInt)
+}
+
+///|
+pub fn SurfaceCreateError::message(self : SurfaceCreateError) -> String {
+  let SurfaceCreateError(status) = self
+  let name = if status == SURFACE_CREATE_STATUS_SUCCESS {
+    "Success"
+  } else if status == SURFACE_CREATE_STATUS_UNSUPPORTED_PLATFORM {
+    "UnsupportedPlatform"
+  } else if status == SURFACE_CREATE_STATUS_INVALID_NS_VIEW {
+    "InvalidNSView"
+  } else if status == SURFACE_CREATE_STATUS_OBJC_UNAVAILABLE {
+    "ObjCUnavailable"
+  } else if status == SURFACE_CREATE_STATUS_APPKIT_UNAVAILABLE {
+    "AppKitUnavailable"
+  } else if status == SURFACE_CREATE_STATUS_NOT_MAIN_THREAD {
+    "NotMainThread"
+  } else if status == SURFACE_CREATE_STATUS_METAL_LAYER_UNAVAILABLE {
+    "MetalLayerUnavailable"
+  } else if status == SURFACE_CREATE_STATUS_INVALID_METAL_LAYER {
+    "InvalidMetalLayer"
+  } else if status == SURFACE_CREATE_STATUS_ZERO_DRAWABLE_SIZE {
+    "ZeroDrawableSize"
+  } else if status == SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED {
+    "CreateSurfaceFailed"
+  } else {
+    "Unknown"
+  }
+  "macOS surface creation failed (status=" +
+  name +
+  ", u32=" +
+  status.to_string() +
+  ")"
 }
 
 ///|

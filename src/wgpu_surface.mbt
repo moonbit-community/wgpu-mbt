@@ -20,6 +20,22 @@ pub fn Surface::add_ref(self : Surface) -> Surface {
 }
 
 ///|
+/// Synchronize this surface's retained `CAMetalLayer` with an `NSView*`.
+///
+/// Call this on macOS after the host view is resized or moves between displays
+/// with different backing scale factors.
+pub fn Surface::sync_macos_ns_view_layer(
+  self : Surface,
+  ns_view : @c.OpaquePtr,
+) -> Unit raise SurfaceCreateError {
+  let status = @c.macos_ns_view_sync_metal_layer(ns_view, self.layer)
+  if status != SURFACE_CREATE_STATUS_SUCCESS {
+    raise SurfaceCreateError(status)
+  }
+  ()
+}
+
+///|
 pub fn surface_descriptor_metal_layer_new(
   layer : @c.OpaquePtr,
 ) -> @c.WGPUSurfaceDescriptorPtr {
