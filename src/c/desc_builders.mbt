@@ -471,6 +471,16 @@ pub extern "C" fn pipeline_layout_descriptor_2_new(
 ) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_2_new"
 
 ///|
+pub extern "C" fn pipeline_layout_descriptor_empty_new() -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_empty_new"
+
+///|
+#borrow(bind_group_layouts)
+pub extern "C" fn pipeline_layout_descriptor_many_new(
+  bind_group_layout_count : UInt64,
+  bind_group_layouts : FixedArray[WGPUBindGroupLayout],
+) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_many_new"
+
+///|
 pub extern "C" fn pipeline_layout_descriptor_push_constants_new(
   stages : UInt64,
   start : UInt,
@@ -764,6 +774,19 @@ pub fn render_pass_descriptor_color2_depth_u32_new(
     stencil_store_op_u32, stencil_clear_value_u32, depth_read_only_u32, stencil_read_only_u32,
   )
 }
+
+///|
+pub extern "C" fn render_pass_descriptor_depth_u32_new(
+  depth_view : WGPUTextureView,
+  depth_load_op_u32 : UInt,
+  depth_store_op_u32 : UInt,
+  depth_clear_value_f32 : Float,
+  stencil_load_op_u32 : UInt,
+  stencil_store_op_u32 : UInt,
+  stencil_clear_value_u32 : UInt,
+  depth_read_only : Bool,
+  stencil_read_only : Bool,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_depth_u32_new"
 
 ///|
 pub extern "C" fn render_pass_descriptor_color_clear_default_occlusion_new(

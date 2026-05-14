@@ -302,6 +302,8 @@ pub fn command_encoder_begin_render_pass_color_load(WGPUCommandEncoder, WGPUText
 
 pub fn command_encoder_begin_render_pass_color_occlusion(WGPUCommandEncoder, WGPUTextureView, WGPUQuerySet) -> WGPURenderPassEncoder
 
+pub fn command_encoder_begin_render_pass_depth_u32(WGPUCommandEncoder, WGPUTextureView, UInt, UInt, Float, UInt, UInt, UInt, Bool, Bool) -> WGPURenderPassEncoder
+
 pub fn command_encoder_clear_buffer(WGPUCommandEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
 
 pub fn command_encoder_copy_buffer_to_buffer(WGPUCommandEncoder, WGPUBuffer, UInt64, WGPUBuffer, UInt64, UInt64) -> Unit
@@ -483,6 +485,8 @@ pub fn device_create_compute_pipeline_with_layout(WGPUDevice, WGPUPipelineLayout
 pub fn device_create_pipeline_layout_1(WGPUDevice, WGPUBindGroupLayout) -> WGPUPipelineLayout
 
 pub fn device_create_pipeline_layout_2(WGPUDevice, WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayout
+
+pub fn device_create_pipeline_layout_many(WGPUDevice, Array[WGPUBindGroupLayout]) -> WGPUPipelineLayout
 
 pub fn device_create_pipeline_layout_push_constants(WGPUDevice, UInt64, UInt, UInt) -> WGPUPipelineLayout
 
@@ -922,7 +926,11 @@ pub fn pipeline_layout_descriptor_1_new(WGPUBindGroupLayout) -> WGPUPipelineLayo
 
 pub fn pipeline_layout_descriptor_2_new(WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayoutDescriptorPtr
 
+pub fn pipeline_layout_descriptor_empty_new() -> WGPUPipelineLayoutDescriptorPtr
+
 pub fn pipeline_layout_descriptor_free(WGPUPipelineLayoutDescriptorPtr) -> Unit
+
+pub fn pipeline_layout_descriptor_many_new(UInt64, FixedArray[WGPUBindGroupLayout]) -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_descriptor_push_constants_many_new(UInt64, FixedArray[UInt64], FixedArray[UInt], FixedArray[UInt]) -> WGPUPipelineLayoutDescriptorPtr
 
@@ -1042,6 +1050,8 @@ pub fn render_pass_descriptor_color_depth_u32_new(WGPUTextureView, UInt, UInt, F
 
 pub fn render_pass_descriptor_color_load_new(WGPUTextureView) -> WGPURenderPassDescriptorPtr
 
+pub fn render_pass_descriptor_depth_u32_new(WGPUTextureView, UInt, UInt, Float, UInt, UInt, UInt, Bool, Bool) -> WGPURenderPassDescriptorPtr
+
 pub fn render_pass_descriptor_free(WGPURenderPassDescriptorPtr) -> Unit
 
 pub fn render_pass_draw(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
@@ -1106,6 +1116,8 @@ pub fn render_pipeline_desc_builder_add_vertex_attribute(RenderPipelineDescBuild
 
 pub fn render_pipeline_desc_builder_add_vertex_buffer_layout(RenderPipelineDescBuilderObj, UInt64, UInt) -> UInt
 
+pub fn render_pipeline_desc_builder_clear_fragment(RenderPipelineDescBuilderObj) -> UInt
+
 pub fn render_pipeline_desc_builder_clear_primitive_extras(RenderPipelineDescBuilderObj) -> UInt
 
 pub fn render_pipeline_desc_builder_disable_blend(RenderPipelineDescBuilderObj) -> UInt
@@ -1138,15 +1150,23 @@ pub fn render_pipeline_desc_builder_set_color_target_write_mask_at(RenderPipelin
 
 pub fn render_pipeline_desc_builder_set_conservative(RenderPipelineDescBuilderObj, Bool) -> UInt
 
+pub fn render_pipeline_desc_builder_set_cull_mode(RenderPipelineDescBuilderObj, UInt) -> UInt
+
 pub fn render_pipeline_desc_builder_set_depth_stencil(RenderPipelineDescBuilderObj, UInt, Bool, UInt) -> UInt
 
 pub fn render_pipeline_desc_builder_set_entry_points_utf8(RenderPipelineDescBuilderObj, Bytes, UInt64, Bytes, UInt64) -> UInt
+
+pub fn render_pipeline_desc_builder_set_fragment_module(RenderPipelineDescBuilderObj, WGPUShaderModule) -> UInt
 
 pub fn render_pipeline_desc_builder_set_polygon_mode(RenderPipelineDescBuilderObj, UInt) -> UInt
 
 pub fn render_pipeline_desc_builder_set_topology(RenderPipelineDescBuilderObj, UInt) -> UInt
 
+pub fn render_pipeline_desc_builder_set_unclipped_depth(RenderPipelineDescBuilderObj, Bool) -> UInt
+
 pub fn render_pipeline_desc_builder_set_vertex_buffer_layout(RenderPipelineDescBuilderObj, UInt64, UInt) -> UInt
+
+pub fn render_pipeline_desc_builder_set_vertex_module(RenderPipelineDescBuilderObj, WGPUShaderModule) -> UInt
 
 pub fn render_pipeline_descriptor_color_format_alpha_blend_new(WGPUPipelineLayout, WGPUShaderModule, UInt) -> WGPURenderPipelineDescriptorPtr
 

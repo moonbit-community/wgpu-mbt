@@ -377,6 +377,40 @@ pub extern "C" fn render_pipeline_desc_builder_set_topology(
 
 ///|
 #borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_cull_mode(
+  builder : RenderPipelineDescBuilderObj,
+  cull_mode_u32 : UInt,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_cull_mode"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_unclipped_depth(
+  builder : RenderPipelineDescBuilderObj,
+  unclipped_depth : Bool,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_unclipped_depth"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_vertex_module(
+  builder : RenderPipelineDescBuilderObj,
+  shader_module : ShaderModule,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_vertex_module"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_fragment_module(
+  builder : RenderPipelineDescBuilderObj,
+  shader_module : ShaderModule,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_fragment_module"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_clear_fragment(
+  builder : RenderPipelineDescBuilderObj,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_clear_fragment"
+
+///|
+#borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_polygon_mode(
   builder : RenderPipelineDescBuilderObj,
   polygon_mode_u32 : UInt,

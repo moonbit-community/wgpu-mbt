@@ -602,6 +602,23 @@ pub fn device_create_pipeline_layout_2(
 }
 
 ///|
+pub fn device_create_pipeline_layout_many(
+  device : Device,
+  bind_group_layouts : Array[BindGroupLayout],
+) -> PipelineLayout {
+  let count = bind_group_layouts.length()
+  let desc = if count == 0 {
+    pipeline_layout_descriptor_empty_new()
+  } else {
+    let fixed = FixedArray::from_array(bind_group_layouts[:])
+    pipeline_layout_descriptor_many_new(count.to_uint64(), fixed)
+  }
+  let layout = wgpuDeviceCreatePipelineLayout(device, desc)
+  pipeline_layout_descriptor_free(desc)
+  layout
+}
+
+///|
 pub fn device_create_pipeline_layout_push_constants(
   device : Device,
   stages : UInt64,
@@ -852,6 +869,28 @@ pub fn command_encoder_begin_render_pass_color2_depth_u32(
     color0_view, color0_load_op_u32, color0_store_op_u32, color0_clear_r_f32, color0_clear_g_f32,
     color0_clear_b_f32, color0_clear_a_f32, color1_view, color1_load_op_u32, color1_store_op_u32,
     color1_clear_r_f32, color1_clear_g_f32, color1_clear_b_f32, color1_clear_a_f32,
+    depth_view, depth_load_op_u32, depth_store_op_u32, depth_clear_value_f32, stencil_load_op_u32,
+    stencil_store_op_u32, stencil_clear_value_u32, depth_read_only, stencil_read_only,
+  )
+  let pass = wgpuCommandEncoderBeginRenderPass(encoder, desc)
+  render_pass_descriptor_free(desc)
+  pass
+}
+
+///|
+pub fn command_encoder_begin_render_pass_depth_u32(
+  encoder : CommandEncoder,
+  depth_view : TextureView,
+  depth_load_op_u32 : UInt,
+  depth_store_op_u32 : UInt,
+  depth_clear_value_f32 : Float,
+  stencil_load_op_u32 : UInt,
+  stencil_store_op_u32 : UInt,
+  stencil_clear_value_u32 : UInt,
+  depth_read_only : Bool,
+  stencil_read_only : Bool,
+) -> RenderPassEncoder {
+  let desc = render_pass_descriptor_depth_u32_new(
     depth_view, depth_load_op_u32, depth_store_op_u32, depth_clear_value_f32, stencil_load_op_u32,
     stencil_store_op_u32, stencil_clear_value_u32, depth_read_only, stencil_read_only,
   )
