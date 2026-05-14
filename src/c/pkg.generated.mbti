@@ -272,6 +272,10 @@ pub fn buffer_set_label_utf8(WGPUBuffer, Bytes, UInt64) -> Unit
 
 pub fn buffer_unmap(WGPUBuffer) -> Unit
 
+pub fn cametallayer_drawable_height_u32(OpaquePtr) -> UInt
+
+pub fn cametallayer_drawable_width_u32(OpaquePtr) -> UInt
+
 pub fn cametallayer_new() -> OpaquePtr
 
 pub fn cametallayer_release(OpaquePtr) -> Unit
@@ -856,6 +860,18 @@ pub fn limits_free(WGPULimitsPtr) -> Unit
 
 pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64, UInt, UInt) -> WGPULimitsPtr
 
+pub fn macos_ns_view_prepare_metal_layer(OpaquePtr) -> OpaquePtr
+
+pub fn macos_ns_view_sync_metal_layer(OpaquePtr, OpaquePtr) -> UInt
+
+pub fn macos_surface_last_status_u32() -> UInt
+
+pub fn macos_test_ns_view_new(UInt, UInt) -> OpaquePtr
+
+pub fn macos_test_ns_view_release(OpaquePtr) -> Unit
+
+pub fn macos_test_ns_view_set_size(OpaquePtr, UInt, UInt) -> Unit
+
 pub fn native_available_u32() -> UInt
 
 pub fn native_diagnostic_utf8(Bytes, UInt64) -> Bool
@@ -1287,6 +1303,8 @@ pub fn surface_descriptor_windows_hwnd_new(OpaquePtr, OpaquePtr) -> WGPUSurfaceD
 pub fn surface_descriptor_xcb_new(OpaquePtr, UInt) -> WGPUSurfaceDescriptorPtr
 
 pub fn surface_descriptor_xlib_new(OpaquePtr, UInt64) -> WGPUSurfaceDescriptorPtr
+
+pub fn surface_is_null(WGPUSurface) -> Bool
 
 pub fn surface_present_u32(WGPUSurface) -> UInt
 

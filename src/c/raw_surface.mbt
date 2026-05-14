@@ -24,6 +24,49 @@ pub extern "C" fn cametallayer_release(layer : OpaquePtr) -> Unit = "mbt_wgpu_ca
 pub extern "C" fn cametallayer_retain(layer : OpaquePtr) -> Unit = "mbt_wgpu_cametallayer_retain"
 
 ///|
+pub extern "C" fn cametallayer_drawable_width_u32(layer : OpaquePtr) -> UInt = "mbt_wgpu_cametallayer_drawable_width_u32"
+
+///|
+pub extern "C" fn cametallayer_drawable_height_u32(layer : OpaquePtr) -> UInt = "mbt_wgpu_cametallayer_drawable_height_u32"
+
+///|
+pub extern "C" fn macos_surface_last_status_u32() -> UInt = "mbt_wgpu_macos_surface_last_status_u32"
+
+///|
+#borrow(ns_view)
+pub extern "C" fn macos_ns_view_prepare_metal_layer(
+  ns_view : OpaquePtr,
+) -> OpaquePtr = "mbt_wgpu_macos_ns_view_prepare_metal_layer"
+
+///|
+#borrow(ns_view, layer)
+pub extern "C" fn macos_ns_view_sync_metal_layer(
+  ns_view : OpaquePtr,
+  layer : OpaquePtr,
+) -> UInt = "mbt_wgpu_macos_ns_view_sync_metal_layer"
+
+///|
+pub extern "C" fn surface_is_null(surface : WGPUSurface) -> Bool = "mbt_wgpu_opaque_ptr_is_null"
+
+///|
+pub extern "C" fn macos_test_ns_view_new(
+  width : UInt,
+  height : UInt,
+) -> OpaquePtr = "mbt_wgpu_macos_test_ns_view_new"
+
+///|
+#borrow(ns_view)
+pub extern "C" fn macos_test_ns_view_set_size(
+  ns_view : OpaquePtr,
+  width : UInt,
+  height : UInt,
+) -> Unit = "mbt_wgpu_macos_test_ns_view_set_size"
+
+///|
+#borrow(ns_view)
+pub extern "C" fn macos_test_ns_view_release(ns_view : OpaquePtr) -> Unit = "mbt_wgpu_macos_test_ns_view_release"
+
+///|
 #borrow(layer)
 pub extern "C" fn instance_create_surface_metal_layer(
   instance : Instance,
