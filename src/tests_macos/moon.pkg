@@ -17,6 +17,7 @@ options(
     "wgpu_surface_configure_custom_test.mbt": [ "native" ],
     "wgpu_surface_configure_view_formats_test.mbt": [ "native" ],
     "wgpu_surface_descriptor_metal_test.mbt": [ "native" ],
+    "wgpu_surface_macos_ns_view_test.mbt": [ "native" ],
     "wgpu_surface_present_test.mbt": [ "native" ],
     "wgpu_surface_texture_bind_group_api_test.mbt": [ "native" ],
   },
