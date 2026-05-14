@@ -1396,6 +1396,19 @@ pub fn Device::create_pipeline_layout_2(
 }
 
 ///|
+pub fn Device::create_pipeline_layout_many(
+  self : Device,
+  bind_group_layouts : Array[BindGroupLayout],
+) -> PipelineLayout {
+  let raw_layouts : Array[@c.BindGroupLayout] = bind_group_layouts.map(l => {
+    l.raw
+  })
+  PipelineLayout::{
+    raw: @c.device_create_pipeline_layout_many(self.raw, raw_layouts),
+  }
+}
+
+///|
 pub fn Device::create_pipeline_layout_push_constants(
   self : Device,
   stages : ShaderStage,

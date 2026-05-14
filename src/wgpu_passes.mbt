@@ -449,6 +449,43 @@ pub fn CommandEncoder::begin_render_pass_color2_depth_u32(
 }
 
 ///|
+pub fn CommandEncoder::begin_render_pass_depth(
+  self : CommandEncoder,
+  depth_view : TextureView,
+) -> RenderPass {
+  self.begin_render_pass_depth_u32(depth_view)
+}
+
+///|
+pub fn CommandEncoder::begin_render_pass_depth_u32(
+  self : CommandEncoder,
+  depth_view : TextureView,
+  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  depth_store_op_u32? : UInt = STORE_OP_STORE,
+  depth_clear_value_f32? : Float = 1.0,
+  depth_read_only? : Bool = false,
+  stencil_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  stencil_store_op_u32? : UInt = STORE_OP_STORE,
+  stencil_clear_value_u32? : UInt = 0U,
+  stencil_read_only? : Bool = true,
+) -> RenderPass {
+  RenderPass::{
+    raw: @c.command_encoder_begin_render_pass_depth_u32(
+      self.raw,
+      depth_view.raw,
+      depth_load_op_u32,
+      depth_store_op_u32,
+      depth_clear_value_f32,
+      stencil_load_op_u32,
+      stencil_store_op_u32,
+      stencil_clear_value_u32,
+      depth_read_only,
+      stencil_read_only,
+    ),
+  }
+}
+
+///|
 pub fn CommandEncoder::begin_render_pass_color_occlusion(
   self : CommandEncoder,
   view : TextureView,

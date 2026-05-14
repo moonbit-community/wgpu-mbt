@@ -2925,6 +2925,40 @@ declare pub fn RenderPipelineDescBuilder::set_topology_u32(
 
 ///|
 #declaration_only
+declare pub fn RenderPipelineDescBuilder::set_cull_mode_u32(
+  self : RenderPipelineDescBuilder,
+  cull_mode_u32 : UInt,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_unclipped_depth(
+  self : RenderPipelineDescBuilder,
+  unclipped_depth : Bool,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_vertex_module(
+  self : RenderPipelineDescBuilder,
+  shader_module : ShaderModule,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_fragment_module(
+  self : RenderPipelineDescBuilder,
+  shader_module : ShaderModule,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::clear_fragment(
+  self : RenderPipelineDescBuilder,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
 declare pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(
   self : RenderPipelineDescBuilder,
   polygon_mode_u32 : UInt,
@@ -2996,6 +3030,13 @@ declare pub fn Device::create_pipeline_layout_2(
   self : Device,
   bind_group_layout0 : BindGroupLayout,
   bind_group_layout1 : BindGroupLayout,
+) -> PipelineLayout
+
+///|
+#declaration_only
+declare pub fn Device::create_pipeline_layout_many(
+  self : Device,
+  bind_group_layouts : Array[BindGroupLayout],
 ) -> PipelineLayout
 
 ///|
@@ -3254,6 +3295,28 @@ declare pub fn CommandEncoder::begin_render_pass_color2_depth_u32(
   color1_clear_g_f32? : Float,
   color1_clear_b_f32? : Float,
   color1_clear_a_f32? : Float,
+  depth_load_op_u32? : UInt,
+  depth_store_op_u32? : UInt,
+  depth_clear_value_f32? : Float,
+  depth_read_only? : Bool,
+  stencil_load_op_u32? : UInt,
+  stencil_store_op_u32? : UInt,
+  stencil_clear_value_u32? : UInt,
+  stencil_read_only? : Bool,
+) -> RenderPass
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::begin_render_pass_depth(
+  self : CommandEncoder,
+  depth_view : TextureView,
+) -> RenderPass
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::begin_render_pass_depth_u32(
+  self : CommandEncoder,
+  depth_view : TextureView,
   depth_load_op_u32? : UInt,
   depth_store_op_u32? : UInt,
   depth_clear_value_f32? : Float,

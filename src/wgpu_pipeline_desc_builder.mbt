@@ -363,6 +363,77 @@ pub fn RenderPipelineDescBuilder::set_topology_u32(
 }
 
 ///|
+pub fn RenderPipelineDescBuilder::set_cull_mode_u32(
+  self : RenderPipelineDescBuilder,
+  cull_mode_u32 : UInt,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_cull_mode(
+    self.raw,
+    cull_mode_u32,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::set_unclipped_depth(
+  self : RenderPipelineDescBuilder,
+  unclipped_depth : Bool,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_unclipped_depth(
+    self.raw,
+    unclipped_depth,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::set_vertex_module(
+  self : RenderPipelineDescBuilder,
+  shader_module : ShaderModule,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_vertex_module(
+    self.raw,
+    shader_module.raw,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::set_fragment_module(
+  self : RenderPipelineDescBuilder,
+  shader_module : ShaderModule,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_fragment_module(
+    self.raw,
+    shader_module.raw,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::clear_fragment(
+  self : RenderPipelineDescBuilder,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_clear_fragment(self.raw)
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
 pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(
   self : RenderPipelineDescBuilder,
   polygon_mode_u32 : UInt,

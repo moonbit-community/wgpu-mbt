@@ -1626,6 +1626,8 @@ pub fn CommandEncoder::begin_render_pass_color_depth(Self, TextureView, TextureV
 pub fn CommandEncoder::begin_render_pass_color_depth_u32(Self, TextureView, TextureView, color_load_op_u32? : UInt, color_store_op_u32? : UInt, color_clear_r_f32? : Float, color_clear_g_f32? : Float, color_clear_b_f32? : Float, color_clear_a_f32? : Float, depth_load_op_u32? : UInt, depth_store_op_u32? : UInt, depth_clear_value_f32? : Float, depth_read_only? : Bool, stencil_load_op_u32? : UInt, stencil_store_op_u32? : UInt, stencil_clear_value_u32? : UInt, stencil_read_only? : Bool) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_load(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_occlusion(Self, TextureView, QuerySet) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_depth(Self, TextureView) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_depth_u32(Self, TextureView, depth_load_op_u32? : UInt, depth_store_op_u32? : UInt, depth_clear_value_f32? : Float, depth_read_only? : Bool, stencil_load_op_u32? : UInt, stencil_store_op_u32? : UInt, stencil_clear_value_u32? : UInt, stencil_read_only? : Bool) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_ptr(Self, @c.WGPURenderPassDescriptorPtr) -> RenderPass
 pub fn CommandEncoder::clear_buffer(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::clear_buffer_raw(Self, Buffer, UInt64, UInt64) -> Unit
@@ -1780,6 +1782,7 @@ pub fn Device::create_pipeline_layout_1(Self, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_2(Self, BindGroupLayout, BindGroupLayout) -> PipelineLayout
 pub fn Device::create_pipeline_layout_immediates(Self, ShaderStage, UInt, UInt) -> PipelineLayout
 pub fn Device::create_pipeline_layout_immediates_many(Self, ShaderStage, UInt, UInt, Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
+pub fn Device::create_pipeline_layout_many(Self, Array[BindGroupLayout]) -> PipelineLayout
 pub fn Device::create_pipeline_layout_ptr(Self, @c.WGPUPipelineLayoutDescriptorPtr) -> PipelineLayout
 pub fn Device::create_pipeline_layout_push_constants(Self, ShaderStage, UInt, UInt) -> PipelineLayout
 pub fn Device::create_pipeline_layout_push_constants_many(Self, ShaderStage, UInt, UInt, Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
@@ -2297,6 +2300,7 @@ pub struct RenderPipelineDescBuilder {
 }
 pub fn RenderPipelineDescBuilder::add_vertex_attribute(Self, UInt, UInt64, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(Self, UInt64, UInt) -> UInt raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::clear_fragment(Self) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::clear_primitive_extras(Self) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::create_pipeline(Self, Device) -> RenderPipeline raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::disable_blend(Self) -> Unit raise RenderPipelineDescError
@@ -2312,11 +2316,15 @@ pub fn RenderPipelineDescBuilder::set_color_target_format_at(Self, UInt, Texture
 pub fn RenderPipelineDescBuilder::set_color_target_write_mask(Self, UInt64) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_color_target_write_mask_at(Self, UInt, UInt64) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_conservative_rasterization(Self, Bool) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_cull_mode_u32(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_fragment_module(Self, ShaderModule) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_unclipped_depth(Self, Bool) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(Self, UInt64, UInt) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_vertex_module(Self, ShaderModule) -> Unit raise RenderPipelineDescError
 
 pub struct Sampler {
   raw : @c.WGPUSampler
