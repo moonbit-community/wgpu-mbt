@@ -16,8 +16,10 @@
 fn compose_supported_rust_features_u64(
   has_depth_clip_control : Bool,
   has_push_constants : Bool,
+  has_texture_atomic : Bool,
   has_shader_int64 : Bool,
   has_subgroup : Bool,
+  has_texture_int64_atomic : Bool,
 ) -> UInt64 {
   let supported : Ref[UInt64] = @ref.new(0UL)
   if has_depth_clip_control {
@@ -26,11 +28,17 @@ fn compose_supported_rust_features_u64(
   if has_push_constants {
     supported.val = supported.val | FEATURES_PUSH_CONSTANTS
   }
+  if has_texture_atomic {
+    supported.val = supported.val | FEATURES_TEXTURE_ATOMIC
+  }
   if has_shader_int64 {
     supported.val = supported.val | FEATURES_SHADER_INT64
   }
   if has_subgroup {
     supported.val = supported.val | FEATURES_SUBGROUP
+  }
+  if has_texture_int64_atomic {
+    supported.val = supported.val | FEATURES_TEXTURE_INT64_ATOMIC
   }
   supported.val
 }
@@ -64,8 +72,10 @@ fn missing_rust_features_mask_u64(
 ///|
 /// Returns the subset of required Rust `wgpu::Features` bits that are missing.
 ///
-/// `FEATURES_TEXTURE_ATOMIC` and `FEATURES_TEXTURE_INT64_ATOMIC` currently stay
-/// missing because the upstream C/native feature surface does not expose them.
+/// `FEATURES_TEXTURE_ATOMIC` and `FEATURES_TEXTURE_INT64_ATOMIC` are queryable
+/// through native feature ids allocated by wgpu-native trunk. The supported
+/// release may still report them missing until an official release exposes the
+/// full R64Uint storage-texture C API.
 pub fn Adapter::missing_rust_features_u64(
   self : Adapter,
   required_features_u64 : UInt64,
@@ -81,8 +91,10 @@ pub fn Adapter::supported_rust_features_u64(self : Adapter) -> UInt64 {
   compose_supported_rust_features_u64(
     self.supported_features_contains_u32(FEATURE_NAME_DEPTH_CLIP_CONTROL),
     self.has_feature_native_push_constants(),
+    self.has_feature_native_texture_atomic(),
     self.has_feature_native_shader_int64(),
     self.has_feature_native_subgroup(),
+    self.has_feature_native_texture_int64_atomic(),
   )
 }
 
@@ -125,8 +137,10 @@ pub fn Adapter::supports_rust_features_u64(
 ///|
 /// Returns the subset of required Rust `wgpu::Features` bits that are missing.
 ///
-/// `FEATURES_TEXTURE_ATOMIC` and `FEATURES_TEXTURE_INT64_ATOMIC` currently stay
-/// missing because the upstream C/native feature surface does not expose them.
+/// `FEATURES_TEXTURE_ATOMIC` and `FEATURES_TEXTURE_INT64_ATOMIC` are queryable
+/// through native feature ids allocated by wgpu-native trunk. The supported
+/// release may still report them missing until an official release exposes the
+/// full R64Uint storage-texture C API.
 pub fn Device::missing_rust_features_u64(
   self : Device,
   required_features_u64 : UInt64,
@@ -142,8 +156,10 @@ pub fn Device::supported_rust_features_u64(self : Device) -> UInt64 {
   compose_supported_rust_features_u64(
     self.has_feature_u32(FEATURE_NAME_DEPTH_CLIP_CONTROL),
     self.has_feature_native_push_constants(),
+    self.has_feature_native_texture_atomic(),
     self.has_feature_native_shader_int64(),
     self.has_feature_native_subgroup(),
+    self.has_feature_native_texture_int64_atomic(),
   )
 }
 

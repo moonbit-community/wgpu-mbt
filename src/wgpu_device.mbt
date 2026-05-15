@@ -265,6 +265,35 @@ pub fn Device::has_feature_native_shader_int64(self : Device) -> Bool {
 }
 
 ///|
+pub fn Device::has_feature_native_shader_float32_atomic(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_FLOAT32_ATOMIC)
+}
+
+///|
+pub fn Device::has_feature_native_texture_atomic(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_ATOMIC)
+}
+
+///|
+pub fn Device::has_feature_native_shader_int64_atomic_min_max(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_INT64_ATOMIC_MIN_MAX)
+}
+
+///|
+pub fn Device::has_feature_native_shader_int64_atomic_all_ops(
+  self : Device,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_INT64_ATOMIC_ALL_OPS)
+}
+
+///|
+pub fn Device::has_feature_native_texture_int64_atomic(self : Device) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_INT64_ATOMIC)
+}
+
+///|
 pub fn Device::has_feature_native_shader_primitive_index(self : Device) -> Bool {
   self.has_feature_native_u32(NATIVE_FEATURE_SHADER_PRIMITIVE_INDEX)
 }

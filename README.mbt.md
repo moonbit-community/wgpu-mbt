@@ -284,6 +284,8 @@ Some `wgpu-native` builds still have unimplemented or unstable entry points.
 - Native features:
   - clear texture: `@wgpu.NATIVE_FEATURE_CLEAR_TEXTURE`
   - multiview: `@wgpu.NATIVE_FEATURE_MULTIVIEW`
+  - texture atomics: `@wgpu.NATIVE_FEATURE_TEXTURE_ATOMIC`
+  - 64-bit texture atomics: `@wgpu.NATIVE_FEATURE_TEXTURE_INT64_ATOMIC`
   - quick checks: `Adapter::has_feature_native_clear_texture()` / `Adapter::has_feature_native_multiview()`
 - Force-disable env vars always take precedence:
   - `MBT_WGPU_DISABLE_PIPELINE_ASYNC=1`
@@ -296,11 +298,20 @@ fake or unstable wrappers for them:
 
 - `AddressModeClampToZero`
 - `AddressModeClampToBorder`
+- `TEXTURE_FORMAT_R64_UINT`
+- `STORAGE_TEXTURE_ACCESS_ATOMIC`
 
 `ClearTexture` and `Multiview` are already exposed by `wgpu_mbt` through local native-feature
 shims. The remaining blocker is sampler clamp-to-zero/border support: current upstream C headers
 still do not expose the required address-mode and border-color API surface.
 Tracker: `wgpu_mbt-jyd` ("Await upstream sampler clamp-mode C API").
+
+`TEXTURE_ATOMIC` and `TEXTURE_INT64_ATOMIC` feature bits are queryable through native feature
+ids allocated by upstream `wgpu-native` trunk, so `Adapter::supported_rust_features_u64()` and
+`Device::supported_rust_features_u64()` can report them when a future/custom native library
+actually exposes those features. The currently supported official release still cannot create
+Bevy-style `texture_storage_2d<r64uint, atomic>` resources because the C header and conversion
+layer do not expose `R64Uint` or storage-texture atomic access.
 
 The supported release also still lacks a stable upstream WGSL-language-feature query.
 `wgpu_mbt` therefore keeps `Instance::get_wgsl_language_features(...)` /

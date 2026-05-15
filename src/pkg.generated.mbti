@@ -312,7 +312,7 @@ pub const FEATURES_DEPTH_CLIP_CONTROL : UInt64 = 0x0000000000000001
 
 pub const FEATURES_PUSH_CONSTANTS : UInt64 = 0x0000000000010000
 
-pub const FEATURES_QUERYABLE_MASK : UInt64 = 0x0000006000010001
+pub const FEATURES_QUERYABLE_MASK : UInt64 = 0x0000406010010001
 
 pub const FEATURES_SHADER_INT64 : UInt64 = 0x0000002000000000
 
@@ -512,9 +512,15 @@ pub const NATIVE_FEATURE_SHADER_EARLY_DEPTH_TEST : UInt = 0x00030020
 
 pub const NATIVE_FEATURE_SHADER_F64 : UInt = 0x0003001D
 
+pub const NATIVE_FEATURE_SHADER_FLOAT32_ATOMIC : UInt = 0x00030027
+
 pub const NATIVE_FEATURE_SHADER_I16 : UInt = 0x0003001E
 
 pub const NATIVE_FEATURE_SHADER_INT64 : UInt = 0x00030026
+
+pub const NATIVE_FEATURE_SHADER_INT64_ATOMIC_ALL_OPS : UInt = 0x0003002D
+
+pub const NATIVE_FEATURE_SHADER_INT64_ATOMIC_MIN_MAX : UInt = 0x0003002C
 
 pub const NATIVE_FEATURE_SHADER_PRIMITIVE_INDEX : UInt = 0x0003001F
 
@@ -530,6 +536,8 @@ pub const NATIVE_FEATURE_SUBGROUP_VERTEX : UInt = 0x00030022
 
 pub const NATIVE_FEATURE_TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES : UInt = 0x00030002
 
+pub const NATIVE_FEATURE_TEXTURE_ATOMIC : UInt = 0x00030028
+
 pub const NATIVE_FEATURE_TEXTURE_BINDING_ARRAY : UInt = 0x00030006
 
 pub const NATIVE_FEATURE_TEXTURE_COMPRESSION_ASTC_HDR : UInt = 0x0003000C
@@ -537,6 +545,10 @@ pub const NATIVE_FEATURE_TEXTURE_COMPRESSION_ASTC_HDR : UInt = 0x0003000C
 pub const NATIVE_FEATURE_TEXTURE_FORMAT16BIT_NORM : UInt = 0x0003000B
 
 pub const NATIVE_FEATURE_TEXTURE_FORMAT_NV12 : UInt = 0x0003001A
+
+pub const NATIVE_FEATURE_TEXTURE_FORMAT_P010 : UInt = 0x00030029
+
+pub const NATIVE_FEATURE_TEXTURE_INT64_ATOMIC : UInt = 0x00030030
 
 pub const NATIVE_FEATURE_TIMESTAMP_QUERY_INSIDE_ENCODERS : UInt = 0x00030024
 
@@ -1400,8 +1412,11 @@ pub fn Adapter::has_feature_native_ray_query(Self) -> Bool
 pub fn Adapter::has_feature_native_sampled_texture_and_storage_buffer_array_non_uniform_indexing(Self) -> Bool
 pub fn Adapter::has_feature_native_shader_early_depth_test(Self) -> Bool
 pub fn Adapter::has_feature_native_shader_f64(Self) -> Bool
+pub fn Adapter::has_feature_native_shader_float32_atomic(Self) -> Bool
 pub fn Adapter::has_feature_native_shader_i16(Self) -> Bool
 pub fn Adapter::has_feature_native_shader_int64(Self) -> Bool
+pub fn Adapter::has_feature_native_shader_int64_atomic_all_ops(Self) -> Bool
+pub fn Adapter::has_feature_native_shader_int64_atomic_min_max(Self) -> Bool
 pub fn Adapter::has_feature_native_shader_primitive_index(Self) -> Bool
 pub fn Adapter::has_feature_native_spirv_shader_passthrough(Self) -> Bool
 pub fn Adapter::has_feature_native_storage_resource_binding_array(Self) -> Bool
@@ -1409,10 +1424,12 @@ pub fn Adapter::has_feature_native_subgroup(Self) -> Bool
 pub fn Adapter::has_feature_native_subgroup_barrier(Self) -> Bool
 pub fn Adapter::has_feature_native_subgroup_vertex(Self) -> Bool
 pub fn Adapter::has_feature_native_texture_adapter_specific_format_features(Self) -> Bool
+pub fn Adapter::has_feature_native_texture_atomic(Self) -> Bool
 pub fn Adapter::has_feature_native_texture_binding_array(Self) -> Bool
 pub fn Adapter::has_feature_native_texture_compression_astc_hdr(Self) -> Bool
 pub fn Adapter::has_feature_native_texture_format16bit_norm(Self) -> Bool
 pub fn Adapter::has_feature_native_texture_format_nv12(Self) -> Bool
+pub fn Adapter::has_feature_native_texture_int64_atomic(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
 pub fn Adapter::has_feature_native_u32(Self, UInt) -> Bool
@@ -1492,8 +1509,11 @@ pub fn Adapter::request_device_sync_ray_query(Self, Instance) -> Device raise Wg
 pub fn Adapter::request_device_sync_sampled_texture_and_storage_buffer_array_non_uniform_indexing(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_shader_early_depth_test(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_shader_f64(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_shader_float32_atomic(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_shader_i16(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_shader_int64(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_shader_int64_atomic_all_ops(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_shader_int64_atomic_min_max(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_shader_primitive_index(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_spirv_shader_passthrough(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_storage_resource_binding_array(Self, Instance) -> Device raise WgpuError
@@ -1501,10 +1521,12 @@ pub fn Adapter::request_device_sync_subgroup(Self, Instance) -> Device raise Wgp
 pub fn Adapter::request_device_sync_subgroup_barrier(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_subgroup_vertex(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_texture_adapter_specific_format_features(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_texture_atomic(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_texture_binding_array(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_texture_compression_astc_hdr(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_texture_format16bit_norm(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_texture_format_nv12(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_texture_int64_atomic(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device raise WgpuError
@@ -1880,8 +1902,11 @@ pub fn Device::has_feature_native_ray_query(Self) -> Bool
 pub fn Device::has_feature_native_sampled_texture_and_storage_buffer_array_non_uniform_indexing(Self) -> Bool
 pub fn Device::has_feature_native_shader_early_depth_test(Self) -> Bool
 pub fn Device::has_feature_native_shader_f64(Self) -> Bool
+pub fn Device::has_feature_native_shader_float32_atomic(Self) -> Bool
 pub fn Device::has_feature_native_shader_i16(Self) -> Bool
 pub fn Device::has_feature_native_shader_int64(Self) -> Bool
+pub fn Device::has_feature_native_shader_int64_atomic_all_ops(Self) -> Bool
+pub fn Device::has_feature_native_shader_int64_atomic_min_max(Self) -> Bool
 pub fn Device::has_feature_native_shader_primitive_index(Self) -> Bool
 pub fn Device::has_feature_native_spirv_shader_passthrough(Self) -> Bool
 pub fn Device::has_feature_native_storage_resource_binding_array(Self) -> Bool
@@ -1889,10 +1914,12 @@ pub fn Device::has_feature_native_subgroup(Self) -> Bool
 pub fn Device::has_feature_native_subgroup_barrier(Self) -> Bool
 pub fn Device::has_feature_native_subgroup_vertex(Self) -> Bool
 pub fn Device::has_feature_native_texture_adapter_specific_format_features(Self) -> Bool
+pub fn Device::has_feature_native_texture_atomic(Self) -> Bool
 pub fn Device::has_feature_native_texture_binding_array(Self) -> Bool
 pub fn Device::has_feature_native_texture_compression_astc_hdr(Self) -> Bool
 pub fn Device::has_feature_native_texture_format16bit_norm(Self) -> Bool
 pub fn Device::has_feature_native_texture_format_nv12(Self) -> Bool
+pub fn Device::has_feature_native_texture_int64_atomic(Self) -> Bool
 pub fn Device::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
 pub fn Device::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
 pub fn Device::has_feature_native_u32(Self, UInt) -> Bool

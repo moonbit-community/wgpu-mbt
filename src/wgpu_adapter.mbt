@@ -635,6 +635,61 @@ pub fn Adapter::request_device_sync_shader_int64(
 }
 
 ///|
+pub fn Adapter::request_device_sync_shader_float32_atomic(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_SHADER_FLOAT32_ATOMIC,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_texture_atomic(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_TEXTURE_ATOMIC,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_shader_int64_atomic_min_max(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_SHADER_INT64_ATOMIC_MIN_MAX,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_shader_int64_atomic_all_ops(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_SHADER_INT64_ATOMIC_ALL_OPS,
+  )
+}
+
+///|
+pub fn Adapter::request_device_sync_texture_int64_atomic(
+  self : Adapter,
+  instance : Instance,
+) -> Device raise WgpuError {
+  self.request_device_sync_native_feature(
+    instance,
+    NATIVE_FEATURE_TEXTURE_INT64_ATOMIC,
+  )
+}
+
+///|
 pub fn Adapter::request_device_sync_shader_primitive_index(
   self : Adapter,
   instance : Instance,
@@ -884,6 +939,37 @@ pub fn Adapter::has_feature_native_shader_i16(self : Adapter) -> Bool {
 ///|
 pub fn Adapter::has_feature_native_shader_int64(self : Adapter) -> Bool {
   self.has_feature_native_u32(NATIVE_FEATURE_SHADER_INT64)
+}
+
+///|
+pub fn Adapter::has_feature_native_shader_float32_atomic(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_FLOAT32_ATOMIC)
+}
+
+///|
+pub fn Adapter::has_feature_native_texture_atomic(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_ATOMIC)
+}
+
+///|
+pub fn Adapter::has_feature_native_shader_int64_atomic_min_max(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_INT64_ATOMIC_MIN_MAX)
+}
+
+///|
+pub fn Adapter::has_feature_native_shader_int64_atomic_all_ops(
+  self : Adapter,
+) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_SHADER_INT64_ATOMIC_ALL_OPS)
+}
+
+///|
+pub fn Adapter::has_feature_native_texture_int64_atomic(self : Adapter) -> Bool {
+  self.has_feature_native_u32(NATIVE_FEATURE_TEXTURE_INT64_ATOMIC)
 }
 
 ///|

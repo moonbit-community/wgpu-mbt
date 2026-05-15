@@ -23,8 +23,15 @@ test "native feature wrappers: repo-exposed extras remain callable" {
 
     let has_clear = adapter.has_feature_native_clear_texture()
     let has_multiview = adapter.has_feature_native_multiview()
+    let has_texture_atomic = adapter.has_feature_native_texture_atomic()
+    let has_texture_int64_atomic = adapter.has_feature_native_texture_int64_atomic()
     inspect(has_clear || !has_clear, content="true")
     inspect(has_multiview || !has_multiview, content="true")
+    inspect(has_texture_atomic || !has_texture_atomic, content="true")
+    inspect(
+      has_texture_int64_atomic || !has_texture_int64_atomic,
+      content="true",
+    )
 
     if has_clear {
       let device_clear = adapter.request_device_sync_clear_texture(instance)
@@ -33,6 +40,16 @@ test "native feature wrappers: repo-exposed extras remain callable" {
     if has_multiview {
       let device_mv = adapter.request_device_sync_multiview(instance)
       device_mv.release()
+    }
+    if has_texture_atomic {
+      let device_atomic = adapter.request_device_sync_texture_atomic(instance)
+      device_atomic.release()
+    }
+    if has_texture_int64_atomic {
+      let device_int64 = adapter.request_device_sync_texture_int64_atomic(
+        instance,
+      )
+      device_int64.release()
     }
 
     adapter.release()

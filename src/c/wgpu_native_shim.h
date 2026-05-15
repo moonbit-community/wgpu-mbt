@@ -78,6 +78,12 @@ typedef enum WGPUNativeFeature {
   WGPUNativeFeature_TimestampQueryInsideEncoders = 0x00030024,
   WGPUNativeFeature_TimestampQueryInsidePasses = 0x00030025,
   WGPUNativeFeature_ShaderInt64 = 0x00030026,
+  WGPUNativeFeature_ShaderFloat32Atomic = 0x00030027,
+  WGPUNativeFeature_TextureAtomic = 0x00030028,
+  WGPUNativeFeature_TextureFormatP010 = 0x00030029,
+  WGPUNativeFeature_ShaderInt64AtomicMinMax = 0x0003002C,
+  WGPUNativeFeature_ShaderInt64AtomicAllOps = 0x0003002D,
+  WGPUNativeFeature_TextureInt64Atomic = 0x00030030,
   WGPUNativeFeature_Force32 = 0x7FFFFFFF
 } WGPUNativeFeature;
 

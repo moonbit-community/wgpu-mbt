@@ -31,9 +31,16 @@ test "rust feature bit constants align with wgpu" {
     (
       @wgpu.FEATURES_DEPTH_CLIP_CONTROL |
       @wgpu.FEATURES_PUSH_CONSTANTS |
+      @wgpu.FEATURES_TEXTURE_ATOMIC |
       @wgpu.FEATURES_SHADER_INT64 |
-      @wgpu.FEATURES_SUBGROUP
+      @wgpu.FEATURES_SUBGROUP |
+      @wgpu.FEATURES_TEXTURE_INT64_ATOMIC
     ),
+    content="true",
+  )
+  inspect(@wgpu.NATIVE_FEATURE_TEXTURE_ATOMIC == 0x00030028U, content="true")
+  inspect(
+    @wgpu.NATIVE_FEATURE_TEXTURE_INT64_ATOMIC == 0x00030030U,
     content="true",
   )
 }
@@ -64,6 +71,10 @@ test "rust feature mask helpers report missing bits" {
       expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_PUSH_CONSTANTS
     }
+    if adapter.has_feature_native_texture_atomic() {
+      expected_adapter_supported.val = expected_adapter_supported.val |
+        @wgpu.FEATURES_TEXTURE_ATOMIC
+    }
     if adapter.has_feature_native_shader_int64() {
       expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_SHADER_INT64
@@ -71,6 +82,10 @@ test "rust feature mask helpers report missing bits" {
     if adapter.has_feature_native_subgroup() {
       expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_SUBGROUP
+    }
+    if adapter.has_feature_native_texture_int64_atomic() {
+      expected_adapter_supported.val = expected_adapter_supported.val |
+        @wgpu.FEATURES_TEXTURE_INT64_ATOMIC
     }
     inspect(
       adapter.supported_rust_features_u64() == expected_adapter_supported.val,
@@ -102,11 +117,13 @@ test "rust feature mask helpers report missing bits" {
       content="true",
     )
     inspect(
-      (adapter_missing & @wgpu.FEATURES_TEXTURE_ATOMIC) != 0UL,
+      ((adapter_missing & @wgpu.FEATURES_TEXTURE_ATOMIC) == 0UL) ==
+      adapter.has_feature_native_texture_atomic(),
       content="true",
     )
     inspect(
-      (adapter_missing & @wgpu.FEATURES_TEXTURE_INT64_ATOMIC) != 0UL,
+      ((adapter_missing & @wgpu.FEATURES_TEXTURE_INT64_ATOMIC) == 0UL) ==
+      adapter.has_feature_native_texture_int64_atomic(),
       content="true",
     )
 
@@ -119,6 +136,10 @@ test "rust feature mask helpers report missing bits" {
       expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_PUSH_CONSTANTS
     }
+    if device.has_feature_native_texture_atomic() {
+      expected_device_supported.val = expected_device_supported.val |
+        @wgpu.FEATURES_TEXTURE_ATOMIC
+    }
     if device.has_feature_native_shader_int64() {
       expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_SHADER_INT64
@@ -126,6 +147,10 @@ test "rust feature mask helpers report missing bits" {
     if device.has_feature_native_subgroup() {
       expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_SUBGROUP
+    }
+    if device.has_feature_native_texture_int64_atomic() {
+      expected_device_supported.val = expected_device_supported.val |
+        @wgpu.FEATURES_TEXTURE_INT64_ATOMIC
     }
     inspect(
       device.supported_rust_features_u64() == expected_device_supported.val,
@@ -157,11 +182,13 @@ test "rust feature mask helpers report missing bits" {
       content="true",
     )
     inspect(
-      (device_missing & @wgpu.FEATURES_TEXTURE_ATOMIC) != 0UL,
+      ((device_missing & @wgpu.FEATURES_TEXTURE_ATOMIC) == 0UL) ==
+      device.has_feature_native_texture_atomic(),
       content="true",
     )
     inspect(
-      (device_missing & @wgpu.FEATURES_TEXTURE_INT64_ATOMIC) != 0UL,
+      ((device_missing & @wgpu.FEATURES_TEXTURE_INT64_ATOMIC) == 0UL) ==
+      device.has_feature_native_texture_int64_atomic(),
       content="true",
     )
 
