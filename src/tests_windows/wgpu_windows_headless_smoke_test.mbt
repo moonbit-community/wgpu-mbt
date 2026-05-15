@@ -14,7 +14,9 @@
 
 ///|
 test "windows/vulkan: headless smoke (compute pipeline)" {
-  inspect(@wgpu.platform_is_windows(), content="true")
+  if !should_run_windows_test() {
+    return ()
+  }
 
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync_options_u32(

@@ -6,6 +6,7 @@ import {
 options(
   link: { },
   targets: {
+    "platform_guard_test.mbt": [ "native" ],
     "wgpu_windows_headless_smoke_test.mbt": [ "native" ],
     "wgpu_windows_surface_contract_test.mbt": [ "native" ],
   },

@@ -7,6 +7,7 @@ import {
 options(
   link: { },
   targets: {
+    "platform_guard_test.mbt": [ "native" ],
     "wgpu_buffer_sync_or_raise_test.mbt": [ "native" ],
     "wgpu_linux_headless_smoke_test.mbt": [ "native" ],
     "wgpu_linux_surface_contract_test.mbt": [ "native" ],

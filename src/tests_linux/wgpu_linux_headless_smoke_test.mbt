@@ -14,6 +14,10 @@
 
 ///|
 test "linux/vulkan: headless smoke (compute pipeline)" {
+  if !should_run_linux_test() {
+    return ()
+  }
+
   let instance = @wgpu.Instance::create()
 
   // Prefer Vulkan explicitly, so this test also works on multi-backend hosts.

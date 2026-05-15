@@ -14,6 +14,10 @@
 
 ///|
 test "buffer sync helpers: readback_or_raise raises on OOB" {
+  if !should_run_linux_test() {
+    return ()
+  }
+
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync_options_u32(
     feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,

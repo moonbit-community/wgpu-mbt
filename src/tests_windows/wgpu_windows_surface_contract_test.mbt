@@ -47,7 +47,9 @@ fn inspect_non_null_surface_descriptor(
 
 ///|
 test "windows: surface descriptor builders accept target-shaped handles" {
-  inspect(@wgpu.platform_is_windows(), content="true")
+  if !should_run_windows_test() {
+    return ()
+  }
 
   let dummy = dummy_opaque_ptr()
 
@@ -61,7 +63,9 @@ test "windows: surface descriptor builders accept target-shaped handles" {
 
 ///|
 test "windows: surface helpers reject incomplete host handles" {
-  inspect(@wgpu.platform_is_windows(), content="true")
+  if !should_run_windows_test() {
+    return ()
+  }
 
   let instance = @wgpu.Instance::create()
   let dummy = dummy_opaque_ptr()

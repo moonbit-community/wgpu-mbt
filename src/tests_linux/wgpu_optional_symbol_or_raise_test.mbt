@@ -45,6 +45,10 @@ fn classify_optional_symbol_error_kind(
 
 ///|
 test "optional symbol capability probes: kind/bool are coherent" {
+  if !should_run_linux_test() {
+    return ()
+  }
+
   let pa_kind = @wgpu.pipeline_async_availability_kind_u32()
   let pa_ok = @wgpu.pipeline_async_available()
   let ci_kind = @wgpu.compilation_info_availability_kind_u32()
@@ -73,6 +77,10 @@ test "optional symbol capability probes: kind/bool are coherent" {
 
 ///|
 test "optional symbol capability probes: disabled reflects in availability kind" {
+  if !should_run_linux_test() {
+    return ()
+  }
+
   @wgpu.set_pipeline_async_enabled(false)
   @wgpu.set_compilation_info_enabled(false)
   inspect(@wgpu.pipeline_async_enabled(), content="false")
@@ -100,6 +108,10 @@ test "optional symbol capability probes: disabled reflects in availability kind"
 
 ///|
 test "optional symbol or_raise: compilation info disabled => runtime fail" {
+  if !should_run_linux_test() {
+    return ()
+  }
+
   @wgpu.set_compilation_info_enabled(false)
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync_options_u32(
@@ -133,6 +145,10 @@ test "optional symbol or_raise: compilation info disabled => runtime fail" {
 
 ///|
 test "optional symbol or_raise: pipeline async disabled => disabled error" {
+  if !should_run_linux_test() {
+    return ()
+  }
+
   @wgpu.set_pipeline_async_enabled(false)
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync_options_u32(
@@ -177,6 +193,10 @@ test "optional symbol or_raise: pipeline async disabled => disabled error" {
 
 ///|
 test "optional symbol or_raise: render pipeline async strict path is repo-gated" {
+  if !should_run_linux_test() {
+    return ()
+  }
+
   @wgpu.set_pipeline_async_enabled(true)
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync_options_u32(

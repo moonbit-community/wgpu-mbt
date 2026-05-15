@@ -47,7 +47,9 @@ fn inspect_non_null_surface_descriptor(
 
 ///|
 test "linux/vulkan: surface descriptor builders accept target-shaped handles" {
-  inspect(@wgpu.platform_is_linux(), content="true")
+  if !should_run_linux_test() {
+    return ()
+  }
 
   let dummy = dummy_opaque_ptr()
 
@@ -64,7 +66,9 @@ test "linux/vulkan: surface descriptor builders accept target-shaped handles" {
 
 ///|
 test "linux/vulkan: surface helpers reject incomplete host handles" {
-  inspect(@wgpu.platform_is_linux(), content="true")
+  if !should_run_linux_test() {
+    return ()
+  }
 
   let instance = @wgpu.Instance::create()
   let dummy = dummy_opaque_ptr()
