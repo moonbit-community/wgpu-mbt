@@ -25,7 +25,7 @@ test "wgpu pipeline layout: many bind group layouts" {
   let layout4 = device.create_pipeline_layout_many([
     group0, group1, group2, group3,
   ])
-  inspect(
+  @debug.debug_inspect(
     [
       @wgpu_c.pipeline_layout_is_null(layout3.raw_handle()),
       @wgpu_c.pipeline_layout_is_null(layout4.raw_handle()),

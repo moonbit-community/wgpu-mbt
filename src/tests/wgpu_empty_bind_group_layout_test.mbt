@@ -24,7 +24,7 @@ test "wgpu bind group layout: empty layout helpers" {
     uniform, empty_from_device,
   )
 
-  inspect(
+  @debug.debug_inspect(
     [
       @wgpu_c.bind_group_layout_is_null(empty_from_builder.raw_handle()),
       @wgpu_c.bind_group_layout_is_null(empty_from_desc.raw_handle()),

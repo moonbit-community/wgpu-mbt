@@ -82,7 +82,7 @@ test "wgpu render depth" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 255, 0, 255]",
   )
@@ -185,7 +185,7 @@ test "wgpu render depth: pipeline desc builder" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 255, 0, 255]",
   )
@@ -296,7 +296,7 @@ test "wgpu render depth: depth-only pass and zero color target pipeline" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 0, 0, 255]",
   )
@@ -424,7 +424,7 @@ test "wgpu render depth: configurable pass depth load/store" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 255, 0, 255]",
   )

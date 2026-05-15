@@ -67,7 +67,7 @@ pub fn Buffer::readback(
   if !ok {
     []
   } else {
-    out[:][prefix.to_int():(prefix + size).to_int()].to_bytes()
+    out[:][prefix.to_int():(prefix + size).to_int()].to_owned()
   }
 }
 
@@ -108,7 +108,7 @@ pub fn Buffer::readback_or_raise(
   if !ok {
     raise BufferSyncFailed("buffer_readback_sync")
   }
-  out[:][prefix.to_int():(prefix + size).to_int()].to_bytes()
+  out[:][prefix.to_int():(prefix + size).to_int()].to_owned()
 }
 
 ///|
@@ -141,7 +141,7 @@ pub fn Buffer::map_read_sync(
   if !ok {
     []
   } else {
-    out[:][prefix.to_int():(prefix + size).to_int()].to_bytes()
+    out[:][prefix.to_int():(prefix + size).to_int()].to_owned()
   }
 }
 
@@ -177,7 +177,7 @@ pub fn Buffer::map_read_sync_or_raise(
   if !ok {
     raise BufferSyncFailed("buffer_map_read_sync")
   }
-  out[:][prefix.to_int():(prefix + size).to_int()].to_bytes()
+  out[:][prefix.to_int():(prefix + size).to_int()].to_owned()
 }
 
 ///|

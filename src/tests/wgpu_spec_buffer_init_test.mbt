@@ -20,7 +20,7 @@ test "spec: device.create_buffer_init" {
   let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST)
   let buf = device.create_buffer_init(usage~, rgba_bytes(1U, 2U, 3U, 4U))
   let out = buf.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[1, 2, 3, 4]",
   )

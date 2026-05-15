@@ -245,7 +245,7 @@ test "wgpu generated handles: add_ref keeps render bundle path alive" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 255, 0, 255]",
   )

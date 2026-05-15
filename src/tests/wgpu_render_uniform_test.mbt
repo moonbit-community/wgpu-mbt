@@ -101,7 +101,7 @@ test "wgpu offscreen render with uniform buffer bind group" {
     out[2].to_uint(),
     out[3].to_uint(),
   ]
-  inspect(rgba, content="[0, 0, 255, 255]")
+  @debug.debug_inspect(rgba, content="[0, 0, 255, 255]")
   cmd.release()
   encoder.release()
   readback_buf.release()

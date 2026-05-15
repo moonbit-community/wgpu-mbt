@@ -109,7 +109,7 @@ test "wgpu sampler addressMode: repeat vs clamp (nearest)" {
   let r_clamp = sampler_addr_sample_r(
     instance, device, queue, pipeline, bg_clamp,
   )
-  inspect([r_repeat, r_clamp], content="[0, 255]")
+  @debug.debug_inspect([r_repeat, r_clamp], content="[0, 255]")
   bg_repeat.release()
   bg_clamp.release()
   samp_repeat.release()
@@ -189,7 +189,7 @@ test "wgpu sampler addressMode: mirrorRepeat vs repeat (nearest)" {
   let r_mirror = sampler_addr_sample_r(
     instance, device, queue, pipeline, bg_mirror,
   )
-  inspect([r_repeat, r_mirror], content="[255, 0]")
+  @debug.debug_inspect([r_repeat, r_mirror], content="[255, 0]")
   bg_mirror.release()
   bg_repeat.release()
   samp_mirror.release()

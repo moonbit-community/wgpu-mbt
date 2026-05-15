@@ -65,7 +65,7 @@ test "wgpu compute: dispatch_workgroups_indirect" {
     u32le_at(out, 8),
     u32le_at(out, 12),
   ]
-  inspect(got, content="[1, 2, 3, 4]")
+  @debug.debug_inspect(got, content="[1, 2, 3, 4]")
   cmd.release()
   encoder.release()
   pipeline.release()

@@ -96,7 +96,7 @@ test "wgpu render: MRT2 + depth helper writes distinct colors" {
   encoder.copy_texture_to_buffer_rgba8(tex1, readback1, 1U, 1U)
   let cmd = encoder.finish()
   queue.submit_one(cmd)
-  inspect(
+  @debug.debug_inspect(
     [read_rgba8(instance, readback0), read_rgba8(instance, readback1)],
     content="[[255, 0, 0, 255], [0, 0, 255, 255]]",
   )
@@ -249,7 +249,7 @@ test "wgpu render: MRT2 + depth configurable pass depth load/store" {
   encoder.copy_texture_to_buffer_rgba8(tex1, readback1, 1U, 1U)
   let cmd = encoder.finish()
   queue.submit_one(cmd)
-  inspect(
+  @debug.debug_inspect(
     [read_rgba8(instance, readback0), read_rgba8(instance, readback1)],
     content="[[255, 0, 0, 255], [0, 0, 255, 255]]",
   )

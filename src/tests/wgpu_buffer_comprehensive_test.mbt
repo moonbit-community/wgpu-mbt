@@ -24,7 +24,7 @@ test "wgpu buffer: queue.write_buffer pads to 4 bytes" {
   queue.write_buffer(buf, 0UL, data)
   submit_empty(device, queue)
   let out = buf.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[1, 2, 3, 0]",
   )
@@ -83,7 +83,7 @@ test "wgpu buffer: map_read_sync slices unaligned offset" {
   submit_empty(device, queue)
   let out = buf.map_read_sync(instance, 1UL, 2UL)
   buf.unmap()
-  inspect([out[0].to_uint(), out[1].to_uint()], content="[20, 30]")
+  @debug.debug_inspect([out[0].to_uint(), out[1].to_uint()], content="[20, 30]")
   buf.release()
   queue.release()
   device.release()
@@ -116,7 +116,7 @@ test "wgpu buffer: map_write_sync supports unaligned offset via padding" {
   encoder.release()
   let out = read_buf.map_read_sync(instance, 0UL, 4UL)
   read_buf.unmap()
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 7, 8, 9]",
   )
@@ -157,7 +157,7 @@ test "wgpu buffer: copy_buffer_to_buffer supports offsets" {
   cmd.release()
   encoder.release()
   let out = staging.readback(instance, 0UL, 8UL)
-  inspect(
+  @debug.debug_inspect(
     [
       out[0].to_uint(),
       out[1].to_uint(),
@@ -204,7 +204,7 @@ test "wgpu buffer: device.create_buffer_init pads to 4 bytes" {
   let data = Bytes::from_array([(9).to_byte(), (8).to_byte(), (7).to_byte()])
   let buf = device.create_buffer_init(usage~, data)
   let out = buf.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[9, 8, 7, 0]",
   )
@@ -226,7 +226,7 @@ test "wgpu buffer: readback supports unaligned offset via internal alignment" {
   queue.write_buffer(buf, 0UL, data)
   submit_empty(device, queue)
   let out = buf.readback(instance, 1UL, 3UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint()],
     content="[2, 3, 4]",
   )
@@ -284,7 +284,7 @@ test "wgpu buffer: queue.write_buffer supports non-zero offset" {
   queue.write_buffer(buf, 4UL, data)
   submit_empty(device, queue)
   let out = buf.readback(instance, 0UL, 8UL)
-  inspect(
+  @debug.debug_inspect(
     [
       out[0].to_uint(),
       out[1].to_uint(),
@@ -334,7 +334,7 @@ test "wgpu buffer: queue.submit can submit multiple command buffers" {
   let cmd1 = encoder1.finish()
   queue.submit([cmd0, cmd1])
   let out = staging.readback(instance, 0UL, 8UL)
-  inspect(
+  @debug.debug_inspect(
     [
       out[0].to_uint(),
       out[1].to_uint(),

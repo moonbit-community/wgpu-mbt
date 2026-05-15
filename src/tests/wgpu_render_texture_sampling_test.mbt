@@ -74,7 +74,7 @@ test "wgpu render texture sampling" {
     out[2].to_uint(),
     out[3].to_uint(),
   ]
-  inspect(rgba, content="[255, 0, 0, 255]")
+  @debug.debug_inspect(rgba, content="[255, 0, 0, 255]")
   cmd.release()
   encoder.release()
   pipeline.release()

@@ -97,14 +97,21 @@ test "wgpu render pass: load op preserves previous contents" {
   let tr = read_rgba8_from_copy_out(out, 1U, 0U)
   let bl = read_rgba8_from_copy_out(out, 0U, 1U)
   let br = read_rgba8_from_copy_out(out, 1U, 1U)
-  inspect(
+  @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],
       [tr[0], tr[1], tr[2], tr[3]],
       [bl[0], bl[1], bl[2], bl[3]],
       [br[0], br[1], br[2], br[3]],
     ],
-    content="[[0, 255, 0, 255], [255, 0, 0, 255], [255, 0, 0, 255], [255, 0, 0, 255]]",
+    content=(
+      #|[
+      #|  [0, 255, 0, 255],
+      #|  [255, 0, 0, 255],
+      #|  [255, 0, 0, 255],
+      #|  [255, 0, 0, 255],
+      #|]
+    ),
   )
   cmd1.release()
   encoder1.release()

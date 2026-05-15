@@ -65,14 +65,21 @@ test "wgpu texture: render 2x2 quadrant colors -> copy_texture_to_buffer layout"
   let tr = read_rgba8_from_copy_out(out, 1U, 0U)
   let bl = read_rgba8_from_copy_out(out, 0U, 1U)
   let br = read_rgba8_from_copy_out(out, 1U, 1U)
-  inspect(
+  @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],
       [tr[0], tr[1], tr[2], tr[3]],
       [bl[0], bl[1], bl[2], bl[3]],
       [br[0], br[1], br[2], br[3]],
     ],
-    content="[[255, 0, 0, 255], [0, 255, 0, 255], [0, 0, 255, 255], [255, 255, 255, 255]]",
+    content=(
+      #|[
+      #|  [255, 0, 0, 255],
+      #|  [0, 255, 0, 255],
+      #|  [0, 0, 255, 255],
+      #|  [255, 255, 255, 255],
+      #|]
+    ),
   )
   cmd.release()
   encoder.release()
@@ -129,14 +136,21 @@ test "wgpu texture: queue.write_texture_rgba8_2d pads rows to 256" {
   let tr = read_rgba8_from_copy_out(out, 1U, 0U)
   let bl = read_rgba8_from_copy_out(out, 0U, 1U)
   let br = read_rgba8_from_copy_out(out, 1U, 1U)
-  inspect(
+  @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],
       [tr[0], tr[1], tr[2], tr[3]],
       [bl[0], bl[1], bl[2], bl[3]],
       [br[0], br[1], br[2], br[3]],
     ],
-    content="[[255, 0, 0, 255], [0, 255, 0, 255], [0, 0, 255, 255], [255, 255, 255, 255]]",
+    content=(
+      #|[
+      #|  [255, 0, 0, 255],
+      #|  [0, 255, 0, 255],
+      #|  [0, 0, 255, 255],
+      #|  [255, 255, 255, 255],
+      #|]
+    ),
   )
   cmd.release()
   encoder.release()
@@ -215,14 +229,21 @@ test "wgpu texture: copy_buffer_to_texture_rgba8 2x2 upload layout" {
   let tr = read_rgba8_from_copy_out(out, 1U, 0U)
   let bl = read_rgba8_from_copy_out(out, 0U, 1U)
   let br = read_rgba8_from_copy_out(out, 1U, 1U)
-  inspect(
+  @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],
       [tr[0], tr[1], tr[2], tr[3]],
       [bl[0], bl[1], bl[2], bl[3]],
       [br[0], br[1], br[2], br[3]],
     ],
-    content="[[255, 0, 0, 255], [0, 255, 0, 255], [0, 0, 255, 255], [255, 255, 255, 255]]",
+    content=(
+      #|[
+      #|  [255, 0, 0, 255],
+      #|  [0, 255, 0, 255],
+      #|  [0, 0, 255, 255],
+      #|  [255, 255, 255, 255],
+      #|]
+    ),
   )
   cmd.release()
   encoder.release()
@@ -277,14 +298,21 @@ test "wgpu texture: copy_texture_to_texture_rgba8 2x2" {
   let tr = read_rgba8_from_copy_out(out, 1U, 0U)
   let bl = read_rgba8_from_copy_out(out, 0U, 1U)
   let br = read_rgba8_from_copy_out(out, 1U, 1U)
-  inspect(
+  @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],
       [tr[0], tr[1], tr[2], tr[3]],
       [bl[0], bl[1], bl[2], bl[3]],
       [br[0], br[1], br[2], br[3]],
     ],
-    content="[[255, 0, 0, 255], [0, 255, 0, 255], [0, 0, 255, 255], [255, 255, 255, 255]]",
+    content=(
+      #|[
+      #|  [255, 0, 0, 255],
+      #|  [0, 255, 0, 255],
+      #|  [0, 0, 255, 255],
+      #|  [255, 255, 255, 255],
+      #|]
+    ),
   )
   cmd.release()
   encoder.release()
@@ -329,7 +357,7 @@ test "wgpu texture: queue.write_texture_rgba8_2d preserves rows (1x2)" {
   let out = readback.readback(instance, 0UL, 512UL)
   let top = read_rgba8_from_copy_out(out, 0U, 0U)
   let bottom = read_rgba8_from_copy_out(out, 0U, 1U)
-  inspect(
+  @debug.debug_inspect(
     [
       [top[0], top[1], top[2], top[3]],
       [bottom[0], bottom[1], bottom[2], bottom[3]],
@@ -396,7 +424,7 @@ test "wgpu texture: create_texture_rgba8_2d_with_usage can render+copy" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 255, 0, 255]",
   )

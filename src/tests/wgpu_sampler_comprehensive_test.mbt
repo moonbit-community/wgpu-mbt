@@ -119,9 +119,11 @@ test "wgpu sampler: linear vs nearest produces different mid-sample" {
   queue.submit_one(cmd1)
   let bytes1 = readback.readback(instance, 0UL, 4UL)
   let r1 = bytes1[0].to_uint()
-  inspect(
+  @debug.debug_inspect(
     [classify_0_255_mid(r0), classify_0_255_mid(r1)],
-    content="[zero, mid]",
+    content=(
+      #|["zero", "mid"]
+    ),
   )
   cmd1.release()
   encoder1.release()
@@ -205,7 +207,7 @@ test "wgpu sampler: clamp-to-edge clamps out-of-range UVs" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 255, 0, 255]",
   )
@@ -284,7 +286,7 @@ test "wgpu sampler: linear clamp-to-edge clamps out-of-range UVs" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[255, 0, 0, 255]",
   )

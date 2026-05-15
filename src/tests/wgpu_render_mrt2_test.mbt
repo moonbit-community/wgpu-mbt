@@ -68,7 +68,7 @@ test "wgpu render: MRT2 writes distinct colors" {
   queue.submit_one(cmd)
   let out0 = readback0.readback(instance, 0UL, 4UL)
   let out1 = readback1.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [
       [
         out0[0].to_uint(),
@@ -162,7 +162,7 @@ test "wgpu render pipeline desc builder: MRT2 writes distinct colors" {
   queue.submit_one(cmd)
   let out0 = readback0.readback(instance, 0UL, 4UL)
   let out1 = readback1.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [
       [
         out0[0].to_uint(),

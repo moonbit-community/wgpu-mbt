@@ -55,7 +55,12 @@ test "wgpu managed lifecycle: offscreen render pipeline" {
       let cmd = encoder.finish()
       queue.submit_one(cmd)
       let out = readback_buf.readback(instance, 0UL, 256UL)
-      inspect(read_rgba8_from_copy_out(out, 0U, 0U), content="[0, 255, 0, 255]")
+      @debug.debug_inspect(
+        read_rgba8_from_copy_out(out, 0U, 0U),
+        content=(
+          #|<FixedArray: [0, 255, 0, 255]>
+        ),
+      )
     })
   })
 }

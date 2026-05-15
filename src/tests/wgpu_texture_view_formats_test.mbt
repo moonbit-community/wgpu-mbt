@@ -69,13 +69,16 @@ test "wgpu texture view formats (sRGB view)" {
     ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.BUFFER_BINDING_TYPE_STORAGE,
   )
-  inspect([bgl_ok0, bgl_ok1, bgl_ok2], content="[true, true, true]")
+  @debug.debug_inspect(
+    [bgl_ok0, bgl_ok1, bgl_ok2],
+    content="[true, true, true]",
+  )
   let bgl = bglb.finish(device)
   let bgb = @wgpu.BindGroupBuilder::new(max_entries=3UL)
   let bg_ok0 = bgb.add_sampler(0U, sampler)
   let bg_ok1 = bgb.add_texture_view(1U, view)
   let bg_ok2 = bgb.add_buffer(2U, storage)
-  inspect([bg_ok0, bg_ok1, bg_ok2], content="[true, true, true]")
+  @debug.debug_inspect([bg_ok0, bg_ok1, bg_ok2], content="[true, true, true]")
   let bg = bgb.finish(device, bgl)
   let pl = device.create_pipeline_layout_1(bgl)
   let wgsl : String =
@@ -104,7 +107,7 @@ test "wgpu texture view formats (sRGB view)" {
   queue.submit_one(cmd)
   let _done = device.poll(wait=true)
   let out = readback.readback(instance, 0UL, 8UL)
-  inspect([u32le_at(out, 0), u32le_at(out, 4)], content="[16, 8]")
+  @debug.debug_inspect([u32le_at(out, 0), u32le_at(out, 4)], content="[16, 8]")
   cmd.release()
   encoder.release()
   cp.release()

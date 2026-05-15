@@ -28,7 +28,7 @@ test "wgpu command encoder clear_buffer" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = buf.readback(instance, 0UL, 16UL)
-  inspect(
+  @debug.debug_inspect(
     [
       out[0].to_uint(),
       out[1].to_uint(),

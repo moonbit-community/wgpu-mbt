@@ -79,7 +79,7 @@ test "wgpu texture view: 2d array layer selection" {
   queue.submit_one(cmd)
   let out0 = readback0.readback(instance, 0UL, 4UL)
   let out1 = readback1.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [
       [
         out0[0].to_uint(),
@@ -154,7 +154,7 @@ test "wgpu texture view: mip level selection" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[255, 0, 0, 255]",
   )

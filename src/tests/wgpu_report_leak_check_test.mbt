@@ -111,7 +111,12 @@ test "wgpu GlobalReport leak check (buffers/textures/pipelines)" {
   let out0 = readback_storage.readback(instance, 0UL, 4UL)
   inspect(u32le_at(out0, 0), content="7")
   let out1 = readback_tex.readback(instance, 0UL, 256UL)
-  inspect(read_rgba8_from_copy_out(out1, 0U, 0U), content="[0, 255, 0, 255]")
+  @debug.debug_inspect(
+    read_rgba8_from_copy_out(out1, 0U, 0U),
+    content=(
+      #|<FixedArray: [0, 255, 0, 255]>
+    ),
+  )
   cmd.release()
   encoder.release()
   rp.release()

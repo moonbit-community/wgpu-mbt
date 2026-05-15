@@ -135,7 +135,7 @@ test "wgpu generated handles: render bundle indirect raw paths render pixels" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 255, 0, 255]",
   )
@@ -213,7 +213,7 @@ test "wgpu generated handles: render pass indexed indirect raw plus stencil refe
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[0, 255, 0, 255]",
   )
@@ -323,7 +323,7 @@ test "wgpu generated handles: render pass multi draw indexed and count raw paths
     let cmd = encoder.finish()
     queue.submit_one(cmd)
     let out = readback.readback(instance, 0UL, 24UL)
-    inspect(
+    @debug.debug_inspect(
       [
         u64le_at(out, 0) >= 2UL,
         u64le_at(out, 8) >= 2UL,

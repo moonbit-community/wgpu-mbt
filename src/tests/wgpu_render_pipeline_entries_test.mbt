@@ -75,9 +75,11 @@ test "wgpu render pipeline: custom entry points via descriptor builder" {
   let r = out[0].to_uint()
   let g = out[1].to_uint()
   let b = out[2].to_uint()
-  inspect(
+  @debug.debug_inspect(
     [bucket_u8(r), bucket_u8(g), bucket_u8(b)],
-    content="[zero, full, zero]",
+    content=(
+      #|["zero", "full", "zero"]
+    ),
   )
   cmd.release()
   encoder.release()
@@ -169,9 +171,11 @@ test "wgpu render pipeline: descriptor builder replaces modules and primitive fl
   let r = out[0].to_uint()
   let g = out[1].to_uint()
   let b = out[2].to_uint()
-  inspect(
+  @debug.debug_inspect(
     [bucket_u8(r), bucket_u8(g), bucket_u8(b)],
-    content="[zero, full, zero]",
+    content=(
+      #|["zero", "full", "zero"]
+    ),
   )
   cmd.release()
   encoder.release()

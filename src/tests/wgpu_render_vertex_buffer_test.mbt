@@ -59,7 +59,7 @@ test "wgpu offscreen render with vertex buffer" {
     out[2].to_uint(),
     out[3].to_uint(),
   ]
-  inspect(rgba, content="[255, 0, 0, 255]")
+  @debug.debug_inspect(rgba, content="[255, 0, 0, 255]")
   cmd.release()
   encoder.release()
   pipeline.release()
@@ -142,7 +142,12 @@ test "wgpu render pipeline desc builder: 2 vertex buffers (pos2 + color)" {
   queue.submit_one(cmd)
   let out = readback_buf.readback(instance, 0UL, 256UL)
   let rgba = read_rgba8_from_copy_out(out, 0U, 0U)
-  inspect(rgba, content="[0, 255, 0, 255]")
+  @debug.debug_inspect(
+    rgba,
+    content=(
+      #|<FixedArray: [0, 255, 0, 255]>
+    ),
+  )
   cmd.release()
   encoder.release()
   pipeline.release()

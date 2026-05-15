@@ -61,7 +61,7 @@ test "wgpu render viewport + scissor" {
     in_px[2].to_uint(),
     in_px[3].to_uint(),
   ]
-  inspect(in_rgba, content="[255, 0, 0, 255]")
+  @debug.debug_inspect(in_rgba, content="[255, 0, 0, 255]")
   let out_px = readback_buf.readback(instance, 4UL, 4UL)
   let out_rgba : Array[UInt] = [
     out_px[0].to_uint(),
@@ -70,7 +70,7 @@ test "wgpu render viewport + scissor" {
     out_px[3].to_uint(),
   ]
   // Outside scissor: still render-pass clear color.
-  inspect(out_rgba, content="[0, 0, 0, 255]")
+  @debug.debug_inspect(out_rgba, content="[0, 0, 0, 255]")
   cmd.release()
   encoder.release()
   pipeline.release()

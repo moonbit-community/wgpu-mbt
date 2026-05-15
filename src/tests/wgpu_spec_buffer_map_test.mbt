@@ -37,7 +37,7 @@ test "spec: buffer.map_{read,write}_sync + unmap" {
     encoder.release()
     let out = read_buf.map_read_sync(instance, 0UL, 4UL)
     read_buf.unmap()
-    inspect(
+    @debug.debug_inspect(
       [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
       content="[9, 8, 7, 6]",
     )

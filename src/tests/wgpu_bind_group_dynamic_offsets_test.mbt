@@ -87,7 +87,7 @@ test "wgpu bind group: dynamic uniform offset selects color" {
 
   let a = render_one(0U)
   let b = render_one(256U)
-  inspect([a, b], content="[[255, 0, 0, 255], [0, 255, 0, 255]]")
+  @debug.debug_inspect([a, b], content="[[255, 0, 0, 255], [0, 255, 0, 255]]")
   pipeline.release()
   sm.release()
   pl.release()
@@ -171,7 +171,7 @@ test "wgpu bind group: pipeline layout 2 groups (sampler+texture, uniform)" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(
+  @debug.debug_inspect(
     [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
     content="[255, 255, 0, 255]",
   )

@@ -72,7 +72,12 @@ test "wgpu surface descriptor metal layer path" {
   surface.present_or_raise()
   let out = readback_buf.readback(instance, 0UL, 256UL)
   let rgba = @test_helpers.read_rgba8_from_copy_out(out, 0U, 0U)
-  inspect(rgba, content="[0, 255, 0, 255]")
+  @debug.debug_inspect(
+    rgba,
+    content=(
+      #|<FixedArray: [0, 255, 0, 255]>
+    ),
+  )
   cmd.release()
   encoder.release()
   pipeline.release()
