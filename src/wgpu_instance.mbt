@@ -392,6 +392,18 @@ pub fn Instance::create_surface_macos_ns_view(
 }
 
 ///|
+/// Create a macOS Metal surface from an `NSView*` address stored as `UInt64`.
+///
+/// This compatibility entry is intended for window packages that expose native
+/// view pointers as integer handles. The value must be an `NSView*` address.
+pub fn Instance::create_surface_macos_ns_view_u64(
+  self : Instance,
+  ns_view : UInt64,
+) -> Surface raise SurfaceCreateError {
+  self.create_surface_macos_ns_view(@c.opaque_ptr_from_u64(ns_view))
+}
+
+///|
 /// Create a surface from Wayland handles (`wl_display*`, `wl_surface*`).
 ///
 /// This is intended for Linux + Vulkan setups. The pointers are passed through

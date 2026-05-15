@@ -16,8 +16,10 @@
 test "wgpu surface macOS NSView path" {
   let view = @wgpu_c.macos_test_ns_view_new(2U, 3U)
   inspect(@wgpu_c.opaque_ptr_is_null(view), content="false")
+  let view_u64 = @wgpu_c.opaque_ptr_to_u64(view)
+  inspect(view_u64 != 0UL, content="true")
   let instance = @wgpu.Instance::create()
-  let surface = instance.create_surface_macos_ns_view(view)
+  let surface = instance.create_surface_macos_ns_view_u64(view_u64)
   let layer = surface.metal_layer_handle()
   inspect(@wgpu_c.opaque_ptr_is_null(layer), content="false")
   inspect(@wgpu_c.cametallayer_drawable_width_u32(layer) >= 2U, content="true")
@@ -38,7 +40,7 @@ test "wgpu surface macOS NSView path" {
   frame.release()
   surface.unconfigure()
   @wgpu_c.macos_test_ns_view_set_size(view, 4U, 5U)
-  surface.sync_macos_ns_view_layer(view)
+  surface.sync_macos_ns_view_layer_u64(view_u64)
   inspect(@wgpu_c.cametallayer_drawable_width_u32(layer) >= 4U, content="true")
   inspect(@wgpu_c.cametallayer_drawable_height_u32(layer) >= 5U, content="true")
   device.release()
@@ -53,9 +55,7 @@ test "wgpu surface macOS NSView path rejects null view" {
   let instance = @wgpu.Instance::create()
   let msg : Ref[String] = @ref.new("")
   try {
-    let surface = instance.create_surface_macos_ns_view(
-      @wgpu_c.null_opaque_ptr(),
-    )
+    let surface = instance.create_surface_macos_ns_view_u64(0UL)
     surface.release()
   } catch {
     e => msg.val = e.message()

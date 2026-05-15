@@ -39,11 +39,24 @@ pub extern "C" fn macos_ns_view_prepare_metal_layer(
 ) -> OpaquePtr = "mbt_wgpu_macos_ns_view_prepare_metal_layer"
 
 ///|
+pub fn macos_ns_view_prepare_metal_layer_u64(ns_view : UInt64) -> OpaquePtr {
+  macos_ns_view_prepare_metal_layer(opaque_ptr_from_u64(ns_view))
+}
+
+///|
 #borrow(ns_view, layer)
 pub extern "C" fn macos_ns_view_sync_metal_layer(
   ns_view : OpaquePtr,
   layer : OpaquePtr,
 ) -> UInt = "mbt_wgpu_macos_ns_view_sync_metal_layer"
+
+///|
+pub fn macos_ns_view_sync_metal_layer_u64(
+  ns_view : UInt64,
+  layer : OpaquePtr,
+) -> UInt {
+  macos_ns_view_sync_metal_layer(opaque_ptr_from_u64(ns_view), layer)
+}
 
 ///|
 pub extern "C" fn surface_is_null(surface : WGPUSurface) -> Bool = "mbt_wgpu_opaque_ptr_is_null"

@@ -862,7 +862,11 @@ pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UI
 
 pub fn macos_ns_view_prepare_metal_layer(OpaquePtr) -> OpaquePtr
 
+pub fn macos_ns_view_prepare_metal_layer_u64(UInt64) -> OpaquePtr
+
 pub fn macos_ns_view_sync_metal_layer(OpaquePtr, OpaquePtr) -> UInt
+
+pub fn macos_ns_view_sync_metal_layer_u64(UInt64, OpaquePtr) -> UInt
 
 pub fn macos_surface_last_status_u32() -> UInt
 
@@ -926,7 +930,11 @@ pub fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr
 
 pub fn null_uint_ptr() -> UIntPtr
 
+pub fn opaque_ptr_from_u64(UInt64) -> OpaquePtr
+
 pub fn opaque_ptr_is_null(OpaquePtr) -> Bool
+
+pub fn opaque_ptr_to_u64(OpaquePtr) -> UInt64
 
 pub fn optional_sym_present_utf8(Bytes, UInt64) -> Bool
 

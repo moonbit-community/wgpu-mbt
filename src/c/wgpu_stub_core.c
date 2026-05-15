@@ -25,6 +25,16 @@ WGPUDevice mbt_wgpu_null_device(void) { return NULL; }
 
 int32_t mbt_wgpu_opaque_ptr_is_null(void *p) { return p == NULL; }
 
+void *mbt_wgpu_opaque_ptr_from_u64(uint64_t raw) {
+  uintptr_t ptr = (uintptr_t)raw;
+  if ((uint64_t)ptr != raw) {
+    return NULL;
+  }
+  return (void *)ptr;
+}
+
+uint64_t mbt_wgpu_opaque_ptr_to_u64(void *p) { return (uint64_t)(uintptr_t)p; }
+
 int32_t mbt_wgpu_shader_module_is_null(WGPUShaderModule shader_module) {
   return shader_module == NULL;
 }

@@ -43,6 +43,13 @@ pub extern "C" fn null_device() -> WGPUDevice = "mbt_wgpu_null_device"
 pub extern "C" fn opaque_ptr_is_null(p : OpaquePtr) -> Bool = "mbt_wgpu_opaque_ptr_is_null"
 
 ///|
+pub extern "C" fn opaque_ptr_from_u64(raw : UInt64) -> OpaquePtr = "mbt_wgpu_opaque_ptr_from_u64"
+
+///|
+#borrow(p)
+pub extern "C" fn opaque_ptr_to_u64(p : OpaquePtr) -> UInt64 = "mbt_wgpu_opaque_ptr_to_u64"
+
+///|
 pub extern "C" fn platform_is_macos() -> Bool = "mbt_wgpu_platform_is_macos"
 
 ///|

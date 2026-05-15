@@ -36,6 +36,16 @@ pub fn Surface::sync_macos_ns_view_layer(
 }
 
 ///|
+/// Synchronize this surface's retained `CAMetalLayer` with an `NSView*`
+/// address stored as `UInt64`.
+pub fn Surface::sync_macos_ns_view_layer_u64(
+  self : Surface,
+  ns_view : UInt64,
+) -> Unit raise SurfaceCreateError {
+  self.sync_macos_ns_view_layer(@c.opaque_ptr_from_u64(ns_view))
+}
+
+///|
 pub fn surface_descriptor_metal_layer_new(
   layer : @c.OpaquePtr,
 ) -> @c.WGPUSurfaceDescriptorPtr {
