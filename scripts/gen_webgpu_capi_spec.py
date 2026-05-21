@@ -388,6 +388,43 @@ def write_webgpu_consts() -> None:
     add_alias("WGPUFeatureName_ShaderInt64", "WGPUNativeFeature_ShaderInt64")
     add_alias("WGPUFeatureName_Immediates", "WGPUNativeFeature_Immediates")
 
+    # Preserve public constants that were present in the v27-era API but are no
+    # longer emitted by upstream v29 headers. They are still used as stable
+    # compatibility values by higher-level wrappers and tests.
+    compatibility_consts: list[tuple[str, str, int]] = [
+        ("WGPUInstanceFlag_Default", "UInt", 0x00000000),
+        ("WGPUNativeFeature_ClearTexture", "UInt", 0x00030016),
+        ("WGPUNativeFeature_Multiview", "UInt", 0x00030018),
+        ("WGPUNativeFeature_ShaderPrimitiveIndex", "UInt", 0x0003001F),
+        ("WGPUNativeFeature_ShaderFloat32Atomic", "UInt", 0x00030027),
+        ("WGPUNativeFeature_TextureAtomic", "UInt", 0x00030028),
+        ("WGPUNativeFeature_ShaderInt64AtomicMinMax", "UInt", 0x0003002C),
+        ("WGPUNativeFeature_ShaderInt64AtomicAllOps", "UInt", 0x0003002D),
+        ("WGPUNativeFeature_TextureInt64Atomic", "UInt", 0x00030030),
+        ("WGPUFeatures_DepthClipControl", "UInt64", 0x0000000000000001),
+        ("WGPUFeatures_PushConstants", "UInt64", 0x0000000000010000),
+        ("WGPUFeatures_TextureAtomic", "UInt64", 0x0000000010000000),
+        ("WGPUFeatures_ShaderInt64", "UInt64", 0x0000002000000000),
+        ("WGPUFeatures_Subgroup", "UInt64", 0x0000004000000000),
+        ("WGPUFeatures_TextureInt64Atomic", "UInt64", 0x0000400000000000),
+        ("WGPUFeatures_QueryableMask", "UInt64", 0x0000406010010001),
+        ("WGPUQueueWorkDoneStatus_InstanceDropped", "UInt", 0x00000002),
+        ("WGPUQueueWorkDoneStatus_Unknown", "UInt", 0x00000004),
+        ("WGPURequestAdapterStatus_InstanceDropped", "UInt", 0x00000002),
+        ("WGPURequestAdapterStatus_Unknown", "UInt", 0x00000005),
+        ("WGPURequestDeviceStatus_InstanceDropped", "UInt", 0x00000002),
+        ("WGPURequestDeviceStatus_Unknown", "UInt", 0x00000004),
+        ("WGPUSurfaceGetCurrentTextureStatus_OutOfMemory", "UInt", 0x00000006),
+        ("WGPUSurfaceGetCurrentTextureStatus_DeviceLost", "UInt", 0x00000007),
+        ("WGPUWaitStatus_UnsupportedTimeout", "UInt", 0x00000003),
+        ("WGPUWaitStatus_UnsupportedCount", "UInt", 0x00000004),
+        ("WGPUWaitStatus_UnsupportedMixedSources", "UInt", 0x00000005),
+    ]
+    for name, ty, val in compatibility_consts:
+        if name not in by_name:
+            by_name[name] = (ty, val)
+            uniq.append((name, ty, val))
+
     uniq.sort(key=lambda t: t[0])
 
     out_lines: list[str] = []
@@ -495,7 +532,7 @@ def parse_any_functions(h_text: str) -> list[Func]:
             continue
         if "wgpu" not in proto:
             continue
-        mm = re.match(r"(.+?)\s+(wgpu\w+)\s*\((.*?)\)\s*;", proto)
+        mm = re.match(r"(.+?)\s*(wgpu\w+)\s*\((.*?)\)\s*;", proto)
         if not mm:
             continue
         ret_c, name, params_c = mm.group(1), mm.group(2), mm.group(3)

@@ -169,6 +169,10 @@ pub type WGPUExtent3DPtr
 
 ///|
 #external
+pub type WGPUExternalTexture
+
+///|
+#external
 pub type WGPUFeatureName
 
 ///|
@@ -197,17 +201,21 @@ pub type WGPUInstance
 ///|
 #external
 #alias(UnitPtr)
-pub type WGPUInstanceCapabilitiesPtr
-
-///|
-#external
-#alias(UnitPtr)
 pub type WGPUInstanceDescriptorPtr
 
 ///|
 #external
 #alias(UnitPtr)
 pub type WGPUInstanceEnumerateAdapterOptionsPtr
+
+///|
+#external
+pub type WGPUInstanceFeatureName
+
+///|
+#external
+#alias(UnitPtr)
+pub type WGPUInstanceLimitsPtr
 
 ///|
 #external
@@ -366,6 +374,15 @@ pub type WGPUSupportedFeaturesPtr
 
 ///|
 #external
+pub type WGPUSupportedInstanceFeatures
+
+///|
+#external
+#alias(UnitPtr)
+pub type WGPUSupportedInstanceFeaturesPtr
+
+///|
+#external
 pub type WGPUSupportedWGSLLanguageFeatures
 
 ///|
@@ -444,6 +461,10 @@ pub type WGPUTextureView
 #external
 #alias(UnitPtr)
 pub type WGPUTextureViewDescriptorPtr
+
+///|
+#external
+pub type WGPUTextureViewDimension
 
 ///|
 #external
@@ -568,6 +589,15 @@ pub extern "C" fn wgpuBufferMapAsync(
 ) -> WGPUFuture = "wgpuBufferMapAsync"
 
 ///|
+#borrow(data)
+pub extern "C" fn wgpuBufferReadMappedRange(
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  data : UnitPtr,
+  size : UInt64,
+) -> WGPUStatus = "wgpuBufferReadMappedRange"
+
+///|
 pub extern "C" fn wgpuBufferRelease(buffer : WGPUBuffer) -> Unit = "wgpuBufferRelease"
 
 ///|
@@ -578,6 +608,15 @@ pub extern "C" fn wgpuBufferSetLabel(
 
 ///|
 pub extern "C" fn wgpuBufferUnmap(buffer : WGPUBuffer) -> Unit = "wgpuBufferUnmap"
+
+///|
+#borrow(data)
+pub extern "C" fn wgpuBufferWriteMappedRange(
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  data : UnitPtr,
+  size : UInt64,
+) -> WGPUStatus = "wgpuBufferWriteMappedRange"
 
 ///|
 pub extern "C" fn wgpuCommandBufferAddRef(
@@ -781,6 +820,15 @@ pub extern "C" fn wgpuComputePassEncoderSetBindGroup(
 ) -> Unit = "wgpuComputePassEncoderSetBindGroup"
 
 ///|
+#borrow(data)
+pub extern "C" fn wgpuComputePassEncoderSetImmediates(
+  encoder : WGPUComputePassEncoder,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit = "wgpuComputePassEncoderSetImmediates"
+
+///|
 pub extern "C" fn wgpuComputePassEncoderSetLabel(
   computePassEncoder : WGPUComputePassEncoder,
   label : WGPUStringView,
@@ -791,15 +839,6 @@ pub extern "C" fn wgpuComputePassEncoderSetPipeline(
   computePassEncoder : WGPUComputePassEncoder,
   pipeline : WGPUComputePipeline,
 ) -> Unit = "wgpuComputePassEncoderSetPipeline"
-
-///|
-#borrow(data)
-pub extern "C" fn wgpuComputePassEncoderSetPushConstants(
-  encoder : WGPUComputePassEncoder,
-  offset : UInt,
-  sizeBytes : UInt,
-  data : UnitPtr,
-) -> Unit = "wgpuComputePassEncoderSetPushConstants"
 
 ///|
 pub extern "C" fn wgpuComputePassEncoderWriteTimestamp(
@@ -950,9 +989,11 @@ pub extern "C" fn wgpuDeviceCreateTexture(
 pub extern "C" fn wgpuDeviceDestroy(device : WGPUDevice) -> Unit = "wgpuDeviceDestroy"
 
 ///|
+#borrow(adapterInfo)
 pub extern "C" fn wgpuDeviceGetAdapterInfo(
   device : WGPUDevice,
-) -> WGPUAdapterInfo = "wgpuDeviceGetAdapterInfo"
+  adapterInfo : WGPUAdapterInfoPtr,
+) -> WGPUStatus = "wgpuDeviceGetAdapterInfo"
 
 ///|
 #borrow(features)
@@ -970,6 +1011,11 @@ pub extern "C" fn wgpuDeviceGetLimits(
 
 ///|
 pub extern "C" fn wgpuDeviceGetLostFuture(device : WGPUDevice) -> WGPUFuture = "wgpuDeviceGetLostFuture"
+
+///|
+pub extern "C" fn wgpuDeviceGetNativeMetalDevice(
+  device : WGPUDevice,
+) -> UnitPtr = "wgpuDeviceGetNativeMetalDevice"
 
 ///|
 pub extern "C" fn wgpuDeviceGetQueue(device : WGPUDevice) -> WGPUQueue = "wgpuDeviceGetQueue"
@@ -1010,6 +1056,32 @@ pub extern "C" fn wgpuDeviceSetLabel(
 ) -> Unit = "wgpuDeviceSetLabel"
 
 ///|
+pub extern "C" fn wgpuDeviceStartGraphicsDebuggerCapture(
+  device : WGPUDevice,
+) -> Bool = "wgpuDeviceStartGraphicsDebuggerCapture"
+
+///|
+pub extern "C" fn wgpuDeviceStopGraphicsDebuggerCapture(
+  device : WGPUDevice,
+) -> Unit = "wgpuDeviceStopGraphicsDebuggerCapture"
+
+///|
+pub extern "C" fn wgpuExternalTextureAddRef(
+  externalTexture : WGPUExternalTexture,
+) -> Unit = "wgpuExternalTextureAddRef"
+
+///|
+pub extern "C" fn wgpuExternalTextureRelease(
+  externalTexture : WGPUExternalTexture,
+) -> Unit = "wgpuExternalTextureRelease"
+
+///|
+pub extern "C" fn wgpuExternalTextureSetLabel(
+  externalTexture : WGPUExternalTexture,
+  label : WGPUStringView,
+) -> Unit = "wgpuExternalTextureSetLabel"
+
+///|
 #borrow(report)
 pub extern "C" fn wgpuGenerateReport(
   instance : WGPUInstance,
@@ -1017,16 +1089,27 @@ pub extern "C" fn wgpuGenerateReport(
 ) -> Unit = "wgpuGenerateReport"
 
 ///|
-#borrow(capabilities)
-pub extern "C" fn wgpuGetInstanceCapabilities(
-  capabilities : WGPUInstanceCapabilitiesPtr,
-) -> WGPUStatus = "wgpuGetInstanceCapabilities"
+#borrow(features)
+pub extern "C" fn wgpuGetInstanceFeatures(
+  features : WGPUSupportedInstanceFeaturesPtr,
+) -> Unit = "wgpuGetInstanceFeatures"
+
+///|
+#borrow(limits)
+pub extern "C" fn wgpuGetInstanceLimits(
+  limits : WGPUInstanceLimitsPtr,
+) -> WGPUStatus = "wgpuGetInstanceLimits"
 
 ///|
 pub extern "C" fn wgpuGetProcAddress(procName : WGPUStringView) -> WGPUProc = "wgpuGetProcAddress"
 
 ///|
 pub extern "C" fn wgpuGetVersion() -> UInt = "wgpuGetVersion"
+
+///|
+pub extern "C" fn wgpuHasInstanceFeature(
+  feature : WGPUInstanceFeatureName,
+) -> Bool = "wgpuHasInstanceFeature"
 
 ///|
 pub extern "C" fn wgpuInstanceAddRef(instance : WGPUInstance) -> Unit = "wgpuInstanceAddRef"
@@ -1051,7 +1134,7 @@ pub extern "C" fn wgpuInstanceEnumerateAdapters(
 pub extern "C" fn wgpuInstanceGetWGSLLanguageFeatures(
   instance : WGPUInstance,
   features : WGPUSupportedWGSLLanguageFeaturesPtr,
-) -> WGPUStatus = "wgpuInstanceGetWGSLLanguageFeatures"
+) -> Unit = "wgpuInstanceGetWGSLLanguageFeatures"
 
 ///|
 pub extern "C" fn wgpuInstanceHasWGSLLanguageFeature(
@@ -1121,6 +1204,11 @@ pub extern "C" fn wgpuQuerySetSetLabel(
 
 ///|
 pub extern "C" fn wgpuQueueAddRef(queue : WGPUQueue) -> Unit = "wgpuQueueAddRef"
+
+///|
+pub extern "C" fn wgpuQueueGetNativeMetalCommandQueue(
+  queue : WGPUQueue,
+) -> UnitPtr = "wgpuQueueGetNativeMetalCommandQueue"
 
 ///|
 pub extern "C" fn wgpuQueueGetTimestampPeriod(queue : WGPUQueue) -> Float = "wgpuQueueGetTimestampPeriod"
@@ -1260,6 +1348,15 @@ pub extern "C" fn wgpuRenderBundleEncoderSetBindGroup(
 ) -> Unit = "wgpuRenderBundleEncoderSetBindGroup"
 
 ///|
+#borrow(data)
+pub extern "C" fn wgpuRenderBundleEncoderSetImmediates(
+  encoder : WGPURenderBundleEncoder,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit = "wgpuRenderBundleEncoderSetImmediates"
+
+///|
 pub extern "C" fn wgpuRenderBundleEncoderSetIndexBuffer(
   renderBundleEncoder : WGPURenderBundleEncoder,
   buffer : WGPUBuffer,
@@ -1279,16 +1376,6 @@ pub extern "C" fn wgpuRenderBundleEncoderSetPipeline(
   renderBundleEncoder : WGPURenderBundleEncoder,
   pipeline : WGPURenderPipeline,
 ) -> Unit = "wgpuRenderBundleEncoderSetPipeline"
-
-///|
-#borrow(data)
-pub extern "C" fn wgpuRenderBundleEncoderSetPushConstants(
-  encoder : WGPURenderBundleEncoder,
-  stages : WGPUShaderStage,
-  offset : UInt,
-  sizeBytes : UInt,
-  data : UnitPtr,
-) -> Unit = "wgpuRenderBundleEncoderSetPushConstants"
 
 ///|
 pub extern "C" fn wgpuRenderBundleEncoderSetVertexBuffer(
@@ -1460,6 +1547,15 @@ pub extern "C" fn wgpuRenderPassEncoderSetBlendConstant(
 ) -> Unit = "wgpuRenderPassEncoderSetBlendConstant"
 
 ///|
+#borrow(data)
+pub extern "C" fn wgpuRenderPassEncoderSetImmediates(
+  encoder : WGPURenderPassEncoder,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit = "wgpuRenderPassEncoderSetImmediates"
+
+///|
 pub extern "C" fn wgpuRenderPassEncoderSetIndexBuffer(
   renderPassEncoder : WGPURenderPassEncoder,
   buffer : WGPUBuffer,
@@ -1479,16 +1575,6 @@ pub extern "C" fn wgpuRenderPassEncoderSetPipeline(
   renderPassEncoder : WGPURenderPassEncoder,
   pipeline : WGPURenderPipeline,
 ) -> Unit = "wgpuRenderPassEncoderSetPipeline"
-
-///|
-#borrow(data)
-pub extern "C" fn wgpuRenderPassEncoderSetPushConstants(
-  encoder : WGPURenderPassEncoder,
-  stages : WGPUShaderStage,
-  offset : UInt,
-  sizeBytes : UInt,
-  data : UnitPtr,
-) -> Unit = "wgpuRenderPassEncoderSetPushConstants"
 
 ///|
 pub extern "C" fn wgpuRenderPassEncoderSetScissorRect(
@@ -1604,6 +1690,11 @@ pub extern "C" fn wgpuSupportedFeaturesFreeMembers(
 ) -> Unit = "wgpuSupportedFeaturesFreeMembers"
 
 ///|
+pub extern "C" fn wgpuSupportedInstanceFeaturesFreeMembers(
+  supportedInstanceFeatures : WGPUSupportedInstanceFeatures,
+) -> Unit = "wgpuSupportedInstanceFeaturesFreeMembers"
+
+///|
 pub extern "C" fn wgpuSupportedWGSLLanguageFeaturesFreeMembers(
   supportedWGSLLanguageFeatures : WGPUSupportedWGSLLanguageFeatures,
 ) -> Unit = "wgpuSupportedWGSLLanguageFeaturesFreeMembers"
@@ -1688,7 +1779,17 @@ pub extern "C" fn wgpuTextureGetHeight(texture : WGPUTexture) -> UInt = "wgpuTex
 pub extern "C" fn wgpuTextureGetMipLevelCount(texture : WGPUTexture) -> UInt = "wgpuTextureGetMipLevelCount"
 
 ///|
+pub extern "C" fn wgpuTextureGetNativeMetalTexture(
+  texture : WGPUTexture,
+) -> UnitPtr = "wgpuTextureGetNativeMetalTexture"
+
+///|
 pub extern "C" fn wgpuTextureGetSampleCount(texture : WGPUTexture) -> UInt = "wgpuTextureGetSampleCount"
+
+///|
+pub extern "C" fn wgpuTextureGetTextureBindingViewDimension(
+  texture : WGPUTexture,
+) -> WGPUTextureViewDimension = "wgpuTextureGetTextureBindingViewDimension"
 
 ///|
 pub extern "C" fn wgpuTextureGetUsage(

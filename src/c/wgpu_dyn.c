@@ -29,13 +29,29 @@ WGPUInstance wgpuCreateInstance(WGPU_NULLABLE WGPUInstanceDescriptor const * des
   }
   return mbt_real_wgpuCreateInstance(descriptor);
 }
-typedef WGPUStatus (*mbt_pfn_wgpuGetInstanceCapabilities)(WGPUInstanceCapabilities * capabilities);
-static mbt_pfn_wgpuGetInstanceCapabilities mbt_real_wgpuGetInstanceCapabilities = NULL;
-WGPUStatus wgpuGetInstanceCapabilities(WGPUInstanceCapabilities * capabilities) {
-  if (!mbt_real_wgpuGetInstanceCapabilities) {
-    mbt_real_wgpuGetInstanceCapabilities = (mbt_pfn_wgpuGetInstanceCapabilities)mbt_wgpu_sym("wgpuGetInstanceCapabilities");
+typedef void (*mbt_pfn_wgpuGetInstanceFeatures)(WGPUSupportedInstanceFeatures * features);
+static mbt_pfn_wgpuGetInstanceFeatures mbt_real_wgpuGetInstanceFeatures = NULL;
+void wgpuGetInstanceFeatures(WGPUSupportedInstanceFeatures * features) {
+  if (!mbt_real_wgpuGetInstanceFeatures) {
+    mbt_real_wgpuGetInstanceFeatures = (mbt_pfn_wgpuGetInstanceFeatures)mbt_wgpu_sym("wgpuGetInstanceFeatures");
   }
-  return mbt_real_wgpuGetInstanceCapabilities(capabilities);
+  mbt_real_wgpuGetInstanceFeatures(features);
+}
+typedef WGPUStatus (*mbt_pfn_wgpuGetInstanceLimits)(WGPUInstanceLimits * limits);
+static mbt_pfn_wgpuGetInstanceLimits mbt_real_wgpuGetInstanceLimits = NULL;
+WGPUStatus wgpuGetInstanceLimits(WGPUInstanceLimits * limits) {
+  if (!mbt_real_wgpuGetInstanceLimits) {
+    mbt_real_wgpuGetInstanceLimits = (mbt_pfn_wgpuGetInstanceLimits)mbt_wgpu_sym("wgpuGetInstanceLimits");
+  }
+  return mbt_real_wgpuGetInstanceLimits(limits);
+}
+typedef WGPUBool (*mbt_pfn_wgpuHasInstanceFeature)(WGPUInstanceFeatureName feature);
+static mbt_pfn_wgpuHasInstanceFeature mbt_real_wgpuHasInstanceFeature = NULL;
+WGPUBool wgpuHasInstanceFeature(WGPUInstanceFeatureName feature) {
+  if (!mbt_real_wgpuHasInstanceFeature) {
+    mbt_real_wgpuHasInstanceFeature = (mbt_pfn_wgpuHasInstanceFeature)mbt_wgpu_sym("wgpuHasInstanceFeature");
+  }
+  return mbt_real_wgpuHasInstanceFeature(feature);
 }
 typedef WGPUProc (*mbt_pfn_wgpuGetProcAddress)(WGPUStringView procName);
 static mbt_pfn_wgpuGetProcAddress mbt_real_wgpuGetProcAddress = NULL;
@@ -173,14 +189,6 @@ void const * wgpuBufferGetConstMappedRange(WGPUBuffer buffer, size_t offset, siz
   }
   return mbt_real_wgpuBufferGetConstMappedRange(buffer, offset, size);
 }
-typedef WGPUBufferMapState (*mbt_pfn_wgpuBufferGetMapState)(WGPUBuffer buffer);
-static mbt_pfn_wgpuBufferGetMapState mbt_real_wgpuBufferGetMapState = NULL;
-WGPUBufferMapState wgpuBufferGetMapState(WGPUBuffer buffer) {
-  if (!mbt_real_wgpuBufferGetMapState) {
-    mbt_real_wgpuBufferGetMapState = (mbt_pfn_wgpuBufferGetMapState)mbt_wgpu_sym("wgpuBufferGetMapState");
-  }
-  return mbt_real_wgpuBufferGetMapState(buffer);
-}
 typedef void * (*mbt_pfn_wgpuBufferGetMappedRange)(WGPUBuffer buffer, size_t offset, size_t size);
 static mbt_pfn_wgpuBufferGetMappedRange mbt_real_wgpuBufferGetMappedRange = NULL;
 void * wgpuBufferGetMappedRange(WGPUBuffer buffer, size_t offset, size_t size) {
@@ -188,6 +196,14 @@ void * wgpuBufferGetMappedRange(WGPUBuffer buffer, size_t offset, size_t size) {
     mbt_real_wgpuBufferGetMappedRange = (mbt_pfn_wgpuBufferGetMappedRange)mbt_wgpu_sym("wgpuBufferGetMappedRange");
   }
   return mbt_real_wgpuBufferGetMappedRange(buffer, offset, size);
+}
+typedef WGPUBufferMapState (*mbt_pfn_wgpuBufferGetMapState)(WGPUBuffer buffer);
+static mbt_pfn_wgpuBufferGetMapState mbt_real_wgpuBufferGetMapState = NULL;
+WGPUBufferMapState wgpuBufferGetMapState(WGPUBuffer buffer) {
+  if (!mbt_real_wgpuBufferGetMapState) {
+    mbt_real_wgpuBufferGetMapState = (mbt_pfn_wgpuBufferGetMapState)mbt_wgpu_sym("wgpuBufferGetMapState");
+  }
+  return mbt_real_wgpuBufferGetMapState(buffer);
 }
 typedef uint64_t (*mbt_pfn_wgpuBufferGetSize)(WGPUBuffer buffer);
 static mbt_pfn_wgpuBufferGetSize mbt_real_wgpuBufferGetSize = NULL;
@@ -213,6 +229,14 @@ WGPUFuture wgpuBufferMapAsync(WGPUBuffer buffer, WGPUMapMode mode, size_t offset
   }
   return mbt_real_wgpuBufferMapAsync(buffer, mode, offset, size, callbackInfo);
 }
+typedef WGPUStatus (*mbt_pfn_wgpuBufferReadMappedRange)(WGPUBuffer buffer, size_t offset, void * data, size_t size);
+static mbt_pfn_wgpuBufferReadMappedRange mbt_real_wgpuBufferReadMappedRange = NULL;
+WGPUStatus wgpuBufferReadMappedRange(WGPUBuffer buffer, size_t offset, void * data, size_t size) {
+  if (!mbt_real_wgpuBufferReadMappedRange) {
+    mbt_real_wgpuBufferReadMappedRange = (mbt_pfn_wgpuBufferReadMappedRange)mbt_wgpu_sym("wgpuBufferReadMappedRange");
+  }
+  return mbt_real_wgpuBufferReadMappedRange(buffer, offset, data, size);
+}
 typedef void (*mbt_pfn_wgpuBufferSetLabel)(WGPUBuffer buffer, WGPUStringView label);
 static mbt_pfn_wgpuBufferSetLabel mbt_real_wgpuBufferSetLabel = NULL;
 void wgpuBufferSetLabel(WGPUBuffer buffer, WGPUStringView label) {
@@ -228,6 +252,14 @@ void wgpuBufferUnmap(WGPUBuffer buffer) {
     mbt_real_wgpuBufferUnmap = (mbt_pfn_wgpuBufferUnmap)mbt_wgpu_sym("wgpuBufferUnmap");
   }
   mbt_real_wgpuBufferUnmap(buffer);
+}
+typedef WGPUStatus (*mbt_pfn_wgpuBufferWriteMappedRange)(WGPUBuffer buffer, size_t offset, void const * data, size_t size);
+static mbt_pfn_wgpuBufferWriteMappedRange mbt_real_wgpuBufferWriteMappedRange = NULL;
+WGPUStatus wgpuBufferWriteMappedRange(WGPUBuffer buffer, size_t offset, void const * data, size_t size) {
+  if (!mbt_real_wgpuBufferWriteMappedRange) {
+    mbt_real_wgpuBufferWriteMappedRange = (mbt_pfn_wgpuBufferWriteMappedRange)mbt_wgpu_sym("wgpuBufferWriteMappedRange");
+  }
+  return mbt_real_wgpuBufferWriteMappedRange(buffer, offset, data, size);
 }
 typedef void (*mbt_pfn_wgpuBufferAddRef)(WGPUBuffer buffer);
 static mbt_pfn_wgpuBufferAddRef mbt_real_wgpuBufferAddRef = NULL;
@@ -533,9 +565,9 @@ WGPUBindGroupLayout wgpuDeviceCreateBindGroupLayout(WGPUDevice device, WGPUBindG
   }
   return mbt_real_wgpuDeviceCreateBindGroupLayout(device, descriptor);
 }
-typedef WGPUBuffer (*mbt_pfn_wgpuDeviceCreateBuffer)(WGPUDevice device, WGPUBufferDescriptor const * descriptor);
+typedef WGPU_NULLABLE WGPUBuffer (*mbt_pfn_wgpuDeviceCreateBuffer)(WGPUDevice device, WGPUBufferDescriptor const * descriptor);
 static mbt_pfn_wgpuDeviceCreateBuffer mbt_real_wgpuDeviceCreateBuffer = NULL;
-WGPUBuffer wgpuDeviceCreateBuffer(WGPUDevice device, WGPUBufferDescriptor const * descriptor) {
+WGPU_NULLABLE WGPUBuffer wgpuDeviceCreateBuffer(WGPUDevice device, WGPUBufferDescriptor const * descriptor) {
   if (!mbt_real_wgpuDeviceCreateBuffer) {
     mbt_real_wgpuDeviceCreateBuffer = (mbt_pfn_wgpuDeviceCreateBuffer)mbt_wgpu_sym("wgpuDeviceCreateBuffer");
   }
@@ -637,13 +669,13 @@ void wgpuDeviceDestroy(WGPUDevice device) {
   }
   mbt_real_wgpuDeviceDestroy(device);
 }
-typedef WGPUAdapterInfo (*mbt_pfn_wgpuDeviceGetAdapterInfo)(WGPUDevice device);
+typedef WGPUStatus (*mbt_pfn_wgpuDeviceGetAdapterInfo)(WGPUDevice device, WGPUAdapterInfo * adapterInfo);
 static mbt_pfn_wgpuDeviceGetAdapterInfo mbt_real_wgpuDeviceGetAdapterInfo = NULL;
-WGPUAdapterInfo wgpuDeviceGetAdapterInfo(WGPUDevice device) {
+WGPUStatus wgpuDeviceGetAdapterInfo(WGPUDevice device, WGPUAdapterInfo * adapterInfo) {
   if (!mbt_real_wgpuDeviceGetAdapterInfo) {
     mbt_real_wgpuDeviceGetAdapterInfo = (mbt_pfn_wgpuDeviceGetAdapterInfo)mbt_wgpu_sym("wgpuDeviceGetAdapterInfo");
   }
-  return mbt_real_wgpuDeviceGetAdapterInfo(device);
+  return mbt_real_wgpuDeviceGetAdapterInfo(device, adapterInfo);
 }
 typedef void (*mbt_pfn_wgpuDeviceGetFeatures)(WGPUDevice device, WGPUSupportedFeatures * features);
 static mbt_pfn_wgpuDeviceGetFeatures mbt_real_wgpuDeviceGetFeatures = NULL;
@@ -725,6 +757,30 @@ void wgpuDeviceRelease(WGPUDevice device) {
   }
   mbt_real_wgpuDeviceRelease(device);
 }
+typedef void (*mbt_pfn_wgpuExternalTextureSetLabel)(WGPUExternalTexture externalTexture, WGPUStringView label);
+static mbt_pfn_wgpuExternalTextureSetLabel mbt_real_wgpuExternalTextureSetLabel = NULL;
+void wgpuExternalTextureSetLabel(WGPUExternalTexture externalTexture, WGPUStringView label) {
+  if (!mbt_real_wgpuExternalTextureSetLabel) {
+    mbt_real_wgpuExternalTextureSetLabel = (mbt_pfn_wgpuExternalTextureSetLabel)mbt_wgpu_sym("wgpuExternalTextureSetLabel");
+  }
+  mbt_real_wgpuExternalTextureSetLabel(externalTexture, label);
+}
+typedef void (*mbt_pfn_wgpuExternalTextureAddRef)(WGPUExternalTexture externalTexture);
+static mbt_pfn_wgpuExternalTextureAddRef mbt_real_wgpuExternalTextureAddRef = NULL;
+void wgpuExternalTextureAddRef(WGPUExternalTexture externalTexture) {
+  if (!mbt_real_wgpuExternalTextureAddRef) {
+    mbt_real_wgpuExternalTextureAddRef = (mbt_pfn_wgpuExternalTextureAddRef)mbt_wgpu_sym("wgpuExternalTextureAddRef");
+  }
+  mbt_real_wgpuExternalTextureAddRef(externalTexture);
+}
+typedef void (*mbt_pfn_wgpuExternalTextureRelease)(WGPUExternalTexture externalTexture);
+static mbt_pfn_wgpuExternalTextureRelease mbt_real_wgpuExternalTextureRelease = NULL;
+void wgpuExternalTextureRelease(WGPUExternalTexture externalTexture) {
+  if (!mbt_real_wgpuExternalTextureRelease) {
+    mbt_real_wgpuExternalTextureRelease = (mbt_pfn_wgpuExternalTextureRelease)mbt_wgpu_sym("wgpuExternalTextureRelease");
+  }
+  mbt_real_wgpuExternalTextureRelease(externalTexture);
+}
 typedef WGPUSurface (*mbt_pfn_wgpuInstanceCreateSurface)(WGPUInstance instance, WGPUSurfaceDescriptor const * descriptor);
 static mbt_pfn_wgpuInstanceCreateSurface mbt_real_wgpuInstanceCreateSurface = NULL;
 WGPUSurface wgpuInstanceCreateSurface(WGPUInstance instance, WGPUSurfaceDescriptor const * descriptor) {
@@ -733,13 +789,13 @@ WGPUSurface wgpuInstanceCreateSurface(WGPUInstance instance, WGPUSurfaceDescript
   }
   return mbt_real_wgpuInstanceCreateSurface(instance, descriptor);
 }
-typedef WGPUStatus (*mbt_pfn_wgpuInstanceGetWGSLLanguageFeatures)(WGPUInstance instance, WGPUSupportedWGSLLanguageFeatures * features);
+typedef void (*mbt_pfn_wgpuInstanceGetWGSLLanguageFeatures)(WGPUInstance instance, WGPUSupportedWGSLLanguageFeatures * features);
 static mbt_pfn_wgpuInstanceGetWGSLLanguageFeatures mbt_real_wgpuInstanceGetWGSLLanguageFeatures = NULL;
-WGPUStatus wgpuInstanceGetWGSLLanguageFeatures(WGPUInstance instance, WGPUSupportedWGSLLanguageFeatures * features) {
+void wgpuInstanceGetWGSLLanguageFeatures(WGPUInstance instance, WGPUSupportedWGSLLanguageFeatures * features) {
   if (!mbt_real_wgpuInstanceGetWGSLLanguageFeatures) {
     mbt_real_wgpuInstanceGetWGSLLanguageFeatures = (mbt_pfn_wgpuInstanceGetWGSLLanguageFeatures)mbt_wgpu_sym("wgpuInstanceGetWGSLLanguageFeatures");
   }
-  return mbt_real_wgpuInstanceGetWGSLLanguageFeatures(instance, features);
+  mbt_real_wgpuInstanceGetWGSLLanguageFeatures(instance, features);
 }
 typedef WGPUBool (*mbt_pfn_wgpuInstanceHasWGSLLanguageFeature)(WGPUInstance instance, WGPUWGSLLanguageFeatureName feature);
 static mbt_pfn_wgpuInstanceHasWGSLLanguageFeature mbt_real_wgpuInstanceHasWGSLLanguageFeature = NULL;
@@ -1333,6 +1389,14 @@ void wgpuSupportedFeaturesFreeMembers(WGPUSupportedFeatures supportedFeatures) {
   }
   mbt_real_wgpuSupportedFeaturesFreeMembers(supportedFeatures);
 }
+typedef void (*mbt_pfn_wgpuSupportedInstanceFeaturesFreeMembers)(WGPUSupportedInstanceFeatures supportedInstanceFeatures);
+static mbt_pfn_wgpuSupportedInstanceFeaturesFreeMembers mbt_real_wgpuSupportedInstanceFeaturesFreeMembers = NULL;
+void wgpuSupportedInstanceFeaturesFreeMembers(WGPUSupportedInstanceFeatures supportedInstanceFeatures) {
+  if (!mbt_real_wgpuSupportedInstanceFeaturesFreeMembers) {
+    mbt_real_wgpuSupportedInstanceFeaturesFreeMembers = (mbt_pfn_wgpuSupportedInstanceFeaturesFreeMembers)mbt_wgpu_sym("wgpuSupportedInstanceFeaturesFreeMembers");
+  }
+  mbt_real_wgpuSupportedInstanceFeaturesFreeMembers(supportedInstanceFeatures);
+}
 typedef void (*mbt_pfn_wgpuSupportedWGSLLanguageFeaturesFreeMembers)(WGPUSupportedWGSLLanguageFeatures supportedWGSLLanguageFeatures);
 static mbt_pfn_wgpuSupportedWGSLLanguageFeaturesFreeMembers mbt_real_wgpuSupportedWGSLLanguageFeaturesFreeMembers = NULL;
 void wgpuSupportedWGSLLanguageFeaturesFreeMembers(WGPUSupportedWGSLLanguageFeatures supportedWGSLLanguageFeatures) {
@@ -1477,6 +1541,14 @@ uint32_t wgpuTextureGetSampleCount(WGPUTexture texture) {
   }
   return mbt_real_wgpuTextureGetSampleCount(texture);
 }
+typedef WGPUTextureViewDimension (*mbt_pfn_wgpuTextureGetTextureBindingViewDimension)(WGPUTexture texture);
+static mbt_pfn_wgpuTextureGetTextureBindingViewDimension mbt_real_wgpuTextureGetTextureBindingViewDimension = NULL;
+WGPUTextureViewDimension wgpuTextureGetTextureBindingViewDimension(WGPUTexture texture) {
+  if (!mbt_real_wgpuTextureGetTextureBindingViewDimension) {
+    mbt_real_wgpuTextureGetTextureBindingViewDimension = (mbt_pfn_wgpuTextureGetTextureBindingViewDimension)mbt_wgpu_sym("wgpuTextureGetTextureBindingViewDimension");
+  }
+  return mbt_real_wgpuTextureGetTextureBindingViewDimension(texture);
+}
 typedef WGPUTextureUsage (*mbt_pfn_wgpuTextureGetUsage)(WGPUTexture texture);
 static mbt_pfn_wgpuTextureGetUsage mbt_real_wgpuTextureGetUsage = NULL;
 WGPUTextureUsage wgpuTextureGetUsage(WGPUTexture texture) {
@@ -1613,29 +1685,53 @@ uint32_t wgpuGetVersion(void) {
   }
   return mbt_real_wgpuGetVersion();
 }
-typedef void (*mbt_pfn_wgpuRenderPassEncoderSetPushConstants)(WGPURenderPassEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const *data);
-static mbt_pfn_wgpuRenderPassEncoderSetPushConstants mbt_real_wgpuRenderPassEncoderSetPushConstants = NULL;
-void wgpuRenderPassEncoderSetPushConstants(WGPURenderPassEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const *data) {
-  if (!mbt_real_wgpuRenderPassEncoderSetPushConstants) {
-    mbt_real_wgpuRenderPassEncoderSetPushConstants = (mbt_pfn_wgpuRenderPassEncoderSetPushConstants)mbt_wgpu_sym("wgpuRenderPassEncoderSetPushConstants");
+typedef void * (*mbt_pfn_wgpuDeviceGetNativeMetalDevice)(WGPUDevice device);
+static mbt_pfn_wgpuDeviceGetNativeMetalDevice mbt_real_wgpuDeviceGetNativeMetalDevice = NULL;
+void * wgpuDeviceGetNativeMetalDevice(WGPUDevice device) {
+  if (!mbt_real_wgpuDeviceGetNativeMetalDevice) {
+    mbt_real_wgpuDeviceGetNativeMetalDevice = (mbt_pfn_wgpuDeviceGetNativeMetalDevice)mbt_wgpu_sym("wgpuDeviceGetNativeMetalDevice");
   }
-  mbt_real_wgpuRenderPassEncoderSetPushConstants(encoder, stages, offset, sizeBytes, data);
+  return mbt_real_wgpuDeviceGetNativeMetalDevice(device);
 }
-typedef void (*mbt_pfn_wgpuComputePassEncoderSetPushConstants)(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data);
-static mbt_pfn_wgpuComputePassEncoderSetPushConstants mbt_real_wgpuComputePassEncoderSetPushConstants = NULL;
-void wgpuComputePassEncoderSetPushConstants(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data) {
-  if (!mbt_real_wgpuComputePassEncoderSetPushConstants) {
-    mbt_real_wgpuComputePassEncoderSetPushConstants = (mbt_pfn_wgpuComputePassEncoderSetPushConstants)mbt_wgpu_sym("wgpuComputePassEncoderSetPushConstants");
+typedef void * (*mbt_pfn_wgpuQueueGetNativeMetalCommandQueue)(WGPUQueue queue);
+static mbt_pfn_wgpuQueueGetNativeMetalCommandQueue mbt_real_wgpuQueueGetNativeMetalCommandQueue = NULL;
+void * wgpuQueueGetNativeMetalCommandQueue(WGPUQueue queue) {
+  if (!mbt_real_wgpuQueueGetNativeMetalCommandQueue) {
+    mbt_real_wgpuQueueGetNativeMetalCommandQueue = (mbt_pfn_wgpuQueueGetNativeMetalCommandQueue)mbt_wgpu_sym("wgpuQueueGetNativeMetalCommandQueue");
   }
-  mbt_real_wgpuComputePassEncoderSetPushConstants(encoder, offset, sizeBytes, data);
+  return mbt_real_wgpuQueueGetNativeMetalCommandQueue(queue);
 }
-typedef void (*mbt_pfn_wgpuRenderBundleEncoderSetPushConstants)(WGPURenderBundleEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const *data);
-static mbt_pfn_wgpuRenderBundleEncoderSetPushConstants mbt_real_wgpuRenderBundleEncoderSetPushConstants = NULL;
-void wgpuRenderBundleEncoderSetPushConstants(WGPURenderBundleEncoder encoder, WGPUShaderStage stages, uint32_t offset, uint32_t sizeBytes, void const *data) {
-  if (!mbt_real_wgpuRenderBundleEncoderSetPushConstants) {
-    mbt_real_wgpuRenderBundleEncoderSetPushConstants = (mbt_pfn_wgpuRenderBundleEncoderSetPushConstants)mbt_wgpu_sym("wgpuRenderBundleEncoderSetPushConstants");
+typedef void * (*mbt_pfn_wgpuTextureGetNativeMetalTexture)(WGPUTexture texture);
+static mbt_pfn_wgpuTextureGetNativeMetalTexture mbt_real_wgpuTextureGetNativeMetalTexture = NULL;
+void * wgpuTextureGetNativeMetalTexture(WGPUTexture texture) {
+  if (!mbt_real_wgpuTextureGetNativeMetalTexture) {
+    mbt_real_wgpuTextureGetNativeMetalTexture = (mbt_pfn_wgpuTextureGetNativeMetalTexture)mbt_wgpu_sym("wgpuTextureGetNativeMetalTexture");
   }
-  mbt_real_wgpuRenderBundleEncoderSetPushConstants(encoder, stages, offset, sizeBytes, data);
+  return mbt_real_wgpuTextureGetNativeMetalTexture(texture);
+}
+typedef void (*mbt_pfn_wgpuRenderPassEncoderSetImmediates)(WGPURenderPassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data);
+static mbt_pfn_wgpuRenderPassEncoderSetImmediates mbt_real_wgpuRenderPassEncoderSetImmediates = NULL;
+void wgpuRenderPassEncoderSetImmediates(WGPURenderPassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data) {
+  if (!mbt_real_wgpuRenderPassEncoderSetImmediates) {
+    mbt_real_wgpuRenderPassEncoderSetImmediates = (mbt_pfn_wgpuRenderPassEncoderSetImmediates)mbt_wgpu_sym("wgpuRenderPassEncoderSetImmediates");
+  }
+  mbt_real_wgpuRenderPassEncoderSetImmediates(encoder, offset, sizeBytes, data);
+}
+typedef void (*mbt_pfn_wgpuComputePassEncoderSetImmediates)(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data);
+static mbt_pfn_wgpuComputePassEncoderSetImmediates mbt_real_wgpuComputePassEncoderSetImmediates = NULL;
+void wgpuComputePassEncoderSetImmediates(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data) {
+  if (!mbt_real_wgpuComputePassEncoderSetImmediates) {
+    mbt_real_wgpuComputePassEncoderSetImmediates = (mbt_pfn_wgpuComputePassEncoderSetImmediates)mbt_wgpu_sym("wgpuComputePassEncoderSetImmediates");
+  }
+  mbt_real_wgpuComputePassEncoderSetImmediates(encoder, offset, sizeBytes, data);
+}
+typedef void (*mbt_pfn_wgpuRenderBundleEncoderSetImmediates)(WGPURenderBundleEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data);
+static mbt_pfn_wgpuRenderBundleEncoderSetImmediates mbt_real_wgpuRenderBundleEncoderSetImmediates = NULL;
+void wgpuRenderBundleEncoderSetImmediates(WGPURenderBundleEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data) {
+  if (!mbt_real_wgpuRenderBundleEncoderSetImmediates) {
+    mbt_real_wgpuRenderBundleEncoderSetImmediates = (mbt_pfn_wgpuRenderBundleEncoderSetImmediates)mbt_wgpu_sym("wgpuRenderBundleEncoderSetImmediates");
+  }
+  mbt_real_wgpuRenderBundleEncoderSetImmediates(encoder, offset, sizeBytes, data);
 }
 typedef void (*mbt_pfn_wgpuRenderPassEncoderMultiDrawIndirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 static mbt_pfn_wgpuRenderPassEncoderMultiDrawIndirect mbt_real_wgpuRenderPassEncoderMultiDrawIndirect = NULL;
@@ -1717,5 +1813,20 @@ void wgpuRenderPassEncoderWriteTimestamp(WGPURenderPassEncoder renderPassEncoder
   }
   mbt_real_wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder, querySet, queryIndex);
 }
-
+typedef WGPUBool (*mbt_pfn_wgpuDeviceStartGraphicsDebuggerCapture)(WGPUDevice device);
+static mbt_pfn_wgpuDeviceStartGraphicsDebuggerCapture mbt_real_wgpuDeviceStartGraphicsDebuggerCapture = NULL;
+WGPUBool wgpuDeviceStartGraphicsDebuggerCapture(WGPUDevice device) {
+  if (!mbt_real_wgpuDeviceStartGraphicsDebuggerCapture) {
+    mbt_real_wgpuDeviceStartGraphicsDebuggerCapture = (mbt_pfn_wgpuDeviceStartGraphicsDebuggerCapture)mbt_wgpu_sym("wgpuDeviceStartGraphicsDebuggerCapture");
+  }
+  return mbt_real_wgpuDeviceStartGraphicsDebuggerCapture(device);
+}
+typedef void (*mbt_pfn_wgpuDeviceStopGraphicsDebuggerCapture)(WGPUDevice device);
+static mbt_pfn_wgpuDeviceStopGraphicsDebuggerCapture mbt_real_wgpuDeviceStopGraphicsDebuggerCapture = NULL;
+void wgpuDeviceStopGraphicsDebuggerCapture(WGPUDevice device) {
+  if (!mbt_real_wgpuDeviceStopGraphicsDebuggerCapture) {
+    mbt_real_wgpuDeviceStopGraphicsDebuggerCapture = (mbt_pfn_wgpuDeviceStopGraphicsDebuggerCapture)mbt_wgpu_sym("wgpuDeviceStopGraphicsDebuggerCapture");
+  }
+  mbt_real_wgpuDeviceStopGraphicsDebuggerCapture(device);
+}
 #endif

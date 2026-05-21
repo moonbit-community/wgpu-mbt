@@ -590,12 +590,13 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
   WGPULimits base = {0};
   WGPUNativeLimits native_base = {
       .chain =
-          (WGPUChainedStructOut){
+          (WGPUChainedStruct){
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_NativeLimits,
           },
-      .maxPushConstantSize = 0u,
+      .maxImmediateSize = 0u,
       .maxNonSamplerBindings = 0u,
+      .maxBindingArrayElementsPerShaderStage = 0u,
   };
   base.nextInChain = &native_base.chain;
   WGPUStatus st = wgpuAdapterGetLimits(adapter, &base);
@@ -632,15 +633,17 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
   if (max_push_constant_size != 0u || max_non_sampler_bindings != 0u) {
     out->native_limits = (WGPUNativeLimits){
         .chain =
-            (WGPUChainedStructOut){
+            (WGPUChainedStruct){
                 .next = NULL,
                 .sType = (WGPUSType)WGPUSType_NativeLimits,
             },
-        .maxPushConstantSize = native_base.maxPushConstantSize,
+        .maxImmediateSize = native_base.maxImmediateSize,
         .maxNonSamplerBindings = native_base.maxNonSamplerBindings,
+        .maxBindingArrayElementsPerShaderStage =
+            native_base.maxBindingArrayElementsPerShaderStage,
     };
     if (max_push_constant_size != 0u) {
-      out->native_limits.maxPushConstantSize = max_push_constant_size;
+      out->native_limits.maxImmediateSize = max_push_constant_size;
     }
     if (max_non_sampler_bindings != 0u) {
       out->native_limits.maxNonSamplerBindings = max_non_sampler_bindings;

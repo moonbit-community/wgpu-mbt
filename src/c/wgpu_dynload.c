@@ -17,11 +17,11 @@
 #endif
 
 #ifndef MBT_WGPU_SUPPORTED_TAG
-#define MBT_WGPU_SUPPORTED_TAG "v27.0.4.0"
+#define MBT_WGPU_SUPPORTED_TAG "v29.0.0.0"
 #endif
 
 #ifndef MBT_WGPU_SUPPORTED_REV
-#define MBT_WGPU_SUPPORTED_REV "768f15f6ace8e4ec8e8720d5732b29e0b34250a8"
+#define MBT_WGPU_SUPPORTED_REV "d2e3330ade4ae1bb238d76b485926f067e7ee64c"
 #endif
 
 #ifndef MBT_WGPU_STATIC_HAS_PIPELINE_ASYNC
@@ -151,8 +151,8 @@ static void *mbt_wgpu_static_known_sym(const char *name) {
   if (strcmp(name, "wgpuCreateInstance") == 0) {
     return (void *)wgpuCreateInstance;
   }
-  if (strcmp(name, "wgpuGetInstanceCapabilities") == 0) {
-    return (void *)wgpuGetInstanceCapabilities;
+  if (strcmp(name, "wgpuGetInstanceLimits") == 0) {
+    return (void *)wgpuGetInstanceLimits;
   }
   if (strcmp(name, "wgpuAdapterRequestDevice") == 0) {
     return (void *)wgpuAdapterRequestDevice;

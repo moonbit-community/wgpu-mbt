@@ -1177,8 +1177,7 @@ typedef struct {
   WGPUPipelineLayoutDescriptor desc;
   WGPUPipelineLayoutExtras extras;
   uint64_t layout_count;
-  uint64_t range_count;
-  unsigned char storage[];
+  WGPUBindGroupLayout layouts[];
 } mbt_pipeline_layout_desc_layouts_push_constants_t;
 
 WGPUPipelineLayoutDescriptor *
@@ -1192,22 +1191,16 @@ mbt_wgpu_pipeline_layout_descriptor_with_push_constants_many_new(
   if (layout_count > (uint64_t)SIZE_MAX || range_count > (uint64_t)SIZE_MAX) {
     return NULL;
   }
-  if ((size_t)layout_count > SIZE_MAX / sizeof(WGPUBindGroupLayout) ||
-      (size_t)range_count > SIZE_MAX / sizeof(WGPUPushConstantRange)) {
+  if ((size_t)layout_count > SIZE_MAX / sizeof(WGPUBindGroupLayout)) {
     return NULL;
   }
 
   size_t layouts_bytes = (size_t)layout_count * sizeof(WGPUBindGroupLayout);
-  size_t ranges_offset =
-      mbt_wgpu_align_up_size(layouts_bytes, MBT_WGPU_ALIGNOF(WGPUPushConstantRange));
-  size_t ranges_bytes = (size_t)range_count * sizeof(WGPUPushConstantRange);
-  if (ranges_offset > SIZE_MAX - ranges_bytes ||
-      sizeof(mbt_pipeline_layout_desc_layouts_push_constants_t) >
-          SIZE_MAX - ranges_offset - ranges_bytes) {
+  if (sizeof(mbt_pipeline_layout_desc_layouts_push_constants_t) >
+      SIZE_MAX - layouts_bytes) {
     return NULL;
   }
-  size_t bytes = sizeof(mbt_pipeline_layout_desc_layouts_push_constants_t) +
-                 ranges_offset + ranges_bytes;
+  size_t bytes = sizeof(mbt_pipeline_layout_desc_layouts_push_constants_t) + layouts_bytes;
   mbt_pipeline_layout_desc_layouts_push_constants_t *out =
       (mbt_pipeline_layout_desc_layouts_push_constants_t *)malloc(bytes);
   if (!out) {
@@ -1215,21 +1208,19 @@ mbt_wgpu_pipeline_layout_descriptor_with_push_constants_many_new(
   }
 
   out->layout_count = layout_count;
-  out->range_count = range_count;
   WGPUBindGroupLayout *stored_layouts =
-      layout_count == 0u ? NULL : (WGPUBindGroupLayout *)out->storage;
-  WGPUPushConstantRange *stored_ranges =
-      range_count == 0u ? NULL : (WGPUPushConstantRange *)(void *)(out->storage + ranges_offset);
+      layout_count == 0u ? NULL : out->layouts;
 
   for (uint64_t i = 0u; i < layout_count; i++) {
     stored_layouts[i] = layouts[i];
   }
+  uint32_t immediate_data_size = 0u;
   for (uint64_t i = 0u; i < range_count; i++) {
-    stored_ranges[i] = (WGPUPushConstantRange){
-        .stages = (WGPUShaderStage)stages_u64[i],
-        .start = starts_u32[i],
-        .end = ends_u32[i],
-    };
+    (void)stages_u64[i];
+    (void)starts_u32[i];
+    if (ends_u32[i] > immediate_data_size) {
+      immediate_data_size = ends_u32[i];
+    }
   }
 
   out->extras = (WGPUPipelineLayoutExtras){
@@ -1238,12 +1229,11 @@ mbt_wgpu_pipeline_layout_descriptor_with_push_constants_many_new(
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_PipelineLayoutExtras,
           },
-      .pushConstantRangeCount = (size_t)range_count,
-      .pushConstantRanges = stored_ranges,
+      .immediateDataSize = immediate_data_size,
   };
 
   out->desc = (WGPUPipelineLayoutDescriptor){
-      .nextInChain = range_count == 0u ? NULL : &out->extras.chain,
+      .nextInChain = immediate_data_size == 0u ? NULL : &out->extras.chain,
       .label = (WGPUStringView){.data = NULL, .length = 0},
       .bindGroupLayoutCount = (size_t)layout_count,
       .bindGroupLayouts = stored_layouts,
@@ -1305,7 +1295,7 @@ void mbt_wgpu_render_bundle_descriptor_free(WGPURenderBundleDescriptor *desc) {
 
 typedef struct {
   WGPUComputePipelineDescriptor desc;
-  WGPUProgrammableStageDescriptor stage;
+  WGPUComputeState stage;
   char entry[64];
   uint32_t last_error;
   uint32_t last_error_a;
@@ -1446,7 +1436,7 @@ mbt_wgpu_compute_pipeline_descriptor_new(WGPUPipelineLayout layout,
     return NULL;
   }
   memset(out->entry, 0, sizeof(out->entry));
-  out->stage = (WGPUProgrammableStageDescriptor){
+  out->stage = (WGPUComputeState){
       .nextInChain = NULL,
       .module = shader_module,
       .entryPoint = (WGPUStringView){.data = NULL, .length = 0},
@@ -3083,7 +3073,7 @@ void mbt_wgpu_render_pass_descriptor_free(WGPURenderPassDescriptor *desc) { free
 WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline(
     WGPUDevice device, WGPUShaderModule shader_module) {
   static const char entry[] = "main";
-  WGPUProgrammableStageDescriptor stage = {
+  WGPUComputeState stage = {
       .nextInChain = NULL,
       .module = shader_module,
       .entryPoint = (WGPUStringView){.data = entry, .length = 4},
@@ -4076,7 +4066,7 @@ int32_t mbt_wgpu_bind_group_layout_builder_add_buffer_array(
     return false;
   }
   WGPUBindGroupLayoutEntry entry = {
-      .nextInChain = (const WGPUChainedStruct *)&extras->chain,
+      .nextInChain = (WGPUChainedStruct *)&extras->chain,
       .binding = binding,
       .visibility = (WGPUShaderStage)visibility,
       .buffer =
@@ -4110,7 +4100,7 @@ int32_t mbt_wgpu_bind_group_layout_builder_add_sampler_array(
     return false;
   }
   WGPUBindGroupLayoutEntry entry = {
-      .nextInChain = (const WGPUChainedStruct *)&extras->chain,
+      .nextInChain = (WGPUChainedStruct *)&extras->chain,
       .binding = binding,
       .visibility = (WGPUShaderStage)visibility,
       .buffer = (WGPUBufferBindingLayout){0},
@@ -4142,7 +4132,7 @@ int32_t mbt_wgpu_bind_group_layout_builder_add_texture_array(
     return false;
   }
   WGPUBindGroupLayoutEntry entry = {
-      .nextInChain = (const WGPUChainedStruct *)&extras->chain,
+      .nextInChain = (WGPUChainedStruct *)&extras->chain,
       .binding = binding,
       .visibility = (WGPUShaderStage)visibility,
       .buffer = (WGPUBufferBindingLayout){0},
@@ -4176,7 +4166,7 @@ int32_t mbt_wgpu_bind_group_layout_builder_add_storage_texture_array(
     return false;
   }
   WGPUBindGroupLayoutEntry entry = {
-      .nextInChain = (const WGPUChainedStruct *)&extras->chain,
+      .nextInChain = (WGPUChainedStruct *)&extras->chain,
       .binding = binding,
       .visibility = (WGPUShaderStage)visibility,
       .buffer = (WGPUBufferBindingLayout){0},
@@ -4401,7 +4391,7 @@ int32_t mbt_wgpu_bind_group_builder_add_texture_view_array(void *builder,
   ex->textureViewCount = (size_t)view_count;
 
   WGPUBindGroupEntry entry = {
-      .nextInChain = (const WGPUChainedStruct *)&ex->chain,
+      .nextInChain = (WGPUChainedStruct *)&ex->chain,
       .binding = binding,
       .buffer = NULL,
       .offset = 0u,
@@ -4442,7 +4432,7 @@ int32_t mbt_wgpu_bind_group_builder_add_sampler_array(void *builder,
   ex->samplerCount = (size_t)sampler_count;
 
   WGPUBindGroupEntry entry = {
-      .nextInChain = (const WGPUChainedStruct *)&ex->chain,
+      .nextInChain = (WGPUChainedStruct *)&ex->chain,
       .binding = binding,
       .buffer = NULL,
       .offset = 0u,
@@ -4485,7 +4475,7 @@ int32_t mbt_wgpu_bind_group_builder_add_buffer_array(void *builder,
   ex->bufferCount = (size_t)buffer_count;
 
   WGPUBindGroupEntry entry = {
-      .nextInChain = (const WGPUChainedStruct *)&ex->chain,
+      .nextInChain = (WGPUChainedStruct *)&ex->chain,
       .binding = binding,
       .buffer = NULL,
       .offset = offset,

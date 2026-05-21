@@ -286,7 +286,7 @@ WGPUComputePipeline mbt_wgpu_device_create_compute_pipeline_with_layout(
     WGPUDevice device, WGPUPipelineLayout layout,
     WGPUShaderModule shader_module) {
   static const char entry[] = "main";
-  WGPUProgrammableStageDescriptor stage = {
+  WGPUComputeState stage = {
       .nextInChain = NULL,
       .module = shader_module,
       .entryPoint = (WGPUStringView){.data = entry, .length = 4},

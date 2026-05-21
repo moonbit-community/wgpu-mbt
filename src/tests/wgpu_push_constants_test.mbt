@@ -113,7 +113,7 @@ test "wgpu push constants many ranges (feature-gated)" {
     #|  enabled: u32,
     #|  green: u32,
     #|};
-    #|var<push_constant> pc : Pc;
+    #|var<immediate> pc : Pc;
     #|
     #|@vertex
     #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
@@ -206,7 +206,7 @@ test "wgpu pipeline layout combines bind group and immediates (feature-gated)" {
     #|  left: u32,
     #|  right: u32,
     #|};
-    #|var<push_constant> params: Params;
+    #|var<immediate> params: Params;
     #|
     #|@group(0) @binding(0)
     #|var<storage, read_write> data: array<u32>;

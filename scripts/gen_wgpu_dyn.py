@@ -165,6 +165,8 @@ def main() -> None:
 #include "wgpu_native_shim.h"
 #include "wgpu_dynload.h"
 
+#if !MBT_WGPU_STATIC_LINK
+
 static void *mbt_wgpu_sym(const char *name) {{
   return mbt_wgpu_native_sym_required(name);
 }}
@@ -172,7 +174,7 @@ static void *mbt_wgpu_sym(const char *name) {{
 """
 
   body = "".join(_emit_wrapper(ret, name, args) for (ret, name, args) in funcs)
-  out_c.write_text(header + body)
+  out_c.write_text(header + body + "#endif\n")
 
   print(f"generated {out_c} ({len(funcs)} functions)")
 

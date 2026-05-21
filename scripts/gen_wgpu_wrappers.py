@@ -331,8 +331,8 @@ def _gen_methods(
                 ]
             )
 
-        # Push-constants: route UnitPtr+size to borrowed Bytes helpers.
-        if op_camel == "SetPushConstants":
+        # Immediates/push-constants: route UnitPtr+size to borrowed Bytes helpers.
+        if op_camel in ("SetPushConstants", "SetImmediates"):
             desired = "set_push_constants"
             if desired in used:
                 return ""

@@ -118,21 +118,21 @@ static WGPUProc mbt_wgpu_get_proc(const char *name) {
 }
 
 uint32_t mbt_wgpu_instance_capabilities_timed_wait_any_enable_u32(void) {
-  WGPUInstanceCapabilities caps = {0};
-  WGPUStatus st = wgpuGetInstanceCapabilities(&caps);
+  WGPUInstanceLimits limits = {0};
+  WGPUStatus st = wgpuGetInstanceLimits(&limits);
   if (st != WGPUStatus_Success) {
     return 0u;
   }
-  return caps.timedWaitAnyEnable ? 1u : 0u;
+  return limits.timedWaitAnyMaxCount > 0u ? 1u : 0u;
 }
 
 uint64_t mbt_wgpu_instance_capabilities_timed_wait_any_max_count_u64(void) {
-  WGPUInstanceCapabilities caps = {0};
-  WGPUStatus st = wgpuGetInstanceCapabilities(&caps);
+  WGPUInstanceLimits limits = {0};
+  WGPUStatus st = wgpuGetInstanceLimits(&limits);
   if (st != WGPUStatus_Success) {
     return 0u;
   }
-  return (uint64_t)caps.timedWaitAnyMaxCount;
+  return (uint64_t)limits.timedWaitAnyMaxCount;
 }
 
 // ---------------------------------------------------------------------------
@@ -510,8 +510,10 @@ static void mbt_wgpu_request_device_async_cb(WGPURequestDeviceStatus status,
 }
 
 static void mbt_wgpu_queue_work_done_mark_completed_cb(WGPUQueueWorkDoneStatus status,
+                                                      WGPUStringView message,
                                                       void *userdata1,
                                                       void *userdata2) {
+  (void)message;
   (void)userdata2;
   mbt_async_queue_work_done_slot_t *slot = (mbt_async_queue_work_done_slot_t *)userdata1;
   if (!slot) {
@@ -1180,12 +1182,13 @@ static bool mbt_wgpu_adapter_get_limits_with_native(WGPUAdapter adapter,
   *limits_out = (WGPULimits){0};
   *native_out = (WGPUNativeLimits){
       .chain =
-          (WGPUChainedStructOut){
+          (WGPUChainedStruct){
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_NativeLimits,
           },
-      .maxPushConstantSize = 0u,
+      .maxImmediateSize = 0u,
       .maxNonSamplerBindings = 0u,
+      .maxBindingArrayElementsPerShaderStage = 0u,
   };
   limits_out->nextInChain = &native_out->chain;
   if (wgpuAdapterGetLimits(adapter, limits_out) == WGPUStatus_Success) {
@@ -1205,12 +1208,13 @@ static bool mbt_wgpu_device_get_limits_with_native(WGPUDevice device,
   *limits_out = (WGPULimits){0};
   *native_out = (WGPUNativeLimits){
       .chain =
-          (WGPUChainedStructOut){
+          (WGPUChainedStruct){
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_NativeLimits,
           },
-      .maxPushConstantSize = 0u,
+      .maxImmediateSize = 0u,
       .maxNonSamplerBindings = 0u,
+      .maxBindingArrayElementsPerShaderStage = 0u,
   };
   limits_out->nextInChain = &native_out->chain;
   if (wgpuDeviceGetLimits(device, limits_out) == WGPUStatus_Success) {
@@ -1416,7 +1420,7 @@ uint32_t mbt_wgpu_adapter_limits_max_push_constant_size_u32(WGPUAdapter adapter)
   if (!mbt_wgpu_adapter_get_limits_with_native(adapter, &limits, &native_limits)) {
     return 0u;
   }
-  return native_limits.maxPushConstantSize;
+  return native_limits.maxImmediateSize;
 }
 
 uint32_t mbt_wgpu_adapter_limits_max_non_sampler_bindings_u32(WGPUAdapter adapter) {
@@ -1434,7 +1438,7 @@ uint32_t mbt_wgpu_device_limits_max_push_constant_size_u32(WGPUDevice device) {
   if (!mbt_wgpu_device_get_limits_with_native(device, &limits, &native_limits)) {
     return 0u;
   }
-  return native_limits.maxPushConstantSize;
+  return native_limits.maxImmediateSize;
 }
 
 uint32_t mbt_wgpu_device_limits_max_non_sampler_bindings_u32(WGPUDevice device) {

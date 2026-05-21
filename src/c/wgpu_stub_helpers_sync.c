@@ -776,8 +776,9 @@ typedef struct {
   WGPUQueueWorkDoneStatus status;
 } mbt_queue_work_done_result_t;
 
-static void mbt_queue_work_done_cb(WGPUQueueWorkDoneStatus status, void *userdata1,
-                                   void *userdata2) {
+static void mbt_queue_work_done_cb(WGPUQueueWorkDoneStatus status, WGPUStringView message,
+                                   void *userdata1, void *userdata2) {
+  (void)message;
   (void)userdata2;
   mbt_queue_work_done_result_t *out = (mbt_queue_work_done_result_t *)userdata1;
   out->status = status;
@@ -915,7 +916,6 @@ WGPUInstance mbt_wgpu_create_instance(void) {
 
   WGPUInstanceDescriptor desc = {0};
   desc.nextInChain = &extras.chain;
-  desc.features = (WGPUInstanceCapabilities){0};
   return wgpuCreateInstance(&desc);
 }
 
@@ -954,7 +954,6 @@ static WGPUInstance mbt_wgpu_create_instance_with_extras_impl(
 
   WGPUInstanceDescriptor desc = {0};
   desc.nextInChain = &extras.chain;
-  desc.features = (WGPUInstanceCapabilities){0};
   return wgpuCreateInstance(&desc);
 }
 
@@ -1882,12 +1881,13 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance inst
 
   WGPUNativeLimits native_limits = {
       .chain =
-          (WGPUChainedStructOut){
+          (WGPUChainedStruct){
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_NativeLimits,
           },
-      .maxPushConstantSize = 128u,
+      .maxImmediateSize = 128u,
       .maxNonSamplerBindings = 0u,
+      .maxBindingArrayElementsPerShaderStage = 0u,
   };
 
   WGPULimits limits = {0};
@@ -2161,14 +2161,11 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
 typedef struct {
   WGPUPipelineLayoutDescriptor desc;
   WGPUPipelineLayoutExtras extras;
-  WGPUPushConstantRange range;
 } mbt_pipeline_layout_push_constants_desc_t;
 
 typedef struct {
   WGPUPipelineLayoutDescriptor desc;
   WGPUPipelineLayoutExtras extras;
-  uint64_t range_count;
-  WGPUPushConstantRange ranges[];
 } mbt_pipeline_layout_push_constants_many_desc_t;
 
 WGPUPipelineLayoutDescriptor *
@@ -2182,11 +2179,8 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_new(uint64_t stages,
     return NULL;
   }
 
-  out->range = (WGPUPushConstantRange){
-      .stages = (WGPUShaderStage)stages,
-      .start = start,
-      .end = end,
-  };
+  (void)stages;
+  (void)start;
 
   out->extras = (WGPUPipelineLayoutExtras){
       .chain =
@@ -2194,8 +2188,7 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_new(uint64_t stages,
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_PipelineLayoutExtras,
           },
-      .pushConstantRangeCount = 1u,
-      .pushConstantRanges = &out->range,
+      .immediateDataSize = end,
   };
 
   out->desc = (WGPUPipelineLayoutDescriptor){
@@ -2218,20 +2211,19 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_many_new(
   if (range_count > (uint64_t)SIZE_MAX) {
     return NULL;
   }
-  size_t bytes = sizeof(mbt_pipeline_layout_push_constants_many_desc_t) +
-                 (size_t)range_count * sizeof(WGPUPushConstantRange);
+  size_t bytes = sizeof(mbt_pipeline_layout_push_constants_many_desc_t);
   mbt_pipeline_layout_push_constants_many_desc_t *out =
       (mbt_pipeline_layout_push_constants_many_desc_t *)malloc(bytes);
   if (!out) {
     return NULL;
   }
-  out->range_count = range_count;
+  uint32_t immediate_data_size = 0u;
   for (uint64_t i = 0; i < range_count; i++) {
-    out->ranges[i] = (WGPUPushConstantRange){
-        .stages = (WGPUShaderStage)stages_u64[i],
-        .start = starts_u32[i],
-        .end = ends_u32[i],
-    };
+    (void)stages_u64[i];
+    (void)starts_u32[i];
+    if (ends_u32[i] > immediate_data_size) {
+      immediate_data_size = ends_u32[i];
+    }
   }
 
   out->extras = (WGPUPipelineLayoutExtras){
@@ -2240,8 +2232,7 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_many_new(
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_PipelineLayoutExtras,
           },
-      .pushConstantRangeCount = (size_t)range_count,
-      .pushConstantRanges = out->ranges,
+      .immediateDataSize = immediate_data_size,
   };
 
   out->desc = (WGPUPipelineLayoutDescriptor){
@@ -2261,8 +2252,8 @@ void mbt_wgpu_render_pass_set_push_constants_bytes(WGPURenderPassEncoder encoder
   if (len > UINT32_MAX) {
     return;
   }
-  wgpuRenderPassEncoderSetPushConstants(
-      encoder, (WGPUShaderStage)stages, offset, (uint32_t)len, data);
+  (void)stages;
+  wgpuRenderPassEncoderSetImmediates(encoder, offset, (uint32_t)len, data);
 }
 
 void mbt_wgpu_compute_pass_set_push_constants_bytes(WGPUComputePassEncoder encoder,
@@ -2272,7 +2263,7 @@ void mbt_wgpu_compute_pass_set_push_constants_bytes(WGPUComputePassEncoder encod
   if (len > UINT32_MAX) {
     return;
   }
-  wgpuComputePassEncoderSetPushConstants(encoder, offset, (uint32_t)len, data);
+  wgpuComputePassEncoderSetImmediates(encoder, offset, (uint32_t)len, data);
 }
 
 void mbt_wgpu_render_bundle_encoder_set_push_constants_bytes(
@@ -2281,8 +2272,8 @@ void mbt_wgpu_render_bundle_encoder_set_push_constants_bytes(
   if (len > UINT32_MAX) {
     return;
   }
-  wgpuRenderBundleEncoderSetPushConstants(
-      encoder, (WGPUShaderStage)stages, offset, (uint32_t)len, data);
+  (void)stages;
+  wgpuRenderBundleEncoderSetImmediates(encoder, offset, (uint32_t)len, data);
 }
 
 WGPUCommandEncoder mbt_wgpu_device_create_command_encoder(WGPUDevice device) {

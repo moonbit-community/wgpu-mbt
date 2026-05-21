@@ -614,8 +614,11 @@ pub fn Device::destroy_raw(self : Device) -> Unit {
 }
 
 ///|
-pub fn Device::get_adapter_info(self : Device) -> @c.WGPUAdapterInfo {
-  @c.wgpuDeviceGetAdapterInfo(self.raw)
+pub fn Device::get_adapter_info(
+  self : Device,
+  adapter_info : @c.WGPUAdapterInfoPtr,
+) -> @c.WGPUStatus {
+  @c.wgpuDeviceGetAdapterInfo(self.raw, adapter_info)
 }
 
 ///|

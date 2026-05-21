@@ -34,9 +34,9 @@ Detailed evidence and current boundaries live in
 3. This repo is pinned to one official upstream release:
 
 - repo: `gfx-rs/wgpu-native`
-- tag: `v27.0.4.0`
-- commit: `768f15f6ace8e4ec8e8720d5732b29e0b34250a8`
-- release page: <https://github.com/gfx-rs/wgpu-native/releases/tag/v27.0.4.0>
+- tag: `v29.0.0.0`
+- commit: `d2e3330ade4ae1bb238d76b485926f067e7ee64c`
+- release page: <https://github.com/gfx-rs/wgpu-native/releases/tag/v29.0.0.0>
 
 4. Dynamic mode should use the matching extracted upstream release tree:
 
@@ -227,10 +227,11 @@ For `WGPUDeviceExtras.tracePath`, you can set trace path on descriptor builders 
 - Query set descriptor extras with multiple pipeline statistics:
   - `@wgpu_c.query_set_descriptor_pipeline_statistics_many_new(...)`
   - `Device::create_query_set_pipeline_statistics_many(count, first_statistic_name_u32, other_statistic_names_u32)`
-- Pipeline layout extras with multiple push-constant ranges:
+- Pipeline layout extras with immediates:
   - `@wgpu_c.pipeline_layout_descriptor_push_constants_many_new(...)`
   - `Device::create_pipeline_layout_push_constants_many(first_stages, first_start, first_end, other_ranges)`
   - `Device::create_pipeline_layout_with_immediates(bind_group_layouts, ranges)`
+  - On `wgpu-native` v29, range-style compatibility APIs allocate the maximum requested immediate byte size.
 - Render pipeline primitive extras on builder:
   - `RenderPipelineDescBuilder::set_polygon_mode_u32(...)`
   - `RenderPipelineDescBuilder::set_conservative_rasterization(...)`

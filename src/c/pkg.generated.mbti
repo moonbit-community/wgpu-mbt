@@ -1452,11 +1452,15 @@ pub fn wgpuBufferGetUsage(WGPUBuffer) -> UInt64
 
 pub fn wgpuBufferMapAsync(WGPUBuffer, UInt64, UInt64, UInt64, WGPUBufferMapCallbackInfo) -> WGPUFuture
 
+pub fn wgpuBufferReadMappedRange(WGPUBuffer, UInt64, UnitPtr, UInt64) -> WGPUStatus
+
 pub fn wgpuBufferRelease(WGPUBuffer) -> Unit
 
 pub fn wgpuBufferSetLabel(WGPUBuffer, WGPUStringView) -> Unit
 
 pub fn wgpuBufferUnmap(WGPUBuffer) -> Unit
+
+pub fn wgpuBufferWriteMappedRange(WGPUBuffer, UInt64, UnitPtr, UInt64) -> WGPUStatus
 
 pub fn wgpuCommandBufferAddRef(WGPUCommandBuffer) -> Unit
 
@@ -1520,11 +1524,11 @@ pub fn wgpuComputePassEncoderSetBindGroup(WGPUComputePassEncoder, UInt, WGPUBind
 
 pub fn wgpuComputePassEncoderSetBindGroup_offsets(WGPUComputePassEncoder, UInt, WGPUBindGroup, UInt64, FixedArray[UInt]) -> Unit
 
+pub fn wgpuComputePassEncoderSetImmediates(WGPUComputePassEncoder, UInt, UInt, UnitPtr) -> Unit
+
 pub fn wgpuComputePassEncoderSetLabel(WGPUComputePassEncoder, WGPUStringView) -> Unit
 
 pub fn wgpuComputePassEncoderSetPipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
-
-pub fn wgpuComputePassEncoderSetPushConstants(WGPUComputePassEncoder, UInt, UInt, UnitPtr) -> Unit
 
 pub fn wgpuComputePassEncoderWriteTimestamp(WGPUComputePassEncoder, WGPUQuerySet, UInt) -> Unit
 
@@ -1572,13 +1576,15 @@ pub fn wgpuDeviceCreateTexture(WGPUDevice, WGPUTextureDescriptorPtr) -> WGPUText
 
 pub fn wgpuDeviceDestroy(WGPUDevice) -> Unit
 
-pub fn wgpuDeviceGetAdapterInfo(WGPUDevice) -> WGPUAdapterInfo
+pub fn wgpuDeviceGetAdapterInfo(WGPUDevice, WGPUAdapterInfoPtr) -> WGPUStatus
 
 pub fn wgpuDeviceGetFeatures(WGPUDevice, WGPUSupportedFeaturesPtr) -> Unit
 
 pub fn wgpuDeviceGetLimits(WGPUDevice, WGPULimitsPtr) -> WGPUStatus
 
 pub fn wgpuDeviceGetLostFuture(WGPUDevice) -> WGPUFuture
+
+pub fn wgpuDeviceGetNativeMetalDevice(WGPUDevice) -> UnitPtr
 
 pub fn wgpuDeviceGetQueue(WGPUDevice) -> WGPUQueue
 
@@ -1594,13 +1600,27 @@ pub fn wgpuDeviceRelease(WGPUDevice) -> Unit
 
 pub fn wgpuDeviceSetLabel(WGPUDevice, WGPUStringView) -> Unit
 
+pub fn wgpuDeviceStartGraphicsDebuggerCapture(WGPUDevice) -> Bool
+
+pub fn wgpuDeviceStopGraphicsDebuggerCapture(WGPUDevice) -> Unit
+
+pub fn wgpuExternalTextureAddRef(WGPUExternalTexture) -> Unit
+
+pub fn wgpuExternalTextureRelease(WGPUExternalTexture) -> Unit
+
+pub fn wgpuExternalTextureSetLabel(WGPUExternalTexture, WGPUStringView) -> Unit
+
 pub fn wgpuGenerateReport(WGPUInstance, WGPUGlobalReportPtr) -> Unit
 
-pub fn wgpuGetInstanceCapabilities(WGPUInstanceCapabilitiesPtr) -> WGPUStatus
+pub fn wgpuGetInstanceFeatures(WGPUSupportedInstanceFeaturesPtr) -> Unit
+
+pub fn wgpuGetInstanceLimits(WGPUInstanceLimitsPtr) -> WGPUStatus
 
 pub fn wgpuGetProcAddress(WGPUStringView) -> WGPUProc
 
 pub fn wgpuGetVersion() -> UInt
+
+pub fn wgpuHasInstanceFeature(WGPUInstanceFeatureName) -> Bool
 
 pub fn wgpuInstanceAddRef(WGPUInstance) -> Unit
 
@@ -1608,7 +1628,7 @@ pub fn wgpuInstanceCreateSurface(WGPUInstance, WGPUSurfaceDescriptorPtr) -> WGPU
 
 pub fn wgpuInstanceEnumerateAdapters(WGPUInstance, WGPUInstanceEnumerateAdapterOptionsPtr, WGPUAdapterPtr) -> UInt64
 
-pub fn wgpuInstanceGetWGSLLanguageFeatures(WGPUInstance, WGPUSupportedWGSLLanguageFeaturesPtr) -> WGPUStatus
+pub fn wgpuInstanceGetWGSLLanguageFeatures(WGPUInstance, WGPUSupportedWGSLLanguageFeaturesPtr) -> Unit
 
 pub fn wgpuInstanceHasWGSLLanguageFeature(WGPUInstance, WGPUWGSLLanguageFeatureName) -> Bool
 
@@ -1639,6 +1659,8 @@ pub fn wgpuQuerySetRelease(WGPUQuerySet) -> Unit
 pub fn wgpuQuerySetSetLabel(WGPUQuerySet, WGPUStringView) -> Unit
 
 pub fn wgpuQueueAddRef(WGPUQueue) -> Unit
+
+pub fn wgpuQueueGetNativeMetalCommandQueue(WGPUQueue) -> UnitPtr
 
 pub fn wgpuQueueGetTimestampPeriod(WGPUQueue) -> Float
 
@@ -1684,13 +1706,13 @@ pub fn wgpuRenderBundleEncoderSetBindGroup(WGPURenderBundleEncoder, UInt, WGPUBi
 
 pub fn wgpuRenderBundleEncoderSetBindGroup_offsets(WGPURenderBundleEncoder, UInt, WGPUBindGroup, UInt64, FixedArray[UInt]) -> Unit
 
+pub fn wgpuRenderBundleEncoderSetImmediates(WGPURenderBundleEncoder, UInt, UInt, UnitPtr) -> Unit
+
 pub fn wgpuRenderBundleEncoderSetIndexBuffer(WGPURenderBundleEncoder, WGPUBuffer, WGPUIndexFormat, UInt64, UInt64) -> Unit
 
 pub fn wgpuRenderBundleEncoderSetLabel(WGPURenderBundleEncoder, WGPUStringView) -> Unit
 
 pub fn wgpuRenderBundleEncoderSetPipeline(WGPURenderBundleEncoder, WGPURenderPipeline) -> Unit
-
-pub fn wgpuRenderBundleEncoderSetPushConstants(WGPURenderBundleEncoder, UInt64, UInt, UInt, UnitPtr) -> Unit
 
 pub fn wgpuRenderBundleEncoderSetVertexBuffer(WGPURenderBundleEncoder, UInt, WGPUBuffer, UInt64, UInt64) -> Unit
 
@@ -1744,13 +1766,13 @@ pub fn wgpuRenderPassEncoderSetBindGroup_offsets(WGPURenderPassEncoder, UInt, WG
 
 pub fn wgpuRenderPassEncoderSetBlendConstant(WGPURenderPassEncoder, WGPUColorPtr) -> Unit
 
+pub fn wgpuRenderPassEncoderSetImmediates(WGPURenderPassEncoder, UInt, UInt, UnitPtr) -> Unit
+
 pub fn wgpuRenderPassEncoderSetIndexBuffer(WGPURenderPassEncoder, WGPUBuffer, WGPUIndexFormat, UInt64, UInt64) -> Unit
 
 pub fn wgpuRenderPassEncoderSetLabel(WGPURenderPassEncoder, WGPUStringView) -> Unit
 
 pub fn wgpuRenderPassEncoderSetPipeline(WGPURenderPassEncoder, WGPURenderPipeline) -> Unit
-
-pub fn wgpuRenderPassEncoderSetPushConstants(WGPURenderPassEncoder, UInt64, UInt, UInt, UnitPtr) -> Unit
 
 pub fn wgpuRenderPassEncoderSetScissorRect(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
 
@@ -1790,6 +1812,8 @@ pub fn wgpuShaderModuleSetLabel(WGPUShaderModule, WGPUStringView) -> Unit
 
 pub fn wgpuSupportedFeaturesFreeMembers(WGPUSupportedFeatures) -> Unit
 
+pub fn wgpuSupportedInstanceFeaturesFreeMembers(WGPUSupportedInstanceFeatures) -> Unit
+
 pub fn wgpuSupportedWGSLLanguageFeaturesFreeMembers(WGPUSupportedWGSLLanguageFeatures) -> Unit
 
 pub fn wgpuSurfaceAddRef(WGPUSurface) -> Unit
@@ -1826,7 +1850,11 @@ pub fn wgpuTextureGetHeight(WGPUTexture) -> UInt
 
 pub fn wgpuTextureGetMipLevelCount(WGPUTexture) -> UInt
 
+pub fn wgpuTextureGetNativeMetalTexture(WGPUTexture) -> UnitPtr
+
 pub fn wgpuTextureGetSampleCount(WGPUTexture) -> UInt
+
+pub fn wgpuTextureGetTextureBindingViewDimension(WGPUTexture) -> WGPUTextureViewDimension
 
 pub fn wgpuTextureGetUsage(WGPUTexture) -> UInt64
 
@@ -1983,6 +2011,9 @@ pub type WGPUErrorFilter
 pub type WGPUExtent3DPtr
 
 #external
+pub type WGPUExternalTexture
+
+#external
 pub type WGPUFeatureName
 
 #external
@@ -2006,15 +2037,18 @@ pub type WGPUInstance
 
 #alias(UnitPtr)
 #external
-pub type WGPUInstanceCapabilitiesPtr
-
-#alias(UnitPtr)
-#external
 pub type WGPUInstanceDescriptorPtr
 
 #alias(UnitPtr)
 #external
 pub type WGPUInstanceEnumerateAdapterOptionsPtr
+
+#external
+pub type WGPUInstanceFeatureName
+
+#alias(UnitPtr)
+#external
+pub type WGPUInstanceLimitsPtr
 
 #alias(UnitPtr)
 #external
@@ -2146,6 +2180,13 @@ pub type WGPUSupportedFeatures
 pub type WGPUSupportedFeaturesPtr
 
 #external
+pub type WGPUSupportedInstanceFeatures
+
+#alias(UnitPtr)
+#external
+pub type WGPUSupportedInstanceFeaturesPtr
+
+#external
 pub type WGPUSupportedWGSLLanguageFeatures
 
 #alias(UnitPtr)
@@ -2212,6 +2253,9 @@ pub type WGPUTextureView
 pub type WGPUTextureViewDescriptorPtr
 
 #external
+pub type WGPUTextureViewDimension
+
+#external
 pub type WGPUWGSLLanguageFeatureName
 
 #external
@@ -2223,8 +2267,6 @@ pub type WGPUBufferUsage = UInt64
 pub type WGPULogLevel = UInt
 
 pub type WGPUMapMode = UInt64
-
-pub type WGPUShaderStage = UInt64
 
 pub type WGPUSubmissionIndex = UInt64
 

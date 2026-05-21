@@ -151,6 +151,10 @@ pub type WGPUExtent3DPtr
 
 ///|
 #declaration_only
+pub type WGPUExternalTexture
+
+///|
+#declaration_only
 pub type WGPUFeatureName
 
 ///|
@@ -175,15 +179,19 @@ pub type WGPUInstance
 
 ///|
 #declaration_only
-pub type WGPUInstanceCapabilitiesPtr
-
-///|
-#declaration_only
 pub type WGPUInstanceDescriptorPtr
 
 ///|
 #declaration_only
 pub type WGPUInstanceEnumerateAdapterOptionsPtr
+
+///|
+#declaration_only
+pub type WGPUInstanceFeatureName
+
+///|
+#declaration_only
+pub type WGPUInstanceLimitsPtr
 
 ///|
 #declaration_only
@@ -304,9 +312,6 @@ pub type WGPUShaderModuleDescriptorPtr
 pub type WGPUShaderModuleDescriptorSpirVPtr
 
 ///|
-pub type WGPUShaderStage = UInt64
-
-///|
 #declaration_only
 pub type WGPUStatus
 
@@ -328,6 +333,14 @@ pub type WGPUSupportedFeatures
 ///|
 #declaration_only
 pub type WGPUSupportedFeaturesPtr
+
+///|
+#declaration_only
+pub type WGPUSupportedInstanceFeatures
+
+///|
+#declaration_only
+pub type WGPUSupportedInstanceFeaturesPtr
 
 ///|
 #declaration_only
@@ -399,6 +412,10 @@ pub type WGPUTextureView
 ///|
 #declaration_only
 pub type WGPUTextureViewDescriptorPtr
+
+///|
+#declaration_only
+pub type WGPUTextureViewDimension
 
 ///|
 #declaration_only
@@ -538,6 +555,15 @@ declare pub fn wgpuBufferMapAsync(
 
 ///|
 #declaration_only
+declare pub fn wgpuBufferReadMappedRange(
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  data : UnitPtr,
+  size : UInt64,
+) -> WGPUStatus
+
+///|
+#declaration_only
 declare pub fn wgpuBufferRelease(buffer : WGPUBuffer) -> Unit
 
 ///|
@@ -550,6 +576,15 @@ declare pub fn wgpuBufferSetLabel(
 ///|
 #declaration_only
 declare pub fn wgpuBufferUnmap(buffer : WGPUBuffer) -> Unit
+
+///|
+#declaration_only
+declare pub fn wgpuBufferWriteMappedRange(
+  buffer : WGPUBuffer,
+  offset : UInt64,
+  data : UnitPtr,
+  size : UInt64,
+) -> WGPUStatus
 
 ///|
 #declaration_only
@@ -777,6 +812,15 @@ declare pub fn wgpuComputePassEncoderSetBindGroup(
 
 ///|
 #declaration_only
+declare pub fn wgpuComputePassEncoderSetImmediates(
+  encoder : WGPUComputePassEncoder,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn wgpuComputePassEncoderSetLabel(
   computePassEncoder : WGPUComputePassEncoder,
   label : WGPUStringView,
@@ -787,15 +831,6 @@ declare pub fn wgpuComputePassEncoderSetLabel(
 declare pub fn wgpuComputePassEncoderSetPipeline(
   computePassEncoder : WGPUComputePassEncoder,
   pipeline : WGPUComputePipeline,
-) -> Unit
-
-///|
-#declaration_only
-declare pub fn wgpuComputePassEncoderSetPushConstants(
-  encoder : WGPUComputePassEncoder,
-  offset : UInt,
-  sizeBytes : UInt,
-  data : UnitPtr,
 ) -> Unit
 
 ///|
@@ -955,7 +990,10 @@ declare pub fn wgpuDeviceDestroy(device : WGPUDevice) -> Unit
 
 ///|
 #declaration_only
-declare pub fn wgpuDeviceGetAdapterInfo(device : WGPUDevice) -> WGPUAdapterInfo
+declare pub fn wgpuDeviceGetAdapterInfo(
+  device : WGPUDevice,
+  adapterInfo : WGPUAdapterInfoPtr,
+) -> WGPUStatus
 
 ///|
 #declaration_only
@@ -974,6 +1012,10 @@ declare pub fn wgpuDeviceGetLimits(
 ///|
 #declaration_only
 declare pub fn wgpuDeviceGetLostFuture(device : WGPUDevice) -> WGPUFuture
+
+///|
+#declaration_only
+declare pub fn wgpuDeviceGetNativeMetalDevice(device : WGPUDevice) -> UnitPtr
 
 ///|
 #declaration_only
@@ -1021,6 +1063,37 @@ declare pub fn wgpuDeviceSetLabel(
 
 ///|
 #declaration_only
+declare pub fn wgpuDeviceStartGraphicsDebuggerCapture(
+  device : WGPUDevice,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn wgpuDeviceStopGraphicsDebuggerCapture(
+  device : WGPUDevice,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn wgpuExternalTextureAddRef(
+  externalTexture : WGPUExternalTexture,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn wgpuExternalTextureRelease(
+  externalTexture : WGPUExternalTexture,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn wgpuExternalTextureSetLabel(
+  externalTexture : WGPUExternalTexture,
+  label : WGPUStringView,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn wgpuGenerateReport(
   instance : WGPUInstance,
   report : WGPUGlobalReportPtr,
@@ -1028,8 +1101,14 @@ declare pub fn wgpuGenerateReport(
 
 ///|
 #declaration_only
-declare pub fn wgpuGetInstanceCapabilities(
-  capabilities : WGPUInstanceCapabilitiesPtr,
+declare pub fn wgpuGetInstanceFeatures(
+  features : WGPUSupportedInstanceFeaturesPtr,
+) -> Unit
+
+///|
+#declaration_only
+declare pub fn wgpuGetInstanceLimits(
+  limits : WGPUInstanceLimitsPtr,
 ) -> WGPUStatus
 
 ///|
@@ -1039,6 +1118,10 @@ declare pub fn wgpuGetProcAddress(procName : WGPUStringView) -> WGPUProc
 ///|
 #declaration_only
 declare pub fn wgpuGetVersion() -> UInt
+
+///|
+#declaration_only
+declare pub fn wgpuHasInstanceFeature(feature : WGPUInstanceFeatureName) -> Bool
 
 ///|
 #declaration_only
@@ -1064,7 +1147,7 @@ declare pub fn wgpuInstanceEnumerateAdapters(
 declare pub fn wgpuInstanceGetWGSLLanguageFeatures(
   instance : WGPUInstance,
   features : WGPUSupportedWGSLLanguageFeaturesPtr,
-) -> WGPUStatus
+) -> Unit
 
 ///|
 #declaration_only
@@ -1147,6 +1230,10 @@ declare pub fn wgpuQuerySetSetLabel(
 ///|
 #declaration_only
 declare pub fn wgpuQueueAddRef(queue : WGPUQueue) -> Unit
+
+///|
+#declaration_only
+declare pub fn wgpuQueueGetNativeMetalCommandQueue(queue : WGPUQueue) -> UnitPtr
 
 ///|
 #declaration_only
@@ -1299,6 +1386,15 @@ declare pub fn wgpuRenderBundleEncoderSetBindGroup(
 
 ///|
 #declaration_only
+declare pub fn wgpuRenderBundleEncoderSetImmediates(
+  encoder : WGPURenderBundleEncoder,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn wgpuRenderBundleEncoderSetIndexBuffer(
   renderBundleEncoder : WGPURenderBundleEncoder,
   buffer : WGPUBuffer,
@@ -1319,16 +1415,6 @@ declare pub fn wgpuRenderBundleEncoderSetLabel(
 declare pub fn wgpuRenderBundleEncoderSetPipeline(
   renderBundleEncoder : WGPURenderBundleEncoder,
   pipeline : WGPURenderPipeline,
-) -> Unit
-
-///|
-#declaration_only
-declare pub fn wgpuRenderBundleEncoderSetPushConstants(
-  encoder : WGPURenderBundleEncoder,
-  stages : WGPUShaderStage,
-  offset : UInt,
-  sizeBytes : UInt,
-  data : UnitPtr,
 ) -> Unit
 
 ///|
@@ -1521,6 +1607,15 @@ declare pub fn wgpuRenderPassEncoderSetBlendConstant(
 
 ///|
 #declaration_only
+declare pub fn wgpuRenderPassEncoderSetImmediates(
+  encoder : WGPURenderPassEncoder,
+  offset : UInt,
+  sizeBytes : UInt,
+  data : UnitPtr,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn wgpuRenderPassEncoderSetIndexBuffer(
   renderPassEncoder : WGPURenderPassEncoder,
   buffer : WGPUBuffer,
@@ -1541,16 +1636,6 @@ declare pub fn wgpuRenderPassEncoderSetLabel(
 declare pub fn wgpuRenderPassEncoderSetPipeline(
   renderPassEncoder : WGPURenderPassEncoder,
   pipeline : WGPURenderPipeline,
-) -> Unit
-
-///|
-#declaration_only
-declare pub fn wgpuRenderPassEncoderSetPushConstants(
-  encoder : WGPURenderPassEncoder,
-  stages : WGPUShaderStage,
-  offset : UInt,
-  sizeBytes : UInt,
-  data : UnitPtr,
 ) -> Unit
 
 ///|
@@ -1682,6 +1767,12 @@ declare pub fn wgpuSupportedFeaturesFreeMembers(
 
 ///|
 #declaration_only
+declare pub fn wgpuSupportedInstanceFeaturesFreeMembers(
+  supportedInstanceFeatures : WGPUSupportedInstanceFeatures,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn wgpuSupportedWGSLLanguageFeaturesFreeMembers(
   supportedWGSLLanguageFeatures : WGPUSupportedWGSLLanguageFeatures,
 ) -> Unit
@@ -1776,7 +1867,19 @@ declare pub fn wgpuTextureGetMipLevelCount(texture : WGPUTexture) -> UInt
 
 ///|
 #declaration_only
+declare pub fn wgpuTextureGetNativeMetalTexture(
+  texture : WGPUTexture,
+) -> UnitPtr
+
+///|
+#declaration_only
 declare pub fn wgpuTextureGetSampleCount(texture : WGPUTexture) -> UInt
+
+///|
+#declaration_only
+declare pub fn wgpuTextureGetTextureBindingViewDimension(
+  texture : WGPUTexture,
+) -> WGPUTextureViewDimension
 
 ///|
 #declaration_only

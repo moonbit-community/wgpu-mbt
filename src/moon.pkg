@@ -1,5 +1,5 @@
 import {
-  "Milky2018/wgpu_mbt/c" @c,
+  "Milky2018/wgpu_mbt/c",
   "moonbitlang/core/ref",
   "moonbitlang/core/encoding/utf8",
 }
