@@ -1237,6 +1237,7 @@ mbt_wgpu_pipeline_layout_descriptor_with_push_constants_many_new(
       .label = (WGPUStringView){.data = NULL, .length = 0},
       .bindGroupLayoutCount = (size_t)layout_count,
       .bindGroupLayouts = stored_layouts,
+      .immediateSize = immediate_data_size,
   };
   return &out->desc;
 }

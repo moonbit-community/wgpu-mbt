@@ -2196,6 +2196,7 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_new(uint64_t stages,
       .label = (WGPUStringView){.data = NULL, .length = 0},
       .bindGroupLayoutCount = 0u,
       .bindGroupLayouts = NULL,
+      .immediateSize = end,
   };
 
   return &out->desc;
@@ -2240,6 +2241,7 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_many_new(
       .label = (WGPUStringView){.data = NULL, .length = 0},
       .bindGroupLayoutCount = 0u,
       .bindGroupLayouts = NULL,
+      .immediateSize = immediate_data_size,
   };
   return &out->desc;
 }
