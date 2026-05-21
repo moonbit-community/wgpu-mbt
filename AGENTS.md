@@ -39,6 +39,9 @@ This is a [MoonBit](https://docs.moonbitlang.com) project.
   testing, so when your changes indeed change the behavior of the code, you
   should run `moon test --update` to update the snapshot.
 
+- For this project, native tests can be run with `moon test --release` when the
+  default debug native path hits local toolchain/framework-linking issues.
+
 - You can run `moon check` to check the code is linted correctly.
 
 - When writing tests, you are encouraged to use `inspect` and run
