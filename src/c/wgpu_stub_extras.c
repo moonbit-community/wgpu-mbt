@@ -1414,7 +1414,7 @@ MBT_DEFINE_DEVICE_LIMIT_U32(
     mbt_wgpu_device_limits_max_compute_workgroups_per_dimension_u32,
     maxComputeWorkgroupsPerDimension)
 
-uint32_t mbt_wgpu_adapter_limits_max_push_constant_size_u32(WGPUAdapter adapter) {
+uint32_t mbt_wgpu_adapter_limits_max_immediate_size_u32(WGPUAdapter adapter) {
   WGPULimits limits = {0};
   WGPUNativeLimits native_limits = {0};
   if (!mbt_wgpu_adapter_get_limits_with_native(adapter, &limits, &native_limits)) {
@@ -1432,7 +1432,7 @@ uint32_t mbt_wgpu_adapter_limits_max_non_sampler_bindings_u32(WGPUAdapter adapte
   return native_limits.maxNonSamplerBindings;
 }
 
-uint32_t mbt_wgpu_device_limits_max_push_constant_size_u32(WGPUDevice device) {
+uint32_t mbt_wgpu_device_limits_max_immediate_size_u32(WGPUDevice device) {
   WGPULimits limits = {0};
   WGPUNativeLimits native_limits = {0};
   if (!mbt_wgpu_device_get_limits_with_native(device, &limits, &native_limits)) {

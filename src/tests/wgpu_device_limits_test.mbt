@@ -48,7 +48,7 @@ test "wgpu device limits (selected fields)" {
   let max_wg_y = device.limits_max_compute_workgroup_size_y_u32()
   let max_wg_z = device.limits_max_compute_workgroup_size_z_u32()
   let max_wg_dim = device.limits_max_compute_workgroups_per_dimension_u32()
-  let _ = device.limits_max_push_constant_size_u32()
+  let _ = device.limits_max_immediate_size_u32()
   let _ = device.limits_max_non_sampler_bindings_u32()
   let ok = max_dim_1d > 0U &&
     max_dim_2d > 0U &&

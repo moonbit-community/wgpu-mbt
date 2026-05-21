@@ -66,7 +66,7 @@ options(
     "wgpu_pipeline_layout_many_test.mbt": [ "native" ],
     "wgpu_pipeline_statistics_query_test.mbt": [ "native" ],
     "wgpu_ptr_constructors_test.mbt": [ "native" ],
-    "wgpu_push_constants_test.mbt": [ "native" ],
+    "wgpu_immediates_test.mbt": [ "native" ],
     "wgpu_queue_work_done_test.mbt": [ "native" ],
     "wgpu_queue_write_buffer_test.mbt": [ "native" ],
     "wgpu_queue_write_texture_ptr_test.mbt": [ "native" ],

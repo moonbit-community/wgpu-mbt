@@ -586,7 +586,7 @@ typedef struct {
 WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
     WGPUAdapter adapter, uint32_t max_bind_groups, uint32_t max_dynamic_uniform_buffers,
     uint64_t max_uniform_buffer_binding_size, uint64_t max_storage_buffer_binding_size,
-    uint32_t max_push_constant_size, uint32_t max_non_sampler_bindings) {
+    uint32_t max_immediate_size, uint32_t max_non_sampler_bindings) {
   WGPULimits base = {0};
   WGPUNativeLimits native_base = {
       .chain =
@@ -630,7 +630,7 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
     out->limits.maxStorageBufferBindingSize = max_storage_buffer_binding_size;
   }
 
-  if (max_push_constant_size != 0u || max_non_sampler_bindings != 0u) {
+  if (max_immediate_size != 0u || max_non_sampler_bindings != 0u) {
     out->native_limits = (WGPUNativeLimits){
         .chain =
             (WGPUChainedStruct){
@@ -642,8 +642,8 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
         .maxBindingArrayElementsPerShaderStage =
             native_base.maxBindingArrayElementsPerShaderStage,
     };
-    if (max_push_constant_size != 0u) {
-      out->native_limits.maxImmediateSize = max_push_constant_size;
+    if (max_immediate_size != 0u) {
+      out->native_limits.maxImmediateSize = max_immediate_size;
     }
     if (max_non_sampler_bindings != 0u) {
       out->native_limits.maxNonSamplerBindings = max_non_sampler_bindings;

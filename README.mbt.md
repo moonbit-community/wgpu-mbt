@@ -228,10 +228,10 @@ For `WGPUDeviceExtras.tracePath`, you can set trace path on descriptor builders 
   - `@wgpu_c.query_set_descriptor_pipeline_statistics_many_new(...)`
   - `Device::create_query_set_pipeline_statistics_many(count, first_statistic_name_u32, other_statistic_names_u32)`
 - Pipeline layout extras with immediates:
-  - `@wgpu_c.pipeline_layout_descriptor_push_constants_many_new(...)`
-  - `Device::create_pipeline_layout_push_constants_many(first_stages, first_start, first_end, other_ranges)`
+  - `@wgpu_c.pipeline_layout_descriptor_immediates_many_new(...)`
+  - `Device::create_pipeline_layout_immediates_many(first_stages, first_start, first_end, other_ranges)`
   - `Device::create_pipeline_layout_with_immediates(bind_group_layouts, ranges)`
-  - On `wgpu-native` v29, range-style compatibility APIs allocate the maximum requested immediate byte size.
+  - On `wgpu-native` v29, range-style immediates APIs allocate the maximum requested immediate byte size.
 - Render pipeline primitive extras on builder:
   - `RenderPipelineDescBuilder::set_polygon_mode_u32(...)`
   - `RenderPipelineDescBuilder::set_conservative_rasterization(...)`

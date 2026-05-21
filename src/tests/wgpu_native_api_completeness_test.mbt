@@ -88,7 +88,7 @@ test "wgpu native api: instance extras + descriptor coverage" {
     ])
     let starts = FixedArray::from_array([0U, 16U])
     let ends = FixedArray::from_array([16U, 32U])
-    let pl_desc = @wgpu_c.pipeline_layout_descriptor_push_constants_many_new(
+    let pl_desc = @wgpu_c.pipeline_layout_descriptor_immediates_many_new(
       2UL, stages, starts, ends,
     )
     @wgpu_c.pipeline_layout_descriptor_free(pl_desc)
@@ -103,16 +103,16 @@ test "wgpu native api: primitive extras builder calls" {
   run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
-    let _ = adapter.limits_max_push_constant_size_u32()
+    let _ = adapter.limits_max_immediate_size_u32()
     let _ = adapter.limits_max_immediate_size_u32()
     let _ = adapter.limits_max_non_sampler_bindings_u32()
     inspect(
-      adapter.has_feature_native_push_constants() ==
+      adapter.has_feature_native_immediates() ==
       adapter.has_feature_native_immediates(),
       content="true",
     )
     inspect(
-      adapter.limits_max_push_constant_size_u32() ==
+      adapter.limits_max_immediate_size_u32() ==
       adapter.limits_max_immediate_size_u32(),
       content="true",
     )
@@ -121,16 +121,16 @@ test "wgpu native api: primitive extras builder calls" {
       immediate_device.release()
     }
     let device = adapter.request_device_sync(instance)
-    let _ = device.limits_max_push_constant_size_u32()
+    let _ = device.limits_max_immediate_size_u32()
     let _ = device.limits_max_immediate_size_u32()
     let _ = device.limits_max_non_sampler_bindings_u32()
     inspect(
-      device.has_feature_native_push_constants() ==
+      device.has_feature_native_immediates() ==
       device.has_feature_native_immediates(),
       content="true",
     )
     inspect(
-      device.limits_max_push_constant_size_u32() ==
+      device.limits_max_immediate_size_u32() ==
       device.limits_max_immediate_size_u32(),
       content="true",
     )
@@ -157,7 +157,7 @@ test "wgpu native api: primitive extras builder calls" {
       #|}
       #|
     let sm = device.create_shader_module_wgsl(wgsl)
-    let push_layout = device.create_pipeline_layout_push_constants_many(
+    let immediate_layout_from_ranges = device.create_pipeline_layout_immediates_many(
       @wgpu.ShaderStage::from_u64(
         @wgpu.SHADER_STAGE_VERTEX | @wgpu.SHADER_STAGE_FRAGMENT,
       ),
@@ -188,7 +188,7 @@ test "wgpu native api: primitive extras builder calls" {
     builder.clear_primitive_extras()
     let cp_builder = @wgpu.ComputePipelineDescBuilder::new(
       sm,
-      layout=push_layout,
+      layout=immediate_layout_from_ranges,
     )
     cp_builder.set_entry_point("cs_main")
 
@@ -196,7 +196,7 @@ test "wgpu native api: primitive extras builder calls" {
     builder.free()
     immediate_layout_1.release()
     immediate_layout.release()
-    push_layout.release()
+    immediate_layout_from_ranges.release()
     sm.release()
     device.release()
     adapter.release()

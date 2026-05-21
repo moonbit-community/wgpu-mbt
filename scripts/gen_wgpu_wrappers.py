@@ -331,9 +331,9 @@ def _gen_methods(
                 ]
             )
 
-        # Immediates/push-constants: route UnitPtr+size to borrowed Bytes helpers.
-        if op_camel in ("SetPushConstants", "SetImmediates"):
-            desired = "set_push_constants"
+        # Immediates: route UnitPtr+size to borrowed Bytes helpers.
+        if op_camel == "SetImmediates":
+            desired = "set_immediates"
             if desired in used:
                 return ""
 
@@ -347,7 +347,7 @@ def _gen_methods(
                         "  offset : UInt,",
                         "  data : Bytes,",
                         ") -> Unit {",
-                        "  @c.compute_pass_set_push_constants_bytes(",
+                        "  @c.compute_pass_set_immediates_bytes(",
                         "    self.raw,",
                         "    offset,",
                         "    data,",
@@ -367,7 +367,7 @@ def _gen_methods(
                         "  offset : UInt,",
                         "  data : Bytes,",
                         ") -> Unit {",
-                        "  @c.render_pass_set_push_constants_bytes(",
+                        "  @c.render_pass_set_immediates_bytes(",
                         "    self.raw,",
                         "    stages,",
                         "    offset,",
@@ -388,7 +388,7 @@ def _gen_methods(
                         "  offset : UInt,",
                         "  data : Bytes,",
                         ") -> Unit {",
-                        "  @c.render_bundle_encoder_set_push_constants_bytes(",
+                        "  @c.render_bundle_encoder_set_immediates_bytes(",
                         "    self.raw,",
                         "    stages,",
                         "    offset,",

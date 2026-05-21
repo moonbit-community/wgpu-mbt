@@ -966,7 +966,7 @@ declare pub fn Adapter::request_device_sync_with_features_and_limits(
   max_dynamic_uniform_buffers_u32? : UInt = 0U,
   max_uniform_buffer_binding_size? : UInt64 = 0UL,
   max_storage_buffer_binding_size? : UInt64 = 0UL,
-  max_push_constant_size_u32? : UInt = 0U,
+  max_immediate_size_u32? : UInt = 0U,
   max_non_sampler_bindings_u32? : UInt = 0U,
   label? : String = "",
   queue_label? : String = "",
@@ -1032,13 +1032,6 @@ declare pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_sync_timestamp_query_inside_passes(
-  self : Adapter,
-  instance : Instance,
-) -> Device raise WgpuError
-
-///|
-#declaration_only
-declare pub fn Adapter::request_device_sync_push_constants(
   self : Adapter,
   instance : Instance,
 ) -> Device raise WgpuError
@@ -1292,12 +1285,6 @@ declare pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(
 ///|
 #declaration_only
 declare pub fn Adapter::has_feature_native_timestamp_query_inside_passes(
-  self : Adapter,
-) -> Bool
-
-///|
-#declaration_only
-declare pub fn Adapter::has_feature_native_push_constants(
   self : Adapter,
 ) -> Bool
 
@@ -1656,12 +1643,6 @@ declare pub fn Adapter::limits_max_compute_invocations_per_workgroup_u32(
 
 ///|
 #declaration_only
-declare pub fn Adapter::limits_max_push_constant_size_u32(
-  self : Adapter,
-) -> UInt
-
-///|
-#declaration_only
 declare pub fn Adapter::limits_max_immediate_size_u32(self : Adapter) -> UInt
 
 ///|
@@ -1788,10 +1769,6 @@ declare pub fn Device::has_feature_native_timestamp_query_inside_encoders(
 declare pub fn Device::has_feature_native_timestamp_query_inside_passes(
   self : Device,
 ) -> Bool
-
-///|
-#declaration_only
-declare pub fn Device::has_feature_native_push_constants(self : Device) -> Bool
 
 ///|
 #declaration_only
@@ -2158,10 +2135,6 @@ declare pub fn Device::limits_max_compute_workgroup_storage_size_u32(
 declare pub fn Device::limits_max_compute_invocations_per_workgroup_u32(
   self : Device,
 ) -> UInt
-
-///|
-#declaration_only
-declare pub fn Device::limits_max_push_constant_size_u32(self : Device) -> UInt
 
 ///|
 #declaration_only
@@ -3055,30 +3028,11 @@ declare pub fn Device::create_pipeline_layout_many(
 
 ///|
 #declaration_only
-declare pub fn Device::create_pipeline_layout_push_constants(
-  self : Device,
-  stages : ShaderStage,
-  start : UInt,
-  end : UInt,
-) -> PipelineLayout
-
-///|
-#declaration_only
 declare pub fn Device::create_pipeline_layout_immediates(
   self : Device,
   stages : ShaderStage,
   start : UInt,
   end : UInt,
-) -> PipelineLayout
-
-///|
-#declaration_only
-declare pub fn Device::create_pipeline_layout_push_constants_many(
-  self : Device,
-  first_stages : ShaderStage,
-  first_start : UInt,
-  first_end : UInt,
-  other_ranges : Array[(ShaderStage, UInt, UInt)],
 ) -> PipelineLayout
 
 ///|
@@ -3089,14 +3043,6 @@ declare pub fn Device::create_pipeline_layout_immediates_many(
   first_start : UInt,
   first_end : UInt,
   other_ranges : Array[(ShaderStage, UInt, UInt)],
-) -> PipelineLayout
-
-///|
-#declaration_only
-declare pub fn Device::create_pipeline_layout_with_push_constants(
-  self : Device,
-  bind_group_layouts : Array[BindGroupLayout],
-  ranges : Array[(ShaderStage, UInt, UInt)],
 ) -> PipelineLayout
 
 ///|
@@ -3568,14 +3514,6 @@ declare pub fn ComputePass::set_pipeline(
 
 ///|
 #declaration_only
-declare pub fn ComputePass::set_push_constants(
-  self : ComputePass,
-  offset : UInt,
-  data : Bytes,
-) -> Unit
-
-///|
-#declaration_only
 declare pub fn ComputePass::set_immediates(
   self : ComputePass,
   offset : UInt,
@@ -3675,15 +3613,6 @@ declare pub fn ComputePass::pop_debug_group(self : ComputePass) -> Unit
 declare pub fn RenderPass::set_pipeline(
   self : RenderPass,
   pipeline : RenderPipeline,
-) -> Unit
-
-///|
-#declaration_only
-declare pub fn RenderPass::set_push_constants(
-  self : RenderPass,
-  stages : ShaderStage,
-  offset : UInt,
-  data : Bytes,
 ) -> Unit
 
 ///|
@@ -4040,15 +3969,6 @@ declare pub fn RenderPipeline::release(self : RenderPipeline) -> Unit
 declare pub fn RenderBundleEncoder::set_pipeline(
   self : RenderBundleEncoder,
   pipeline : RenderPipeline,
-) -> Unit
-
-///|
-#declaration_only
-declare pub fn RenderBundleEncoder::set_push_constants(
-  self : RenderBundleEncoder,
-  stages : ShaderStage,
-  offset : UInt,
-  data : Bytes,
 ) -> Unit
 
 ///|

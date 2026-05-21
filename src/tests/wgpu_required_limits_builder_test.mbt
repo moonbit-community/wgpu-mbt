@@ -28,23 +28,27 @@ test "wgpu requiredLimits builder: request device with maxBindGroups override" {
 }
 
 ///|
-test "wgpu requiredLimits builder: native limits chain override (push constants)" {
+test "wgpu requiredLimits builder: native limits chain override (immediates)" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
-  if !adapter.has_feature_native_push_constants() {
+  if !adapter.has_feature_native_immediates() {
     inspect("unsupported", content="unsupported")
     adapter.release()
     instance.release()
     return
   }
-  let adapter_push = adapter.limits_max_push_constant_size_u32()
-  if adapter_push == 0U {
+  let adapter_immediate = adapter.limits_max_immediate_size_u32()
+  if adapter_immediate == 0U {
     inspect("unsupported", content="unsupported")
     adapter.release()
     instance.release()
     return
   }
-  let want_push = if adapter_push < 4U { adapter_push } else { 4U }
+  let want_immediate = if adapter_immediate < 4U {
+    adapter_immediate
+  } else {
+    4U
+  }
   let adapter_non_sampler = adapter.limits_max_non_sampler_bindings_u32()
   let want_non_sampler = if adapter_non_sampler == 0U {
     0U
@@ -55,12 +59,12 @@ test "wgpu requiredLimits builder: native limits chain override (push constants)
   }
   let device = adapter.request_device_sync_with_features_and_limits(
     instance,
-    [@wgpu.NATIVE_FEATURE_PUSH_CONSTANTS],
-    max_push_constant_size_u32=want_push,
+    [@wgpu.NATIVE_FEATURE_IMMEDIATES],
+    max_immediate_size_u32=want_immediate,
     max_non_sampler_bindings_u32=want_non_sampler,
   )
   inspect(
-    device.limits_max_push_constant_size_u32() >= want_push,
+    device.limits_max_immediate_size_u32() >= want_immediate,
     content="true",
   )
   if want_non_sampler != 0U {

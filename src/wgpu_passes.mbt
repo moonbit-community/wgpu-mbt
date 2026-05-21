@@ -592,26 +592,17 @@ pub fn ComputePass::set_pipeline(
 }
 
 ///|
-pub fn ComputePass::set_push_constants(
-  self : ComputePass,
-  offset : UInt,
-  data : Bytes,
-) -> Unit {
-  @c.compute_pass_set_push_constants_bytes(
-    self.raw,
-    offset,
-    data,
-    data.length().to_uint64(),
-  )
-}
-
-///|
 pub fn ComputePass::set_immediates(
   self : ComputePass,
   offset : UInt,
   data : Bytes,
 ) -> Unit {
-  self.set_push_constants(offset, data)
+  @c.compute_pass_set_immediates_bytes(
+    self.raw,
+    offset,
+    data,
+    data.length().to_uint64(),
+  )
 }
 
 ///|
@@ -738,29 +729,19 @@ pub fn RenderPass::set_pipeline(
 }
 
 ///|
-pub fn RenderPass::set_push_constants(
-  self : RenderPass,
-  stages : ShaderStage,
-  offset : UInt,
-  data : Bytes,
-) -> Unit {
-  @c.render_pass_set_push_constants_bytes(
-    self.raw,
-    stages.raw,
-    offset,
-    data,
-    data.length().to_uint64(),
-  )
-}
-
-///|
 pub fn RenderPass::set_immediates(
   self : RenderPass,
   stages : ShaderStage,
   offset : UInt,
   data : Bytes,
 ) -> Unit {
-  self.set_push_constants(stages, offset, data)
+  @c.render_pass_set_immediates_bytes(
+    self.raw,
+    stages.raw,
+    offset,
+    data,
+    data.length().to_uint64(),
+  )
 }
 
 ///|
@@ -1101,29 +1082,19 @@ pub fn RenderBundleEncoder::set_pipeline(
 }
 
 ///|
-pub fn RenderBundleEncoder::set_push_constants(
-  self : RenderBundleEncoder,
-  stages : ShaderStage,
-  offset : UInt,
-  data : Bytes,
-) -> Unit {
-  @c.render_bundle_encoder_set_push_constants_bytes(
-    self.raw,
-    stages.raw,
-    offset,
-    data,
-    data.length().to_uint64(),
-  )
-}
-
-///|
 pub fn RenderBundleEncoder::set_immediates(
   self : RenderBundleEncoder,
   stages : ShaderStage,
   offset : UInt,
   data : Bytes,
 ) -> Unit {
-  self.set_push_constants(stages, offset, data)
+  @c.render_bundle_encoder_set_immediates_bytes(
+    self.raw,
+    stages.raw,
+    offset,
+    data,
+    data.length().to_uint64(),
+  )
 }
 
 ///|

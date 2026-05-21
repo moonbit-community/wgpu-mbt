@@ -360,8 +360,6 @@ pub const FEATURE_NAME_FLOAT32_FILTERABLE : UInt = 0x0000000E
 
 pub const FEATURE_NAME_FORCE32 : UInt = 0x7FFFFFFF
 
-pub const FEATURE_NAME_IMMEDIATES : UInt = 0x00030001
-
 pub const FEATURE_NAME_INDIRECT_FIRST_INSTANCE : UInt = 0x0000000A
 
 pub const FEATURE_NAME_PRIMITIVE_INDEX : UInt = 0x00000015
@@ -537,8 +535,6 @@ pub const NATIVE_FEATURE_PIPELINE_STATISTICS_QUERY : UInt = 0x00030008
 pub const NATIVE_FEATURE_POLYGON_MODE_LINE : UInt = 0x00030013
 
 pub const NATIVE_FEATURE_POLYGON_MODE_POINT : UInt = 0x00030014
-
-pub const NATIVE_FEATURE_PUSH_CONSTANTS : UInt = 0x00030001
 
 pub const NATIVE_FEATURE_RAY_QUERY : UInt = 0x0003001C
 
@@ -1503,7 +1499,6 @@ pub fn Adapter::has_feature_native_partially_bound_binding_array(Self) -> Bool
 pub fn Adapter::has_feature_native_pipeline_statistics_query(Self) -> Bool
 pub fn Adapter::has_feature_native_polygon_mode_line(Self) -> Bool
 pub fn Adapter::has_feature_native_polygon_mode_point(Self) -> Bool
-pub fn Adapter::has_feature_native_push_constants(Self) -> Bool
 pub fn Adapter::has_feature_native_ray_query(Self) -> Bool
 pub fn Adapter::has_feature_native_sampled_texture_and_storage_buffer_array_non_uniform_indexing(Self) -> Bool
 pub fn Adapter::has_feature_native_shader_early_depth_test(Self) -> Bool
@@ -1558,7 +1553,6 @@ pub fn Adapter::limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(Self)
 pub fn Adapter::limits_max_immediate_size_u32(Self) -> UInt
 pub fn Adapter::limits_max_inter_stage_shader_variables_u32(Self) -> UInt
 pub fn Adapter::limits_max_non_sampler_bindings_u32(Self) -> UInt
-pub fn Adapter::limits_max_push_constant_size_u32(Self) -> UInt
 pub fn Adapter::limits_max_sampled_textures_per_shader_stage_u32(Self) -> UInt
 pub fn Adapter::limits_max_samplers_per_shader_stage_u32(Self) -> UInt
 pub fn Adapter::limits_max_storage_buffer_binding_size_u64(Self) -> UInt64
@@ -1600,7 +1594,6 @@ pub fn Adapter::request_device_sync_pipeline_statistics_query(Self, Instance) ->
 pub fn Adapter::request_device_sync_polygon_mode_line(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_polygon_mode_point(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_ptr(Self, Instance, @c.WGPUDeviceDescriptorPtr) -> Device raise WgpuError
-pub fn Adapter::request_device_sync_push_constants(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_ray_query(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_sampled_texture_and_storage_buffer_array_non_uniform_indexing(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_shader_early_depth_test(Self, Instance) -> Device raise WgpuError
@@ -1630,7 +1623,7 @@ pub fn Adapter::request_device_sync_uniform_buffer_and_storage_texture_array_non
 pub fn Adapter::request_device_sync_vertex_attribute64bit(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_vertex_writable_storage(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_with_features(Self, Instance, Array[UInt], label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
-pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, max_push_constant_size_u32? : UInt, max_non_sampler_bindings_u32? : UInt, label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, max_immediate_size_u32? : UInt, max_non_sampler_bindings_u32? : UInt, label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
 pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64
@@ -1853,7 +1846,6 @@ pub fn ComputePass::set_immediates(Self, UInt, Bytes) -> Unit
 pub fn ComputePass::set_label(Self, String) -> Unit
 pub fn ComputePass::set_pipeline(Self, ComputePipeline) -> Unit
 pub fn ComputePass::set_pipeline_raw(Self, ComputePipeline) -> Unit
-pub fn ComputePass::set_push_constants(Self, UInt, Bytes) -> Unit
 pub fn ComputePass::write_timestamp(Self, QuerySet, UInt) -> Unit
 pub fn ComputePass::write_timestamp_raw(Self, QuerySet, UInt) -> Unit
 
@@ -1925,10 +1917,7 @@ pub fn Device::create_pipeline_layout_immediates(Self, ShaderStage, UInt, UInt) 
 pub fn Device::create_pipeline_layout_immediates_many(Self, ShaderStage, UInt, UInt, Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
 pub fn Device::create_pipeline_layout_many(Self, Array[BindGroupLayout]) -> PipelineLayout
 pub fn Device::create_pipeline_layout_ptr(Self, @c.WGPUPipelineLayoutDescriptorPtr) -> PipelineLayout
-pub fn Device::create_pipeline_layout_push_constants(Self, ShaderStage, UInt, UInt) -> PipelineLayout
-pub fn Device::create_pipeline_layout_push_constants_many(Self, ShaderStage, UInt, UInt, Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
 pub fn Device::create_pipeline_layout_with_immediates(Self, Array[BindGroupLayout], Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
-pub fn Device::create_pipeline_layout_with_push_constants(Self, Array[BindGroupLayout], Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
 pub fn Device::create_query_set(Self, @c.WGPUQuerySetDescriptorPtr) -> QuerySet
 pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
 pub fn Device::create_query_set_pipeline_statistics(Self, UInt, UInt) -> QuerySet
@@ -1995,7 +1984,6 @@ pub fn Device::has_feature_native_partially_bound_binding_array(Self) -> Bool
 pub fn Device::has_feature_native_pipeline_statistics_query(Self) -> Bool
 pub fn Device::has_feature_native_polygon_mode_line(Self) -> Bool
 pub fn Device::has_feature_native_polygon_mode_point(Self) -> Bool
-pub fn Device::has_feature_native_push_constants(Self) -> Bool
 pub fn Device::has_feature_native_ray_query(Self) -> Bool
 pub fn Device::has_feature_native_sampled_texture_and_storage_buffer_array_non_uniform_indexing(Self) -> Bool
 pub fn Device::has_feature_native_shader_early_depth_test(Self) -> Bool
@@ -2051,7 +2039,6 @@ pub fn Device::limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(Self) 
 pub fn Device::limits_max_immediate_size_u32(Self) -> UInt
 pub fn Device::limits_max_inter_stage_shader_variables_u32(Self) -> UInt
 pub fn Device::limits_max_non_sampler_bindings_u32(Self) -> UInt
-pub fn Device::limits_max_push_constant_size_u32(Self) -> UInt
 pub fn Device::limits_max_sampled_textures_per_shader_stage_u32(Self) -> UInt
 pub fn Device::limits_max_samplers_per_shader_stage_u32(Self) -> UInt
 pub fn Device::limits_max_storage_buffer_binding_size_u64(Self) -> UInt64
@@ -2366,7 +2353,6 @@ pub fn RenderBundleEncoder::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -
 pub fn RenderBundleEncoder::set_label(Self, String) -> Unit
 pub fn RenderBundleEncoder::set_pipeline(Self, RenderPipeline) -> Unit
 pub fn RenderBundleEncoder::set_pipeline_raw(Self, RenderPipeline) -> Unit
-pub fn RenderBundleEncoder::set_push_constants(Self, ShaderStage, UInt, Bytes) -> Unit
 pub fn RenderBundleEncoder::set_vertex_buffer(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderBundleEncoder::set_vertex_buffer_raw(Self, UInt, Buffer, UInt64, UInt64) -> Unit
 
@@ -2421,7 +2407,6 @@ pub fn RenderPass::set_index_buffer_u32(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn RenderPass::set_label(Self, String) -> Unit
 pub fn RenderPass::set_pipeline(Self, RenderPipeline) -> Unit
 pub fn RenderPass::set_pipeline_raw(Self, RenderPipeline) -> Unit
-pub fn RenderPass::set_push_constants(Self, ShaderStage, UInt, Bytes) -> Unit
 pub fn RenderPass::set_scissor_rect(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::set_scissor_rect_raw(Self, UInt, UInt, UInt, UInt) -> Unit
 pub fn RenderPass::set_stencil_reference(Self, UInt) -> Unit

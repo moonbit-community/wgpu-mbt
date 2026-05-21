@@ -619,20 +619,20 @@ pub fn device_create_pipeline_layout_many(
 }
 
 ///|
-pub fn device_create_pipeline_layout_push_constants(
+pub fn device_create_pipeline_layout_immediates(
   device : Device,
   stages : UInt64,
   start : UInt,
   end : UInt,
 ) -> PipelineLayout {
-  let desc = pipeline_layout_descriptor_push_constants_new(stages, start, end)
+  let desc = pipeline_layout_descriptor_immediates_new(stages, start, end)
   let layout = wgpuDeviceCreatePipelineLayout(device, desc)
   pipeline_layout_descriptor_free(desc)
   layout
 }
 
 ///|
-pub fn device_create_pipeline_layout_push_constants_many(
+pub fn device_create_pipeline_layout_immediates_many(
   device : Device,
   first_stages : UInt64,
   first_start : UInt,
@@ -652,7 +652,7 @@ pub fn device_create_pipeline_layout_push_constants_many(
   let stages_fixed = FixedArray::from_array(stages_all[:])
   let starts_fixed = FixedArray::from_array(starts_all[:])
   let ends_fixed = FixedArray::from_array(ends_all[:])
-  let desc = pipeline_layout_descriptor_push_constants_many_new(
+  let desc = pipeline_layout_descriptor_immediates_many_new(
     range_count, stages_fixed, starts_fixed, ends_fixed,
   )
   let layout = wgpuDeviceCreatePipelineLayout(device, desc)
@@ -661,7 +661,7 @@ pub fn device_create_pipeline_layout_push_constants_many(
 }
 
 ///|
-pub fn device_create_pipeline_layout_with_push_constants(
+pub fn device_create_pipeline_layout_with_immediates(
   device : Device,
   bind_group_layouts : Array[BindGroupLayout],
   ranges : Array[(UInt64, UInt, UInt)],
@@ -684,7 +684,7 @@ pub fn device_create_pipeline_layout_with_push_constants(
   let stages_fixed = FixedArray::from_array(stages_all[:])
   let starts_fixed = FixedArray::from_array(starts_all[:])
   let ends_fixed = FixedArray::from_array(ends_all[:])
-  let desc = pipeline_layout_descriptor_with_push_constants_many_new(
+  let desc = pipeline_layout_descriptor_with_immediates_many_new(
     layout_count, layouts_fixed, range_count, stages_fixed, starts_fixed, ends_fixed,
   )
   let layout = wgpuDeviceCreatePipelineLayout(device, desc)
@@ -1516,32 +1516,32 @@ pub extern "C" fn device_poll(
 
 ///|
 #borrow(data)
-pub extern "C" fn render_pass_set_push_constants_bytes(
+pub extern "C" fn render_pass_set_immediates_bytes(
   encoder : RenderPassEncoder,
   stages : UInt64,
   offset : UInt,
   data : Bytes,
   data_len : UInt64,
-) -> Unit = "mbt_wgpu_render_pass_set_push_constants_bytes"
+) -> Unit = "mbt_wgpu_render_pass_set_immediates_bytes"
 
 ///|
 #borrow(data)
-pub extern "C" fn compute_pass_set_push_constants_bytes(
+pub extern "C" fn compute_pass_set_immediates_bytes(
   encoder : ComputePassEncoder,
   offset : UInt,
   data : Bytes,
   data_len : UInt64,
-) -> Unit = "mbt_wgpu_compute_pass_set_push_constants_bytes"
+) -> Unit = "mbt_wgpu_compute_pass_set_immediates_bytes"
 
 ///|
 #borrow(data)
-pub extern "C" fn render_bundle_encoder_set_push_constants_bytes(
+pub extern "C" fn render_bundle_encoder_set_immediates_bytes(
   encoder : WGPURenderBundleEncoder,
   stages : UInt64,
   offset : UInt,
   data : Bytes,
   data_len : UInt64,
-) -> Unit = "mbt_wgpu_render_bundle_encoder_set_push_constants_bytes"
+) -> Unit = "mbt_wgpu_render_bundle_encoder_set_immediates_bytes"
 
 ///|
 #borrow(data)

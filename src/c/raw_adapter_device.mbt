@@ -282,9 +282,9 @@ pub extern "C" fn adapter_limits_max_compute_workgroups_per_dimension_u32(
 ) -> UInt = "mbt_wgpu_adapter_limits_max_compute_workgroups_per_dimension_u32"
 
 ///|
-pub extern "C" fn adapter_limits_max_push_constant_size_u32(
+pub extern "C" fn adapter_limits_max_immediate_size_u32(
   adapter : Adapter,
-) -> UInt = "mbt_wgpu_adapter_limits_max_push_constant_size_u32"
+) -> UInt = "mbt_wgpu_adapter_limits_max_immediate_size_u32"
 
 ///|
 pub extern "C" fn adapter_limits_max_non_sampler_bindings_u32(
@@ -441,9 +441,7 @@ pub extern "C" fn device_limits_max_compute_workgroups_per_dimension_u32(
 ) -> UInt = "mbt_wgpu_device_limits_max_compute_workgroups_per_dimension_u32"
 
 ///|
-pub extern "C" fn device_limits_max_push_constant_size_u32(
-  device : Device,
-) -> UInt = "mbt_wgpu_device_limits_max_push_constant_size_u32"
+pub extern "C" fn device_limits_max_immediate_size_u32(device : Device) -> UInt = "mbt_wgpu_device_limits_max_immediate_size_u32"
 
 ///|
 pub extern "C" fn device_limits_max_non_sampler_bindings_u32(
@@ -803,10 +801,10 @@ pub extern "C" fn adapter_request_device_sync_timestamp_query_inside_passes(
 ) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes"
 
 ///|
-pub extern "C" fn adapter_request_device_sync_push_constants(
+pub extern "C" fn adapter_request_device_sync_immediates(
   instance : Instance,
   adapter : WGPUAdapter,
-) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_push_constants"
+) -> WGPUDevice = "mbt_wgpu_adapter_request_device_sync_immediates"
 
 ///|
 pub extern "C" fn adapter_request_device_sync_texture_binding_array(
@@ -879,8 +877,8 @@ pub fn adapter_has_feature_native_timestamp_query_inside_passes(
 }
 
 ///|
-pub fn adapter_has_feature_native_push_constants(adapter : Adapter) -> Bool {
-  wgpuAdapterHasFeature(adapter, feature_name_native_push_constants())
+pub fn adapter_has_feature_native_immediates(adapter : Adapter) -> Bool {
+  wgpuAdapterHasFeature(adapter, feature_name_native_immediates())
 }
 
 ///|

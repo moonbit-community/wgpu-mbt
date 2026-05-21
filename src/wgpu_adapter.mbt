@@ -186,7 +186,7 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
   max_dynamic_uniform_buffers_u32? : UInt = 0U,
   max_uniform_buffer_binding_size? : UInt64 = 0UL,
   max_storage_buffer_binding_size? : UInt64 = 0UL,
-  max_push_constant_size_u32? : UInt = 0U,
+  max_immediate_size_u32? : UInt = 0U,
   max_non_sampler_bindings_u32? : UInt = 0U,
   label? : String = "",
   queue_label? : String = "",
@@ -200,7 +200,7 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
     max_dynamic_uniform_buffers_u32,
     max_uniform_buffer_binding_size,
     max_storage_buffer_binding_size,
-    max_push_constant_size_u32,
+    max_immediate_size_u32,
     max_non_sampler_bindings_u32,
   )
   let label_bytes = utf8_bytes(label)
@@ -307,13 +307,13 @@ pub fn Adapter::request_device_sync_timestamp_query_inside_passes(
 }
 
 ///|
-pub fn Adapter::request_device_sync_push_constants(
+pub fn Adapter::request_device_sync_immediates(
   self : Adapter,
   instance : Instance,
 ) -> Device raise WgpuError {
   require_native_symbol("wgpuAdapterRequestDevice")
   require_native_symbol("wgpuInstanceProcessEvents")
-  let device_raw = @c.adapter_request_device_sync_push_constants(
+  let device_raw = @c.adapter_request_device_sync_immediates(
     instance.raw,
     self.raw,
   )
@@ -323,14 +323,6 @@ pub fn Adapter::request_device_sync_push_constants(
     )
   }
   Device::{ raw: device_raw }
-}
-
-///|
-pub fn Adapter::request_device_sync_immediates(
-  self : Adapter,
-  instance : Instance,
-) -> Device raise WgpuError {
-  self.request_device_sync_push_constants(instance)
 }
 
 ///|
@@ -777,11 +769,6 @@ pub fn Adapter::has_feature_native_timestamp_query_inside_passes(
   self : Adapter,
 ) -> Bool {
   @c.adapter_has_feature_native_timestamp_query_inside_passes(self.raw)
-}
-
-///|
-pub fn Adapter::has_feature_native_push_constants(self : Adapter) -> Bool {
-  @c.adapter_has_feature_native_push_constants(self.raw)
 }
 
 ///|
@@ -1290,13 +1277,8 @@ pub fn Adapter::limits_max_compute_workgroups_per_dimension_u32(
 }
 
 ///|
-pub fn Adapter::limits_max_push_constant_size_u32(self : Adapter) -> UInt {
-  @c.adapter_limits_max_push_constant_size_u32(self.raw)
-}
-
-///|
 pub fn Adapter::limits_max_immediate_size_u32(self : Adapter) -> UInt {
-  self.limits_max_push_constant_size_u32()
+  @c.adapter_limits_max_immediate_size_u32(self.raw)
 }
 
 ///|

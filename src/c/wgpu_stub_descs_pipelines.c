@@ -1178,10 +1178,10 @@ typedef struct {
   WGPUPipelineLayoutExtras extras;
   uint64_t layout_count;
   WGPUBindGroupLayout layouts[];
-} mbt_pipeline_layout_desc_layouts_push_constants_t;
+} mbt_pipeline_layout_desc_layouts_immediates_t;
 
 WGPUPipelineLayoutDescriptor *
-mbt_wgpu_pipeline_layout_descriptor_with_push_constants_many_new(
+mbt_wgpu_pipeline_layout_descriptor_with_immediates_many_new(
     uint64_t layout_count, const WGPUBindGroupLayout *layouts, uint64_t range_count,
     const uint64_t *stages_u64, const uint32_t *starts_u32, const uint32_t *ends_u32) {
   if ((layout_count != 0u && !layouts) ||
@@ -1196,13 +1196,13 @@ mbt_wgpu_pipeline_layout_descriptor_with_push_constants_many_new(
   }
 
   size_t layouts_bytes = (size_t)layout_count * sizeof(WGPUBindGroupLayout);
-  if (sizeof(mbt_pipeline_layout_desc_layouts_push_constants_t) >
+  if (sizeof(mbt_pipeline_layout_desc_layouts_immediates_t) >
       SIZE_MAX - layouts_bytes) {
     return NULL;
   }
-  size_t bytes = sizeof(mbt_pipeline_layout_desc_layouts_push_constants_t) + layouts_bytes;
-  mbt_pipeline_layout_desc_layouts_push_constants_t *out =
-      (mbt_pipeline_layout_desc_layouts_push_constants_t *)malloc(bytes);
+  size_t bytes = sizeof(mbt_pipeline_layout_desc_layouts_immediates_t) + layouts_bytes;
+  mbt_pipeline_layout_desc_layouts_immediates_t *out =
+      (mbt_pipeline_layout_desc_layouts_immediates_t *)malloc(bytes);
   if (!out) {
     return NULL;
   }

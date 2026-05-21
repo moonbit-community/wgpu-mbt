@@ -215,7 +215,7 @@ pub extern "C" fn limits_new_from_adapter_overrides_u32(
   max_dynamic_uniform_buffers_u32 : UInt,
   max_uniform_buffer_binding_size : UInt64,
   max_storage_buffer_binding_size : UInt64,
-  max_push_constant_size_u32 : UInt,
+  max_immediate_size_u32 : UInt,
   max_non_sampler_bindings_u32 : UInt,
 ) -> WGPULimitsPtr = "mbt_wgpu_limits_new_from_adapter_overrides_u32"
 
@@ -481,31 +481,31 @@ pub extern "C" fn pipeline_layout_descriptor_many_new(
 ) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_many_new"
 
 ///|
-pub extern "C" fn pipeline_layout_descriptor_push_constants_new(
+pub extern "C" fn pipeline_layout_descriptor_immediates_new(
   stages : UInt64,
   start : UInt,
   end : UInt,
-) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_push_constants_new"
+) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_immediates_new"
 
 ///|
 #borrow(stages_u64, starts_u32, ends_u32)
-pub extern "C" fn pipeline_layout_descriptor_push_constants_many_new(
+pub extern "C" fn pipeline_layout_descriptor_immediates_many_new(
   range_count : UInt64,
   stages_u64 : FixedArray[UInt64],
   starts_u32 : FixedArray[UInt],
   ends_u32 : FixedArray[UInt],
-) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_push_constants_many_new"
+) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_immediates_many_new"
 
 ///|
 #borrow(bind_group_layouts, stages_u64, starts_u32, ends_u32)
-pub extern "C" fn pipeline_layout_descriptor_with_push_constants_many_new(
+pub extern "C" fn pipeline_layout_descriptor_with_immediates_many_new(
   bind_group_layout_count : UInt64,
   bind_group_layouts : FixedArray[WGPUBindGroupLayout],
   range_count : UInt64,
   stages_u64 : FixedArray[UInt64],
   starts_u32 : FixedArray[UInt],
   ends_u32 : FixedArray[UInt],
-) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_with_push_constants_many_new"
+) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_with_immediates_many_new"
 
 ///|
 #borrow(desc)
@@ -958,7 +958,7 @@ pub extern "C" fn feature_name_native_timestamp_query_inside_encoders() -> WGPUF
 pub extern "C" fn feature_name_native_timestamp_query_inside_passes() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_timestamp_query_inside_passes"
 
 ///|
-pub extern "C" fn feature_name_native_push_constants() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_push_constants"
+pub extern "C" fn feature_name_native_immediates() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_immediates"
 
 ///|
 pub extern "C" fn feature_name_native_pipeline_statistics_query() -> WGPUFeatureName = "mbt_wgpu_feature_name_native_pipeline_statistics_query"

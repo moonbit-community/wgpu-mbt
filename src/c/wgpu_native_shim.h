@@ -555,11 +555,8 @@ typedef enum WGPUNativeFeature
     WGPUNativeFeature_Force32 = 0x7FFFFFFF
 } WGPUNativeFeature;
 
-// Compatibility aliases for the public MoonBit API. wgpu-native v29 renamed
-// push constants to immediates and no longer exposes a few native feature names
-// in wgpu.h, while the numeric native feature ids remain the interop contract
-// used by existing wgpu_mbt wrappers.
-static const WGPUNativeFeature WGPUNativeFeature_PushConstants = WGPUNativeFeature_Immediates;
+// Compatibility aliases for native feature ids still used by high-level helpers
+// but no longer exposed in wgpu-native v29's wgpu.h.
 static const WGPUNativeFeature WGPUNativeFeature_ClearTexture = (WGPUNativeFeature)0x00030016;
 static const WGPUNativeFeature WGPUNativeFeature_Multiview = (WGPUNativeFeature)0x00030018;
 

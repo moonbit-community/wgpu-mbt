@@ -446,8 +446,8 @@ WGPUFeatureName mbt_wgpu_feature_name_native_timestamp_query_inside_passes(void)
   return (WGPUFeatureName)WGPUNativeFeature_TimestampQueryInsidePasses;
 }
 
-WGPUFeatureName mbt_wgpu_feature_name_native_push_constants(void) {
-  return (WGPUFeatureName)WGPUNativeFeature_PushConstants;
+WGPUFeatureName mbt_wgpu_feature_name_native_immediates(void) {
+  return (WGPUFeatureName)WGPUNativeFeature_Immediates;
 }
 
 WGPUFeatureName mbt_wgpu_feature_name_native_pipeline_statistics_query(void) {
@@ -1863,7 +1863,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_timestamp_query_inside_passes(
   return mbt_wgpu_device_register_info_and_return(out.device, adapter);
 }
 
-WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance instance,
+WGPUDevice mbt_wgpu_adapter_request_device_sync_immediates(WGPUInstance instance,
                                                                WGPUAdapter adapter) {
   g_mbt_wgpu_last_request_device_status_u32 = 0u;
   mbt_request_device_result_t out = {0};
@@ -1876,7 +1876,7 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_push_constants(WGPUInstance inst
   };
 
   static const WGPUFeatureName required_features[1] = {
-      (WGPUFeatureName)WGPUNativeFeature_PushConstants,
+      (WGPUFeatureName)WGPUNativeFeature_Immediates,
   };
 
   WGPUNativeLimits native_limits = {
@@ -2161,20 +2161,20 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
 typedef struct {
   WGPUPipelineLayoutDescriptor desc;
   WGPUPipelineLayoutExtras extras;
-} mbt_pipeline_layout_push_constants_desc_t;
+} mbt_pipeline_layout_immediates_desc_t;
 
 typedef struct {
   WGPUPipelineLayoutDescriptor desc;
   WGPUPipelineLayoutExtras extras;
-} mbt_pipeline_layout_push_constants_many_desc_t;
+} mbt_pipeline_layout_immediates_many_desc_t;
 
 WGPUPipelineLayoutDescriptor *
-mbt_wgpu_pipeline_layout_descriptor_push_constants_new(uint64_t stages,
+mbt_wgpu_pipeline_layout_descriptor_immediates_new(uint64_t stages,
                                                        uint32_t start,
                                                        uint32_t end) {
-  mbt_pipeline_layout_push_constants_desc_t *out =
-      (mbt_pipeline_layout_push_constants_desc_t *)malloc(
-          sizeof(mbt_pipeline_layout_push_constants_desc_t));
+  mbt_pipeline_layout_immediates_desc_t *out =
+      (mbt_pipeline_layout_immediates_desc_t *)malloc(
+          sizeof(mbt_pipeline_layout_immediates_desc_t));
   if (!out) {
     return NULL;
   }
@@ -2203,7 +2203,7 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_new(uint64_t stages,
 }
 
 WGPUPipelineLayoutDescriptor *
-mbt_wgpu_pipeline_layout_descriptor_push_constants_many_new(
+mbt_wgpu_pipeline_layout_descriptor_immediates_many_new(
     uint64_t range_count, const uint64_t *stages_u64, const uint32_t *starts_u32,
     const uint32_t *ends_u32) {
   if (range_count == 0u || !stages_u64 || !starts_u32 || !ends_u32) {
@@ -2212,9 +2212,9 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_many_new(
   if (range_count > (uint64_t)SIZE_MAX) {
     return NULL;
   }
-  size_t bytes = sizeof(mbt_pipeline_layout_push_constants_many_desc_t);
-  mbt_pipeline_layout_push_constants_many_desc_t *out =
-      (mbt_pipeline_layout_push_constants_many_desc_t *)malloc(bytes);
+  size_t bytes = sizeof(mbt_pipeline_layout_immediates_many_desc_t);
+  mbt_pipeline_layout_immediates_many_desc_t *out =
+      (mbt_pipeline_layout_immediates_many_desc_t *)malloc(bytes);
   if (!out) {
     return NULL;
   }
@@ -2246,7 +2246,7 @@ mbt_wgpu_pipeline_layout_descriptor_push_constants_many_new(
   return &out->desc;
 }
 
-void mbt_wgpu_render_pass_set_push_constants_bytes(WGPURenderPassEncoder encoder,
+void mbt_wgpu_render_pass_set_immediates_bytes(WGPURenderPassEncoder encoder,
                                                    uint64_t stages,
                                                    uint32_t offset,
                                                    const uint8_t *data,
@@ -2258,7 +2258,7 @@ void mbt_wgpu_render_pass_set_push_constants_bytes(WGPURenderPassEncoder encoder
   wgpuRenderPassEncoderSetImmediates(encoder, offset, (uint32_t)len, data);
 }
 
-void mbt_wgpu_compute_pass_set_push_constants_bytes(WGPUComputePassEncoder encoder,
+void mbt_wgpu_compute_pass_set_immediates_bytes(WGPUComputePassEncoder encoder,
                                                     uint32_t offset,
                                                     const uint8_t *data,
                                                     uint64_t len) {
@@ -2268,7 +2268,7 @@ void mbt_wgpu_compute_pass_set_push_constants_bytes(WGPUComputePassEncoder encod
   wgpuComputePassEncoderSetImmediates(encoder, offset, (uint32_t)len, data);
 }
 
-void mbt_wgpu_render_bundle_encoder_set_push_constants_bytes(
+void mbt_wgpu_render_bundle_encoder_set_immediates_bytes(
     WGPURenderBundleEncoder encoder, uint64_t stages, uint32_t offset,
     const uint8_t *data, uint64_t len) {
   if (len > UINT32_MAX) {

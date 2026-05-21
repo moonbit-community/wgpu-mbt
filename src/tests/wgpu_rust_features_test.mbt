@@ -67,7 +67,7 @@ test "rust feature mask helpers report missing bits" {
       expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_DEPTH_CLIP_CONTROL
     }
-    if adapter.has_feature_native_push_constants() {
+    if adapter.has_feature_native_immediates() {
       expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_PUSH_CONSTANTS
     }
@@ -132,7 +132,7 @@ test "rust feature mask helpers report missing bits" {
       expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_DEPTH_CLIP_CONTROL
     }
-    if device.has_feature_native_push_constants() {
+    if device.has_feature_native_immediates() {
       expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_PUSH_CONSTANTS
     }

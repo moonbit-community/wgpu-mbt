@@ -4,11 +4,11 @@ package "Milky2018/wgpu_mbt/c"
 // Values
 pub fn adapter_has_feature_native_clear_texture(WGPUAdapter) -> Bool
 
+pub fn adapter_has_feature_native_immediates(WGPUAdapter) -> Bool
+
 pub fn adapter_has_feature_native_multiview(WGPUAdapter) -> Bool
 
 pub fn adapter_has_feature_native_pipeline_statistics_query(WGPUAdapter) -> Bool
-
-pub fn adapter_has_feature_native_push_constants(WGPUAdapter) -> Bool
 
 pub fn adapter_has_feature_native_spirv_shader_passthrough(WGPUAdapter) -> Bool
 
@@ -72,11 +72,11 @@ pub fn adapter_limits_max_dynamic_storage_buffers_per_pipeline_layout_u32(WGPUAd
 
 pub fn adapter_limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(WGPUAdapter) -> UInt
 
+pub fn adapter_limits_max_immediate_size_u32(WGPUAdapter) -> UInt
+
 pub fn adapter_limits_max_inter_stage_shader_variables_u32(WGPUAdapter) -> UInt
 
 pub fn adapter_limits_max_non_sampler_bindings_u32(WGPUAdapter) -> UInt
-
-pub fn adapter_limits_max_push_constant_size_u32(WGPUAdapter) -> UInt
 
 pub fn adapter_limits_max_sampled_textures_per_shader_stage_u32(WGPUAdapter) -> UInt
 
@@ -128,6 +128,8 @@ pub fn adapter_request_device_sync(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_clear_texture(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
+pub fn adapter_request_device_sync_immediates(WGPUInstance, WGPUAdapter) -> WGPUDevice
+
 pub fn adapter_request_device_sync_last_message_utf8(Bytes, UInt64) -> Bool
 
 pub fn adapter_request_device_sync_last_message_utf8_len() -> UInt64
@@ -139,8 +141,6 @@ pub fn adapter_request_device_sync_multiview(WGPUInstance, WGPUAdapter) -> WGPUD
 pub fn adapter_request_device_sync_pipeline_statistics_query(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_ptr(WGPUInstance, WGPUAdapter, WGPUDeviceDescriptorPtr) -> WGPUDevice
-
-pub fn adapter_request_device_sync_push_constants(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
 pub fn adapter_request_device_sync_spirv_shader_passthrough(WGPUInstance, WGPUAdapter) -> WGPUDevice
 
@@ -398,11 +398,11 @@ pub fn compute_pass_set_bind_group(WGPUComputePassEncoder, UInt, WGPUBindGroup, 
 
 pub fn compute_pass_set_bind_group0(WGPUComputePassEncoder, WGPUBindGroup) -> Unit
 
+pub fn compute_pass_set_immediates_bytes(WGPUComputePassEncoder, UInt, Bytes, UInt64) -> Unit
+
 pub fn compute_pass_set_label_utf8(WGPUComputePassEncoder, Bytes, UInt64) -> Unit
 
 pub fn compute_pass_set_pipeline(WGPUComputePassEncoder, WGPUComputePipeline) -> Unit
-
-pub fn compute_pass_set_push_constants_bytes(WGPUComputePassEncoder, UInt, Bytes, UInt64) -> Unit
 
 pub fn compute_pass_write_timestamp(WGPUComputePassEncoder, WGPUQuerySet, UInt) -> Unit
 
@@ -490,13 +490,13 @@ pub fn device_create_pipeline_layout_1(WGPUDevice, WGPUBindGroupLayout) -> WGPUP
 
 pub fn device_create_pipeline_layout_2(WGPUDevice, WGPUBindGroupLayout, WGPUBindGroupLayout) -> WGPUPipelineLayout
 
+pub fn device_create_pipeline_layout_immediates(WGPUDevice, UInt64, UInt, UInt) -> WGPUPipelineLayout
+
+pub fn device_create_pipeline_layout_immediates_many(WGPUDevice, UInt64, UInt, UInt, Array[(UInt64, UInt, UInt)]) -> WGPUPipelineLayout
+
 pub fn device_create_pipeline_layout_many(WGPUDevice, Array[WGPUBindGroupLayout]) -> WGPUPipelineLayout
 
-pub fn device_create_pipeline_layout_push_constants(WGPUDevice, UInt64, UInt, UInt) -> WGPUPipelineLayout
-
-pub fn device_create_pipeline_layout_push_constants_many(WGPUDevice, UInt64, UInt, UInt, Array[(UInt64, UInt, UInt)]) -> WGPUPipelineLayout
-
-pub fn device_create_pipeline_layout_with_push_constants(WGPUDevice, Array[WGPUBindGroupLayout], Array[(UInt64, UInt, UInt)]) -> WGPUPipelineLayout
+pub fn device_create_pipeline_layout_with_immediates(WGPUDevice, Array[WGPUBindGroupLayout], Array[(UInt64, UInt, UInt)]) -> WGPUPipelineLayout
 
 pub fn device_create_query_set(WGPUDevice, WGPUQuerySetDescriptorPtr) -> WGPUQuerySet
 
@@ -634,11 +634,11 @@ pub fn device_limits_max_dynamic_storage_buffers_per_pipeline_layout_u32(WGPUDev
 
 pub fn device_limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(WGPUDevice) -> UInt
 
+pub fn device_limits_max_immediate_size_u32(WGPUDevice) -> UInt
+
 pub fn device_limits_max_inter_stage_shader_variables_u32(WGPUDevice) -> UInt
 
 pub fn device_limits_max_non_sampler_bindings_u32(WGPUDevice) -> UInt
-
-pub fn device_limits_max_push_constant_size_u32(WGPUDevice) -> UInt
 
 pub fn device_limits_max_sampled_textures_per_shader_stage_u32(WGPUDevice) -> UInt
 
@@ -702,11 +702,11 @@ pub fn extent3d_new(UInt, UInt, UInt) -> WGPUExtent3DPtr
 
 pub fn feature_name_native_clear_texture() -> WGPUFeatureName
 
+pub fn feature_name_native_immediates() -> WGPUFeatureName
+
 pub fn feature_name_native_multiview() -> WGPUFeatureName
 
 pub fn feature_name_native_pipeline_statistics_query() -> WGPUFeatureName
-
-pub fn feature_name_native_push_constants() -> WGPUFeatureName
 
 pub fn feature_name_native_spirv_shader_passthrough() -> WGPUFeatureName
 
@@ -956,13 +956,13 @@ pub fn pipeline_layout_descriptor_empty_new() -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_descriptor_free(WGPUPipelineLayoutDescriptorPtr) -> Unit
 
+pub fn pipeline_layout_descriptor_immediates_many_new(UInt64, FixedArray[UInt64], FixedArray[UInt], FixedArray[UInt]) -> WGPUPipelineLayoutDescriptorPtr
+
+pub fn pipeline_layout_descriptor_immediates_new(UInt64, UInt, UInt) -> WGPUPipelineLayoutDescriptorPtr
+
 pub fn pipeline_layout_descriptor_many_new(UInt64, FixedArray[WGPUBindGroupLayout]) -> WGPUPipelineLayoutDescriptorPtr
 
-pub fn pipeline_layout_descriptor_push_constants_many_new(UInt64, FixedArray[UInt64], FixedArray[UInt], FixedArray[UInt]) -> WGPUPipelineLayoutDescriptorPtr
-
-pub fn pipeline_layout_descriptor_push_constants_new(UInt64, UInt, UInt) -> WGPUPipelineLayoutDescriptorPtr
-
-pub fn pipeline_layout_descriptor_with_push_constants_many_new(UInt64, FixedArray[WGPUBindGroupLayout], UInt64, FixedArray[UInt64], FixedArray[UInt], FixedArray[UInt]) -> WGPUPipelineLayoutDescriptorPtr
+pub fn pipeline_layout_descriptor_with_immediates_many_new(UInt64, FixedArray[WGPUBindGroupLayout], UInt64, FixedArray[UInt64], FixedArray[UInt], FixedArray[UInt]) -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_is_null(WGPUPipelineLayout) -> Bool
 
@@ -1046,11 +1046,11 @@ pub fn render_bundle_encoder_set_bind_group(WGPURenderBundleEncoder, UInt, WGPUB
 
 pub fn render_bundle_encoder_set_bind_group0(WGPURenderBundleEncoder, WGPUBindGroup) -> Unit
 
+pub fn render_bundle_encoder_set_immediates_bytes(WGPURenderBundleEncoder, UInt64, UInt, Bytes, UInt64) -> Unit
+
 pub fn render_bundle_encoder_set_label_utf8(WGPURenderBundleEncoder, Bytes, UInt64) -> Unit
 
 pub fn render_bundle_encoder_set_pipeline(WGPURenderBundleEncoder, WGPURenderPipeline) -> Unit
-
-pub fn render_bundle_encoder_set_push_constants_bytes(WGPURenderBundleEncoder, UInt64, UInt, Bytes, UInt64) -> Unit
 
 pub fn render_bundle_release(WGPURenderBundle) -> Unit
 
@@ -1120,6 +1120,8 @@ pub fn render_pass_set_bind_group0(WGPURenderPassEncoder, WGPUBindGroup) -> Unit
 
 pub fn render_pass_set_blend_constant_rgba(WGPURenderPassEncoder, Double, Double, Double, Double) -> Unit
 
+pub fn render_pass_set_immediates_bytes(WGPURenderPassEncoder, UInt64, UInt, Bytes, UInt64) -> Unit
+
 pub fn render_pass_set_index_buffer_u16(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
 
 pub fn render_pass_set_index_buffer_u32(WGPURenderPassEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
@@ -1127,8 +1129,6 @@ pub fn render_pass_set_index_buffer_u32(WGPURenderPassEncoder, WGPUBuffer, UInt6
 pub fn render_pass_set_label_utf8(WGPURenderPassEncoder, Bytes, UInt64) -> Unit
 
 pub fn render_pass_set_pipeline(WGPURenderPassEncoder, WGPURenderPipeline) -> Unit
-
-pub fn render_pass_set_push_constants_bytes(WGPURenderPassEncoder, UInt64, UInt, Bytes, UInt64) -> Unit
 
 pub fn render_pass_set_scissor_rect(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
 

@@ -15,7 +15,7 @@
 ///|
 fn compose_supported_rust_features_u64(
   has_depth_clip_control : Bool,
-  has_push_constants : Bool,
+  has_immediates : Bool,
   has_texture_atomic : Bool,
   has_shader_int64 : Bool,
   has_subgroup : Bool,
@@ -25,7 +25,7 @@ fn compose_supported_rust_features_u64(
   if has_depth_clip_control {
     supported.val = supported.val | FEATURES_DEPTH_CLIP_CONTROL
   }
-  if has_push_constants {
+  if has_immediates {
     supported.val = supported.val | FEATURES_PUSH_CONSTANTS
   }
   if has_texture_atomic {
@@ -90,7 +90,7 @@ pub fn Adapter::missing_rust_features_u64(
 pub fn Adapter::supported_rust_features_u64(self : Adapter) -> UInt64 {
   compose_supported_rust_features_u64(
     self.supported_features_contains_u32(FEATURE_NAME_DEPTH_CLIP_CONTROL),
-    self.has_feature_native_push_constants(),
+    self.has_feature_native_immediates(),
     self.has_feature_native_texture_atomic(),
     self.has_feature_native_shader_int64(),
     self.has_feature_native_subgroup(),
@@ -155,7 +155,7 @@ pub fn Device::missing_rust_features_u64(
 pub fn Device::supported_rust_features_u64(self : Device) -> UInt64 {
   compose_supported_rust_features_u64(
     self.has_feature_u32(FEATURE_NAME_DEPTH_CLIP_CONTROL),
-    self.has_feature_native_push_constants(),
+    self.has_feature_native_immediates(),
     self.has_feature_native_texture_atomic(),
     self.has_feature_native_shader_int64(),
     self.has_feature_native_subgroup(),

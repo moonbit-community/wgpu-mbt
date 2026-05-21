@@ -13,10 +13,10 @@
 // limitations under the License.
 
 ///|
-test "wgpu push constants (feature-gated)" {
+test "wgpu immediates (feature-gated)" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
-  if !adapter.has_feature_native_push_constants() {
+  if !adapter.has_feature_native_immediates() {
     inspect("unsupported", content="unsupported")
     adapter.release()
     instance.release()
@@ -92,10 +92,10 @@ test "wgpu push constants (feature-gated)" {
 }
 
 ///|
-test "wgpu push constants many ranges (feature-gated)" {
+test "wgpu immediates many ranges (feature-gated)" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
-  if !adapter.has_feature_native_push_constants() {
+  if !adapter.has_feature_native_immediates() {
     inspect("unsupported", content="unsupported")
     adapter.release()
     instance.release()
@@ -184,7 +184,7 @@ test "wgpu push constants many ranges (feature-gated)" {
 test "wgpu pipeline layout combines bind group and immediates (feature-gated)" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
-  if !adapter.has_feature_native_push_constants() {
+  if !adapter.has_feature_native_immediates() {
     inspect("unsupported", content="unsupported")
     adapter.release()
     instance.release()

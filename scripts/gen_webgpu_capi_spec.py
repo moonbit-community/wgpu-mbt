@@ -367,7 +367,6 @@ def write_webgpu_consts() -> None:
         uniq.append((name, ty, val))
 
     # Compatibility aliases:
-    # - wgpu-native renamed push constants to immediates in newer releases.
     # - WebGPU header uses `Subgroups` while many users expect `Subgroup`.
     by_name: dict[str, tuple[str, int]] = {name: (ty, val) for name, ty, val in uniq}
 
@@ -380,13 +379,10 @@ def write_webgpu_consts() -> None:
         by_name[alias] = base
         uniq.append((alias, base[0], base[1]))
 
-    add_alias("WGPUNativeFeature_Immediates", "WGPUNativeFeature_PushConstants")
-    add_alias("WGPUNativeFeature_PushConstants", "WGPUNativeFeature_Immediates")
     add_alias("WGPUFeatureName_Subgroup", "WGPUNativeFeature_Subgroup")
     add_alias("WGPUFeatureName_Subgroup", "WGPUFeatureName_Subgroups")
     add_alias("WGPUFeatureName_Subgroups", "WGPUFeatureName_Subgroup")
     add_alias("WGPUFeatureName_ShaderInt64", "WGPUNativeFeature_ShaderInt64")
-    add_alias("WGPUFeatureName_Immediates", "WGPUNativeFeature_Immediates")
 
     # Preserve public constants that were present in the v27-era API but are no
     # longer emitted by upstream v29 headers. They are still used as stable
