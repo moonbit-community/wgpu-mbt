@@ -1114,6 +1114,22 @@ typedef struct {
   WGPUBindGroupLayout layouts[];
 } mbt_pipeline_layout_desc_many_t;
 
+#if defined(_MSC_VER)
+#define MBT_WGPU_ALIGNOF(type) __alignof(type)
+#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L)
+#define MBT_WGPU_ALIGNOF(type) _Alignof(type)
+#else
+#define MBT_WGPU_ALIGNOF(type) sizeof(void *)
+#endif
+
+static size_t mbt_wgpu_align_up_size(size_t value, size_t alignment) {
+  if (alignment == 0u) {
+    return value;
+  }
+  size_t rem = value % alignment;
+  return rem == 0u ? value : value + (alignment - rem);
+}
+
 WGPUPipelineLayoutDescriptor *mbt_wgpu_pipeline_layout_descriptor_empty_new(void) {
   mbt_pipeline_layout_desc_many_t *out =
       (mbt_pipeline_layout_desc_many_t *)malloc(sizeof(mbt_pipeline_layout_desc_many_t));
@@ -1153,6 +1169,84 @@ mbt_wgpu_pipeline_layout_descriptor_many_new(uint64_t layout_count,
       .label = (WGPUStringView){.data = NULL, .length = 0},
       .bindGroupLayoutCount = (size_t)layout_count,
       .bindGroupLayouts = out->layouts,
+  };
+  return &out->desc;
+}
+
+typedef struct {
+  WGPUPipelineLayoutDescriptor desc;
+  WGPUPipelineLayoutExtras extras;
+  uint64_t layout_count;
+  uint64_t range_count;
+  unsigned char storage[];
+} mbt_pipeline_layout_desc_layouts_push_constants_t;
+
+WGPUPipelineLayoutDescriptor *
+mbt_wgpu_pipeline_layout_descriptor_with_push_constants_many_new(
+    uint64_t layout_count, const WGPUBindGroupLayout *layouts, uint64_t range_count,
+    const uint64_t *stages_u64, const uint32_t *starts_u32, const uint32_t *ends_u32) {
+  if ((layout_count != 0u && !layouts) ||
+      (range_count != 0u && (!stages_u64 || !starts_u32 || !ends_u32))) {
+    return NULL;
+  }
+  if (layout_count > (uint64_t)SIZE_MAX || range_count > (uint64_t)SIZE_MAX) {
+    return NULL;
+  }
+  if ((size_t)layout_count > SIZE_MAX / sizeof(WGPUBindGroupLayout) ||
+      (size_t)range_count > SIZE_MAX / sizeof(WGPUPushConstantRange)) {
+    return NULL;
+  }
+
+  size_t layouts_bytes = (size_t)layout_count * sizeof(WGPUBindGroupLayout);
+  size_t ranges_offset =
+      mbt_wgpu_align_up_size(layouts_bytes, MBT_WGPU_ALIGNOF(WGPUPushConstantRange));
+  size_t ranges_bytes = (size_t)range_count * sizeof(WGPUPushConstantRange);
+  if (ranges_offset > SIZE_MAX - ranges_bytes ||
+      sizeof(mbt_pipeline_layout_desc_layouts_push_constants_t) >
+          SIZE_MAX - ranges_offset - ranges_bytes) {
+    return NULL;
+  }
+  size_t bytes = sizeof(mbt_pipeline_layout_desc_layouts_push_constants_t) +
+                 ranges_offset + ranges_bytes;
+  mbt_pipeline_layout_desc_layouts_push_constants_t *out =
+      (mbt_pipeline_layout_desc_layouts_push_constants_t *)malloc(bytes);
+  if (!out) {
+    return NULL;
+  }
+
+  out->layout_count = layout_count;
+  out->range_count = range_count;
+  WGPUBindGroupLayout *stored_layouts =
+      layout_count == 0u ? NULL : (WGPUBindGroupLayout *)out->storage;
+  WGPUPushConstantRange *stored_ranges =
+      range_count == 0u ? NULL : (WGPUPushConstantRange *)(void *)(out->storage + ranges_offset);
+
+  for (uint64_t i = 0u; i < layout_count; i++) {
+    stored_layouts[i] = layouts[i];
+  }
+  for (uint64_t i = 0u; i < range_count; i++) {
+    stored_ranges[i] = (WGPUPushConstantRange){
+        .stages = (WGPUShaderStage)stages_u64[i],
+        .start = starts_u32[i],
+        .end = ends_u32[i],
+    };
+  }
+
+  out->extras = (WGPUPipelineLayoutExtras){
+      .chain =
+          (WGPUChainedStruct){
+              .next = NULL,
+              .sType = (WGPUSType)WGPUSType_PipelineLayoutExtras,
+          },
+      .pushConstantRangeCount = (size_t)range_count,
+      .pushConstantRanges = stored_ranges,
+  };
+
+  out->desc = (WGPUPipelineLayoutDescriptor){
+      .nextInChain = range_count == 0u ? NULL : &out->extras.chain,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .bindGroupLayoutCount = (size_t)layout_count,
+      .bindGroupLayouts = stored_layouts,
   };
   return &out->desc;
 }

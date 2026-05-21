@@ -1502,6 +1502,38 @@ pub fn Device::create_pipeline_layout_immediates_many(
 }
 
 ///|
+pub fn Device::create_pipeline_layout_with_push_constants(
+  self : Device,
+  bind_group_layouts : Array[BindGroupLayout],
+  ranges : Array[(ShaderStage, UInt, UInt)],
+) -> PipelineLayout {
+  let raw_layouts : Array[@c.BindGroupLayout] = bind_group_layouts.map(l => {
+    l.raw
+  })
+  let raw_ranges : Array[(UInt64, UInt, UInt)] = []
+  for i = 0; i < ranges.length(); i = i + 1 {
+    let (stages, start, end) = ranges[i]
+    raw_ranges.push((stages.raw, start, end))
+  }
+  PipelineLayout::{
+    raw: @c.device_create_pipeline_layout_with_push_constants(
+      self.raw,
+      raw_layouts,
+      raw_ranges,
+    ),
+  }
+}
+
+///|
+pub fn Device::create_pipeline_layout_with_immediates(
+  self : Device,
+  bind_group_layouts : Array[BindGroupLayout],
+  ranges : Array[(ShaderStage, UInt, UInt)],
+) -> PipelineLayout {
+  self.create_pipeline_layout_with_push_constants(bind_group_layouts, ranges)
+}
+
+///|
 pub fn Device::create_bind_group_storage_buffer(
   self : Device,
   bind_group_layout : BindGroupLayout,

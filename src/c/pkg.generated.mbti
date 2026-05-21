@@ -496,6 +496,8 @@ pub fn device_create_pipeline_layout_push_constants(WGPUDevice, UInt64, UInt, UI
 
 pub fn device_create_pipeline_layout_push_constants_many(WGPUDevice, UInt64, UInt, UInt, Array[(UInt64, UInt, UInt)]) -> WGPUPipelineLayout
 
+pub fn device_create_pipeline_layout_with_push_constants(WGPUDevice, Array[WGPUBindGroupLayout], Array[(UInt64, UInt, UInt)]) -> WGPUPipelineLayout
+
 pub fn device_create_query_set(WGPUDevice, WGPUQuerySetDescriptorPtr) -> WGPUQuerySet
 
 pub fn device_create_query_set_occlusion(WGPUDevice, UInt) -> WGPUQuerySet
@@ -959,6 +961,8 @@ pub fn pipeline_layout_descriptor_many_new(UInt64, FixedArray[WGPUBindGroupLayou
 pub fn pipeline_layout_descriptor_push_constants_many_new(UInt64, FixedArray[UInt64], FixedArray[UInt], FixedArray[UInt]) -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_descriptor_push_constants_new(UInt64, UInt, UInt) -> WGPUPipelineLayoutDescriptorPtr
+
+pub fn pipeline_layout_descriptor_with_push_constants_many_new(UInt64, FixedArray[WGPUBindGroupLayout], UInt64, FixedArray[UInt64], FixedArray[UInt], FixedArray[UInt]) -> WGPUPipelineLayoutDescriptorPtr
 
 pub fn pipeline_layout_is_null(WGPUPipelineLayout) -> Bool
 

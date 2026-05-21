@@ -3093,6 +3093,22 @@ declare pub fn Device::create_pipeline_layout_immediates_many(
 
 ///|
 #declaration_only
+declare pub fn Device::create_pipeline_layout_with_push_constants(
+  self : Device,
+  bind_group_layouts : Array[BindGroupLayout],
+  ranges : Array[(ShaderStage, UInt, UInt)],
+) -> PipelineLayout
+
+///|
+#declaration_only
+declare pub fn Device::create_pipeline_layout_with_immediates(
+  self : Device,
+  bind_group_layouts : Array[BindGroupLayout],
+  ranges : Array[(ShaderStage, UInt, UInt)],
+) -> PipelineLayout
+
+///|
+#declaration_only
 declare pub fn Device::release(self : Device) -> Unit
 
 ///|

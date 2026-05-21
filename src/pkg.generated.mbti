@@ -1831,6 +1831,8 @@ pub fn Device::create_pipeline_layout_many(Self, Array[BindGroupLayout]) -> Pipe
 pub fn Device::create_pipeline_layout_ptr(Self, @c.WGPUPipelineLayoutDescriptorPtr) -> PipelineLayout
 pub fn Device::create_pipeline_layout_push_constants(Self, ShaderStage, UInt, UInt) -> PipelineLayout
 pub fn Device::create_pipeline_layout_push_constants_many(Self, ShaderStage, UInt, UInt, Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
+pub fn Device::create_pipeline_layout_with_immediates(Self, Array[BindGroupLayout], Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
+pub fn Device::create_pipeline_layout_with_push_constants(Self, Array[BindGroupLayout], Array[(ShaderStage, UInt, UInt)]) -> PipelineLayout
 pub fn Device::create_query_set(Self, @c.WGPUQuerySetDescriptorPtr) -> QuerySet
 pub fn Device::create_query_set_occlusion(Self, UInt) -> QuerySet
 pub fn Device::create_query_set_pipeline_statistics(Self, UInt, UInt) -> QuerySet

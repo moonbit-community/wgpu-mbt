@@ -661,6 +661,38 @@ pub fn device_create_pipeline_layout_push_constants_many(
 }
 
 ///|
+pub fn device_create_pipeline_layout_with_push_constants(
+  device : Device,
+  bind_group_layouts : Array[BindGroupLayout],
+  ranges : Array[(UInt64, UInt, UInt)],
+) -> PipelineLayout {
+  if ranges.length() == 0 {
+    return device_create_pipeline_layout_many(device, bind_group_layouts)
+  }
+  let stages_all : Array[UInt64] = []
+  let starts_all : Array[UInt] = []
+  let ends_all : Array[UInt] = []
+  for i = 0; i < ranges.length(); i = i + 1 {
+    let (stages, start, end) = ranges[i]
+    stages_all.push(stages)
+    starts_all.push(start)
+    ends_all.push(end)
+  }
+  let layout_count = bind_group_layouts.length().to_uint64()
+  let range_count = ranges.length().to_uint64()
+  let layouts_fixed = FixedArray::from_array(bind_group_layouts[:])
+  let stages_fixed = FixedArray::from_array(stages_all[:])
+  let starts_fixed = FixedArray::from_array(starts_all[:])
+  let ends_fixed = FixedArray::from_array(ends_all[:])
+  let desc = pipeline_layout_descriptor_with_push_constants_many_new(
+    layout_count, layouts_fixed, range_count, stages_fixed, starts_fixed, ends_fixed,
+  )
+  let layout = wgpuDeviceCreatePipelineLayout(device, desc)
+  pipeline_layout_descriptor_free(desc)
+  layout
+}
+
+///|
 pub fn device_create_render_bundle_encoder_rgba8(
   device : Device,
 ) -> WGPURenderBundleEncoder {

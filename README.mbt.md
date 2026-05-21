@@ -230,6 +230,7 @@ For `WGPUDeviceExtras.tracePath`, you can set trace path on descriptor builders 
 - Pipeline layout extras with multiple push-constant ranges:
   - `@wgpu_c.pipeline_layout_descriptor_push_constants_many_new(...)`
   - `Device::create_pipeline_layout_push_constants_many(first_stages, first_start, first_end, other_ranges)`
+  - `Device::create_pipeline_layout_with_immediates(bind_group_layouts, ranges)`
 - Render pipeline primitive extras on builder:
   - `RenderPipelineDescBuilder::set_polygon_mode_u32(...)`
   - `RenderPipelineDescBuilder::set_conservative_rasterization(...)`
