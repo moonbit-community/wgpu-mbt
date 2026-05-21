@@ -63,6 +63,7 @@ options(
     "wgpu_pass_ptr_test.mbt": [ "native" ],
     "wgpu_perf_bench_test.mbt": [ "native" ],
     "wgpu_pipeline_async_sync_test.mbt": [ "native" ],
+    "wgpu_pipeline_layout_many_test.mbt": [ "native" ],
     "wgpu_pipeline_statistics_query_test.mbt": [ "native" ],
     "wgpu_ptr_constructors_test.mbt": [ "native" ],
     "wgpu_push_constants_test.mbt": [ "native" ],

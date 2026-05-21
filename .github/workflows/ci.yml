@@ -290,19 +290,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          MBT_WGPU_LINK_MODE=static moon run --target native src/cmd/main/main.mbt
+          MBT_WGPU_LINK_MODE=static moon run --target native --release src/cmd/main/main.mbt
 
       - name: Run common native test suite (static link)
         shell: bash
         run: |
           set -euo pipefail
-          MBT_WGPU_LINK_MODE=static moon test --target native src/tests --test-failure-json
+          MBT_WGPU_LINK_MODE=static moon test --target native --release src/tests --test-failure-json
 
       - name: Run platform-only native test suite (macOS, static link)
         shell: bash
         run: |
           set -euo pipefail
-          MBT_WGPU_LINK_MODE=static moon test --target native "$MBT_WGPU_PLATFORM_TEST_DIR" --test-failure-json
+          MBT_WGPU_LINK_MODE=static moon test --target native --release "$MBT_WGPU_PLATFORM_TEST_DIR" --test-failure-json
 
       - name: Dump wgpu diagnostics (on failure)
         if: failure()
@@ -318,7 +318,7 @@ jobs:
           moon run --target native src/cmd/main/main.mbt
           echo "[static]"
           moon clean
-          MBT_WGPU_LINK_MODE=static moon run --target native src/cmd/main/main.mbt
+          MBT_WGPU_LINK_MODE=static moon run --target native --release src/cmd/main/main.mbt
 
   windows:
     name: Windows (Lavapipe Vulkan, full)
