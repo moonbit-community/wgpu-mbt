@@ -218,6 +218,21 @@ pub fn RenderPipelineDescBuilder::set_color_target_format_at(
 }
 
 ///|
+pub fn RenderPipelineDescBuilder::set_color_target_unused_at(
+  self : RenderPipelineDescBuilder,
+  index_u32 : UInt,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_color_target_unused_at(
+    self.raw,
+    index_u32,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
 pub fn RenderPipelineDescBuilder::set_color_target_write_mask(
   self : RenderPipelineDescBuilder,
   write_mask_u64 : UInt64,
@@ -486,6 +501,25 @@ pub fn RenderPipelineDescBuilder::set_depth_stencil(
     depth_format.raw,
     depth_write_enabled,
     depth_compare_u32,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
+pub fn RenderPipelineDescBuilder::set_multisample(
+  self : RenderPipelineDescBuilder,
+  count_u32 : UInt,
+  mask_u32? : UInt = 0xFFFFFFFFU,
+  alpha_to_coverage_enabled? : Bool = false,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_multisample(
+    self.raw,
+    count_u32,
+    mask_u32,
+    alpha_to_coverage_enabled,
   )
   if err != 0U {
     raise self.last_error()

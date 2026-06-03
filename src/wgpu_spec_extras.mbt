@@ -2841,6 +2841,13 @@ declare pub fn RenderPipelineDescBuilder::set_color_target_format_at(
 
 ///|
 #declaration_only
+declare pub fn RenderPipelineDescBuilder::set_color_target_unused_at(
+  self : RenderPipelineDescBuilder,
+  index_u32 : UInt,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
 declare pub fn RenderPipelineDescBuilder::set_color_target_write_mask(
   self : RenderPipelineDescBuilder,
   write_mask_u64 : UInt64,
@@ -2971,6 +2978,15 @@ declare pub fn RenderPipelineDescBuilder::set_depth_stencil(
   depth_format : TextureFormat,
   depth_write_enabled? : Bool = true,
   depth_compare_u32? : UInt = COMPARE_FUNCTION_LESS,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
+declare pub fn RenderPipelineDescBuilder::set_multisample(
+  self : RenderPipelineDescBuilder,
+  count_u32 : UInt,
+  mask_u32? : UInt = 0xFFFFFFFFU,
+  alpha_to_coverage_enabled? : Bool = false,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
@@ -3250,6 +3266,57 @@ declare pub fn CommandEncoder::begin_render_pass_color2_depth(
   color0_view : TextureView,
   color1_view : TextureView,
   depth_view : TextureView,
+) -> RenderPass
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::begin_render_pass_color2_depth_sparse_u32(
+  self : CommandEncoder,
+  color0_view : TextureView,
+  color1_view : TextureView,
+  depth_view : TextureView,
+  color0_load_op_u32? : UInt,
+  color0_store_op_u32? : UInt,
+  color0_clear_r_f32? : Float,
+  color0_clear_g_f32? : Float,
+  color0_clear_b_f32? : Float,
+  color0_clear_a_f32? : Float,
+  color1_load_op_u32? : UInt,
+  color1_store_op_u32? : UInt,
+  color1_clear_r_f32? : Float,
+  color1_clear_g_f32? : Float,
+  color1_clear_b_f32? : Float,
+  color1_clear_a_f32? : Float,
+  depth_load_op_u32? : UInt,
+  depth_store_op_u32? : UInt,
+  depth_clear_value_f32? : Float,
+  depth_read_only? : Bool,
+  stencil_load_op_u32? : UInt,
+  stencil_store_op_u32? : UInt,
+  stencil_clear_value_u32? : UInt,
+  stencil_read_only? : Bool,
+) -> RenderPass
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::begin_render_pass_color1_depth_u32(
+  self : CommandEncoder,
+  color1_view : TextureView,
+  depth_view : TextureView,
+  color1_load_op_u32? : UInt,
+  color1_store_op_u32? : UInt,
+  color1_clear_r_f32? : Float,
+  color1_clear_g_f32? : Float,
+  color1_clear_b_f32? : Float,
+  color1_clear_a_f32? : Float,
+  depth_load_op_u32? : UInt,
+  depth_store_op_u32? : UInt,
+  depth_clear_value_f32? : Float,
+  depth_read_only? : Bool,
+  stencil_load_op_u32? : UInt,
+  stencil_store_op_u32? : UInt,
+  stencil_clear_value_u32? : UInt,
+  stencil_read_only? : Bool,
 ) -> RenderPass
 
 ///|
@@ -3939,6 +4006,10 @@ declare pub fn ShaderModule::release(self : ShaderModule) -> Unit
 ///|
 #declaration_only
 declare pub fn Sampler::release(self : Sampler) -> Unit
+
+///|
+#declaration_only
+declare pub fn TextureView::null() -> TextureView
 
 ///|
 #declaration_only

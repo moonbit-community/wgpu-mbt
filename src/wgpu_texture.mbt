@@ -132,6 +132,12 @@ pub fn TextureView::add_ref(self : TextureView) -> TextureView {
 }
 
 ///|
+/// Null texture view for nullable descriptor slots. Do not release it.
+pub fn TextureView::null() -> TextureView {
+  { raw: @c.null_texture_view() }
+}
+
+///|
 pub fn Texture::destroy(self : Texture) -> Unit {
   @c.texture_destroy(self.raw)
 }

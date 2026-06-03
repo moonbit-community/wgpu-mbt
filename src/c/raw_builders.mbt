@@ -306,6 +306,13 @@ pub extern "C" fn render_pipeline_desc_builder_set_color_target_format_at(
 
 ///|
 #borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_color_target_unused_at(
+  builder : RenderPipelineDescBuilderObj,
+  index_u32 : UInt,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_color_target_unused_at"
+
+///|
+#borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_color_target_write_mask(
   builder : RenderPipelineDescBuilderObj,
   write_mask_u64 : UInt64,
@@ -437,6 +444,15 @@ pub extern "C" fn render_pipeline_desc_builder_set_depth_stencil(
   depth_write_enabled : Bool,
   depth_compare_u32 : UInt,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_multisample(
+  builder : RenderPipelineDescBuilderObj,
+  count_u32 : UInt,
+  mask_u32 : UInt,
+  alpha_to_coverage_enabled : Bool,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_multisample"
 
 ///|
 #borrow(builder)

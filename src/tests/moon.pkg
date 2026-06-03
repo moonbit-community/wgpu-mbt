@@ -83,6 +83,7 @@ options(
     "wgpu_render_occlusion_query_test.mbt": [ "native" ],
     "wgpu_render_offscreen_test.mbt": [ "native" ],
     "wgpu_render_pipeline_entries_test.mbt": [ "native" ],
+    "wgpu_render_sparse_msaa_prepass_test.mbt": [ "native" ],
     "wgpu_render_texture_sampling_split_groups_test.mbt": [ "native" ],
     "wgpu_render_texture_sampling_test.mbt": [ "native" ],
     "wgpu_render_uniform_test.mbt": [ "native" ],

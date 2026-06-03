@@ -1752,8 +1752,10 @@ pub fn CommandEncoder::begin_compute_pass_ptr(Self, @c.WGPUComputePassDescriptor
 pub fn CommandEncoder::begin_compute_pass_raw(Self, @c.WGPUComputePassDescriptorPtr) -> ComputePass
 pub fn CommandEncoder::begin_render_pass(Self, @c.WGPURenderPassDescriptorPtr) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color(Self, TextureView) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_color1_depth_u32(Self, TextureView, TextureView, color1_load_op_u32? : UInt, color1_store_op_u32? : UInt, color1_clear_r_f32? : Float, color1_clear_g_f32? : Float, color1_clear_b_f32? : Float, color1_clear_a_f32? : Float, depth_load_op_u32? : UInt, depth_store_op_u32? : UInt, depth_clear_value_f32? : Float, depth_read_only? : Bool, stencil_load_op_u32? : UInt, stencil_store_op_u32? : UInt, stencil_clear_value_u32? : UInt, stencil_read_only? : Bool) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color2(Self, TextureView, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color2_depth(Self, TextureView, TextureView, TextureView) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_color2_depth_sparse_u32(Self, TextureView, TextureView, TextureView, color0_load_op_u32? : UInt, color0_store_op_u32? : UInt, color0_clear_r_f32? : Float, color0_clear_g_f32? : Float, color0_clear_b_f32? : Float, color0_clear_a_f32? : Float, color1_load_op_u32? : UInt, color1_store_op_u32? : UInt, color1_clear_r_f32? : Float, color1_clear_g_f32? : Float, color1_clear_b_f32? : Float, color1_clear_a_f32? : Float, depth_load_op_u32? : UInt, depth_store_op_u32? : UInt, depth_clear_value_f32? : Float, depth_read_only? : Bool, stencil_load_op_u32? : UInt, stencil_store_op_u32? : UInt, stencil_clear_value_u32? : UInt, stencil_read_only? : Bool) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color2_depth_u32(Self, TextureView, TextureView, TextureView, color0_load_op_u32? : UInt, color0_store_op_u32? : UInt, color0_clear_r_f32? : Float, color0_clear_g_f32? : Float, color0_clear_b_f32? : Float, color0_clear_a_f32? : Float, color1_load_op_u32? : UInt, color1_store_op_u32? : UInt, color1_clear_r_f32? : Float, color1_clear_g_f32? : Float, color1_clear_b_f32? : Float, color1_clear_a_f32? : Float, depth_load_op_u32? : UInt, depth_store_op_u32? : UInt, depth_clear_value_f32? : Float, depth_read_only? : Bool, stencil_load_op_u32? : UInt, stencil_store_op_u32? : UInt, stencil_clear_value_u32? : UInt, stencil_read_only? : Bool) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_clear(Self, TextureView, Float, Float, Float, Float) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_color_depth(Self, TextureView, TextureView) -> RenderPass
@@ -2448,6 +2450,7 @@ pub fn RenderPipelineDescBuilder::set_blend_components(Self, UInt, UInt, UInt, U
 pub fn RenderPipelineDescBuilder::set_color_target_count(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_color_target_format(Self, TextureFormat) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_color_target_format_at(Self, UInt, TextureFormat) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_color_target_unused_at(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_color_target_write_mask(Self, UInt64) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_color_target_write_mask_at(Self, UInt, UInt64) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_conservative_rasterization(Self, Bool) -> Unit raise RenderPipelineDescError
@@ -2455,6 +2458,7 @@ pub fn RenderPipelineDescBuilder::set_cull_mode_u32(Self, UInt) -> Unit raise Re
 pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_fragment_module(Self, ShaderModule) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_multisample(Self, UInt, mask_u32? : UInt, alpha_to_coverage_enabled? : Bool) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_unclipped_depth(Self, Bool) -> Unit raise RenderPipelineDescError
@@ -2628,6 +2632,7 @@ pub struct TextureView {
 }
 pub fn TextureView::add_ref(Self) -> Self
 pub fn TextureView::add_ref_raw(Self) -> Unit
+pub fn TextureView::null() -> Self
 pub fn TextureView::raw_handle(Self) -> @c.WGPUTextureView
 pub fn TextureView::release(Self) -> Unit
 pub fn TextureView::release_raw(Self) -> Unit

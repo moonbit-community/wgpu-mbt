@@ -294,6 +294,8 @@ pub fn command_encoder_begin_render_pass_color2(WGPUCommandEncoder, WGPUTextureV
 
 pub fn command_encoder_begin_render_pass_color2_depth(WGPUCommandEncoder, WGPUTextureView, WGPUTextureView, WGPUTextureView) -> WGPURenderPassEncoder
 
+pub fn command_encoder_begin_render_pass_color2_depth_sparse_u32(WGPUCommandEncoder, WGPUTextureView, WGPUTextureView, WGPUTextureView, UInt, UInt, Float, Float, Float, Float, UInt, UInt, Float, Float, Float, Float, UInt, UInt, Float, UInt, UInt, UInt, Bool, Bool) -> WGPURenderPassEncoder
+
 pub fn command_encoder_begin_render_pass_color2_depth_u32(WGPUCommandEncoder, WGPUTextureView, WGPUTextureView, WGPUTextureView, UInt, UInt, Float, Float, Float, Float, UInt, UInt, Float, Float, Float, Float, UInt, UInt, Float, UInt, UInt, UInt, Bool, Bool) -> WGPURenderPassEncoder
 
 pub fn command_encoder_begin_render_pass_color_clear(WGPUCommandEncoder, WGPUTextureView, Float, Float, Float, Float) -> WGPURenderPassEncoder
@@ -928,6 +930,8 @@ pub fn null_submission_index_ptr() -> WGPUSubmissionIndexPtr
 
 pub fn null_surface() -> WGPUSurface
 
+pub fn null_texture_view() -> WGPUTextureView
+
 pub fn null_texture_view_descriptor_ptr() -> WGPUTextureViewDescriptorPtr
 
 pub fn null_uint_ptr() -> UIntPtr
@@ -1064,6 +1068,8 @@ pub fn render_pass_descriptor_color2_clear_default_new(WGPUTextureView, WGPUText
 
 pub fn render_pass_descriptor_color2_depth_new(WGPUTextureView, WGPUTextureView, WGPUTextureView) -> WGPURenderPassDescriptorPtr
 
+pub fn render_pass_descriptor_color2_depth_sparse_u32_new(WGPUTextureView, UInt, UInt, Float, Float, Float, Float, WGPUTextureView, UInt, UInt, Float, Float, Float, Float, WGPUTextureView, UInt, UInt, Float, UInt, UInt, UInt, Bool, Bool) -> WGPURenderPassDescriptorPtr
+
 pub fn render_pass_descriptor_color2_depth_u32_new(WGPUTextureView, UInt, UInt, Float, Float, Float, Float, WGPUTextureView, UInt, UInt, Float, Float, Float, Float, WGPUTextureView, UInt, UInt, Float, UInt, UInt, UInt, Bool, Bool) -> WGPURenderPassDescriptorPtr
 
 pub fn render_pass_descriptor_color_clear_default_new(WGPUTextureView) -> WGPURenderPassDescriptorPtr
@@ -1172,6 +1178,8 @@ pub fn render_pipeline_desc_builder_set_color_target_format(RenderPipelineDescBu
 
 pub fn render_pipeline_desc_builder_set_color_target_format_at(RenderPipelineDescBuilderObj, UInt, UInt) -> UInt
 
+pub fn render_pipeline_desc_builder_set_color_target_unused_at(RenderPipelineDescBuilderObj, UInt) -> UInt
+
 pub fn render_pipeline_desc_builder_set_color_target_write_mask(RenderPipelineDescBuilderObj, UInt64) -> UInt
 
 pub fn render_pipeline_desc_builder_set_color_target_write_mask_at(RenderPipelineDescBuilderObj, UInt, UInt64) -> UInt
@@ -1185,6 +1193,8 @@ pub fn render_pipeline_desc_builder_set_depth_stencil(RenderPipelineDescBuilderO
 pub fn render_pipeline_desc_builder_set_entry_points_utf8(RenderPipelineDescBuilderObj, Bytes, UInt64, Bytes, UInt64) -> UInt
 
 pub fn render_pipeline_desc_builder_set_fragment_module(RenderPipelineDescBuilderObj, WGPUShaderModule) -> UInt
+
+pub fn render_pipeline_desc_builder_set_multisample(RenderPipelineDescBuilderObj, UInt, UInt, Bool) -> UInt
 
 pub fn render_pipeline_desc_builder_set_polygon_mode(RenderPipelineDescBuilderObj, UInt) -> UInt
 
