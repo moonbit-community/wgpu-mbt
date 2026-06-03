@@ -44,6 +44,9 @@ static void *mbt_appkit = NULL;
 static void *mbt_objc_get_class_sym = NULL;
 static void *mbt_sel_register_name_sym = NULL;
 static void *mbt_objc_msg_send_sym = NULL;
+static void *mbt_objc_allocate_class_pair_sym = NULL;
+static void *mbt_objc_register_class_pair_sym = NULL;
+static void *mbt_class_add_method_sym = NULL;
 #if defined(__x86_64__)
 static void *mbt_objc_msg_send_stret_sym = NULL;
 #endif
@@ -65,7 +68,14 @@ typedef struct {
 
 static uint32_t mbt_wgpu_macos_surface_last_status =
     MBT_WGPU_MACOS_SURFACE_STATUS_SUCCESS;
-static mbt_objc_id mbt_wgpu_macos_delegate_boundary_view = NULL;
+static mbt_objc_id mbt_wgpu_macos_surface_delegate = NULL;
+
+static mbt_objc_id mbt_wgpu_macos_surface_delegate_window(mbt_objc_id self,
+                                                          mbt_objc_sel cmd) {
+  (void)self;
+  (void)cmd;
+  return NULL;
+}
 
 static bool mbt_objc_init(void) {
   if (mbt_objc_get_class_sym && mbt_sel_register_name_sym && mbt_objc_msg_send_sym) {
@@ -95,6 +105,9 @@ static bool mbt_objc_init(void) {
   mbt_objc_get_class_sym = dlsym(mbt_objc_dylib, "objc_getClass");
   mbt_sel_register_name_sym = dlsym(mbt_objc_dylib, "sel_registerName");
   mbt_objc_msg_send_sym = dlsym(mbt_objc_dylib, "objc_msgSend");
+  mbt_objc_allocate_class_pair_sym = dlsym(mbt_objc_dylib, "objc_allocateClassPair");
+  mbt_objc_register_class_pair_sym = dlsym(mbt_objc_dylib, "objc_registerClassPair");
+  mbt_class_add_method_sym = dlsym(mbt_objc_dylib, "class_addMethod");
 #if defined(__x86_64__)
   mbt_objc_msg_send_stret_sym = dlsym(mbt_objc_dylib, "objc_msgSend_stret");
 #endif
@@ -155,12 +168,6 @@ static void mbt_objc_send_void_size(mbt_objc_id obj, const char *sel_name,
 static void mbt_objc_send_void_rect(mbt_objc_id obj, const char *sel_name,
                                     mbt_cg_rect_t value) {
   ((void (*)(mbt_objc_id, mbt_objc_sel, mbt_cg_rect_t))mbt_objc_msg_send_sym)(
-      obj, mbt_objc_selector(sel_name), value);
-}
-
-static bool mbt_objc_send_bool_id(mbt_objc_id obj, const char *sel_name,
-                                  mbt_objc_id value) {
-  return ((bool (*)(mbt_objc_id, mbt_objc_sel, mbt_objc_id))mbt_objc_msg_send_sym)(
       obj, mbt_objc_selector(sel_name), value);
 }
 
@@ -236,25 +243,38 @@ static double mbt_wgpu_macos_view_scale(mbt_objc_id view) {
   return scale;
 }
 
-static mbt_objc_id mbt_wgpu_macos_delegate_boundary(void) {
-  // Stop wgpu-native's Metal occlusion probe at the CAMetalLayer we own.
-  if (mbt_wgpu_macos_delegate_boundary_view) {
-    return mbt_wgpu_macos_delegate_boundary_view;
+static mbt_objc_id mbt_wgpu_macos_surface_delegate_singleton(void) {
+  if (mbt_wgpu_macos_surface_delegate) {
+    return mbt_wgpu_macos_surface_delegate;
   }
-  mbt_objc_class view_cls = mbt_objc_class_named("NSView");
-  if (!view_cls) {
+  if (!mbt_objc_allocate_class_pair_sym || !mbt_objc_register_class_pair_sym ||
+      !mbt_class_add_method_sym) {
     return NULL;
   }
-  mbt_objc_id allocated = mbt_objc_send_id((mbt_objc_id)view_cls, "alloc");
+  mbt_objc_class cls = mbt_objc_class_named("MbtWgpuMetalLayerDelegate");
+  if (!cls) {
+    mbt_objc_class base = mbt_objc_class_named("NSObject");
+    if (!base) {
+      return NULL;
+    }
+    cls = ((mbt_objc_class(*)(mbt_objc_class, const char *, size_t))
+               mbt_objc_allocate_class_pair_sym)(base, "MbtWgpuMetalLayerDelegate",
+                                                 0);
+    if (!cls) {
+      return NULL;
+    }
+    ((bool (*)(mbt_objc_class, mbt_objc_sel, void *, const char *))
+         mbt_class_add_method_sym)(
+        cls, mbt_objc_selector("window"),
+        (void *)mbt_wgpu_macos_surface_delegate_window, "@@:");
+    ((void (*)(mbt_objc_class))mbt_objc_register_class_pair_sym)(cls);
+  }
+  mbt_objc_id allocated = mbt_objc_send_id((mbt_objc_id)cls, "alloc");
   if (!allocated) {
     return NULL;
   }
-  mbt_cg_rect_t frame = {{0.0, 0.0}, {0.0, 0.0}};
-  mbt_objc_id view =
-      ((mbt_objc_id(*)(mbt_objc_id, mbt_objc_sel, mbt_cg_rect_t))
-           mbt_objc_msg_send_sym)(allocated, mbt_objc_selector("initWithFrame:"), frame);
-  mbt_wgpu_macos_delegate_boundary_view = view;
-  return mbt_wgpu_macos_delegate_boundary_view;
+  mbt_wgpu_macos_surface_delegate = mbt_objc_send_id(allocated, "init");
+  return mbt_wgpu_macos_surface_delegate;
 }
 
 uint32_t mbt_wgpu_macos_surface_last_status_u32(void) {
@@ -291,6 +311,8 @@ void mbt_wgpu_cametallayer_release(void *layer) {
   if (!mbt_objc_init()) {
     return;
   }
+  ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(
+      (mbt_objc_id)layer, mbt_objc_selector("removeFromSuperlayer"));
   mbt_objc_sel release_sel =
       ((mbt_objc_sel(*)(const char *))mbt_sel_register_name_sym)("release");
   ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)((mbt_objc_id)layer, release_sel);
@@ -334,14 +356,27 @@ uint32_t mbt_wgpu_macos_ns_view_sync_metal_layer(void *ns_view, void *layer) {
 
   mbt_objc_id view = (mbt_objc_id)ns_view;
   mbt_objc_id metal_layer = (mbt_objc_id)layer;
-  mbt_objc_id current_layer = mbt_objc_send_id(view, "layer");
-  if (current_layer != metal_layer) {
-    mbt_objc_send_void_id(view, "setLayer:", metal_layer);
-  }
   mbt_objc_send_void_bool(view, "setWantsLayer:", true);
-  mbt_objc_id delegate_boundary = mbt_wgpu_macos_delegate_boundary();
-  if (delegate_boundary) {
-    mbt_objc_send_void_id(metal_layer, "setDelegate:", delegate_boundary);
+  mbt_objc_id root_layer = mbt_objc_send_id(view, "layer");
+  if (!root_layer) {
+    mbt_wgpu_macos_surface_last_status =
+        MBT_WGPU_MACOS_SURFACE_STATUS_INVALID_METAL_LAYER;
+    return mbt_wgpu_macos_surface_last_status;
+  }
+  mbt_objc_id superlayer = mbt_objc_send_id(metal_layer, "superlayer");
+  if (superlayer != root_layer) {
+    if (superlayer) {
+      ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(
+          metal_layer, mbt_objc_selector("removeFromSuperlayer"));
+    }
+    mbt_objc_send_void_id(root_layer, "addSublayer:", metal_layer);
+  }
+  // The C API gives wgpu-native only a CAMetalLayer, not a window handle.
+  // Keep visibility ownership with the host window package instead of letting
+  // wgpu-native infer it from AppKit ancestor layers.
+  mbt_objc_id surface_delegate = mbt_wgpu_macos_surface_delegate_singleton();
+  if (surface_delegate) {
+    mbt_objc_send_void_id(metal_layer, "setDelegate:", surface_delegate);
   }
 
   mbt_cg_rect_t bounds = mbt_objc_send_rect(view, "bounds");
@@ -398,19 +433,11 @@ void *mbt_wgpu_macos_ns_view_prepare_metal_layer(void *ns_view) {
     return NULL;
   }
 
-  mbt_objc_id view = (mbt_objc_id)ns_view;
-  mbt_objc_id layer = mbt_objc_send_id(view, "layer");
-  if (!layer || !mbt_objc_send_bool_id(layer, "isKindOfClass:", (mbt_objc_id)metal_cls)) {
-    layer = (mbt_objc_id)mbt_wgpu_cametallayer_new();
-    if (!layer) {
-      mbt_wgpu_macos_surface_last_status =
-          MBT_WGPU_MACOS_SURFACE_STATUS_METAL_LAYER_UNAVAILABLE;
-      return NULL;
-    }
-    mbt_objc_send_void_id(view, "setLayer:", layer);
-    mbt_objc_send_void_bool(view, "setWantsLayer:", true);
-  } else {
-    mbt_wgpu_cametallayer_retain(layer);
+  mbt_objc_id layer = (mbt_objc_id)mbt_wgpu_cametallayer_new();
+  if (!layer) {
+    mbt_wgpu_macos_surface_last_status =
+        MBT_WGPU_MACOS_SURFACE_STATUS_METAL_LAYER_UNAVAILABLE;
+    return NULL;
   }
 
   uint32_t status = mbt_wgpu_macos_ns_view_sync_metal_layer(ns_view, layer);
@@ -537,15 +564,26 @@ void mbt_wgpu_macos_test_window_show(void *window) {
   if (!window || !mbt_appkit_loaded() || !mbt_wgpu_macos_is_main_thread()) {
     return;
   }
+  mbt_objc_class app_cls = mbt_objc_class_named("NSApplication");
+  mbt_objc_id app = app_cls ? mbt_objc_send_id((mbt_objc_id)app_cls, "sharedApplication") : NULL;
+  if (app) {
+    ((void (*)(mbt_objc_id, mbt_objc_sel, mbt_objc_id))mbt_objc_msg_send_sym)(
+        app, mbt_objc_selector("unhide:"), NULL);
+  }
   ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(
       (mbt_objc_id)window, mbt_objc_selector("center"));
   ((void (*)(mbt_objc_id, mbt_objc_sel, mbt_objc_id))mbt_objc_msg_send_sym)(
       (mbt_objc_id)window, mbt_objc_selector("makeKeyAndOrderFront:"), NULL);
   ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(
+      (mbt_objc_id)window, mbt_objc_selector("makeMainWindow"));
+  ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(
       (mbt_objc_id)window, mbt_objc_selector("orderFrontRegardless"));
+  if (app) {
+    mbt_objc_send_void_bool(app, "activateIgnoringOtherApps:", true);
+  }
   ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(
       (mbt_objc_id)window, mbt_objc_selector("displayIfNeeded"));
-  mbt_wgpu_macos_test_pump_events(4u);
+  mbt_wgpu_macos_test_pump_events(12u);
 }
 
 void mbt_wgpu_macos_test_window_release(void *window) {
