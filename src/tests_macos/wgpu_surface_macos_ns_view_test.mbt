@@ -66,3 +66,56 @@ test "wgpu surface macOS NSView path rejects null view" {
   )
   instance.release()
 }
+
+///|
+test "wgpu surface macOS NSWindow contentView path" {
+  let window = @wgpu_c.macos_test_window_new(64U, 64U)
+  inspect(@wgpu_c.opaque_ptr_is_null(window), content="false")
+  let view = @wgpu_c.macos_test_window_content_view(window)
+  inspect(@wgpu_c.opaque_ptr_is_null(view), content="false")
+  @wgpu_c.macos_test_window_show(window)
+  let view_u64 = @wgpu_c.opaque_ptr_to_u64(view)
+  inspect(view_u64 != 0UL, content="true")
+  let instance = @wgpu.Instance::create()
+  let surface = instance.create_surface_macos_ns_view_u64(view_u64)
+  let layer = surface.metal_layer_handle()
+  inspect(@wgpu_c.opaque_ptr_is_null(layer), content="false")
+  inspect(@wgpu_c.cametallayer_drawable_width_u32(layer) >= 64U, content="true")
+  inspect(
+    @wgpu_c.cametallayer_drawable_height_u32(layer) >= 64U,
+    content="true",
+  )
+  let adapter = instance.request_adapter_sync_options_surface_u32(
+    surface,
+    feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
+    backend_type_u32=@wgpu.BACKEND_TYPE_METAL,
+  )
+  let device = adapter.request_device_sync(instance)
+  let usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+  )
+  let format = surface.configure_default(adapter, device, 64U, 64U, usage)
+  inspect(format.raw == 0U, content="false")
+  let acquired : Ref[Bool] = @ref.new(false)
+  for _ in 0..<12 {
+    if !acquired.val {
+      @wgpu_c.macos_test_pump_events(2U)
+      surface.sync_macos_ns_view_layer_u64(view_u64)
+      let st = surface.get_current_texture()
+      if st.is_success() {
+        let tex = st.take_texture()
+        tex.release()
+        ignore(surface.present())
+        acquired.val = true
+      }
+      st.release()
+    }
+  }
+  inspect(acquired.val, content="true")
+  surface.unconfigure()
+  device.release()
+  adapter.release()
+  surface.release()
+  @wgpu_c.macos_test_window_release(window)
+  instance.release()
+}

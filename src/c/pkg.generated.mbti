@@ -880,6 +880,16 @@ pub fn macos_test_ns_view_release(OpaquePtr) -> Unit
 
 pub fn macos_test_ns_view_set_size(OpaquePtr, UInt, UInt) -> Unit
 
+pub fn macos_test_pump_events(UInt) -> Unit
+
+pub fn macos_test_window_content_view(OpaquePtr) -> OpaquePtr
+
+pub fn macos_test_window_new(UInt, UInt) -> OpaquePtr
+
+pub fn macos_test_window_release(OpaquePtr) -> Unit
+
+pub fn macos_test_window_show(OpaquePtr) -> Unit
+
 pub fn native_available_u32() -> UInt
 
 pub fn native_diagnostic_utf8(Bytes, UInt64) -> Bool

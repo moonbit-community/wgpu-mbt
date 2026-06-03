@@ -68,6 +68,29 @@ pub extern "C" fn macos_test_ns_view_new(
 ) -> OpaquePtr = "mbt_wgpu_macos_test_ns_view_new"
 
 ///|
+pub extern "C" fn macos_test_window_new(
+  width : UInt,
+  height : UInt,
+) -> OpaquePtr = "mbt_wgpu_macos_test_window_new"
+
+///|
+#borrow(window)
+pub extern "C" fn macos_test_window_content_view(
+  window : OpaquePtr,
+) -> OpaquePtr = "mbt_wgpu_macos_test_window_content_view"
+
+///|
+#borrow(window)
+pub extern "C" fn macos_test_window_show(window : OpaquePtr) -> Unit = "mbt_wgpu_macos_test_window_show"
+
+///|
+pub extern "C" fn macos_test_pump_events(iterations : UInt) -> Unit = "mbt_wgpu_macos_test_pump_events"
+
+///|
+#borrow(window)
+pub extern "C" fn macos_test_window_release(window : OpaquePtr) -> Unit = "mbt_wgpu_macos_test_window_release"
+
+///|
 #borrow(ns_view)
 pub extern "C" fn macos_test_ns_view_set_size(
   ns_view : OpaquePtr,
