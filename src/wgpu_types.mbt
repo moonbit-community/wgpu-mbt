@@ -194,12 +194,15 @@ pub fn PresentMode::to_u32(self : PresentMode) -> UInt {
 }
 
 ///|
-pub impl Eq for PresentMode with equal(self : PresentMode, other : PresentMode) -> Bool {
+pub impl Eq for PresentMode with fn equal(
+  self : PresentMode,
+  other : PresentMode,
+) -> Bool {
   self.raw == other.raw
 }
 
 ///|
-pub impl Eq for PresentMode with not_equal(
+pub impl Eq for PresentMode with fn not_equal(
   self : PresentMode,
   other : PresentMode,
 ) -> Bool {
@@ -222,7 +225,7 @@ pub fn CompositeAlphaMode::to_u32(self : CompositeAlphaMode) -> UInt {
 }
 
 ///|
-pub impl Eq for CompositeAlphaMode with equal(
+pub impl Eq for CompositeAlphaMode with fn equal(
   self : CompositeAlphaMode,
   other : CompositeAlphaMode,
 ) -> Bool {
@@ -230,7 +233,7 @@ pub impl Eq for CompositeAlphaMode with equal(
 }
 
 ///|
-pub impl Eq for CompositeAlphaMode with not_equal(
+pub impl Eq for CompositeAlphaMode with fn not_equal(
   self : CompositeAlphaMode,
   other : CompositeAlphaMode,
 ) -> Bool {
@@ -256,7 +259,7 @@ pub fn TextureFormat::to_u32(self : TextureFormat) -> UInt {
 }
 
 ///|
-pub impl Eq for TextureFormat with equal(
+pub impl Eq for TextureFormat with fn equal(
   self : TextureFormat,
   other : TextureFormat,
 ) -> Bool {
@@ -264,7 +267,7 @@ pub impl Eq for TextureFormat with equal(
 }
 
 ///|
-pub impl Eq for TextureFormat with not_equal(
+pub impl Eq for TextureFormat with fn not_equal(
   self : TextureFormat,
   other : TextureFormat,
 ) -> Bool {
@@ -287,7 +290,7 @@ pub fn TextureDimension::to_u32(self : TextureDimension) -> UInt {
 }
 
 ///|
-pub impl Eq for TextureDimension with equal(
+pub impl Eq for TextureDimension with fn equal(
   self : TextureDimension,
   other : TextureDimension,
 ) -> Bool {
@@ -295,7 +298,7 @@ pub impl Eq for TextureDimension with equal(
 }
 
 ///|
-pub impl Eq for TextureDimension with not_equal(
+pub impl Eq for TextureDimension with fn not_equal(
   self : TextureDimension,
   other : TextureDimension,
 ) -> Bool {
@@ -318,7 +321,7 @@ pub fn TextureUsage::to_u64(self : TextureUsage) -> UInt64 {
 }
 
 ///|
-pub impl Eq for TextureUsage with equal(
+pub impl Eq for TextureUsage with fn equal(
   self : TextureUsage,
   other : TextureUsage,
 ) -> Bool {
@@ -326,7 +329,7 @@ pub impl Eq for TextureUsage with equal(
 }
 
 ///|
-pub impl Eq for TextureUsage with not_equal(
+pub impl Eq for TextureUsage with fn not_equal(
   self : TextureUsage,
   other : TextureUsage,
 ) -> Bool {
@@ -349,12 +352,15 @@ pub fn BufferUsage::to_u64(self : BufferUsage) -> UInt64 {
 }
 
 ///|
-pub impl Eq for BufferUsage with equal(self : BufferUsage, other : BufferUsage) -> Bool {
+pub impl Eq for BufferUsage with fn equal(
+  self : BufferUsage,
+  other : BufferUsage,
+) -> Bool {
   self.raw == other.raw
 }
 
 ///|
-pub impl Eq for BufferUsage with not_equal(
+pub impl Eq for BufferUsage with fn not_equal(
   self : BufferUsage,
   other : BufferUsage,
 ) -> Bool {
@@ -377,12 +383,15 @@ pub fn ShaderStage::to_u64(self : ShaderStage) -> UInt64 {
 }
 
 ///|
-pub impl Eq for ShaderStage with equal(self : ShaderStage, other : ShaderStage) -> Bool {
+pub impl Eq for ShaderStage with fn equal(
+  self : ShaderStage,
+  other : ShaderStage,
+) -> Bool {
   self.raw == other.raw
 }
 
 ///|
-pub impl Eq for ShaderStage with not_equal(
+pub impl Eq for ShaderStage with fn not_equal(
   self : ShaderStage,
   other : ShaderStage,
 ) -> Bool {
@@ -405,12 +414,12 @@ pub fn MapMode::to_u64(self : MapMode) -> UInt64 {
 }
 
 ///|
-pub impl Eq for MapMode with equal(self : MapMode, other : MapMode) -> Bool {
+pub impl Eq for MapMode with fn equal(self : MapMode, other : MapMode) -> Bool {
   self.raw == other.raw
 }
 
 ///|
-pub impl Eq for MapMode with not_equal(self : MapMode, other : MapMode) -> Bool {
+pub impl Eq for MapMode with fn not_equal(self : MapMode, other : MapMode) -> Bool {
   self.raw != other.raw
 }
 
