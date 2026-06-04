@@ -67,16 +67,17 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases on callb
     let rel0_queues = report0.hub_queues_num_released_from_user()
     report0.release()
 
-    ignore(
-      try? instance.with_device_queue_sync((device, _queue) => {
-        let buf = device.create_buffer(
-          size=4UL,
-          usage=bu(@wgpu.BUFFER_USAGE_COPY_DST),
-        )
-        buf.release()
-        raise LifecycleHelperCallbackFailed("callback error")
-      }),
-    )
+    instance.with_device_queue_sync((device, _queue) => {
+      let buf = device.create_buffer(
+        size=4UL,
+        usage=bu(@wgpu.BUFFER_USAGE_COPY_DST),
+      )
+      buf.release()
+      raise LifecycleHelperCallbackFailed("callback error")
+    }) catch {
+      LifecycleHelperCallbackFailed(_) => ()
+      e => raise e
+    }
 
     instance.process_events()
     let report1 = instance.generate_report()
@@ -102,15 +103,16 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_auto_release releases 
     let rel0_buffers = report0.hub_buffers_num_released_from_user()
     report0.release()
 
-    ignore(
-      try? instance.with_device_queue_auto_release((device, _queue, pool) => {
-        let buf = pool.track_buffer(
-          device.create_buffer(size=4UL, usage=bu(@wgpu.BUFFER_USAGE_COPY_DST)),
-        )
-        ignore(buf.size())
-        raise LifecycleHelperCallbackFailed("callback error")
-      }),
-    )
+    instance.with_device_queue_auto_release((device, _queue, pool) => {
+      let buf = pool.track_buffer(
+        device.create_buffer(size=4UL, usage=bu(@wgpu.BUFFER_USAGE_COPY_DST)),
+      )
+      ignore(buf.size())
+      raise LifecycleHelperCallbackFailed("callback error")
+    }) catch {
+      LifecycleHelperCallbackFailed(_) => ()
+      e => raise e
+    }
 
     instance.process_events()
     let report1 = instance.generate_report()
