@@ -200,6 +200,10 @@ pub type BindGroupBuilder
 
 ///|
 #declaration_only
+pub type RenderPassDescBuilder
+
+///|
+#declaration_only
 pub type RenderPipelineDescBuilder
 
 ///|

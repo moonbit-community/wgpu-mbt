@@ -161,6 +161,11 @@ pub extern "C" fn compute_pipeline_descriptor_ptr_is_null(
 ) -> Bool = "mbt_wgpu_compute_pipeline_descriptor_ptr_is_null"
 
 ///|
+pub extern "C" fn render_pass_descriptor_ptr_is_null(
+  p : WGPURenderPassDescriptorPtr,
+) -> Bool = "mbt_wgpu_render_pass_descriptor_ptr_is_null"
+
+///|
 fn align_up_u32(value : UInt, align : UInt) -> UInt {
   let rem = value % align
   if rem == 0U {

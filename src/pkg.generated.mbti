@@ -724,6 +724,12 @@ pub const QUEUE_WORK_DONE_STATUS_SUCCESS : UInt = 0x00000001
 
 pub const QUEUE_WORK_DONE_STATUS_UNKNOWN : UInt = 0x00000004
 
+pub const RENDER_PASS_DESC_ERR_COLOR_ATTACHMENT_INDEX_OOB : UInt = 2
+
+pub const RENDER_PASS_DESC_ERR_NULL_BUILDER : UInt = 1
+
+pub const RENDER_PASS_DESC_ERR_OOM : UInt = 3
+
 pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_EXCEEDS_MAX : UInt = 5
 
 pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_ZERO : UInt = 4
@@ -1450,6 +1456,9 @@ pub fn QueueWorkDoneError::status_u32(Self) -> UInt
 type QueueWorkDoneWaitError
 pub fn QueueWorkDoneWaitError::message(Self) -> String
 
+type RenderPassDescError
+pub fn RenderPassDescError::message(Self) -> String
+
 type RenderPipelineDescError
 pub fn RenderPipelineDescError::message(Self) -> String
 
@@ -1764,6 +1773,7 @@ pub fn CommandEncoder::begin_render_pass_color_load(Self, TextureView) -> Render
 pub fn CommandEncoder::begin_render_pass_color_occlusion(Self, TextureView, QuerySet) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_depth(Self, TextureView) -> RenderPass
 pub fn CommandEncoder::begin_render_pass_depth_u32(Self, TextureView, depth_load_op_u32? : UInt, depth_store_op_u32? : UInt, depth_clear_value_f32? : Float, depth_read_only? : Bool, stencil_load_op_u32? : UInt, stencil_store_op_u32? : UInt, stencil_clear_value_u32? : UInt, stencil_read_only? : Bool) -> RenderPass
+pub fn CommandEncoder::begin_render_pass_desc_builder(Self, RenderPassDescBuilder) -> RenderPass raise RenderPassDescError
 pub fn CommandEncoder::begin_render_pass_ptr(Self, @c.WGPURenderPassDescriptorPtr) -> RenderPass
 pub fn CommandEncoder::clear_buffer(Self, Buffer, UInt64, UInt64) -> Unit
 pub fn CommandEncoder::clear_buffer_raw(Self, Buffer, UInt64, UInt64) -> Unit
@@ -2419,6 +2429,20 @@ pub fn RenderPass::set_viewport(Self, Float, Float, Float, Float, Float, Float) 
 pub fn RenderPass::set_viewport_raw(Self, Float, Float, Float, Float, Float, Float) -> Unit
 pub fn RenderPass::write_timestamp(Self, QuerySet, UInt) -> Unit
 pub fn RenderPass::write_timestamp_raw(Self, QuerySet, UInt) -> Unit
+
+pub struct RenderPassDescBuilder {
+  raw : @c.RenderPassDescBuilderObj
+}
+pub fn RenderPassDescBuilder::begin(Self, CommandEncoder) -> RenderPass raise RenderPassDescError
+pub fn RenderPassDescBuilder::clear_color_attachment_resolve_target(Self, UInt) -> Unit raise RenderPassDescError
+pub fn RenderPassDescBuilder::clear_depth_stencil_attachment(Self) -> Unit raise RenderPassDescError
+pub fn RenderPassDescBuilder::finish_descriptor_ptr(Self) -> @c.WGPURenderPassDescriptorPtr raise RenderPassDescError
+pub fn RenderPassDescBuilder::free(Self) -> Unit
+pub fn RenderPassDescBuilder::last_error(Self) -> RenderPassDescError
+pub fn RenderPassDescBuilder::new(UInt) -> Self raise RenderPassDescError
+pub fn RenderPassDescBuilder::set_color_attachment(Self, UInt, TextureView, load_op_u32? : UInt, store_op_u32? : UInt, clear_r_f32? : Float, clear_g_f32? : Float, clear_b_f32? : Float, clear_a_f32? : Float) -> Unit raise RenderPassDescError
+pub fn RenderPassDescBuilder::set_color_attachment_resolve_target(Self, UInt, TextureView) -> Unit raise RenderPassDescError
+pub fn RenderPassDescBuilder::set_depth_stencil_attachment(Self, TextureView, depth_load_op_u32? : UInt, depth_store_op_u32? : UInt, depth_clear_value_f32? : Float, stencil_load_op_u32? : UInt, stencil_store_op_u32? : UInt, stencil_clear_value_u32? : UInt, depth_read_only? : Bool, stencil_read_only? : Bool) -> Unit raise RenderPassDescError
 
 pub struct RenderPipeline {
   raw : @c.WGPURenderPipeline

@@ -708,6 +708,94 @@ pub extern "C" fn compute_pass_descriptor_free(
 ) -> Unit = "mbt_wgpu_compute_pass_descriptor_free"
 
 ///|
+pub type RenderPassDescBuilderObj
+
+///|
+pub extern "C" fn render_pass_desc_builder_new(
+  color_attachment_count : UInt,
+) -> RenderPassDescBuilderObj = "mbt_wgpu_render_pass_desc_builder_new"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_is_null(
+  builder : RenderPassDescBuilderObj,
+) -> Bool = "mbt_wgpu_render_pass_desc_builder_is_null"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_last_error_u32(
+  builder : RenderPassDescBuilderObj,
+) -> UInt = "mbt_wgpu_render_pass_desc_builder_last_error_u32"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_last_error_args_u64(
+  builder : RenderPassDescBuilderObj,
+) -> UInt64 = "mbt_wgpu_render_pass_desc_builder_last_error_args_u64"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_set_color_attachment_u32(
+  builder : RenderPassDescBuilderObj,
+  index_u32 : UInt,
+  view : WGPUTextureView,
+  load_op_u32 : UInt,
+  store_op_u32 : UInt,
+  clear_r_f32 : Float,
+  clear_g_f32 : Float,
+  clear_b_f32 : Float,
+  clear_a_f32 : Float,
+) -> UInt = "mbt_wgpu_render_pass_desc_builder_set_color_attachment_u32"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_set_color_attachment_resolve_target(
+  builder : RenderPassDescBuilderObj,
+  index_u32 : UInt,
+  resolve_target : WGPUTextureView,
+) -> UInt = "mbt_wgpu_render_pass_desc_builder_set_color_attachment_resolve_target"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_clear_color_attachment_resolve_target(
+  builder : RenderPassDescBuilderObj,
+  index_u32 : UInt,
+) -> UInt = "mbt_wgpu_render_pass_desc_builder_clear_color_attachment_resolve_target"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_set_depth_stencil_attachment_u32(
+  builder : RenderPassDescBuilderObj,
+  depth_view : WGPUTextureView,
+  depth_load_op_u32 : UInt,
+  depth_store_op_u32 : UInt,
+  depth_clear_value_f32 : Float,
+  stencil_load_op_u32 : UInt,
+  stencil_store_op_u32 : UInt,
+  stencil_clear_value_u32 : UInt,
+  depth_read_only : Bool,
+  stencil_read_only : Bool,
+) -> UInt = "mbt_wgpu_render_pass_desc_builder_set_depth_stencil_attachment_u32"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_clear_depth_stencil_attachment(
+  builder : RenderPassDescBuilderObj,
+) -> UInt = "mbt_wgpu_render_pass_desc_builder_clear_depth_stencil_attachment"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_finish(
+  builder : RenderPassDescBuilderObj,
+) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_desc_builder_finish"
+
+///|
+#borrow(builder)
+pub extern "C" fn render_pass_desc_builder_free(
+  builder : RenderPassDescBuilderObj,
+) -> Unit = "mbt_wgpu_render_pass_desc_builder_free"
+
+///|
 pub extern "C" fn render_pass_descriptor_color_clear_default_new(
   view : WGPUTextureView,
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_clear_default_new"

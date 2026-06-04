@@ -2714,6 +2714,253 @@ typedef struct {
   WGPURenderPassDepthStencilAttachment depth;
 } mbt_render_pass_desc_depth_t;
 
+enum {
+  MBT_WGPU_RENDER_PASS_DESC_OK = 0u,
+  MBT_WGPU_RENDER_PASS_DESC_ERR_NULL_BUILDER = 1u,
+  MBT_WGPU_RENDER_PASS_DESC_ERR_COLOR_ATTACHMENT_INDEX_OOB = 2u,
+  MBT_WGPU_RENDER_PASS_DESC_ERR_OOM = 3u,
+};
+
+typedef struct {
+  WGPURenderPassDescriptor desc;
+  WGPURenderPassDepthStencilAttachment depth;
+  uint32_t color_attachment_count;
+  uint32_t last_error;
+  uint32_t last_error_a;
+  uint32_t last_error_b;
+  WGPURenderPassColorAttachment colors[];
+} mbt_render_pass_desc_builder_t;
+
+typedef struct {
+  mbt_render_pass_desc_builder_t *builder;
+} mbt_render_pass_desc_builder_handle_t;
+
+static void mbt_wgpu_render_pass_desc_builder_clear_error(
+    mbt_render_pass_desc_builder_t *builder) {
+  if (!builder) {
+    return;
+  }
+  builder->last_error = MBT_WGPU_RENDER_PASS_DESC_OK;
+  builder->last_error_a = 0u;
+  builder->last_error_b = 0u;
+}
+
+static uint32_t mbt_wgpu_render_pass_desc_builder_set_error(
+    mbt_render_pass_desc_builder_t *builder, uint32_t code, uint32_t a, uint32_t b) {
+  if (builder) {
+    builder->last_error = code;
+    builder->last_error_a = a;
+    builder->last_error_b = b;
+  }
+  return code;
+}
+
+static mbt_render_pass_desc_builder_t *
+mbt_wgpu_render_pass_desc_builder_unwrap(void *builder) {
+  mbt_render_pass_desc_builder_handle_t *handle =
+      (mbt_render_pass_desc_builder_handle_t *)builder;
+  if (!handle) {
+    return NULL;
+  }
+  return handle->builder;
+}
+
+static uint32_t mbt_wgpu_render_pass_desc_builder_check_color_index(
+    mbt_render_pass_desc_builder_t *builder, uint32_t index) {
+  if (index >= builder->color_attachment_count) {
+    return mbt_wgpu_render_pass_desc_builder_set_error(
+        builder, MBT_WGPU_RENDER_PASS_DESC_ERR_COLOR_ATTACHMENT_INDEX_OOB, index,
+        builder->color_attachment_count);
+  }
+  return MBT_WGPU_RENDER_PASS_DESC_OK;
+}
+
+static void mbt_wgpu_render_pass_desc_builder_drop(
+    mbt_render_pass_desc_builder_handle_t *handle) {
+  if (!handle || !handle->builder) {
+    return;
+  }
+  free(handle->builder);
+  handle->builder = NULL;
+}
+
+static void mbt_wgpu_render_pass_desc_builder_finalize(void *self) {
+  mbt_wgpu_render_pass_desc_builder_drop(
+      (mbt_render_pass_desc_builder_handle_t *)self);
+}
+
+void *mbt_wgpu_render_pass_desc_builder_new(uint32_t color_attachment_count) {
+  size_t color_bytes =
+      (size_t)color_attachment_count * sizeof(WGPURenderPassColorAttachment);
+  mbt_render_pass_desc_builder_t *inner =
+      (mbt_render_pass_desc_builder_t *)malloc(sizeof(mbt_render_pass_desc_builder_t) +
+                                               color_bytes);
+  if (!inner) {
+    return NULL;
+  }
+  memset(inner, 0, sizeof(mbt_render_pass_desc_builder_t) + color_bytes);
+  inner->color_attachment_count = color_attachment_count;
+  mbt_wgpu_render_pass_desc_builder_clear_error(inner);
+
+  for (uint32_t i = 0; i < color_attachment_count; i++) {
+    inner->colors[i] = (WGPURenderPassColorAttachment){
+        .nextInChain = NULL,
+        .view = NULL,
+        .depthSlice = WGPU_DEPTH_SLICE_UNDEFINED,
+        .resolveTarget = NULL,
+        .loadOp = WGPULoadOp_Clear,
+        .storeOp = WGPUStoreOp_Store,
+        .clearValue = (WGPUColor){.r = 0.0, .g = 0.0, .b = 0.0, .a = 1.0},
+    };
+  }
+
+  inner->desc = (WGPURenderPassDescriptor){
+      .nextInChain = NULL,
+      .label = (WGPUStringView){.data = NULL, .length = 0},
+      .colorAttachmentCount = (size_t)color_attachment_count,
+      .colorAttachments = color_attachment_count == 0u ? NULL : inner->colors,
+      .depthStencilAttachment = NULL,
+      .occlusionQuerySet = NULL,
+      .timestampWrites = NULL,
+  };
+
+  mbt_render_pass_desc_builder_handle_t *handle =
+      (mbt_render_pass_desc_builder_handle_t *)moonbit_make_external_object(
+          mbt_wgpu_render_pass_desc_builder_finalize,
+          sizeof(mbt_render_pass_desc_builder_handle_t));
+  if (!handle) {
+    free(inner);
+    return NULL;
+  }
+  handle->builder = inner;
+  return handle;
+}
+
+int32_t mbt_wgpu_render_pass_desc_builder_is_null(void *builder) {
+  return mbt_wgpu_render_pass_desc_builder_unwrap(builder) == NULL;
+}
+
+void mbt_wgpu_render_pass_desc_builder_free(void *builder) {
+  mbt_wgpu_render_pass_desc_builder_drop(
+      (mbt_render_pass_desc_builder_handle_t *)builder);
+}
+
+uint32_t mbt_wgpu_render_pass_desc_builder_last_error_u32(void *builder) {
+  mbt_render_pass_desc_builder_t *out =
+      mbt_wgpu_render_pass_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RENDER_PASS_DESC_ERR_NULL_BUILDER;
+  }
+  return out->last_error;
+}
+
+uint64_t mbt_wgpu_render_pass_desc_builder_last_error_args_u64(void *builder) {
+  mbt_render_pass_desc_builder_t *out =
+      mbt_wgpu_render_pass_desc_builder_unwrap(builder);
+  if (!out) {
+    return 0u;
+  }
+  return ((uint64_t)out->last_error_a << 32) | (uint64_t)out->last_error_b;
+}
+
+uint32_t mbt_wgpu_render_pass_desc_builder_set_color_attachment_u32(
+    void *builder, uint32_t index, WGPUTextureView view, uint32_t load_op_u32,
+    uint32_t store_op_u32, float clear_r_f32, float clear_g_f32, float clear_b_f32,
+    float clear_a_f32) {
+  mbt_render_pass_desc_builder_t *out =
+      mbt_wgpu_render_pass_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RENDER_PASS_DESC_ERR_NULL_BUILDER;
+  }
+  mbt_wgpu_render_pass_desc_builder_clear_error(out);
+  uint32_t err = mbt_wgpu_render_pass_desc_builder_check_color_index(out, index);
+  if (err != MBT_WGPU_RENDER_PASS_DESC_OK) {
+    return err;
+  }
+  out->colors[index].view = view;
+  out->colors[index].loadOp = (WGPULoadOp)load_op_u32;
+  out->colors[index].storeOp = (WGPUStoreOp)store_op_u32;
+  out->colors[index].clearValue = (WGPUColor){
+      .r = clear_r_f32,
+      .g = clear_g_f32,
+      .b = clear_b_f32,
+      .a = clear_a_f32,
+  };
+  return MBT_WGPU_RENDER_PASS_DESC_OK;
+}
+
+uint32_t mbt_wgpu_render_pass_desc_builder_set_color_attachment_resolve_target(
+    void *builder, uint32_t index, WGPUTextureView resolve_target) {
+  mbt_render_pass_desc_builder_t *out =
+      mbt_wgpu_render_pass_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RENDER_PASS_DESC_ERR_NULL_BUILDER;
+  }
+  mbt_wgpu_render_pass_desc_builder_clear_error(out);
+  uint32_t err = mbt_wgpu_render_pass_desc_builder_check_color_index(out, index);
+  if (err != MBT_WGPU_RENDER_PASS_DESC_OK) {
+    return err;
+  }
+  out->colors[index].resolveTarget = resolve_target;
+  return MBT_WGPU_RENDER_PASS_DESC_OK;
+}
+
+uint32_t mbt_wgpu_render_pass_desc_builder_clear_color_attachment_resolve_target(
+    void *builder, uint32_t index) {
+  return mbt_wgpu_render_pass_desc_builder_set_color_attachment_resolve_target(
+      builder, index, NULL);
+}
+
+uint32_t mbt_wgpu_render_pass_desc_builder_set_depth_stencil_attachment_u32(
+    void *builder, WGPUTextureView depth_view, uint32_t depth_load_op_u32,
+    uint32_t depth_store_op_u32, float depth_clear_value_f32,
+    uint32_t stencil_load_op_u32, uint32_t stencil_store_op_u32,
+    uint32_t stencil_clear_value_u32, bool depth_read_only, bool stencil_read_only) {
+  mbt_render_pass_desc_builder_t *out =
+      mbt_wgpu_render_pass_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RENDER_PASS_DESC_ERR_NULL_BUILDER;
+  }
+  mbt_wgpu_render_pass_desc_builder_clear_error(out);
+  out->depth = (WGPURenderPassDepthStencilAttachment){
+      .view = depth_view,
+      .depthLoadOp = (WGPULoadOp)depth_load_op_u32,
+      .depthStoreOp = (WGPUStoreOp)depth_store_op_u32,
+      .depthClearValue = depth_clear_value_f32,
+      .depthReadOnly = depth_read_only ? 1u : 0u,
+      .stencilLoadOp = (WGPULoadOp)stencil_load_op_u32,
+      .stencilStoreOp = (WGPUStoreOp)stencil_store_op_u32,
+      .stencilClearValue = stencil_clear_value_u32,
+      .stencilReadOnly = stencil_read_only ? 1u : 0u,
+  };
+  out->desc.depthStencilAttachment = &out->depth;
+  return MBT_WGPU_RENDER_PASS_DESC_OK;
+}
+
+uint32_t mbt_wgpu_render_pass_desc_builder_clear_depth_stencil_attachment(
+    void *builder) {
+  mbt_render_pass_desc_builder_t *out =
+      mbt_wgpu_render_pass_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RENDER_PASS_DESC_ERR_NULL_BUILDER;
+  }
+  mbt_wgpu_render_pass_desc_builder_clear_error(out);
+  out->desc.depthStencilAttachment = NULL;
+  return MBT_WGPU_RENDER_PASS_DESC_OK;
+}
+
+WGPURenderPassDescriptor *mbt_wgpu_render_pass_desc_builder_finish(void *builder) {
+  mbt_render_pass_desc_builder_handle_t *handle =
+      (mbt_render_pass_desc_builder_handle_t *)builder;
+  mbt_render_pass_desc_builder_t *out = mbt_wgpu_render_pass_desc_builder_unwrap(builder);
+  if (!out) {
+    return NULL;
+  }
+  mbt_wgpu_render_pass_desc_builder_clear_error(out);
+  handle->builder = NULL;
+  return &out->desc;
+}
+
 WGPURenderPassDescriptor *mbt_wgpu_render_pass_descriptor_depth_u32_new(
     WGPUTextureView depth_view, uint32_t depth_load_op_u32,
     uint32_t depth_store_op_u32, float depth_clear_value_f32,

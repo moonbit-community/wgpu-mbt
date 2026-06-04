@@ -49,6 +49,11 @@ int32_t mbt_wgpu_compute_pipeline_descriptor_ptr_is_null(
   return p == NULL;
 }
 
+int32_t mbt_wgpu_render_pass_descriptor_ptr_is_null(
+    WGPURenderPassDescriptor *p) {
+  return p == NULL;
+}
+
 int32_t mbt_wgpu_adapter_is_null(WGPUAdapter adapter) { return adapter == NULL; }
 int32_t mbt_wgpu_device_is_null(WGPUDevice device) { return device == NULL; }
 int32_t mbt_wgpu_bind_group_layout_is_null(WGPUBindGroupLayout bind_group_layout) {

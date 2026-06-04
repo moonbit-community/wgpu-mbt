@@ -2804,6 +2804,98 @@ declare pub fn ComputePipelineDescError::message(
 
 ///|
 #declaration_only
+declare pub fn RenderPassDescBuilder::new(
+  color_attachment_count : UInt,
+) -> RenderPassDescBuilder raise RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn RenderPassDescBuilder::set_color_attachment(
+  self : RenderPassDescBuilder,
+  index_u32 : UInt,
+  view : TextureView,
+  load_op_u32? : UInt = LOAD_OP_CLEAR,
+  store_op_u32? : UInt = STORE_OP_STORE,
+  clear_r_f32? : Float = 0.0,
+  clear_g_f32? : Float = 0.0,
+  clear_b_f32? : Float = 0.0,
+  clear_a_f32? : Float = 1.0,
+) -> Unit raise RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn RenderPassDescBuilder::set_color_attachment_resolve_target(
+  self : RenderPassDescBuilder,
+  index_u32 : UInt,
+  resolve_target : TextureView,
+) -> Unit raise RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn RenderPassDescBuilder::clear_color_attachment_resolve_target(
+  self : RenderPassDescBuilder,
+  index_u32 : UInt,
+) -> Unit raise RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn RenderPassDescBuilder::set_depth_stencil_attachment(
+  self : RenderPassDescBuilder,
+  depth_view : TextureView,
+  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
+  depth_store_op_u32? : UInt = STORE_OP_STORE,
+  depth_clear_value_f32? : Float = 1.0,
+  stencil_load_op_u32? : UInt = LOAD_OP_UNDEFINED,
+  stencil_store_op_u32? : UInt = STORE_OP_UNDEFINED,
+  stencil_clear_value_u32? : UInt = 0U,
+  depth_read_only? : Bool = false,
+  stencil_read_only? : Bool = false,
+) -> Unit raise RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn RenderPassDescBuilder::clear_depth_stencil_attachment(
+  self : RenderPassDescBuilder,
+) -> Unit raise RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn RenderPassDescBuilder::finish_descriptor_ptr(
+  self : RenderPassDescBuilder,
+) -> @c.WGPURenderPassDescriptorPtr raise RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn RenderPassDescBuilder::begin(
+  self : RenderPassDescBuilder,
+  encoder : CommandEncoder,
+) -> RenderPass raise RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn CommandEncoder::begin_render_pass_desc_builder(
+  self : CommandEncoder,
+  builder : RenderPassDescBuilder,
+) -> RenderPass raise RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn RenderPassDescBuilder::free(self : RenderPassDescBuilder) -> Unit
+
+///|
+#declaration_only
+declare pub fn RenderPassDescBuilder::last_error(
+  self : RenderPassDescBuilder,
+) -> RenderPassDescError
+
+///|
+#declaration_only
+declare pub fn RenderPassDescError::message(
+  self : RenderPassDescError,
+) -> String
+
+///|
+#declaration_only
 declare pub fn RenderPipelineDescBuilder::new(
   shader_module : ShaderModule,
   layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },

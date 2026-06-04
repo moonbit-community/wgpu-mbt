@@ -1074,6 +1074,28 @@ pub fn render_pass_begin_occlusion_query(WGPURenderPassEncoder, UInt) -> Unit
 
 pub fn render_pass_begin_pipeline_statistics_query(WGPURenderPassEncoder, WGPUQuerySet, UInt) -> Unit
 
+pub fn render_pass_desc_builder_clear_color_attachment_resolve_target(RenderPassDescBuilderObj, UInt) -> UInt
+
+pub fn render_pass_desc_builder_clear_depth_stencil_attachment(RenderPassDescBuilderObj) -> UInt
+
+pub fn render_pass_desc_builder_finish(RenderPassDescBuilderObj) -> WGPURenderPassDescriptorPtr
+
+pub fn render_pass_desc_builder_free(RenderPassDescBuilderObj) -> Unit
+
+pub fn render_pass_desc_builder_is_null(RenderPassDescBuilderObj) -> Bool
+
+pub fn render_pass_desc_builder_last_error_args_u64(RenderPassDescBuilderObj) -> UInt64
+
+pub fn render_pass_desc_builder_last_error_u32(RenderPassDescBuilderObj) -> UInt
+
+pub fn render_pass_desc_builder_new(UInt) -> RenderPassDescBuilderObj
+
+pub fn render_pass_desc_builder_set_color_attachment_resolve_target(RenderPassDescBuilderObj, UInt, WGPUTextureView) -> UInt
+
+pub fn render_pass_desc_builder_set_color_attachment_u32(RenderPassDescBuilderObj, UInt, WGPUTextureView, UInt, UInt, Float, Float, Float, Float) -> UInt
+
+pub fn render_pass_desc_builder_set_depth_stencil_attachment_u32(RenderPassDescBuilderObj, WGPUTextureView, UInt, UInt, Float, UInt, UInt, UInt, Bool, Bool) -> UInt
+
 pub fn render_pass_descriptor_color2_clear_default_new(WGPUTextureView, WGPUTextureView) -> WGPURenderPassDescriptorPtr
 
 pub fn render_pass_descriptor_color2_depth_new(WGPUTextureView, WGPUTextureView, WGPUTextureView) -> WGPURenderPassDescriptorPtr
@@ -1097,6 +1119,8 @@ pub fn render_pass_descriptor_color_load_new(WGPUTextureView) -> WGPURenderPassD
 pub fn render_pass_descriptor_depth_u32_new(WGPUTextureView, UInt, UInt, Float, UInt, UInt, UInt, Bool, Bool) -> WGPURenderPassDescriptorPtr
 
 pub fn render_pass_descriptor_free(WGPURenderPassDescriptorPtr) -> Unit
+
+pub fn render_pass_descriptor_ptr_is_null(WGPURenderPassDescriptorPtr) -> Bool
 
 pub fn render_pass_draw(WGPURenderPassEncoder, UInt, UInt, UInt, UInt) -> Unit
 
@@ -1903,6 +1927,8 @@ pub type ComputePipelineDescBuilderObj
 
 #external
 pub type OpaquePtr
+
+pub type RenderPassDescBuilderObj
 
 pub type RenderPipelineDescBuilderObj
 

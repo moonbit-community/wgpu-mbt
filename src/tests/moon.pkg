@@ -80,6 +80,7 @@ options(
     "wgpu_render_loadop_test.mbt": [ "native" ],
     "wgpu_render_mrt2_depth_test.mbt": [ "native" ],
     "wgpu_render_mrt2_test.mbt": [ "native" ],
+    "wgpu_render_msaa_resolve_test.mbt": [ "native" ],
     "wgpu_render_occlusion_query_test.mbt": [ "native" ],
     "wgpu_render_offscreen_test.mbt": [ "native" ],
     "wgpu_render_pipeline_entries_test.mbt": [ "native" ],
