@@ -132,7 +132,7 @@ pub fn SurfaceConfiguration::new(
   present_mode : PresentMode,
   alpha_mode : CompositeAlphaMode,
 ) -> SurfaceConfiguration {
-  SurfaceConfiguration::{
+  {
     width,
     height,
     usage,
@@ -149,7 +149,7 @@ pub fn SurfaceConfiguration::with_view_formats(
   self : SurfaceConfiguration,
   view_formats : Array[TextureFormat],
 ) -> SurfaceConfiguration {
-  SurfaceConfiguration::{
+  {
     width: self.width,
     height: self.height,
     usage: self.usage,
@@ -166,7 +166,7 @@ pub fn SurfaceConfiguration::with_desired_maximum_frame_latency(
   self : SurfaceConfiguration,
   desired_maximum_frame_latency : UInt,
 ) -> SurfaceConfiguration {
-  SurfaceConfiguration::{
+  {
     width: self.width,
     height: self.height,
     usage: self.usage,
@@ -185,7 +185,7 @@ pub struct PresentMode {
 
 ///|
 pub fn PresentMode::from_u32(raw : UInt) -> PresentMode {
-  PresentMode::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -216,7 +216,7 @@ pub struct CompositeAlphaMode {
 
 ///|
 pub fn CompositeAlphaMode::from_u32(raw : UInt) -> CompositeAlphaMode {
-  CompositeAlphaMode::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -250,7 +250,7 @@ pub struct TextureFormat {
 
 ///|
 pub fn TextureFormat::from_u32(raw : UInt) -> TextureFormat {
-  TextureFormat::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -281,7 +281,7 @@ pub struct TextureDimension {
 
 ///|
 pub fn TextureDimension::from_u32(raw : UInt) -> TextureDimension {
-  TextureDimension::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -312,7 +312,7 @@ pub struct TextureUsage {
 
 ///|
 pub fn TextureUsage::from_u64(raw : UInt64) -> TextureUsage {
-  TextureUsage::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -343,7 +343,7 @@ pub struct BufferUsage {
 
 ///|
 pub fn BufferUsage::from_u64(raw : UInt64) -> BufferUsage {
-  BufferUsage::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -374,7 +374,7 @@ pub struct ShaderStage {
 
 ///|
 pub fn ShaderStage::from_u64(raw : UInt64) -> ShaderStage {
-  ShaderStage::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -405,7 +405,7 @@ pub struct MapMode {
 
 ///|
 pub fn MapMode::from_u64(raw : UInt64) -> MapMode {
-  MapMode::{ raw, }
+  { raw, }
 }
 
 ///|

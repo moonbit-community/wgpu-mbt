@@ -210,10 +210,7 @@ pub fn compilation_info_available() -> Bool {
 pub fn get_instance_capabilities() -> InstanceCapabilities {
   let enable = @c.instance_capabilities_timed_wait_any_enable_u32() != 0U
   let max_count = @c.instance_capabilities_timed_wait_any_max_count_u64()
-  InstanceCapabilities::{
-    timed_wait_any_enable: enable,
-    timed_wait_any_max_count: max_count,
-  }
+  { timed_wait_any_enable: enable, timed_wait_any_max_count: max_count }
 }
 
 ///|

@@ -16,7 +16,7 @@
 pub fn BindGroupLayoutBuilder::new(
   max_entries~ : UInt64,
 ) -> BindGroupLayoutBuilder {
-  BindGroupLayoutBuilder::{ raw: @c.bind_group_layout_builder_new(max_entries) }
+  { raw: @c.bind_group_layout_builder_new(max_entries) }
 }
 
 ///|
@@ -155,7 +155,7 @@ pub fn BindGroupLayoutBuilder::finish(
     bytes.length().to_uint64(),
   )
   @c.bind_group_layout_builder_free(self.raw)
-  BindGroupLayout::{ raw: out }
+  { raw: out }
 }
 
 ///|
@@ -165,7 +165,7 @@ pub fn BindGroupLayoutBuilder::free(self : BindGroupLayoutBuilder) -> Unit {
 
 ///|
 pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> BindGroupBuilder {
-  BindGroupBuilder::{ raw: @c.bind_group_builder_new(max_entries) }
+  { raw: @c.bind_group_builder_new(max_entries) }
 }
 
 ///|
@@ -289,7 +289,7 @@ pub fn BindGroupBuilder::finish(
     bytes.length().to_uint64(),
   )
   @c.bind_group_builder_free(self.raw)
-  BindGroup::{ raw: out }
+  { raw: out }
 }
 
 ///|
@@ -305,7 +305,7 @@ pub fn BindGroupLayout::release(self : BindGroupLayout) -> Unit {
 ///|
 pub fn BindGroupLayout::add_ref(self : BindGroupLayout) -> BindGroupLayout {
   @c.bind_group_layout_add_ref(self.raw)
-  BindGroupLayout::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|
@@ -316,7 +316,7 @@ pub fn BindGroup::release(self : BindGroup) -> Unit {
 ///|
 pub fn BindGroup::add_ref(self : BindGroup) -> BindGroup {
   @c.bind_group_add_ref(self.raw)
-  BindGroup::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|

@@ -22,13 +22,13 @@
 /// builder automatically.
 pub fn ComputePipelineDescBuilder::new(
   shader_module : ShaderModule,
-  layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
+  layout? : PipelineLayout = { raw: @c.null_pipeline_layout() },
 ) -> ComputePipelineDescBuilder raise ComputePipelineDescError {
   let raw = @c.compute_pipeline_desc_builder_new(layout.raw, shader_module.raw)
   if @c.compute_pipeline_desc_builder_is_null(raw) {
     raise ComputePipelineDescError(COMPUTE_PIPELINE_DESC_ERR_OOM, 0U, 0U)
   }
-  ComputePipelineDescBuilder::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -140,13 +140,13 @@ pub const COMPUTE_PIPELINE_DESC_ERR_OOM : UInt = 4U
 /// builder automatically.
 pub fn RenderPipelineDescBuilder::new(
   shader_module : ShaderModule,
-  layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
+  layout? : PipelineLayout = { raw: @c.null_pipeline_layout() },
 ) -> RenderPipelineDescBuilder raise RenderPipelineDescError {
   let raw = @c.render_pipeline_desc_builder_new(layout.raw, shader_module.raw)
   if @c.render_pipeline_desc_builder_is_null(raw) {
     raise RenderPipelineDescError(RENDER_PIPELINE_DESC_ERR_OOM, 0U, 0U)
   }
-  RenderPipelineDescBuilder::{ raw, }
+  { raw, }
 }
 
 ///|

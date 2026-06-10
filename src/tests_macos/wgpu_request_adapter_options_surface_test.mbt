@@ -58,7 +58,7 @@ test "wgpu request_adapter options: compatibleSurface rejects backend mismatch (
     )
     adapter.release()
   } catch {
-    @wgpu.WgpuRequestAdapterFailed(_) => failed.val = true
+    WgpuRequestAdapterFailed(_) => failed.val = true
     e => raise e
   }
   inspect(failed.val, content="true")

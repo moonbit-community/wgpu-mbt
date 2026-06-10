@@ -297,7 +297,7 @@ pub fn Buffer::set_label(self : Buffer, label : String) -> Unit {
 ///|
 pub fn Buffer::add_ref(self : Buffer) -> Buffer {
   @c.buffer_add_ref_tracked(self.raw)
-  Buffer::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|

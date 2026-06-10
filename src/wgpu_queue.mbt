@@ -365,7 +365,7 @@ pub fn Queue::release(self : Queue) -> Unit {
 ///|
 pub fn Queue::add_ref(self : Queue) -> Queue {
   @c.wgpuQueueAddRef(self.raw)
-  Queue::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|

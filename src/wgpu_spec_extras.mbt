@@ -2761,7 +2761,7 @@ declare pub fn BindGroupBuilder::free(self : BindGroupBuilder) -> Unit
 #declaration_only
 declare pub fn ComputePipelineDescBuilder::new(
   shader_module : ShaderModule,
-  layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
+  layout? : PipelineLayout = { raw: @c.null_pipeline_layout() },
 ) -> ComputePipelineDescBuilder raise ComputePipelineDescError
 
 ///|
@@ -2898,7 +2898,7 @@ declare pub fn RenderPassDescError::message(
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::new(
   shader_module : ShaderModule,
-  layout? : PipelineLayout = PipelineLayout::{ raw: @c.null_pipeline_layout() },
+  layout? : PipelineLayout = { raw: @c.null_pipeline_layout() },
 ) -> RenderPipelineDescBuilder raise RenderPipelineDescError
 
 ///|

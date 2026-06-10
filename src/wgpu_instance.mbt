@@ -15,7 +15,7 @@
 ///|
 pub fn Instance::create() -> Instance raise WgpuError {
   require_native()
-  Instance::{ raw: @c.create_instance() }
+  { raw: @c.create_instance() }
 }
 
 ///|
@@ -23,7 +23,7 @@ pub fn Instance::create_ptr(
   descriptor : @c.WGPUInstanceDescriptorPtr,
 ) -> Instance raise WgpuError {
   require_native()
-  Instance::{ raw: @c.wgpuCreateInstance(descriptor) }
+  { raw: @c.wgpuCreateInstance(descriptor) }
 }
 
 ///|
@@ -44,7 +44,7 @@ pub fn Instance::create_with_extras_u32(
 ) -> Instance raise WgpuError {
   require_native()
   let dxc_path_utf8 = utf8_bytes(dxc_path)
-  Instance::{
+  {
     raw: @c.create_instance_with_extras_utf8(
       backends_u64,
       flags_u32,
@@ -99,7 +99,7 @@ pub fn Instance::request_adapter_sync(
       @c.instance_enumerate_adapter_first_primary(self.raw)
     }
     if !@c.adapter_is_null(raw) {
-      return Adapter::{ raw, }
+      return { raw, }
     }
   }
   require_native_symbol("wgpuInstanceRequestAdapter")
@@ -151,7 +151,7 @@ pub fn Instance::request_adapter_sync(
       feature_level_u32, force_fallback_adapter, backend_type_u32,
     )
     if !@c.adapter_is_null(raw) {
-      return Adapter::{ raw, }
+      return { raw, }
     }
   }
 
@@ -174,7 +174,7 @@ pub fn Instance::request_adapter_sync_ptr(
       @c.instance_request_adapter_sync_last_status_u32(),
     )
   }
-  Adapter::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -201,7 +201,7 @@ pub fn Instance::request_adapter_sync_options_u32(
       @c.instance_request_adapter_sync_last_status_u32(),
     )
   }
-  Adapter::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -229,7 +229,7 @@ pub fn Instance::request_adapter_sync_options_surface_u32(
       @c.instance_request_adapter_sync_last_status_u32(),
     )
   }
-  Adapter::{ raw, }
+  { raw, }
 }
 
 ///|
@@ -261,7 +261,7 @@ pub fn Instance::request_adapter_async_adapter(
   future_id : UInt64,
 ) -> Adapter {
   let _ = self
-  Adapter::{ raw: @c.instance_request_adapter_async_adapter(future_id) }
+  { raw: @c.instance_request_adapter_async_adapter(future_id) }
 }
 
 ///|
@@ -327,7 +327,7 @@ pub fn Instance::wait_any_one(
   )
   let status = (packed & 0xFFFF_FFFFUL).to_int().reinterpret_as_uint()
   let completed = packed >> 32 != 0UL
-  WaitAnyResult::{ status, completed }
+  { status, completed }
 }
 
 ///|
@@ -360,14 +360,14 @@ pub fn Instance::wgsl_language_features_count_u64(self : Instance) -> UInt64 {
 
 ///|
 pub fn Instance::generate_report(self : Instance) -> GlobalReport {
-  GlobalReport::{ raw: @c.instance_generate_report_new(self.raw) }
+  { raw: @c.instance_generate_report_new(self.raw) }
 }
 
 ///|
 pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
   let layer = @c.cametallayer_new()
   let surface = @c.instance_create_surface_metal_layer(self.raw, layer)
-  Surface::{ raw: surface, layer }
+  { raw: surface, layer }
 }
 
 ///|
@@ -388,7 +388,7 @@ pub fn Instance::create_surface_macos_ns_view(
     @c.cametallayer_release(layer)
     raise SurfaceCreateError(SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED)
   }
-  Surface::{ raw: surface, layer }
+  { raw: surface, layer }
 }
 
 ///|
@@ -413,7 +413,7 @@ pub fn Instance::create_surface_wayland(
   display : @c.OpaquePtr,
   surface : @c.OpaquePtr,
 ) -> Surface {
-  Surface::{
+  {
     raw: @c.instance_create_surface_wayland(self.raw, display, surface),
     layer: @c.null_opaque_ptr(),
   }
@@ -426,7 +426,7 @@ pub fn Instance::create_surface_xcb(
   connection : @c.OpaquePtr,
   window : UInt,
 ) -> Surface {
-  Surface::{
+  {
     raw: @c.instance_create_surface_xcb(self.raw, connection, window),
     layer: @c.null_opaque_ptr(),
   }
@@ -439,7 +439,7 @@ pub fn Instance::create_surface_xlib(
   display : @c.OpaquePtr,
   window : UInt64,
 ) -> Surface {
-  Surface::{
+  {
     raw: @c.instance_create_surface_xlib(self.raw, display, window),
     layer: @c.null_opaque_ptr(),
   }
@@ -451,7 +451,7 @@ pub fn Instance::create_surface_android_native_window(
   self : Instance,
   window : @c.OpaquePtr,
 ) -> Surface {
-  Surface::{
+  {
     raw: @c.instance_create_surface_android_native_window(self.raw, window),
     layer: @c.null_opaque_ptr(),
   }
@@ -463,7 +463,7 @@ pub fn Instance::create_surface_swap_chain_panel(
   self : Instance,
   panel_native : @c.OpaquePtr,
 ) -> Surface {
-  Surface::{
+  {
     raw: @c.instance_create_surface_swap_chain_panel(self.raw, panel_native),
     layer: @c.null_opaque_ptr(),
   }
@@ -479,7 +479,7 @@ pub fn Instance::create_surface_windows_hwnd(
   hinstance : @c.OpaquePtr,
   hwnd : @c.OpaquePtr,
 ) -> Surface {
-  Surface::{
+  {
     raw: @c.instance_create_surface_windows_hwnd(self.raw, hinstance, hwnd),
     layer: @c.null_opaque_ptr(),
   }
@@ -712,7 +712,7 @@ pub fn Instance::release(self : Instance) -> Unit {
 ///|
 pub fn Instance::add_ref(self : Instance) -> Instance {
   @c.wgpuInstanceAddRef(self.raw)
-  Instance::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|

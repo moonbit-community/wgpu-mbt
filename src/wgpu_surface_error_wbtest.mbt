@@ -15,7 +15,7 @@
 ///|
 test "surface texture error helpers: null surface raises" {
   // Keep this runtime-free: `null_surface` never touches `libwgpu_native`.
-  let surface = Surface::{ raw: @c.null_surface(), layer: @c.null_opaque_ptr() }
+  let surface = { raw: @c.null_surface(), layer: @c.null_opaque_ptr() }
   let st0 = surface.get_current_texture()
   inspect(
     st0.status() == SURFACE_GET_CURRENT_TEXTURE_STATUS_ERROR,

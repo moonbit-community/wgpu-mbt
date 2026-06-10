@@ -27,7 +27,7 @@ pub fn ShaderModule::get_compilation_info_sync(
     self.raw,
   )
   if @c.opaque_ptr_is_null(info) {
-    CompilationInfo::{ status_u32: 0U, messages: [] }
+    { status_u32: 0U, messages: [] }
   } else {
     let status_u32 = @c.compilation_info_status_u32(info)
     let count_u32 = @c.compilation_info_message_count_u32(info)
@@ -46,7 +46,7 @@ pub fn ShaderModule::get_compilation_info_sync(
           ""
         }
       }
-      messages.val.push(CompilationMessage::{
+      messages.val.push({
         type_u32: @c.compilation_info_message_type_u32(info, idx),
         line_num_u64: @c.compilation_info_message_line_num_u64(info, idx),
         line_pos_u64: @c.compilation_info_message_line_pos_u64(info, idx),
@@ -56,7 +56,7 @@ pub fn ShaderModule::get_compilation_info_sync(
       })
     }
     @c.compilation_info_free(info)
-    CompilationInfo::{ status_u32, messages: messages.val }
+    { status_u32, messages: messages.val }
   }
 }
 
@@ -130,7 +130,7 @@ pub fn ShaderModule::get_compilation_info_sync_or_raise(
         ""
       }
     }
-    messages.val.push(CompilationMessage::{
+    messages.val.push({
       type_u32: @c.compilation_info_message_type_u32(info, idx),
       line_num_u64: @c.compilation_info_message_line_num_u64(info, idx),
       line_pos_u64: @c.compilation_info_message_line_pos_u64(info, idx),
@@ -140,7 +140,7 @@ pub fn ShaderModule::get_compilation_info_sync_or_raise(
     })
   }
   @c.compilation_info_free(info)
-  CompilationInfo::{ status_u32, messages: messages.val }
+  { status_u32, messages: messages.val }
 }
 
 ///|
@@ -157,7 +157,7 @@ pub fn ShaderModule::set_label(self : ShaderModule, label : String) -> Unit {
 ///|
 pub fn ShaderModule::add_ref(self : ShaderModule) -> ShaderModule {
   @c.wgpuShaderModuleAddRef(self.raw)
-  ShaderModule::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|

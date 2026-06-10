@@ -77,31 +77,31 @@ pub fn Sampler::set_label(self : Sampler, label : String) -> Unit {
 ///|
 pub fn Sampler::add_ref(self : Sampler) -> Sampler {
   @c.wgpuSamplerAddRef(self.raw)
-  Sampler::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|
 pub fn PipelineLayout::add_ref(self : PipelineLayout) -> PipelineLayout {
   @c.wgpuPipelineLayoutAddRef(self.raw)
-  PipelineLayout::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|
 pub fn ComputePipeline::add_ref(self : ComputePipeline) -> ComputePipeline {
   @c.wgpuComputePipelineAddRef(self.raw)
-  ComputePipeline::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|
 pub fn RenderPipeline::add_ref(self : RenderPipeline) -> RenderPipeline {
   @c.wgpuRenderPipelineAddRef(self.raw)
-  RenderPipeline::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|
 pub fn QuerySet::add_ref(self : QuerySet) -> QuerySet {
   @c.wgpuQuerySetAddRef(self.raw)
-  QuerySet::{ raw: self.raw }
+  { raw: self.raw }
 }
 
 ///|
@@ -109,9 +109,7 @@ pub fn ComputePipeline::get_bind_group_layout(
   self : ComputePipeline,
   index : UInt,
 ) -> BindGroupLayout {
-  BindGroupLayout::{
-    raw: @c.wgpuComputePipelineGetBindGroupLayout(self.raw, index),
-  }
+  { raw: @c.wgpuComputePipelineGetBindGroupLayout(self.raw, index) }
 }
 
 ///|
@@ -119,9 +117,7 @@ pub fn RenderPipeline::get_bind_group_layout(
   self : RenderPipeline,
   index : UInt,
 ) -> BindGroupLayout {
-  BindGroupLayout::{
-    raw: @c.wgpuRenderPipelineGetBindGroupLayout(self.raw, index),
-  }
+  { raw: @c.wgpuRenderPipelineGetBindGroupLayout(self.raw, index) }
 }
 
 ///|

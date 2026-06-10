@@ -13,14 +13,21 @@
 // limitations under the License.
 
 ///|
+fn run_bench(name~ : String, count~ : UInt, f : () -> Unit) -> Unit {
+  for _i = 0; _i < count.reinterpret_as_int(); _i = _i + 1 {
+    f()
+  }
+  println("\{name}: \{count} iterations")
+}
+
+///|
 fn main {
   try {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
     let queue = device.queue()
-    let b = @core_bench.new()
-    b.bench(name="buffer create+release (4B)", count=1000U, () => {
+    run_bench(name="buffer create+release (4B)", count=1000U, () => {
       let buf = device.create_buffer(
         size=4UL,
         usage=@wgpu.BufferUsage::from_u64(@wgpu.BUFFER_USAGE_COPY_DST),
@@ -28,7 +35,7 @@ fn main {
       ignore(buf.size())
       buf.release()
     })
-    b.bench(name="texture+view+sampler create+release", count=200U, () => {
+    run_bench(name="texture+view+sampler create+release", count=200U, () => {
       let tex = device.create_texture_rgba8_2d(1U, 1U)
       let view = tex.create_view()
       let sampler = device.create_sampler_linear_clamp()
@@ -40,13 +47,13 @@ fn main {
       #|@compute @workgroup_size(1)
       #|fn main() {}
       #|
-    b.bench(name="shader+compute pipeline create+release", count=100U, () => {
+    run_bench(name="shader+compute pipeline create+release", count=100U, () => {
       let sm = device.create_shader_module_wgsl(wgsl_compute)
       let p = device.create_compute_pipeline(sm)
       p.release()
       sm.release()
     })
-    b.bench(name="encode+submit empty compute", count=200U, () => {
+    run_bench(name="encode+submit empty compute", count=200U, () => {
       let sm = device.create_shader_module_wgsl(wgsl_compute)
       let p = device.create_compute_pipeline(sm)
       let encoder = device.create_command_encoder()
@@ -63,7 +70,6 @@ fn main {
       p.release()
       sm.release()
     })
-    println(b.dump_summaries())
     queue.release()
     device.release()
     adapter.release()
