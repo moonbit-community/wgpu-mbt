@@ -215,6 +215,8 @@ pub extern "C" fn limits_new_from_adapter_overrides_u32(
   max_dynamic_uniform_buffers_u32 : UInt,
   max_uniform_buffer_binding_size : UInt64,
   max_storage_buffer_binding_size : UInt64,
+  max_sampled_textures_per_shader_stage_u32 : UInt,
+  max_samplers_per_shader_stage_u32 : UInt,
   max_immediate_size_u32 : UInt,
   max_non_sampler_bindings_u32 : UInt,
 ) -> WGPULimitsPtr = "mbt_wgpu_limits_new_from_adapter_overrides_u32"

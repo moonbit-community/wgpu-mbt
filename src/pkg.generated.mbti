@@ -1632,7 +1632,7 @@ pub fn Adapter::request_device_sync_uniform_buffer_and_storage_texture_array_non
 pub fn Adapter::request_device_sync_vertex_attribute64bit(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_vertex_writable_storage(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_with_features(Self, Instance, Array[UInt], label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
-pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, max_immediate_size_u32? : UInt, max_non_sampler_bindings_u32? : UInt, label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_with_features_and_limits(Self, Instance, Array[UInt], max_bind_groups_u32? : UInt, max_dynamic_uniform_buffers_u32? : UInt, max_uniform_buffer_binding_size? : UInt64, max_storage_buffer_binding_size? : UInt64, max_sampled_textures_per_shader_stage_u32? : UInt, max_samplers_per_shader_stage_u32? : UInt, max_immediate_size_u32? : UInt, max_non_sampler_bindings_u32? : UInt, label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
 pub fn Adapter::supported_feature_u32_at(Self, UInt64) -> UInt
 pub fn Adapter::supported_features_contains_u32(Self, UInt) -> Bool
 pub fn Adapter::supported_features_count_u64(Self) -> UInt64

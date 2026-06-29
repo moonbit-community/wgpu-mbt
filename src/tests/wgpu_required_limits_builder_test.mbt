@@ -28,6 +28,38 @@ test "wgpu requiredLimits builder: request device with maxBindGroups override" {
 }
 
 ///|
+test "wgpu requiredLimits builder: per-stage sampler and sampled texture overrides" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let want_sampled_textures = adapter.limits_max_sampled_textures_per_shader_stage_u32()
+  let want_samplers = adapter.limits_max_samplers_per_shader_stage_u32()
+  if want_sampled_textures == 0U || want_samplers == 0U {
+    inspect("unsupported", content="unsupported")
+    adapter.release()
+    instance.release()
+    return
+  }
+  let device = adapter.request_device_sync_with_features_and_limits(
+    instance,
+    [],
+    max_sampled_textures_per_shader_stage_u32=want_sampled_textures,
+    max_samplers_per_shader_stage_u32=want_samplers,
+  )
+  inspect(
+    device.limits_max_sampled_textures_per_shader_stage_u32() >=
+    want_sampled_textures,
+    content="true",
+  )
+  inspect(
+    device.limits_max_samplers_per_shader_stage_u32() >= want_samplers,
+    content="true",
+  )
+  device.release()
+  adapter.release()
+  instance.release()
+}
+
+///|
 test "wgpu requiredLimits builder: native limits chain override (immediates)" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()

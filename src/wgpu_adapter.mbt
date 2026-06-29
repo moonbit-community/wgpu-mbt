@@ -186,6 +186,8 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
   max_dynamic_uniform_buffers_u32? : UInt = 0U,
   max_uniform_buffer_binding_size? : UInt64 = 0UL,
   max_storage_buffer_binding_size? : UInt64 = 0UL,
+  max_sampled_textures_per_shader_stage_u32? : UInt = 0U,
+  max_samplers_per_shader_stage_u32? : UInt = 0U,
   max_immediate_size_u32? : UInt = 0U,
   max_non_sampler_bindings_u32? : UInt = 0U,
   label? : String = "",
@@ -200,6 +202,8 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
     max_dynamic_uniform_buffers_u32,
     max_uniform_buffer_binding_size,
     max_storage_buffer_binding_size,
+    max_sampled_textures_per_shader_stage_u32,
+    max_samplers_per_shader_stage_u32,
     max_immediate_size_u32,
     max_non_sampler_bindings_u32,
   )

@@ -862,7 +862,7 @@ pub fn instance_wgsl_language_features_count_u64(WGPUInstance) -> UInt64
 
 pub fn limits_free(WGPULimitsPtr) -> Unit
 
-pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64, UInt, UInt) -> WGPULimitsPtr
+pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64, UInt, UInt, UInt, UInt) -> WGPULimitsPtr
 
 pub fn macos_ns_view_prepare_metal_layer(OpaquePtr) -> OpaquePtr
 
