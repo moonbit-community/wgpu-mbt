@@ -2479,7 +2479,7 @@ pub fn RenderPipelineDescBuilder::set_color_target_write_mask(Self, UInt64) -> U
 pub fn RenderPipelineDescBuilder::set_color_target_write_mask_at(Self, UInt, UInt64) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_conservative_rasterization(Self, Bool) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_cull_mode_u32(Self, UInt) -> Unit raise RenderPipelineDescError
-pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_depth_stencil(Self, TextureFormat, depth_write_enabled? : Bool, depth_compare_u32? : UInt, depth_bias? : Int, depth_bias_slope_scale? : Float, depth_bias_clamp? : Float) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_fragment_module(Self, ShaderModule) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_multisample(Self, UInt, mask_u32? : UInt, alpha_to_coverage_enabled? : Bool) -> Unit raise RenderPipelineDescError

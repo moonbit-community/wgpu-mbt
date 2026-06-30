@@ -2396,7 +2396,8 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_clear_primitive_extras(void *buil
 
 uint32_t mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil(
     void *builder, uint32_t depth_format_u32, bool depth_write_enabled,
-    uint32_t depth_compare_u32) {
+    uint32_t depth_compare_u32, int32_t depth_bias, float depth_bias_slope_scale,
+    float depth_bias_clamp) {
   if (!builder) {
     return MBT_WGPU_RP_ERR_NULL_BUILDER;
   }
@@ -2422,9 +2423,9 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil(
       .stencilBack = out->stencil,
       .stencilReadMask = 0u,
       .stencilWriteMask = 0u,
-      .depthBias = 0,
-      .depthBiasSlopeScale = 0.0f,
-      .depthBiasClamp = 0.0f,
+      .depthBias = depth_bias,
+      .depthBiasSlopeScale = depth_bias_slope_scale,
+      .depthBiasClamp = depth_bias_clamp,
   };
   out->desc.depthStencil = &out->depth_stencil;
   return MBT_WGPU_RP_OK;

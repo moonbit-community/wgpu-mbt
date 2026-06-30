@@ -443,6 +443,9 @@ pub extern "C" fn render_pipeline_desc_builder_set_depth_stencil(
   depth_format_u32 : UInt,
   depth_write_enabled : Bool,
   depth_compare_u32 : UInt,
+  depth_bias : Int,
+  depth_bias_slope_scale : Float,
+  depth_bias_clamp : Float,
 ) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_depth_stencil"
 
 ///|

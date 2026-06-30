@@ -495,12 +495,18 @@ pub fn RenderPipelineDescBuilder::set_depth_stencil(
   depth_format : TextureFormat,
   depth_write_enabled? : Bool = true,
   depth_compare_u32? : UInt = COMPARE_FUNCTION_LESS,
+  depth_bias? : Int = 0,
+  depth_bias_slope_scale? : Float = 0.0,
+  depth_bias_clamp? : Float = 0.0,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_depth_stencil(
     self.raw,
     depth_format.raw,
     depth_write_enabled,
     depth_compare_u32,
+    depth_bias,
+    depth_bias_slope_scale,
+    depth_bias_clamp,
   )
   if err != 0U {
     raise self.last_error()

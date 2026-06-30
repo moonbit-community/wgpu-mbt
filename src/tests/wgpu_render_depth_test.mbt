@@ -207,6 +207,114 @@ test "wgpu render depth: pipeline desc builder" {
 }
 
 ///|
+test "wgpu render depth: pipeline desc builder depth bias" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let queue = device.queue()
+  let color_tex = device.create_texture_rgba8_2d(1U, 1U)
+  let color_view = color_tex.create_view()
+  let depth_tex = device.create_texture_depth24plus_2d(1U, 1U)
+  let depth_view = depth_tex.create_view()
+  let readback = device.create_buffer(
+    size=256UL,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+  )
+  let wgsl_red : String =
+    #|struct VSOut { @builtin(position) pos: vec4<f32> };
+    #|
+    #|@vertex
+    #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+    #|  var positions = array<vec2<f32>, 3>(
+    #|    vec2<f32>(-1.0, -1.0),
+    #|    vec2<f32>( 3.0, -1.0),
+    #|    vec2<f32>(-1.0,  3.0),
+    #|  );
+    #|  var out: VSOut;
+    #|  out.pos = vec4<f32>(positions[vid], 0.5, 1.0);
+    #|  return out;
+    #|}
+    #|
+    #|@fragment
+    #|fn fs_main() -> @location(0) vec4<f32> {
+    #|  return vec4<f32>(1.0, 0.0, 0.0, 1.0);
+    #|}
+    #|
+  let wgsl_green : String =
+    #|struct VSOut { @builtin(position) pos: vec4<f32> };
+    #|
+    #|@vertex
+    #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+    #|  var positions = array<vec2<f32>, 3>(
+    #|    vec2<f32>(-1.0, -1.0),
+    #|    vec2<f32>( 3.0, -1.0),
+    #|    vec2<f32>(-1.0,  3.0),
+    #|  );
+    #|  var out: VSOut;
+    #|  out.pos = vec4<f32>(positions[vid], 0.5, 1.0);
+    #|  return out;
+    #|}
+    #|
+    #|@fragment
+    #|fn fs_main() -> @location(0) vec4<f32> {
+    #|  return vec4<f32>(0.0, 1.0, 0.0, 1.0);
+    #|}
+    #|
+  let sm_red = device.create_shader_module_wgsl(wgsl_red)
+  let sm_green = device.create_shader_module_wgsl(wgsl_green)
+  let color_fmt = @wgpu.TextureFormat::from_u32(
+    @wgpu.TEXTURE_FORMAT_RGBA8_UNORM,
+  )
+  let depth_fmt = @wgpu.TextureFormat::from_u32(
+    @wgpu.TEXTURE_FORMAT_DEPTH24_PLUS,
+  )
+  let b_red = @wgpu.RenderPipelineDescBuilder::new(sm_red)
+  b_red.set_color_target_format(color_fmt)
+  b_red.set_depth_stencil(depth_fmt)
+  let pipeline_red = b_red.create_pipeline(device)
+  let b_green = @wgpu.RenderPipelineDescBuilder::new(sm_green)
+  b_green.set_color_target_format(color_fmt)
+  b_green.set_depth_stencil(
+    depth_fmt,
+    depth_bias=-1000000,
+    depth_bias_slope_scale=0.5,
+    depth_bias_clamp=1.0,
+  )
+  let pipeline_green = b_green.create_pipeline(device)
+  let encoder = device.create_command_encoder()
+  let pass = encoder.begin_render_pass_color_depth(color_view, depth_view)
+  pass.set_pipeline(pipeline_red)
+  pass.draw(3U, 1U, 0U, 0U)
+  pass.set_pipeline(pipeline_green)
+  pass.draw(3U, 1U, 0U, 0U)
+  pass.end()
+  pass.release()
+  encoder.copy_texture_to_buffer_rgba8(color_tex, readback, 1U, 1U)
+  let cmd = encoder.finish()
+  queue.submit_one(cmd)
+  let out = readback.readback(instance, 0UL, 4UL)
+  @debug.debug_inspect(
+    [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()],
+    content="[0, 255, 0, 255]",
+  )
+  cmd.release()
+  encoder.release()
+  pipeline_green.release()
+  pipeline_red.release()
+  sm_green.release()
+  sm_red.release()
+  readback.release()
+  depth_view.release()
+  depth_tex.release()
+  color_view.release()
+  color_tex.release()
+  queue.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}
+
+///|
 test "wgpu render depth: depth-only pass and zero color target pipeline" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()

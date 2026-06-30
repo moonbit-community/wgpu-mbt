@@ -1222,7 +1222,7 @@ pub fn render_pipeline_desc_builder_set_conservative(RenderPipelineDescBuilderOb
 
 pub fn render_pipeline_desc_builder_set_cull_mode(RenderPipelineDescBuilderObj, UInt) -> UInt
 
-pub fn render_pipeline_desc_builder_set_depth_stencil(RenderPipelineDescBuilderObj, UInt, Bool, UInt) -> UInt
+pub fn render_pipeline_desc_builder_set_depth_stencil(RenderPipelineDescBuilderObj, UInt, Bool, UInt, Int, Float, Float) -> UInt
 
 pub fn render_pipeline_desc_builder_set_entry_points_utf8(RenderPipelineDescBuilderObj, Bytes, UInt64, Bytes, UInt64) -> UInt
 
