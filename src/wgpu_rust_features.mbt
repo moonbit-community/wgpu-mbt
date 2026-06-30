@@ -15,6 +15,8 @@
 ///|
 fn compose_supported_rust_features_u64(
   has_depth_clip_control : Bool,
+  has_experimental_mesh_shader : Bool,
+  has_experimental_mesh_shader_points : Bool,
   has_immediates : Bool,
   has_texture_atomic : Bool,
   has_shader_int64 : Bool,
@@ -24,6 +26,12 @@ fn compose_supported_rust_features_u64(
   let supported : Ref[UInt64] = @ref.new(0UL)
   if has_depth_clip_control {
     supported.val = supported.val | FEATURES_DEPTH_CLIP_CONTROL
+  }
+  if has_experimental_mesh_shader {
+    supported.val = supported.val | FEATURES_EXPERIMENTAL_MESH_SHADER
+  }
+  if has_experimental_mesh_shader_points {
+    supported.val = supported.val | FEATURES_EXPERIMENTAL_MESH_SHADER_POINTS
   }
   if has_immediates {
     supported.val = supported.val | FEATURES_PUSH_CONSTANTS
@@ -90,6 +98,8 @@ pub fn Adapter::missing_rust_features_u64(
 pub fn Adapter::supported_rust_features_u64(self : Adapter) -> UInt64 {
   compose_supported_rust_features_u64(
     self.supported_features_contains_u32(FEATURE_NAME_DEPTH_CLIP_CONTROL),
+    self.has_feature_experimental_mesh_shader(),
+    self.has_feature_experimental_mesh_shader_points(),
     self.has_feature_native_immediates(),
     self.has_feature_native_texture_atomic(),
     self.has_feature_native_shader_int64(),
@@ -155,6 +165,8 @@ pub fn Device::missing_rust_features_u64(
 pub fn Device::supported_rust_features_u64(self : Device) -> UInt64 {
   compose_supported_rust_features_u64(
     self.has_feature_u32(FEATURE_NAME_DEPTH_CLIP_CONTROL),
+    self.has_feature_experimental_mesh_shader(),
+    self.has_feature_experimental_mesh_shader_points(),
     self.has_feature_native_immediates(),
     self.has_feature_native_texture_atomic(),
     self.has_feature_native_shader_int64(),

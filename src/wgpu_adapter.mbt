@@ -812,6 +812,20 @@ pub fn Adapter::has_feature_native_texture_binding_array(
 }
 
 ///|
+pub fn Adapter::has_feature_experimental_mesh_shader(self : Adapter) -> Bool {
+  let _ = self
+  false
+}
+
+///|
+pub fn Adapter::has_feature_experimental_mesh_shader_points(
+  self : Adapter,
+) -> Bool {
+  let _ = self
+  false
+}
+
+///|
 pub fn Adapter::has_feature_native_buffer_binding_array(self : Adapter) -> Bool {
   self.has_feature_native_u32(NATIVE_FEATURE_BUFFER_BINDING_ARRAY)
 }

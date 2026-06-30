@@ -322,9 +322,13 @@ pub const ERROR_TYPE_VALIDATION : UInt = 0x00000002
 
 pub const FEATURES_DEPTH_CLIP_CONTROL : UInt64 = 0x0000000000000001
 
+pub const FEATURES_EXPERIMENTAL_MESH_SHADER : UInt64 = 0x0001000000000000
+
+pub const FEATURES_EXPERIMENTAL_MESH_SHADER_POINTS : UInt64 = 0x0080000000000000
+
 pub const FEATURES_PUSH_CONSTANTS : UInt64 = 0x0000000000010000
 
-pub const FEATURES_QUERYABLE_MASK : UInt64 = 0x0000406010010001
+pub const FEATURES_QUERYABLE_MASK : UInt64 = 0x0081406010010001
 
 pub const FEATURES_SHADER_INT64 : UInt64 = 0x0000002000000000
 
@@ -1497,6 +1501,8 @@ pub fn Adapter::get_features(Self, @c.WGPUSupportedFeaturesPtr) -> Unit
 pub fn Adapter::get_info(Self, @c.WGPUAdapterInfoPtr) -> @c.WGPUStatus
 pub fn Adapter::get_limits(Self, @c.WGPULimitsPtr) -> @c.WGPUStatus
 pub fn Adapter::has_feature(Self, @c.WGPUFeatureName) -> Bool
+pub fn Adapter::has_feature_experimental_mesh_shader(Self) -> Bool
+pub fn Adapter::has_feature_experimental_mesh_shader_points(Self) -> Bool
 pub fn Adapter::has_feature_native_buffer_binding_array(Self) -> Bool
 pub fn Adapter::has_feature_native_clear_texture(Self) -> Bool
 pub fn Adapter::has_feature_native_conservative_rasterization(Self) -> Bool
@@ -1985,6 +1991,8 @@ pub fn Device::get_lost_future(Self) -> @c.WGPUFuture
 pub fn Device::get_queue(Self) -> Queue
 pub fn Device::get_supported_read_only_binding_type_u32(Self, UInt) -> UInt
 pub fn Device::has_feature(Self, @c.WGPUFeatureName) -> Bool
+pub fn Device::has_feature_experimental_mesh_shader(Self) -> Bool
+pub fn Device::has_feature_experimental_mesh_shader_points(Self) -> Bool
 pub fn Device::has_feature_native_buffer_binding_array(Self) -> Bool
 pub fn Device::has_feature_native_clear_texture(Self) -> Bool
 pub fn Device::has_feature_native_conservative_rasterization(Self) -> Bool

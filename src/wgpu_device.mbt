@@ -139,6 +139,20 @@ pub fn Device::has_feature_native_texture_binding_array(self : Device) -> Bool {
 }
 
 ///|
+pub fn Device::has_feature_experimental_mesh_shader(self : Device) -> Bool {
+  let _ = self
+  false
+}
+
+///|
+pub fn Device::has_feature_experimental_mesh_shader_points(
+  self : Device,
+) -> Bool {
+  let _ = self
+  false
+}
+
+///|
 pub fn Device::has_feature_native_buffer_binding_array(self : Device) -> Bool {
   self.has_feature_native_u32(NATIVE_FEATURE_BUFFER_BINDING_ARRAY)
 }

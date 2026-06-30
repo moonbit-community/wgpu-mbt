@@ -18,6 +18,14 @@ test "rust feature bit constants align with wgpu" {
     @wgpu.FEATURES_DEPTH_CLIP_CONTROL == 0x0000000000000001UL,
     content="true",
   )
+  inspect(
+    @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER == 0x0001000000000000UL,
+    content="true",
+  )
+  inspect(
+    @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER_POINTS == 0x0080000000000000UL,
+    content="true",
+  )
   inspect(@wgpu.FEATURES_PUSH_CONSTANTS == 0x0000000000010000UL, content="true")
   inspect(@wgpu.FEATURES_TEXTURE_ATOMIC == 0x0000000010000000UL, content="true")
   inspect(@wgpu.FEATURES_SHADER_INT64 == 0x0000002000000000UL, content="true")
@@ -30,6 +38,8 @@ test "rust feature bit constants align with wgpu" {
     @wgpu.FEATURES_QUERYABLE_MASK ==
     (
       @wgpu.FEATURES_DEPTH_CLIP_CONTROL |
+      @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER |
+      @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER_POINTS |
       @wgpu.FEATURES_PUSH_CONSTANTS |
       @wgpu.FEATURES_TEXTURE_ATOMIC |
       @wgpu.FEATURES_SHADER_INT64 |
@@ -52,6 +62,8 @@ test "rust feature mask helpers report missing bits" {
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
     let required = @wgpu.FEATURES_DEPTH_CLIP_CONTROL |
+      @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER |
+      @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER_POINTS |
       @wgpu.FEATURES_PUSH_CONSTANTS |
       @wgpu.FEATURES_TEXTURE_ATOMIC |
       @wgpu.FEATURES_SHADER_INT64 |
@@ -70,6 +82,14 @@ test "rust feature mask helpers report missing bits" {
     if adapter.has_feature_native_immediates() {
       expected_adapter_supported.val = expected_adapter_supported.val |
         @wgpu.FEATURES_PUSH_CONSTANTS
+    }
+    if adapter.has_feature_experimental_mesh_shader() {
+      expected_adapter_supported.val = expected_adapter_supported.val |
+        @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER
+    }
+    if adapter.has_feature_experimental_mesh_shader_points() {
+      expected_adapter_supported.val = expected_adapter_supported.val |
+        @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER_POINTS
     }
     if adapter.has_feature_native_texture_atomic() {
       expected_adapter_supported.val = expected_adapter_supported.val |
@@ -126,6 +146,19 @@ test "rust feature mask helpers report missing bits" {
       adapter.has_feature_native_texture_int64_atomic(),
       content="true",
     )
+    inspect(
+      ((adapter_missing & @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER) == 0UL) ==
+      adapter.has_feature_experimental_mesh_shader(),
+      content="true",
+    )
+    inspect(
+      (
+        (adapter_missing & @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER_POINTS) ==
+        0UL
+      ) ==
+      adapter.has_feature_experimental_mesh_shader_points(),
+      content="true",
+    )
 
     let expected_device_supported : Ref[UInt64] = @ref.new(0UL)
     if device.has_feature_u32(@wgpu.FEATURE_NAME_DEPTH_CLIP_CONTROL) {
@@ -135,6 +168,14 @@ test "rust feature mask helpers report missing bits" {
     if device.has_feature_native_immediates() {
       expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_PUSH_CONSTANTS
+    }
+    if device.has_feature_experimental_mesh_shader() {
+      expected_device_supported.val = expected_device_supported.val |
+        @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER
+    }
+    if device.has_feature_experimental_mesh_shader_points() {
+      expected_device_supported.val = expected_device_supported.val |
+        @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER_POINTS
     }
     if device.has_feature_native_texture_atomic() {
       expected_device_supported.val = expected_device_supported.val |
@@ -189,6 +230,16 @@ test "rust feature mask helpers report missing bits" {
     inspect(
       ((device_missing & @wgpu.FEATURES_TEXTURE_INT64_ATOMIC) == 0UL) ==
       device.has_feature_native_texture_int64_atomic(),
+      content="true",
+    )
+    inspect(
+      ((device_missing & @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER) == 0UL) ==
+      device.has_feature_experimental_mesh_shader(),
+      content="true",
+    )
+    inspect(
+      ((device_missing & @wgpu.FEATURES_EXPERIMENTAL_MESH_SHADER_POINTS) == 0UL) ==
+      device.has_feature_experimental_mesh_shader_points(),
       content="true",
     )
 

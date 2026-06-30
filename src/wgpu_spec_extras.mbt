@@ -1322,6 +1322,18 @@ declare pub fn Adapter::has_feature_native_texture_binding_array(
 
 ///|
 #declaration_only
+declare pub fn Adapter::has_feature_experimental_mesh_shader(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Adapter::has_feature_experimental_mesh_shader_points(
+  self : Adapter,
+) -> Bool
+
+///|
+#declaration_only
 declare pub fn Adapter::has_feature_native_buffer_binding_array(
   self : Adapter,
 ) -> Bool
@@ -1799,6 +1811,18 @@ declare pub fn Device::has_feature_native_spirv_shader_passthrough(
 ///|
 #declaration_only
 declare pub fn Device::has_feature_native_texture_binding_array(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_experimental_mesh_shader(
+  self : Device,
+) -> Bool
+
+///|
+#declaration_only
+declare pub fn Device::has_feature_experimental_mesh_shader_points(
   self : Device,
 ) -> Bool
 
