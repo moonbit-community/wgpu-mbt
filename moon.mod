@@ -17,5 +17,5 @@ preferred_target = "native"
 options(
   source: "src",
   "--moonbit-unstable-prebuild": "build.js",
-  exclude: [ "trace.json", "_build", "target", "src/c/target" ],
+  exclude: [ "_build", "target", "src/c/target" ],
 )
