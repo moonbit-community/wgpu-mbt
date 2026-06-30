@@ -152,6 +152,10 @@ void mbt_wgpu_buffer_unmap_tracked(WGPUBuffer buffer) {
   mbt_buffer_track_set_state(buffer, WGPUBufferMapState_Unmapped);
 }
 
+void mbt_wgpu_buffer_mark_mapped_tracked(WGPUBuffer buffer) {
+  mbt_buffer_track_set_state(buffer, WGPUBufferMapState_Mapped);
+}
+
 typedef struct {
   WGPUMapAsyncStatus status;
 } mbt_map_result2_t;

@@ -1010,6 +1010,14 @@ pub fn query_type_timestamp() -> WGPUQueryType
 
 pub fn queue_get_timestamp_period(WGPUQueue) -> Float
 
+pub fn queue_map_read_async_clear(UInt64) -> Unit
+
+pub fn queue_map_read_async_read(UInt64, Bytes, UInt64) -> Bool
+
+pub fn queue_map_read_async_size_u64(UInt64) -> UInt64
+
+pub fn queue_map_read_async_status_u32(UInt64) -> UInt
+
 pub fn queue_on_submitted_work_done_async_clear(UInt64) -> Unit
 
 pub fn queue_on_submitted_work_done_async_status_u32(UInt64) -> UInt
@@ -1025,6 +1033,8 @@ pub fn queue_set_label_utf8(WGPUQueue, Bytes, UInt64) -> Unit
 pub fn queue_submit(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> Unit
 
 pub fn queue_submit_for_index(WGPUQueue, UInt64, FixedArray[WGPUCommandBuffer]) -> UInt64
+
+pub fn queue_submit_one_and_map_read_async(WGPUQueue, WGPUCommandBuffer, WGPUBuffer, UInt64, UInt64) -> UInt64
 
 pub fn queue_write_buffer(WGPUQueue, WGPUBuffer, UInt64, Bytes, UInt64) -> Unit
 

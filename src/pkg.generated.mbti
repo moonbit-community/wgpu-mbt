@@ -2306,6 +2306,9 @@ pub struct Queue {
 pub fn Queue::add_ref(Self) -> Self
 pub fn Queue::add_ref_raw(Self) -> Unit
 pub fn Queue::get_timestamp_period(Self) -> Float
+pub fn Queue::map_read_async_clear(Self, UInt64) -> Unit
+pub fn Queue::map_read_async_read(Self, UInt64) -> Bytes
+pub fn Queue::map_read_async_status_u32(Self, UInt64) -> UInt
 pub fn Queue::on_submitted_work_done_async_clear(Self, UInt64) -> Unit
 pub fn Queue::on_submitted_work_done_async_status_u32(Self, UInt64) -> UInt
 pub fn Queue::on_submitted_work_done_async_take_or_raise(Self, UInt64) -> Unit raise QueueWorkDoneError
@@ -2321,6 +2324,7 @@ pub fn Queue::submit(Self, Array[CommandBuffer]) -> Unit
 pub fn Queue::submit_for_index(Self, Array[CommandBuffer]) -> UInt64
 pub fn Queue::submit_for_index_raw(Self, UInt64, @c.WGPUCommandBufferPtr) -> UInt64
 pub fn Queue::submit_one(Self, CommandBuffer) -> Unit
+pub fn Queue::submit_one_and_map_read_async(Self, CommandBuffer, Buffer, UInt64, UInt64) -> UInt64
 pub fn Queue::submit_one_for_index(Self, CommandBuffer) -> UInt64
 pub fn Queue::submit_raw(Self, UInt64, @c.WGPUCommandBufferPtr) -> Unit
 pub fn Queue::timestamp_period(Self) -> Float

@@ -61,3 +61,62 @@ test "wgpu queue.on_submitted_work_done_sync" {
   adapter.release()
   instance.release()
 }
+
+///|
+test "wgpu queue: submit one and map read async" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let queue = device.queue()
+
+  let src = device.create_buffer(
+    size=8UL,
+    usage=bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
+  )
+  let staging = device.create_buffer(
+    size=8UL,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+  )
+  queue.write_buffer(src, 0UL, u32le_pack([0x11223344U, 0x55667788U]))
+
+  let encoder = device.create_command_encoder()
+  encoder.copy_buffer_to_buffer(src, 0UL, staging, 0UL, 8UL)
+  let cmd = encoder.finish()
+  let future_id = queue.submit_one_and_map_read_async(cmd, staging, 0UL, 8UL)
+  inspect(future_id != 0UL, content="true")
+  ignore(device.poll(wait=true))
+
+  let completed : Ref[Bool] = @ref.new(false)
+  for _ in 0..<4000 {
+    if !completed.val {
+      ignore(device.poll())
+      let wait = instance.wait_any_one(future_id)
+      completed.val = wait.completed
+      if !completed.val {
+        instance.process_events()
+      }
+    }
+  }
+  inspect(completed.val, content="true")
+  inspect(
+    queue.map_read_async_status_u32(future_id) == @wgpu.MAP_ASYNC_STATUS_SUCCESS,
+    content="true",
+  )
+  let out = queue.map_read_async_read(future_id)
+  @debug.debug_inspect(
+    [u32le_at(out, 0), u32le_at(out, 4)],
+    content="[287454020, 1432778632]",
+  )
+  inspect(@wgpu_c.buffer_map_state_u32(staging.get_map_state()), content="3")
+  queue.map_read_async_clear(future_id)
+  inspect(@wgpu_c.buffer_map_state_u32(staging.get_map_state()), content="1")
+
+  cmd.release()
+  encoder.release()
+  staging.release()
+  src.release()
+  queue.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}

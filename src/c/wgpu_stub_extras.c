@@ -230,9 +230,22 @@ typedef struct {
   uint32_t status_u32;
 } mbt_async_queue_work_done_slot_t;
 
+typedef struct {
+  uint64_t id;
+  _Atomic uint32_t done_u32;
+  uint32_t status_u32;
+  WGPUBuffer buffer;
+  uint64_t offset_u64;
+  uint64_t size_u64;
+  uint32_t mapped_u32;
+  uint64_t message_len_u64;
+  uint8_t message[MBT_WGPU_ASYNC_MSG_MAX_LEN];
+} mbt_async_buffer_map_read_slot_t;
+
 static mbt_async_request_adapter_slot_t g_async_request_adapter_slots[MBT_WGPU_ASYNC_SLOT_CAP];
 static mbt_async_request_device_slot_t g_async_request_device_slots[MBT_WGPU_ASYNC_SLOT_CAP];
 static mbt_async_queue_work_done_slot_t g_async_queue_work_done_slots[MBT_WGPU_ASYNC_SLOT_CAP];
+static mbt_async_buffer_map_read_slot_t g_async_buffer_map_read_slots[MBT_WGPU_ASYNC_SLOT_CAP];
 
 #define MBT_WGPU_DEVICE_INFO_CACHE_CAP 128u
 #define MBT_WGPU_DEVICE_INFO_STR_MAX 256u
@@ -455,6 +468,46 @@ static void mbt_async_queue_work_done_slot_clear(uint64_t id) {
   mbt_wgpu_wait_any_mu_unlock();
 }
 
+static mbt_async_buffer_map_read_slot_t *mbt_async_buffer_map_read_slot_new(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  mbt_async_buffer_map_read_slot_t *slot = NULL;
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_buffer_map_read_slots[i].id == 0u) {
+      slot = &g_async_buffer_map_read_slots[i];
+      memset(slot, 0, sizeof(*slot));
+      slot->id = id;
+      atomic_store_explicit(&slot->done_u32, 0u, memory_order_relaxed);
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+  return slot;
+}
+
+static mbt_async_buffer_map_read_slot_t *mbt_async_buffer_map_read_slot_get(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  mbt_async_buffer_map_read_slot_t *slot = NULL;
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_buffer_map_read_slots[i].id == id) {
+      slot = &g_async_buffer_map_read_slots[i];
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+  return slot;
+}
+
+static void mbt_async_buffer_map_read_slot_clear(uint64_t id) {
+  mbt_wgpu_wait_any_mu_lock();
+  for (size_t i = 0; i < MBT_WGPU_ASYNC_SLOT_CAP; i++) {
+    if (g_async_buffer_map_read_slots[i].id == id) {
+      memset(&g_async_buffer_map_read_slots[i], 0, sizeof(g_async_buffer_map_read_slots[i]));
+      break;
+    }
+  }
+  mbt_wgpu_wait_any_mu_unlock();
+}
+
 static void mbt_wgpu_request_adapter_async_cb(WGPURequestAdapterStatus status,
                                               WGPUAdapter adapter,
                                               WGPUStringView message,
@@ -526,6 +579,65 @@ static void mbt_wgpu_queue_work_done_mark_completed_cb(WGPUQueueWorkDoneStatus s
   }
 }
 
+static void mbt_wgpu_buffer_map_read_async_cb(WGPUMapAsyncStatus status,
+                                             WGPUStringView message,
+                                             void *userdata1,
+                                             void *userdata2) {
+  (void)userdata2;
+  mbt_async_buffer_map_read_slot_t *slot = (mbt_async_buffer_map_read_slot_t *)userdata1;
+  if (!slot) {
+    return;
+  }
+  slot->status_u32 = (uint32_t)status;
+  slot->message_len_u64 = 0u;
+  if (message.data && message.length > 0u) {
+    size_t n = message.length;
+    if (n > MBT_WGPU_ASYNC_MSG_MAX_LEN) {
+      n = MBT_WGPU_ASYNC_MSG_MAX_LEN;
+    }
+    memcpy(slot->message, message.data, n);
+    slot->message_len_u64 = (uint64_t)n;
+  }
+  if (status == WGPUMapAsyncStatus_Success && slot->buffer) {
+    slot->mapped_u32 = 1u;
+    mbt_wgpu_buffer_mark_mapped_tracked(slot->buffer);
+  }
+  atomic_store_explicit(&slot->done_u32, 1u, memory_order_release);
+  if (slot->id != 0u) {
+    mbt_wait_any_mark_completed(slot->id);
+  }
+}
+
+static void mbt_wgpu_buffer_map_read_after_submit_cb(WGPUQueueWorkDoneStatus status,
+                                                    WGPUStringView message,
+                                                    void *userdata1,
+                                                    void *userdata2) {
+  (void)message;
+  (void)userdata2;
+  mbt_async_buffer_map_read_slot_t *slot = (mbt_async_buffer_map_read_slot_t *)userdata1;
+  if (!slot) {
+    return;
+  }
+  if (status != WGPUQueueWorkDoneStatus_Success) {
+    slot->status_u32 = (uint32_t)WGPUMapAsyncStatus_Error;
+    atomic_store_explicit(&slot->done_u32, 1u, memory_order_release);
+    if (slot->id != 0u) {
+      mbt_wait_any_mark_completed(slot->id);
+    }
+    return;
+  }
+  WGPUBufferMapCallbackInfo cb = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_wgpu_buffer_map_read_async_cb,
+      .userdata1 = slot,
+      .userdata2 = NULL,
+  };
+  (void)wgpuBufferMapAsync(slot->buffer, WGPUMapMode_Read,
+                          (size_t)slot->offset_u64,
+                          (size_t)slot->size_u64, cb);
+}
+
 uint64_t mbt_wgpu_queue_on_submitted_work_done_future_id_u64(WGPUQueue queue) {
   if (!queue) {
     return 0u;
@@ -564,6 +676,113 @@ uint32_t mbt_wgpu_queue_on_submitted_work_done_async_status_u32(uint64_t future_
 void mbt_wgpu_queue_on_submitted_work_done_async_clear(uint64_t future_id) {
   mbt_wait_any_remove_id(future_id);
   mbt_async_queue_work_done_slot_clear(future_id);
+}
+
+uint64_t mbt_wgpu_queue_submit_one_and_map_read_async(
+    WGPUQueue queue, WGPUCommandBuffer command_buffer, WGPUBuffer buffer,
+    uint64_t offset, uint64_t size) {
+  if (!queue || !command_buffer || !buffer || size == 0u) {
+    return 0u;
+  }
+  if ((offset % 8u) != 0u || (size % 4u) != 0u) {
+    return 0u;
+  }
+  uint64_t buffer_size = wgpuBufferGetSize(buffer);
+  if (offset > buffer_size || size > (buffer_size - offset)) {
+    return 0u;
+  }
+  if ((uint64_t)(size_t)offset != offset || (uint64_t)(size_t)size != size) {
+    return 0u;
+  }
+
+  uint64_t id = mbt_wait_any_new_id();
+  if (id == 0u) {
+    return 0u;
+  }
+  mbt_async_buffer_map_read_slot_t *slot = mbt_async_buffer_map_read_slot_new(id);
+  if (!slot) {
+    mbt_wait_any_remove_id(id);
+    return 0u;
+  }
+  slot->buffer = buffer;
+  slot->offset_u64 = offset;
+  slot->size_u64 = size;
+  mbt_wgpu_buffer_add_ref_tracked(buffer);
+
+  WGPUCommandBuffer commands[1] = {command_buffer};
+  wgpuQueueSubmit(queue, 1u, commands);
+
+  WGPUQueueWorkDoneCallbackInfo cb = {
+      .nextInChain = NULL,
+      .mode = WGPUCallbackMode_AllowProcessEvents,
+      .callback = mbt_wgpu_buffer_map_read_after_submit_cb,
+      .userdata1 = slot,
+      .userdata2 = NULL,
+  };
+  (void)wgpuQueueOnSubmittedWorkDone(queue, cb);
+  return id;
+}
+
+uint32_t mbt_wgpu_queue_map_read_async_status_u32(uint64_t future_id) {
+  mbt_async_buffer_map_read_slot_t *slot = mbt_async_buffer_map_read_slot_get(future_id);
+  if (!slot) {
+    return 0u;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return 0u;
+  }
+  return slot->status_u32;
+}
+
+uint64_t mbt_wgpu_queue_map_read_async_size_u64(uint64_t future_id) {
+  mbt_async_buffer_map_read_slot_t *slot = mbt_async_buffer_map_read_slot_get(future_id);
+  if (!slot) {
+    return 0u;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return 0u;
+  }
+  if (slot->status_u32 != (uint32_t)WGPUMapAsyncStatus_Success) {
+    return 0u;
+  }
+  return slot->size_u64;
+}
+
+int32_t mbt_wgpu_queue_map_read_async_read(uint64_t future_id,
+                                          uint8_t *out,
+                                          uint64_t out_len) {
+  mbt_async_buffer_map_read_slot_t *slot = mbt_async_buffer_map_read_slot_get(future_id);
+  if (!slot || !out) {
+    return false;
+  }
+  if (atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return false;
+  }
+  if (slot->status_u32 != (uint32_t)WGPUMapAsyncStatus_Success) {
+    return false;
+  }
+  if (out_len < slot->size_u64) {
+    return false;
+  }
+  const void *mapped = wgpuBufferGetConstMappedRange(
+      slot->buffer, (size_t)slot->offset_u64, (size_t)slot->size_u64);
+  if (!mapped) {
+    return false;
+  }
+  memcpy(out, mapped, (size_t)slot->size_u64);
+  return true;
+}
+
+void mbt_wgpu_queue_map_read_async_clear(uint64_t future_id) {
+  mbt_async_buffer_map_read_slot_t *slot = mbt_async_buffer_map_read_slot_get(future_id);
+  if (slot && slot->buffer) {
+    if (slot->mapped_u32 != 0u) {
+      mbt_wgpu_buffer_unmap_tracked(slot->buffer);
+    }
+    mbt_wgpu_buffer_release_tracked(slot->buffer);
+  }
+  mbt_wait_any_remove_id(future_id);
+  mbt_async_buffer_map_read_slot_clear(future_id);
 }
 
 uint64_t mbt_wgpu_instance_request_adapter_future_id_u64(

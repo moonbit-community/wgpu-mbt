@@ -28,3 +28,8 @@
 static inline WGPUStringView mbt_wgpu_string_view(const uint8_t *bytes, uint64_t len) {
   return (WGPUStringView){.data = (const char *)bytes, .length = len};
 }
+
+void mbt_wgpu_buffer_add_ref_tracked(WGPUBuffer buffer);
+void mbt_wgpu_buffer_release_tracked(WGPUBuffer buffer);
+void mbt_wgpu_buffer_unmap_tracked(WGPUBuffer buffer);
+void mbt_wgpu_buffer_mark_mapped_tracked(WGPUBuffer buffer);

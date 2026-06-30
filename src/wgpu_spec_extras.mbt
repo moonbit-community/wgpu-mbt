@@ -3278,6 +3278,37 @@ declare pub fn Queue::on_submitted_work_done_async_clear(
 
 ///|
 #declaration_only
+declare pub fn Queue::submit_one_and_map_read_async(
+  self : Queue,
+  cmd : CommandBuffer,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> UInt64
+
+///|
+#declaration_only
+declare pub fn Queue::map_read_async_status_u32(
+  self : Queue,
+  future_id : UInt64,
+) -> UInt
+
+///|
+#declaration_only
+declare pub fn Queue::map_read_async_read(
+  self : Queue,
+  future_id : UInt64,
+) -> Bytes
+
+///|
+#declaration_only
+declare pub fn Queue::map_read_async_clear(
+  self : Queue,
+  future_id : UInt64,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn Queue::on_submitted_work_done_async_take_or_raise(
   self : Queue,
   future_id : UInt64,

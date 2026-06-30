@@ -92,6 +92,53 @@ pub fn Queue::on_submitted_work_done_async_clear(
 }
 
 ///|
+pub fn Queue::submit_one_and_map_read_async(
+  self : Queue,
+  cmd : CommandBuffer,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> UInt64 {
+  @c.queue_submit_one_and_map_read_async(
+    self.raw,
+    cmd.raw,
+    buffer.raw,
+    offset,
+    size,
+  )
+}
+
+///|
+pub fn Queue::map_read_async_status_u32(
+  self : Queue,
+  future_id : UInt64,
+) -> UInt {
+  let _ = self
+  @c.queue_map_read_async_status_u32(future_id)
+}
+
+///|
+pub fn Queue::map_read_async_read(self : Queue, future_id : UInt64) -> Bytes {
+  let _ = self
+  let size = @c.queue_map_read_async_size_u64(future_id)
+  if size == 0UL {
+    return []
+  }
+  let out = Bytes::makei(size.to_int(), _ => 0)
+  if @c.queue_map_read_async_read(future_id, out, size) {
+    out
+  } else {
+    []
+  }
+}
+
+///|
+pub fn Queue::map_read_async_clear(self : Queue, future_id : UInt64) -> Unit {
+  let _ = self
+  @c.queue_map_read_async_clear(future_id)
+}
+
+///|
 pub fn Queue::on_submitted_work_done_async_take_or_raise(
   self : Queue,
   future_id : UInt64,

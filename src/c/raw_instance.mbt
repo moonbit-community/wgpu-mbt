@@ -71,6 +71,32 @@ pub extern "C" fn queue_on_submitted_work_done_async_clear(
 ) -> Unit = "mbt_wgpu_queue_on_submitted_work_done_async_clear"
 
 ///|
+pub extern "C" fn queue_submit_one_and_map_read_async(
+  queue : Queue,
+  command_buffer : CommandBuffer,
+  buffer : Buffer,
+  offset : UInt64,
+  size : UInt64,
+) -> UInt64 = "mbt_wgpu_queue_submit_one_and_map_read_async"
+
+///|
+pub extern "C" fn queue_map_read_async_status_u32(future_id : UInt64) -> UInt = "mbt_wgpu_queue_map_read_async_status_u32"
+
+///|
+pub extern "C" fn queue_map_read_async_size_u64(future_id : UInt64) -> UInt64 = "mbt_wgpu_queue_map_read_async_size_u64"
+
+///|
+#borrow(out)
+pub extern "C" fn queue_map_read_async_read(
+  future_id : UInt64,
+  out : Bytes,
+  out_len : UInt64,
+) -> Bool = "mbt_wgpu_queue_map_read_async_read"
+
+///|
+pub extern "C" fn queue_map_read_async_clear(future_id : UInt64) -> Unit = "mbt_wgpu_queue_map_read_async_clear"
+
+///|
 pub extern "C" fn instance_request_adapter_future_id_u64(
   instance : Instance,
   options : WGPURequestAdapterOptionsPtr,
