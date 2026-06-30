@@ -2265,6 +2265,22 @@ uint32_t mbt_wgpu_render_pipeline_desc_builder_set_topology(void *builder, uint3
   return MBT_WGPU_RP_OK;
 }
 
+uint32_t mbt_wgpu_render_pipeline_desc_builder_set_strip_index_format(
+    void *builder, uint32_t index_format_u32) {
+  if (!builder) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_render_pipeline_desc_t *out =
+      mbt_wgpu_render_pipeline_desc_builder_unwrap(builder);
+  if (!out) {
+    return MBT_WGPU_RP_ERR_NULL_BUILDER;
+  }
+  mbt_wgpu_rp_builder_clear_error(out);
+  out->primitive.stripIndexFormat = (WGPUIndexFormat)index_format_u32;
+  out->desc.primitive.stripIndexFormat = (WGPUIndexFormat)index_format_u32;
+  return MBT_WGPU_RP_OK;
+}
+
 uint32_t mbt_wgpu_render_pipeline_desc_builder_set_cull_mode(void *builder,
                                                              uint32_t cull_mode_u32) {
   if (!builder) {

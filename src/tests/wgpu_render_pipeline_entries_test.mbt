@@ -190,3 +190,44 @@ test "wgpu render pipeline: descriptor builder replaces modules and primitive fl
   adapter.release()
   instance.release()
 }
+
+///|
+test "wgpu render pipeline: descriptor builder strip index format" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let wgsl : String =
+    #|struct VSOut { @builtin(position) pos: vec4<f32> };
+    #|
+    #|@vertex
+    #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+    #|  var positions = array<vec2<f32>, 4>(
+    #|    vec2<f32>(-0.5, -0.5),
+    #|    vec2<f32>( 0.5, -0.5),
+    #|    vec2<f32>(-0.5,  0.5),
+    #|    vec2<f32>( 0.5,  0.5),
+    #|  );
+    #|  var out: VSOut;
+    #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
+    #|  return out;
+    #|}
+    #|
+    #|@fragment
+    #|fn fs_main() -> @location(0) vec4<f32> {
+    #|  return vec4<f32>(0.0, 1.0, 0.0, 1.0);
+    #|}
+    #|
+  let sm = device.create_shader_module_wgsl(wgsl)
+  let builder = @wgpu.RenderPipelineDescBuilder::new(sm)
+  builder.set_color_target_format(
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA8_UNORM),
+  )
+  builder.set_topology_u32(@wgpu.PRIMITIVE_TOPOLOGY_LINE_STRIP)
+  builder.set_strip_index_format_u32(@wgpu.INDEX_FORMAT_UINT16)
+  let pipeline = builder.create_pipeline(device)
+  pipeline.release()
+  sm.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}

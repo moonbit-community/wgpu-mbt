@@ -2492,6 +2492,7 @@ pub fn RenderPipelineDescBuilder::set_entry_points(Self, String, String) -> Unit
 pub fn RenderPipelineDescBuilder::set_fragment_module(Self, ShaderModule) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_multisample(Self, UInt, mask_u32? : UInt, alpha_to_coverage_enabled? : Bool) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(Self, UInt) -> Unit raise RenderPipelineDescError
+pub fn RenderPipelineDescBuilder::set_strip_index_format_u32(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_topology_u32(Self, UInt) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_unclipped_depth(Self, Bool) -> Unit raise RenderPipelineDescError
 pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(Self, UInt64, UInt) -> Unit raise RenderPipelineDescError

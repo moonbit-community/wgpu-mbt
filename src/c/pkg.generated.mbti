@@ -1232,6 +1232,8 @@ pub fn render_pipeline_desc_builder_set_multisample(RenderPipelineDescBuilderObj
 
 pub fn render_pipeline_desc_builder_set_polygon_mode(RenderPipelineDescBuilderObj, UInt) -> UInt
 
+pub fn render_pipeline_desc_builder_set_strip_index_format(RenderPipelineDescBuilderObj, UInt) -> UInt
+
 pub fn render_pipeline_desc_builder_set_topology(RenderPipelineDescBuilderObj, UInt) -> UInt
 
 pub fn render_pipeline_desc_builder_set_unclipped_depth(RenderPipelineDescBuilderObj, Bool) -> UInt

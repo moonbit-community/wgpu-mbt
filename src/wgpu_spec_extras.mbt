@@ -3037,6 +3037,13 @@ declare pub fn RenderPipelineDescBuilder::set_topology_u32(
 
 ///|
 #declaration_only
+declare pub fn RenderPipelineDescBuilder::set_strip_index_format_u32(
+  self : RenderPipelineDescBuilder,
+  index_format_u32 : UInt,
+) -> Unit raise RenderPipelineDescError
+
+///|
+#declaration_only
 declare pub fn RenderPipelineDescBuilder::set_cull_mode_u32(
   self : RenderPipelineDescBuilder,
   cull_mode_u32 : UInt,

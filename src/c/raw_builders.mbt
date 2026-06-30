@@ -384,6 +384,13 @@ pub extern "C" fn render_pipeline_desc_builder_set_topology(
 
 ///|
 #borrow(builder)
+pub extern "C" fn render_pipeline_desc_builder_set_strip_index_format(
+  builder : RenderPipelineDescBuilderObj,
+  index_format_u32 : UInt,
+) -> UInt = "mbt_wgpu_render_pipeline_desc_builder_set_strip_index_format"
+
+///|
+#borrow(builder)
 pub extern "C" fn render_pipeline_desc_builder_set_cull_mode(
   builder : RenderPipelineDescBuilderObj,
   cull_mode_u32 : UInt,

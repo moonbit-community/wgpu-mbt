@@ -378,6 +378,21 @@ pub fn RenderPipelineDescBuilder::set_topology_u32(
 }
 
 ///|
+pub fn RenderPipelineDescBuilder::set_strip_index_format_u32(
+  self : RenderPipelineDescBuilder,
+  index_format_u32 : UInt,
+) -> Unit raise RenderPipelineDescError {
+  let err = @c.render_pipeline_desc_builder_set_strip_index_format(
+    self.raw,
+    index_format_u32,
+  )
+  if err != 0U {
+    raise self.last_error()
+  }
+  ()
+}
+
+///|
 pub fn RenderPipelineDescBuilder::set_cull_mode_u32(
   self : RenderPipelineDescBuilder,
   cull_mode_u32 : UInt,
