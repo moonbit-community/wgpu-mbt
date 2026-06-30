@@ -775,6 +775,9 @@ int32_t mbt_wgpu_queue_map_read_async_read(uint64_t future_id,
 
 void mbt_wgpu_queue_map_read_async_clear(uint64_t future_id) {
   mbt_async_buffer_map_read_slot_t *slot = mbt_async_buffer_map_read_slot_get(future_id);
+  if (slot && atomic_load_explicit(&slot->done_u32, memory_order_acquire) == 0u) {
+    return;
+  }
   if (slot && slot->buffer) {
     if (slot->mapped_u32 != 0u) {
       mbt_wgpu_buffer_unmap_tracked(slot->buffer);
