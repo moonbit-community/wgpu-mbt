@@ -588,7 +588,9 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
     uint64_t max_uniform_buffer_binding_size, uint64_t max_storage_buffer_binding_size,
     uint32_t max_sampled_textures_per_shader_stage,
     uint32_t max_samplers_per_shader_stage,
-    uint32_t max_immediate_size, uint32_t max_non_sampler_bindings) {
+    uint32_t max_immediate_size, uint32_t max_non_sampler_bindings,
+    uint32_t max_binding_array_elements_per_shader_stage,
+    uint32_t max_binding_array_sampler_elements_per_shader_stage) {
   WGPULimits base = {0};
   WGPUNativeLimits native_base = {
       .chain =
@@ -599,6 +601,7 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
       .maxImmediateSize = 0u,
       .maxNonSamplerBindings = 0u,
       .maxBindingArrayElementsPerShaderStage = 0u,
+      .maxBindingArraySamplerElementsPerShaderStage = 0u,
   };
   base.nextInChain = &native_base.chain;
   WGPUStatus st = wgpuAdapterGetLimits(adapter, &base);
@@ -638,7 +641,9 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
     out->limits.maxSamplersPerShaderStage = max_samplers_per_shader_stage;
   }
 
-  if (max_immediate_size != 0u || max_non_sampler_bindings != 0u) {
+  if (max_immediate_size != 0u || max_non_sampler_bindings != 0u ||
+      max_binding_array_elements_per_shader_stage != 0u ||
+      max_binding_array_sampler_elements_per_shader_stage != 0u) {
     out->native_limits = (WGPUNativeLimits){
         .chain =
             (WGPUChainedStruct){
@@ -649,12 +654,22 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
         .maxNonSamplerBindings = native_base.maxNonSamplerBindings,
         .maxBindingArrayElementsPerShaderStage =
             native_base.maxBindingArrayElementsPerShaderStage,
+        .maxBindingArraySamplerElementsPerShaderStage =
+            native_base.maxBindingArraySamplerElementsPerShaderStage,
     };
     if (max_immediate_size != 0u) {
       out->native_limits.maxImmediateSize = max_immediate_size;
     }
     if (max_non_sampler_bindings != 0u) {
       out->native_limits.maxNonSamplerBindings = max_non_sampler_bindings;
+    }
+    if (max_binding_array_elements_per_shader_stage != 0u) {
+      out->native_limits.maxBindingArrayElementsPerShaderStage =
+          max_binding_array_elements_per_shader_stage;
+    }
+    if (max_binding_array_sampler_elements_per_shader_stage != 0u) {
+      out->native_limits.maxBindingArraySamplerElementsPerShaderStage =
+          max_binding_array_sampler_elements_per_shader_stage;
     }
     out->limits.nextInChain = &out->native_limits.chain;
   }

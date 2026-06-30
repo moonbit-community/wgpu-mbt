@@ -1027,6 +1027,11 @@ typedef struct WGPUNativeLimits
      * shader stage.
      */
     uint32_t maxBindingArrayElementsPerShaderStage;
+    /**
+     * Maximum number of individual sampler resources within binding arrays per
+     * shader stage.
+     */
+    uint32_t maxBindingArraySamplerElementsPerShaderStage;
 } WGPUNativeLimits;
 
 typedef struct WGPUPipelineLayoutExtras

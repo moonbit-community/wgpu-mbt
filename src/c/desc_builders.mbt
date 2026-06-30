@@ -219,6 +219,8 @@ pub extern "C" fn limits_new_from_adapter_overrides_u32(
   max_samplers_per_shader_stage_u32 : UInt,
   max_immediate_size_u32 : UInt,
   max_non_sampler_bindings_u32 : UInt,
+  max_binding_array_elements_per_shader_stage_u32 : UInt,
+  max_binding_array_sampler_elements_per_shader_stage_u32 : UInt,
 ) -> WGPULimitsPtr = "mbt_wgpu_limits_new_from_adapter_overrides_u32"
 
 ///|

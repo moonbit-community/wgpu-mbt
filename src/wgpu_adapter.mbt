@@ -190,6 +190,8 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
   max_samplers_per_shader_stage_u32? : UInt = 0U,
   max_immediate_size_u32? : UInt = 0U,
   max_non_sampler_bindings_u32? : UInt = 0U,
+  max_binding_array_elements_per_shader_stage_u32? : UInt = 0U,
+  max_binding_array_sampler_elements_per_shader_stage_u32? : UInt = 0U,
   label? : String = "",
   queue_label? : String = "",
   trace_path? : String = "",
@@ -206,6 +208,8 @@ pub fn Adapter::request_device_sync_with_features_and_limits(
     max_samplers_per_shader_stage_u32,
     max_immediate_size_u32,
     max_non_sampler_bindings_u32,
+    max_binding_array_elements_per_shader_stage_u32,
+    max_binding_array_sampler_elements_per_shader_stage_u32,
   )
   let label_bytes = utf8_bytes(label)
   let queue_label_bytes = utf8_bytes(queue_label)
@@ -1302,6 +1306,22 @@ pub fn Adapter::limits_max_immediate_size_u32(self : Adapter) -> UInt {
 ///|
 pub fn Adapter::limits_max_non_sampler_bindings_u32(self : Adapter) -> UInt {
   @c.adapter_limits_max_non_sampler_bindings_u32(self.raw)
+}
+
+///|
+pub fn Adapter::limits_max_binding_array_elements_per_shader_stage_u32(
+  self : Adapter,
+) -> UInt {
+  @c.adapter_limits_max_binding_array_elements_per_shader_stage_u32(self.raw)
+}
+
+///|
+pub fn Adapter::limits_max_binding_array_sampler_elements_per_shader_stage_u32(
+  self : Adapter,
+) -> UInt {
+  @c.adapter_limits_max_binding_array_sampler_elements_per_shader_stage_u32(
+    self.raw,
+  )
 }
 
 ///|

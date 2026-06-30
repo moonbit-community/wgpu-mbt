@@ -49,6 +49,8 @@ test "wgpu adapter limits (selected fields)" {
   let max_wg_dim = adapter.limits_max_compute_workgroups_per_dimension_u32()
   let _ = adapter.limits_max_immediate_size_u32()
   let _ = adapter.limits_max_non_sampler_bindings_u32()
+  let _ = adapter.limits_max_binding_array_elements_per_shader_stage_u32()
+  let _ = adapter.limits_max_binding_array_sampler_elements_per_shader_stage_u32()
   let ok = max_dim_1d > 0U &&
     max_dim_2d > 0U &&
     max_dim_3d > 0U &&

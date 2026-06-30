@@ -641,6 +641,22 @@ pub fn Device::limits_max_non_sampler_bindings_u32(self : Device) -> UInt {
 }
 
 ///|
+pub fn Device::limits_max_binding_array_elements_per_shader_stage_u32(
+  self : Device,
+) -> UInt {
+  @c.device_limits_max_binding_array_elements_per_shader_stage_u32(self.raw)
+}
+
+///|
+pub fn Device::limits_max_binding_array_sampler_elements_per_shader_stage_u32(
+  self : Device,
+) -> UInt {
+  @c.device_limits_max_binding_array_sampler_elements_per_shader_stage_u32(
+    self.raw,
+  )
+}
+
+///|
 pub fn Device::create_buffer(
   self : Device,
   size~ : UInt64,

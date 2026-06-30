@@ -48,6 +48,10 @@ pub fn adapter_limits_max_bind_groups_plus_vertex_buffers_u32(WGPUAdapter) -> UI
 
 pub fn adapter_limits_max_bind_groups_u32(WGPUAdapter) -> UInt
 
+pub fn adapter_limits_max_binding_array_elements_per_shader_stage_u32(WGPUAdapter) -> UInt
+
+pub fn adapter_limits_max_binding_array_sampler_elements_per_shader_stage_u32(WGPUAdapter) -> UInt
+
 pub fn adapter_limits_max_bindings_per_bind_group_u32(WGPUAdapter) -> UInt
 
 pub fn adapter_limits_max_buffer_size_u64(WGPUAdapter) -> UInt64
@@ -612,6 +616,10 @@ pub fn device_limits_max_bind_groups_plus_vertex_buffers_u32(WGPUDevice) -> UInt
 
 pub fn device_limits_max_bind_groups_u32(WGPUDevice) -> UInt
 
+pub fn device_limits_max_binding_array_elements_per_shader_stage_u32(WGPUDevice) -> UInt
+
+pub fn device_limits_max_binding_array_sampler_elements_per_shader_stage_u32(WGPUDevice) -> UInt
+
 pub fn device_limits_max_bindings_per_bind_group_u32(WGPUDevice) -> UInt
 
 pub fn device_limits_max_buffer_size_u64(WGPUDevice) -> UInt64
@@ -862,7 +870,7 @@ pub fn instance_wgsl_language_features_count_u64(WGPUInstance) -> UInt64
 
 pub fn limits_free(WGPULimitsPtr) -> Unit
 
-pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64, UInt, UInt, UInt, UInt) -> WGPULimitsPtr
+pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64, UInt, UInt, UInt, UInt, UInt, UInt) -> WGPULimitsPtr
 
 pub fn macos_ns_view_prepare_metal_layer(OpaquePtr) -> OpaquePtr
 

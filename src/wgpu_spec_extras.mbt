@@ -970,6 +970,8 @@ declare pub fn Adapter::request_device_sync_with_features_and_limits(
   max_samplers_per_shader_stage_u32? : UInt = 0U,
   max_immediate_size_u32? : UInt = 0U,
   max_non_sampler_bindings_u32? : UInt = 0U,
+  max_binding_array_elements_per_shader_stage_u32? : UInt = 0U,
+  max_binding_array_sampler_elements_per_shader_stage_u32? : UInt = 0U,
   label? : String = "",
   queue_label? : String = "",
   trace_path? : String = "",
@@ -1691,6 +1693,18 @@ declare pub fn Adapter::limits_max_non_sampler_bindings_u32(
 
 ///|
 #declaration_only
+declare pub fn Adapter::limits_max_binding_array_elements_per_shader_stage_u32(
+  self : Adapter,
+) -> UInt
+
+///|
+#declaration_only
+declare pub fn Adapter::limits_max_binding_array_sampler_elements_per_shader_stage_u32(
+  self : Adapter,
+) -> UInt
+
+///|
+#declaration_only
 declare pub fn Adapter::supported_features_count_u64(self : Adapter) -> UInt64
 
 ///|
@@ -2193,6 +2207,18 @@ declare pub fn Device::limits_max_compute_workgroups_per_dimension_u32(
 ///|
 #declaration_only
 declare pub fn Device::limits_max_non_sampler_bindings_u32(
+  self : Device,
+) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::limits_max_binding_array_elements_per_shader_stage_u32(
+  self : Device,
+) -> UInt
+
+///|
+#declaration_only
+declare pub fn Device::limits_max_binding_array_sampler_elements_per_shader_stage_u32(
   self : Device,
 ) -> UInt
 

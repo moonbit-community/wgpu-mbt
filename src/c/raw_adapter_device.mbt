@@ -292,6 +292,16 @@ pub extern "C" fn adapter_limits_max_non_sampler_bindings_u32(
 ) -> UInt = "mbt_wgpu_adapter_limits_max_non_sampler_bindings_u32"
 
 ///|
+pub extern "C" fn adapter_limits_max_binding_array_elements_per_shader_stage_u32(
+  adapter : Adapter,
+) -> UInt = "mbt_wgpu_adapter_limits_max_binding_array_elements_per_shader_stage_u32"
+
+///|
+pub extern "C" fn adapter_limits_max_binding_array_sampler_elements_per_shader_stage_u32(
+  adapter : Adapter,
+) -> UInt = "mbt_wgpu_adapter_limits_max_binding_array_sampler_elements_per_shader_stage_u32"
+
+///|
 pub extern "C" fn device_limits_max_texture_dimension_1d_u32(
   device : Device,
 ) -> UInt = "mbt_wgpu_device_limits_max_texture_dimension_1d_u32"
@@ -447,6 +457,16 @@ pub extern "C" fn device_limits_max_immediate_size_u32(device : Device) -> UInt 
 pub extern "C" fn device_limits_max_non_sampler_bindings_u32(
   device : Device,
 ) -> UInt = "mbt_wgpu_device_limits_max_non_sampler_bindings_u32"
+
+///|
+pub extern "C" fn device_limits_max_binding_array_elements_per_shader_stage_u32(
+  device : Device,
+) -> UInt = "mbt_wgpu_device_limits_max_binding_array_elements_per_shader_stage_u32"
+
+///|
+pub extern "C" fn device_limits_max_binding_array_sampler_elements_per_shader_stage_u32(
+  device : Device,
+) -> UInt = "mbt_wgpu_device_limits_max_binding_array_sampler_elements_per_shader_stage_u32"
 
 ///|
 pub extern "C" fn adapter_supported_features_count_u64(
