@@ -26,6 +26,11 @@ fn bucket_half_u8(x : UInt) -> String {
 }
 
 ///|
+fn u16le_at(bytes : Bytes, off : Int) -> UInt {
+  bytes[off].to_uint() | (bytes[off + 1].to_uint() << 8)
+}
+
+///|
 test "wgpu render: alpha blending over loaded color" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
@@ -112,6 +117,133 @@ test "wgpu render: alpha blending over loaded color" {
     [bucket_half_u8(r), bucket_half_u8(g), bucket_half_u8(b)],
     content=(
       #|["half", "half", "zero"]
+    ),
+  )
+  cmd1.release()
+  encoder1.release()
+  p_blend.release()
+  p_green.release()
+  sm_red.release()
+  sm_green.release()
+  readback.release()
+  view.release()
+  tex.release()
+  queue.release()
+  device.release()
+  adapter.release()
+  instance.release()
+}
+
+///|
+test "wgpu render: constant-factor blending over loaded RGBA16Float color" {
+  let instance = @wgpu.Instance::create()
+  let adapter = instance.request_adapter_sync()
+  let device = adapter.request_device_sync(instance)
+  let queue = device.queue()
+  let tex = device.create_texture_u32(
+    1U,
+    1U,
+    1U,
+    @wgpu.TextureUsage::from_u64(
+      @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+    ),
+    @wgpu.TextureDimension::from_u32(@wgpu.TEXTURE_DIMENSION_2D),
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA16_FLOAT),
+  )
+  let view = tex.create_view()
+  let readback = device.create_buffer(
+    size=256UL,
+    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+  )
+  let wgsl_green : String =
+    #|struct VSOut { @builtin(position) pos: vec4<f32> };
+    #|
+    #|@vertex
+    #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+    #|  var positions = array<vec2<f32>, 3>(
+    #|    vec2<f32>(-1.0, -1.0),
+    #|    vec2<f32>( 3.0, -1.0),
+    #|    vec2<f32>(-1.0,  3.0),
+    #|  );
+    #|  var out: VSOut;
+    #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
+    #|  return out;
+    #|}
+    #|
+    #|@fragment
+    #|fn fs_main() -> @location(0) vec4<f32> {
+    #|  return vec4<f32>(0.0, 1.0, 0.0, 1.0);
+    #|}
+    #|
+  let wgsl_red : String =
+    #|struct VSOut { @builtin(position) pos: vec4<f32> };
+    #|
+    #|@vertex
+    #|fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
+    #|  var positions = array<vec2<f32>, 3>(
+    #|    vec2<f32>(-1.0, -1.0),
+    #|    vec2<f32>( 3.0, -1.0),
+    #|    vec2<f32>(-1.0,  3.0),
+    #|  );
+    #|  var out: VSOut;
+    #|  out.pos = vec4<f32>(positions[vid], 0.0, 1.0);
+    #|  return out;
+    #|}
+    #|
+    #|@fragment
+    #|fn fs_main() -> @location(0) vec4<f32> {
+    #|  return vec4<f32>(1.0, 0.0, 0.0, 1.0);
+    #|}
+    #|
+  let sm_green = device.create_shader_module_wgsl(wgsl_green)
+  let sm_red = device.create_shader_module_wgsl(wgsl_red)
+
+  let b_green = @wgpu.RenderPipelineDescBuilder::new(sm_green)
+  b_green.set_color_target_format(
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA16_FLOAT),
+  )
+  let p_green = b_green.create_pipeline(device)
+
+  let b_blend = @wgpu.RenderPipelineDescBuilder::new(sm_red)
+  b_blend.set_color_target_format(
+    @wgpu.TextureFormat::from_u32(@wgpu.TEXTURE_FORMAT_RGBA16_FLOAT),
+  )
+  b_blend.set_blend_components(
+    @wgpu.BLEND_FACTOR_CONSTANT,
+    @wgpu.BLEND_FACTOR_ONE_MINUS_CONSTANT,
+    @wgpu.BLEND_OPERATION_ADD,
+    @wgpu.BLEND_FACTOR_ZERO,
+    @wgpu.BLEND_FACTOR_ONE,
+    @wgpu.BLEND_OPERATION_ADD,
+  )
+  let p_blend = b_blend.create_pipeline(device)
+
+  let encoder0 = device.create_command_encoder()
+  let pass0 = encoder0.begin_render_pass_color(view)
+  pass0.set_pipeline(p_green)
+  pass0.draw(3U, 1U, 0U, 0U)
+  pass0.end()
+  pass0.release()
+  let cmd0 = encoder0.finish()
+  queue.submit_one(cmd0)
+  cmd0.release()
+  encoder0.release()
+
+  let encoder1 = device.create_command_encoder()
+  let pass1 = encoder1.begin_render_pass_color_load(view)
+  pass1.set_blend_constant_rgba(0.25, 0.25, 0.25, 1.0)
+  pass1.set_pipeline(p_blend)
+  pass1.draw(3U, 1U, 0U, 0U)
+  pass1.end()
+  pass1.release()
+  encoder1.copy_texture_to_buffer_bytes_per_pixel(tex, readback, 1U, 1U, 8U)
+  let cmd1 = encoder1.finish()
+  queue.submit_one(cmd1)
+  let out = readback.readback(instance, 0UL, 8UL)
+  @debug.debug_inspect(
+    [u16le_at(out, 0), u16le_at(out, 2), u16le_at(out, 4), u16le_at(out, 6)],
+    content=(
+      #|[13312, 14848, 0, 15360]
     ),
   )
   cmd1.release()
