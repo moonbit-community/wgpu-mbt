@@ -1,6 +1,6 @@
 name = "Milky2018/wgpu_mbt"
 
-version = "0.14.5"
+version = "0.14.6"
 
 readme = "README.mbt.md"
 
