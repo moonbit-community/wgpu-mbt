@@ -463,7 +463,7 @@ WGPUFeatureName mbt_wgpu_feature_name_native_multiview(void) {
 }
 
 WGPUFeatureName mbt_wgpu_feature_name_native_spirv_shader_passthrough(void) {
-  return (WGPUFeatureName)WGPUNativeFeature_SpirvShaderPassthrough;
+  return (WGPUFeatureName)0u;
 }
 
 WGPUQuerySetDescriptor *mbt_wgpu_query_set_descriptor_new(WGPUQueryType type,
@@ -1127,9 +1127,6 @@ WGPUAdapter mbt_wgpu_instance_request_adapter_sync_ptr(
       case WGPUBackendType_D3D12:
         backends = WGPUInstanceBackend_DX12;
         break;
-      case WGPUBackendType_D3D11:
-        backends = WGPUInstanceBackend_DX11;
-        break;
       case WGPUBackendType_Metal:
         backends = WGPUInstanceBackend_Metal;
         break;
@@ -1649,15 +1646,11 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_spirv_shader_passthrough(
       .userdata2 = NULL,
   };
 
-  static const WGPUFeatureName required_features[1] = {
-      (WGPUFeatureName)WGPUNativeFeature_SpirvShaderPassthrough,
-  };
-
   WGPUDeviceDescriptor desc = {
       .nextInChain = NULL,
       .label = (WGPUStringView){.data = NULL, .length = 0},
-      .requiredFeatureCount = 1u,
-      .requiredFeatures = required_features,
+      .requiredFeatureCount = 0u,
+      .requiredFeatures = NULL,
       .requiredLimits = NULL,
       .defaultQueue =
           (WGPUQueueDescriptor){
@@ -1885,13 +1878,14 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_immediates(WGPUInstance instance
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_NativeLimits,
           },
-      .maxImmediateSize = 128u,
+      .maxMultiviewViewCount = 0u,
       .maxNonSamplerBindings = 0u,
       .maxBindingArrayElementsPerShaderStage = 0u,
   };
 
   WGPULimits limits = {0};
   (void)wgpuAdapterGetLimits(adapter, &limits);
+  limits.maxImmediateSize = 128u;
   limits.nextInChain = &native_limits.chain;
 
   WGPUDeviceDescriptor desc = {
@@ -2160,12 +2154,10 @@ WGPUDevice mbt_wgpu_adapter_request_device_sync_pipeline_statistics_query(
 
 typedef struct {
   WGPUPipelineLayoutDescriptor desc;
-  WGPUPipelineLayoutExtras extras;
 } mbt_pipeline_layout_immediates_desc_t;
 
 typedef struct {
   WGPUPipelineLayoutDescriptor desc;
-  WGPUPipelineLayoutExtras extras;
 } mbt_pipeline_layout_immediates_many_desc_t;
 
 WGPUPipelineLayoutDescriptor *
@@ -2182,17 +2174,8 @@ mbt_wgpu_pipeline_layout_descriptor_immediates_new(uint64_t stages,
   (void)stages;
   (void)start;
 
-  out->extras = (WGPUPipelineLayoutExtras){
-      .chain =
-          (WGPUChainedStruct){
-              .next = NULL,
-              .sType = (WGPUSType)WGPUSType_PipelineLayoutExtras,
-          },
-      .immediateDataSize = end,
-  };
-
   out->desc = (WGPUPipelineLayoutDescriptor){
-      .nextInChain = &out->extras.chain,
+      .nextInChain = NULL,
       .label = (WGPUStringView){.data = NULL, .length = 0},
       .bindGroupLayoutCount = 0u,
       .bindGroupLayouts = NULL,
@@ -2227,17 +2210,8 @@ mbt_wgpu_pipeline_layout_descriptor_immediates_many_new(
     }
   }
 
-  out->extras = (WGPUPipelineLayoutExtras){
-      .chain =
-          (WGPUChainedStruct){
-              .next = NULL,
-              .sType = (WGPUSType)WGPUSType_PipelineLayoutExtras,
-          },
-      .immediateDataSize = immediate_data_size,
-  };
-
   out->desc = (WGPUPipelineLayoutDescriptor){
-      .nextInChain = &out->extras.chain,
+      .nextInChain = NULL,
       .label = (WGPUStringView){.data = NULL, .length = 0},
       .bindGroupLayoutCount = 0u,
       .bindGroupLayouts = NULL,
@@ -2255,7 +2229,7 @@ void mbt_wgpu_render_pass_set_immediates_bytes(WGPURenderPassEncoder encoder,
     return;
   }
   (void)stages;
-  wgpuRenderPassEncoderSetImmediates(encoder, offset, (uint32_t)len, data);
+  wgpuRenderPassEncoderSetImmediates(encoder, offset, data, (size_t)len);
 }
 
 void mbt_wgpu_compute_pass_set_immediates_bytes(WGPUComputePassEncoder encoder,
@@ -2265,7 +2239,7 @@ void mbt_wgpu_compute_pass_set_immediates_bytes(WGPUComputePassEncoder encoder,
   if (len > UINT32_MAX) {
     return;
   }
-  wgpuComputePassEncoderSetImmediates(encoder, offset, (uint32_t)len, data);
+  wgpuComputePassEncoderSetImmediates(encoder, offset, data, (size_t)len);
 }
 
 void mbt_wgpu_render_bundle_encoder_set_immediates_bytes(
@@ -2275,7 +2249,7 @@ void mbt_wgpu_render_bundle_encoder_set_immediates_bytes(
     return;
   }
   (void)stages;
-  wgpuRenderBundleEncoderSetImmediates(encoder, offset, (uint32_t)len, data);
+  wgpuRenderBundleEncoderSetImmediates(encoder, offset, data, (size_t)len);
 }
 
 WGPUCommandEncoder mbt_wgpu_device_create_command_encoder(WGPUDevice device) {

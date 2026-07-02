@@ -1072,7 +1072,8 @@ WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_dx12(WGPUInstance instance
 }
 
 WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_dx11(WGPUInstance instance) {
-  return mbt_wgpu_instance_enumerate_adapter_first_backend(instance, WGPUInstanceBackend_DX11);
+  (void)instance;
+  return NULL;
 }
 
 WGPUAdapter mbt_wgpu_instance_enumerate_adapter_first_metal(WGPUInstance instance) {
@@ -1408,7 +1409,7 @@ static bool mbt_wgpu_adapter_get_limits_with_native(WGPUAdapter adapter,
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_NativeLimits,
           },
-      .maxImmediateSize = 0u,
+      .maxMultiviewViewCount = 0u,
       .maxNonSamplerBindings = 0u,
       .maxBindingArrayElementsPerShaderStage = 0u,
       .maxBindingArraySamplerElementsPerShaderStage = 0u,
@@ -1435,7 +1436,7 @@ static bool mbt_wgpu_device_get_limits_with_native(WGPUDevice device,
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_NativeLimits,
           },
-      .maxImmediateSize = 0u,
+      .maxMultiviewViewCount = 0u,
       .maxNonSamplerBindings = 0u,
       .maxBindingArrayElementsPerShaderStage = 0u,
       .maxBindingArraySamplerElementsPerShaderStage = 0u,
@@ -1644,7 +1645,7 @@ uint32_t mbt_wgpu_adapter_limits_max_immediate_size_u32(WGPUAdapter adapter) {
   if (!mbt_wgpu_adapter_get_limits_with_native(adapter, &limits, &native_limits)) {
     return 0u;
   }
-  return native_limits.maxImmediateSize;
+  return limits.maxImmediateSize;
 }
 
 uint32_t mbt_wgpu_adapter_limits_max_non_sampler_bindings_u32(WGPUAdapter adapter) {
@@ -1682,7 +1683,7 @@ uint32_t mbt_wgpu_device_limits_max_immediate_size_u32(WGPUDevice device) {
   if (!mbt_wgpu_device_get_limits_with_native(device, &limits, &native_limits)) {
     return 0u;
   }
-  return native_limits.maxImmediateSize;
+  return limits.maxImmediateSize;
 }
 
 uint32_t mbt_wgpu_device_limits_max_non_sampler_bindings_u32(WGPUDevice device) {

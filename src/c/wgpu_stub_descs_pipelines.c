@@ -1175,7 +1175,6 @@ mbt_wgpu_pipeline_layout_descriptor_many_new(uint64_t layout_count,
 
 typedef struct {
   WGPUPipelineLayoutDescriptor desc;
-  WGPUPipelineLayoutExtras extras;
   uint64_t layout_count;
   WGPUBindGroupLayout layouts[];
 } mbt_pipeline_layout_desc_layouts_immediates_t;
@@ -1223,17 +1222,8 @@ mbt_wgpu_pipeline_layout_descriptor_with_immediates_many_new(
     }
   }
 
-  out->extras = (WGPUPipelineLayoutExtras){
-      .chain =
-          (WGPUChainedStruct){
-              .next = NULL,
-              .sType = (WGPUSType)WGPUSType_PipelineLayoutExtras,
-          },
-      .immediateDataSize = immediate_data_size,
-  };
-
   out->desc = (WGPUPipelineLayoutDescriptor){
-      .nextInChain = immediate_data_size == 0u ? NULL : &out->extras.chain,
+      .nextInChain = NULL,
       .label = (WGPUStringView){.data = NULL, .length = 0},
       .bindGroupLayoutCount = (size_t)layout_count,
       .bindGroupLayouts = stored_layouts,

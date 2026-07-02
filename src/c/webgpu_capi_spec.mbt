@@ -171,6 +171,10 @@ pub type WGPUGlobalReportPtr
 
 ///|
 #declaration_only
+pub type WGPUImageSubresourceRangePtr
+
+///|
+#declaration_only
 pub type WGPUIndexFormat
 
 ///|
@@ -310,6 +314,9 @@ pub type WGPUShaderModuleDescriptorPtr
 ///|
 #declaration_only
 pub type WGPUShaderModuleDescriptorSpirVPtr
+
+///|
+pub type WGPUShaderRuntimeChecks = UInt64
 
 ///|
 #declaration_only
@@ -636,6 +643,14 @@ declare pub fn wgpuCommandEncoderClearBuffer(
 
 ///|
 #declaration_only
+declare pub fn wgpuCommandEncoderClearTexture(
+  commandEncoder : WGPUCommandEncoder,
+  texture : WGPUTexture,
+  range : WGPUImageSubresourceRangePtr,
+) -> Unit
+
+///|
+#declaration_only
 declare pub fn wgpuCommandEncoderCopyBufferToBuffer(
   commandEncoder : WGPUCommandEncoder,
   source : WGPUBuffer,
@@ -813,10 +828,10 @@ declare pub fn wgpuComputePassEncoderSetBindGroup(
 ///|
 #declaration_only
 declare pub fn wgpuComputePassEncoderSetImmediates(
-  encoder : WGPUComputePassEncoder,
+  computePassEncoder : WGPUComputePassEncoder,
   offset : UInt,
-  sizeBytes : UInt,
   data : UnitPtr,
+  size : UInt64,
 ) -> Unit
 
 ///|
@@ -975,6 +990,14 @@ declare pub fn wgpuDeviceCreateShaderModule(
 declare pub fn wgpuDeviceCreateShaderModuleSpirV(
   device : WGPUDevice,
   descriptor : WGPUShaderModuleDescriptorSpirVPtr,
+) -> WGPUShaderModule
+
+///|
+#declaration_only
+declare pub fn wgpuDeviceCreateShaderModuleTrusted(
+  device : WGPUDevice,
+  descriptor : WGPUShaderModuleDescriptorPtr,
+  runtimeChecks : WGPUShaderRuntimeChecks,
 ) -> WGPUShaderModule
 
 ///|
@@ -1387,10 +1410,10 @@ declare pub fn wgpuRenderBundleEncoderSetBindGroup(
 ///|
 #declaration_only
 declare pub fn wgpuRenderBundleEncoderSetImmediates(
-  encoder : WGPURenderBundleEncoder,
+  renderBundleEncoder : WGPURenderBundleEncoder,
   offset : UInt,
-  sizeBytes : UInt,
   data : UnitPtr,
+  size : UInt64,
 ) -> Unit
 
 ///|
@@ -1608,10 +1631,10 @@ declare pub fn wgpuRenderPassEncoderSetBlendConstant(
 ///|
 #declaration_only
 declare pub fn wgpuRenderPassEncoderSetImmediates(
-  encoder : WGPURenderPassEncoder,
+  renderPassEncoder : WGPURenderPassEncoder,
   offset : UInt,
-  sizeBytes : UInt,
   data : UnitPtr,
+  size : UInt64,
 ) -> Unit
 
 ///|

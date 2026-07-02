@@ -1540,6 +1540,8 @@ pub fn wgpuCommandEncoderBeginRenderPass(WGPUCommandEncoder, WGPURenderPassDescr
 
 pub fn wgpuCommandEncoderClearBuffer(WGPUCommandEncoder, WGPUBuffer, UInt64, UInt64) -> Unit
 
+pub fn wgpuCommandEncoderClearTexture(WGPUCommandEncoder, WGPUTexture, WGPUImageSubresourceRangePtr) -> Unit
+
 pub fn wgpuCommandEncoderCopyBufferToBuffer(WGPUCommandEncoder, WGPUBuffer, UInt64, WGPUBuffer, UInt64, UInt64) -> Unit
 
 pub fn wgpuCommandEncoderCopyBufferToTexture(WGPUCommandEncoder, WGPUTexelCopyBufferInfoPtr, WGPUTexelCopyTextureInfoPtr, WGPUExtent3DPtr) -> Unit
@@ -1588,7 +1590,7 @@ pub fn wgpuComputePassEncoderSetBindGroup(WGPUComputePassEncoder, UInt, WGPUBind
 
 pub fn wgpuComputePassEncoderSetBindGroup_offsets(WGPUComputePassEncoder, UInt, WGPUBindGroup, UInt64, FixedArray[UInt]) -> Unit
 
-pub fn wgpuComputePassEncoderSetImmediates(WGPUComputePassEncoder, UInt, UInt, UnitPtr) -> Unit
+pub fn wgpuComputePassEncoderSetImmediates(WGPUComputePassEncoder, UInt, UnitPtr, UInt64) -> Unit
 
 pub fn wgpuComputePassEncoderSetLabel(WGPUComputePassEncoder, WGPUStringView) -> Unit
 
@@ -1635,6 +1637,8 @@ pub fn wgpuDeviceCreateSampler(WGPUDevice, WGPUSamplerDescriptorPtr) -> WGPUSamp
 pub fn wgpuDeviceCreateShaderModule(WGPUDevice, WGPUShaderModuleDescriptorPtr) -> WGPUShaderModule
 
 pub fn wgpuDeviceCreateShaderModuleSpirV(WGPUDevice, WGPUShaderModuleDescriptorSpirVPtr) -> WGPUShaderModule
+
+pub fn wgpuDeviceCreateShaderModuleTrusted(WGPUDevice, WGPUShaderModuleDescriptorPtr, UInt64) -> WGPUShaderModule
 
 pub fn wgpuDeviceCreateTexture(WGPUDevice, WGPUTextureDescriptorPtr) -> WGPUTexture
 
@@ -1770,7 +1774,7 @@ pub fn wgpuRenderBundleEncoderSetBindGroup(WGPURenderBundleEncoder, UInt, WGPUBi
 
 pub fn wgpuRenderBundleEncoderSetBindGroup_offsets(WGPURenderBundleEncoder, UInt, WGPUBindGroup, UInt64, FixedArray[UInt]) -> Unit
 
-pub fn wgpuRenderBundleEncoderSetImmediates(WGPURenderBundleEncoder, UInt, UInt, UnitPtr) -> Unit
+pub fn wgpuRenderBundleEncoderSetImmediates(WGPURenderBundleEncoder, UInt, UnitPtr, UInt64) -> Unit
 
 pub fn wgpuRenderBundleEncoderSetIndexBuffer(WGPURenderBundleEncoder, WGPUBuffer, WGPUIndexFormat, UInt64, UInt64) -> Unit
 
@@ -1830,7 +1834,7 @@ pub fn wgpuRenderPassEncoderSetBindGroup_offsets(WGPURenderPassEncoder, UInt, WG
 
 pub fn wgpuRenderPassEncoderSetBlendConstant(WGPURenderPassEncoder, WGPUColorPtr) -> Unit
 
-pub fn wgpuRenderPassEncoderSetImmediates(WGPURenderPassEncoder, UInt, UInt, UnitPtr) -> Unit
+pub fn wgpuRenderPassEncoderSetImmediates(WGPURenderPassEncoder, UInt, UnitPtr, UInt64) -> Unit
 
 pub fn wgpuRenderPassEncoderSetIndexBuffer(WGPURenderPassEncoder, WGPUBuffer, WGPUIndexFormat, UInt64, UInt64) -> Unit
 
@@ -2093,6 +2097,10 @@ pub type WGPUFutureWaitInfoPtr
 #external
 pub type WGPUGlobalReportPtr
 
+#alias(UnitPtr)
+#external
+pub type WGPUImageSubresourceRangePtr
+
 #external
 pub type WGPUIndexFormat
 
@@ -2333,6 +2341,8 @@ pub type WGPUBufferUsage = UInt64
 pub type WGPULogLevel = UInt
 
 pub type WGPUMapMode = UInt64
+
+pub type WGPUShaderRuntimeChecks = UInt64
 
 pub type WGPUSubmissionIndex = UInt64
 

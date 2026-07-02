@@ -925,5 +925,6 @@ pub fn adapter_has_feature_native_multiview(adapter : Adapter) -> Bool {
 pub fn adapter_has_feature_native_spirv_shader_passthrough(
   adapter : Adapter,
 ) -> Bool {
-  wgpuAdapterHasFeature(adapter, feature_name_native_spirv_shader_passthrough())
+  let _ = adapter
+  false
 }

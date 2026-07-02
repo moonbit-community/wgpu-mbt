@@ -191,6 +191,11 @@ pub type WGPUGlobalReportPtr
 
 ///|
 #external
+#alias(UnitPtr)
+pub type WGPUImageSubresourceRangePtr
+
+///|
+#external
 pub type WGPUIndexFormat
 
 ///|
@@ -662,6 +667,14 @@ pub extern "C" fn wgpuCommandEncoderClearBuffer(
 ) -> Unit = "wgpuCommandEncoderClearBuffer"
 
 ///|
+#borrow(range)
+pub extern "C" fn wgpuCommandEncoderClearTexture(
+  commandEncoder : WGPUCommandEncoder,
+  texture : WGPUTexture,
+  range : WGPUImageSubresourceRangePtr,
+) -> Unit = "wgpuCommandEncoderClearTexture"
+
+///|
 pub extern "C" fn wgpuCommandEncoderCopyBufferToBuffer(
   commandEncoder : WGPUCommandEncoder,
   source : WGPUBuffer,
@@ -822,10 +835,10 @@ pub extern "C" fn wgpuComputePassEncoderSetBindGroup(
 ///|
 #borrow(data)
 pub extern "C" fn wgpuComputePassEncoderSetImmediates(
-  encoder : WGPUComputePassEncoder,
+  computePassEncoder : WGPUComputePassEncoder,
   offset : UInt,
-  sizeBytes : UInt,
   data : UnitPtr,
+  size : UInt64,
 ) -> Unit = "wgpuComputePassEncoderSetImmediates"
 
 ///|
@@ -977,6 +990,14 @@ pub extern "C" fn wgpuDeviceCreateShaderModuleSpirV(
   device : WGPUDevice,
   descriptor : WGPUShaderModuleDescriptorSpirVPtr,
 ) -> WGPUShaderModule = "wgpuDeviceCreateShaderModuleSpirV"
+
+///|
+#borrow(descriptor)
+pub extern "C" fn wgpuDeviceCreateShaderModuleTrusted(
+  device : WGPUDevice,
+  descriptor : WGPUShaderModuleDescriptorPtr,
+  runtimeChecks : WGPUShaderRuntimeChecks,
+) -> WGPUShaderModule = "wgpuDeviceCreateShaderModuleTrusted"
 
 ///|
 #borrow(descriptor)
@@ -1350,10 +1371,10 @@ pub extern "C" fn wgpuRenderBundleEncoderSetBindGroup(
 ///|
 #borrow(data)
 pub extern "C" fn wgpuRenderBundleEncoderSetImmediates(
-  encoder : WGPURenderBundleEncoder,
+  renderBundleEncoder : WGPURenderBundleEncoder,
   offset : UInt,
-  sizeBytes : UInt,
   data : UnitPtr,
+  size : UInt64,
 ) -> Unit = "wgpuRenderBundleEncoderSetImmediates"
 
 ///|
@@ -1549,10 +1570,10 @@ pub extern "C" fn wgpuRenderPassEncoderSetBlendConstant(
 ///|
 #borrow(data)
 pub extern "C" fn wgpuRenderPassEncoderSetImmediates(
-  encoder : WGPURenderPassEncoder,
+  renderPassEncoder : WGPURenderPassEncoder,
   offset : UInt,
-  sizeBytes : UInt,
   data : UnitPtr,
+  size : UInt64,
 ) -> Unit = "wgpuRenderPassEncoderSetImmediates"
 
 ///|

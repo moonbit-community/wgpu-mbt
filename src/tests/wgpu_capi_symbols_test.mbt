@@ -50,6 +50,7 @@ test "spec: webgpu.h symbol coverage (expected red)" {
     let _ = @wgpu_c.wgpuCommandEncoderBeginComputePass
     let _ = @wgpu_c.wgpuCommandEncoderBeginRenderPass
     let _ = @wgpu_c.wgpuCommandEncoderClearBuffer
+    let _ = @wgpu_c.wgpuCommandEncoderClearTexture
     let _ = @wgpu_c.wgpuCommandEncoderCopyBufferToBuffer
     let _ = @wgpu_c.wgpuCommandEncoderCopyBufferToTexture
     let _ = @wgpu_c.wgpuCommandEncoderCopyTextureToBuffer
@@ -97,6 +98,7 @@ test "spec: webgpu.h symbol coverage (expected red)" {
     let _ = @wgpu_c.wgpuDeviceCreateSampler
     let _ = @wgpu_c.wgpuDeviceCreateShaderModule
     let _ = @wgpu_c.wgpuDeviceCreateShaderModuleSpirV
+    let _ = @wgpu_c.wgpuDeviceCreateShaderModuleTrusted
     let _ = @wgpu_c.wgpuDeviceCreateTexture
     let _ = @wgpu_c.wgpuDeviceDestroy
     let _ = @wgpu_c.wgpuDeviceGetAdapterInfo

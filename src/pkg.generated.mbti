@@ -506,6 +506,10 @@ pub const MIPMAP_FILTER_MODE_UNDEFINED : UInt = 0x00000000
 
 pub const MIP_LEVEL_COUNT_UNDEFINED : UInt = 0xFFFFFFFF
 
+pub const NATIVE_ADDRESS_MODE_CLAMP_TO_BORDER : UInt = 0x00000004
+
+pub const NATIVE_ADDRESS_MODE_FORCE32 : UInt = 0x7FFFFFFF
+
 pub const NATIVE_DISPLAY_HANDLE_TYPE_FORCE32 : UInt = 0x7FFFFFFF
 
 pub const NATIVE_DISPLAY_HANDLE_TYPE_NONE : UInt = 0x00000000
@@ -516,11 +520,19 @@ pub const NATIVE_DISPLAY_HANDLE_TYPE_XCB : UInt = 0x00000002
 
 pub const NATIVE_DISPLAY_HANDLE_TYPE_XLIB : UInt = 0x00000001
 
+pub const NATIVE_FEATURE_ACCELERATION_STRUCTURE_BINDING_ARRAY : UInt = 0x0003003E
+
+pub const NATIVE_FEATURE_ADDRESS_MODE_CLAMP_TO_BORDER : UInt = 0x00030012
+
+pub const NATIVE_FEATURE_ADDRESS_MODE_CLAMP_TO_ZERO : UInt = 0x00030011
+
 pub const NATIVE_FEATURE_BUFFER_BINDING_ARRAY : UInt = 0x0003000F
 
 pub const NATIVE_FEATURE_CLEAR_TEXTURE : UInt = 0x00030016
 
 pub const NATIVE_FEATURE_CONSERVATIVE_RASTERIZATION : UInt = 0x00030015
+
+pub const NATIVE_FEATURE_COOPERATIVE_MATRIX : UInt = 0x0003003B
 
 pub const NATIVE_FEATURE_FORCE32 : UInt = 0x7FFFFFFF
 
@@ -528,11 +540,19 @@ pub const NATIVE_FEATURE_IMMEDIATES : UInt = 0x00030001
 
 pub const NATIVE_FEATURE_MAPPABLE_PRIMARY_BUFFERS : UInt = 0x0003000E
 
+pub const NATIVE_FEATURE_MEMORY_DECORATION_COHERENT : UInt = 0x0003003F
+
+pub const NATIVE_FEATURE_MEMORY_DECORATION_VOLATILE : UInt = 0x00030040
+
+pub const NATIVE_FEATURE_MULTISAMPLE_ARRAY : UInt = 0x0003003A
+
 pub const NATIVE_FEATURE_MULTIVIEW : UInt = 0x00030018
 
 pub const NATIVE_FEATURE_MULTI_DRAW_INDIRECT_COUNT : UInt = 0x00030004
 
 pub const NATIVE_FEATURE_PARTIALLY_BOUND_BINDING_ARRAY : UInt = 0x0003000A
+
+pub const NATIVE_FEATURE_PIPELINE_CACHE : UInt = 0x0003002B
 
 pub const NATIVE_FEATURE_PIPELINE_STATISTICS_QUERY : UInt = 0x00030008
 
@@ -543,6 +563,12 @@ pub const NATIVE_FEATURE_POLYGON_MODE_POINT : UInt = 0x00030014
 pub const NATIVE_FEATURE_RAY_QUERY : UInt = 0x0003001C
 
 pub const NATIVE_FEATURE_SAMPLED_TEXTURE_AND_STORAGE_BUFFER_ARRAY_NON_UNIFORM_INDEXING : UInt = 0x00030007
+
+pub const NATIVE_FEATURE_SELECTIVE_MULTIVIEW : UInt = 0x00030038
+
+pub const NATIVE_FEATURE_SHADER_BARYCENTRICS : UInt = 0x00030037
+
+pub const NATIVE_FEATURE_SHADER_DRAW_INDEX : UInt = 0x0003003D
 
 pub const NATIVE_FEATURE_SHADER_EARLY_DEPTH_TEST : UInt = 0x00030020
 
@@ -558,11 +584,13 @@ pub const NATIVE_FEATURE_SHADER_INT64_ATOMIC_ALL_OPS : UInt = 0x0003002D
 
 pub const NATIVE_FEATURE_SHADER_INT64_ATOMIC_MIN_MAX : UInt = 0x0003002C
 
+pub const NATIVE_FEATURE_SHADER_PER_VERTEX : UInt = 0x0003003C
+
 pub const NATIVE_FEATURE_SHADER_PRIMITIVE_INDEX : UInt = 0x0003001F
 
-pub const NATIVE_FEATURE_SPIRV_SHADER_PASSTHROUGH : UInt = 0x00030017
-
 pub const NATIVE_FEATURE_STORAGE_RESOURCE_BINDING_ARRAY : UInt = 0x00030009
+
+pub const NATIVE_FEATURE_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING : UInt = 0x00030010
 
 pub const NATIVE_FEATURE_SUBGROUP : UInt = 0x00030021
 
@@ -582,13 +610,13 @@ pub const NATIVE_FEATURE_TEXTURE_FORMAT16BIT_NORM : UInt = 0x0003000B
 
 pub const NATIVE_FEATURE_TEXTURE_FORMAT_NV12 : UInt = 0x0003001A
 
+pub const NATIVE_FEATURE_TEXTURE_FORMAT_P010 : UInt = 0x00030029
+
 pub const NATIVE_FEATURE_TEXTURE_INT64_ATOMIC : UInt = 0x00030030
 
 pub const NATIVE_FEATURE_TIMESTAMP_QUERY_INSIDE_ENCODERS : UInt = 0x00030024
 
 pub const NATIVE_FEATURE_TIMESTAMP_QUERY_INSIDE_PASSES : UInt = 0x00030025
-
-pub const NATIVE_FEATURE_UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING : UInt = 0x00030010
 
 pub const NATIVE_FEATURE_VERTEX_ATTRIBUTE64BIT : UInt = 0x00030019
 
@@ -605,18 +633,6 @@ pub const NATIVE_S_TYPE_FORCE32 : UInt = 0x7FFFFFFF
 pub const NATIVE_TEXTURE_FORMAT_NV12 : UInt = 0x00030007
 
 pub const NATIVE_TEXTURE_FORMAT_P010 : UInt = 0x00030008
-
-pub const NATIVE_TEXTURE_FORMAT_R16_SNORM : UInt = 0x00030002
-
-pub const NATIVE_TEXTURE_FORMAT_R16_UNORM : UInt = 0x00030001
-
-pub const NATIVE_TEXTURE_FORMAT_RG16_SNORM : UInt = 0x00030004
-
-pub const NATIVE_TEXTURE_FORMAT_RG16_UNORM : UInt = 0x00030003
-
-pub const NATIVE_TEXTURE_FORMAT_RGBA16_SNORM : UInt = 0x00030006
-
-pub const NATIVE_TEXTURE_FORMAT_RGBA16_UNORM : UInt = 0x00030005
 
 pub const OPTIONAL_BOOL_FALSE : UInt = 0x00000000
 
@@ -794,6 +810,30 @@ pub const SAMPLER_BINDING_TYPE_NON_FILTERING : UInt = 0x00000003
 
 pub const SAMPLER_BINDING_TYPE_UNDEFINED : UInt = 0x00000001
 
+pub const SAMPLER_BORDER_COLOR_FORCE32 : UInt = 0x7FFFFFFF
+
+pub const SAMPLER_BORDER_COLOR_OPAQUE_BLACK : UInt = 0x00000002
+
+pub const SAMPLER_BORDER_COLOR_OPAQUE_WHITE : UInt = 0x00000003
+
+pub const SAMPLER_BORDER_COLOR_TRANSPARENT_BLACK : UInt = 0x00000001
+
+pub const SAMPLER_BORDER_COLOR_UNDEFINED : UInt = 0x00000000
+
+pub const SAMPLER_BORDER_COLOR_ZERO : UInt = 0x00000004
+
+pub const SHADER_RUNTIME_CHECKS_BOUNDS_CHECKS : UInt64 = 0x0000000000000001
+
+pub const SHADER_RUNTIME_CHECKS_FORCE_LOOP_BOUNDING : UInt64 = 0x0000000000000002
+
+pub const SHADER_RUNTIME_CHECKS_MESH_SHADER_PRIMITIVE_INDICES_CLAMP : UInt64 = 0x0000000000000010
+
+pub const SHADER_RUNTIME_CHECKS_NONE : UInt64 = 0x0000000000000000
+
+pub const SHADER_RUNTIME_CHECKS_RAY_QUERY_INITIALIZATION_TRACKING : UInt64 = 0x0000000000000004
+
+pub const SHADER_RUNTIME_CHECKS_TASK_SHADER_DISPATCH_TRACKING : UInt64 = 0x0000000000000008
+
 pub const SHADER_STAGE_COMPUTE : UInt64 = 0x0000000000000004
 
 pub const SHADER_STAGE_FRAGMENT : UInt64 = 0x0000000000000002
@@ -892,9 +932,9 @@ pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_SUCCESS_SUBOPTIMAL : UInt = 0x00000
 
 pub const SURFACE_GET_CURRENT_TEXTURE_STATUS_TIMEOUT : UInt = 0x00000003
 
-pub const S_TYPE_BIND_GROUP_ENTRY_EXTRAS : UInt = 0x00030007
+pub const S_TYPE_BIND_GROUP_ENTRY_EXTRAS : UInt = 0x00030005
 
-pub const S_TYPE_BIND_GROUP_LAYOUT_ENTRY_EXTRAS : UInt = 0x00030008
+pub const S_TYPE_BIND_GROUP_LAYOUT_ENTRY_EXTRAS : UInt = 0x00030006
 
 pub const S_TYPE_COMPATIBILITY_MODE_LIMITS : UInt = 0x0000000F
 
@@ -906,21 +946,21 @@ pub const S_TYPE_EXTERNAL_TEXTURE_BINDING_LAYOUT : UInt = 0x0000000D
 
 pub const S_TYPE_FORCE32 : UInt = 0x7FFFFFFF
 
-pub const S_TYPE_INSTANCE_EXTRAS : UInt = 0x00030006
+pub const S_TYPE_INSTANCE_EXTRAS : UInt = 0x00030004
 
 pub const S_TYPE_NATIVE_LIMITS : UInt = 0x00030002
 
-pub const S_TYPE_PIPELINE_LAYOUT_EXTRAS : UInt = 0x00030003
+pub const S_TYPE_PRIMITIVE_STATE_EXTRAS : UInt = 0x0003000A
 
-pub const S_TYPE_PRIMITIVE_STATE_EXTRAS : UInt = 0x0003000C
-
-pub const S_TYPE_QUERY_SET_DESCRIPTOR_EXTRAS : UInt = 0x00030009
+pub const S_TYPE_QUERY_SET_DESCRIPTOR_EXTRAS : UInt = 0x00030007
 
 pub const S_TYPE_RENDER_PASS_MAX_DRAW_COUNT : UInt = 0x00000003
 
 pub const S_TYPE_REQUEST_ADAPTER_WEB_XR_OPTIONS : UInt = 0x0000000B
 
-pub const S_TYPE_SHADER_SOURCE_GLSL : UInt = 0x00030004
+pub const S_TYPE_SAMPLER_DESCRIPTOR_EXTRAS : UInt = 0x0003000B
+
+pub const S_TYPE_SHADER_SOURCE_GLSL : UInt = 0x00030003
 
 pub const S_TYPE_SHADER_SOURCE_SPIRV : UInt = 0x00000001
 
@@ -928,13 +968,13 @@ pub const S_TYPE_SHADER_SOURCE_WGSL : UInt = 0x00000002
 
 pub const S_TYPE_SURFACE_COLOR_MANAGEMENT : UInt = 0x0000000A
 
-pub const S_TYPE_SURFACE_CONFIGURATION_EXTRAS : UInt = 0x0003000A
+pub const S_TYPE_SURFACE_CONFIGURATION_EXTRAS : UInt = 0x00030008
 
 pub const S_TYPE_SURFACE_SOURCE_ANDROID_NATIVE_WINDOW : UInt = 0x00000008
 
 pub const S_TYPE_SURFACE_SOURCE_METAL_LAYER : UInt = 0x00000004
 
-pub const S_TYPE_SURFACE_SOURCE_SWAP_CHAIN_PANEL : UInt = 0x0003000B
+pub const S_TYPE_SURFACE_SOURCE_SWAP_CHAIN_PANEL : UInt = 0x00030009
 
 pub const S_TYPE_SURFACE_SOURCE_WAYLAND_SURFACE : UInt = 0x00000007
 
@@ -1334,6 +1374,8 @@ pub const WAIT_STATUS_UNSUPPORTED_TIMEOUT : UInt = 0x00000003
 
 pub const WGSL_LANGUAGE_FEATURE_NAME_FORCE32 : UInt = 0x7FFFFFFF
 
+pub const WGSL_LANGUAGE_FEATURE_NAME_LINEAR_INDEXING : UInt = 0x0000000A
+
 pub const WGSL_LANGUAGE_FEATURE_NAME_PACKED4X8_INTEGER_DOT_PRODUCT : UInt = 0x00000002
 
 pub const WGSL_LANGUAGE_FEATURE_NAME_POINTER_COMPOSITE_ACCESS : UInt = 0x00000004
@@ -1526,6 +1568,7 @@ pub fn Adapter::has_feature_native_shader_int64_atomic_min_max(Self) -> Bool
 pub fn Adapter::has_feature_native_shader_primitive_index(Self) -> Bool
 pub fn Adapter::has_feature_native_spirv_shader_passthrough(Self) -> Bool
 pub fn Adapter::has_feature_native_storage_resource_binding_array(Self) -> Bool
+pub fn Adapter::has_feature_native_storage_texture_array_non_uniform_indexing(Self) -> Bool
 pub fn Adapter::has_feature_native_subgroup(Self) -> Bool
 pub fn Adapter::has_feature_native_subgroup_barrier(Self) -> Bool
 pub fn Adapter::has_feature_native_subgroup_vertex(Self) -> Bool
@@ -1539,7 +1582,6 @@ pub fn Adapter::has_feature_native_texture_int64_atomic(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
 pub fn Adapter::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
 pub fn Adapter::has_feature_native_u32(Self, UInt) -> Bool
-pub fn Adapter::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(Self) -> Bool
 pub fn Adapter::has_feature_native_vertex_attribute64bit(Self) -> Bool
 pub fn Adapter::has_feature_native_vertex_writable_storage(Self) -> Bool
 pub fn Adapter::has_feature_timestamp_query(Self) -> Bool
@@ -1623,6 +1665,7 @@ pub fn Adapter::request_device_sync_shader_int64_atomic_min_max(Self, Instance) 
 pub fn Adapter::request_device_sync_shader_primitive_index(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_spirv_shader_passthrough(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_storage_resource_binding_array(Self, Instance) -> Device raise WgpuError
+pub fn Adapter::request_device_sync_storage_texture_array_non_uniform_indexing(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_subgroup(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_subgroup_barrier(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_subgroup_vertex(Self, Instance) -> Device raise WgpuError
@@ -1636,7 +1679,6 @@ pub fn Adapter::request_device_sync_texture_int64_atomic(Self, Instance) -> Devi
 pub fn Adapter::request_device_sync_timestamp_query(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_timestamp_query_inside_encoders(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_timestamp_query_inside_passes(Self, Instance) -> Device raise WgpuError
-pub fn Adapter::request_device_sync_uniform_buffer_and_storage_texture_array_non_uniform_indexing(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_vertex_attribute64bit(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_vertex_writable_storage(Self, Instance) -> Device raise WgpuError
 pub fn Adapter::request_device_sync_with_features(Self, Instance, Array[UInt], label? : String, queue_label? : String, trace_path? : String) -> Device raise WgpuError
@@ -2018,6 +2060,7 @@ pub fn Device::has_feature_native_shader_int64_atomic_min_max(Self) -> Bool
 pub fn Device::has_feature_native_shader_primitive_index(Self) -> Bool
 pub fn Device::has_feature_native_spirv_shader_passthrough(Self) -> Bool
 pub fn Device::has_feature_native_storage_resource_binding_array(Self) -> Bool
+pub fn Device::has_feature_native_storage_texture_array_non_uniform_indexing(Self) -> Bool
 pub fn Device::has_feature_native_subgroup(Self) -> Bool
 pub fn Device::has_feature_native_subgroup_barrier(Self) -> Bool
 pub fn Device::has_feature_native_subgroup_vertex(Self) -> Bool
@@ -2031,7 +2074,6 @@ pub fn Device::has_feature_native_texture_int64_atomic(Self) -> Bool
 pub fn Device::has_feature_native_timestamp_query_inside_encoders(Self) -> Bool
 pub fn Device::has_feature_native_timestamp_query_inside_passes(Self) -> Bool
 pub fn Device::has_feature_native_u32(Self, UInt) -> Bool
-pub fn Device::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(Self) -> Bool
 pub fn Device::has_feature_native_vertex_attribute64bit(Self) -> Bool
 pub fn Device::has_feature_native_vertex_writable_storage(Self) -> Bool
 pub fn Device::has_feature_timestamp_query(Self) -> Bool

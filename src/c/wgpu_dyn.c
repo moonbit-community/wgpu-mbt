@@ -485,6 +485,14 @@ void wgpuComputePassEncoderSetBindGroup(WGPUComputePassEncoder computePassEncode
   }
   mbt_real_wgpuComputePassEncoderSetBindGroup(computePassEncoder, groupIndex, group, dynamicOffsetCount, dynamicOffsets);
 }
+typedef void (*mbt_pfn_wgpuComputePassEncoderSetImmediates)(WGPUComputePassEncoder computePassEncoder, uint32_t offset, void const * data, size_t size);
+static mbt_pfn_wgpuComputePassEncoderSetImmediates mbt_real_wgpuComputePassEncoderSetImmediates = NULL;
+void wgpuComputePassEncoderSetImmediates(WGPUComputePassEncoder computePassEncoder, uint32_t offset, void const * data, size_t size) {
+  if (!mbt_real_wgpuComputePassEncoderSetImmediates) {
+    mbt_real_wgpuComputePassEncoderSetImmediates = (mbt_pfn_wgpuComputePassEncoderSetImmediates)mbt_wgpu_sym("wgpuComputePassEncoderSetImmediates");
+  }
+  mbt_real_wgpuComputePassEncoderSetImmediates(computePassEncoder, offset, data, size);
+}
 typedef void (*mbt_pfn_wgpuComputePassEncoderSetLabel)(WGPUComputePassEncoder computePassEncoder, WGPUStringView label);
 static mbt_pfn_wgpuComputePassEncoderSetLabel mbt_real_wgpuComputePassEncoderSetLabel = NULL;
 void wgpuComputePassEncoderSetLabel(WGPUComputePassEncoder computePassEncoder, WGPUStringView label) {
@@ -1069,6 +1077,14 @@ void wgpuRenderBundleEncoderSetBindGroup(WGPURenderBundleEncoder renderBundleEnc
   }
   mbt_real_wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder, groupIndex, group, dynamicOffsetCount, dynamicOffsets);
 }
+typedef void (*mbt_pfn_wgpuRenderBundleEncoderSetImmediates)(WGPURenderBundleEncoder renderBundleEncoder, uint32_t offset, void const * data, size_t size);
+static mbt_pfn_wgpuRenderBundleEncoderSetImmediates mbt_real_wgpuRenderBundleEncoderSetImmediates = NULL;
+void wgpuRenderBundleEncoderSetImmediates(WGPURenderBundleEncoder renderBundleEncoder, uint32_t offset, void const * data, size_t size) {
+  if (!mbt_real_wgpuRenderBundleEncoderSetImmediates) {
+    mbt_real_wgpuRenderBundleEncoderSetImmediates = (mbt_pfn_wgpuRenderBundleEncoderSetImmediates)mbt_wgpu_sym("wgpuRenderBundleEncoderSetImmediates");
+  }
+  mbt_real_wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder, offset, data, size);
+}
 typedef void (*mbt_pfn_wgpuRenderBundleEncoderSetIndexBuffer)(WGPURenderBundleEncoder renderBundleEncoder, WGPUBuffer buffer, WGPUIndexFormat format, uint64_t offset, uint64_t size);
 static mbt_pfn_wgpuRenderBundleEncoderSetIndexBuffer mbt_real_wgpuRenderBundleEncoderSetIndexBuffer = NULL;
 void wgpuRenderBundleEncoderSetIndexBuffer(WGPURenderBundleEncoder renderBundleEncoder, WGPUBuffer buffer, WGPUIndexFormat format, uint64_t offset, uint64_t size) {
@@ -1220,6 +1236,14 @@ void wgpuRenderPassEncoderSetBlendConstant(WGPURenderPassEncoder renderPassEncod
     mbt_real_wgpuRenderPassEncoderSetBlendConstant = (mbt_pfn_wgpuRenderPassEncoderSetBlendConstant)mbt_wgpu_sym("wgpuRenderPassEncoderSetBlendConstant");
   }
   mbt_real_wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder, color);
+}
+typedef void (*mbt_pfn_wgpuRenderPassEncoderSetImmediates)(WGPURenderPassEncoder renderPassEncoder, uint32_t offset, void const * data, size_t size);
+static mbt_pfn_wgpuRenderPassEncoderSetImmediates mbt_real_wgpuRenderPassEncoderSetImmediates = NULL;
+void wgpuRenderPassEncoderSetImmediates(WGPURenderPassEncoder renderPassEncoder, uint32_t offset, void const * data, size_t size) {
+  if (!mbt_real_wgpuRenderPassEncoderSetImmediates) {
+    mbt_real_wgpuRenderPassEncoderSetImmediates = (mbt_pfn_wgpuRenderPassEncoderSetImmediates)mbt_wgpu_sym("wgpuRenderPassEncoderSetImmediates");
+  }
+  mbt_real_wgpuRenderPassEncoderSetImmediates(renderPassEncoder, offset, data, size);
 }
 typedef void (*mbt_pfn_wgpuRenderPassEncoderSetIndexBuffer)(WGPURenderPassEncoder renderPassEncoder, WGPUBuffer buffer, WGPUIndexFormat format, uint64_t offset, uint64_t size);
 static mbt_pfn_wgpuRenderPassEncoderSetIndexBuffer mbt_real_wgpuRenderPassEncoderSetIndexBuffer = NULL;
@@ -1709,30 +1733,6 @@ void * wgpuTextureGetNativeMetalTexture(WGPUTexture texture) {
   }
   return mbt_real_wgpuTextureGetNativeMetalTexture(texture);
 }
-typedef void (*mbt_pfn_wgpuRenderPassEncoderSetImmediates)(WGPURenderPassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data);
-static mbt_pfn_wgpuRenderPassEncoderSetImmediates mbt_real_wgpuRenderPassEncoderSetImmediates = NULL;
-void wgpuRenderPassEncoderSetImmediates(WGPURenderPassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data) {
-  if (!mbt_real_wgpuRenderPassEncoderSetImmediates) {
-    mbt_real_wgpuRenderPassEncoderSetImmediates = (mbt_pfn_wgpuRenderPassEncoderSetImmediates)mbt_wgpu_sym("wgpuRenderPassEncoderSetImmediates");
-  }
-  mbt_real_wgpuRenderPassEncoderSetImmediates(encoder, offset, sizeBytes, data);
-}
-typedef void (*mbt_pfn_wgpuComputePassEncoderSetImmediates)(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data);
-static mbt_pfn_wgpuComputePassEncoderSetImmediates mbt_real_wgpuComputePassEncoderSetImmediates = NULL;
-void wgpuComputePassEncoderSetImmediates(WGPUComputePassEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data) {
-  if (!mbt_real_wgpuComputePassEncoderSetImmediates) {
-    mbt_real_wgpuComputePassEncoderSetImmediates = (mbt_pfn_wgpuComputePassEncoderSetImmediates)mbt_wgpu_sym("wgpuComputePassEncoderSetImmediates");
-  }
-  mbt_real_wgpuComputePassEncoderSetImmediates(encoder, offset, sizeBytes, data);
-}
-typedef void (*mbt_pfn_wgpuRenderBundleEncoderSetImmediates)(WGPURenderBundleEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data);
-static mbt_pfn_wgpuRenderBundleEncoderSetImmediates mbt_real_wgpuRenderBundleEncoderSetImmediates = NULL;
-void wgpuRenderBundleEncoderSetImmediates(WGPURenderBundleEncoder encoder, uint32_t offset, uint32_t sizeBytes, void const *data) {
-  if (!mbt_real_wgpuRenderBundleEncoderSetImmediates) {
-    mbt_real_wgpuRenderBundleEncoderSetImmediates = (mbt_pfn_wgpuRenderBundleEncoderSetImmediates)mbt_wgpu_sym("wgpuRenderBundleEncoderSetImmediates");
-  }
-  mbt_real_wgpuRenderBundleEncoderSetImmediates(encoder, offset, sizeBytes, data);
-}
 typedef void (*mbt_pfn_wgpuRenderPassEncoderMultiDrawIndirect)(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count);
 static mbt_pfn_wgpuRenderPassEncoderMultiDrawIndirect mbt_real_wgpuRenderPassEncoderMultiDrawIndirect = NULL;
 void wgpuRenderPassEncoderMultiDrawIndirect(WGPURenderPassEncoder encoder, WGPUBuffer buffer, uint64_t offset, uint32_t count) {
@@ -1828,5 +1828,21 @@ void wgpuDeviceStopGraphicsDebuggerCapture(WGPUDevice device) {
     mbt_real_wgpuDeviceStopGraphicsDebuggerCapture = (mbt_pfn_wgpuDeviceStopGraphicsDebuggerCapture)mbt_wgpu_sym("wgpuDeviceStopGraphicsDebuggerCapture");
   }
   mbt_real_wgpuDeviceStopGraphicsDebuggerCapture(device);
+}
+typedef void (*mbt_pfn_wgpuCommandEncoderClearTexture)(WGPUCommandEncoder commandEncoder, WGPUTexture texture, WGPUImageSubresourceRange const * range);
+static mbt_pfn_wgpuCommandEncoderClearTexture mbt_real_wgpuCommandEncoderClearTexture = NULL;
+void wgpuCommandEncoderClearTexture(WGPUCommandEncoder commandEncoder, WGPUTexture texture, WGPUImageSubresourceRange const * range) {
+  if (!mbt_real_wgpuCommandEncoderClearTexture) {
+    mbt_real_wgpuCommandEncoderClearTexture = (mbt_pfn_wgpuCommandEncoderClearTexture)mbt_wgpu_sym("wgpuCommandEncoderClearTexture");
+  }
+  mbt_real_wgpuCommandEncoderClearTexture(commandEncoder, texture, range);
+}
+typedef WGPUShaderModule (*mbt_pfn_wgpuDeviceCreateShaderModuleTrusted)(WGPUDevice device, WGPUShaderModuleDescriptor const * descriptor, WGPUShaderRuntimeChecks runtimeChecks);
+static mbt_pfn_wgpuDeviceCreateShaderModuleTrusted mbt_real_wgpuDeviceCreateShaderModuleTrusted = NULL;
+WGPUShaderModule wgpuDeviceCreateShaderModuleTrusted(WGPUDevice device, WGPUShaderModuleDescriptor const * descriptor, WGPUShaderRuntimeChecks runtimeChecks) {
+  if (!mbt_real_wgpuDeviceCreateShaderModuleTrusted) {
+    mbt_real_wgpuDeviceCreateShaderModuleTrusted = (mbt_pfn_wgpuDeviceCreateShaderModuleTrusted)mbt_wgpu_sym("wgpuDeviceCreateShaderModuleTrusted");
+  }
+  return mbt_real_wgpuDeviceCreateShaderModuleTrusted(device, descriptor, runtimeChecks);
 }
 #endif

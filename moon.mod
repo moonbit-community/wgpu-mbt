@@ -14,9 +14,8 @@ description = "This repo contains a MoonBit port of the `wgpu-native` C API (Web
 
 preferred_target = "native"
 
-source = "src"
-
 options(
+  source: "src",
   "--moonbit-unstable-prebuild": "build.js",
   exclude: [ "_build", "target", "src/c/target" ],
 )

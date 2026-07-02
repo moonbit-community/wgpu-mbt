@@ -130,7 +130,8 @@ pub fn Device::has_feature_native_multiview(self : Device) -> Bool {
 pub fn Device::has_feature_native_spirv_shader_passthrough(
   self : Device,
 ) -> Bool {
-  self.has_feature_native_u32(NATIVE_FEATURE_SPIRV_SHADER_PASSTHROUGH)
+  let _ = self
+  false
 }
 
 ///|
@@ -172,11 +173,11 @@ pub fn Device::has_feature_native_partially_bound_binding_array(
 }
 
 ///|
-pub fn Device::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+pub fn Device::has_feature_native_storage_texture_array_non_uniform_indexing(
   self : Device,
 ) -> Bool {
   self.has_feature_native_u32(
-    NATIVE_FEATURE_UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
+    NATIVE_FEATURE_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
   )
 }
 

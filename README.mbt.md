@@ -34,9 +34,9 @@ Detailed evidence and current boundaries live in
 3. This repo is pinned to one official upstream release:
 
 - repo: `gfx-rs/wgpu-native`
-- tag: `v29.0.0.0`
-- commit: `d2e3330ade4ae1bb238d76b485926f067e7ee64c`
-- release page: <https://github.com/gfx-rs/wgpu-native/releases/tag/v29.0.0.0>
+- tag: `v29.0.1.1`
+- commit: `6aed50955d934ac36049ba8d002034841633ae02`
+- release page: <https://github.com/gfx-rs/wgpu-native/releases/tag/v29.0.1.1>
 
 4. Dynamic mode should use the matching extracted upstream release tree:
 
@@ -298,15 +298,11 @@ Some `wgpu-native` builds still have unimplemented or unstable entry points.
 These are still blocked by upstream `wgpu-native` headers/releases, so `wgpu_mbt` does not expose
 fake or unstable wrappers for them:
 
-- `AddressModeClampToZero`
-- `AddressModeClampToBorder`
 - `TEXTURE_FORMAT_R64_UINT`
 - `STORAGE_TEXTURE_ACCESS_ATOMIC`
 
-`ClearTexture` and `Multiview` are already exposed by `wgpu_mbt` through local native-feature
-shims. The remaining blocker is sampler clamp-to-zero/border support: current upstream C headers
-still do not expose the required address-mode and border-color API surface.
-Tracker: `wgpu_mbt-jyd` ("Await upstream sampler clamp-mode C API").
+`AddressModeClampToZero`, `AddressModeClampToBorder`, `ClearTexture`, and `Multiview` are exposed
+by the pinned upstream `wgpu-native` header.
 
 `TEXTURE_ATOMIC` and `TEXTURE_INT64_ATOMIC` feature bits are queryable through native feature
 ids allocated by upstream `wgpu-native` trunk, so `Adapter::supported_rust_features_u64()` and

@@ -1113,7 +1113,7 @@ declare pub fn Adapter::request_device_sync_partially_bound_binding_array(
 
 ///|
 #declaration_only
-declare pub fn Adapter::request_device_sync_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+declare pub fn Adapter::request_device_sync_storage_texture_array_non_uniform_indexing(
   self : Adapter,
   instance : Instance,
 ) -> Device raise WgpuError
@@ -1354,7 +1354,7 @@ declare pub fn Adapter::has_feature_native_partially_bound_binding_array(
 
 ///|
 #declaration_only
-declare pub fn Adapter::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+declare pub fn Adapter::has_feature_native_storage_texture_array_non_uniform_indexing(
   self : Adapter,
 ) -> Bool
 
@@ -1860,7 +1860,7 @@ declare pub fn Device::has_feature_native_partially_bound_binding_array(
 
 ///|
 #declaration_only
-declare pub fn Device::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+declare pub fn Device::has_feature_native_storage_texture_array_non_uniform_indexing(
   self : Device,
 ) -> Bool
 

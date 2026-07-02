@@ -180,35 +180,48 @@ test "wgpu bind group builder: sampler binding array renders with dynamic index"
   )
   queue.write_buffer(slot, 0UL, u32le_pack([1U, 0U, 0U, 0U]))
 
-  let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=3UL)
-  let ok0 = bglb.add_buffer(
+  let slot_bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=1UL)
+  let slot_ok = slot_bglb.add_buffer(
     0U,
     ss(@wgpu.SHADER_STAGE_FRAGMENT),
     @wgpu.BUFFER_BINDING_TYPE_UNIFORM,
     min_binding_size=4UL,
   )
-  let ok1 = bglb.add_texture(
+  @debug.debug_inspect(slot_ok, content="true")
+  let slot_bgl = slot_bglb.finish(device)
+
+  let arrays_bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=2UL)
+  let arrays_ok0 = arrays_bglb.add_texture(
     4U,
     ss(@wgpu.SHADER_STAGE_FRAGMENT),
     @wgpu.TEXTURE_SAMPLE_TYPE_FLOAT,
     @wgpu.TEXTURE_VIEW_DIMENSION_2D,
     count=2U,
   )
-  let ok2 = bglb.add_sampler(
+  let arrays_ok1 = arrays_bglb.add_sampler(
     5U,
     ss(@wgpu.SHADER_STAGE_FRAGMENT),
     @wgpu.SAMPLER_BINDING_TYPE_FILTERING,
     count=2U,
   )
-  @debug.debug_inspect([ok0, ok1, ok2], content="[true, true, true]")
-  let bgl = bglb.finish(device)
-  let pl = device.create_pipeline_layout_1(bgl)
-  let bgb = @wgpu.BindGroupBuilder::new(max_entries=3UL)
-  let bg_ok0 = bgb.add_buffer(0U, slot)
-  let bg_ok1 = bgb.add_texture_view_array(4U, [tex0_view, tex1_view])
-  let bg_ok2 = bgb.add_sampler_array(5U, [sampler_clamp, sampler_repeat])
-  @debug.debug_inspect([bg_ok0, bg_ok1, bg_ok2], content="[true, true, true]")
-  let bg = bgb.finish(device, bgl)
+  @debug.debug_inspect([arrays_ok0, arrays_ok1], content="[true, true]")
+  let arrays_bgl = arrays_bglb.finish(device)
+  let pl = device.create_pipeline_layout_many([slot_bgl, arrays_bgl])
+
+  let slot_bgb = @wgpu.BindGroupBuilder::new(max_entries=1UL)
+  let slot_bg_ok = slot_bgb.add_buffer(0U, slot)
+  @debug.debug_inspect(slot_bg_ok, content="true")
+  let slot_bg = slot_bgb.finish(device, slot_bgl)
+
+  let arrays_bgb = @wgpu.BindGroupBuilder::new(max_entries=2UL)
+  let arrays_bg_ok0 = arrays_bgb.add_texture_view_array(4U, [
+    tex0_view, tex1_view,
+  ])
+  let arrays_bg_ok1 = arrays_bgb.add_sampler_array(5U, [
+    sampler_clamp, sampler_repeat,
+  ])
+  @debug.debug_inspect([arrays_bg_ok0, arrays_bg_ok1], content="[true, true]")
+  let arrays_bg = arrays_bgb.finish(device, arrays_bgl)
 
   let wgsl : String =
     #|struct Slot {
@@ -232,8 +245,8 @@ test "wgpu bind group builder: sampler binding array renders with dynamic index"
     #|}
     #|
     #|@group(0) @binding(0) var<uniform> slot: Slot;
-    #|@group(0) @binding(4) var lightmaps_textures: binding_array<texture_2d<f32>, 2>;
-    #|@group(0) @binding(5) var lightmaps_samplers: binding_array<sampler, 2>;
+    #|@group(1) @binding(4) var lightmaps_textures: binding_array<texture_2d<f32>, 2>;
+    #|@group(1) @binding(5) var lightmaps_samplers: binding_array<sampler, 2>;
     #|
     #|@fragment
     #|fn fs_main() -> @location(0) vec4<f32> {
@@ -257,7 +270,8 @@ test "wgpu bind group builder: sampler binding array renders with dynamic index"
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(dst_view)
   pass.set_pipeline(pipeline)
-  pass.set_bind_group0(bg)
+  pass.set_bind_group(0U, slot_bg, [])
+  pass.set_bind_group(1U, arrays_bg, [])
   pass.draw(3U, 1U, 0U, 0U)
   pass.end()
   pass.release()
@@ -277,9 +291,11 @@ test "wgpu bind group builder: sampler binding array renders with dynamic index"
   dst.release()
   pipeline.release()
   sm.release()
-  bg.release()
+  arrays_bg.release()
+  slot_bg.release()
   pl.release()
-  bgl.release()
+  arrays_bgl.release()
+  slot_bgl.release()
   slot.release()
   sampler_repeat.release()
   sampler_clamp.release()

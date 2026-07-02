@@ -598,7 +598,7 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
               .next = NULL,
               .sType = (WGPUSType)WGPUSType_NativeLimits,
           },
-      .maxImmediateSize = 0u,
+      .maxMultiviewViewCount = 0u,
       .maxNonSamplerBindings = 0u,
       .maxBindingArrayElementsPerShaderStage = 0u,
       .maxBindingArraySamplerElementsPerShaderStage = 0u,
@@ -640,8 +640,11 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
   if (max_samplers_per_shader_stage != 0u) {
     out->limits.maxSamplersPerShaderStage = max_samplers_per_shader_stage;
   }
+  if (max_immediate_size != 0u) {
+    out->limits.maxImmediateSize = max_immediate_size;
+  }
 
-  if (max_immediate_size != 0u || max_non_sampler_bindings != 0u ||
+  if (max_non_sampler_bindings != 0u ||
       max_binding_array_elements_per_shader_stage != 0u ||
       max_binding_array_sampler_elements_per_shader_stage != 0u) {
     out->native_limits = (WGPUNativeLimits){
@@ -650,16 +653,13 @@ WGPULimits *mbt_wgpu_limits_new_from_adapter_overrides_u32(
                 .next = NULL,
                 .sType = (WGPUSType)WGPUSType_NativeLimits,
             },
-        .maxImmediateSize = native_base.maxImmediateSize,
+        .maxMultiviewViewCount = native_base.maxMultiviewViewCount,
         .maxNonSamplerBindings = native_base.maxNonSamplerBindings,
         .maxBindingArrayElementsPerShaderStage =
             native_base.maxBindingArrayElementsPerShaderStage,
         .maxBindingArraySamplerElementsPerShaderStage =
             native_base.maxBindingArraySamplerElementsPerShaderStage,
     };
-    if (max_immediate_size != 0u) {
-      out->native_limits.maxImmediateSize = max_immediate_size;
-    }
     if (max_non_sampler_bindings != 0u) {
       out->native_limits.maxNonSamplerBindings = max_non_sampler_bindings;
     }

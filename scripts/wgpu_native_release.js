@@ -2,13 +2,13 @@ const os = require('os');
 
 const SUPPORTED_RELEASE = {
   repo: 'gfx-rs/wgpu-native',
-  tag: 'v29.0.0.0',
-  rev: 'd2e3330ade4ae1bb238d76b485926f067e7ee64c',
+  tag: 'v29.0.1.1',
+  rev: '6aed50955d934ac36049ba8d002034841633ae02',
   assets: {
     'linux:x64': {
       staticArchive: 'wgpu-linux-x86_64-release.zip',
       dynamicArchive: 'wgpu-linux-x86_64-release.zip',
-      staticSha256: 'cf614af80f23c6364a13f6569e7ae4ca7367ebf6062e3d3d6e80e205264636b4',
+      staticSha256: '95a4d90c071005a98d03eab348beaa6b07e16eb00d1dcdb9f8348f75eb97ec5a',
       staticLibRel: 'lib/libwgpu_native.a',
       dynamicLibRel: 'lib/libwgpu_native.so',
       linkFlags: ['-ldl', '-lm', '-pthread'],
@@ -18,7 +18,7 @@ const SUPPORTED_RELEASE = {
     'linux:arm64': {
       staticArchive: 'wgpu-linux-aarch64-release.zip',
       dynamicArchive: 'wgpu-linux-aarch64-release.zip',
-      staticSha256: 'd763c855a15ab77d43638769514e4cb24b2ab025928160ffbd8b791b1d5a083f',
+      staticSha256: '015fcdf1dbae82e614a783cc38017e5399ae0927a889fe9b69c9b664bc61b47a',
       staticLibRel: 'lib/libwgpu_native.a',
       dynamicLibRel: 'lib/libwgpu_native.so',
       linkFlags: ['-ldl', '-lm', '-pthread'],
@@ -28,7 +28,7 @@ const SUPPORTED_RELEASE = {
     'darwin:x64': {
       staticArchive: 'wgpu-macos-x86_64-release.zip',
       dynamicArchive: 'wgpu-macos-x86_64-release.zip',
-      staticSha256: '8201b3b9c05c395b9d3c8bb37d965c0c47c5e53a2e251cf6af04356f01e6c81a',
+      staticSha256: '8e2f7378548ddd0e2cf21e7d864dda46e953f0af724855a33778b85ead206d41',
       staticLibRel: 'lib/libwgpu_native.a',
       dynamicLibRel: 'lib/libwgpu_native.dylib',
       linkFlags: [
@@ -60,7 +60,7 @@ const SUPPORTED_RELEASE = {
     'darwin:arm64': {
       staticArchive: 'wgpu-macos-aarch64-release.zip',
       dynamicArchive: 'wgpu-macos-aarch64-release.zip',
-      staticSha256: 'e3e3f6144f9b197b8199681e956391631cfc6d1cef057a1e8c5a1c6aedef5054',
+      staticSha256: 'a5797a37b1adf720bcd5dcffb291edbbd5b7b14be0a3874c28e6393a655a7a3e',
       staticLibRel: 'lib/libwgpu_native.a',
       dynamicLibRel: 'lib/libwgpu_native.dylib',
       linkFlags: [
@@ -92,7 +92,7 @@ const SUPPORTED_RELEASE = {
     'win32:x64': {
       staticArchive: 'wgpu-windows-x86_64-gnu-release.zip',
       dynamicArchive: 'wgpu-windows-x86_64-msvc-release.zip',
-      staticSha256: 'a42357359100682b195550d6a7d2fad44415e1f4770b22ef1acb73e7b2039ae5',
+      staticSha256: 'd471e3614733c1d4ddd61bfd19868356477d0d37bf531bf8c6cb64a7f579bd2a',
       staticLibRel: 'lib/libwgpu_native.a',
       dynamicLibRel: 'lib/wgpu_native.dll',
       linkFlags: [
@@ -120,7 +120,7 @@ const SUPPORTED_RELEASE = {
     'win32:arm64': {
       staticArchive: 'wgpu-windows-aarch64-msvc-release.zip',
       dynamicArchive: 'wgpu-windows-aarch64-msvc-release.zip',
-      staticSha256: 'f0f131424903b827378f242ff5f4652d075376461603ef6ca3a6d2b4199d4fb8',
+      staticSha256: '4a876421a8c1e5fe72f849b3722214280fe485cb1c56f77f8b0c82414be5b29f',
       staticLibRel: 'lib/wgpu_native.lib',
       dynamicLibRel: 'lib/wgpu_native.dll',
       linkFlags: [

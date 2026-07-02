@@ -471,13 +471,13 @@ pub fn Adapter::request_device_sync_partially_bound_binding_array(
 }
 
 ///|
-pub fn Adapter::request_device_sync_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+pub fn Adapter::request_device_sync_storage_texture_array_non_uniform_indexing(
   self : Adapter,
   instance : Instance,
 ) -> Device raise WgpuError {
   self.request_device_sync_native_feature(
     instance,
-    NATIVE_FEATURE_UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
+    NATIVE_FEATURE_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
   )
 }
 
@@ -805,7 +805,8 @@ pub fn Adapter::has_feature_native_multiview(self : Adapter) -> Bool {
 pub fn Adapter::has_feature_native_spirv_shader_passthrough(
   self : Adapter,
 ) -> Bool {
-  @c.adapter_has_feature_native_spirv_shader_passthrough(self.raw)
+  let _ = self
+  false
 }
 
 ///|
@@ -849,11 +850,11 @@ pub fn Adapter::has_feature_native_partially_bound_binding_array(
 }
 
 ///|
-pub fn Adapter::has_feature_native_uniform_buffer_and_storage_texture_array_non_uniform_indexing(
+pub fn Adapter::has_feature_native_storage_texture_array_non_uniform_indexing(
   self : Adapter,
 ) -> Bool {
   self.has_feature_native_u32(
-    NATIVE_FEATURE_UNIFORM_BUFFER_AND_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
+    NATIVE_FEATURE_STORAGE_TEXTURE_ARRAY_NON_UNIFORM_INDEXING,
   )
 }
 
