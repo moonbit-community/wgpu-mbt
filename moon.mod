@@ -14,6 +14,10 @@ description = "This repo contains a MoonBit port of the `wgpu-native` C API (Web
 
 preferred_target = "native"
 
+import {
+  "Milky2018/windowing@0.1.0",
+}
+
 options(
   source: "src",
   "--moonbit-unstable-prebuild": "build.js",

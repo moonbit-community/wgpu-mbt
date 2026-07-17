@@ -3,6 +3,7 @@ package "Milky2018/wgpu_mbt"
 
 import {
   "Milky2018/wgpu_mbt/c",
+  "Milky2018/windowing",
 }
 
 // Values
@@ -2196,6 +2197,8 @@ pub fn Instance::create() -> Self raise WgpuError
 pub fn Instance::create_ptr(@c.WGPUInstanceDescriptorPtr) -> Self raise WgpuError
 pub fn Instance::create_surface(Self, @c.WGPUSurfaceDescriptorPtr) -> Surface
 pub fn Instance::create_surface_android_native_window(Self, @c.OpaquePtr) -> Surface
+pub fn[T : @windowing.HasWindowHandle + @windowing.HasDisplayHandle] Instance::create_surface_from_window(Self, T) -> Surface raise SurfaceCreateError
+pub fn Instance::create_surface_from_window_handles(Self, @windowing.WindowHandle, @windowing.DisplayHandle) -> Surface raise SurfaceCreateError
 pub fn Instance::create_surface_macos_ns_view(Self, @c.OpaquePtr) -> Surface raise SurfaceCreateError
 pub fn Instance::create_surface_macos_ns_view_u64(Self, UInt64) -> Surface raise SurfaceCreateError
 pub fn Instance::create_surface_metal_layer(Self) -> Surface
@@ -2582,6 +2585,7 @@ pub impl Eq for ShaderStage
 pub struct Surface {
   raw : @c.WGPUSurface
   layer : @c.OpaquePtr
+  // private fields
 }
 pub fn Surface::add_ref(Self) -> Self
 pub fn Surface::add_ref_raw(Self) -> Unit
@@ -2620,6 +2624,7 @@ pub fn Surface::release_raw(Self) -> Unit
 pub fn Surface::set_label(Self, String) -> Unit
 pub fn Surface::sync_macos_ns_view_layer(Self, @c.OpaquePtr) -> Unit raise SurfaceCreateError
 pub fn Surface::sync_macos_ns_view_layer_u64(Self, UInt64) -> Unit raise SurfaceCreateError
+pub fn Surface::sync_macos_window_handle(Self, @windowing.WindowHandle) -> Unit raise SurfaceCreateError
 pub fn Surface::unconfigure(Self) -> Unit
 pub fn Surface::unconfigure_raw(Self) -> Unit
 

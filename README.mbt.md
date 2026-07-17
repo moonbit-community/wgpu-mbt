@@ -6,9 +6,9 @@ MoonBit bindings for the `wgpu-native` C API (WebGPU), targeting **native** back
 
 | Platform | Status | Validated in repo | Surface API |
 |---|---|---|---|
-| macOS | supported | Metal runtime + host-backed surface tests in CI | `Instance::create_surface_metal_layer()` |
-| Linux | experimental | Vulkan headless runtime + Linux descriptor/input validation in CI | `Instance::create_surface_wayland()` / `create_surface_xcb()` / `create_surface_xlib()` |
-| Windows | experimental | Vulkan headless runtime + Windows descriptor/input validation in CI | `Instance::create_surface_windows_hwnd()` / `create_surface_swap_chain_panel()` |
+| macOS | supported | Metal runtime + host-backed surface tests in CI | `Instance::create_surface_from_window()` / `create_surface_metal_layer()` |
+| Linux | experimental | Vulkan headless runtime + Linux descriptor/input validation in CI | `Instance::create_surface_from_window()` / platform constructors |
+| Windows | experimental | Vulkan headless runtime + Windows descriptor/input validation in CI | `Instance::create_surface_from_window()` / platform constructors |
 | Android | unsupported by repo build matrix | API only; no pinned build path or runtime validation | `Instance::create_surface_android_native_window()` |
 
 Detailed evidence and current boundaries live in
@@ -158,7 +158,30 @@ the package now also exposes pointer builders that include
 
 ## Surface Sources (All Common Native Sources)
 
-High-level constructors now cover all common native surface sources:
+The preferred window integration uses the backend-neutral
+`Milky2018/windowing` contracts:
+
+```moonbit
+let surface = instance.create_surface_from_window(window)
+```
+
+The window must implement both `HasWindowHandle` and `HasDisplayHandle`.
+`Milky2018/window@0.6.0` implements these contracts for its AppKit `Window`.
+The returned `Surface` retains both handle providers, keeping the native window
+and display owners reachable while the surface is in use. On macOS, synchronize
+the attached Metal layer after resize or scale-factor changes:
+
+```moonbit
+surface.sync_macos_window_handle(window.window_handle())
+```
+
+`create_surface_from_window_handles(window_handle, display_handle)` is also
+available when an integration already owns the two structured handles. Window
+and display handles must use the same backend. Missing Win32 `HINSTANCE`, Xlib
+`Display*`, or XCB connection values raise `SurfaceCreateError`; the API does
+not infer or substitute native handles.
+
+Low-level constructors remain available for SDL and custom native hosts:
 
 - Metal: `Instance::create_surface_metal_layer()`
 - macOS AppKit: `Instance::create_surface_macos_ns_view(ns_view)`
@@ -172,6 +195,9 @@ High-level constructors now cover all common native surface sources:
 Current contract:
 
 - The checked-in host-integration behavior tests are for macOS/Metal.
+- The AppKit integration test exercises `Milky2018/windowing` handle providers,
+  real surface creation, configuration, frame acquisition, presentation, and
+  resize synchronization.
 - `create_surface_macos_ns_view` accepts an AppKit `NSView*`, installs or reuses
   a `CAMetalLayer`, synchronizes its drawable size from the view's backing
   coordinates, and returns a `Surface` that retains the layer. Call

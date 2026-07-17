@@ -65,6 +65,8 @@ pub struct TextureView {
 pub struct Surface {
   raw : @c.WGPUSurface
   layer : @c.OpaquePtr
+  priv mut owner_window_handle : @windowing.WindowHandle?
+  priv mut owner_display_handle : @windowing.DisplayHandle?
 }
 
 ///|
@@ -676,39 +678,60 @@ suberror SurfaceTextureError {
 ///|
 suberror SurfaceCreateError {
   SurfaceCreateError(UInt)
+  SurfaceWindowHandleUnavailable
+  SurfaceDisplayHandleUnavailable
+  SurfaceHandlePairMismatch
+  SurfaceWin32HinstanceUnavailable
+  SurfaceXlibDisplayUnavailable
+  SurfaceXcbConnectionUnavailable
+  SurfaceAppKitWindowHandleRequired
+  SurfaceNativeCreateFailed
 }
 
 ///|
 pub fn SurfaceCreateError::message(self : SurfaceCreateError) -> String {
-  let SurfaceCreateError(status) = self
-  let name = if status == SURFACE_CREATE_STATUS_SUCCESS {
-    "Success"
-  } else if status == SURFACE_CREATE_STATUS_UNSUPPORTED_PLATFORM {
-    "UnsupportedPlatform"
-  } else if status == SURFACE_CREATE_STATUS_INVALID_NS_VIEW {
-    "InvalidNSView"
-  } else if status == SURFACE_CREATE_STATUS_OBJC_UNAVAILABLE {
-    "ObjCUnavailable"
-  } else if status == SURFACE_CREATE_STATUS_APPKIT_UNAVAILABLE {
-    "AppKitUnavailable"
-  } else if status == SURFACE_CREATE_STATUS_NOT_MAIN_THREAD {
-    "NotMainThread"
-  } else if status == SURFACE_CREATE_STATUS_METAL_LAYER_UNAVAILABLE {
-    "MetalLayerUnavailable"
-  } else if status == SURFACE_CREATE_STATUS_INVALID_METAL_LAYER {
-    "InvalidMetalLayer"
-  } else if status == SURFACE_CREATE_STATUS_ZERO_DRAWABLE_SIZE {
-    "ZeroDrawableSize"
-  } else if status == SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED {
-    "CreateSurfaceFailed"
-  } else {
-    "Unknown"
+  match self {
+    SurfaceCreateError(status) => {
+      let name = if status == SURFACE_CREATE_STATUS_SUCCESS {
+        "Success"
+      } else if status == SURFACE_CREATE_STATUS_UNSUPPORTED_PLATFORM {
+        "UnsupportedPlatform"
+      } else if status == SURFACE_CREATE_STATUS_INVALID_NS_VIEW {
+        "InvalidNSView"
+      } else if status == SURFACE_CREATE_STATUS_OBJC_UNAVAILABLE {
+        "ObjCUnavailable"
+      } else if status == SURFACE_CREATE_STATUS_APPKIT_UNAVAILABLE {
+        "AppKitUnavailable"
+      } else if status == SURFACE_CREATE_STATUS_NOT_MAIN_THREAD {
+        "NotMainThread"
+      } else if status == SURFACE_CREATE_STATUS_METAL_LAYER_UNAVAILABLE {
+        "MetalLayerUnavailable"
+      } else if status == SURFACE_CREATE_STATUS_INVALID_METAL_LAYER {
+        "InvalidMetalLayer"
+      } else if status == SURFACE_CREATE_STATUS_ZERO_DRAWABLE_SIZE {
+        "ZeroDrawableSize"
+      } else if status == SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED {
+        "CreateSurfaceFailed"
+      } else {
+        "Unknown"
+      }
+      "macOS surface creation failed (status=" +
+      name +
+      ", u32=" +
+      status.to_string() +
+      ")"
+    }
+    SurfaceWindowHandleUnavailable => "window handle is unavailable"
+    SurfaceDisplayHandleUnavailable => "display handle is unavailable"
+    SurfaceHandlePairMismatch =>
+      "window and display handles use different backends"
+    SurfaceWin32HinstanceUnavailable => "Win32 HINSTANCE is unavailable"
+    SurfaceXlibDisplayUnavailable => "Xlib Display pointer is unavailable"
+    SurfaceXcbConnectionUnavailable => "XCB connection pointer is unavailable"
+    SurfaceAppKitWindowHandleRequired =>
+      "an AppKit window handle is required for Metal layer synchronization"
+    SurfaceNativeCreateFailed => "native surface creation failed"
   }
-  "macOS surface creation failed (status=" +
-  name +
-  ", u32=" +
-  status.to_string() +
-  ")"
 }
 
 ///|

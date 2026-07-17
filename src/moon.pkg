@@ -1,5 +1,6 @@
 import {
   "Milky2018/wgpu_mbt/c",
+  "Milky2018/windowing",
   "moonbitlang/core/ref",
   "moonbitlang/core/encoding/utf8",
 }
@@ -26,5 +27,6 @@ options(
     "wgpu_surface.mbt": [ "native" ],
     "wgpu_texture.mbt": [ "native" ],
     "wgpu_types.mbt": [ "native" ],
+    "wgpu_windowing.mbt": [ "native" ],
   },
 )

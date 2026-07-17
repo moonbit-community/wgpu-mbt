@@ -535,6 +535,21 @@ declare pub fn Instance::create_surface_macos_ns_view(
 
 ///|
 #declaration_only
+declare pub fn Instance::create_surface_from_window_handles(
+  self : Instance,
+  window_handle : @windowing.WindowHandle,
+  display_handle : @windowing.DisplayHandle,
+) -> Surface raise SurfaceCreateError
+
+///|
+#declaration_only
+declare pub fn[T : @windowing.HasWindowHandle + @windowing.HasDisplayHandle] Instance::create_surface_from_window(
+  self : Instance,
+  window : T,
+) -> Surface raise SurfaceCreateError
+
+///|
+#declaration_only
 declare pub fn Instance::create_surface_wayland(
   self : Instance,
   display : @c.OpaquePtr,
@@ -650,6 +665,13 @@ declare pub fn Surface::configure_ptr(
 declare pub fn Surface::sync_macos_ns_view_layer(
   self : Surface,
   ns_view : @c.OpaquePtr,
+) -> Unit raise SurfaceCreateError
+
+///|
+#declaration_only
+declare pub fn Surface::sync_macos_window_handle(
+  self : Surface,
+  window_handle : @windowing.WindowHandle,
 ) -> Unit raise SurfaceCreateError
 
 ///|

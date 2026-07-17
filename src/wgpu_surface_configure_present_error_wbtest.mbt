@@ -14,7 +14,12 @@
 
 ///|
 test "surface present_or_raise raises on null surface" {
-  let surface = { raw: @c.null_surface(), layer: @c.null_opaque_ptr() }
+  let surface = {
+    raw: @c.null_surface(),
+    layer: @c.null_opaque_ptr(),
+    owner_window_handle: None,
+    owner_display_handle: None,
+  }
   let raised : Ref[Bool] = @ref.new(false)
   surface.present_or_raise() catch {
     _ => raised.val = true
@@ -24,7 +29,12 @@ test "surface present_or_raise raises on null surface" {
 
 ///|
 test "surface configure_or_raise raises on null handles" {
-  let surface = { raw: @c.null_surface(), layer: @c.null_opaque_ptr() }
+  let surface = {
+    raw: @c.null_surface(),
+    layer: @c.null_opaque_ptr(),
+    owner_window_handle: None,
+    owner_display_handle: None,
+  }
   let adapter_raw : @c.Adapter = @c.null_adapter()
   let device_raw : @c.Device = @c.null_device()
   let adapter : Adapter = { raw: adapter_raw }
@@ -49,7 +59,12 @@ test "surface configure_or_raise raises on null handles" {
 
 ///|
 test "surface configure_with validates desired_maximum_frame_latency" {
-  let surface = { raw: @c.null_surface(), layer: @c.null_opaque_ptr() }
+  let surface = {
+    raw: @c.null_surface(),
+    layer: @c.null_opaque_ptr(),
+    owner_window_handle: None,
+    owner_display_handle: None,
+  }
   let adapter : Adapter = { raw: @c.null_adapter() }
   let device : Device = { raw: @c.null_device() }
   let usage = TextureUsage::from_u64(TEXTURE_USAGE_RENDER_ATTACHMENT)
@@ -68,7 +83,12 @@ test "surface configure_with validates desired_maximum_frame_latency" {
 
 ///|
 test "surface configure_with_or_raise validates desired_maximum_frame_latency" {
-  let surface = { raw: @c.null_surface(), layer: @c.null_opaque_ptr() }
+  let surface = {
+    raw: @c.null_surface(),
+    layer: @c.null_opaque_ptr(),
+    owner_window_handle: None,
+    owner_display_handle: None,
+  }
   let adapter : Adapter = { raw: @c.null_adapter() }
   let device : Device = { raw: @c.null_device() }
   let usage = TextureUsage::from_u64(TEXTURE_USAGE_RENDER_ATTACHMENT)

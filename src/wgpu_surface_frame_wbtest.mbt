@@ -15,7 +15,12 @@
 ///|
 test "surface frame helpers: null surface raises" {
   // Keep this runtime-free: `null_surface` never touches `libwgpu_native`.
-  let surface = { raw: @c.null_surface(), layer: @c.null_opaque_ptr() }
+  let surface = {
+    raw: @c.null_surface(),
+    layer: @c.null_opaque_ptr(),
+    owner_window_handle: None,
+    owner_display_handle: None,
+  }
   let st = surface.get_current_texture()
   let raised_take : Ref[Bool] = @ref.new(false)
   try {

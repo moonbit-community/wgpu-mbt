@@ -13,13 +13,51 @@
 // limitations under the License.
 
 ///|
-test "wgpu surface macOS NSView path" {
+priv struct AppKitSurfaceWindow {
+  ns_view : UInt64
+}
+
+///|
+impl @windowing.WindowHandleProvider for AppKitSurfaceWindow with fn raw_window_handle(
+  self,
+) {
+  AppKit(@windowing.AppKitWindowHandle::new(self.ns_view))
+}
+
+///|
+impl @windowing.DisplayHandleProvider for AppKitSurfaceWindow with fn raw_display_handle(
+  _self,
+) {
+  AppKit(@windowing.AppKitDisplayHandle::new())
+}
+
+///|
+impl @windowing.HasWindowHandle for AppKitSurfaceWindow with fn window_handle(
+  self,
+) {
+  @windowing.WindowHandle::from_provider(
+    self as &@windowing.WindowHandleProvider,
+  )
+}
+
+///|
+impl @windowing.HasDisplayHandle for AppKitSurfaceWindow with fn display_handle(
+  self,
+) {
+  @windowing.DisplayHandle::from_provider(
+    self as &@windowing.DisplayHandleProvider,
+  )
+}
+
+///|
+test "wgpu surface windowing AppKit path" {
   let view = @wgpu_c.macos_test_ns_view_new(2U, 3U)
   inspect(@wgpu_c.opaque_ptr_is_null(view), content="false")
   let view_u64 = @wgpu_c.opaque_ptr_to_u64(view)
   inspect(view_u64 != 0UL, content="true")
+  let window : AppKitSurfaceWindow = { ns_view: view_u64 }
   let instance = @wgpu.Instance::create()
-  let surface = instance.create_surface_macos_ns_view_u64(view_u64)
+  let surface = instance.create_surface_from_window(window)
   let layer = surface.metal_layer_handle()
   inspect(@wgpu_c.opaque_ptr_is_null(layer), content="false")
   inspect(@wgpu_c.cametallayer_drawable_width_u32(layer) >= 2U, content="true")
@@ -40,7 +78,9 @@ test "wgpu surface macOS NSView path" {
   frame.release()
   surface.unconfigure()
   @wgpu_c.macos_test_ns_view_set_size(view, 4U, 5U)
-  surface.sync_macos_ns_view_layer_u64(view_u64)
+  surface.sync_macos_window_handle(
+    @windowing.HasWindowHandle::window_handle(window),
+  )
   inspect(@wgpu_c.cametallayer_drawable_width_u32(layer) >= 4U, content="true")
   inspect(@wgpu_c.cametallayer_drawable_height_u32(layer) >= 5U, content="true")
   device.release()
