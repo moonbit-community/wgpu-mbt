@@ -17,6 +17,7 @@ test "surface present_or_raise raises on null surface" {
   let surface = {
     raw: @c.null_surface(),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -32,6 +33,7 @@ test "surface configure_or_raise raises on null handles" {
   let surface = {
     raw: @c.null_surface(),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -62,6 +64,7 @@ test "surface configure_with validates desired_maximum_frame_latency" {
   let surface = {
     raw: @c.null_surface(),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -86,6 +89,7 @@ test "surface configure_with_or_raise validates desired_maximum_frame_latency" {
   let surface = {
     raw: @c.null_surface(),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }

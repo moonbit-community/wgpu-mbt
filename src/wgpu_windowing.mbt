@@ -123,6 +123,7 @@ pub fn Instance::create_surface_from_window_handles(
   {
     raw: surface.raw,
     layer: surface.layer,
+    layer_owner: surface.layer_owner,
     owner_window_handle: Some(window_handle),
     owner_display_handle: Some(display_handle),
   }

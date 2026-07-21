@@ -367,7 +367,13 @@ pub fn Instance::generate_report(self : Instance) -> GlobalReport {
 pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
   let layer = @c.cametallayer_new()
   let surface = @c.instance_create_surface_metal_layer(self.raw, layer)
-  { raw: surface, layer, owner_window_handle: None, owner_display_handle: None }
+  {
+    raw: surface,
+    layer,
+    layer_owner: @c.cametallayer_owner_new(layer),
+    owner_window_handle: None,
+    owner_display_handle: None,
+  }
 }
 
 ///|
@@ -385,10 +391,17 @@ pub fn Instance::create_surface_macos_ns_view(
   }
   let surface = @c.instance_create_surface_metal_layer(self.raw, layer)
   if @c.surface_is_null(surface) {
+    @c.cametallayer_detach(layer)
     @c.cametallayer_release(layer)
     raise SurfaceCreateError(SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED)
   }
-  { raw: surface, layer, owner_window_handle: None, owner_display_handle: None }
+  {
+    raw: surface,
+    layer,
+    layer_owner: @c.cametallayer_owner_new(layer),
+    owner_window_handle: None,
+    owner_display_handle: None,
+  }
 }
 
 ///|
@@ -416,6 +429,7 @@ pub fn Instance::create_surface_wayland(
   {
     raw: @c.instance_create_surface_wayland(self.raw, display, surface),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -431,6 +445,7 @@ pub fn Instance::create_surface_xcb(
   {
     raw: @c.instance_create_surface_xcb(self.raw, connection, window),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -446,6 +461,7 @@ pub fn Instance::create_surface_xlib(
   {
     raw: @c.instance_create_surface_xlib(self.raw, display, window),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -460,6 +476,7 @@ pub fn Instance::create_surface_android_native_window(
   {
     raw: @c.instance_create_surface_android_native_window(self.raw, window),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -474,6 +491,7 @@ pub fn Instance::create_surface_swap_chain_panel(
   {
     raw: @c.instance_create_surface_swap_chain_panel(self.raw, panel_native),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -492,6 +510,7 @@ pub fn Instance::create_surface_windows_hwnd(
   {
     raw: @c.instance_create_surface_windows_hwnd(self.raw, hinstance, hwnd),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }

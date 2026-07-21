@@ -161,6 +161,7 @@ test "windowing surface add_ref retains handle providers" {
   let surface : Surface = {
     raw: base.raw,
     layer: base.layer,
+    layer_owner: base.layer_owner,
     owner_window_handle: Some(window_handle),
     owner_display_handle: Some(display_handle),
   }

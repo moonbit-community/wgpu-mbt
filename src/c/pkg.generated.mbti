@@ -276,11 +276,21 @@ pub fn buffer_set_label_utf8(WGPUBuffer, Bytes, UInt64) -> Unit
 
 pub fn buffer_unmap(WGPUBuffer) -> Unit
 
+pub fn cametallayer_detach(OpaquePtr) -> Unit
+
 pub fn cametallayer_drawable_height_u32(OpaquePtr) -> UInt
 
 pub fn cametallayer_drawable_width_u32(OpaquePtr) -> UInt
 
+pub fn cametallayer_has_superlayer(OpaquePtr) -> Bool
+
 pub fn cametallayer_new() -> OpaquePtr
+
+pub fn cametallayer_owner_new(OpaquePtr) -> OpaquePtr
+
+pub fn cametallayer_owner_release(OpaquePtr) -> Unit
+
+pub fn cametallayer_owner_retain(OpaquePtr) -> Unit
 
 pub fn cametallayer_release(OpaquePtr) -> Unit
 
@@ -871,6 +881,8 @@ pub fn instance_wgsl_language_features_count_u64(WGPUInstance) -> UInt64
 pub fn limits_free(WGPULimitsPtr) -> Unit
 
 pub fn limits_new_from_adapter_overrides_u32(WGPUAdapter, UInt, UInt, UInt64, UInt64, UInt, UInt, UInt, UInt, UInt, UInt) -> WGPULimitsPtr
+
+pub fn macos_ns_view_has_sublayers(OpaquePtr) -> Bool
 
 pub fn macos_ns_view_prepare_metal_layer(OpaquePtr) -> OpaquePtr
 

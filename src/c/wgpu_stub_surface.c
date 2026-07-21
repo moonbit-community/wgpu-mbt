@@ -33,6 +33,7 @@ enum {
 #if defined(__APPLE__)
 
 #include <dlfcn.h>
+#include <stdatomic.h>
 
 typedef void *mbt_objc_id;
 typedef void *mbt_objc_sel;
@@ -151,6 +152,11 @@ static void mbt_objc_send_void_u64(mbt_objc_id obj, const char *sel_name,
                                    uint64_t value) {
   ((void (*)(mbt_objc_id, mbt_objc_sel, uint64_t))mbt_objc_msg_send_sym)(
       obj, mbt_objc_selector(sel_name), value);
+}
+
+static uint64_t mbt_objc_send_u64(mbt_objc_id obj, const char *sel_name) {
+  return ((uint64_t(*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(
+      obj, mbt_objc_selector(sel_name));
 }
 
 static void mbt_objc_send_void_double(mbt_objc_id obj, const char *sel_name,
@@ -304,7 +310,7 @@ void *mbt_wgpu_cametallayer_new(void) {
   return (void *)retained;
 }
 
-void mbt_wgpu_cametallayer_release(void *layer) {
+void mbt_wgpu_cametallayer_detach(void *layer) {
   if (!layer) {
     return;
   }
@@ -313,6 +319,15 @@ void mbt_wgpu_cametallayer_release(void *layer) {
   }
   ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)(
       (mbt_objc_id)layer, mbt_objc_selector("removeFromSuperlayer"));
+}
+
+void mbt_wgpu_cametallayer_release(void *layer) {
+  if (!layer) {
+    return;
+  }
+  if (!mbt_objc_init()) {
+    return;
+  }
   mbt_objc_sel release_sel =
       ((mbt_objc_sel(*)(const char *))mbt_sel_register_name_sym)("release");
   ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)((mbt_objc_id)layer, release_sel);
@@ -329,6 +344,68 @@ void mbt_wgpu_cametallayer_retain(void *layer) {
       ((mbt_objc_sel(*)(const char *))mbt_sel_register_name_sym)("retain");
   ((mbt_objc_id(*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)((mbt_objc_id)layer,
                                                                      retain_sel);
+}
+
+bool mbt_wgpu_cametallayer_has_superlayer(void *layer) {
+  if (!layer || !mbt_objc_init()) {
+    return false;
+  }
+  return mbt_objc_send_id((mbt_objc_id)layer, "superlayer") != NULL;
+}
+
+bool mbt_wgpu_macos_ns_view_has_sublayers(void *ns_view) {
+  if (!ns_view || !mbt_objc_init()) {
+    return false;
+  }
+  mbt_objc_id root_layer = mbt_objc_send_id((mbt_objc_id)ns_view, "layer");
+  if (!root_layer) {
+    return false;
+  }
+  mbt_objc_id sublayers = mbt_objc_send_id(root_layer, "sublayers");
+  return sublayers && mbt_objc_send_u64(sublayers, "count") != 0u;
+}
+
+typedef struct {
+  _Atomic uint32_t refs;
+  void *layer;
+} mbt_wgpu_cametallayer_owner_t;
+
+void *mbt_wgpu_cametallayer_owner_new(void *layer) {
+  if (!layer) {
+    return NULL;
+  }
+  mbt_wgpu_cametallayer_owner_t *owner =
+      (mbt_wgpu_cametallayer_owner_t *)calloc(1, sizeof(*owner));
+  if (!owner) {
+    abort();
+  }
+  atomic_init(&owner->refs, 1u);
+  owner->layer = layer;
+  return owner;
+}
+
+void mbt_wgpu_cametallayer_owner_retain(void *owner_ptr) {
+  if (!owner_ptr) {
+    return;
+  }
+  mbt_wgpu_cametallayer_owner_t *owner =
+      (mbt_wgpu_cametallayer_owner_t *)owner_ptr;
+  atomic_fetch_add_explicit(&owner->refs, 1u, memory_order_relaxed);
+}
+
+void mbt_wgpu_cametallayer_owner_release(void *owner_ptr) {
+  if (!owner_ptr) {
+    return;
+  }
+  mbt_wgpu_cametallayer_owner_t *owner =
+      (mbt_wgpu_cametallayer_owner_t *)owner_ptr;
+  uint32_t previous =
+      atomic_fetch_sub_explicit(&owner->refs, 1u, memory_order_acq_rel);
+  if (previous == 1u) {
+    mbt_wgpu_cametallayer_detach(owner->layer);
+    mbt_wgpu_cametallayer_release(owner->layer);
+    free(owner);
+  }
 }
 
 uint32_t mbt_wgpu_macos_ns_view_sync_metal_layer(void *ns_view, void *layer) {
@@ -442,6 +519,7 @@ void *mbt_wgpu_macos_ns_view_prepare_metal_layer(void *ns_view) {
 
   uint32_t status = mbt_wgpu_macos_ns_view_sync_metal_layer(ns_view, layer);
   if (status != MBT_WGPU_MACOS_SURFACE_STATUS_SUCCESS) {
+    mbt_wgpu_cametallayer_detach(layer);
     mbt_wgpu_cametallayer_release(layer);
     return NULL;
   }
@@ -647,8 +725,23 @@ WGPUSurface mbt_wgpu_instance_create_surface_metal_layer(WGPUInstance instance,
 #else
 
 void *mbt_wgpu_cametallayer_new(void) { return NULL; }
+void mbt_wgpu_cametallayer_detach(void *layer) { (void)layer; }
 void mbt_wgpu_cametallayer_release(void *layer) { (void)layer; }
 void mbt_wgpu_cametallayer_retain(void *layer) { (void)layer; }
+bool mbt_wgpu_cametallayer_has_superlayer(void *layer) {
+  (void)layer;
+  return false;
+}
+bool mbt_wgpu_macos_ns_view_has_sublayers(void *ns_view) {
+  (void)ns_view;
+  return false;
+}
+void *mbt_wgpu_cametallayer_owner_new(void *layer) {
+  (void)layer;
+  return NULL;
+}
+void mbt_wgpu_cametallayer_owner_retain(void *owner) { (void)owner; }
+void mbt_wgpu_cametallayer_owner_release(void *owner) { (void)owner; }
 uint32_t mbt_wgpu_macos_surface_last_status_u32(void) {
   return MBT_WGPU_MACOS_SURFACE_STATUS_UNSUPPORTED_PLATFORM;
 }

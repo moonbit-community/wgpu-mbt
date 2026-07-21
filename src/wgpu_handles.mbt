@@ -675,6 +675,7 @@ pub fn Instance::create_surface(
   {
     raw: @c.wgpuInstanceCreateSurface(self.raw, descriptor),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }

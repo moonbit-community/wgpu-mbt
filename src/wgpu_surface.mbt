@@ -15,10 +15,11 @@
 ///|
 pub fn Surface::add_ref(self : Surface) -> Surface {
   @c.surface_add_ref(self.raw)
-  @c.cametallayer_retain(self.layer)
+  @c.cametallayer_owner_retain(self.layer_owner)
   {
     raw: self.raw,
     layer: self.layer,
+    layer_owner: self.layer_owner,
     owner_window_handle: self.owner_window_handle,
     owner_display_handle: self.owner_display_handle,
   }
@@ -644,7 +645,7 @@ pub fn SurfaceTexture::release(self : SurfaceTexture) -> Unit {
 ///|
 pub fn Surface::release(self : Surface) -> Unit {
   @c.surface_release_safe(self.raw)
-  @c.cametallayer_release(self.layer)
+  @c.cametallayer_owner_release(self.layer_owner)
   self.owner_window_handle = None
   self.owner_display_handle = None
 }

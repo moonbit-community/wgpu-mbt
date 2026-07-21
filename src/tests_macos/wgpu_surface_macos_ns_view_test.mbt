@@ -57,9 +57,12 @@ test "wgpu surface windowing AppKit path" {
   inspect(view_u64 != 0UL, content="true")
   let window : AppKitSurfaceWindow = { ns_view: view_u64 }
   let instance = @wgpu.Instance::create()
-  let surface = instance.create_surface_from_window(window)
+  let original_surface = instance.create_surface_from_window(window)
+  let surface = original_surface.add_ref()
+  original_surface.release()
   let layer = surface.metal_layer_handle()
   inspect(@wgpu_c.opaque_ptr_is_null(layer), content="false")
+  inspect(@wgpu_c.cametallayer_has_superlayer(layer), content="true")
   inspect(@wgpu_c.cametallayer_drawable_width_u32(layer) >= 2U, content="true")
   inspect(@wgpu_c.cametallayer_drawable_height_u32(layer) >= 3U, content="true")
   let adapter = instance.request_adapter_sync_options_surface_u32(
@@ -76,6 +79,7 @@ test "wgpu surface windowing AppKit path" {
   let frame = surface.get_current_frame_or_raise()
   frame.present_or_raise()
   frame.release()
+  inspect(@wgpu_c.cametallayer_has_superlayer(layer), content="true")
   surface.unconfigure()
   @wgpu_c.macos_test_ns_view_set_size(view, 4U, 5U)
   surface.sync_macos_window_handle(
@@ -86,6 +90,7 @@ test "wgpu surface windowing AppKit path" {
   device.release()
   adapter.release()
   surface.release()
+  inspect(@wgpu_c.macos_ns_view_has_sublayers(view), content="false")
   @wgpu_c.macos_test_ns_view_release(view)
   instance.release()
 }

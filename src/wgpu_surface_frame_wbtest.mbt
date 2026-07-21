@@ -18,6 +18,7 @@ test "surface frame helpers: null surface raises" {
   let surface = {
     raw: @c.null_surface(),
     layer: @c.null_opaque_ptr(),
+    layer_owner: @c.null_opaque_ptr(),
     owner_window_handle: None,
     owner_display_handle: None,
   }

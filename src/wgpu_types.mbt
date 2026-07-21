@@ -65,6 +65,7 @@ pub struct TextureView {
 pub struct Surface {
   raw : @c.WGPUSurface
   layer : @c.OpaquePtr
+  priv layer_owner : @c.OpaquePtr
   priv mut owner_window_handle : @windowing.WindowHandle?
   priv mut owner_display_handle : @windowing.DisplayHandle?
 }

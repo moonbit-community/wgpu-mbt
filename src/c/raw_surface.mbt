@@ -17,11 +17,29 @@
 pub extern "C" fn cametallayer_new() -> OpaquePtr = "mbt_wgpu_cametallayer_new"
 
 ///|
+pub extern "C" fn cametallayer_detach(layer : OpaquePtr) -> Unit = "mbt_wgpu_cametallayer_detach"
+
+///|
 #borrow(layer)
 pub extern "C" fn cametallayer_release(layer : OpaquePtr) -> Unit = "mbt_wgpu_cametallayer_release"
 
 ///|
 pub extern "C" fn cametallayer_retain(layer : OpaquePtr) -> Unit = "mbt_wgpu_cametallayer_retain"
+
+///|
+pub extern "C" fn cametallayer_has_superlayer(layer : OpaquePtr) -> Bool = "mbt_wgpu_cametallayer_has_superlayer"
+
+///|
+pub extern "C" fn macos_ns_view_has_sublayers(ns_view : OpaquePtr) -> Bool = "mbt_wgpu_macos_ns_view_has_sublayers"
+
+///|
+pub extern "C" fn cametallayer_owner_new(layer : OpaquePtr) -> OpaquePtr = "mbt_wgpu_cametallayer_owner_new"
+
+///|
+pub extern "C" fn cametallayer_owner_retain(owner : OpaquePtr) -> Unit = "mbt_wgpu_cametallayer_owner_retain"
+
+///|
+pub extern "C" fn cametallayer_owner_release(owner : OpaquePtr) -> Unit = "mbt_wgpu_cametallayer_owner_release"
 
 ///|
 pub extern "C" fn cametallayer_drawable_width_u32(layer : OpaquePtr) -> UInt = "mbt_wgpu_cametallayer_drawable_width_u32"
