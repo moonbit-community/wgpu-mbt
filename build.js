@@ -84,6 +84,9 @@ function stubCcFlags({ staticLink, asset }) {
     `-DMBT_WGPU_SUPPORTED_TAG=\\\"${escapeDefineString(SUPPORTED_RELEASE.tag)}\\\"`,
     `-DMBT_WGPU_SUPPORTED_REV=\\\"${escapeDefineString(SUPPORTED_RELEASE.rev)}\\\"`,
   ];
+  if (os.platform() === 'win32') {
+    flags.push('/std:c11');
+  }
   if (staticLink && asset) {
     flags.push(`-DMBT_WGPU_STATIC_HAS_PIPELINE_ASYNC=${asset.pipelineAsync ? '1' : '0'}`);
     flags.push(`-DMBT_WGPU_STATIC_HAS_COMPILATION_INFO=${asset.compilationInfo ? '1' : '0'}`);

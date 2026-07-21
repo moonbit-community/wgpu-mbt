@@ -21,8 +21,20 @@ fi
 # Keep compile and runtime discovery on the same clang toolchain.
 ASAN_CLANG="${MBT_WGPU_ASAN_CLANG:-${CC:-clang}}"
 
-ARTIFACT_JSON="$(moon test --target native --build-only "$TARGET")"
-RSPFILE="$(
+TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wgpu_mbt_asan.XXXXXX")"
+cleanup() {
+  rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT
+
+ARTIFACT_JSON="$(
+  moon test \
+    --target native \
+    --build-only \
+    --target-dir "$TMP_DIR/build" \
+    "$TARGET"
+)"
+BIN="$(
   ARTIFACT_JSON="$ARTIFACT_JSON" python3 - <<'PY'
 import json
 import os
@@ -35,7 +47,12 @@ print(paths[0])
 PY
 )"
 
-BUILD_DIR="$(dirname "$RSPFILE")"
+if [[ ! -x "$BIN" ]]; then
+  echo "MoonBit test artifact is not executable: $BIN" >&2
+  exit 1
+fi
+
+BUILD_DIR="$(dirname "$BIN")"
 INFO_JSON="$BUILD_DIR/__blackbox_test_info.json"
 TARGET_BASE="$(basename "$TARGET")"
 
@@ -61,45 +78,6 @@ print("/".join(sys.argv[1:]))
 PY
 )"
 fi
-
-COMPILE_ARGS=()
-C_FILE=""
-SEEN_RUN=0
-while IFS= read -r line || [[ -n "$line" ]]; do
-  if [[ "$line" == "-run" ]]; then
-    SEEN_RUN=1
-    continue
-  fi
-  if [[ $SEEN_RUN -eq 0 ]]; then
-    COMPILE_ARGS+=("$line")
-    continue
-  fi
-  C_FILE="$line"
-  break
-done < "$RSPFILE"
-
-if [[ -z "$C_FILE" ]]; then
-  echo "failed to parse generated C source from $RSPFILE" >&2
-  exit 1
-fi
-
-TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wgpu_mbt_asan.XXXXXX")"
-BIN="$TMP_DIR/tests_asan"
-cleanup() {
-  rm -rf "$TMP_DIR"
-}
-trap cleanup EXIT
-
-if [[ "$(uname -s)" == "Darwin" && -n "${SDKROOT:-}" ]]; then
-  COMPILE_ARGS+=("-isysroot" "$SDKROOT")
-fi
-
-"$ASAN_CLANG" \
-  "${COMPILE_ARGS[@]}" \
-  -fsanitize=address \
-  -fno-omit-frame-pointer \
-  "$C_FILE" \
-  -o "$BIN"
 
 ASAN_OPTS="${ASAN_OPTIONS:-abort_on_error=1}"
 if [[ "$(uname -s)" == "Darwin" && "$ASAN_OPTS" != *detect_leaks=* ]]; then
