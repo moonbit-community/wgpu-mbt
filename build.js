@@ -85,7 +85,7 @@ function stubCcFlags({ staticLink, asset }) {
     `-DMBT_WGPU_SUPPORTED_REV=\\\"${escapeDefineString(SUPPORTED_RELEASE.rev)}\\\"`,
   ];
   if (os.platform() === 'win32') {
-    flags.push('/std:c11');
+    flags.push('/std:c11', '/experimental:c11atomics');
   }
   if (staticLink && asset) {
     flags.push(`-DMBT_WGPU_STATIC_HAS_PIPELINE_ASYNC=${asset.pipelineAsync ? '1' : '0'}`);
