@@ -370,7 +370,7 @@ pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
   {
     raw: surface,
     layer,
-    layer_owner: @c.cametallayer_owner_new(layer, false),
+    layer_owner: @c.cametallayer_owner_new(layer),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -391,14 +391,13 @@ pub fn Instance::create_surface_macos_ns_view(
   }
   let surface = @c.instance_create_surface_metal_layer(self.raw, layer)
   if @c.surface_is_null(surface) {
-    @c.cametallayer_detach(layer)
     @c.cametallayer_release(layer)
     raise SurfaceCreateError(SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED)
   }
   {
     raw: surface,
     layer,
-    layer_owner: @c.cametallayer_owner_new(layer, true),
+    layer_owner: @c.cametallayer_owner_new(layer),
     owner_window_handle: None,
     owner_display_handle: None,
   }

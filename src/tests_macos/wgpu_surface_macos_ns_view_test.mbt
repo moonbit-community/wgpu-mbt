@@ -127,6 +127,20 @@ test "wgpu SurfaceFrame owns the final AppKit surface reference" {
 }
 
 ///|
+test "wgpu custom Metal host release detaches raw-attached layer" {
+  let view = @wgpu_c.macos_test_ns_view_new(2U, 3U)
+  let instance = @wgpu.Instance::create()
+  let surface = instance.create_surface_metal_layer()
+  let layer = surface.metal_layer_handle()
+  inspect(@wgpu_c.macos_ns_view_sync_metal_layer(view, layer), content="0")
+  inspect(@wgpu_c.cametallayer_has_superlayer(layer), content="true")
+  surface.release()
+  inspect(@wgpu_c.macos_ns_view_has_sublayers(view), content="false")
+  @wgpu_c.macos_test_ns_view_release(view)
+  instance.release()
+}
+
+///|
 test "wgpu surface macOS NSView path rejects null view" {
   let instance = @wgpu.Instance::create()
   let msg : Ref[String] = @ref.new("")

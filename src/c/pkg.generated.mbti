@@ -276,8 +276,6 @@ pub fn buffer_set_label_utf8(WGPUBuffer, Bytes, UInt64) -> Unit
 
 pub fn buffer_unmap(WGPUBuffer) -> Unit
 
-pub fn cametallayer_detach(OpaquePtr) -> Unit
-
 pub fn cametallayer_drawable_height_u32(OpaquePtr) -> UInt
 
 pub fn cametallayer_drawable_width_u32(OpaquePtr) -> UInt
@@ -286,9 +284,7 @@ pub fn cametallayer_has_superlayer(OpaquePtr) -> Bool
 
 pub fn cametallayer_new() -> OpaquePtr
 
-pub fn cametallayer_owner_mark_attached(OpaquePtr) -> Unit
-
-pub fn cametallayer_owner_new(OpaquePtr, Bool) -> OpaquePtr
+pub fn cametallayer_owner_new(OpaquePtr) -> OpaquePtr
 
 pub fn cametallayer_owner_release(OpaquePtr) -> Unit
 
@@ -896,8 +892,6 @@ pub fn macos_ns_view_sync_metal_layer_u64(UInt64, OpaquePtr) -> UInt
 
 pub fn macos_surface_last_status_u32() -> UInt
 
-pub fn macos_test_cametallayer_owner_release_on_worker(OpaquePtr) -> Bool
-
 pub fn macos_test_ns_view_new(UInt, UInt) -> OpaquePtr
 
 pub fn macos_test_ns_view_release(OpaquePtr) -> Unit
@@ -905,6 +899,8 @@ pub fn macos_test_ns_view_release(OpaquePtr) -> Unit
 pub fn macos_test_ns_view_set_size(OpaquePtr, UInt, UInt) -> Unit
 
 pub fn macos_test_pump_events(UInt) -> Unit
+
+pub fn macos_test_surface_release_on_worker(WGPUSurface, OpaquePtr) -> Bool
 
 pub fn macos_test_window_content_view(OpaquePtr) -> OpaquePtr
 

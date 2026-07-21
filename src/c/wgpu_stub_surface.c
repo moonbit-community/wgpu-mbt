@@ -312,7 +312,7 @@ void *mbt_wgpu_cametallayer_new(void) {
   return (void *)retained;
 }
 
-void mbt_wgpu_cametallayer_detach(void *layer) {
+static void mbt_wgpu_cametallayer_detach(void *layer) {
   if (!layer) {
     return;
   }
@@ -323,7 +323,7 @@ void mbt_wgpu_cametallayer_detach(void *layer) {
       (mbt_objc_id)layer, mbt_objc_selector("removeFromSuperlayer"));
 }
 
-void mbt_wgpu_cametallayer_release(void *layer) {
+static void mbt_wgpu_cametallayer_release_ref(void *layer) {
   if (!layer) {
     return;
   }
@@ -333,6 +333,11 @@ void mbt_wgpu_cametallayer_release(void *layer) {
   mbt_objc_sel release_sel =
       ((mbt_objc_sel(*)(const char *))mbt_sel_register_name_sym)("release");
   ((void (*)(mbt_objc_id, mbt_objc_sel))mbt_objc_msg_send_sym)((mbt_objc_id)layer, release_sel);
+}
+
+void mbt_wgpu_cametallayer_release(void *layer) {
+  mbt_wgpu_cametallayer_detach(layer);
+  mbt_wgpu_cametallayer_release_ref(layer);
 }
 
 void mbt_wgpu_cametallayer_retain(void *layer) {
@@ -369,11 +374,10 @@ bool mbt_wgpu_macos_ns_view_has_sublayers(void *ns_view) {
 
 typedef struct {
   _Atomic uint32_t refs;
-  _Atomic bool attached_to_view;
   void *layer;
 } mbt_wgpu_cametallayer_owner_t;
 
-void *mbt_wgpu_cametallayer_owner_new(void *layer, bool attached_to_view) {
+void *mbt_wgpu_cametallayer_owner_new(void *layer) {
   if (!layer) {
     return NULL;
   }
@@ -383,18 +387,8 @@ void *mbt_wgpu_cametallayer_owner_new(void *layer, bool attached_to_view) {
     abort();
   }
   atomic_init(&owner->refs, 1u);
-  atomic_init(&owner->attached_to_view, attached_to_view);
   owner->layer = layer;
   return owner;
-}
-
-void mbt_wgpu_cametallayer_owner_mark_attached(void *owner_ptr) {
-  if (!owner_ptr) {
-    return;
-  }
-  mbt_wgpu_cametallayer_owner_t *owner =
-      (mbt_wgpu_cametallayer_owner_t *)owner_ptr;
-  atomic_store_explicit(&owner->attached_to_view, true, memory_order_release);
 }
 
 void mbt_wgpu_cametallayer_owner_retain(void *owner_ptr) {
@@ -409,10 +403,8 @@ void mbt_wgpu_cametallayer_owner_retain(void *owner_ptr) {
 static void mbt_wgpu_cametallayer_owner_destroy(void *owner_ptr) {
   mbt_wgpu_cametallayer_owner_t *owner =
       (mbt_wgpu_cametallayer_owner_t *)owner_ptr;
-  if (atomic_load_explicit(&owner->attached_to_view, memory_order_acquire)) {
-    mbt_wgpu_cametallayer_detach(owner->layer);
-  }
-  mbt_wgpu_cametallayer_release(owner->layer);
+  mbt_wgpu_cametallayer_detach(owner->layer);
+  mbt_wgpu_cametallayer_release_ref(owner->layer);
   free(owner);
 }
 
@@ -425,9 +417,7 @@ void mbt_wgpu_cametallayer_owner_release(void *owner_ptr) {
   uint32_t previous =
       atomic_fetch_sub_explicit(&owner->refs, 1u, memory_order_acq_rel);
   if (previous == 1u) {
-    bool attached =
-        atomic_load_explicit(&owner->attached_to_view, memory_order_acquire);
-    if (attached && !mbt_wgpu_macos_is_main_thread()) {
+    if (!mbt_wgpu_macos_is_main_thread()) {
       // Keep the owner alive until the AppKit layer hierarchy can be mutated on
       // the main queue.
       dispatch_async_f(dispatch_get_main_queue(), owner,
@@ -438,19 +428,31 @@ void mbt_wgpu_cametallayer_owner_release(void *owner_ptr) {
   }
 }
 
-static void *mbt_wgpu_cametallayer_owner_release_worker(void *owner_ptr) {
-  mbt_wgpu_cametallayer_owner_release(owner_ptr);
+typedef struct {
+  WGPUSurface surface;
+  void *layer_owner;
+} mbt_wgpu_surface_release_worker_context_t;
+
+static void *mbt_wgpu_surface_release_worker(void *context_ptr) {
+  mbt_wgpu_surface_release_worker_context_t *context =
+      (mbt_wgpu_surface_release_worker_context_t *)context_ptr;
+  wgpuSurfaceRelease(context->surface);
+  mbt_wgpu_cametallayer_owner_release(context->layer_owner);
   return NULL;
 }
 
-bool mbt_wgpu_macos_test_cametallayer_owner_release_on_worker(void *owner_ptr) {
-  if (!owner_ptr) {
+bool mbt_wgpu_macos_test_surface_release_on_worker(WGPUSurface surface,
+                                                   void *layer_owner) {
+  if (!surface || !layer_owner) {
     return false;
   }
+  mbt_wgpu_surface_release_worker_context_t context = {
+      .surface = surface,
+      .layer_owner = layer_owner,
+  };
   pthread_t thread;
-  if (pthread_create(&thread, NULL,
-                     mbt_wgpu_cametallayer_owner_release_worker,
-                     owner_ptr) != 0) {
+  if (pthread_create(&thread, NULL, mbt_wgpu_surface_release_worker,
+                     &context) != 0) {
     return false;
   }
   return pthread_join(thread, NULL) == 0;
@@ -567,7 +569,6 @@ void *mbt_wgpu_macos_ns_view_prepare_metal_layer(void *ns_view) {
 
   uint32_t status = mbt_wgpu_macos_ns_view_sync_metal_layer(ns_view, layer);
   if (status != MBT_WGPU_MACOS_SURFACE_STATUS_SUCCESS) {
-    mbt_wgpu_cametallayer_detach(layer);
     mbt_wgpu_cametallayer_release(layer);
     return NULL;
   }
@@ -773,7 +774,6 @@ WGPUSurface mbt_wgpu_instance_create_surface_metal_layer(WGPUInstance instance,
 #else
 
 void *mbt_wgpu_cametallayer_new(void) { return NULL; }
-void mbt_wgpu_cametallayer_detach(void *layer) { (void)layer; }
 void mbt_wgpu_cametallayer_release(void *layer) { (void)layer; }
 void mbt_wgpu_cametallayer_retain(void *layer) { (void)layer; }
 bool mbt_wgpu_cametallayer_has_superlayer(void *layer) {
@@ -784,16 +784,16 @@ bool mbt_wgpu_macos_ns_view_has_sublayers(void *ns_view) {
   (void)ns_view;
   return false;
 }
-void *mbt_wgpu_cametallayer_owner_new(void *layer, bool attached_to_view) {
+void *mbt_wgpu_cametallayer_owner_new(void *layer) {
   (void)layer;
-  (void)attached_to_view;
   return NULL;
 }
-void mbt_wgpu_cametallayer_owner_mark_attached(void *owner) { (void)owner; }
 void mbt_wgpu_cametallayer_owner_retain(void *owner) { (void)owner; }
 void mbt_wgpu_cametallayer_owner_release(void *owner) { (void)owner; }
-bool mbt_wgpu_macos_test_cametallayer_owner_release_on_worker(void *owner) {
-  (void)owner;
+bool mbt_wgpu_macos_test_surface_release_on_worker(WGPUSurface surface,
+                                                   void *layer_owner) {
+  (void)surface;
+  (void)layer_owner;
   return false;
 }
 uint32_t mbt_wgpu_macos_surface_last_status_u32(void) {
