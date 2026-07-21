@@ -65,6 +65,10 @@ jobs:
         shell: bash
         run: moon version --all
 
+      - name: Update MoonBit registry
+        shell: bash
+        run: moon update
+
       - name: Lint (moon check)
         shell: bash
         run: moon check
@@ -205,6 +209,10 @@ jobs:
       - name: Moon version
         shell: bash
         run: moon version --all
+
+      - name: Update MoonBit registry
+        shell: bash
+        run: moon update
 
       - name: Lint (moon check)
         shell: bash
@@ -381,6 +389,10 @@ jobs:
       - name: Moon version
         shell: pwsh
         run: moon version --all
+
+      - name: Update MoonBit registry
+        shell: pwsh
+        run: moon update
 
       - name: Lint (moon check)
         shell: pwsh
