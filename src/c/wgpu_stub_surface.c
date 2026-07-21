@@ -33,6 +33,8 @@ enum {
 #if defined(__APPLE__)
 
 #include <dlfcn.h>
+#include <dispatch/dispatch.h>
+#include <pthread.h>
 #include <stdatomic.h>
 
 typedef void *mbt_objc_id;
@@ -367,10 +369,11 @@ bool mbt_wgpu_macos_ns_view_has_sublayers(void *ns_view) {
 
 typedef struct {
   _Atomic uint32_t refs;
+  _Atomic bool attached_to_view;
   void *layer;
 } mbt_wgpu_cametallayer_owner_t;
 
-void *mbt_wgpu_cametallayer_owner_new(void *layer) {
+void *mbt_wgpu_cametallayer_owner_new(void *layer, bool attached_to_view) {
   if (!layer) {
     return NULL;
   }
@@ -380,8 +383,18 @@ void *mbt_wgpu_cametallayer_owner_new(void *layer) {
     abort();
   }
   atomic_init(&owner->refs, 1u);
+  atomic_init(&owner->attached_to_view, attached_to_view);
   owner->layer = layer;
   return owner;
+}
+
+void mbt_wgpu_cametallayer_owner_mark_attached(void *owner_ptr) {
+  if (!owner_ptr) {
+    return;
+  }
+  mbt_wgpu_cametallayer_owner_t *owner =
+      (mbt_wgpu_cametallayer_owner_t *)owner_ptr;
+  atomic_store_explicit(&owner->attached_to_view, true, memory_order_release);
 }
 
 void mbt_wgpu_cametallayer_owner_retain(void *owner_ptr) {
@@ -393,6 +406,16 @@ void mbt_wgpu_cametallayer_owner_retain(void *owner_ptr) {
   atomic_fetch_add_explicit(&owner->refs, 1u, memory_order_relaxed);
 }
 
+static void mbt_wgpu_cametallayer_owner_destroy(void *owner_ptr) {
+  mbt_wgpu_cametallayer_owner_t *owner =
+      (mbt_wgpu_cametallayer_owner_t *)owner_ptr;
+  if (atomic_load_explicit(&owner->attached_to_view, memory_order_acquire)) {
+    mbt_wgpu_cametallayer_detach(owner->layer);
+  }
+  mbt_wgpu_cametallayer_release(owner->layer);
+  free(owner);
+}
+
 void mbt_wgpu_cametallayer_owner_release(void *owner_ptr) {
   if (!owner_ptr) {
     return;
@@ -402,10 +425,35 @@ void mbt_wgpu_cametallayer_owner_release(void *owner_ptr) {
   uint32_t previous =
       atomic_fetch_sub_explicit(&owner->refs, 1u, memory_order_acq_rel);
   if (previous == 1u) {
-    mbt_wgpu_cametallayer_detach(owner->layer);
-    mbt_wgpu_cametallayer_release(owner->layer);
-    free(owner);
+    bool attached =
+        atomic_load_explicit(&owner->attached_to_view, memory_order_acquire);
+    if (attached && !mbt_wgpu_macos_is_main_thread()) {
+      // Keep the owner alive until the AppKit layer hierarchy can be mutated on
+      // the main queue.
+      dispatch_async_f(dispatch_get_main_queue(), owner,
+                       mbt_wgpu_cametallayer_owner_destroy);
+    } else {
+      mbt_wgpu_cametallayer_owner_destroy(owner);
+    }
   }
+}
+
+static void *mbt_wgpu_cametallayer_owner_release_worker(void *owner_ptr) {
+  mbt_wgpu_cametallayer_owner_release(owner_ptr);
+  return NULL;
+}
+
+bool mbt_wgpu_macos_test_cametallayer_owner_release_on_worker(void *owner_ptr) {
+  if (!owner_ptr) {
+    return false;
+  }
+  pthread_t thread;
+  if (pthread_create(&thread, NULL,
+                     mbt_wgpu_cametallayer_owner_release_worker,
+                     owner_ptr) != 0) {
+    return false;
+  }
+  return pthread_join(thread, NULL) == 0;
 }
 
 uint32_t mbt_wgpu_macos_ns_view_sync_metal_layer(void *ns_view, void *layer) {
@@ -736,12 +784,18 @@ bool mbt_wgpu_macos_ns_view_has_sublayers(void *ns_view) {
   (void)ns_view;
   return false;
 }
-void *mbt_wgpu_cametallayer_owner_new(void *layer) {
+void *mbt_wgpu_cametallayer_owner_new(void *layer, bool attached_to_view) {
   (void)layer;
+  (void)attached_to_view;
   return NULL;
 }
+void mbt_wgpu_cametallayer_owner_mark_attached(void *owner) { (void)owner; }
 void mbt_wgpu_cametallayer_owner_retain(void *owner) { (void)owner; }
 void mbt_wgpu_cametallayer_owner_release(void *owner) { (void)owner; }
+bool mbt_wgpu_macos_test_cametallayer_owner_release_on_worker(void *owner) {
+  (void)owner;
+  return false;
+}
 uint32_t mbt_wgpu_macos_surface_last_status_u32(void) {
   return MBT_WGPU_MACOS_SURFACE_STATUS_UNSUPPORTED_PLATFORM;
 }

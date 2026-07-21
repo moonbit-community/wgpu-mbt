@@ -370,7 +370,7 @@ pub fn Instance::create_surface_metal_layer(self : Instance) -> Surface {
   {
     raw: surface,
     layer,
-    layer_owner: @c.cametallayer_owner_new(layer),
+    layer_owner: @c.cametallayer_owner_new(layer, false),
     owner_window_handle: None,
     owner_display_handle: None,
   }
@@ -398,7 +398,7 @@ pub fn Instance::create_surface_macos_ns_view(
   {
     raw: surface,
     layer,
-    layer_owner: @c.cametallayer_owner_new(layer),
+    layer_owner: @c.cametallayer_owner_new(layer, true),
     owner_window_handle: None,
     owner_display_handle: None,
   }

@@ -286,7 +286,9 @@ pub fn cametallayer_has_superlayer(OpaquePtr) -> Bool
 
 pub fn cametallayer_new() -> OpaquePtr
 
-pub fn cametallayer_owner_new(OpaquePtr) -> OpaquePtr
+pub fn cametallayer_owner_mark_attached(OpaquePtr) -> Unit
+
+pub fn cametallayer_owner_new(OpaquePtr, Bool) -> OpaquePtr
 
 pub fn cametallayer_owner_release(OpaquePtr) -> Unit
 
@@ -893,6 +895,8 @@ pub fn macos_ns_view_sync_metal_layer(OpaquePtr, OpaquePtr) -> UInt
 pub fn macos_ns_view_sync_metal_layer_u64(UInt64, OpaquePtr) -> UInt
 
 pub fn macos_surface_last_status_u32() -> UInt
+
+pub fn macos_test_cametallayer_owner_release_on_worker(OpaquePtr) -> Bool
 
 pub fn macos_test_ns_view_new(UInt, UInt) -> OpaquePtr
 

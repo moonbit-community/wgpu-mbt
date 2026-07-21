@@ -176,6 +176,29 @@ test "windowing surface add_ref retains handle providers" {
 }
 
 ///|
+test "attached surface owner finalizes on the macOS main thread" {
+  if !platform_is_macos() {
+    inspect("macOS only", content="macOS only")
+    return
+  }
+  let view = @c.macos_test_ns_view_new(2U, 3U)
+  let instance = Instance::create()
+  let surface = instance.create_surface_macos_ns_view(view)
+  let layer = surface.metal_layer_handle()
+  @c.cametallayer_owner_retain(surface.layer_owner)
+  surface.release()
+  inspect(@c.cametallayer_has_superlayer(layer), content="true")
+  inspect(
+    @c.macos_test_cametallayer_owner_release_on_worker(surface.layer_owner),
+    content="true",
+  )
+  @c.macos_test_pump_events(12U)
+  inspect(@c.macos_ns_view_has_sublayers(view), content="false")
+  @c.macos_test_ns_view_release(view)
+  instance.release()
+}
+
+///|
 test "windowing generic constructor rejects backend mismatch before native call" {
   let window : TestWindow = {
     window: { raw: AppKit(@windowing.AppKitWindowHandle::new(1UL)) },

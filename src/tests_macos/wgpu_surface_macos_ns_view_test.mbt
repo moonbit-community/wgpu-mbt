@@ -89,8 +89,39 @@ test "wgpu surface windowing AppKit path" {
   inspect(@wgpu_c.cametallayer_drawable_height_u32(layer) >= 5U, content="true")
   device.release()
   adapter.release()
+  surface.add_ref_raw()
   surface.release()
+  inspect(@wgpu_c.cametallayer_has_superlayer(layer), content="true")
+  surface.release_raw()
   inspect(@wgpu_c.macos_ns_view_has_sublayers(view), content="false")
+  @wgpu_c.macos_test_ns_view_release(view)
+  instance.release()
+}
+
+///|
+test "wgpu SurfaceFrame owns the final AppKit surface reference" {
+  let view = @wgpu_c.macos_test_ns_view_new(2U, 3U)
+  let instance = @wgpu.Instance::create()
+  let surface = instance.create_surface_macos_ns_view(view)
+  let layer = surface.metal_layer_handle()
+  let adapter = instance.request_adapter_sync_options_surface_u32(
+    surface,
+    feature_level_u32=@wgpu.FEATURE_LEVEL_CORE,
+    backend_type_u32=@wgpu.BACKEND_TYPE_METAL,
+  )
+  let device = adapter.request_device_sync(instance)
+  let usage = @wgpu.TextureUsage::from_u64(
+    @wgpu.TEXTURE_USAGE_RENDER_ATTACHMENT | @wgpu.TEXTURE_USAGE_COPY_SRC,
+  )
+  ignore(surface.configure_default(adapter, device, 2U, 3U, usage))
+  let frame = surface.get_current_frame_or_raise()
+  frame.present_or_raise()
+  surface.release()
+  inspect(@wgpu_c.cametallayer_has_superlayer(layer), content="true")
+  frame.release()
+  inspect(@wgpu_c.macos_ns_view_has_sublayers(view), content="false")
+  device.release()
+  adapter.release()
   @wgpu_c.macos_test_ns_view_release(view)
   instance.release()
 }

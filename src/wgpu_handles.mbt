@@ -1266,6 +1266,7 @@ pub fn ShaderModule::release_raw(self : ShaderModule) -> Unit {
 ///|
 pub fn Surface::add_ref_raw(self : Surface) -> Unit {
   @c.wgpuSurfaceAddRef(self.raw)
+  @c.cametallayer_owner_retain(self.layer_owner)
 }
 
 ///|
@@ -1301,6 +1302,7 @@ pub fn Surface::present_raw(self : Surface) -> @c.WGPUStatus {
 ///|
 pub fn Surface::release_raw(self : Surface) -> Unit {
   @c.wgpuSurfaceRelease(self.raw)
+  @c.cametallayer_owner_release(self.layer_owner)
 }
 
 ///|

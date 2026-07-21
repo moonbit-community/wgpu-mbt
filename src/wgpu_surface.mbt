@@ -38,6 +38,7 @@ pub fn Surface::sync_macos_ns_view_layer(
   if status != SURFACE_CREATE_STATUS_SUCCESS {
     raise SurfaceCreateError(status)
   }
+  @c.cametallayer_owner_mark_attached(self.layer_owner)
   ()
 }
 
