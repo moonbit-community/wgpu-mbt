@@ -608,36 +608,6 @@ static void mbt_wgpu_buffer_map_read_async_cb(WGPUMapAsyncStatus status,
   }
 }
 
-static void mbt_wgpu_buffer_map_read_after_submit_cb(WGPUQueueWorkDoneStatus status,
-                                                    WGPUStringView message,
-                                                    void *userdata1,
-                                                    void *userdata2) {
-  (void)message;
-  (void)userdata2;
-  mbt_async_buffer_map_read_slot_t *slot = (mbt_async_buffer_map_read_slot_t *)userdata1;
-  if (!slot) {
-    return;
-  }
-  if (status != WGPUQueueWorkDoneStatus_Success) {
-    slot->status_u32 = (uint32_t)WGPUMapAsyncStatus_Error;
-    atomic_store_explicit(&slot->done_u32, 1u, memory_order_release);
-    if (slot->id != 0u) {
-      mbt_wait_any_mark_completed(slot->id);
-    }
-    return;
-  }
-  WGPUBufferMapCallbackInfo cb = {
-      .nextInChain = NULL,
-      .mode = WGPUCallbackMode_AllowProcessEvents,
-      .callback = mbt_wgpu_buffer_map_read_async_cb,
-      .userdata1 = slot,
-      .userdata2 = NULL,
-  };
-  (void)wgpuBufferMapAsync(slot->buffer, WGPUMapMode_Read,
-                          (size_t)slot->offset_u64,
-                          (size_t)slot->size_u64, cb);
-}
-
 uint64_t mbt_wgpu_queue_on_submitted_work_done_future_id_u64(WGPUQueue queue) {
   if (!queue) {
     return 0u;
@@ -712,14 +682,15 @@ uint64_t mbt_wgpu_queue_submit_one_and_map_read_async(
   WGPUCommandBuffer commands[1] = {command_buffer};
   wgpuQueueSubmit(queue, 1u, commands);
 
-  WGPUQueueWorkDoneCallbackInfo cb = {
+  WGPUBufferMapCallbackInfo cb = {
       .nextInChain = NULL,
       .mode = WGPUCallbackMode_AllowProcessEvents,
-      .callback = mbt_wgpu_buffer_map_read_after_submit_cb,
+      .callback = mbt_wgpu_buffer_map_read_async_cb,
       .userdata1 = slot,
       .userdata2 = NULL,
   };
-  (void)wgpuQueueOnSubmittedWorkDone(queue, cb);
+  (void)wgpuBufferMapAsync(buffer, WGPUMapMode_Read,
+                          (size_t)offset, (size_t)size, cb);
   return id;
 }
 
