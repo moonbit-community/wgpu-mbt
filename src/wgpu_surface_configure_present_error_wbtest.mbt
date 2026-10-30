@@ -21,7 +21,7 @@ test "surface present_or_raise raises on null surface" {
     owner_window_handle: None,
     owner_display_handle: None,
   }
-  let raised : Ref[Bool] = @ref.new(false)
+  let raised : Ref[Bool] = Ref(false)
   surface.present_or_raise() catch {
     _ => raised.val = true
   }
@@ -43,7 +43,7 @@ test "surface configure_or_raise raises on null handles" {
   let device : Device = { raw: device_raw, }
   let usage = TextureUsage::from_u64(TEXTURE_USAGE_RENDER_ATTACHMENT)
   let fmt = TextureFormat::from_u32(TEXTURE_FORMAT_BGRA8_UNORM)
-  let raised1 : Ref[Bool] = @ref.new(false)
+  let raised1 : Ref[Bool] = Ref(false)
   surface.configure_u32_or_raise(
     adapter,
     device,
@@ -105,7 +105,7 @@ test "surface configure_with_or_raise validates desired_maximum_frame_latency" {
     PresentMode::from_u32(PRESENT_MODE_FIFO),
     CompositeAlphaMode::from_u32(COMPOSITE_ALPHA_MODE_AUTO),
   ).with_desired_maximum_frame_latency(0U)
-  let msg : Ref[String] = @ref.new("")
+  let msg : Ref[String] = Ref("")
   surface.configure_with_or_raise(adapter, device, cfg) catch {
     e => msg.val = e.message()
   }

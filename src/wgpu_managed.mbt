@@ -167,7 +167,7 @@ pub fn ManagedDevice::create_buffer(
   self : ManagedDevice,
   size~ : UInt64,
   usage~ : BufferUsage,
-  mapped_at_creation? : Bool = false,
+  mapped_at_creation~ : Bool = false,
 ) -> ManagedBuffer {
   wrap_managed_buffer(
     self.pool.track_buffer(
@@ -189,8 +189,8 @@ pub fn ManagedDevice::create_shader_module_wgsl(
 ///|
 pub fn ManagedDevice::create_texture_rgba8_2d(
   self : ManagedDevice,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> ManagedTexture {
   wrap_managed_texture(
     self.pool.track_texture(self.raw.create_texture_rgba8_2d(width, height)),
@@ -233,7 +233,7 @@ pub fn ManagedDevice::create_command_encoder(
 }
 
 ///|
-pub fn ManagedDevice::poll(self : ManagedDevice, wait? : Bool = false) -> Bool {
+pub fn ManagedDevice::poll(self : ManagedDevice, wait~ : Bool = false) -> Bool {
   self.raw.poll(wait~)
 }
 
@@ -291,8 +291,8 @@ pub fn ManagedCommandEncoder::copy_texture_to_buffer_rgba8(
   self : ManagedCommandEncoder,
   texture : ManagedTexture,
   buffer : ManagedBuffer,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   self.raw.copy_texture_to_buffer_rgba8(texture.raw, buffer.raw, width, height)
 }
@@ -315,9 +315,9 @@ pub fn ManagedComputePass::set_pipeline(
 ///|
 pub fn ManagedComputePass::dispatch_workgroups(
   self : ManagedComputePass,
-  x : UInt,
-  y : UInt,
-  z : UInt,
+  x : UInt32,
+  y : UInt32,
+  z : UInt32,
 ) -> Unit {
   self.raw.dispatch_workgroups(x, y, z)
 }
@@ -338,10 +338,10 @@ pub fn ManagedRenderPass::set_pipeline(
 ///|
 pub fn ManagedRenderPass::draw(
   self : ManagedRenderPass,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit {
   self.raw.draw(vertex_count, instance_count, first_vertex, first_instance)
 }

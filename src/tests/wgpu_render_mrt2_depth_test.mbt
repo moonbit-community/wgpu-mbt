@@ -35,7 +35,7 @@ fn create_mrt2_depth_pipeline(
 fn read_rgba8(
   instance : @wgpu.Instance,
   readback : @wgpu.Buffer,
-) -> Array[UInt] {
+) -> Array[UInt32] {
   let out = readback.readback(instance, 0UL, 4UL)
   [out[0].to_uint(), out[1].to_uint(), out[2].to_uint(), out[3].to_uint()]
 }
@@ -54,11 +54,11 @@ test "wgpu render: MRT2 + depth helper writes distinct colors" {
   let depth_view = depth_tex.create_view()
   let readback0 = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let readback1 = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -132,11 +132,11 @@ test "wgpu render: MRT2 + depth configurable pass depth load/store" {
   let depth_view = depth_tex.create_view()
   let readback0 = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let readback1 = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
 
   let wgsl_near : String =

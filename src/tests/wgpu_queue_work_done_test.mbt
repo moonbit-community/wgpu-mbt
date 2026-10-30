@@ -19,7 +19,7 @@ fn wait_for_queue_map_read(
   future_id : UInt64,
 ) -> Bool {
   ignore(device.poll(wait=true))
-  let completed : Ref[Bool] = @ref.new(false)
+  let completed : Ref[Bool] = Ref(false)
   for _i = 0; _i < 4000 && !completed.val; _i = _i + 1 {
     ignore(device.poll())
     let wait = instance.wait_any_one(future_id)
@@ -58,7 +58,7 @@ test "wgpu queue.on_submitted_work_done_sync" {
   let encoder4 = device.create_command_encoder()
   let cmd4 = encoder4.finish()
   queue.submit_one(cmd4)
-  let timeout_raised_msg : Ref[String] = @ref.new("")
+  let timeout_raised_msg : Ref[String] = Ref("")
   queue.on_submitted_work_done_wait_or_raise(instance, timeout_ns=1UL) catch {
     e => timeout_raised_msg.val = e.message()
   }
@@ -90,13 +90,13 @@ test "wgpu queue: submit one and map read async" {
 
   let src = device.create_buffer(
     size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let staging = device.create_buffer(
     size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
-  queue.write_buffer(src, 0UL, u32le_pack([0x11223344U, 0x55667788U]))
+  queue.write_buffer(src, 0UL, @tests.u32le_pack([0x11223344U, 0x55667788U]))
 
   let encoder = device.create_command_encoder()
   encoder.copy_buffer_to_buffer(src, 0UL, staging, 0UL, 8UL)
@@ -110,14 +110,14 @@ test "wgpu queue: submit one and map read async" {
   )
   let out = queue.map_read_async_read(future_id)
   @debug.debug_inspect(
-    [u32le_at(out, 0), u32le_at(out, 4)],
+    [@tests.u32le_at(out, 0), @tests.u32le_at(out, 4)],
     content="[287454020, 1432778632]",
   )
   inspect(@wgpu_c.buffer_map_state_u32(staging.get_map_state()), content="3")
   queue.map_read_async_clear(future_id)
   inspect(@wgpu_c.buffer_map_state_u32(staging.get_map_state()), content="1")
 
-  queue.write_buffer(src, 0UL, u32le_pack([0xaabbccddU, 0x10203040U]))
+  queue.write_buffer(src, 0UL, @tests.u32le_pack([0xaabbccddU, 0x10203040U]))
   let encoder2 = device.create_command_encoder()
   encoder2.copy_buffer_to_buffer(src, 0UL, staging, 0UL, 8UL)
   let cmd2 = encoder2.finish()
@@ -126,7 +126,7 @@ test "wgpu queue: submit one and map read async" {
   inspect(wait_for_queue_map_read(instance, device, future_id2), content="true")
   let out2 = queue.map_read_async_read(future_id2)
   @debug.debug_inspect(
-    [u32le_at(out2, 0), u32le_at(out2, 4)],
+    [@tests.u32le_at(out2, 0), @tests.u32le_at(out2, 4)],
     content="[2864434397, 270544960]",
   )
   queue.map_read_async_clear(future_id2)
@@ -156,13 +156,13 @@ test "wgpu queue: submit map read owns pending user handles" {
 
   let src = device.create_buffer(
     size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let staging = device.create_buffer(
     size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
-  queue.write_buffer(src, 0UL, u32le_pack([0x01020304U, 0x05060708U]))
+  queue.write_buffer(src, 0UL, @tests.u32le_pack([0x01020304U, 0x05060708U]))
 
   let encoder = device.create_command_encoder()
   encoder.copy_buffer_to_buffer(src, 0UL, staging, 0UL, 8UL)
@@ -183,7 +183,7 @@ test "wgpu queue: submit map read owns pending user handles" {
   )
   let out = queue.map_read_async_read(future_id)
   @debug.debug_inspect(
-    [u32le_at(out, 0), u32le_at(out, 4)],
+    [@tests.u32le_at(out, 0), @tests.u32le_at(out, 4)],
     content="[16909060, 84281096]",
   )
   queue.map_read_async_clear(future_id)

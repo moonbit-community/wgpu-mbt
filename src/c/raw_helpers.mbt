@@ -86,8 +86,8 @@ pub fn device_create_compute_pipeline(
 ///|
 pub fn device_create_texture_rgba8_2d(
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Texture {
   let desc = texture_descriptor_rgba8_2d_default_new(width, height)
   let tex = wgpuDeviceCreateTexture(device, desc)
@@ -98,8 +98,8 @@ pub fn device_create_texture_rgba8_2d(
 ///|
 pub fn device_create_texture_rgba8_2d_with_usage(
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : UInt64,
 ) -> Texture {
   let desc = texture_descriptor_rgba8_2d_with_usage_new(width, height, usage)
@@ -111,10 +111,10 @@ pub fn device_create_texture_rgba8_2d_with_usage(
 ///|
 pub fn device_create_texture_rgba8_2d_array_with_usage(
   device : Device,
-  width : UInt,
-  height : UInt,
-  layers : UInt,
-  mip_level_count : UInt,
+  width : UInt32,
+  height : UInt32,
+  layers : UInt32,
+  mip_level_count : UInt32,
   usage : UInt64,
 ) -> Texture {
   let desc = texture_descriptor_rgba8_2d_array_with_usage_new(
@@ -128,8 +128,8 @@ pub fn device_create_texture_rgba8_2d_array_with_usage(
 ///|
 pub fn device_create_texture_depth24plus_2d(
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Texture {
   let desc = texture_descriptor_depth24plus_2d_new(width, height)
   let tex = wgpuDeviceCreateTexture(device, desc)
@@ -140,14 +140,14 @@ pub fn device_create_texture_depth24plus_2d(
 ///|
 pub fn device_create_texture_u32(
   device : Device,
-  width : UInt,
-  height : UInt,
-  depth_or_array_layers : UInt,
+  width : UInt32,
+  height : UInt32,
+  depth_or_array_layers : UInt32,
   usage : UInt64,
-  dimension_u32 : UInt,
-  format_u32 : UInt,
-  mip_level_count : UInt,
-  sample_count : UInt,
+  dimension_u32 : UInt32,
+  format_u32 : UInt32,
+  mip_level_count : UInt32,
+  sample_count : UInt32,
 ) -> Texture {
   let desc = texture_descriptor_u32_new(
     usage, dimension_u32, width, height, depth_or_array_layers, format_u32, mip_level_count,
@@ -161,16 +161,16 @@ pub fn device_create_texture_u32(
 ///|
 pub fn device_create_texture_view_formats_u32(
   device : Device,
-  width : UInt,
-  height : UInt,
-  depth_or_array_layers : UInt,
+  width : UInt32,
+  height : UInt32,
+  depth_or_array_layers : UInt32,
   usage : UInt64,
-  dimension_u32 : UInt,
-  format_u32 : UInt,
-  mip_level_count : UInt,
-  sample_count : UInt,
+  dimension_u32 : UInt32,
+  format_u32 : UInt32,
+  mip_level_count : UInt32,
+  sample_count : UInt32,
   view_format_count : UInt64,
-  view_formats : FixedArray[UInt],
+  view_formats : FixedArray[UInt32],
 ) -> Texture {
   let desc = texture_descriptor_u32_with_view_formats_new(
     usage, dimension_u32, width, height, depth_or_array_layers, format_u32, mip_level_count,
@@ -189,13 +189,13 @@ pub fn texture_create_view(texture : Texture) -> TextureView {
 ///|
 pub fn texture_create_view_u32(
   texture : Texture,
-  format_u32 : UInt,
-  view_dimension_u32 : UInt,
-  aspect_u32 : UInt,
-  base_array_layer : UInt,
-  array_layer_count : UInt,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  format_u32 : UInt32,
+  view_dimension_u32 : UInt32,
+  aspect_u32 : UInt32,
+  base_array_layer : UInt32,
+  array_layer_count : UInt32,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> TextureView {
   let desc = texture_view_descriptor_u32_new(
     format_u32, view_dimension_u32, aspect_u32, base_array_layer, array_layer_count,
@@ -209,8 +209,8 @@ pub fn texture_create_view_u32(
 ///|
 pub fn texture_create_view_2d(
   texture : Texture,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> TextureView {
   let desc = texture_view_descriptor_2d_new(base_mip_level, mip_level_count)
   let view = wgpuTextureCreateView(texture, desc)
@@ -221,10 +221,10 @@ pub fn texture_create_view_2d(
 ///|
 pub fn texture_create_view_2d_array(
   texture : Texture,
-  base_array_layer : UInt,
-  array_layer_count : UInt,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  base_array_layer : UInt32,
+  array_layer_count : UInt32,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> TextureView {
   let desc = texture_view_descriptor_2d_array_new(
     base_array_layer, array_layer_count, base_mip_level, mip_level_count,
@@ -252,7 +252,7 @@ pub fn device_create_render_pipeline_rgba8(
 pub fn device_create_render_pipeline_color_format(
   device : Device,
   shader_module : ShaderModule,
-  format : UInt,
+  format : UInt32,
 ) -> RenderPipeline {
   let desc = render_pipeline_descriptor_color_format_new(
     null_pipeline_layout(),
@@ -268,7 +268,7 @@ pub fn device_create_render_pipeline_color_format(
 pub fn device_create_render_pipeline_color_format_alpha_blend(
   device : Device,
   shader_module : ShaderModule,
-  format : UInt,
+  format : UInt32,
 ) -> RenderPipeline {
   let desc = render_pipeline_descriptor_color_format_alpha_blend_new(
     null_pipeline_layout(),
@@ -487,16 +487,16 @@ pub fn device_create_sampler_linear_mirror_repeat(device : Device) -> Sampler {
 ///|
 pub fn device_create_sampler_u32(
   device : Device,
-  address_mode_u_u32 : UInt,
-  address_mode_v_u32 : UInt,
-  address_mode_w_u32 : UInt,
-  mag_filter_u32 : UInt,
-  min_filter_u32 : UInt,
-  mipmap_filter_u32 : UInt,
+  address_mode_u_u32 : UInt32,
+  address_mode_v_u32 : UInt32,
+  address_mode_w_u32 : UInt32,
+  mag_filter_u32 : UInt32,
+  min_filter_u32 : UInt32,
+  mipmap_filter_u32 : UInt32,
   lod_min_clamp_f32 : Float,
   lod_max_clamp_f32 : Float,
-  compare_u32 : UInt,
-  max_anisotropy_u32 : UInt,
+  compare_u32 : UInt32,
+  max_anisotropy_u32 : UInt32,
 ) -> Sampler {
   let desc = sampler_descriptor_u32_new(
     address_mode_u_u32, address_mode_v_u32, address_mode_w_u32, mag_filter_u32, min_filter_u32,
@@ -622,8 +622,8 @@ pub fn device_create_pipeline_layout_many(
 pub fn device_create_pipeline_layout_immediates(
   device : Device,
   stages : UInt64,
-  start : UInt,
-  end : UInt,
+  start : UInt32,
+  end : UInt32,
 ) -> PipelineLayout {
   let desc = pipeline_layout_descriptor_immediates_new(stages, start, end)
   let layout = wgpuDeviceCreatePipelineLayout(device, desc)
@@ -635,13 +635,13 @@ pub fn device_create_pipeline_layout_immediates(
 pub fn device_create_pipeline_layout_immediates_many(
   device : Device,
   first_stages : UInt64,
-  first_start : UInt,
-  first_end : UInt,
-  other_ranges : Array[(UInt64, UInt, UInt)],
+  first_start : UInt32,
+  first_end : UInt32,
+  other_ranges : Array[(UInt64, UInt32, UInt32)],
 ) -> PipelineLayout {
   let stages_all : Array[UInt64] = [first_stages]
-  let starts_all : Array[UInt] = [first_start]
-  let ends_all : Array[UInt] = [first_end]
+  let starts_all : Array[UInt32] = [first_start]
+  let ends_all : Array[UInt32] = [first_end]
   for i = 0; i < other_ranges.length(); i = i + 1 {
     let (stages, start, end) = other_ranges[i]
     stages_all.push(stages)
@@ -664,14 +664,14 @@ pub fn device_create_pipeline_layout_immediates_many(
 pub fn device_create_pipeline_layout_with_immediates(
   device : Device,
   bind_group_layouts : Array[BindGroupLayout],
-  ranges : Array[(UInt64, UInt, UInt)],
+  ranges : Array[(UInt64, UInt32, UInt32)],
 ) -> PipelineLayout {
   if ranges.length() == 0 {
     return device_create_pipeline_layout_many(device, bind_group_layouts)
   }
   let stages_all : Array[UInt64] = []
-  let starts_all : Array[UInt] = []
-  let ends_all : Array[UInt] = []
+  let starts_all : Array[UInt32] = []
+  let ends_all : Array[UInt32] = []
   for i = 0; i < ranges.length(); i = i + 1 {
     let (stages, start, end) = ranges[i]
     stages_all.push(stages)
@@ -711,10 +711,10 @@ pub extern "C" fn render_bundle_encoder_set_pipeline(
 ///|
 pub extern "C" fn render_bundle_encoder_draw(
   encoder : WGPURenderBundleEncoder,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit = "wgpuRenderBundleEncoderDraw"
 
 ///|
@@ -729,18 +729,18 @@ pub fn render_bundle_encoder_set_bind_group0(
 #borrow(offsets)
 pub extern "C" fn wgpuRenderBundleEncoderSetBindGroup_offsets(
   encoder : WGPURenderBundleEncoder,
-  group_index : UInt,
+  group_index : UInt32,
   group : BindGroup,
   dynamic_offset_count : UInt64,
-  offsets : FixedArray[UInt],
+  offsets : FixedArray[UInt32],
 ) -> Unit = "wgpuRenderBundleEncoderSetBindGroup"
 
 ///|
 pub fn render_bundle_encoder_set_bind_group(
   encoder : WGPURenderBundleEncoder,
-  index : UInt,
+  index : UInt32,
   group : BindGroup,
-  dynamic_offsets : Array[UInt],
+  dynamic_offsets : Array[UInt32],
 ) -> Unit {
   let n = dynamic_offsets.length()
   if n == 0 {
@@ -753,7 +753,7 @@ pub fn render_bundle_encoder_set_bind_group(
     )
     return
   }
-  let offsets : FixedArray[UInt] = FixedArray::make(n, 0U)
+  let offsets : FixedArray[UInt32] = FixedArray::make(n, 0U)
   for i in 0..<n {
     offsets[i] = dynamic_offsets[i]
   }
@@ -876,24 +876,24 @@ pub fn command_encoder_begin_render_pass_color2_depth_u32(
   color0_view : TextureView,
   color1_view : TextureView,
   depth_view : TextureView,
-  color0_load_op_u32 : UInt,
-  color0_store_op_u32 : UInt,
+  color0_load_op_u32 : UInt32,
+  color0_store_op_u32 : UInt32,
   color0_clear_r_f32 : Float,
   color0_clear_g_f32 : Float,
   color0_clear_b_f32 : Float,
   color0_clear_a_f32 : Float,
-  color1_load_op_u32 : UInt,
-  color1_store_op_u32 : UInt,
+  color1_load_op_u32 : UInt32,
+  color1_store_op_u32 : UInt32,
   color1_clear_r_f32 : Float,
   color1_clear_g_f32 : Float,
   color1_clear_b_f32 : Float,
   color1_clear_a_f32 : Float,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
   depth_read_only : Bool,
   stencil_read_only : Bool,
 ) -> RenderPassEncoder {
@@ -915,24 +915,24 @@ pub fn command_encoder_begin_render_pass_color2_depth_sparse_u32(
   color0_view : TextureView,
   color1_view : TextureView,
   depth_view : TextureView,
-  color0_load_op_u32 : UInt,
-  color0_store_op_u32 : UInt,
+  color0_load_op_u32 : UInt32,
+  color0_store_op_u32 : UInt32,
   color0_clear_r_f32 : Float,
   color0_clear_g_f32 : Float,
   color0_clear_b_f32 : Float,
   color0_clear_a_f32 : Float,
-  color1_load_op_u32 : UInt,
-  color1_store_op_u32 : UInt,
+  color1_load_op_u32 : UInt32,
+  color1_store_op_u32 : UInt32,
   color1_clear_r_f32 : Float,
   color1_clear_g_f32 : Float,
   color1_clear_b_f32 : Float,
   color1_clear_a_f32 : Float,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
   depth_read_only : Bool,
   stencil_read_only : Bool,
 ) -> RenderPassEncoder {
@@ -952,12 +952,12 @@ pub fn command_encoder_begin_render_pass_color2_depth_sparse_u32(
 pub fn command_encoder_begin_render_pass_depth_u32(
   encoder : CommandEncoder,
   depth_view : TextureView,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
   depth_read_only : Bool,
   stencil_read_only : Bool,
 ) -> RenderPassEncoder {
@@ -1026,19 +1026,19 @@ pub fn command_encoder_begin_render_pass_color_depth(
 pub fn command_encoder_begin_render_pass_color_depth_u32(
   encoder : CommandEncoder,
   color_view : TextureView,
-  color_load_op_u32 : UInt,
-  color_store_op_u32 : UInt,
+  color_load_op_u32 : UInt32,
+  color_store_op_u32 : UInt32,
   color_clear_r_f32 : Float,
   color_clear_g_f32 : Float,
   color_clear_b_f32 : Float,
   color_clear_a_f32 : Float,
   depth_view : TextureView,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
   depth_read_only : Bool,
   stencil_read_only : Bool,
 ) -> RenderPassEncoder {
@@ -1095,25 +1095,25 @@ pub fn render_pass_set_bind_group0(
 #borrow(offsets)
 pub extern "C" fn wgpuRenderPassEncoderSetBindGroup_offsets(
   pass : RenderPassEncoder,
-  group_index : UInt,
+  group_index : UInt32,
   group : BindGroup,
   dynamic_offset_count : UInt64,
-  offsets : FixedArray[UInt],
+  offsets : FixedArray[UInt32],
 ) -> Unit = "wgpuRenderPassEncoderSetBindGroup"
 
 ///|
 pub fn render_pass_set_bind_group(
   pass : RenderPassEncoder,
-  index : UInt,
+  index : UInt32,
   group : BindGroup,
-  dynamic_offsets : Array[UInt],
+  dynamic_offsets : Array[UInt32],
 ) -> Unit {
   let n = dynamic_offsets.length()
   if n == 0 {
     wgpuRenderPassEncoderSetBindGroup(pass, index, group, 0UL, null_uint_ptr())
     return
   }
-  let offsets : FixedArray[UInt] = FixedArray::make(n, 0U)
+  let offsets : FixedArray[UInt32] = FixedArray::make(n, 0U)
   for i in 0..<n {
     offsets[i] = dynamic_offsets[i]
   }
@@ -1129,7 +1129,7 @@ pub fn render_pass_set_bind_group(
 ///|
 pub extern "C" fn render_pass_set_vertex_buffer(
   pass : RenderPassEncoder,
-  slot : UInt,
+  slot : UInt32,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
@@ -1149,10 +1149,10 @@ pub extern "C" fn render_pass_set_viewport(
 ///|
 pub extern "C" fn render_pass_set_scissor_rect(
   pass : RenderPassEncoder,
-  x : UInt,
-  y : UInt,
-  width : UInt,
-  height : UInt,
+  x : UInt32,
+  y : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderSetScissorRect"
 
 ///|
@@ -1196,20 +1196,20 @@ pub fn render_pass_set_index_buffer_u32(
 ///|
 pub extern "C" fn render_pass_draw(
   pass : RenderPassEncoder,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderDraw"
 
 ///|
 pub extern "C" fn render_pass_draw_indexed(
   pass : RenderPassEncoder,
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex : Int,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex : Int32,
+  first_instance : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderDrawIndexed"
 
 ///|
@@ -1227,9 +1227,9 @@ pub extern "C" fn compute_pass_set_pipeline(
 ///|
 pub extern "C" fn compute_pass_dispatch_workgroups(
   pass : ComputePassEncoder,
-  x : UInt,
-  y : UInt,
-  z : UInt,
+  x : UInt32,
+  y : UInt32,
+  z : UInt32,
 ) -> Unit = "wgpuComputePassEncoderDispatchWorkgroups"
 
 ///|
@@ -1244,25 +1244,25 @@ pub fn compute_pass_set_bind_group0(
 #borrow(offsets)
 pub extern "C" fn wgpuComputePassEncoderSetBindGroup_offsets(
   pass : ComputePassEncoder,
-  group_index : UInt,
+  group_index : UInt32,
   group : BindGroup,
   dynamic_offset_count : UInt64,
-  offsets : FixedArray[UInt],
+  offsets : FixedArray[UInt32],
 ) -> Unit = "wgpuComputePassEncoderSetBindGroup"
 
 ///|
 pub fn compute_pass_set_bind_group(
   pass : ComputePassEncoder,
-  index : UInt,
+  index : UInt32,
   group : BindGroup,
-  dynamic_offsets : Array[UInt],
+  dynamic_offsets : Array[UInt32],
 ) -> Unit {
   let n = dynamic_offsets.length()
   if n == 0 {
     wgpuComputePassEncoderSetBindGroup(pass, index, group, 0UL, null_uint_ptr())
     return
   }
-  let offsets : FixedArray[UInt] = FixedArray::make(n, 0U)
+  let offsets : FixedArray[UInt32] = FixedArray::make(n, 0U)
   for i in 0..<n {
     offsets[i] = dynamic_offsets[i]
   }
@@ -1374,8 +1374,8 @@ pub fn command_encoder_copy_texture_to_buffer_rgba8(
   encoder : CommandEncoder,
   texture : Texture,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   let bytes_per_row = align_up_u32(width * 4U, 256U)
   let src = texel_copy_texture_info_default_new(texture)
@@ -1391,11 +1391,11 @@ pub fn command_encoder_copy_texture_to_buffer_rgba8(
 pub fn command_encoder_copy_texture_to_buffer_rgba8_mip_layer(
   encoder : CommandEncoder,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   let bytes_per_row = align_up_u32(width * 4U, 256U)
   let src = texel_copy_texture_info_new(texture, mip_level, 0U, 0U, array_layer)
@@ -1412,9 +1412,9 @@ pub fn command_encoder_copy_texture_to_buffer_bytes_per_pixel(
   encoder : CommandEncoder,
   texture : Texture,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
-  bytes_per_pixel : UInt,
+  width : UInt32,
+  height : UInt32,
+  bytes_per_pixel : UInt32,
 ) -> Unit {
   let bytes_per_row = align_up_u32(width * bytes_per_pixel, 256U)
   let src = texel_copy_texture_info_default_new(texture)
@@ -1430,12 +1430,12 @@ pub fn command_encoder_copy_texture_to_buffer_bytes_per_pixel(
 pub fn command_encoder_copy_texture_to_buffer_bytes_per_pixel_mip_layer(
   encoder : CommandEncoder,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
-  bytes_per_pixel : UInt,
+  width : UInt32,
+  height : UInt32,
+  bytes_per_pixel : UInt32,
 ) -> Unit {
   let bytes_per_row = align_up_u32(width * bytes_per_pixel, 256U)
   let src = texel_copy_texture_info_new(texture, mip_level, 0U, 0U, array_layer)
@@ -1452,8 +1452,8 @@ pub fn command_encoder_copy_buffer_to_texture_rgba8(
   encoder : CommandEncoder,
   buffer : Buffer,
   texture : Texture,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   let bytes_per_row = align_up_u32(width * 4U, 256U)
   let src = texel_copy_buffer_info_new(buffer, 0UL, bytes_per_row, height)
@@ -1470,10 +1470,10 @@ pub fn command_encoder_copy_buffer_to_texture_rgba8_mip_layer(
   encoder : CommandEncoder,
   buffer : Buffer,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
-  width : UInt,
-  height : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   let bytes_per_row = align_up_u32(width * 4U, 256U)
   let src = texel_copy_buffer_info_new(buffer, 0UL, bytes_per_row, height)
@@ -1490,8 +1490,8 @@ pub fn command_encoder_copy_texture_to_texture_rgba8(
   encoder : CommandEncoder,
   src : Texture,
   dst : Texture,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   let src_info = texel_copy_texture_info_default_new(src)
   let dst_info = texel_copy_texture_info_default_new(dst)
@@ -1506,13 +1506,13 @@ pub fn command_encoder_copy_texture_to_texture_rgba8(
 pub fn command_encoder_copy_texture_to_texture_rgba8_mip_layer(
   encoder : CommandEncoder,
   src : Texture,
-  src_mip_level : UInt,
-  src_array_layer : UInt,
+  src_mip_level : UInt32,
+  src_array_layer : UInt32,
   dst : Texture,
-  dst_mip_level : UInt,
-  dst_array_layer : UInt,
-  width : UInt,
-  height : UInt,
+  dst_mip_level : UInt32,
+  dst_array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   let src_info = texel_copy_texture_info_new(
     src, src_mip_level, 0U, 0U, src_array_layer,
@@ -1558,7 +1558,7 @@ pub extern "C" fn device_poll(
 pub extern "C" fn render_pass_set_immediates_bytes(
   encoder : RenderPassEncoder,
   stages : UInt64,
-  offset : UInt,
+  offset : UInt32,
   data : Bytes,
   data_len : UInt64,
 ) -> Unit = "mbt_wgpu_render_pass_set_immediates_bytes"
@@ -1567,7 +1567,7 @@ pub extern "C" fn render_pass_set_immediates_bytes(
 #borrow(data)
 pub extern "C" fn compute_pass_set_immediates_bytes(
   encoder : ComputePassEncoder,
-  offset : UInt,
+  offset : UInt32,
   data : Bytes,
   data_len : UInt64,
 ) -> Unit = "mbt_wgpu_compute_pass_set_immediates_bytes"
@@ -1577,7 +1577,7 @@ pub extern "C" fn compute_pass_set_immediates_bytes(
 pub extern "C" fn render_bundle_encoder_set_immediates_bytes(
   encoder : WGPURenderBundleEncoder,
   stages : UInt64,
-  offset : UInt,
+  offset : UInt32,
   data : Bytes,
   data_len : UInt64,
 ) -> Unit = "mbt_wgpu_render_bundle_encoder_set_immediates_bytes"
@@ -1596,8 +1596,8 @@ pub extern "C" fn queue_write_buffer(
 pub fn queue_write_texture_rgba8_2d(
   queue : Queue,
   texture : Texture,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   data : Bytes,
   size : UInt64,
 ) -> Unit {
@@ -1617,10 +1617,10 @@ pub fn queue_write_texture_rgba8_2d(
 pub fn queue_write_texture_rgba8_2d_mip_layer(
   queue : Queue,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
-  width : UInt,
-  height : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
   data : Bytes,
   size : UInt64,
 ) -> Unit {
@@ -1638,9 +1638,9 @@ pub fn queue_write_texture_rgba8_2d_mip_layer(
 pub fn queue_write_texture_2d_bytes_per_pixel(
   queue : Queue,
   texture : Texture,
-  width : UInt,
-  height : UInt,
-  bytes_per_pixel : UInt,
+  width : UInt32,
+  height : UInt32,
+  bytes_per_pixel : UInt32,
   data : Bytes,
   size : UInt64,
 ) -> Unit {
@@ -1658,11 +1658,11 @@ pub fn queue_write_texture_2d_bytes_per_pixel(
 pub fn queue_write_texture_2d_bytes_per_pixel_mip_layer(
   queue : Queue,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
-  width : UInt,
-  height : UInt,
-  bytes_per_pixel : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
+  bytes_per_pixel : UInt32,
   data : Bytes,
   size : UInt64,
 ) -> Unit {
@@ -1765,27 +1765,27 @@ pub extern "C" fn render_pipeline_release(pipeline : RenderPipeline) -> Unit = "
 pub extern "C" fn texture_destroy(texture : Texture) -> Unit = "wgpuTextureDestroy"
 
 ///|
-pub extern "C" fn texture_get_width_u32(texture : Texture) -> UInt = "wgpuTextureGetWidth"
+pub extern "C" fn texture_get_width_u32(texture : Texture) -> UInt32 = "wgpuTextureGetWidth"
 
 ///|
-pub extern "C" fn texture_get_height_u32(texture : Texture) -> UInt = "wgpuTextureGetHeight"
+pub extern "C" fn texture_get_height_u32(texture : Texture) -> UInt32 = "wgpuTextureGetHeight"
 
 ///|
 pub extern "C" fn texture_get_depth_or_array_layers_u32(
   texture : Texture,
-) -> UInt = "wgpuTextureGetDepthOrArrayLayers"
+) -> UInt32 = "wgpuTextureGetDepthOrArrayLayers"
 
 ///|
-pub extern "C" fn texture_get_mip_level_count_u32(texture : Texture) -> UInt = "wgpuTextureGetMipLevelCount"
+pub extern "C" fn texture_get_mip_level_count_u32(texture : Texture) -> UInt32 = "wgpuTextureGetMipLevelCount"
 
 ///|
-pub extern "C" fn texture_get_sample_count_u32(texture : Texture) -> UInt = "wgpuTextureGetSampleCount"
+pub extern "C" fn texture_get_sample_count_u32(texture : Texture) -> UInt32 = "wgpuTextureGetSampleCount"
 
 ///|
-pub extern "C" fn texture_get_dimension_u32(texture : Texture) -> UInt = "wgpuTextureGetDimension"
+pub extern "C" fn texture_get_dimension_u32(texture : Texture) -> UInt32 = "wgpuTextureGetDimension"
 
 ///|
-pub extern "C" fn texture_get_format_u32(texture : Texture) -> UInt = "wgpuTextureGetFormat"
+pub extern "C" fn texture_get_format_u32(texture : Texture) -> UInt32 = "wgpuTextureGetFormat"
 
 ///|
 pub extern "C" fn texture_get_usage_u64(texture : Texture) -> UInt64 = "wgpuTextureGetUsage"
@@ -1859,7 +1859,7 @@ pub extern "C" fn device_create_query_set(
 ///|
 pub fn device_create_query_set_occlusion(
   device : Device,
-  count : UInt,
+  count : UInt32,
 ) -> QuerySet {
   let desc = query_set_descriptor_new(query_type_occlusion(), count)
   let qs = device_create_query_set(device, desc)
@@ -1870,7 +1870,7 @@ pub fn device_create_query_set_occlusion(
 ///|
 pub fn device_create_query_set_timestamp(
   device : Device,
-  count : UInt,
+  count : UInt32,
 ) -> QuerySet {
   let desc = query_set_descriptor_new(query_type_timestamp(), count)
   let qs = device_create_query_set(device, desc)
@@ -1881,8 +1881,8 @@ pub fn device_create_query_set_timestamp(
 ///|
 pub fn device_create_query_set_pipeline_statistics(
   device : Device,
-  count : UInt,
-  statistic_name : UInt,
+  count : UInt32,
+  statistic_name : UInt32,
 ) -> QuerySet {
   let desc = query_set_descriptor_pipeline_statistics_new(count, statistic_name)
   let qs = device_create_query_set(device, desc)
@@ -1893,11 +1893,11 @@ pub fn device_create_query_set_pipeline_statistics(
 ///|
 pub fn device_create_query_set_pipeline_statistics_many(
   device : Device,
-  count : UInt,
-  first_statistic_name_u32 : UInt,
-  other_statistic_names_u32 : Array[UInt],
+  count : UInt32,
+  first_statistic_name_u32 : UInt32,
+  other_statistic_names_u32 : Array[UInt32],
 ) -> QuerySet {
-  let all_stats : Array[UInt] = [first_statistic_name_u32]
+  let all_stats : Array[UInt32] = [first_statistic_name_u32]
   for i = 0; i < other_statistic_names_u32.length(); i = i + 1 {
     all_stats.push(other_statistic_names_u32[i])
   }
@@ -1919,8 +1919,8 @@ pub extern "C" fn query_set_release(query_set : QuerySet) -> Unit = "wgpuQuerySe
 pub extern "C" fn command_encoder_resolve_query_set(
   encoder : CommandEncoder,
   query_set : QuerySet,
-  first_query : UInt,
-  query_count : UInt,
+  first_query : UInt32,
+  query_count : UInt32,
   destination : Buffer,
   destination_offset : UInt64,
 ) -> Unit = "wgpuCommandEncoderResolveQuerySet"
@@ -1929,28 +1929,28 @@ pub extern "C" fn command_encoder_resolve_query_set(
 pub extern "C" fn command_encoder_write_timestamp(
   encoder : CommandEncoder,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit = "wgpuCommandEncoderWriteTimestamp"
 
 ///|
 pub extern "C" fn render_pass_write_timestamp(
   pass : RenderPassEncoder,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderWriteTimestamp"
 
 ///|
 pub extern "C" fn compute_pass_write_timestamp(
   pass : ComputePassEncoder,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit = "wgpuComputePassEncoderWriteTimestamp"
 
 ///|
 pub extern "C" fn compute_pass_begin_pipeline_statistics_query(
   pass : ComputePassEncoder,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit = "wgpuComputePassEncoderBeginPipelineStatisticsQuery"
 
 ///|
@@ -1962,7 +1962,7 @@ pub extern "C" fn compute_pass_end_pipeline_statistics_query(
 pub extern "C" fn render_pass_begin_pipeline_statistics_query(
   pass : RenderPassEncoder,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderBeginPipelineStatisticsQuery"
 
 ///|
@@ -1973,7 +1973,7 @@ pub extern "C" fn render_pass_end_pipeline_statistics_query(
 ///|
 pub extern "C" fn render_pass_begin_occlusion_query(
   pass : RenderPassEncoder,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderBeginOcclusionQuery"
 
 ///|
@@ -1984,7 +1984,7 @@ pub extern "C" fn render_pass_end_occlusion_query(
 ///|
 pub extern "C" fn render_pass_set_stencil_reference(
   pass : RenderPassEncoder,
-  reference : UInt,
+  reference : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderSetStencilReference"
 
 ///|
@@ -2006,7 +2006,7 @@ pub extern "C" fn render_pass_multi_draw_indirect(
   pass : RenderPassEncoder,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderMultiDrawIndirect"
 
 ///|
@@ -2014,7 +2014,7 @@ pub extern "C" fn render_pass_multi_draw_indexed_indirect(
   pass : RenderPassEncoder,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderMultiDrawIndexedIndirect"
 
 ///|
@@ -2024,7 +2024,7 @@ pub extern "C" fn render_pass_multi_draw_indirect_count(
   indirect_offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderMultiDrawIndirectCount"
 
 ///|
@@ -2034,7 +2034,7 @@ pub extern "C" fn render_pass_multi_draw_indexed_indirect_count(
   indirect_offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit = "wgpuRenderPassEncoderMultiDrawIndexedIndirectCount"
 
 ///|

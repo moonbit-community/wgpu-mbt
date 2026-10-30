@@ -1,7 +1,6 @@
 import {
   "Milky2018/wgpu_mbt/c",
   "Milky2018/windowing",
-  "moonbitlang/core/ref",
   "moonbitlang/core/encoding/utf8",
 }
 

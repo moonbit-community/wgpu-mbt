@@ -29,13 +29,13 @@ test "surface texture error helpers: null surface raises" {
   )
   st0.release()
   let st1 = surface.get_current_texture()
-  let raised1 : Ref[Bool] = @ref.new(false)
+  let raised1 : Ref[Bool] = Ref(false)
   st1.require_success() catch {
     _ => raised1.val = true
   }
   st1.release()
   inspect(raised1.val, content="true")
-  let raised2 : Ref[Bool] = @ref.new(false)
+  let raised2 : Ref[Bool] = Ref(false)
   try {
     let st2 = surface.get_current_texture_or_raise()
     st2.release()

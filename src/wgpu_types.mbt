@@ -82,54 +82,54 @@ pub struct SurfaceFrame {
 }
 
 ///|
-pub const SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY : UInt = 2U
+pub const SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY : UInt32 = 2U
 
 ///|
 pub struct SurfaceConfiguration {
-  width : UInt
-  height : UInt
+  width : UInt32
+  height : UInt32
   usage : TextureUsage
   format : TextureFormat
-  present_mode_u32 : UInt
-  alpha_mode_u32 : UInt
+  present_mode_u32 : UInt32
+  alpha_mode_u32 : UInt32
   view_formats : Array[TextureFormat]
-  desired_maximum_frame_latency : UInt
+  desired_maximum_frame_latency : UInt32
 }
 
 ///|
-pub const SURFACE_CREATE_STATUS_SUCCESS : UInt = 0U
+pub const SURFACE_CREATE_STATUS_SUCCESS : UInt32 = 0U
 
 ///|
-pub const SURFACE_CREATE_STATUS_UNSUPPORTED_PLATFORM : UInt = 1U
+pub const SURFACE_CREATE_STATUS_UNSUPPORTED_PLATFORM : UInt32 = 1U
 
 ///|
-pub const SURFACE_CREATE_STATUS_INVALID_NS_VIEW : UInt = 2U
+pub const SURFACE_CREATE_STATUS_INVALID_NS_VIEW : UInt32 = 2U
 
 ///|
-pub const SURFACE_CREATE_STATUS_OBJC_UNAVAILABLE : UInt = 3U
+pub const SURFACE_CREATE_STATUS_OBJC_UNAVAILABLE : UInt32 = 3U
 
 ///|
-pub const SURFACE_CREATE_STATUS_APPKIT_UNAVAILABLE : UInt = 4U
+pub const SURFACE_CREATE_STATUS_APPKIT_UNAVAILABLE : UInt32 = 4U
 
 ///|
-pub const SURFACE_CREATE_STATUS_NOT_MAIN_THREAD : UInt = 5U
+pub const SURFACE_CREATE_STATUS_NOT_MAIN_THREAD : UInt32 = 5U
 
 ///|
-pub const SURFACE_CREATE_STATUS_METAL_LAYER_UNAVAILABLE : UInt = 6U
+pub const SURFACE_CREATE_STATUS_METAL_LAYER_UNAVAILABLE : UInt32 = 6U
 
 ///|
-pub const SURFACE_CREATE_STATUS_INVALID_METAL_LAYER : UInt = 7U
+pub const SURFACE_CREATE_STATUS_INVALID_METAL_LAYER : UInt32 = 7U
 
 ///|
-pub const SURFACE_CREATE_STATUS_ZERO_DRAWABLE_SIZE : UInt = 8U
+pub const SURFACE_CREATE_STATUS_ZERO_DRAWABLE_SIZE : UInt32 = 8U
 
 ///|
-pub const SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED : UInt = 9U
+pub const SURFACE_CREATE_STATUS_CREATE_SURFACE_FAILED : UInt32 = 9U
 
 ///|
 pub fn SurfaceConfiguration::new(
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
   present_mode : PresentMode,
@@ -167,7 +167,7 @@ pub fn SurfaceConfiguration::with_view_formats(
 ///|
 pub fn SurfaceConfiguration::with_desired_maximum_frame_latency(
   self : SurfaceConfiguration,
-  desired_maximum_frame_latency : UInt,
+  desired_maximum_frame_latency : UInt32,
 ) -> SurfaceConfiguration {
   {
     width: self.width,
@@ -183,16 +183,16 @@ pub fn SurfaceConfiguration::with_desired_maximum_frame_latency(
 
 ///|
 pub struct PresentMode {
-  raw : UInt
+  raw : UInt32
 }
 
 ///|
-pub fn PresentMode::from_u32(raw : UInt) -> PresentMode {
+pub fn PresentMode::from_u32(raw : UInt32) -> PresentMode {
   { raw, }
 }
 
 ///|
-pub fn PresentMode::to_u32(self : PresentMode) -> UInt {
+pub fn PresentMode::to_u32(self : PresentMode) -> UInt32 {
   self.raw
 }
 
@@ -214,16 +214,16 @@ pub impl Eq for PresentMode with fn not_equal(
 
 ///|
 pub struct CompositeAlphaMode {
-  raw : UInt
+  raw : UInt32
 }
 
 ///|
-pub fn CompositeAlphaMode::from_u32(raw : UInt) -> CompositeAlphaMode {
+pub fn CompositeAlphaMode::from_u32(raw : UInt32) -> CompositeAlphaMode {
   { raw, }
 }
 
 ///|
-pub fn CompositeAlphaMode::to_u32(self : CompositeAlphaMode) -> UInt {
+pub fn CompositeAlphaMode::to_u32(self : CompositeAlphaMode) -> UInt32 {
   self.raw
 }
 
@@ -248,16 +248,16 @@ pub impl Eq for CompositeAlphaMode with fn not_equal(
 ///
 /// v0.4.0+ gradually moves public APIs away from raw `UInt`/`UInt64` for these.
 pub struct TextureFormat {
-  raw : UInt
+  raw : UInt32
 }
 
 ///|
-pub fn TextureFormat::from_u32(raw : UInt) -> TextureFormat {
+pub fn TextureFormat::from_u32(raw : UInt32) -> TextureFormat {
   { raw, }
 }
 
 ///|
-pub fn TextureFormat::to_u32(self : TextureFormat) -> UInt {
+pub fn TextureFormat::to_u32(self : TextureFormat) -> UInt32 {
   self.raw
 }
 
@@ -279,16 +279,16 @@ pub impl Eq for TextureFormat with fn not_equal(
 
 ///|
 pub struct TextureDimension {
-  raw : UInt
+  raw : UInt32
 }
 
 ///|
-pub fn TextureDimension::from_u32(raw : UInt) -> TextureDimension {
+pub fn TextureDimension::from_u32(raw : UInt32) -> TextureDimension {
   { raw, }
 }
 
 ///|
-pub fn TextureDimension::to_u32(self : TextureDimension) -> UInt {
+pub fn TextureDimension::to_u32(self : TextureDimension) -> UInt32 {
   self.raw
 }
 
@@ -428,7 +428,7 @@ pub impl Eq for MapMode with fn not_equal(self : MapMode, other : MapMode) -> Bo
 
 ///|
 pub struct CompilationMessage {
-  type_u32 : UInt
+  type_u32 : UInt32
   line_num_u64 : UInt64
   line_pos_u64 : UInt64
   offset_u64 : UInt64
@@ -438,13 +438,13 @@ pub struct CompilationMessage {
 
 ///|
 pub struct CompilationInfo {
-  status_u32 : UInt
+  status_u32 : UInt32
   messages : Array[CompilationMessage]
 }
 
 ///|
 pub struct ErrorScopeResult {
-  error_type : UInt
+  error_type : UInt32
   message : String
 }
 
@@ -527,12 +527,12 @@ pub struct ComputePipelineDescBuilder {
 
 ///|
 suberror RenderPipelineDescError {
-  RenderPipelineDescError(UInt, UInt, UInt)
+  RenderPipelineDescError(UInt32, UInt32, UInt32)
 }
 
 ///|
 suberror ComputePipelineDescError {
-  ComputePipelineDescError(UInt, UInt, UInt)
+  ComputePipelineDescError(UInt32, UInt32, UInt32)
 }
 
 ///|
@@ -540,12 +540,12 @@ pub suberror WgpuError {
   WgpuNativeUnavailable(String)
   WgpuNativeUnsupported(String)
   WgpuNativeMissingSymbol(String, String)
-  WgpuRequestAdapterFailed(UInt)
-  WgpuRequestDeviceFailed(UInt)
+  WgpuRequestAdapterFailed(UInt32)
+  WgpuRequestDeviceFailed(UInt32)
 }
 
 ///|
-fn request_adapter_status_name(status : UInt) -> String {
+fn request_adapter_status_name(status : UInt32) -> String {
   if status == REQUEST_ADAPTER_STATUS_SUCCESS {
     "Success"
   } else if status == REQUEST_ADAPTER_STATUS_INSTANCE_DROPPED {
@@ -562,7 +562,7 @@ fn request_adapter_status_name(status : UInt) -> String {
 }
 
 ///|
-fn request_device_status_name(status : UInt) -> String {
+fn request_device_status_name(status : UInt32) -> String {
   if status == REQUEST_DEVICE_STATUS_SUCCESS {
     "Success"
   } else if status == REQUEST_DEVICE_STATUS_INSTANCE_DROPPED {
@@ -621,31 +621,31 @@ suberror OptionalSymbolError {
 }
 
 ///|
-pub const OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE : UInt = 1U
+pub const OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE : UInt32 = 1U
 
 ///|
-pub const OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL : UInt = 2U
+pub const OPTIONAL_SYMBOL_ERROR_KIND_MISSING_SYMBOL : UInt32 = 2U
 
 ///|
-pub const OPTIONAL_SYMBOL_ERROR_KIND_DISABLED : UInt = 3U
+pub const OPTIONAL_SYMBOL_ERROR_KIND_DISABLED : UInt32 = 3U
 
 ///|
-pub const OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED : UInt = 4U
+pub const OPTIONAL_SYMBOL_ERROR_KIND_RUNTIME_FAILED : UInt32 = 4U
 
 ///|
-pub const OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE : UInt = 0U
+pub const OPTIONAL_SYMBOL_AVAILABILITY_AVAILABLE : UInt32 = 0U
 
 ///|
-pub const OPTIONAL_SYMBOL_AVAILABILITY_NATIVE_UNAVAILABLE : UInt = 1U
+pub const OPTIONAL_SYMBOL_AVAILABILITY_NATIVE_UNAVAILABLE : UInt32 = 1U
 
 ///|
-pub const OPTIONAL_SYMBOL_AVAILABILITY_MISSING_SYMBOL : UInt = 2U
+pub const OPTIONAL_SYMBOL_AVAILABILITY_MISSING_SYMBOL : UInt32 = 2U
 
 ///|
-pub const OPTIONAL_SYMBOL_AVAILABILITY_DISABLED : UInt = 3U
+pub const OPTIONAL_SYMBOL_AVAILABILITY_DISABLED : UInt32 = 3U
 
 ///|
-pub fn OptionalSymbolError::kind_u32(self : OptionalSymbolError) -> UInt {
+pub fn OptionalSymbolError::kind_u32(self : OptionalSymbolError) -> UInt32 {
   match self {
     OptionalSymbolNativeUnavailable(_) =>
       OPTIONAL_SYMBOL_ERROR_KIND_NATIVE_UNAVAILABLE
@@ -673,12 +673,12 @@ pub fn OptionalSymbolError::message(self : OptionalSymbolError) -> String {
 
 ///|
 suberror SurfaceTextureError {
-  SurfaceTextureError(UInt)
+  SurfaceTextureError(UInt32)
 }
 
 ///|
 suberror SurfaceCreateError {
-  SurfaceCreateError(UInt)
+  SurfaceCreateError(UInt32)
   SurfaceWindowHandleUnavailable
   SurfaceDisplayHandleUnavailable
   SurfaceHandlePairMismatch
@@ -806,8 +806,8 @@ pub fn BufferSyncError::message(self : BufferSyncError) -> String {
 
 ///|
 suberror SurfaceConfigureError {
-  SurfaceConfigureInvalidDesiredMaximumFrameLatency(UInt)
-  SurfaceConfigureFailed(UInt, UInt, UInt64, UInt, UInt, UInt, UInt)
+  SurfaceConfigureInvalidDesiredMaximumFrameLatency(UInt32)
+  SurfaceConfigureFailed(UInt32, UInt32, UInt64, UInt32, UInt32, UInt32, UInt32)
 }
 
 ///|
@@ -846,7 +846,7 @@ pub fn SurfaceConfigureError::message(self : SurfaceConfigureError) -> String {
 
 ///|
 suberror SurfacePresentError {
-  SurfacePresentError(UInt)
+  SurfacePresentError(UInt32)
 }
 
 ///|
@@ -868,17 +868,17 @@ pub fn SurfacePresentError::message(self : SurfacePresentError) -> String {
 
 ///|
 suberror QueueWorkDoneError {
-  QueueWorkDoneError(UInt)
+  QueueWorkDoneError(UInt32)
 }
 
 ///|
-pub fn QueueWorkDoneError::status_u32(self : QueueWorkDoneError) -> UInt {
+pub fn QueueWorkDoneError::status_u32(self : QueueWorkDoneError) -> UInt32 {
   let QueueWorkDoneError(status) = self
   status
 }
 
 ///|
-fn queue_work_done_status_name(status : UInt) -> String {
+fn queue_work_done_status_name(status : UInt32) -> String {
   if status == 0U {
     "PendingOrInvalid"
   } else if status == QUEUE_WORK_DONE_STATUS_SUCCESS {
@@ -906,17 +906,17 @@ pub fn QueueWorkDoneError::message(self : QueueWorkDoneError) -> String {
 
 ///|
 suberror WaitAnyError {
-  WaitAnyError(UInt)
+  WaitAnyError(UInt32)
 }
 
 ///|
-pub fn WaitAnyError::status_u32(self : WaitAnyError) -> UInt {
+pub fn WaitAnyError::status_u32(self : WaitAnyError) -> UInt32 {
   let WaitAnyError(status) = self
   status
 }
 
 ///|
-fn wait_status_name(status : UInt) -> String {
+fn wait_status_name(status : UInt32) -> String {
   if status == 0U {
     "PendingOrInvalid"
   } else if status == WAIT_STATUS_SUCCESS {
@@ -947,8 +947,8 @@ pub fn WaitAnyError::message(self : WaitAnyError) -> String {
 ///|
 suberror QueueWorkDoneWaitError {
   QueueWorkDoneWaitFutureUnavailable
-  QueueWorkDoneWaitAnyFailed(UInt)
-  QueueWorkDoneWaitStatusFailed(UInt)
+  QueueWorkDoneWaitAnyFailed(UInt32)
+  QueueWorkDoneWaitStatusFailed(UInt32)
 }
 
 ///|
@@ -989,7 +989,7 @@ pub struct InstanceCapabilities {
 
 ///|
 pub struct WaitAnyResult {
-  status : UInt
+  status : UInt32
   completed : Bool
 }
 

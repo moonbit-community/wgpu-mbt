@@ -18,7 +18,7 @@ priv enum SurfaceHandleSource {
   SurfaceSourceWin32(UInt64, UInt64)
   SurfaceSourceWayland(UInt64, UInt64)
   SurfaceSourceXlib(UInt64, UInt64)
-  SurfaceSourceXcb(UInt64, UInt)
+  SurfaceSourceXcb(UInt64, UInt32)
 }
 
 ///|

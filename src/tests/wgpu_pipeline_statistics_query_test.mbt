@@ -32,7 +32,7 @@ test "wgpu pipeline statistics query (feature-gated)" {
   )
   let resolve = device.create_buffer(
     size=8UL,
-    usage=bu(
+    usage=@tests.bu(
       @wgpu.BUFFER_USAGE_COPY_SRC |
       @wgpu.BUFFER_USAGE_COPY_DST |
       @wgpu.BUFFER_USAGE_QUERY_RESOLVE,
@@ -40,7 +40,7 @@ test "wgpu pipeline statistics query (feature-gated)" {
   )
   let readback = device.create_buffer(
     size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|@compute @workgroup_size(1)
@@ -64,7 +64,7 @@ test "wgpu pipeline statistics query (feature-gated)" {
   if out.length() < 8 {
     inspect("unsupported", content="unsupported")
   } else {
-    let v = u64le_at(out, 0)
+    let v = @tests.u64le_at(out, 0)
     if v == 0UL {
       inspect("unsupported", content="unsupported")
     } else {
@@ -105,7 +105,7 @@ test "wgpu pipeline statistics query many (feature-gated)" {
   let view = tex.create_view()
   let resolve = device.create_buffer(
     size=16UL,
-    usage=bu(
+    usage=@tests.bu(
       @wgpu.BUFFER_USAGE_COPY_SRC |
       @wgpu.BUFFER_USAGE_COPY_DST |
       @wgpu.BUFFER_USAGE_QUERY_RESOLVE,
@@ -113,7 +113,7 @@ test "wgpu pipeline statistics query many (feature-gated)" {
   )
   let readback = device.create_buffer(
     size=16UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -150,8 +150,8 @@ test "wgpu pipeline statistics query many (feature-gated)" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 16UL)
-  let vertex_invocations = u64le_at(out, 0)
-  let fragment_invocations = u64le_at(out, 8)
+  let vertex_invocations = @tests.u64le_at(out, 0)
+  let fragment_invocations = @tests.u64le_at(out, 8)
   inspect(vertex_invocations > 0UL, content="true")
   inspect(fragment_invocations > 0UL, content="true")
   cmd.release()

@@ -19,14 +19,20 @@ test "wgpu render texture sampling" {
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
   let upload_usage = @wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST
-  let upload_buf = device.create_buffer(size=256UL, usage=bu(upload_usage))
-  queue.write_buffer(upload_buf, 0UL, rgba_bytes(255U, 0U, 0U, 255U))
+  let upload_buf = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(upload_usage),
+  )
+  queue.write_buffer(upload_buf, 0UL, @tests.rgba_bytes(255U, 0U, 0U, 255U))
   let src_tex = device.create_texture_rgba8_2d(1U, 1U)
   let src_view = src_tex.create_view()
   let dst_tex = device.create_texture_rgba8_2d(1U, 1U)
   let dst_view = dst_tex.create_view()
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback_buf = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let sampler = device.create_sampler_nearest_clamp()
   let bgl = device.create_bind_group_layout_sampler_texture_2d()
   let pl = device.create_pipeline_layout_1(bgl)
@@ -68,7 +74,7 @@ test "wgpu render texture sampling" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback_buf.readback(instance, 0UL, 4UL)
-  let rgba : Array[UInt] = [
+  let rgba : Array[UInt32] = [
     out[0].to_uint(),
     out[1].to_uint(),
     out[2].to_uint(),

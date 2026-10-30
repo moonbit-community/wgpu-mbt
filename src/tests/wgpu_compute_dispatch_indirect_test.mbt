@@ -20,18 +20,18 @@ test "wgpu compute: dispatch_workgroups_indirect" {
   let queue = device.queue()
   let out_buf = device.create_buffer(
     size=16UL,
-    usage=bu(@wgpu.BUFFER_USAGE_STORAGE | @wgpu.BUFFER_USAGE_COPY_SRC),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_STORAGE | @wgpu.BUFFER_USAGE_COPY_SRC),
   )
   let readback = device.create_buffer(
     size=16UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let indirect = device.create_buffer(
     size=12UL,
-    usage=bu(@wgpu.BUFFER_USAGE_INDIRECT | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_INDIRECT | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   // workgroupCountX=4, Y=1, Z=1
-  let args = u32le_pack([4U, 1U, 1U])
+  let args = @tests.u32le_pack([4U, 1U, 1U])
   queue.write_buffer(indirect, 0UL, args)
   let wgsl : String =
     #|@group(0) @binding(0) var<storage, read_write> out: array<u32>;
@@ -59,11 +59,11 @@ test "wgpu compute: dispatch_workgroups_indirect" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 16UL)
-  let got : Array[UInt] = [
-    u32le_at(out, 0),
-    u32le_at(out, 4),
-    u32le_at(out, 8),
-    u32le_at(out, 12),
+  let got : Array[UInt32] = [
+    @tests.u32le_at(out, 0),
+    @tests.u32le_at(out, 4),
+    @tests.u32le_at(out, 8),
+    @tests.u32le_at(out, 12),
   ]
   @debug.debug_inspect(got, content="[1, 2, 3, 4]")
   cmd.release()

@@ -71,7 +71,7 @@ pub struct AutoReleasePool {
 
 ///|
 pub fn AutoReleasePool::new() -> AutoReleasePool {
-  { state: @ref.new({ entries: [], released: false, }), }
+  { state: Ref({ entries: [], released: false, }), }
 }
 
 ///|

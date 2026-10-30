@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-fn run_bench(name~ : String, count~ : UInt, f : () -> Unit) -> Unit {
+fn run_bench(name~ : String, count~ : UInt32, f : () -> Unit) -> Unit {
   for _i = 0; _i < count.reinterpret_as_int(); _i = _i + 1 {
     f()
   }

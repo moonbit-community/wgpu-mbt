@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-fn write_u32_le(bytes : Bytes) -> UInt {
+fn write_u32_le(bytes : Bytes) -> UInt32 {
   if bytes.length() < 4 {
     return 0U
   }
@@ -24,7 +24,7 @@ fn write_u32_le(bytes : Bytes) -> UInt {
 }
 
 ///|
-fn write_u32_to_le_bytes(v : UInt) -> Bytes {
+fn write_u32_to_le_bytes(v : UInt32) -> Bytes {
   let b0 = (v & 0xFF).reinterpret_as_int().to_byte()
   let b1 = ((v >> 8) & 0xFF).reinterpret_as_int().to_byte()
   let b2 = ((v >> 16) & 0xFF).reinterpret_as_int().to_byte()
@@ -34,7 +34,7 @@ fn write_u32_to_le_bytes(v : UInt) -> Bytes {
 
 ///|
 test "wgpu queue.write_buffer + compute" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -44,8 +44,14 @@ test "wgpu queue.write_buffer + compute" {
       @wgpu.BUFFER_USAGE_COPY_DST
     let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ |
       @wgpu.BUFFER_USAGE_COPY_DST
-    let storage_buf = device.create_buffer(size=4UL, usage=bu(storage_usage))
-    let readback_buf = device.create_buffer(size=4UL, usage=bu(readback_usage))
+    let storage_buf = device.create_buffer(
+      size=4UL,
+      usage=@tests.bu(storage_usage),
+    )
+    let readback_buf = device.create_buffer(
+      size=4UL,
+      usage=@tests.bu(readback_usage),
+    )
     queue.write_buffer(storage_buf, 0UL, write_u32_to_le_bytes(1U))
     let bgl = device.create_bind_group_layout_storage_buffer()
     let pl = device.create_pipeline_layout_1(bgl)

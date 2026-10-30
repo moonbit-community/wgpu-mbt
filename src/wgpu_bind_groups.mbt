@@ -22,12 +22,12 @@ pub fn BindGroupLayoutBuilder::new(
 ///|
 pub fn BindGroupLayoutBuilder::add_buffer(
   self : BindGroupLayoutBuilder,
-  binding : UInt,
+  binding : UInt32,
   visibility : ShaderStage,
-  type_u32 : UInt,
-  has_dynamic_offset? : Bool = false,
-  min_binding_size? : UInt64 = 0UL,
-  count? : UInt = 1U,
+  type_u32 : UInt32,
+  has_dynamic_offset~ : Bool = false,
+  min_binding_size~ : UInt64 = 0UL,
+  count~ : UInt32 = 1U,
 ) -> Bool {
   if count <= 1U {
     @c.bind_group_layout_builder_add_buffer(
@@ -54,10 +54,10 @@ pub fn BindGroupLayoutBuilder::add_buffer(
 ///|
 pub fn BindGroupLayoutBuilder::add_sampler(
   self : BindGroupLayoutBuilder,
-  binding : UInt,
+  binding : UInt32,
   visibility : ShaderStage,
-  type_u32 : UInt,
-  count? : UInt = 1U,
+  type_u32 : UInt32,
+  count~ : UInt32 = 1U,
 ) -> Bool {
   if count <= 1U {
     @c.bind_group_layout_builder_add_sampler(
@@ -80,12 +80,12 @@ pub fn BindGroupLayoutBuilder::add_sampler(
 ///|
 pub fn BindGroupLayoutBuilder::add_texture(
   self : BindGroupLayoutBuilder,
-  binding : UInt,
+  binding : UInt32,
   visibility : ShaderStage,
-  sample_type_u32 : UInt,
-  view_dimension_u32 : UInt,
-  multisampled? : Bool = false,
-  count? : UInt = 1U,
+  sample_type_u32 : UInt32,
+  view_dimension_u32 : UInt32,
+  multisampled~ : Bool = false,
+  count~ : UInt32 = 1U,
 ) -> Bool {
   if count <= 1U {
     @c.bind_group_layout_builder_add_texture(
@@ -112,12 +112,12 @@ pub fn BindGroupLayoutBuilder::add_texture(
 ///|
 pub fn BindGroupLayoutBuilder::add_storage_texture(
   self : BindGroupLayoutBuilder,
-  binding : UInt,
+  binding : UInt32,
   visibility : ShaderStage,
-  access_u32 : UInt,
+  access_u32 : UInt32,
   format : TextureFormat,
-  view_dimension_u32 : UInt,
-  count? : UInt = 1U,
+  view_dimension_u32 : UInt32,
+  count~ : UInt32 = 1U,
 ) -> Bool {
   if count <= 1U {
     @c.bind_group_layout_builder_add_storage_texture(
@@ -145,7 +145,7 @@ pub fn BindGroupLayoutBuilder::add_storage_texture(
 pub fn BindGroupLayoutBuilder::finish(
   self : BindGroupLayoutBuilder,
   device : Device,
-  label? : String = "",
+  label~ : String = "",
 ) -> BindGroupLayout {
   let bytes = utf8_bytes(label)
   let out = @c.bind_group_layout_builder_finish(
@@ -171,10 +171,10 @@ pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> BindGroupBuilder {
 ///|
 pub fn BindGroupBuilder::add_buffer(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   buffer : Buffer,
-  offset? : UInt64 = 0UL,
-  size? : UInt64 = WHOLE_SIZE,
+  offset~ : UInt64 = 0UL,
+  size~ : UInt64 = WHOLE_SIZE,
 ) -> Bool {
   @c.bind_group_builder_add_buffer(self.raw, binding, buffer.raw, offset, size)
 }
@@ -182,10 +182,10 @@ pub fn BindGroupBuilder::add_buffer(
 ///|
 pub fn BindGroupBuilder::add_buffer_array(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   buffers : Array[Buffer],
-  offset? : UInt64 = 0UL,
-  size? : UInt64 = WHOLE_SIZE,
+  offset~ : UInt64 = 0UL,
+  size~ : UInt64 = WHOLE_SIZE,
 ) -> Bool {
   let count = buffers.length()
   if count == 0 {
@@ -210,7 +210,7 @@ pub fn BindGroupBuilder::add_buffer_array(
 ///|
 pub fn BindGroupBuilder::add_sampler(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   sampler : Sampler,
 ) -> Bool {
   @c.bind_group_builder_add_sampler(self.raw, binding, sampler.raw)
@@ -219,7 +219,7 @@ pub fn BindGroupBuilder::add_sampler(
 ///|
 pub fn BindGroupBuilder::add_sampler_array(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   samplers : Array[Sampler],
 ) -> Bool {
   let count = samplers.length()
@@ -243,7 +243,7 @@ pub fn BindGroupBuilder::add_sampler_array(
 ///|
 pub fn BindGroupBuilder::add_texture_view(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   view : TextureView,
 ) -> Bool {
   @c.bind_group_builder_add_texture_view(self.raw, binding, view.raw)
@@ -252,7 +252,7 @@ pub fn BindGroupBuilder::add_texture_view(
 ///|
 pub fn BindGroupBuilder::add_texture_view_array(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   views : Array[TextureView],
 ) -> Bool {
   let count = views.length()
@@ -278,7 +278,7 @@ pub fn BindGroupBuilder::finish(
   self : BindGroupBuilder,
   device : Device,
   layout : BindGroupLayout,
-  label? : String = "",
+  label~ : String = "",
 ) -> BindGroup {
   let bytes = utf8_bytes(label)
   let out = @c.bind_group_builder_finish(

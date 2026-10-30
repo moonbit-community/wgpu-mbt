@@ -243,8 +243,8 @@ pub fn CommandEncoder::release_raw(self : CommandEncoder) -> Unit {
 pub fn CommandEncoder::resolve_query_set_raw(
   self : CommandEncoder,
   query_set : QuerySet,
-  first_query : UInt,
-  query_count : UInt,
+  first_query : UInt32,
+  query_count : UInt32,
   destination : Buffer,
   destination_offset : UInt64,
 ) -> Unit {
@@ -262,7 +262,7 @@ pub fn CommandEncoder::resolve_query_set_raw(
 pub fn CommandEncoder::write_timestamp_raw(
   self : CommandEncoder,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.wgpuCommandEncoderWriteTimestamp(self.raw, query_set.raw, query_index)
 }
@@ -276,7 +276,7 @@ pub fn ComputePass::add_ref_raw(self : ComputePass) -> Unit {
 pub fn ComputePass::begin_pipeline_statistics_query_raw(
   self : ComputePass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.wgpuComputePassEncoderBeginPipelineStatisticsQuery(
     self.raw,
@@ -288,9 +288,9 @@ pub fn ComputePass::begin_pipeline_statistics_query_raw(
 ///|
 pub fn ComputePass::dispatch_workgroups_raw(
   self : ComputePass,
-  workgroup_count_x : UInt,
-  workgroup_count_y : UInt,
-  workgroup_count_z : UInt,
+  workgroup_count_x : UInt32,
+  workgroup_count_y : UInt32,
+  workgroup_count_z : UInt32,
 ) -> Unit {
   @c.wgpuComputePassEncoderDispatchWorkgroups(
     self.raw,
@@ -347,7 +347,7 @@ pub fn ComputePass::set_pipeline_raw(
 pub fn ComputePass::write_timestamp_raw(
   self : ComputePass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.wgpuComputePassEncoderWriteTimestamp(self.raw, query_set.raw, query_index)
 }
@@ -360,7 +360,7 @@ pub fn ComputePipeline::add_ref_raw(self : ComputePipeline) -> Unit {
 ///|
 pub fn ComputePipeline::get_bind_group_layout_raw(
   self : ComputePipeline,
-  group_index : UInt,
+  group_index : UInt32,
 ) -> BindGroupLayout {
   { raw: @c.wgpuComputePipelineGetBindGroupLayout(self.raw, group_index), }
 }
@@ -747,7 +747,7 @@ pub fn QuerySet::destroy(self : QuerySet) -> Unit {
 }
 
 ///|
-pub fn QuerySet::get_count(self : QuerySet) -> UInt {
+pub fn QuerySet::get_count(self : QuerySet) -> UInt32 {
   @c.wgpuQuerySetGetCount(self.raw)
 }
 
@@ -807,10 +807,10 @@ pub fn RenderBundleEncoder::add_ref_raw(self : RenderBundleEncoder) -> Unit {
 ///|
 pub fn RenderBundleEncoder::draw_raw(
   self : RenderBundleEncoder,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit {
   @c.wgpuRenderBundleEncoderDraw(
     self.raw,
@@ -824,11 +824,11 @@ pub fn RenderBundleEncoder::draw_raw(
 ///|
 pub fn RenderBundleEncoder::draw_indexed_raw(
   self : RenderBundleEncoder,
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex : Int,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex : Int32,
+  first_instance : UInt32,
 ) -> Unit {
   @c.wgpuRenderBundleEncoderDrawIndexed(
     self.raw,
@@ -914,7 +914,7 @@ pub fn RenderBundleEncoder::set_pipeline_raw(
 ///|
 pub fn RenderBundleEncoder::set_vertex_buffer_raw(
   self : RenderBundleEncoder,
-  slot : UInt,
+  slot : UInt32,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
@@ -941,7 +941,7 @@ pub fn RenderPass::add_ref_raw(self : RenderPass) -> Unit {
 ///|
 pub fn RenderPass::begin_occlusion_query_raw(
   self : RenderPass,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderBeginOcclusionQuery(self.raw, query_index)
 }
@@ -950,7 +950,7 @@ pub fn RenderPass::begin_occlusion_query_raw(
 pub fn RenderPass::begin_pipeline_statistics_query_raw(
   self : RenderPass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderBeginPipelineStatisticsQuery(
     self.raw,
@@ -962,10 +962,10 @@ pub fn RenderPass::begin_pipeline_statistics_query_raw(
 ///|
 pub fn RenderPass::draw_raw(
   self : RenderPass,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderDraw(
     self.raw,
@@ -979,11 +979,11 @@ pub fn RenderPass::draw_raw(
 ///|
 pub fn RenderPass::draw_indexed_raw(
   self : RenderPass,
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex : Int,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex : Int32,
+  first_instance : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderDrawIndexed(
     self.raw,
@@ -1050,7 +1050,7 @@ pub fn RenderPass::multi_draw_indexed_indirect_raw(
   self : RenderPass,
   buffer : Buffer,
   offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderMultiDrawIndexedIndirect(
     self.raw,
@@ -1067,7 +1067,7 @@ pub fn RenderPass::multi_draw_indexed_indirect_count_raw(
   offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(
     self.raw,
@@ -1084,7 +1084,7 @@ pub fn RenderPass::multi_draw_indirect_raw(
   self : RenderPass,
   buffer : Buffer,
   offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderMultiDrawIndirect(self.raw, buffer.raw, offset, count)
 }
@@ -1096,7 +1096,7 @@ pub fn RenderPass::multi_draw_indirect_count_raw(
   offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderMultiDrawIndirectCount(
     self.raw,
@@ -1154,10 +1154,10 @@ pub fn RenderPass::set_pipeline_raw(
 ///|
 pub fn RenderPass::set_scissor_rect_raw(
   self : RenderPass,
-  x : UInt,
-  y : UInt,
-  width : UInt,
-  height : UInt,
+  x : UInt32,
+  y : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderSetScissorRect(self.raw, x, y, width, height)
 }
@@ -1165,7 +1165,7 @@ pub fn RenderPass::set_scissor_rect_raw(
 ///|
 pub fn RenderPass::set_stencil_reference_raw(
   self : RenderPass,
-  reference : UInt,
+  reference : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderSetStencilReference(self.raw, reference)
 }
@@ -1173,7 +1173,7 @@ pub fn RenderPass::set_stencil_reference_raw(
 ///|
 pub fn RenderPass::set_vertex_buffer_raw(
   self : RenderPass,
-  slot : UInt,
+  slot : UInt32,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
@@ -1212,7 +1212,7 @@ pub fn RenderPass::set_viewport_raw(
 pub fn RenderPass::write_timestamp_raw(
   self : RenderPass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.wgpuRenderPassEncoderWriteTimestamp(self.raw, query_set.raw, query_index)
 }
@@ -1225,7 +1225,7 @@ pub fn RenderPipeline::add_ref_raw(self : RenderPipeline) -> Unit {
 ///|
 pub fn RenderPipeline::get_bind_group_layout_raw(
   self : RenderPipeline,
-  group_index : UInt,
+  group_index : UInt32,
 ) -> BindGroupLayout {
   { raw: @c.wgpuRenderPipelineGetBindGroupLayout(self.raw, group_index), }
 }
@@ -1254,7 +1254,7 @@ pub fn ShaderModule::add_ref_raw(self : ShaderModule) -> Unit {
 pub fn ShaderModule::get_compilation_info_sync_status_u32(
   self : ShaderModule,
   instance : Instance,
-) -> UInt {
+) -> UInt32 {
   @c.shader_module_get_compilation_info_sync_status_u32(instance.raw, self.raw)
 }
 
@@ -1329,7 +1329,7 @@ pub fn Texture::destroy_raw(self : Texture) -> Unit {
 }
 
 ///|
-pub fn Texture::get_depth_or_array_layers(self : Texture) -> UInt {
+pub fn Texture::get_depth_or_array_layers(self : Texture) -> UInt32 {
   @c.wgpuTextureGetDepthOrArrayLayers(self.raw)
 }
 
@@ -1344,17 +1344,17 @@ pub fn Texture::get_format(self : Texture) -> @c.WGPUTextureFormat {
 }
 
 ///|
-pub fn Texture::get_height(self : Texture) -> UInt {
+pub fn Texture::get_height(self : Texture) -> UInt32 {
   @c.wgpuTextureGetHeight(self.raw)
 }
 
 ///|
-pub fn Texture::get_mip_level_count(self : Texture) -> UInt {
+pub fn Texture::get_mip_level_count(self : Texture) -> UInt32 {
   @c.wgpuTextureGetMipLevelCount(self.raw)
 }
 
 ///|
-pub fn Texture::get_sample_count(self : Texture) -> UInt {
+pub fn Texture::get_sample_count(self : Texture) -> UInt32 {
   @c.wgpuTextureGetSampleCount(self.raw)
 }
 
@@ -1364,7 +1364,7 @@ pub fn Texture::get_usage(self : Texture) -> @c.WGPUTextureUsage {
 }
 
 ///|
-pub fn Texture::get_width(self : Texture) -> UInt {
+pub fn Texture::get_width(self : Texture) -> UInt32 {
   @c.wgpuTextureGetWidth(self.raw)
 }
 

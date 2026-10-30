@@ -22,7 +22,7 @@ test "wgpu texture: render 2x2 quadrant colors -> copy_texture_to_buffer layout"
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=512UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -61,10 +61,10 @@ test "wgpu texture: render 2x2 quadrant colors -> copy_texture_to_buffer layout"
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 512UL)
-  let tl = read_rgba8_from_copy_out(out, 0U, 0U)
-  let tr = read_rgba8_from_copy_out(out, 1U, 0U)
-  let bl = read_rgba8_from_copy_out(out, 0U, 1U)
-  let br = read_rgba8_from_copy_out(out, 1U, 1U)
+  let tl = @tests.read_rgba8_from_copy_out(out, 0U, 0U)
+  let tr = @tests.read_rgba8_from_copy_out(out, 1U, 0U)
+  let bl = @tests.read_rgba8_from_copy_out(out, 0U, 1U)
+  let br = @tests.read_rgba8_from_copy_out(out, 1U, 1U)
   @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],
@@ -103,7 +103,7 @@ test "wgpu texture: queue.write_texture_rgba8_2d pads rows to 256" {
   let tex = device.create_texture_rgba8_2d(2U, 2U)
   let readback = device.create_buffer(
     size=512UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
 
   // Row-major 2x2 pixels: (red, green) / (blue, white)
@@ -132,10 +132,10 @@ test "wgpu texture: queue.write_texture_rgba8_2d pads rows to 256" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 512UL)
-  let tl = read_rgba8_from_copy_out(out, 0U, 0U)
-  let tr = read_rgba8_from_copy_out(out, 1U, 0U)
-  let bl = read_rgba8_from_copy_out(out, 0U, 1U)
-  let br = read_rgba8_from_copy_out(out, 1U, 1U)
+  let tl = @tests.read_rgba8_from_copy_out(out, 0U, 0U)
+  let tr = @tests.read_rgba8_from_copy_out(out, 1U, 0U)
+  let bl = @tests.read_rgba8_from_copy_out(out, 0U, 1U)
+  let br = @tests.read_rgba8_from_copy_out(out, 1U, 1U)
   @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],
@@ -170,12 +170,12 @@ test "wgpu texture: copy_buffer_to_texture_rgba8 2x2 upload layout" {
   let queue = device.queue()
   let upload = device.create_buffer(
     size=512UL,
-    usage=bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let tex = device.create_texture_rgba8_2d(2U, 2U)
   let readback = device.create_buffer(
     size=512UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
 
   // Build a 512-byte upload buffer matching bytesPerRow=256, with 2x2 pixels:
@@ -225,10 +225,10 @@ test "wgpu texture: copy_buffer_to_texture_rgba8 2x2 upload layout" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 512UL)
-  let tl = read_rgba8_from_copy_out(out, 0U, 0U)
-  let tr = read_rgba8_from_copy_out(out, 1U, 0U)
-  let bl = read_rgba8_from_copy_out(out, 0U, 1U)
-  let br = read_rgba8_from_copy_out(out, 1U, 1U)
+  let tl = @tests.read_rgba8_from_copy_out(out, 0U, 0U)
+  let tr = @tests.read_rgba8_from_copy_out(out, 1U, 0U)
+  let bl = @tests.read_rgba8_from_copy_out(out, 0U, 1U)
+  let br = @tests.read_rgba8_from_copy_out(out, 1U, 1U)
   @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],
@@ -266,7 +266,7 @@ test "wgpu texture: copy_texture_to_texture_rgba8 2x2" {
   let dst = device.create_texture_rgba8_2d(2U, 2U)
   let readback = device.create_buffer(
     size=512UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let pixels = Bytes::from_array([
     (255).to_byte(),
@@ -294,10 +294,10 @@ test "wgpu texture: copy_texture_to_texture_rgba8 2x2" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 512UL)
-  let tl = read_rgba8_from_copy_out(out, 0U, 0U)
-  let tr = read_rgba8_from_copy_out(out, 1U, 0U)
-  let bl = read_rgba8_from_copy_out(out, 0U, 1U)
-  let br = read_rgba8_from_copy_out(out, 1U, 1U)
+  let tl = @tests.read_rgba8_from_copy_out(out, 0U, 0U)
+  let tr = @tests.read_rgba8_from_copy_out(out, 1U, 0U)
+  let bl = @tests.read_rgba8_from_copy_out(out, 0U, 1U)
+  let br = @tests.read_rgba8_from_copy_out(out, 1U, 1U)
   @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],
@@ -334,7 +334,7 @@ test "wgpu texture: queue.write_texture_rgba8_2d preserves rows (1x2)" {
   let tex = device.create_texture_rgba8_2d(1U, 2U)
   let readback = device.create_buffer(
     size=512UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
 
   // (red) / (green)
@@ -355,8 +355,8 @@ test "wgpu texture: queue.write_texture_rgba8_2d preserves rows (1x2)" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 512UL)
-  let top = read_rgba8_from_copy_out(out, 0U, 0U)
-  let bottom = read_rgba8_from_copy_out(out, 0U, 1U)
+  let top = @tests.read_rgba8_from_copy_out(out, 0U, 0U)
+  let bottom = @tests.read_rgba8_from_copy_out(out, 0U, 1U)
   @debug.debug_inspect(
     [
       [top[0], top[1], top[2], top[3]],
@@ -390,7 +390,7 @@ test "wgpu texture: create_texture_rgba8_2d_with_usage can render+copy" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };

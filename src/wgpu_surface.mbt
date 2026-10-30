@@ -77,7 +77,7 @@ pub fn surface_descriptor_windows_hwnd_new(
 ///|
 pub fn surface_descriptor_xcb_new(
   connection : @c.OpaquePtr,
-  window : UInt,
+  window : UInt32,
 ) -> @c.WGPUSurfaceDescriptorPtr {
   @c.surface_descriptor_xcb_new(connection, window)
 }
@@ -127,7 +127,7 @@ pub fn surface_configuration_ptr_new(
       config.desired_maximum_frame_latency,
     )
   } else {
-    let raw_view_formats : Ref[Array[UInt]] = @ref.new([])
+    let raw_view_formats : Ref[Array[UInt32]] = Ref([])
     for i = 0; i < count; i = i + 1 {
       raw_view_formats.val.push(config.view_formats[i].raw)
     }
@@ -167,10 +167,10 @@ pub fn Surface::configure_default(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> TextureFormat {
   TextureFormat::from_u32(
     @c.surface_configure_default(
@@ -187,8 +187,8 @@ pub fn Surface::configure_default(
 
 ///|
 fn pack_alpha_mode_and_desired_maximum_frame_latency_u64(
-  alpha_mode_u32 : UInt,
-  desired_maximum_frame_latency : UInt,
+  alpha_mode_u32 : UInt32,
+  desired_maximum_frame_latency : UInt32,
 ) -> UInt64 {
   (desired_maximum_frame_latency.to_uint64() << 32) | alpha_mode_u32.to_uint64()
 }
@@ -221,7 +221,7 @@ pub fn Surface::configure_with(
       packed_alpha_mode_and_desired_maximum_frame_latency,
     )
   } else {
-    let raw_view_formats : Ref[Array[UInt]] = @ref.new([])
+    let raw_view_formats : Ref[Array[UInt32]] = Ref([])
     for i = 0; i < count; i = i + 1 {
       raw_view_formats.val.push(config.view_formats[i].raw)
     }
@@ -274,13 +274,13 @@ pub fn Surface::configure_u32(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Bool {
   let config = SurfaceConfiguration::new(
     width,
@@ -298,13 +298,13 @@ pub fn Surface::configure_u32_or_raise(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Unit raise SurfaceConfigureError {
   let config = SurfaceConfiguration::new(
     width,
@@ -322,14 +322,14 @@ pub fn Surface::configure_view_formats_u32(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
   view_formats : Array[TextureFormat],
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Bool {
   let config = SurfaceConfiguration::new(
       width,
@@ -349,14 +349,14 @@ pub fn Surface::configure_view_formats_u32_or_raise(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
   view_formats : Array[TextureFormat],
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Unit raise SurfaceConfigureError {
   let config = SurfaceConfiguration::new(
       width,
@@ -402,7 +402,7 @@ pub fn Surface::get_current_frame_or_raise(
 }
 
 ///|
-pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt {
+pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt32 {
   @c.surface_texture_status(self.raw)
 }
 
@@ -433,7 +433,7 @@ pub fn SurfaceTexture::take_texture_or_raise(
 }
 
 ///|
-pub fn Surface::present(self : Surface) -> UInt {
+pub fn Surface::present(self : Surface) -> UInt32 {
   @c.surface_present_u32(self.raw)
 }
 
@@ -449,7 +449,7 @@ pub fn Surface::present_or_raise(
 }
 
 ///|
-pub fn SurfaceFrame::present(self : SurfaceFrame) -> UInt {
+pub fn SurfaceFrame::present(self : SurfaceFrame) -> UInt32 {
   self.surface.present()
 }
 
@@ -521,7 +521,7 @@ pub fn Surface::capabilities_present_mode_u32_at(
   self : Surface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt {
+) -> UInt32 {
   @c.surface_capabilities_present_mode_u32_at(self.raw, adapter.raw, index)
 }
 
@@ -530,7 +530,7 @@ pub fn Surface::capabilities_alpha_mode_u32_at(
   self : Surface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt {
+) -> UInt32 {
   @c.surface_capabilities_alpha_mode_u32_at(self.raw, adapter.raw, index)
 }
 
@@ -540,7 +540,7 @@ pub fn Surface::capabilities_formats(
   adapter : Adapter,
 ) -> Array[TextureFormat] {
   let count = self.capabilities_formats_count_u64(adapter)
-  let out : Ref[Array[TextureFormat]] = @ref.new([])
+  let out : Ref[Array[TextureFormat]] = Ref([])
   for i = 0; i < count.to_int(); i = i + 1 {
     out.val.push(self.capabilities_format_u32_at(adapter, i.to_uint64()))
   }
@@ -551,9 +551,9 @@ pub fn Surface::capabilities_formats(
 pub fn Surface::capabilities_present_modes(
   self : Surface,
   adapter : Adapter,
-) -> Array[UInt] {
+) -> Array[UInt32] {
   let count = self.capabilities_present_modes_count_u64(adapter)
-  let out : Ref[Array[UInt]] = @ref.new([])
+  let out : Ref[Array[UInt32]] = Ref([])
   for i = 0; i < count.to_int(); i = i + 1 {
     out.val.push(self.capabilities_present_mode_u32_at(adapter, i.to_uint64()))
   }
@@ -564,9 +564,9 @@ pub fn Surface::capabilities_present_modes(
 pub fn Surface::capabilities_alpha_modes(
   self : Surface,
   adapter : Adapter,
-) -> Array[UInt] {
+) -> Array[UInt32] {
   let count = self.capabilities_alpha_modes_count_u64(adapter)
-  let out : Ref[Array[UInt]] = @ref.new([])
+  let out : Ref[Array[UInt32]] = Ref([])
   for i = 0; i < count.to_int(); i = i + 1 {
     out.val.push(self.capabilities_alpha_mode_u32_at(adapter, i.to_uint64()))
   }
@@ -578,12 +578,12 @@ pub fn Surface::configure_best_effort(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
-  prefer_srgb? : Bool = true,
-  vsync? : Bool = true,
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  prefer_srgb~ : Bool = true,
+  vsync~ : Bool = true,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Bool {
   let formats = self.capabilities_formats(adapter)
   let present_modes = self.capabilities_present_modes(adapter)

@@ -31,12 +31,15 @@ pub fn Device::create_command_encoder_ptr(
 }
 
 ///|
-pub fn Device::push_error_scope(self : Device, filter_u32 : UInt) -> Unit {
+pub fn Device::push_error_scope(self : Device, filter_u32 : UInt32) -> Unit {
   @c.device_push_error_scope_u32(self.raw, filter_u32)
 }
 
 ///|
-pub fn Device::pop_error_scope_sync(self : Device, instance : Instance) -> UInt {
+pub fn Device::pop_error_scope_sync(
+  self : Device,
+  instance : Instance,
+) -> UInt32 {
   @c.device_pop_error_scope_sync_u32(instance.raw, self.raw)
 }
 
@@ -62,18 +65,21 @@ pub fn Device::supported_features_count_u64(self : Device) -> UInt64 {
 ///|
 pub fn Device::supported_features_contains_u32(
   self : Device,
-  feature_u32 : UInt,
+  feature_u32 : UInt32,
 ) -> Bool {
   @c.device_supported_features_contains_u32(self.raw, feature_u32)
 }
 
 ///|
-pub fn Device::supported_feature_u32_at(self : Device, index : UInt64) -> UInt {
+pub fn Device::supported_feature_u32_at(
+  self : Device,
+  index : UInt64,
+) -> UInt32 {
   @c.device_supported_feature_u32_at(self.raw, index)
 }
 
 ///|
-pub fn Device::has_feature_u32(self : Device, feature_u32 : UInt) -> Bool {
+pub fn Device::has_feature_u32(self : Device, feature_u32 : UInt32) -> Bool {
   self.supported_features_contains_u32(feature_u32)
 }
 
@@ -85,7 +91,7 @@ pub fn Device::has_feature_timestamp_query(self : Device) -> Bool {
 ///|
 pub fn Device::has_feature_native_u32(
   self : Device,
-  native_feature_u32 : UInt,
+  native_feature_u32 : UInt32,
 ) -> Bool {
   self.supported_features_contains_u32(native_feature_u32)
 }
@@ -338,22 +344,22 @@ pub fn Device::has_feature_native_texture_adapter_specific_format_features(
 }
 
 ///|
-pub fn Device::info_backend_type_u32(self : Device) -> UInt {
+pub fn Device::info_backend_type_u32(self : Device) -> UInt32 {
   @c.device_info_backend_type_u32(self.raw)
 }
 
 ///|
-pub fn Device::info_adapter_type_u32(self : Device) -> UInt {
+pub fn Device::info_adapter_type_u32(self : Device) -> UInt32 {
   @c.device_info_adapter_type_u32(self.raw)
 }
 
 ///|
-pub fn Device::info_vendor_id_u32(self : Device) -> UInt {
+pub fn Device::info_vendor_id_u32(self : Device) -> UInt32 {
   @c.device_info_vendor_id_u32(self.raw)
 }
 
 ///|
-pub fn Device::info_device_id_u32(self : Device) -> UInt {
+pub fn Device::info_device_id_u32(self : Device) -> UInt32 {
   @c.device_info_device_id_u32(self.raw)
 }
 
@@ -422,79 +428,81 @@ pub fn Device::info_description(self : Device) -> String {
 }
 
 ///|
-pub fn Device::limits_max_texture_dimension_1d_u32(self : Device) -> UInt {
+pub fn Device::limits_max_texture_dimension_1d_u32(self : Device) -> UInt32 {
   @c.device_limits_max_texture_dimension_1d_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_texture_dimension_2d_u32(self : Device) -> UInt {
+pub fn Device::limits_max_texture_dimension_2d_u32(self : Device) -> UInt32 {
   @c.device_limits_max_texture_dimension_2d_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_texture_dimension_3d_u32(self : Device) -> UInt {
+pub fn Device::limits_max_texture_dimension_3d_u32(self : Device) -> UInt32 {
   @c.device_limits_max_texture_dimension_3d_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_texture_array_layers_u32(self : Device) -> UInt {
+pub fn Device::limits_max_texture_array_layers_u32(self : Device) -> UInt32 {
   @c.device_limits_max_texture_array_layers_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_bind_groups_u32(self : Device) -> UInt {
+pub fn Device::limits_max_bind_groups_u32(self : Device) -> UInt32 {
   @c.device_limits_max_bind_groups_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_bind_groups_plus_vertex_buffers_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_bind_groups_plus_vertex_buffers_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_bindings_per_bind_group_u32(self : Device) -> UInt {
+pub fn Device::limits_max_bindings_per_bind_group_u32(self : Device) -> UInt32 {
   @c.device_limits_max_bindings_per_bind_group_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_dynamic_storage_buffers_per_pipeline_layout_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_dynamic_storage_buffers_per_pipeline_layout_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_sampled_textures_per_shader_stage_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_sampled_textures_per_shader_stage_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_samplers_per_shader_stage_u32(self : Device) -> UInt {
+pub fn Device::limits_max_samplers_per_shader_stage_u32(
+  self : Device,
+) -> UInt32 {
   @c.device_limits_max_samplers_per_shader_stage_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_storage_buffers_per_shader_stage_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_storage_buffers_per_shader_stage_u32(self.raw)
 }
 
 ///|
 pub fn Device::supports_read_only_storage_buffer_binding(
   self : Device,
-  required_storage_buffers_per_shader_stage : UInt,
+  required_storage_buffers_per_shader_stage : UInt32,
 ) -> Bool {
   self.limits_max_storage_buffers_per_shader_stage_u32() >=
   required_storage_buffers_per_shader_stage
@@ -503,8 +511,8 @@ pub fn Device::supports_read_only_storage_buffer_binding(
 ///|
 pub fn Device::get_supported_read_only_binding_type_u32(
   self : Device,
-  required_storage_buffers_per_shader_stage : UInt,
-) -> UInt {
+  required_storage_buffers_per_shader_stage : UInt32,
+) -> UInt32 {
   if self.supports_read_only_storage_buffer_binding(
       required_storage_buffers_per_shader_stage,
     ) {
@@ -517,14 +525,14 @@ pub fn Device::get_supported_read_only_binding_type_u32(
 ///|
 pub fn Device::limits_max_storage_textures_per_shader_stage_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_storage_textures_per_shader_stage_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_uniform_buffers_per_shader_stage_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_uniform_buffers_per_shader_stage_u32(self.raw)
 }
 
@@ -545,19 +553,19 @@ pub fn Device::limits_max_storage_buffer_binding_size_u64(
 ///|
 pub fn Device::limits_min_uniform_buffer_offset_alignment_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_min_uniform_buffer_offset_alignment_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_min_storage_buffer_offset_alignment_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_min_storage_buffer_offset_alignment_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_vertex_buffers_u32(self : Device) -> UInt {
+pub fn Device::limits_max_vertex_buffers_u32(self : Device) -> UInt32 {
   @c.device_limits_max_vertex_buffers_u32(self.raw)
 }
 
@@ -567,91 +575,93 @@ pub fn Device::limits_max_buffer_size_u64(self : Device) -> UInt64 {
 }
 
 ///|
-pub fn Device::limits_max_vertex_attributes_u32(self : Device) -> UInt {
+pub fn Device::limits_max_vertex_attributes_u32(self : Device) -> UInt32 {
   @c.device_limits_max_vertex_attributes_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_vertex_buffer_array_stride_u32(self : Device) -> UInt {
+pub fn Device::limits_max_vertex_buffer_array_stride_u32(
+  self : Device,
+) -> UInt32 {
   @c.device_limits_max_vertex_buffer_array_stride_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_inter_stage_shader_variables_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_inter_stage_shader_variables_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_color_attachments_u32(self : Device) -> UInt {
+pub fn Device::limits_max_color_attachments_u32(self : Device) -> UInt32 {
   @c.device_limits_max_color_attachments_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_color_attachment_bytes_per_sample_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_color_attachment_bytes_per_sample_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_compute_workgroup_storage_size_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_compute_workgroup_storage_size_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_compute_invocations_per_workgroup_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_compute_invocations_per_workgroup_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_compute_workgroup_size_x_u32(self : Device) -> UInt {
+pub fn Device::limits_max_compute_workgroup_size_x_u32(self : Device) -> UInt32 {
   @c.device_limits_max_compute_workgroup_size_x_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_compute_workgroup_size_y_u32(self : Device) -> UInt {
+pub fn Device::limits_max_compute_workgroup_size_y_u32(self : Device) -> UInt32 {
   @c.device_limits_max_compute_workgroup_size_y_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_compute_workgroup_size_z_u32(self : Device) -> UInt {
+pub fn Device::limits_max_compute_workgroup_size_z_u32(self : Device) -> UInt32 {
   @c.device_limits_max_compute_workgroup_size_z_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_compute_workgroups_per_dimension_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_compute_workgroups_per_dimension_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_immediate_size_u32(self : Device) -> UInt {
+pub fn Device::limits_max_immediate_size_u32(self : Device) -> UInt32 {
   @c.device_limits_max_immediate_size_u32(self.raw)
 }
 
 ///|
-pub fn Device::limits_max_non_sampler_bindings_u32(self : Device) -> UInt {
+pub fn Device::limits_max_non_sampler_bindings_u32(self : Device) -> UInt32 {
   @c.device_limits_max_non_sampler_bindings_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_binding_array_elements_per_shader_stage_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_binding_array_elements_per_shader_stage_u32(self.raw)
 }
 
 ///|
 pub fn Device::limits_max_binding_array_sampler_elements_per_shader_stage_u32(
   self : Device,
-) -> UInt {
+) -> UInt32 {
   @c.device_limits_max_binding_array_sampler_elements_per_shader_stage_u32(
     self.raw,
   )
@@ -662,7 +672,7 @@ pub fn Device::create_buffer(
   self : Device,
   size~ : UInt64,
   usage~ : BufferUsage,
-  mapped_at_creation? : Bool = false,
+  mapped_at_creation~ : Bool = false,
 ) -> Buffer {
   {
     raw: @c.device_create_buffer(self.raw, size, usage.raw, mapped_at_creation),
@@ -717,7 +727,7 @@ pub fn Device::create_buffer_init(
 ///|
 pub fn Device::create_query_set_occlusion(
   self : Device,
-  count : UInt,
+  count : UInt32,
 ) -> QuerySet {
   { raw: @c.device_create_query_set_occlusion(self.raw, count), }
 }
@@ -725,7 +735,7 @@ pub fn Device::create_query_set_occlusion(
 ///|
 pub fn Device::create_query_set_timestamp(
   self : Device,
-  count : UInt,
+  count : UInt32,
 ) -> QuerySet {
   { raw: @c.device_create_query_set_timestamp(self.raw, count), }
 }
@@ -733,8 +743,8 @@ pub fn Device::create_query_set_timestamp(
 ///|
 pub fn Device::create_query_set_pipeline_statistics(
   self : Device,
-  count : UInt,
-  statistic_name : UInt,
+  count : UInt32,
+  statistic_name : UInt32,
 ) -> QuerySet {
   {
     raw: @c.device_create_query_set_pipeline_statistics(
@@ -748,9 +758,9 @@ pub fn Device::create_query_set_pipeline_statistics(
 ///|
 pub fn Device::create_query_set_pipeline_statistics_many(
   self : Device,
-  count : UInt,
-  first_statistic_name_u32 : UInt,
-  other_statistic_names_u32 : Array[UInt],
+  count : UInt32,
+  first_statistic_name_u32 : UInt32,
+  other_statistic_names_u32 : Array[UInt32],
 ) -> QuerySet {
   {
     raw: @c.device_create_query_set_pipeline_statistics_many(
@@ -852,8 +862,8 @@ pub fn Device::create_texture_ptr(
 ///|
 pub fn Device::create_texture_rgba8_2d(
   self : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Texture {
   { raw: @c.device_create_texture_rgba8_2d(self.raw, width, height), }
 }
@@ -861,8 +871,8 @@ pub fn Device::create_texture_rgba8_2d(
 ///|
 pub fn Device::create_texture_depth24plus_2d(
   self : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Texture {
   { raw: @c.device_create_texture_depth24plus_2d(self.raw, width, height), }
 }
@@ -870,8 +880,8 @@ pub fn Device::create_texture_depth24plus_2d(
 ///|
 pub fn Device::create_texture_rgba8_2d_with_usage(
   self : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
 ) -> Texture {
   {
@@ -887,10 +897,10 @@ pub fn Device::create_texture_rgba8_2d_with_usage(
 ///|
 pub fn Device::create_texture_rgba8_2d_array(
   self : Device,
-  width : UInt,
-  height : UInt,
-  layers : UInt,
-  mip_level_count : UInt,
+  width : UInt32,
+  height : UInt32,
+  layers : UInt32,
+  mip_level_count : UInt32,
 ) -> Texture {
   self.create_texture_rgba8_2d_array_with_usage(
     width,
@@ -909,10 +919,10 @@ pub fn Device::create_texture_rgba8_2d_array(
 ///|
 pub fn Device::create_texture_rgba8_2d_array_with_usage(
   self : Device,
-  width : UInt,
-  height : UInt,
-  layers : UInt,
-  mip_level_count : UInt,
+  width : UInt32,
+  height : UInt32,
+  layers : UInt32,
+  mip_level_count : UInt32,
   usage : TextureUsage,
 ) -> Texture {
   {
@@ -930,15 +940,15 @@ pub fn Device::create_texture_rgba8_2d_array_with_usage(
 ///|
 pub fn Device::create_texture_u32(
   self : Device,
-  width : UInt,
-  height : UInt,
-  depth_or_array_layers : UInt,
+  width : UInt32,
+  height : UInt32,
+  depth_or_array_layers : UInt32,
   usage : TextureUsage,
   dimension : TextureDimension,
   format : TextureFormat,
-  mip_level_count? : UInt = 1U,
-  sample_count? : UInt = 1U,
-  view_formats? : Array[TextureFormat] = [],
+  mip_level_count~ : UInt32 = 1U,
+  sample_count~ : UInt32 = 1U,
+  view_formats~ : Array[TextureFormat] = [],
 ) -> Texture {
   let count = view_formats.length()
   if count == 0 {
@@ -956,7 +966,7 @@ pub fn Device::create_texture_u32(
       ),
     }
   } else {
-    let raw_view_formats : Ref[Array[UInt]] = @ref.new([])
+    let raw_view_formats : Ref[Array[UInt32]] = Ref([])
     for i = 0; i < count; i = i + 1 {
       raw_view_formats.val.push(view_formats[i].raw)
     }
@@ -1030,11 +1040,11 @@ pub fn Device::create_render_pipeline_color_format_entries(
   self : Device,
   shader_module : ShaderModule,
   format : TextureFormat,
-  vs_entry? : String = "vs_main",
-  fs_entry? : String = "fs_main",
-  alpha_blend? : Bool = false,
-  depth? : Bool = false,
-  color_write_mask? : UInt64 = COLOR_WRITE_MASK_ALL,
+  vs_entry~ : String = "vs_main",
+  fs_entry~ : String = "fs_main",
+  alpha_blend~ : Bool = false,
+  depth~ : Bool = false,
+  color_write_mask~ : UInt64 = COLOR_WRITE_MASK_ALL,
 ) -> RenderPipeline {
   let vs_bytes = utf8_bytes(vs_entry)
   let fs_bytes = utf8_bytes(fs_entry)
@@ -1276,16 +1286,16 @@ pub fn Device::create_sampler_ptr(
 ///|
 pub fn Device::create_sampler_u32(
   self : Device,
-  address_mode_u_u32 : UInt,
-  address_mode_v_u32 : UInt,
-  address_mode_w_u32 : UInt,
-  mag_filter_u32 : UInt,
-  min_filter_u32 : UInt,
-  mipmap_filter_u32 : UInt,
-  lod_min_clamp_f32? : Float = 0.0,
-  lod_max_clamp_f32? : Float = 32.0,
-  compare_u32? : UInt = COMPARE_FUNCTION_UNDEFINED,
-  max_anisotropy_u32? : UInt = 1U,
+  address_mode_u_u32 : UInt32,
+  address_mode_v_u32 : UInt32,
+  address_mode_w_u32 : UInt32,
+  mag_filter_u32 : UInt32,
+  min_filter_u32 : UInt32,
+  mipmap_filter_u32 : UInt32,
+  lod_min_clamp_f32~ : Float = 0.0,
+  lod_max_clamp_f32~ : Float = 32.0,
+  compare_u32~ : UInt32 = COMPARE_FUNCTION_UNDEFINED,
+  max_anisotropy_u32~ : UInt32 = 1U,
 ) -> Sampler {
   {
     raw: @c.device_create_sampler_u32(
@@ -1418,8 +1428,8 @@ pub fn Device::create_pipeline_layout_many(
 pub fn Device::create_pipeline_layout_immediates(
   self : Device,
   stages : ShaderStage,
-  start : UInt,
-  end : UInt,
+  start : UInt32,
+  end : UInt32,
 ) -> PipelineLayout {
   {
     raw: @c.device_create_pipeline_layout_immediates(
@@ -1435,11 +1445,11 @@ pub fn Device::create_pipeline_layout_immediates(
 pub fn Device::create_pipeline_layout_immediates_many(
   self : Device,
   first_stages : ShaderStage,
-  first_start : UInt,
-  first_end : UInt,
-  other_ranges : Array[(ShaderStage, UInt, UInt)],
+  first_start : UInt32,
+  first_end : UInt32,
+  other_ranges : Array[(ShaderStage, UInt32, UInt32)],
 ) -> PipelineLayout {
-  let other_raw_ranges : Array[(UInt64, UInt, UInt)] = []
+  let other_raw_ranges : Array[(UInt64, UInt32, UInt32)] = []
   for i = 0; i < other_ranges.length(); i = i + 1 {
     let (stages, start, end) = other_ranges[i]
     other_raw_ranges.push((stages.raw, start, end))
@@ -1459,12 +1469,12 @@ pub fn Device::create_pipeline_layout_immediates_many(
 pub fn Device::create_pipeline_layout_with_immediates(
   self : Device,
   bind_group_layouts : Array[BindGroupLayout],
-  ranges : Array[(ShaderStage, UInt, UInt)],
+  ranges : Array[(ShaderStage, UInt32, UInt32)],
 ) -> PipelineLayout {
   let raw_layouts : Array[@c.BindGroupLayout] = bind_group_layouts.map(l => {
     l.raw
   })
-  let raw_ranges : Array[(UInt64, UInt, UInt)] = []
+  let raw_ranges : Array[(UInt64, UInt32, UInt32)] = []
   for i = 0; i < ranges.length(); i = i + 1 {
     let (stages, start, end) = ranges[i]
     raw_ranges.push((stages.raw, start, end))
@@ -1548,12 +1558,12 @@ pub fn Device::set_label(self : Device, label : String) -> Unit {
 }
 
 ///|
-pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool {
+pub fn Device::poll(self : Device, wait~ : Bool = false) -> Bool {
   @c.device_poll(self.raw, wait, @c.null_submission_index_ptr())
 }
 
 ///|
-pub fn Device::take_lost_reason(self : Device) -> UInt {
+pub fn Device::take_lost_reason(self : Device) -> UInt32 {
   @c.device_take_lost_reason_u32(self.raw)
 }
 
@@ -1561,7 +1571,7 @@ pub fn Device::take_lost_reason(self : Device) -> UInt {
 pub fn Device::wait_lost_reason_sync(
   self : Device,
   instance : Instance,
-) -> UInt {
+) -> UInt32 {
   @c.device_wait_lost_reason_sync_u32(instance.raw, self.raw)
 }
 

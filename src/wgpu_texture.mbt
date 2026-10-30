@@ -29,12 +29,12 @@ pub fn Texture::create_view_ptr(
 pub fn Texture::create_view_u32(
   self : Texture,
   format : TextureFormat,
-  view_dimension_u32 : UInt,
-  aspect_u32 : UInt,
-  base_array_layer : UInt,
-  array_layer_count : UInt,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  view_dimension_u32 : UInt32,
+  aspect_u32 : UInt32,
+  base_array_layer : UInt32,
+  array_layer_count : UInt32,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> TextureView {
   {
     raw: @c.texture_create_view_u32(
@@ -53,8 +53,8 @@ pub fn Texture::create_view_u32(
 ///|
 pub fn Texture::create_view_2d(
   self : Texture,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> TextureView {
   { raw: @c.texture_create_view_2d(self.raw, base_mip_level, mip_level_count), }
 }
@@ -62,10 +62,10 @@ pub fn Texture::create_view_2d(
 ///|
 pub fn Texture::create_view_2d_array(
   self : Texture,
-  base_array_layer : UInt,
-  array_layer_count : UInt,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  base_array_layer : UInt32,
+  array_layer_count : UInt32,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> TextureView {
   {
     raw: @c.texture_create_view_2d_array(
@@ -79,27 +79,27 @@ pub fn Texture::create_view_2d_array(
 }
 
 ///|
-pub fn Texture::width_u32(self : Texture) -> UInt {
+pub fn Texture::width_u32(self : Texture) -> UInt32 {
   @c.texture_get_width_u32(self.raw)
 }
 
 ///|
-pub fn Texture::height_u32(self : Texture) -> UInt {
+pub fn Texture::height_u32(self : Texture) -> UInt32 {
   @c.texture_get_height_u32(self.raw)
 }
 
 ///|
-pub fn Texture::depth_or_array_layers_u32(self : Texture) -> UInt {
+pub fn Texture::depth_or_array_layers_u32(self : Texture) -> UInt32 {
   @c.texture_get_depth_or_array_layers_u32(self.raw)
 }
 
 ///|
-pub fn Texture::mip_level_count_u32(self : Texture) -> UInt {
+pub fn Texture::mip_level_count_u32(self : Texture) -> UInt32 {
   @c.texture_get_mip_level_count_u32(self.raw)
 }
 
 ///|
-pub fn Texture::sample_count_u32(self : Texture) -> UInt {
+pub fn Texture::sample_count_u32(self : Texture) -> UInt32 {
   @c.texture_get_sample_count_u32(self.raw)
 }
 

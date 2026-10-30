@@ -14,23 +14,23 @@
 
 ///|
 fn draw_indirect_args_bytes(
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Bytes {
-  u32le_pack([vertex_count, instance_count, first_vertex, first_instance])
+  @tests.u32le_pack([vertex_count, instance_count, first_vertex, first_instance])
 }
 
 ///|
 fn draw_indexed_indirect_args_bytes(
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex_u32 : UInt,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex_u32 : UInt32,
+  first_instance : UInt32,
 ) -> Bytes {
-  u32le_pack([
+  @tests.u32le_pack([
     index_count, instance_count, first_index, base_vertex_u32, first_instance,
   ])
 }
@@ -96,24 +96,24 @@ test "wgpu generated handles: render bundle indirect raw paths render pixels" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let vb = device.create_buffer(
     size=24UL,
-    usage=bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
   )
-  queue.write_buffer(vb, 0UL, vertices_pos2_bytes())
+  queue.write_buffer(vb, 0UL, @tests.vertices_pos2_bytes())
   let ib = device.create_buffer(
     size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_INDEX | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_INDEX | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   queue.write_buffer(ib, 0UL, idx_u16_indices())
   let indirect = device.create_buffer_init(
-    usage=bu(@wgpu.BUFFER_USAGE_INDIRECT),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_INDIRECT),
     draw_indirect_args_bytes(3U, 1U, 0U, 0U),
   )
   let indexed_indirect = device.create_buffer_init(
-    usage=bu(@wgpu.BUFFER_USAGE_INDIRECT),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_INDIRECT),
     draw_indexed_indirect_args_bytes(3U, 1U, 0U, 0U, 0U),
   )
   let sm = device.create_shader_module_wgsl(render_pos2_green_wgsl())
@@ -169,20 +169,20 @@ test "wgpu generated handles: render pass indexed indirect raw plus stencil refe
   let depth_view = depth_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let vb = device.create_buffer(
     size=24UL,
-    usage=bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
   )
-  queue.write_buffer(vb, 0UL, vertices_pos2_bytes())
+  queue.write_buffer(vb, 0UL, @tests.vertices_pos2_bytes())
   let ib = device.create_buffer(
     size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_INDEX | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_INDEX | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   queue.write_buffer(ib, 0UL, idx_u16_indices())
   let indexed_indirect = device.create_buffer_init(
-    usage=bu(@wgpu.BUFFER_USAGE_INDIRECT),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_INDIRECT),
     draw_indexed_indirect_args_bytes(3U, 1U, 0U, 0U, 0U),
   )
   let sm = device.create_shader_module_wgsl(render_pos2_green_wgsl())
@@ -251,7 +251,7 @@ test "wgpu generated handles: render pass multi draw indexed and count raw paths
     let qs = device.create_query_set_occlusion(3U)
     let resolve = device.create_buffer(
       size=24UL,
-      usage=bu(
+      usage=@tests.bu(
         @wgpu.BUFFER_USAGE_COPY_SRC |
         @wgpu.BUFFER_USAGE_COPY_DST |
         @wgpu.BUFFER_USAGE_QUERY_RESOLVE,
@@ -259,29 +259,29 @@ test "wgpu generated handles: render pass multi draw indexed and count raw paths
     )
     let readback = device.create_buffer(
       size=24UL,
-      usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+      usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
     )
     let vb = device.create_buffer(
       size=24UL,
-      usage=bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
+      usage=@tests.bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
     )
-    queue.write_buffer(vb, 0UL, vertices_pos2_bytes())
+    queue.write_buffer(vb, 0UL, @tests.vertices_pos2_bytes())
     let ib = device.create_buffer(
       size=8UL,
-      usage=bu(@wgpu.BUFFER_USAGE_INDEX | @wgpu.BUFFER_USAGE_COPY_DST),
+      usage=@tests.bu(@wgpu.BUFFER_USAGE_INDEX | @wgpu.BUFFER_USAGE_COPY_DST),
     )
     queue.write_buffer(ib, 0UL, idx_u16_indices())
     let indirect = device.create_buffer_init(
-      usage=bu(@wgpu.BUFFER_USAGE_INDIRECT),
-      u32le_pack([3U, 1U, 0U, 0U, 3U, 1U, 0U, 0U]),
+      usage=@tests.bu(@wgpu.BUFFER_USAGE_INDIRECT),
+      @tests.u32le_pack([3U, 1U, 0U, 0U, 3U, 1U, 0U, 0U]),
     )
     let indexed_indirect = device.create_buffer_init(
-      usage=bu(@wgpu.BUFFER_USAGE_INDIRECT),
-      u32le_pack([3U, 1U, 0U, 0U, 0U, 3U, 1U, 0U, 0U, 0U]),
+      usage=@tests.bu(@wgpu.BUFFER_USAGE_INDIRECT),
+      @tests.u32le_pack([3U, 1U, 0U, 0U, 0U, 3U, 1U, 0U, 0U, 0U]),
     )
     let count = device.create_buffer_init(
-      usage=bu(@wgpu.BUFFER_USAGE_INDIRECT),
-      u32le_pack([2U]),
+      usage=@tests.bu(@wgpu.BUFFER_USAGE_INDIRECT),
+      @tests.u32le_pack([2U]),
     )
     let sm = device.create_shader_module_wgsl(render_pos2_green_wgsl())
     let pipeline = device.create_render_pipeline_rgba8_pos2(sm)
@@ -325,9 +325,9 @@ test "wgpu generated handles: render pass multi draw indexed and count raw paths
     let out = readback.readback(instance, 0UL, 24UL)
     @debug.debug_inspect(
       [
-        u64le_at(out, 0) >= 2UL,
-        u64le_at(out, 8) >= 2UL,
-        u64le_at(out, 16) >= 2UL,
+        @tests.u64le_at(out, 0) >= 2UL,
+        @tests.u64le_at(out, 8) >= 2UL,
+        @tests.u64le_at(out, 16) >= 2UL,
       ],
       content="[true, true, true]",
     )

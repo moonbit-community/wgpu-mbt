@@ -31,7 +31,7 @@ pub fn ShaderModule::get_compilation_info_sync(
   } else {
     let status_u32 = @c.compilation_info_status_u32(info)
     let count_u32 = @c.compilation_info_message_count_u32(info)
-    let messages : Ref[Array[CompilationMessage]] = @ref.new([])
+    let messages : Ref[Array[CompilationMessage]] = Ref([])
     for i = 0; i < count_u32.reinterpret_as_int(); i = i + 1 {
       let idx = i.reinterpret_as_uint()
       let text_len = @c.compilation_info_message_utf8_len(info, idx)
@@ -115,7 +115,7 @@ pub fn ShaderModule::get_compilation_info_sync_or_raise(
   }
   let status_u32 = @c.compilation_info_status_u32(info)
   let count_u32 = @c.compilation_info_message_count_u32(info)
-  let messages : Ref[Array[CompilationMessage]] = @ref.new([])
+  let messages : Ref[Array[CompilationMessage]] = Ref([])
   for i = 0; i < count_u32.reinterpret_as_int(); i = i + 1 {
     let idx = i.reinterpret_as_uint()
     let text_len = @c.compilation_info_message_utf8_len(info, idx)

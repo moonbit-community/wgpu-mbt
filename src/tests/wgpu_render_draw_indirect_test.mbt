@@ -21,10 +21,16 @@ test "wgpu render: draw_indirect" {
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let indirect_usage = @wgpu.BUFFER_USAGE_INDIRECT | @wgpu.BUFFER_USAGE_COPY_DST
-  let indirect = device.create_buffer(size=16UL, usage=bu(indirect_usage))
-  let args = u32le_pack([3U, 1U, 0U, 0U])
+  let indirect = device.create_buffer(
+    size=16UL,
+    usage=@tests.bu(indirect_usage),
+  )
+  let args = @tests.u32le_pack([3U, 1U, 0U, 0U])
   queue.write_buffer(indirect, 0UL, args)
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -58,7 +64,7 @@ test "wgpu render: draw_indirect" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  let rgba : Array[UInt] = [
+  let rgba : Array[UInt32] = [
     out[0].to_uint(),
     out[1].to_uint(),
     out[2].to_uint(),

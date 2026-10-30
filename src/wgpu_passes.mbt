@@ -104,8 +104,8 @@ pub fn CommandEncoder::copy_texture_to_buffer_rgba8(
   self : CommandEncoder,
   texture : Texture,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   @c.command_encoder_copy_texture_to_buffer_rgba8(
     self.raw,
@@ -120,11 +120,11 @@ pub fn CommandEncoder::copy_texture_to_buffer_rgba8(
 pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(
   self : CommandEncoder,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   @c.command_encoder_copy_texture_to_buffer_rgba8_mip_layer(
     self.raw,
@@ -142,9 +142,9 @@ pub fn CommandEncoder::copy_texture_to_buffer_bytes_per_pixel(
   self : CommandEncoder,
   texture : Texture,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
-  bytes_per_pixel : UInt,
+  width : UInt32,
+  height : UInt32,
+  bytes_per_pixel : UInt32,
 ) -> Unit {
   @c.command_encoder_copy_texture_to_buffer_bytes_per_pixel(
     self.raw,
@@ -160,12 +160,12 @@ pub fn CommandEncoder::copy_texture_to_buffer_bytes_per_pixel(
 pub fn CommandEncoder::copy_texture_to_buffer_bytes_per_pixel_mip_layer(
   self : CommandEncoder,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
-  bytes_per_pixel : UInt,
+  width : UInt32,
+  height : UInt32,
+  bytes_per_pixel : UInt32,
 ) -> Unit {
   @c.command_encoder_copy_texture_to_buffer_bytes_per_pixel_mip_layer(
     self.raw,
@@ -184,8 +184,8 @@ pub fn CommandEncoder::copy_buffer_to_texture_rgba8(
   self : CommandEncoder,
   buffer : Buffer,
   texture : Texture,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   @c.command_encoder_copy_buffer_to_texture_rgba8(
     self.raw,
@@ -201,10 +201,10 @@ pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(
   self : CommandEncoder,
   buffer : Buffer,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
-  width : UInt,
-  height : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   @c.command_encoder_copy_buffer_to_texture_rgba8_mip_layer(
     self.raw,
@@ -222,8 +222,8 @@ pub fn CommandEncoder::copy_texture_to_texture_rgba8(
   self : CommandEncoder,
   src : Texture,
   dst : Texture,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   @c.command_encoder_copy_texture_to_texture_rgba8(
     self.raw,
@@ -238,13 +238,13 @@ pub fn CommandEncoder::copy_texture_to_texture_rgba8(
 pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(
   self : CommandEncoder,
   src : Texture,
-  src_mip_level : UInt,
-  src_array_layer : UInt,
+  src_mip_level : UInt32,
+  src_array_layer : UInt32,
   dst : Texture,
-  dst_mip_level : UInt,
-  dst_array_layer : UInt,
-  width : UInt,
-  height : UInt,
+  dst_mip_level : UInt32,
+  dst_array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   @c.command_encoder_copy_texture_to_texture_rgba8_mip_layer(
     self.raw,
@@ -263,8 +263,8 @@ pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(
 pub fn CommandEncoder::resolve_query_set(
   self : CommandEncoder,
   query_set : QuerySet,
-  first_query : UInt,
-  query_count : UInt,
+  first_query : UInt32,
+  query_count : UInt32,
   destination : Buffer,
   destination_offset : UInt64,
 ) -> Unit {
@@ -282,7 +282,7 @@ pub fn CommandEncoder::resolve_query_set(
 pub fn CommandEncoder::write_timestamp(
   self : CommandEncoder,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.command_encoder_write_timestamp(self.raw, query_set.raw, query_index)
 }
@@ -391,26 +391,26 @@ pub fn CommandEncoder::begin_render_pass_color2_depth_u32(
   color0_view : TextureView,
   color1_view : TextureView,
   depth_view : TextureView,
-  color0_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  color0_store_op_u32? : UInt = STORE_OP_STORE,
-  color0_clear_r_f32? : Float = 0.0,
-  color0_clear_g_f32? : Float = 0.0,
-  color0_clear_b_f32? : Float = 0.0,
-  color0_clear_a_f32? : Float = 1.0,
-  color1_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  color1_store_op_u32? : UInt = STORE_OP_STORE,
-  color1_clear_r_f32? : Float = 0.0,
-  color1_clear_g_f32? : Float = 0.0,
-  color1_clear_b_f32? : Float = 0.0,
-  color1_clear_a_f32? : Float = 1.0,
-  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  depth_store_op_u32? : UInt = STORE_OP_STORE,
-  depth_clear_value_f32? : Float = 1.0,
-  depth_read_only? : Bool = false,
-  stencil_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  stencil_store_op_u32? : UInt = STORE_OP_STORE,
-  stencil_clear_value_u32? : UInt = 0U,
-  stencil_read_only? : Bool = true,
+  color0_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  color0_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  color0_clear_r_f32~ : Float = 0.0,
+  color0_clear_g_f32~ : Float = 0.0,
+  color0_clear_b_f32~ : Float = 0.0,
+  color0_clear_a_f32~ : Float = 1.0,
+  color1_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  color1_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  color1_clear_r_f32~ : Float = 0.0,
+  color1_clear_g_f32~ : Float = 0.0,
+  color1_clear_b_f32~ : Float = 0.0,
+  color1_clear_a_f32~ : Float = 1.0,
+  depth_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  depth_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  depth_clear_value_f32~ : Float = 1.0,
+  depth_read_only~ : Bool = false,
+  stencil_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  stencil_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  stencil_clear_value_u32~ : UInt32 = 0U,
+  stencil_read_only~ : Bool = true,
 ) -> RenderPass {
   {
     raw: @c.command_encoder_begin_render_pass_color2_depth_u32(
@@ -448,26 +448,26 @@ pub fn CommandEncoder::begin_render_pass_color2_depth_sparse_u32(
   color0_view : TextureView,
   color1_view : TextureView,
   depth_view : TextureView,
-  color0_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  color0_store_op_u32? : UInt = STORE_OP_STORE,
-  color0_clear_r_f32? : Float = 0.0,
-  color0_clear_g_f32? : Float = 0.0,
-  color0_clear_b_f32? : Float = 0.0,
-  color0_clear_a_f32? : Float = 1.0,
-  color1_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  color1_store_op_u32? : UInt = STORE_OP_STORE,
-  color1_clear_r_f32? : Float = 0.0,
-  color1_clear_g_f32? : Float = 0.0,
-  color1_clear_b_f32? : Float = 0.0,
-  color1_clear_a_f32? : Float = 1.0,
-  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  depth_store_op_u32? : UInt = STORE_OP_STORE,
-  depth_clear_value_f32? : Float = 1.0,
-  depth_read_only? : Bool = false,
-  stencil_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  stencil_store_op_u32? : UInt = STORE_OP_STORE,
-  stencil_clear_value_u32? : UInt = 0U,
-  stencil_read_only? : Bool = true,
+  color0_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  color0_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  color0_clear_r_f32~ : Float = 0.0,
+  color0_clear_g_f32~ : Float = 0.0,
+  color0_clear_b_f32~ : Float = 0.0,
+  color0_clear_a_f32~ : Float = 1.0,
+  color1_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  color1_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  color1_clear_r_f32~ : Float = 0.0,
+  color1_clear_g_f32~ : Float = 0.0,
+  color1_clear_b_f32~ : Float = 0.0,
+  color1_clear_a_f32~ : Float = 1.0,
+  depth_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  depth_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  depth_clear_value_f32~ : Float = 1.0,
+  depth_read_only~ : Bool = false,
+  stencil_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  stencil_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  stencil_clear_value_u32~ : UInt32 = 0U,
+  stencil_read_only~ : Bool = true,
 ) -> RenderPass {
   {
     raw: @c.command_encoder_begin_render_pass_color2_depth_sparse_u32(
@@ -504,20 +504,20 @@ pub fn CommandEncoder::begin_render_pass_color1_depth_u32(
   self : CommandEncoder,
   color1_view : TextureView,
   depth_view : TextureView,
-  color1_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  color1_store_op_u32? : UInt = STORE_OP_STORE,
-  color1_clear_r_f32? : Float = 0.0,
-  color1_clear_g_f32? : Float = 0.0,
-  color1_clear_b_f32? : Float = 0.0,
-  color1_clear_a_f32? : Float = 1.0,
-  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  depth_store_op_u32? : UInt = STORE_OP_STORE,
-  depth_clear_value_f32? : Float = 1.0,
-  depth_read_only? : Bool = false,
-  stencil_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  stencil_store_op_u32? : UInt = STORE_OP_STORE,
-  stencil_clear_value_u32? : UInt = 0U,
-  stencil_read_only? : Bool = true,
+  color1_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  color1_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  color1_clear_r_f32~ : Float = 0.0,
+  color1_clear_g_f32~ : Float = 0.0,
+  color1_clear_b_f32~ : Float = 0.0,
+  color1_clear_a_f32~ : Float = 1.0,
+  depth_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  depth_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  depth_clear_value_f32~ : Float = 1.0,
+  depth_read_only~ : Bool = false,
+  stencil_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  stencil_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  stencil_clear_value_u32~ : UInt32 = 0U,
+  stencil_read_only~ : Bool = true,
 ) -> RenderPass {
   self.begin_render_pass_color2_depth_sparse_u32(
     TextureView::null(),
@@ -552,14 +552,14 @@ pub fn CommandEncoder::begin_render_pass_depth(
 pub fn CommandEncoder::begin_render_pass_depth_u32(
   self : CommandEncoder,
   depth_view : TextureView,
-  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  depth_store_op_u32? : UInt = STORE_OP_STORE,
-  depth_clear_value_f32? : Float = 1.0,
-  depth_read_only? : Bool = false,
-  stencil_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  stencil_store_op_u32? : UInt = STORE_OP_STORE,
-  stencil_clear_value_u32? : UInt = 0U,
-  stencil_read_only? : Bool = true,
+  depth_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  depth_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  depth_clear_value_f32~ : Float = 1.0,
+  depth_read_only~ : Bool = false,
+  stencil_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  stencil_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  stencil_clear_value_u32~ : UInt32 = 0U,
+  stencil_read_only~ : Bool = true,
 ) -> RenderPass {
   {
     raw: @c.command_encoder_begin_render_pass_depth_u32(
@@ -635,20 +635,20 @@ pub fn CommandEncoder::begin_render_pass_color_depth_u32(
   self : CommandEncoder,
   color_view : TextureView,
   depth_view : TextureView,
-  color_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  color_store_op_u32? : UInt = STORE_OP_STORE,
-  color_clear_r_f32? : Float = 0.0,
-  color_clear_g_f32? : Float = 0.0,
-  color_clear_b_f32? : Float = 0.0,
-  color_clear_a_f32? : Float = 1.0,
-  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  depth_store_op_u32? : UInt = STORE_OP_STORE,
-  depth_clear_value_f32? : Float = 1.0,
-  depth_read_only? : Bool = false,
-  stencil_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  stencil_store_op_u32? : UInt = STORE_OP_STORE,
-  stencil_clear_value_u32? : UInt = 0U,
-  stencil_read_only? : Bool = true,
+  color_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  color_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  color_clear_r_f32~ : Float = 0.0,
+  color_clear_g_f32~ : Float = 0.0,
+  color_clear_b_f32~ : Float = 0.0,
+  color_clear_a_f32~ : Float = 1.0,
+  depth_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  depth_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  depth_clear_value_f32~ : Float = 1.0,
+  depth_read_only~ : Bool = false,
+  stencil_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  stencil_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  stencil_clear_value_u32~ : UInt32 = 0U,
+  stencil_read_only~ : Bool = true,
 ) -> RenderPass {
   {
     raw: @c.command_encoder_begin_render_pass_color_depth_u32(
@@ -684,7 +684,7 @@ pub fn ComputePass::set_pipeline(
 ///|
 pub fn ComputePass::set_immediates(
   self : ComputePass,
-  offset : UInt,
+  offset : UInt32,
   data : Bytes,
 ) -> Unit {
   @c.compute_pass_set_immediates_bytes(
@@ -698,9 +698,9 @@ pub fn ComputePass::set_immediates(
 ///|
 pub fn ComputePass::dispatch_workgroups(
   self : ComputePass,
-  x : UInt,
-  y : UInt,
-  z : UInt,
+  x : UInt32,
+  y : UInt32,
+  z : UInt32,
 ) -> Unit {
   @c.compute_pass_dispatch_workgroups(self.raw, x, y, z)
 }
@@ -722,7 +722,7 @@ pub fn ComputePass::dispatch_workgroups_indirect(
 pub fn ComputePass::write_timestamp(
   self : ComputePass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.compute_pass_write_timestamp(self.raw, query_set.raw, query_index)
 }
@@ -731,7 +731,7 @@ pub fn ComputePass::write_timestamp(
 pub fn ComputePass::begin_pipeline_statistics_query(
   self : ComputePass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.compute_pass_begin_pipeline_statistics_query(
     self.raw,
@@ -756,9 +756,9 @@ pub fn ComputePass::set_bind_group0(
 ///|
 pub fn ComputePass::set_bind_group(
   self : ComputePass,
-  index : UInt,
+  index : UInt32,
   group : BindGroup,
-  dynamic_offsets : Array[UInt],
+  dynamic_offsets : Array[UInt32],
 ) -> Unit {
   @c.compute_pass_set_bind_group(self.raw, index, group.raw, dynamic_offsets)
 }
@@ -822,7 +822,7 @@ pub fn RenderPass::set_pipeline(
 pub fn RenderPass::set_immediates(
   self : RenderPass,
   stages : ShaderStage,
-  offset : UInt,
+  offset : UInt32,
   data : Bytes,
 ) -> Unit {
   @c.render_pass_set_immediates_bytes(
@@ -854,9 +854,9 @@ pub fn RenderPass::set_bind_group0(
 ///|
 pub fn RenderPass::set_bind_group(
   self : RenderPass,
-  index : UInt,
+  index : UInt32,
   group : BindGroup,
-  dynamic_offsets : Array[UInt],
+  dynamic_offsets : Array[UInt32],
 ) -> Unit {
   @c.render_pass_set_bind_group(self.raw, index, group.raw, dynamic_offsets)
 }
@@ -864,7 +864,7 @@ pub fn RenderPass::set_bind_group(
 ///|
 pub fn RenderPass::set_vertex_buffer(
   self : RenderPass,
-  slot : UInt,
+  slot : UInt32,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
@@ -896,10 +896,10 @@ pub fn RenderPass::set_viewport(
 ///|
 pub fn RenderPass::set_scissor_rect(
   self : RenderPass,
-  x : UInt,
-  y : UInt,
-  width : UInt,
-  height : UInt,
+  x : UInt32,
+  y : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit {
   @c.render_pass_set_scissor_rect(self.raw, x, y, width, height)
 }
@@ -927,10 +927,10 @@ pub fn RenderPass::set_index_buffer_u32(
 ///|
 pub fn RenderPass::draw(
   self : RenderPass,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit {
   @c.render_pass_draw(
     self.raw,
@@ -944,11 +944,11 @@ pub fn RenderPass::draw(
 ///|
 pub fn RenderPass::draw_indexed(
   self : RenderPass,
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex : Int,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex : Int32,
+  first_instance : UInt32,
 ) -> Unit {
   @c.render_pass_draw_indexed(
     self.raw,
@@ -987,7 +987,7 @@ pub fn RenderPass::multi_draw_indirect(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit {
   @c.render_pass_multi_draw_indirect(
     self.raw,
@@ -1002,7 +1002,7 @@ pub fn RenderPass::multi_draw_indexed_indirect(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit {
   @c.render_pass_multi_draw_indexed_indirect(
     self.raw,
@@ -1019,7 +1019,7 @@ pub fn RenderPass::multi_draw_indirect_count(
   indirect_offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit {
   @c.render_pass_multi_draw_indirect_count(
     self.raw,
@@ -1038,7 +1038,7 @@ pub fn RenderPass::multi_draw_indexed_indirect_count(
   indirect_offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit {
   @c.render_pass_multi_draw_indexed_indirect_count(
     self.raw,
@@ -1053,7 +1053,7 @@ pub fn RenderPass::multi_draw_indexed_indirect_count(
 ///|
 pub fn RenderPass::begin_occlusion_query(
   self : RenderPass,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.render_pass_begin_occlusion_query(self.raw, query_index)
 }
@@ -1062,7 +1062,7 @@ pub fn RenderPass::begin_occlusion_query(
 pub fn RenderPass::write_timestamp(
   self : RenderPass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.render_pass_write_timestamp(self.raw, query_set.raw, query_index)
 }
@@ -1071,7 +1071,7 @@ pub fn RenderPass::write_timestamp(
 pub fn RenderPass::begin_pipeline_statistics_query(
   self : RenderPass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit {
   @c.render_pass_begin_pipeline_statistics_query(
     self.raw,
@@ -1093,7 +1093,7 @@ pub fn RenderPass::end_occlusion_query(self : RenderPass) -> Unit {
 ///|
 pub fn RenderPass::set_stencil_reference(
   self : RenderPass,
-  reference : UInt,
+  reference : UInt32,
 ) -> Unit {
   @c.render_pass_set_stencil_reference(self.raw, reference)
 }
@@ -1175,7 +1175,7 @@ pub fn RenderBundleEncoder::set_pipeline(
 pub fn RenderBundleEncoder::set_immediates(
   self : RenderBundleEncoder,
   stages : ShaderStage,
-  offset : UInt,
+  offset : UInt32,
   data : Bytes,
 ) -> Unit {
   @c.render_bundle_encoder_set_immediates_bytes(
@@ -1190,10 +1190,10 @@ pub fn RenderBundleEncoder::set_immediates(
 ///|
 pub fn RenderBundleEncoder::draw(
   self : RenderBundleEncoder,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit {
   @c.render_bundle_encoder_draw(
     self.raw,
@@ -1207,11 +1207,11 @@ pub fn RenderBundleEncoder::draw(
 ///|
 pub fn RenderBundleEncoder::draw_indexed(
   self : RenderBundleEncoder,
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex : Int,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex : Int32,
+  first_instance : UInt32,
 ) -> Unit {
   @c.wgpuRenderBundleEncoderDrawIndexed(
     self.raw,
@@ -1260,9 +1260,9 @@ pub fn RenderBundleEncoder::set_bind_group0(
 ///|
 pub fn RenderBundleEncoder::set_bind_group(
   self : RenderBundleEncoder,
-  index : UInt,
+  index : UInt32,
   group : BindGroup,
-  dynamic_offsets : Array[UInt],
+  dynamic_offsets : Array[UInt32],
 ) -> Unit {
   @c.render_bundle_encoder_set_bind_group(
     self.raw,
@@ -1275,7 +1275,7 @@ pub fn RenderBundleEncoder::set_bind_group(
 ///|
 pub fn RenderBundleEncoder::set_vertex_buffer(
   self : RenderBundleEncoder,
-  slot : UInt,
+  slot : UInt32,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,

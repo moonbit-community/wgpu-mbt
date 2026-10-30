@@ -143,7 +143,7 @@ test "wgpu custom Metal host release detaches raw-attached layer" {
 ///|
 test "wgpu surface macOS NSView path rejects null view" {
   let instance = @wgpu.Instance::create()
-  let msg : Ref[String] = @ref.new("")
+  let msg : Ref[String] = Ref("")
   try {
     let surface = instance.create_surface_macos_ns_view_u64(0UL)
     surface.release()
@@ -186,7 +186,7 @@ test "wgpu surface macOS NSWindow contentView path" {
   )
   let format = surface.configure_default(adapter, device, 64U, 64U, usage)
   inspect(format.raw == 0U, content="false")
-  let acquired : Ref[Bool] = @ref.new(false)
+  let acquired : Ref[Bool] = Ref(false)
   for _ in 0..<12 {
     if !acquired.val {
       @wgpu_c.macos_test_pump_events(2U)

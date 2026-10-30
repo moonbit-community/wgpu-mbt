@@ -23,7 +23,7 @@ test "surface frame helpers: null surface raises" {
     owner_display_handle: None,
   }
   let st = surface.get_current_texture()
-  let raised_take : Ref[Bool] = @ref.new(false)
+  let raised_take : Ref[Bool] = Ref(false)
   try {
     let _ = st.take_texture_or_raise()
     ()
@@ -32,7 +32,7 @@ test "surface frame helpers: null surface raises" {
   }
   st.release()
   inspect(raised_take.val, content="true")
-  let raised_frame : Ref[Bool] = @ref.new(false)
+  let raised_frame : Ref[Bool] = Ref(false)
   try {
     let _ = surface.get_current_frame_or_raise()
     ()

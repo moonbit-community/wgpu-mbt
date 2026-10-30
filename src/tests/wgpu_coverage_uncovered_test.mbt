@@ -14,11 +14,11 @@
 
 ///|
 fn rgba_prefix_bytes(
-  total : Int,
-  r : UInt,
-  g : UInt,
-  b : UInt,
-  a : UInt,
+  total : Int32,
+  r : UInt32,
+  g : UInt32,
+  b : UInt32,
+  a : UInt32,
 ) -> Bytes {
   Bytes::makei(total, i => {
     if i == 0 {
@@ -97,7 +97,10 @@ test "coverage: compute pass set_bind_group empty offsets" {
   let storage_usage = @wgpu.BUFFER_USAGE_STORAGE |
     @wgpu.BUFFER_USAGE_COPY_SRC |
     @wgpu.BUFFER_USAGE_COPY_DST
-  let storage_buf = device.create_buffer(size=4UL, usage=bu(storage_usage))
+  let storage_buf = device.create_buffer(
+    size=4UL,
+    usage=@tests.bu(storage_usage),
+  )
   let bgl = device.create_bind_group_layout_storage_buffer()
   let pl = device.create_pipeline_layout_1(bgl)
   let bg = device.create_bind_group_storage_buffer(bgl, storage_buf)
@@ -138,7 +141,7 @@ test "coverage: compute pass set_bind_group dynamic offsets" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let ub_usage = @wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST
-  let ub = device.create_buffer(size=256UL, usage=bu(ub_usage))
+  let ub = device.create_buffer(size=256UL, usage=@tests.bu(ub_usage))
   let bgl = device.create_bind_group_layout_uniform_buffer_dynamic()
   let bg = device.create_bind_group_uniform_buffer(bgl, ub)
   let encoder = device.create_command_encoder()
@@ -167,7 +170,7 @@ test "coverage: copy buffer->texture (bytesPerRow aligned) + copy texture->textu
   let queue = device.queue()
   let upload_usage = @wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST
   // 64 * 4 = 256, so bytesPerRow is already aligned (covers align_up_u32 rem==0).
-  let upload = device.create_buffer(size=256UL, usage=bu(upload_usage))
+  let upload = device.create_buffer(size=256UL, usage=@tests.bu(upload_usage))
   queue.write_buffer(upload, 0UL, rgba_prefix_bytes(256, 0U, 255U, 0U, 255U))
   let usage = @wgpu.TextureUsage::from_u64(
     @wgpu.TEXTURE_USAGE_COPY_DST | @wgpu.TEXTURE_USAGE_COPY_SRC,
@@ -176,7 +179,7 @@ test "coverage: copy buffer->texture (bytesPerRow aligned) + copy texture->textu
   let dst_tex = device.create_texture_rgba8_2d_with_usage(64U, 1U, usage)
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   encoder.copy_buffer_to_texture_rgba8_mip_layer(
@@ -210,7 +213,9 @@ test "coverage: buffer map bounds checks" {
   let instance = @wgpu.Instance::create()
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
-  let usage = bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_MAP_WRITE)
+  let usage = @tests.bu(
+    @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_MAP_WRITE,
+  )
   let buf = device.create_buffer(size=6UL, usage~)
   // offset+size > buf_size
   let a = buf.map_read_sync(instance, 8UL, 4UL)
@@ -219,8 +224,8 @@ test "coverage: buffer map bounds checks" {
   let b = buf.map_read_sync(instance, 2UL, 4UL)
   inspect(b.length(), content="0")
   // map write: out-of-range and alignment overflow should be no-ops.
-  buf.map_write_sync(instance, 8UL, rgba_bytes(1U, 2U, 3U, 4U))
-  buf.map_write_sync(instance, 2UL, rgba_bytes(1U, 2U, 3U, 4U))
+  buf.map_write_sync(instance, 8UL, @tests.rgba_bytes(1U, 2U, 3U, 4U))
+  buf.map_write_sync(instance, 2UL, @tests.rgba_bytes(1U, 2U, 3U, 4U))
   buf.release()
   device.release()
   adapter.release()

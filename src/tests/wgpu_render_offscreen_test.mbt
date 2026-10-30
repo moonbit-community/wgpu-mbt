@@ -14,7 +14,7 @@
 
 ///|
 test "wgpu offscreen render pipeline" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -25,7 +25,7 @@ test "wgpu offscreen render pipeline" {
       @wgpu.BUFFER_USAGE_COPY_DST
     let readback_buf = device.create_buffer(
       size=256UL,
-      usage=bu(readback_usage),
+      usage=@tests.bu(readback_usage),
     )
     let wgsl : String =
       #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -59,7 +59,7 @@ test "wgpu offscreen render pipeline" {
     let cmd = encoder.finish()
     queue.submit_one(cmd)
     let out = readback_buf.readback(instance, 0UL, 4UL)
-    let rgba : Array[UInt] = [
+    let rgba : Array[UInt32] = [
       out[0].to_uint(),
       out[1].to_uint(),
       out[2].to_uint(),

@@ -20,30 +20,30 @@ pub fn create_instance() -> Instance {
 ///|
 pub extern "C" fn create_instance_with_extras_u32(
   backends_u64 : UInt64,
-  flags_u32 : UInt,
-  dx12_shader_compiler_u32 : UInt,
-  gles3_minor_version_u32 : UInt,
-  gl_fence_behaviour_u32 : UInt,
-  dxc_max_shader_model_u32 : UInt,
-  dx12_presentation_system_u32 : UInt,
+  flags_u32 : UInt32,
+  dx12_shader_compiler_u32 : UInt32,
+  gles3_minor_version_u32 : UInt32,
+  gl_fence_behaviour_u32 : UInt32,
+  dxc_max_shader_model_u32 : UInt32,
+  dx12_presentation_system_u32 : UInt32,
 ) -> Instance = "mbt_wgpu_create_instance_with_extras_u32"
 
 ///|
 #borrow(dxc_path_utf8)
 pub extern "C" fn create_instance_with_extras_utf8(
   backends_u64 : UInt64,
-  flags_u32 : UInt,
-  dx12_shader_compiler_u32 : UInt,
+  flags_u32 : UInt32,
+  dx12_shader_compiler_u32 : UInt32,
   dxc_path_utf8 : Bytes,
   dxc_path_utf8_len : UInt64,
-  gles3_minor_version_u32 : UInt,
-  gl_fence_behaviour_u32 : UInt,
-  dxc_max_shader_model_u32 : UInt,
-  dx12_presentation_system_u32 : UInt,
+  gles3_minor_version_u32 : UInt32,
+  gl_fence_behaviour_u32 : UInt32,
+  dxc_max_shader_model_u32 : UInt32,
+  dx12_presentation_system_u32 : UInt32,
 ) -> Instance = "mbt_wgpu_create_instance_with_extras_utf8"
 
 ///|
-pub extern "C" fn instance_capabilities_timed_wait_any_enable_u32() -> UInt = "mbt_wgpu_instance_capabilities_timed_wait_any_enable_u32"
+pub extern "C" fn instance_capabilities_timed_wait_any_enable_u32() -> UInt32 = "mbt_wgpu_instance_capabilities_timed_wait_any_enable_u32"
 
 ///|
 pub extern "C" fn instance_capabilities_timed_wait_any_max_count_u64() -> UInt64 = "mbt_wgpu_instance_capabilities_timed_wait_any_max_count_u64"
@@ -63,7 +63,7 @@ pub extern "C" fn queue_on_submitted_work_done_future_id_u64(
 ///|
 pub extern "C" fn queue_on_submitted_work_done_async_status_u32(
   future_id : UInt64,
-) -> UInt = "mbt_wgpu_queue_on_submitted_work_done_async_status_u32"
+) -> UInt32 = "mbt_wgpu_queue_on_submitted_work_done_async_status_u32"
 
 ///|
 pub extern "C" fn queue_on_submitted_work_done_async_clear(
@@ -80,7 +80,7 @@ pub extern "C" fn queue_submit_one_and_map_read_async(
 ) -> UInt64 = "mbt_wgpu_queue_submit_one_and_map_read_async"
 
 ///|
-pub extern "C" fn queue_map_read_async_status_u32(future_id : UInt64) -> UInt = "mbt_wgpu_queue_map_read_async_status_u32"
+pub extern "C" fn queue_map_read_async_status_u32(future_id : UInt64) -> UInt32 = "mbt_wgpu_queue_map_read_async_status_u32"
 
 ///|
 pub extern "C" fn queue_map_read_async_size_u64(future_id : UInt64) -> UInt64 = "mbt_wgpu_queue_map_read_async_size_u64"
@@ -105,7 +105,7 @@ pub extern "C" fn instance_request_adapter_future_id_u64(
 ///|
 pub extern "C" fn instance_request_adapter_async_status_u32(
   future_id : UInt64,
-) -> UInt = "mbt_wgpu_instance_request_adapter_async_status_u32"
+) -> UInt32 = "mbt_wgpu_instance_request_adapter_async_status_u32"
 
 ///|
 pub extern "C" fn instance_request_adapter_async_adapter(
@@ -182,7 +182,7 @@ pub extern "C" fn instance_request_adapter_sync_ptr(
 ) -> WGPUAdapter = "mbt_wgpu_instance_request_adapter_sync_ptr"
 
 ///|
-pub extern "C" fn instance_request_adapter_sync_last_status_u32() -> UInt = "mbt_wgpu_instance_request_adapter_sync_last_status_u32"
+pub extern "C" fn instance_request_adapter_sync_last_status_u32() -> UInt32 = "mbt_wgpu_instance_request_adapter_sync_last_status_u32"
 
 ///|
 pub extern "C" fn instance_request_adapter_sync_last_message_utf8_len() -> UInt64 = "mbt_wgpu_instance_request_adapter_sync_last_message_utf8_len"
@@ -197,10 +197,10 @@ pub extern "C" fn instance_request_adapter_sync_last_message_utf8(
 ///|
 pub fn instance_request_adapter_sync_options_u32(
   instance : Instance,
-  feature_level_u32 : UInt,
-  power_preference_u32 : UInt,
+  feature_level_u32 : UInt32,
+  power_preference_u32 : UInt32,
   force_fallback_adapter : Bool,
-  backend_type_u32 : UInt,
+  backend_type_u32 : UInt32,
   compatible_surface : WGPUSurface,
 ) -> Adapter {
   let opts = request_adapter_options_new_u32(

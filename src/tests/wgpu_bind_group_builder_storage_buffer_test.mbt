@@ -22,12 +22,15 @@ test "wgpu bind group builder (storage buffer)" {
     @wgpu.BUFFER_USAGE_COPY_SRC |
     @wgpu.BUFFER_USAGE_COPY_DST
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage = device.create_buffer(size=4UL, usage=bu(storage_usage))
-  let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let storage = device.create_buffer(size=4UL, usage=@tests.bu(storage_usage))
+  let readback = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=1UL)
   let bgl_ok = bglb.add_buffer(
     0U,
-    ss(@wgpu.SHADER_STAGE_COMPUTE),
+    @tests.ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.BUFFER_BINDING_TYPE_STORAGE,
   )
   inspect(bgl_ok, content="true")
@@ -59,7 +62,7 @@ test "wgpu bind group builder (storage buffer)" {
   queue.submit_one(cmd)
   let _done = device.poll(wait=true)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(u32le_at(out, 0), content="7")
+  inspect(@tests.u32le_at(out, 0), content="7")
   cmd.release()
   encoder.release()
   cp.release()
@@ -85,14 +88,17 @@ test "wgpu bind group builder creates zero-entry bind group" {
     @wgpu.BUFFER_USAGE_COPY_SRC |
     @wgpu.BUFFER_USAGE_COPY_DST
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage = device.create_buffer(size=4UL, usage=bu(storage_usage))
-  let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let storage = device.create_buffer(size=4UL, usage=@tests.bu(storage_usage))
+  let readback = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let storage_layout_builder = @wgpu.BindGroupLayoutBuilder::new(
     max_entries=1UL,
   )
   let storage_layout_ok = storage_layout_builder.add_buffer(
     0U,
-    ss(@wgpu.SHADER_STAGE_COMPUTE),
+    @tests.ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.BUFFER_BINDING_TYPE_STORAGE,
   )
   inspect(storage_layout_ok, content="true")
@@ -128,7 +134,7 @@ test "wgpu bind group builder creates zero-entry bind group" {
   queue.submit_one(cmd)
   let _done = device.poll(wait=true)
   let out = readback.readback(instance, 0UL, 4UL)
-  inspect(u32le_at(out, 0), content="11")
+  inspect(@tests.u32le_at(out, 0), content="11")
   cmd.release()
   encoder.release()
   cp.release()

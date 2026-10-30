@@ -22,7 +22,7 @@ test "wgpu render pass: load op preserves previous contents" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=512UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_red : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -93,10 +93,10 @@ test "wgpu render pass: load op preserves previous contents" {
   let cmd1 = encoder1.finish()
   queue.submit_one(cmd1)
   let out = readback.readback(instance, 0UL, 512UL)
-  let tl = read_rgba8_from_copy_out(out, 0U, 0U)
-  let tr = read_rgba8_from_copy_out(out, 1U, 0U)
-  let bl = read_rgba8_from_copy_out(out, 0U, 1U)
-  let br = read_rgba8_from_copy_out(out, 1U, 1U)
+  let tl = @tests.read_rgba8_from_copy_out(out, 0U, 0U)
+  let tr = @tests.read_rgba8_from_copy_out(out, 1U, 0U)
+  let bl = @tests.read_rgba8_from_copy_out(out, 0U, 1U)
+  let br = @tests.read_rgba8_from_copy_out(out, 1U, 1U)
   @debug.debug_inspect(
     [
       [tl[0], tl[1], tl[2], tl[3]],

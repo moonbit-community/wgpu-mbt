@@ -24,7 +24,7 @@ test "wgpu render depth" {
   let depth_view = depth_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_far_red : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -115,7 +115,7 @@ test "wgpu render depth: pipeline desc builder" {
   let depth_view = depth_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_far_red : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -218,7 +218,7 @@ test "wgpu render depth: pipeline desc builder depth bias" {
   let depth_view = depth_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_red : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -326,7 +326,7 @@ test "wgpu render depth: depth-only pass and zero color target pipeline" {
   let depth_view = depth_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_depth_only : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -437,7 +437,7 @@ test "wgpu render depth: configurable pass depth load/store" {
   let depth_view = depth_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
 
   let wgsl_far_red : String =

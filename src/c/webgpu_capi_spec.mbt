@@ -206,7 +206,7 @@ pub type WGPULimitsPtr
 pub type WGPULogCallback
 
 ///|
-pub type WGPULogLevel = UInt
+pub type WGPULogLevel = UInt32
 
 ///|
 pub type WGPUMapMode = UInt64
@@ -725,8 +725,8 @@ declare pub fn wgpuCommandEncoderRelease(
 declare pub fn wgpuCommandEncoderResolveQuerySet(
   commandEncoder : WGPUCommandEncoder,
   querySet : WGPUQuerySet,
-  firstQuery : UInt,
-  queryCount : UInt,
+  firstQuery : UInt32,
+  queryCount : UInt32,
   destination : WGPUBuffer,
   destinationOffset : UInt64,
 ) -> Unit
@@ -743,7 +743,7 @@ declare pub fn wgpuCommandEncoderSetLabel(
 declare pub fn wgpuCommandEncoderWriteTimestamp(
   commandEncoder : WGPUCommandEncoder,
   querySet : WGPUQuerySet,
-  queryIndex : UInt,
+  queryIndex : UInt32,
 ) -> Unit
 
 ///|
@@ -757,16 +757,16 @@ declare pub fn wgpuComputePassEncoderAddRef(
 declare pub fn wgpuComputePassEncoderBeginPipelineStatisticsQuery(
   computePassEncoder : WGPUComputePassEncoder,
   querySet : WGPUQuerySet,
-  queryIndex : UInt,
+  queryIndex : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn wgpuComputePassEncoderDispatchWorkgroups(
   computePassEncoder : WGPUComputePassEncoder,
-  workgroupCountX : UInt,
-  workgroupCountY : UInt,
-  workgroupCountZ : UInt,
+  workgroupCountX : UInt32,
+  workgroupCountY : UInt32,
+  workgroupCountZ : UInt32,
 ) -> Unit
 
 ///|
@@ -819,7 +819,7 @@ declare pub fn wgpuComputePassEncoderRelease(
 #declaration_only
 declare pub fn wgpuComputePassEncoderSetBindGroup(
   computePassEncoder : WGPUComputePassEncoder,
-  groupIndex : UInt,
+  groupIndex : UInt32,
   group : WGPUBindGroup,
   dynamicOffsetCount : UInt64,
   dynamicOffsets : UIntPtr,
@@ -829,7 +829,7 @@ declare pub fn wgpuComputePassEncoderSetBindGroup(
 #declaration_only
 declare pub fn wgpuComputePassEncoderSetImmediates(
   computePassEncoder : WGPUComputePassEncoder,
-  offset : UInt,
+  offset : UInt32,
   data : UnitPtr,
   size : UInt64,
 ) -> Unit
@@ -853,7 +853,7 @@ declare pub fn wgpuComputePassEncoderSetPipeline(
 declare pub fn wgpuComputePassEncoderWriteTimestamp(
   computePassEncoder : WGPUComputePassEncoder,
   querySet : WGPUQuerySet,
-  queryIndex : UInt,
+  queryIndex : UInt32,
 ) -> Unit
 
 ///|
@@ -866,7 +866,7 @@ declare pub fn wgpuComputePipelineAddRef(
 #declaration_only
 declare pub fn wgpuComputePipelineGetBindGroupLayout(
   computePipeline : WGPUComputePipeline,
-  groupIndex : UInt,
+  groupIndex : UInt32,
 ) -> WGPUBindGroupLayout
 
 ///|
@@ -1140,7 +1140,7 @@ declare pub fn wgpuGetProcAddress(procName : WGPUStringView) -> WGPUProc
 
 ///|
 #declaration_only
-declare pub fn wgpuGetVersion() -> UInt
+declare pub fn wgpuGetVersion() -> UInt32
 
 ///|
 #declaration_only
@@ -1233,7 +1233,7 @@ declare pub fn wgpuQuerySetDestroy(querySet : WGPUQuerySet) -> Unit
 
 ///|
 #declaration_only
-declare pub fn wgpuQuerySetGetCount(querySet : WGPUQuerySet) -> UInt
+declare pub fn wgpuQuerySetGetCount(querySet : WGPUQuerySet) -> UInt32
 
 ///|
 #declaration_only
@@ -1331,21 +1331,21 @@ declare pub fn wgpuRenderBundleEncoderAddRef(
 #declaration_only
 declare pub fn wgpuRenderBundleEncoderDraw(
   renderBundleEncoder : WGPURenderBundleEncoder,
-  vertexCount : UInt,
-  instanceCount : UInt,
-  firstVertex : UInt,
-  firstInstance : UInt,
+  vertexCount : UInt32,
+  instanceCount : UInt32,
+  firstVertex : UInt32,
+  firstInstance : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn wgpuRenderBundleEncoderDrawIndexed(
   renderBundleEncoder : WGPURenderBundleEncoder,
-  indexCount : UInt,
-  instanceCount : UInt,
-  firstIndex : UInt,
-  baseVertex : Int,
-  firstInstance : UInt,
+  indexCount : UInt32,
+  instanceCount : UInt32,
+  firstIndex : UInt32,
+  baseVertex : Int32,
+  firstInstance : UInt32,
 ) -> Unit
 
 ///|
@@ -1401,7 +1401,7 @@ declare pub fn wgpuRenderBundleEncoderRelease(
 #declaration_only
 declare pub fn wgpuRenderBundleEncoderSetBindGroup(
   renderBundleEncoder : WGPURenderBundleEncoder,
-  groupIndex : UInt,
+  groupIndex : UInt32,
   group : WGPUBindGroup,
   dynamicOffsetCount : UInt64,
   dynamicOffsets : UIntPtr,
@@ -1411,7 +1411,7 @@ declare pub fn wgpuRenderBundleEncoderSetBindGroup(
 #declaration_only
 declare pub fn wgpuRenderBundleEncoderSetImmediates(
   renderBundleEncoder : WGPURenderBundleEncoder,
-  offset : UInt,
+  offset : UInt32,
   data : UnitPtr,
   size : UInt64,
 ) -> Unit
@@ -1444,7 +1444,7 @@ declare pub fn wgpuRenderBundleEncoderSetPipeline(
 #declaration_only
 declare pub fn wgpuRenderBundleEncoderSetVertexBuffer(
   renderBundleEncoder : WGPURenderBundleEncoder,
-  slot : UInt,
+  slot : UInt32,
   buffer : WGPUBuffer,
   offset : UInt64,
   size : UInt64,
@@ -1471,7 +1471,7 @@ declare pub fn wgpuRenderPassEncoderAddRef(
 #declaration_only
 declare pub fn wgpuRenderPassEncoderBeginOcclusionQuery(
   renderPassEncoder : WGPURenderPassEncoder,
-  queryIndex : UInt,
+  queryIndex : UInt32,
 ) -> Unit
 
 ///|
@@ -1479,28 +1479,28 @@ declare pub fn wgpuRenderPassEncoderBeginOcclusionQuery(
 declare pub fn wgpuRenderPassEncoderBeginPipelineStatisticsQuery(
   renderPassEncoder : WGPURenderPassEncoder,
   querySet : WGPUQuerySet,
-  queryIndex : UInt,
+  queryIndex : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn wgpuRenderPassEncoderDraw(
   renderPassEncoder : WGPURenderPassEncoder,
-  vertexCount : UInt,
-  instanceCount : UInt,
-  firstVertex : UInt,
-  firstInstance : UInt,
+  vertexCount : UInt32,
+  instanceCount : UInt32,
+  firstVertex : UInt32,
+  firstInstance : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn wgpuRenderPassEncoderDrawIndexed(
   renderPassEncoder : WGPURenderPassEncoder,
-  indexCount : UInt,
-  instanceCount : UInt,
-  firstIndex : UInt,
-  baseVertex : Int,
-  firstInstance : UInt,
+  indexCount : UInt32,
+  instanceCount : UInt32,
+  firstIndex : UInt32,
+  baseVertex : Int32,
+  firstInstance : UInt32,
 ) -> Unit
 
 ///|
@@ -1558,7 +1558,7 @@ declare pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirect(
   encoder : WGPURenderPassEncoder,
   buffer : WGPUBuffer,
   offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit
 
 ///|
@@ -1569,7 +1569,7 @@ declare pub fn wgpuRenderPassEncoderMultiDrawIndexedIndirectCount(
   offset : UInt64,
   count_buffer : WGPUBuffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit
 
 ///|
@@ -1578,7 +1578,7 @@ declare pub fn wgpuRenderPassEncoderMultiDrawIndirect(
   encoder : WGPURenderPassEncoder,
   buffer : WGPUBuffer,
   offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit
 
 ///|
@@ -1589,7 +1589,7 @@ declare pub fn wgpuRenderPassEncoderMultiDrawIndirectCount(
   offset : UInt64,
   count_buffer : WGPUBuffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit
 
 ///|
@@ -1615,7 +1615,7 @@ declare pub fn wgpuRenderPassEncoderRelease(
 #declaration_only
 declare pub fn wgpuRenderPassEncoderSetBindGroup(
   renderPassEncoder : WGPURenderPassEncoder,
-  groupIndex : UInt,
+  groupIndex : UInt32,
   group : WGPUBindGroup,
   dynamicOffsetCount : UInt64,
   dynamicOffsets : UIntPtr,
@@ -1632,7 +1632,7 @@ declare pub fn wgpuRenderPassEncoderSetBlendConstant(
 #declaration_only
 declare pub fn wgpuRenderPassEncoderSetImmediates(
   renderPassEncoder : WGPURenderPassEncoder,
-  offset : UInt,
+  offset : UInt32,
   data : UnitPtr,
   size : UInt64,
 ) -> Unit
@@ -1665,24 +1665,24 @@ declare pub fn wgpuRenderPassEncoderSetPipeline(
 #declaration_only
 declare pub fn wgpuRenderPassEncoderSetScissorRect(
   renderPassEncoder : WGPURenderPassEncoder,
-  x : UInt,
-  y : UInt,
-  width : UInt,
-  height : UInt,
+  x : UInt32,
+  y : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn wgpuRenderPassEncoderSetStencilReference(
   renderPassEncoder : WGPURenderPassEncoder,
-  reference : UInt,
+  reference : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn wgpuRenderPassEncoderSetVertexBuffer(
   renderPassEncoder : WGPURenderPassEncoder,
-  slot : UInt,
+  slot : UInt32,
   buffer : WGPUBuffer,
   offset : UInt64,
   size : UInt64,
@@ -1705,7 +1705,7 @@ declare pub fn wgpuRenderPassEncoderSetViewport(
 declare pub fn wgpuRenderPassEncoderWriteTimestamp(
   renderPassEncoder : WGPURenderPassEncoder,
   querySet : WGPUQuerySet,
-  queryIndex : UInt,
+  queryIndex : UInt32,
 ) -> Unit
 
 ///|
@@ -1718,7 +1718,7 @@ declare pub fn wgpuRenderPipelineAddRef(
 #declaration_only
 declare pub fn wgpuRenderPipelineGetBindGroupLayout(
   renderPipeline : WGPURenderPipeline,
-  groupIndex : UInt,
+  groupIndex : UInt32,
 ) -> WGPUBindGroupLayout
 
 ///|
@@ -1868,7 +1868,7 @@ declare pub fn wgpuTextureDestroy(texture : WGPUTexture) -> Unit
 
 ///|
 #declaration_only
-declare pub fn wgpuTextureGetDepthOrArrayLayers(texture : WGPUTexture) -> UInt
+declare pub fn wgpuTextureGetDepthOrArrayLayers(texture : WGPUTexture) -> UInt32
 
 ///|
 #declaration_only
@@ -1882,11 +1882,11 @@ declare pub fn wgpuTextureGetFormat(texture : WGPUTexture) -> WGPUTextureFormat
 
 ///|
 #declaration_only
-declare pub fn wgpuTextureGetHeight(texture : WGPUTexture) -> UInt
+declare pub fn wgpuTextureGetHeight(texture : WGPUTexture) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn wgpuTextureGetMipLevelCount(texture : WGPUTexture) -> UInt
+declare pub fn wgpuTextureGetMipLevelCount(texture : WGPUTexture) -> UInt32
 
 ///|
 #declaration_only
@@ -1896,7 +1896,7 @@ declare pub fn wgpuTextureGetNativeMetalTexture(
 
 ///|
 #declaration_only
-declare pub fn wgpuTextureGetSampleCount(texture : WGPUTexture) -> UInt
+declare pub fn wgpuTextureGetSampleCount(texture : WGPUTexture) -> UInt32
 
 ///|
 #declaration_only
@@ -1910,7 +1910,7 @@ declare pub fn wgpuTextureGetUsage(texture : WGPUTexture) -> WGPUTextureUsage
 
 ///|
 #declaration_only
-declare pub fn wgpuTextureGetWidth(texture : WGPUTexture) -> UInt
+declare pub fn wgpuTextureGetWidth(texture : WGPUTexture) -> UInt32
 
 ///|
 #declaration_only

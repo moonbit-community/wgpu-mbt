@@ -47,7 +47,10 @@ test "wgpu render: MSAA color attachment resolves to sampled texture" {
   let resolved_view = resolved_tex.create_view()
   let dst_view = dst_tex.create_view()
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback_buf = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let red_wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
     #|
@@ -120,7 +123,7 @@ test "wgpu render: MSAA color attachment resolves to sampled texture" {
   resolve_pass.release()
   let sample_pass = encoder.begin_render_pass_color(dst_view)
   sample_pass.set_pipeline(sample_pipeline)
-  let empty_offsets : Array[UInt] = []
+  let empty_offsets : Array[UInt32] = []
   sample_pass.set_bind_group(0U, bg_sampler, empty_offsets)
   sample_pass.set_bind_group(1U, bg_tex, empty_offsets)
   sample_pass.draw(3U, 1U, 0U, 0U)
@@ -130,7 +133,7 @@ test "wgpu render: MSAA color attachment resolves to sampled texture" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback_buf.readback(instance, 0UL, 4UL)
-  let rgba : Array[UInt] = [
+  let rgba : Array[UInt32] = [
     out[0].to_uint(),
     out[1].to_uint(),
     out[2].to_uint(),

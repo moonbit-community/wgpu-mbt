@@ -14,7 +14,7 @@
 
 ///|
 fn render_uniform_f32_le_bytes(v : Float) -> Bytes {
-  let bits : UInt = v.reinterpret_as_int().reinterpret_as_uint()
+  let bits : UInt32 = v.reinterpret_as_int().reinterpret_as_uint()
   let b0 = (bits & 0xFF).to_byte()
   let b1 = ((bits >> 8) & 0xFF).to_byte()
   let b2 = ((bits >> 16) & 0xFF).to_byte()
@@ -36,7 +36,7 @@ fn render_uniform_vec4_bytes(
   b : Float,
   a : Float,
 ) -> Bytes {
-  let out : Ref[Array[Byte]] = @ref.new([])
+  let out : Ref[Array[Byte]] = Ref([])
   render_uniform_push_bytes(out, render_uniform_f32_le_bytes(r))
   render_uniform_push_bytes(out, render_uniform_f32_le_bytes(g))
   render_uniform_push_bytes(out, render_uniform_f32_le_bytes(b))
@@ -53,10 +53,10 @@ test "wgpu offscreen render with uniform buffer bind group" {
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
   let vb_usage = @wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST
-  let vb = device.create_buffer(size=24UL, usage=bu(vb_usage))
-  queue.write_buffer(vb, 0UL, vertices_pos2_bytes())
+  let vb = device.create_buffer(size=24UL, usage=@tests.bu(vb_usage))
+  queue.write_buffer(vb, 0UL, @tests.vertices_pos2_bytes())
   let ub_usage = @wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST
-  let ub = device.create_buffer(size=16UL, usage=bu(ub_usage))
+  let ub = device.create_buffer(size=16UL, usage=@tests.bu(ub_usage))
   queue.write_buffer(ub, 0UL, render_uniform_vec4_bytes(0.0, 0.0, 1.0, 1.0))
   let bgl = device.create_bind_group_layout_uniform_buffer()
   let pl = device.create_pipeline_layout_1(bgl)
@@ -82,7 +82,10 @@ test "wgpu offscreen render with uniform buffer bind group" {
   let sm = device.create_shader_module_wgsl(wgsl)
   let pipeline = device.create_render_pipeline_rgba8_pos2_with_layout(pl, sm)
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback_buf = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(view)
   pass.set_pipeline(pipeline)
@@ -95,7 +98,7 @@ test "wgpu offscreen render with uniform buffer bind group" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback_buf.readback(instance, 0UL, 4UL)
-  let rgba : Array[UInt] = [
+  let rgba : Array[UInt32] = [
     out[0].to_uint(),
     out[1].to_uint(),
     out[2].to_uint(),

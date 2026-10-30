@@ -67,7 +67,7 @@ pub extern "C" fn surface_descriptor_windows_hwnd_new(
 /// Build a `WGPUSurfaceDescriptor` for `WGPUSurfaceSourceXCBWindow`.
 pub extern "C" fn surface_descriptor_xcb_new(
   connection : OpaquePtr,
-  window : UInt,
+  window : UInt32,
 ) -> WGPUSurfaceDescriptorPtr = "mbt_wgpu_surface_descriptor_xcb_new"
 
 ///|
@@ -99,12 +99,12 @@ pub extern "C" fn surface_descriptor_free(
 pub extern "C" fn surface_configuration_u32_new(
   device : Device,
   usage_u64 : UInt64,
-  format_u32 : UInt,
-  width : UInt,
-  height : UInt,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
-  desired_maximum_frame_latency : UInt,
+  format_u32 : UInt32,
+  width : UInt32,
+  height : UInt32,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
+  desired_maximum_frame_latency : UInt32,
 ) -> WGPUSurfaceConfigurationPtr = "mbt_wgpu_surface_configuration_u32_new"
 
 ///|
@@ -112,14 +112,14 @@ pub extern "C" fn surface_configuration_u32_new(
 pub extern "C" fn surface_configuration_u32_with_view_formats_new(
   device : Device,
   usage_u64 : UInt64,
-  format_u32 : UInt,
-  width : UInt,
-  height : UInt,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
-  desired_maximum_frame_latency : UInt,
+  format_u32 : UInt32,
+  width : UInt32,
+  height : UInt32,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
+  desired_maximum_frame_latency : UInt32,
   view_format_count : UInt64,
-  view_formats_u32 : FixedArray[UInt],
+  view_formats_u32 : FixedArray[UInt32],
 ) -> WGPUSurfaceConfigurationPtr = "mbt_wgpu_surface_configuration_u32_with_view_formats_new"
 
 ///|
@@ -130,19 +130,19 @@ pub extern "C" fn surface_configuration_free(
 
 ///|
 extern "C" fn request_adapter_options_new_u32_packed(
-  feature_level_u32 : UInt,
-  power_preference_u32 : UInt,
-  force_fallback_adapter_u32 : UInt,
-  backend_type_u32 : UInt,
+  feature_level_u32 : UInt32,
+  power_preference_u32 : UInt32,
+  force_fallback_adapter_u32 : UInt32,
+  backend_type_u32 : UInt32,
   compatible_surface : WGPUSurface,
 ) -> WGPURequestAdapterOptionsPtr = "mbt_wgpu_request_adapter_options_new_u32"
 
 ///|
 pub fn request_adapter_options_new_u32(
-  feature_level_u32 : UInt,
-  power_preference_u32 : UInt,
+  feature_level_u32 : UInt32,
+  power_preference_u32 : UInt32,
   force_fallback_adapter : Bool,
-  backend_type_u32 : UInt,
+  backend_type_u32 : UInt32,
   compatible_surface : WGPUSurface,
 ) -> WGPURequestAdapterOptionsPtr {
   request_adapter_options_new_u32_packed(
@@ -182,7 +182,7 @@ pub extern "C" fn device_descriptor_new_features_utf8(
   label : Bytes,
   label_len : UInt64,
   required_feature_count : UInt64,
-  required_features_u32 : FixedArray[UInt],
+  required_features_u32 : FixedArray[UInt32],
   queue_label : Bytes,
   queue_label_len : UInt64,
 ) -> WGPUDeviceDescriptorPtr = "mbt_wgpu_device_descriptor_new_features_utf8"
@@ -211,16 +211,16 @@ pub extern "C" fn device_descriptor_set_required_limits(
 ///|
 pub extern "C" fn limits_new_from_adapter_overrides_u32(
   adapter : WGPUAdapter,
-  max_bind_groups_u32 : UInt,
-  max_dynamic_uniform_buffers_u32 : UInt,
+  max_bind_groups_u32 : UInt32,
+  max_dynamic_uniform_buffers_u32 : UInt32,
   max_uniform_buffer_binding_size : UInt64,
   max_storage_buffer_binding_size : UInt64,
-  max_sampled_textures_per_shader_stage_u32 : UInt,
-  max_samplers_per_shader_stage_u32 : UInt,
-  max_immediate_size_u32 : UInt,
-  max_non_sampler_bindings_u32 : UInt,
-  max_binding_array_elements_per_shader_stage_u32 : UInt,
-  max_binding_array_sampler_elements_per_shader_stage_u32 : UInt,
+  max_sampled_textures_per_shader_stage_u32 : UInt32,
+  max_samplers_per_shader_stage_u32 : UInt32,
+  max_immediate_size_u32 : UInt32,
+  max_non_sampler_bindings_u32 : UInt32,
+  max_binding_array_elements_per_shader_stage_u32 : UInt32,
+  max_binding_array_sampler_elements_per_shader_stage_u32 : UInt32,
 ) -> WGPULimitsPtr = "mbt_wgpu_limits_new_from_adapter_overrides_u32"
 
 ///|
@@ -235,27 +235,27 @@ pub extern "C" fn null_texture_view() -> WGPUTextureView = "mbt_wgpu_null_ptr"
 
 ///|
 pub extern "C" fn texture_view_descriptor_2d_new(
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_texture_view_descriptor_2d_new"
 
 ///|
 pub extern "C" fn texture_view_descriptor_2d_array_new(
-  base_array_layer : UInt,
-  array_layer_count : UInt,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  base_array_layer : UInt32,
+  array_layer_count : UInt32,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_texture_view_descriptor_2d_array_new"
 
 ///|
 pub extern "C" fn texture_view_descriptor_u32_new(
-  format_u32 : UInt,
-  view_dimension_u32 : UInt,
-  aspect_u32 : UInt,
-  base_array_layer : UInt,
-  array_layer_count : UInt,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  format_u32 : UInt32,
+  view_dimension_u32 : UInt32,
+  aspect_u32 : UInt32,
+  base_array_layer : UInt32,
+  array_layer_count : UInt32,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> WGPUTextureViewDescriptorPtr = "mbt_wgpu_texture_view_descriptor_u32_new"
 
 ///|
@@ -269,57 +269,57 @@ pub extern "C" fn null_command_buffer_descriptor_ptr() -> WGPUCommandBufferDescr
 
 ///|
 pub extern "C" fn texture_descriptor_rgba8_2d_default_new(
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_rgba8_2d_default_new"
 
 ///|
 pub extern "C" fn texture_descriptor_rgba8_2d_with_usage_new(
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : UInt64,
 ) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_rgba8_2d_with_usage_new"
 
 ///|
 pub extern "C" fn texture_descriptor_rgba8_2d_array_with_usage_new(
-  width : UInt,
-  height : UInt,
-  layers : UInt,
-  mip_level_count : UInt,
+  width : UInt32,
+  height : UInt32,
+  layers : UInt32,
+  mip_level_count : UInt32,
   usage : UInt64,
 ) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_rgba8_2d_array_with_usage_new"
 
 ///|
 pub extern "C" fn texture_descriptor_u32_new(
   usage : UInt64,
-  dimension_u32 : UInt,
-  width : UInt,
-  height : UInt,
-  depth_or_array_layers : UInt,
-  format_u32 : UInt,
-  mip_level_count : UInt,
-  sample_count : UInt,
+  dimension_u32 : UInt32,
+  width : UInt32,
+  height : UInt32,
+  depth_or_array_layers : UInt32,
+  format_u32 : UInt32,
+  mip_level_count : UInt32,
+  sample_count : UInt32,
 ) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_u32_new"
 
 ///|
 #borrow(view_formats)
 pub extern "C" fn texture_descriptor_u32_with_view_formats_new(
   usage : UInt64,
-  dimension_u32 : UInt,
-  width : UInt,
-  height : UInt,
-  depth_or_array_layers : UInt,
-  format_u32 : UInt,
-  mip_level_count : UInt,
-  sample_count : UInt,
+  dimension_u32 : UInt32,
+  width : UInt32,
+  height : UInt32,
+  depth_or_array_layers : UInt32,
+  format_u32 : UInt32,
+  mip_level_count : UInt32,
+  sample_count : UInt32,
   view_format_count : UInt64,
-  view_formats : FixedArray[UInt],
+  view_formats : FixedArray[UInt32],
 ) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_u32_with_view_formats_new"
 
 ///|
 pub extern "C" fn texture_descriptor_depth24plus_2d_new(
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> WGPUTextureDescriptorPtr = "mbt_wgpu_texture_descriptor_depth24plus_2d_new"
 
 ///|
@@ -348,16 +348,16 @@ pub extern "C" fn sampler_descriptor_linear_mirror_repeat_new() -> WGPUSamplerDe
 
 ///|
 pub extern "C" fn sampler_descriptor_u32_new(
-  address_mode_u_u32 : UInt,
-  address_mode_v_u32 : UInt,
-  address_mode_w_u32 : UInt,
-  mag_filter_u32 : UInt,
-  min_filter_u32 : UInt,
-  mipmap_filter_u32 : UInt,
+  address_mode_u_u32 : UInt32,
+  address_mode_v_u32 : UInt32,
+  address_mode_w_u32 : UInt32,
+  mag_filter_u32 : UInt32,
+  min_filter_u32 : UInt32,
+  mipmap_filter_u32 : UInt32,
   lod_min_clamp_f32 : Float,
   lod_max_clamp_f32 : Float,
-  compare_u32 : UInt,
-  max_anisotropy_u32 : UInt,
+  compare_u32 : UInt32,
+  max_anisotropy_u32 : UInt32,
 ) -> WGPUSamplerDescriptorPtr = "mbt_wgpu_sampler_descriptor_u32_new"
 
 ///|
@@ -490,8 +490,8 @@ pub extern "C" fn pipeline_layout_descriptor_many_new(
 ///|
 pub extern "C" fn pipeline_layout_descriptor_immediates_new(
   stages : UInt64,
-  start : UInt,
-  end : UInt,
+  start : UInt32,
+  end : UInt32,
 ) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_immediates_new"
 
 ///|
@@ -499,8 +499,8 @@ pub extern "C" fn pipeline_layout_descriptor_immediates_new(
 pub extern "C" fn pipeline_layout_descriptor_immediates_many_new(
   range_count : UInt64,
   stages_u64 : FixedArray[UInt64],
-  starts_u32 : FixedArray[UInt],
-  ends_u32 : FixedArray[UInt],
+  starts_u32 : FixedArray[UInt32],
+  ends_u32 : FixedArray[UInt32],
 ) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_immediates_many_new"
 
 ///|
@@ -510,8 +510,8 @@ pub extern "C" fn pipeline_layout_descriptor_with_immediates_many_new(
   bind_group_layouts : FixedArray[WGPUBindGroupLayout],
   range_count : UInt64,
   stages_u64 : FixedArray[UInt64],
-  starts_u32 : FixedArray[UInt],
-  ends_u32 : FixedArray[UInt],
+  starts_u32 : FixedArray[UInt32],
+  ends_u32 : FixedArray[UInt32],
 ) -> WGPUPipelineLayoutDescriptorPtr = "mbt_wgpu_pipeline_layout_descriptor_with_immediates_many_new"
 
 ///|
@@ -565,13 +565,13 @@ pub extern "C" fn compute_pipeline_desc_builder_set_entry_point_utf8(
   builder : ComputePipelineDescBuilderObj,
   entry_point : Bytes,
   entry_point_len : UInt64,
-) -> UInt = "mbt_wgpu_compute_pipeline_desc_builder_set_entry_point_utf8"
+) -> UInt32 = "mbt_wgpu_compute_pipeline_desc_builder_set_entry_point_utf8"
 
 ///|
 #borrow(builder)
 pub extern "C" fn compute_pipeline_desc_builder_last_error_u32(
   builder : ComputePipelineDescBuilderObj,
-) -> UInt = "mbt_wgpu_compute_pipeline_desc_builder_last_error_u32"
+) -> UInt32 = "mbt_wgpu_compute_pipeline_desc_builder_last_error_u32"
 
 ///|
 #borrow(builder)
@@ -597,13 +597,13 @@ pub extern "C" fn compute_pipeline_descriptor_set_entry_point_utf8(
   desc : WGPUComputePipelineDescriptorPtr,
   entry_point : Bytes,
   entry_point_len : UInt64,
-) -> UInt = "mbt_wgpu_compute_pipeline_descriptor_set_entry_point_utf8"
+) -> UInt32 = "mbt_wgpu_compute_pipeline_descriptor_set_entry_point_utf8"
 
 ///|
 #borrow(desc)
 pub extern "C" fn compute_pipeline_descriptor_last_error_u32(
   desc : WGPUComputePipelineDescriptorPtr,
-) -> UInt = "mbt_wgpu_compute_pipeline_descriptor_last_error_u32"
+) -> UInt32 = "mbt_wgpu_compute_pipeline_descriptor_last_error_u32"
 
 ///|
 #borrow(desc)
@@ -627,14 +627,14 @@ pub extern "C" fn render_pipeline_descriptor_rgba8_new(
 pub extern "C" fn render_pipeline_descriptor_color_format_new(
   layout : WGPUPipelineLayout,
   shader_module : WGPUShaderModule,
-  format : UInt,
+  format : UInt32,
 ) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_color_format_new"
 
 ///|
 pub extern "C" fn render_pipeline_descriptor_color_format_alpha_blend_new(
   layout : WGPUPipelineLayout,
   shader_module : WGPUShaderModule,
-  format : UInt,
+  format : UInt32,
 ) -> WGPURenderPipelineDescriptorPtr = "mbt_wgpu_render_pipeline_descriptor_color_format_alpha_blend_new"
 
 ///|
@@ -642,9 +642,9 @@ pub extern "C" fn render_pipeline_descriptor_color_format_alpha_blend_new(
 extern "C" fn render_pipeline_descriptor_color_format_entries_u32_packed_new(
   layout : WGPUPipelineLayout,
   shader_module : WGPUShaderModule,
-  format_u32 : UInt,
-  color_write_mask_u32 : UInt,
-  flags_u32 : UInt,
+  format_u32 : UInt32,
+  color_write_mask_u32 : UInt32,
+  flags_u32 : UInt32,
   vs_entry : Bytes,
   vs_entry_len : UInt64,
   fs_entry : Bytes,
@@ -655,8 +655,8 @@ extern "C" fn render_pipeline_descriptor_color_format_entries_u32_packed_new(
 pub fn render_pipeline_descriptor_color_format_entries_u32_new(
   layout : WGPUPipelineLayout,
   shader_module : WGPUShaderModule,
-  format_u32 : UInt,
-  color_write_mask_u32 : UInt,
+  format_u32 : UInt32,
+  color_write_mask_u32 : UInt32,
   alpha_blend : Bool,
   depth : Bool,
   vs_entry : Bytes,
@@ -716,7 +716,7 @@ pub type RenderPassDescBuilderObj
 
 ///|
 pub extern "C" fn render_pass_desc_builder_new(
-  color_attachment_count : UInt,
+  color_attachment_count : UInt32,
 ) -> RenderPassDescBuilderObj = "mbt_wgpu_render_pass_desc_builder_new"
 
 ///|
@@ -729,7 +729,7 @@ pub extern "C" fn render_pass_desc_builder_is_null(
 #borrow(builder)
 pub extern "C" fn render_pass_desc_builder_last_error_u32(
   builder : RenderPassDescBuilderObj,
-) -> UInt = "mbt_wgpu_render_pass_desc_builder_last_error_u32"
+) -> UInt32 = "mbt_wgpu_render_pass_desc_builder_last_error_u32"
 
 ///|
 #borrow(builder)
@@ -741,51 +741,51 @@ pub extern "C" fn render_pass_desc_builder_last_error_args_u64(
 #borrow(builder)
 pub extern "C" fn render_pass_desc_builder_set_color_attachment_u32(
   builder : RenderPassDescBuilderObj,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   view : WGPUTextureView,
-  load_op_u32 : UInt,
-  store_op_u32 : UInt,
+  load_op_u32 : UInt32,
+  store_op_u32 : UInt32,
   clear_r_f32 : Float,
   clear_g_f32 : Float,
   clear_b_f32 : Float,
   clear_a_f32 : Float,
-) -> UInt = "mbt_wgpu_render_pass_desc_builder_set_color_attachment_u32"
+) -> UInt32 = "mbt_wgpu_render_pass_desc_builder_set_color_attachment_u32"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pass_desc_builder_set_color_attachment_resolve_target(
   builder : RenderPassDescBuilderObj,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   resolve_target : WGPUTextureView,
-) -> UInt = "mbt_wgpu_render_pass_desc_builder_set_color_attachment_resolve_target"
+) -> UInt32 = "mbt_wgpu_render_pass_desc_builder_set_color_attachment_resolve_target"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pass_desc_builder_clear_color_attachment_resolve_target(
   builder : RenderPassDescBuilderObj,
-  index_u32 : UInt,
-) -> UInt = "mbt_wgpu_render_pass_desc_builder_clear_color_attachment_resolve_target"
+  index_u32 : UInt32,
+) -> UInt32 = "mbt_wgpu_render_pass_desc_builder_clear_color_attachment_resolve_target"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pass_desc_builder_set_depth_stencil_attachment_u32(
   builder : RenderPassDescBuilderObj,
   depth_view : WGPUTextureView,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
   depth_read_only : Bool,
   stencil_read_only : Bool,
-) -> UInt = "mbt_wgpu_render_pass_desc_builder_set_depth_stencil_attachment_u32"
+) -> UInt32 = "mbt_wgpu_render_pass_desc_builder_set_depth_stencil_attachment_u32"
 
 ///|
 #borrow(builder)
 pub extern "C" fn render_pass_desc_builder_clear_depth_stencil_attachment(
   builder : RenderPassDescBuilderObj,
-) -> UInt = "mbt_wgpu_render_pass_desc_builder_clear_depth_stencil_attachment"
+) -> UInt32 = "mbt_wgpu_render_pass_desc_builder_clear_depth_stencil_attachment"
 
 ///|
 #borrow(builder)
@@ -823,17 +823,17 @@ extern "C" fn render_pass_descriptor_color2_depth_u32_packed_new(
   color0_view : WGPUTextureView,
   color1_view : WGPUTextureView,
   depth_view : WGPUTextureView,
-  color_load_ops_u32 : FixedArray[UInt],
-  color_store_ops_u32 : FixedArray[UInt],
+  color_load_ops_u32 : FixedArray[UInt32],
+  color_store_ops_u32 : FixedArray[UInt32],
   color_clears_rgba_f32 : FixedArray[Float],
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
-  depth_read_only_u32 : UInt,
-  stencil_read_only_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
+  depth_read_only_u32 : UInt32,
+  stencil_read_only_u32 : UInt32,
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color2_depth_u32_packed_new"
 
 ///|
@@ -842,42 +842,42 @@ extern "C" fn render_pass_descriptor_color2_depth_sparse_u32_packed_new(
   color0_view : WGPUTextureView,
   color1_view : WGPUTextureView,
   depth_view : WGPUTextureView,
-  color_load_ops_u32 : FixedArray[UInt],
-  color_store_ops_u32 : FixedArray[UInt],
+  color_load_ops_u32 : FixedArray[UInt32],
+  color_store_ops_u32 : FixedArray[UInt32],
   color_clears_rgba_f32 : FixedArray[Float],
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
-  depth_read_only_u32 : UInt,
-  stencil_read_only_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
+  depth_read_only_u32 : UInt32,
+  stencil_read_only_u32 : UInt32,
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color2_depth_sparse_u32_packed_new"
 
 ///|
 pub fn render_pass_descriptor_color2_depth_u32_new(
   color0_view : WGPUTextureView,
-  color0_load_op_u32 : UInt,
-  color0_store_op_u32 : UInt,
+  color0_load_op_u32 : UInt32,
+  color0_store_op_u32 : UInt32,
   color0_clear_r_f32 : Float,
   color0_clear_g_f32 : Float,
   color0_clear_b_f32 : Float,
   color0_clear_a_f32 : Float,
   color1_view : WGPUTextureView,
-  color1_load_op_u32 : UInt,
-  color1_store_op_u32 : UInt,
+  color1_load_op_u32 : UInt32,
+  color1_store_op_u32 : UInt32,
   color1_clear_r_f32 : Float,
   color1_clear_g_f32 : Float,
   color1_clear_b_f32 : Float,
   color1_clear_a_f32 : Float,
   depth_view : WGPUTextureView,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
   depth_read_only : Bool,
   stencil_read_only : Bool,
 ) -> WGPURenderPassDescriptorPtr {
@@ -903,26 +903,26 @@ pub fn render_pass_descriptor_color2_depth_u32_new(
 ///|
 pub fn render_pass_descriptor_color2_depth_sparse_u32_new(
   color0_view : WGPUTextureView,
-  color0_load_op_u32 : UInt,
-  color0_store_op_u32 : UInt,
+  color0_load_op_u32 : UInt32,
+  color0_store_op_u32 : UInt32,
   color0_clear_r_f32 : Float,
   color0_clear_g_f32 : Float,
   color0_clear_b_f32 : Float,
   color0_clear_a_f32 : Float,
   color1_view : WGPUTextureView,
-  color1_load_op_u32 : UInt,
-  color1_store_op_u32 : UInt,
+  color1_load_op_u32 : UInt32,
+  color1_store_op_u32 : UInt32,
   color1_clear_r_f32 : Float,
   color1_clear_g_f32 : Float,
   color1_clear_b_f32 : Float,
   color1_clear_a_f32 : Float,
   depth_view : WGPUTextureView,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
   depth_read_only : Bool,
   stencil_read_only : Bool,
 ) -> WGPURenderPassDescriptorPtr {
@@ -948,12 +948,12 @@ pub fn render_pass_descriptor_color2_depth_sparse_u32_new(
 ///|
 pub extern "C" fn render_pass_descriptor_depth_u32_new(
   depth_view : WGPUTextureView,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
   depth_read_only : Bool,
   stencil_read_only : Bool,
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_depth_u32_new"
@@ -988,34 +988,34 @@ pub extern "C" fn render_pass_descriptor_color_depth_new(
 #borrow(color_ops_u32, color_clear_rgba_f32)
 extern "C" fn render_pass_descriptor_color_depth_u32_packed_new(
   color_view : WGPUTextureView,
-  color_ops_u32 : FixedArray[UInt],
+  color_ops_u32 : FixedArray[UInt32],
   color_clear_rgba_f32 : FixedArray[Float],
   depth_view : WGPUTextureView,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
-  flags_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
+  flags_u32 : UInt32,
 ) -> WGPURenderPassDescriptorPtr = "mbt_wgpu_render_pass_descriptor_color_depth_u32_packed_new"
 
 ///|
 pub fn render_pass_descriptor_color_depth_u32_new(
   color_view : WGPUTextureView,
-  color_load_op_u32 : UInt,
-  color_store_op_u32 : UInt,
+  color_load_op_u32 : UInt32,
+  color_store_op_u32 : UInt32,
   color_clear_r_f32 : Float,
   color_clear_g_f32 : Float,
   color_clear_b_f32 : Float,
   color_clear_a_f32 : Float,
   depth_view : WGPUTextureView,
-  depth_load_op_u32 : UInt,
-  depth_store_op_u32 : UInt,
+  depth_load_op_u32 : UInt32,
+  depth_store_op_u32 : UInt32,
   depth_clear_value_f32 : Float,
-  stencil_load_op_u32 : UInt,
-  stencil_store_op_u32 : UInt,
-  stencil_clear_value_u32 : UInt,
+  stencil_load_op_u32 : UInt32,
+  stencil_store_op_u32 : UInt32,
+  stencil_clear_value_u32 : UInt32,
   depth_read_only : Bool,
   stencil_read_only : Bool,
 ) -> WGPURenderPassDescriptorPtr {
@@ -1048,10 +1048,10 @@ pub extern "C" fn texel_copy_texture_info_default_new(
 ///|
 pub extern "C" fn texel_copy_texture_info_new(
   texture : WGPUTexture,
-  mip_level : UInt,
-  origin_x : UInt,
-  origin_y : UInt,
-  origin_z : UInt,
+  mip_level : UInt32,
+  origin_x : UInt32,
+  origin_y : UInt32,
+  origin_z : UInt32,
 ) -> WGPUTexelCopyTextureInfoPtr = "mbt_wgpu_texel_copy_texture_info_new"
 
 ///|
@@ -1063,8 +1063,8 @@ pub extern "C" fn texel_copy_texture_info_free(
 ///|
 pub extern "C" fn texel_copy_buffer_layout_new(
   offset : UInt64,
-  bytes_per_row : UInt,
-  rows_per_image : UInt,
+  bytes_per_row : UInt32,
+  rows_per_image : UInt32,
 ) -> WGPUTexelCopyBufferLayoutPtr = "mbt_wgpu_texel_copy_buffer_layout_new"
 
 ///|
@@ -1077,8 +1077,8 @@ pub extern "C" fn texel_copy_buffer_layout_free(
 pub extern "C" fn texel_copy_buffer_info_new(
   buffer : WGPUBuffer,
   offset : UInt64,
-  bytes_per_row : UInt,
-  rows_per_image : UInt,
+  bytes_per_row : UInt32,
+  rows_per_image : UInt32,
 ) -> WGPUTexelCopyBufferInfoPtr = "mbt_wgpu_texel_copy_buffer_info_new"
 
 ///|
@@ -1089,9 +1089,9 @@ pub extern "C" fn texel_copy_buffer_info_free(
 
 ///|
 pub extern "C" fn extent3d_new(
-  width : UInt,
-  height : UInt,
-  depth_or_array_layers : UInt,
+  width : UInt32,
+  height : UInt32,
+  depth_or_array_layers : UInt32,
 ) -> WGPUExtent3DPtr = "mbt_wgpu_extent3d_new"
 
 ///|
@@ -1134,21 +1134,21 @@ pub extern "C" fn feature_name_native_spirv_shader_passthrough() -> WGPUFeatureN
 ///|
 pub extern "C" fn query_set_descriptor_new(
   query_type : WGPUQueryType,
-  count : UInt,
+  count : UInt32,
 ) -> WGPUQuerySetDescriptorPtr = "mbt_wgpu_query_set_descriptor_new"
 
 ///|
 pub extern "C" fn query_set_descriptor_pipeline_statistics_new(
-  count : UInt,
-  statistic_name : UInt,
+  count : UInt32,
+  statistic_name : UInt32,
 ) -> WGPUQuerySetDescriptorPtr = "mbt_wgpu_query_set_descriptor_pipeline_statistics_new"
 
 ///|
 #borrow(statistic_names_u32)
 pub extern "C" fn query_set_descriptor_pipeline_statistics_many_new(
-  count : UInt,
+  count : UInt32,
   statistic_count : UInt64,
-  statistic_names_u32 : FixedArray[UInt],
+  statistic_names_u32 : FixedArray[UInt32],
 ) -> WGPUQuerySetDescriptorPtr = "mbt_wgpu_query_set_descriptor_pipeline_statistics_many_new"
 
 ///|

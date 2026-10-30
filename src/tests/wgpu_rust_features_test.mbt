@@ -57,7 +57,7 @@ test "rust feature bit constants align with wgpu" {
 
 ///|
 test "rust feature mask helpers report missing bits" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -72,7 +72,7 @@ test "rust feature mask helpers report missing bits" {
     let required_known = required & @wgpu.FEATURES_QUERYABLE_MASK
     let required_unknown = required ^ required_known
 
-    let expected_adapter_supported : Ref[UInt64] = @ref.new(0UL)
+    let expected_adapter_supported : Ref[UInt64] = Ref(0UL)
     if adapter.supported_features_contains_u32(
         @wgpu.FEATURE_NAME_DEPTH_CLIP_CONTROL,
       ) {
@@ -160,7 +160,7 @@ test "rust feature mask helpers report missing bits" {
       content="true",
     )
 
-    let expected_device_supported : Ref[UInt64] = @ref.new(0UL)
+    let expected_device_supported : Ref[UInt64] = Ref(0UL)
     if device.has_feature_u32(@wgpu.FEATURE_NAME_DEPTH_CLIP_CONTROL) {
       expected_device_supported.val = expected_device_supported.val |
         @wgpu.FEATURES_DEPTH_CLIP_CONTROL

@@ -1,6 +1,5 @@
 import {
   "Milky2018/wgpu_mbt" @wgpu,
-  "moonbitlang/core/ref",
 }
 
 import {
@@ -8,7 +7,6 @@ import {
   "Milky2018/wgpu_mbt/c" @wgpu_c,
   "moonbitlang/core/bench",
   "moonbitlang/core/debug",
-  "moonbitlang/core/ref",
   "moonbitlang/core/encoding/utf8",
 } for "test"
 

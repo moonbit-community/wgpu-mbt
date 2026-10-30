@@ -22,10 +22,10 @@ test "wgpu bind group: dynamic uniform offset selects color" {
   // Dynamic offsets for uniform buffers typically require 256-byte alignment.
   let ubo = device.create_buffer(
     size=512UL,
-    usage=bu(@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST),
   )
-  queue.write_buffer(ubo, 0UL, u32le_pack([255U, 0U, 0U, 255U]))
-  queue.write_buffer(ubo, 256UL, u32le_pack([0U, 255U, 0U, 255U]))
+  queue.write_buffer(ubo, 0UL, @tests.u32le_pack([255U, 0U, 0U, 255U]))
+  queue.write_buffer(ubo, 256UL, @tests.u32le_pack([0U, 255U, 0U, 255U]))
   let bgl = device.create_bind_group_layout_uniform_buffer_dynamic()
   let bg = device.create_bind_group_uniform_buffer_16(bgl, ubo)
   let pl = device.create_pipeline_layout_1(bgl)
@@ -53,12 +53,12 @@ test "wgpu bind group: dynamic uniform offset selects color" {
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
   let pipeline = device.create_render_pipeline_rgba8_with_layout(pl, sm)
-  fn render_one(offset : UInt) -> Array[UInt] {
+  fn render_one(offset : UInt32) -> Array[UInt32] {
     let tex = device.create_texture_rgba8_2d(1U, 1U)
     let view = tex.create_view()
     let readback = device.create_buffer(
       size=256UL,
-      usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+      usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
     )
     let encoder = device.create_command_encoder()
     let pass = encoder.begin_render_pass_color(view)
@@ -71,7 +71,7 @@ test "wgpu bind group: dynamic uniform offset selects color" {
     let cmd = encoder.finish()
     queue.submit_one(cmd)
     let out = readback.readback(instance, 0UL, 4UL)
-    let rgba : Array[UInt] = [
+    let rgba : Array[UInt32] = [
       out[0].to_uint(),
       out[1].to_uint(),
       out[2].to_uint(),
@@ -110,15 +110,20 @@ test "wgpu bind group: pipeline layout 2 groups (sampler+texture, uniform)" {
   // Source texture: solid red.
   let src = device.create_texture_rgba8_2d(1U, 1U)
   let src_view = src.create_view()
-  queue.write_texture_rgba8_2d(src, 1U, 1U, rgba_bytes(255U, 0U, 0U, 255U))
+  queue.write_texture_rgba8_2d(
+    src,
+    1U,
+    1U,
+    @tests.rgba_bytes(255U, 0U, 0U, 255U),
+  )
   submit_empty(device, queue)
 
   // Uniform vec4<u32>: [0, 255, 0, 255] => green channel becomes 1.0.
   let ubo = device.create_buffer(
     size=16UL,
-    usage=bu(@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST),
   )
-  queue.write_buffer(ubo, 0UL, u32le_pack([0U, 255U, 0U, 255U]))
+  queue.write_buffer(ubo, 0UL, @tests.u32le_pack([0U, 255U, 0U, 255U]))
   let bgl0 = device.create_bind_group_layout_sampler_texture_2d()
   let bgl1 = device.create_bind_group_layout_uniform_buffer()
   let pl = device.create_pipeline_layout_2(bgl0, bgl1)
@@ -157,7 +162,7 @@ test "wgpu bind group: pipeline layout 2 groups (sampler+texture, uniform)" {
   let out_view = out_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(out_view)

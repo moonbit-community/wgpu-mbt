@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-pub fn rgba_bytes(r : UInt, g : UInt, b : UInt, a : UInt) -> Bytes {
+pub fn rgba_bytes(r : UInt32, g : UInt32, b : UInt32, a : UInt32) -> Bytes {
   let b0 = (r & 0xFF).reinterpret_as_int().to_byte()
   let b1 = (g & 0xFF).reinterpret_as_int().to_byte()
   let b2 = (b & 0xFF).reinterpret_as_int().to_byte()
@@ -36,9 +36,9 @@ pub fn ss(raw : UInt64) -> @wgpu.ShaderStage {
 /// `CommandEncoder::copy_texture_to_buffer_rgba8`, which uses `bytesPerRow=256`.
 pub fn read_rgba8_from_copy_out(
   copy_out : Bytes,
-  x : UInt,
-  y : UInt,
-) -> FixedArray[UInt] {
+  x : UInt32,
+  y : UInt32,
+) -> FixedArray[UInt32] {
   let base = y.reinterpret_as_int() * 256 + x.reinterpret_as_int() * 4
   [
     copy_out[base].to_uint(),
@@ -49,7 +49,7 @@ pub fn read_rgba8_from_copy_out(
 }
 
 ///|
-pub fn u32le_pack(xs : Array[UInt]) -> Bytes {
+pub fn u32le_pack(xs : Array[UInt32]) -> Bytes {
   let n = xs.length()
   Bytes::makei(n * 4, i => {
     let word = xs[i / 4]
@@ -59,7 +59,7 @@ pub fn u32le_pack(xs : Array[UInt]) -> Bytes {
 }
 
 ///|
-pub fn u32le_at(bytes : Bytes, off : Int) -> UInt {
+pub fn u32le_at(bytes : Bytes, off : Int32) -> UInt32 {
   let b0 = bytes[off].to_uint()
   let b1 = bytes[off + 1].to_uint()
   let b2 = bytes[off + 2].to_uint()
@@ -68,7 +68,7 @@ pub fn u32le_at(bytes : Bytes, off : Int) -> UInt {
 }
 
 ///|
-pub fn u64le_at(bytes : Bytes, off : Int) -> UInt64 {
+pub fn u64le_at(bytes : Bytes, off : Int32) -> UInt64 {
   let b0 = bytes[off].to_uint64()
   let b1 = bytes[off + 1].to_uint64()
   let b2 = bytes[off + 2].to_uint64()
@@ -89,7 +89,7 @@ pub fn u64le_at(bytes : Bytes, off : Int) -> UInt64 {
 
 ///|
 pub fn f32le_bytes(v : Float) -> Bytes {
-  let bits : UInt = v.reinterpret_as_int().reinterpret_as_uint()
+  let bits : UInt32 = v.reinterpret_as_int().reinterpret_as_uint()
   let b0 = (bits & 0xFF).to_byte()
   let b1 = ((bits >> 8) & 0xFF).to_byte()
   let b2 = ((bits >> 16) & 0xFF).to_byte()
@@ -99,7 +99,7 @@ pub fn f32le_bytes(v : Float) -> Bytes {
 
 ///|
 pub fn concat_bytes(parts : Array[Bytes]) -> Bytes {
-  let out : Ref[Array[Byte]] = @ref.new([])
+  let out : Ref[Array[Byte]] = Ref([])
   for i = 0; i < parts.length(); i = i + 1 {
     let p = parts[i]
     for j = 0; j < p.length(); j = j + 1 {

@@ -194,8 +194,8 @@ declare pub fn CommandEncoder::release_raw(self : CommandEncoder) -> Unit
 declare pub fn CommandEncoder::resolve_query_set_raw(
   self : CommandEncoder,
   query_set : QuerySet,
-  first_query : UInt,
-  query_count : UInt,
+  first_query : UInt32,
+  query_count : UInt32,
   destination : Buffer,
   destination_offset : UInt64,
 ) -> Unit
@@ -205,7 +205,7 @@ declare pub fn CommandEncoder::resolve_query_set_raw(
 declare pub fn CommandEncoder::write_timestamp_raw(
   self : CommandEncoder,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -217,16 +217,16 @@ declare pub fn ComputePass::add_ref_raw(self : ComputePass) -> Unit
 declare pub fn ComputePass::begin_pipeline_statistics_query_raw(
   self : ComputePass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn ComputePass::dispatch_workgroups_raw(
   self : ComputePass,
-  workgroup_count_x : UInt,
-  workgroup_count_y : UInt,
-  workgroup_count_z : UInt,
+  workgroup_count_x : UInt32,
+  workgroup_count_y : UInt32,
+  workgroup_count_z : UInt32,
 ) -> Unit
 
 ///|
@@ -267,7 +267,7 @@ declare pub fn ComputePass::set_pipeline_raw(
 declare pub fn ComputePass::write_timestamp_raw(
   self : ComputePass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -278,7 +278,7 @@ declare pub fn ComputePipeline::add_ref_raw(self : ComputePipeline) -> Unit
 #declaration_only
 declare pub fn ComputePipeline::get_bind_group_layout_raw(
   self : ComputePipeline,
-  group_index : UInt,
+  group_index : UInt32,
 ) -> BindGroupLayout
 
 ///|
@@ -546,7 +546,7 @@ declare pub fn QuerySet::destroy(self : QuerySet) -> Unit
 
 ///|
 #declaration_only
-declare pub fn QuerySet::get_count(self : QuerySet) -> UInt
+declare pub fn QuerySet::get_count(self : QuerySet) -> UInt32
 
 ///|
 #declaration_only
@@ -598,21 +598,21 @@ declare pub fn RenderBundleEncoder::add_ref_raw(
 #declaration_only
 declare pub fn RenderBundleEncoder::draw_raw(
   self : RenderBundleEncoder,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderBundleEncoder::draw_indexed_raw(
   self : RenderBundleEncoder,
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex : Int,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex : Int32,
+  first_instance : UInt32,
 ) -> Unit
 
 ///|
@@ -671,7 +671,7 @@ declare pub fn RenderBundleEncoder::set_pipeline_raw(
 #declaration_only
 declare pub fn RenderBundleEncoder::set_vertex_buffer_raw(
   self : RenderBundleEncoder,
-  slot : UInt,
+  slot : UInt32,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
@@ -689,7 +689,7 @@ declare pub fn RenderPass::add_ref_raw(self : RenderPass) -> Unit
 #declaration_only
 declare pub fn RenderPass::begin_occlusion_query_raw(
   self : RenderPass,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -697,28 +697,28 @@ declare pub fn RenderPass::begin_occlusion_query_raw(
 declare pub fn RenderPass::begin_pipeline_statistics_query_raw(
   self : RenderPass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderPass::draw_raw(
   self : RenderPass,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderPass::draw_indexed_raw(
   self : RenderPass,
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex : Int,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex : Int32,
+  first_instance : UInt32,
 ) -> Unit
 
 ///|
@@ -765,7 +765,7 @@ declare pub fn RenderPass::multi_draw_indexed_indirect_raw(
   self : RenderPass,
   buffer : Buffer,
   offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit
 
 ///|
@@ -776,7 +776,7 @@ declare pub fn RenderPass::multi_draw_indexed_indirect_count_raw(
   offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit
 
 ///|
@@ -785,7 +785,7 @@ declare pub fn RenderPass::multi_draw_indirect_raw(
   self : RenderPass,
   buffer : Buffer,
   offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit
 
 ///|
@@ -796,7 +796,7 @@ declare pub fn RenderPass::multi_draw_indirect_count_raw(
   offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit
 
 ///|
@@ -835,24 +835,24 @@ declare pub fn RenderPass::set_pipeline_raw(
 #declaration_only
 declare pub fn RenderPass::set_scissor_rect_raw(
   self : RenderPass,
-  x : UInt,
-  y : UInt,
-  width : UInt,
-  height : UInt,
+  x : UInt32,
+  y : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderPass::set_stencil_reference_raw(
   self : RenderPass,
-  reference : UInt,
+  reference : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderPass::set_vertex_buffer_raw(
   self : RenderPass,
-  slot : UInt,
+  slot : UInt32,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
@@ -875,7 +875,7 @@ declare pub fn RenderPass::set_viewport_raw(
 declare pub fn RenderPass::write_timestamp_raw(
   self : RenderPass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -886,7 +886,7 @@ declare pub fn RenderPipeline::add_ref_raw(self : RenderPipeline) -> Unit
 #declaration_only
 declare pub fn RenderPipeline::get_bind_group_layout_raw(
   self : RenderPipeline,
-  group_index : UInt,
+  group_index : UInt32,
 ) -> BindGroupLayout
 
 ///|
@@ -910,7 +910,7 @@ declare pub fn ShaderModule::add_ref_raw(self : ShaderModule) -> Unit
 declare pub fn ShaderModule::get_compilation_info_sync_status_u32(
   self : ShaderModule,
   instance : Instance,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -978,7 +978,7 @@ declare pub fn Texture::destroy_raw(self : Texture) -> Unit
 
 ///|
 #declaration_only
-declare pub fn Texture::get_depth_or_array_layers(self : Texture) -> UInt
+declare pub fn Texture::get_depth_or_array_layers(self : Texture) -> UInt32
 
 ///|
 #declaration_only
@@ -990,15 +990,15 @@ declare pub fn Texture::get_format(self : Texture) -> @c.WGPUTextureFormat
 
 ///|
 #declaration_only
-declare pub fn Texture::get_height(self : Texture) -> UInt
+declare pub fn Texture::get_height(self : Texture) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Texture::get_mip_level_count(self : Texture) -> UInt
+declare pub fn Texture::get_mip_level_count(self : Texture) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Texture::get_sample_count(self : Texture) -> UInt
+declare pub fn Texture::get_sample_count(self : Texture) -> UInt32
 
 ///|
 #declaration_only
@@ -1006,7 +1006,7 @@ declare pub fn Texture::get_usage(self : Texture) -> @c.WGPUTextureUsage
 
 ///|
 #declaration_only
-declare pub fn Texture::get_width(self : Texture) -> UInt
+declare pub fn Texture::get_width(self : Texture) -> UInt32
 
 ///|
 #declaration_only

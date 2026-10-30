@@ -107,7 +107,7 @@ pub fn QuerySet::add_ref(self : QuerySet) -> QuerySet {
 ///|
 pub fn ComputePipeline::get_bind_group_layout(
   self : ComputePipeline,
-  index : UInt,
+  index : UInt32,
 ) -> BindGroupLayout {
   { raw: @c.wgpuComputePipelineGetBindGroupLayout(self.raw, index), }
 }
@@ -115,7 +115,7 @@ pub fn ComputePipeline::get_bind_group_layout(
 ///|
 pub fn RenderPipeline::get_bind_group_layout(
   self : RenderPipeline,
-  index : UInt,
+  index : UInt32,
 ) -> BindGroupLayout {
   { raw: @c.wgpuRenderPipelineGetBindGroupLayout(self.raw, index), }
 }

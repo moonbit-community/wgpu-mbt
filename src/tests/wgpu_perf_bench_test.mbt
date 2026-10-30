@@ -14,7 +14,7 @@
 
 ///|
 test "bench wgpu: api buffer create+release" (b : @bench.T) {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -34,7 +34,7 @@ test "bench wgpu: api buffer create+release" (b : @bench.T) {
 
 ///|
 test "bench wgpu: api texture/view/sampler create+release" (b : @bench.T) {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -54,7 +54,7 @@ test "bench wgpu: api texture/view/sampler create+release" (b : @bench.T) {
 
 ///|
 test "bench wgpu: api shader+compute pipeline create+release" (b : @bench.T) {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -76,7 +76,7 @@ test "bench wgpu: api shader+compute pipeline create+release" (b : @bench.T) {
 
 ///|
 test "bench wgpu: gpu pipeline create+first submit" (b : @bench.T) {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -86,8 +86,11 @@ test "bench wgpu: gpu pipeline create+first submit" (b : @bench.T) {
       @wgpu.BUFFER_USAGE_COPY_DST
     let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ |
       @wgpu.BUFFER_USAGE_COPY_DST
-    let storage = device.create_buffer(size=4UL, usage=bu(storage_usage))
-    let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
+    let storage = device.create_buffer(size=4UL, usage=@tests.bu(storage_usage))
+    let readback = device.create_buffer(
+      size=256UL,
+      usage=@tests.bu(readback_usage),
+    )
     let wgsl_compute : String =
       #|@group(0) @binding(0) var<storage, read_write> out: array<u32>;
       #|
@@ -134,7 +137,7 @@ test "bench wgpu: gpu pipeline create+first submit" (b : @bench.T) {
 
 ///|
 test "bench wgpu: gpu encode+submit+readback compute" (b : @bench.T) {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
@@ -144,8 +147,11 @@ test "bench wgpu: gpu encode+submit+readback compute" (b : @bench.T) {
       @wgpu.BUFFER_USAGE_COPY_DST
     let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ |
       @wgpu.BUFFER_USAGE_COPY_DST
-    let storage = device.create_buffer(size=4UL, usage=bu(storage_usage))
-    let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
+    let storage = device.create_buffer(size=4UL, usage=@tests.bu(storage_usage))
+    let readback = device.create_buffer(
+      size=256UL,
+      usage=@tests.bu(readback_usage),
+    )
     let wgsl_compute : String =
       #|@group(0) @binding(0) var<storage, read_write> out: array<u32>;
       #|

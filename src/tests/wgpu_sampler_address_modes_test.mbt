@@ -19,12 +19,12 @@ fn sampler_addr_sample_r(
   queue : @wgpu.Queue,
   pipeline : @wgpu.RenderPipeline,
   bg : @wgpu.BindGroup,
-) -> UInt {
+) -> UInt32 {
   let out_tex = device.create_texture_rgba8_2d(1U, 1U)
   let out_view = out_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(out_view)

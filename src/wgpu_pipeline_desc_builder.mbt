@@ -22,7 +22,7 @@
 /// builder automatically.
 pub fn ComputePipelineDescBuilder::new(
   shader_module : ShaderModule,
-  layout? : PipelineLayout = { raw: @c.null_pipeline_layout(), },
+  layout~ : PipelineLayout = { raw: @c.null_pipeline_layout(), },
 ) -> ComputePipelineDescBuilder raise ComputePipelineDescError {
   let raw = @c.compute_pipeline_desc_builder_new(layout.raw, shader_module.raw)
   if @c.compute_pipeline_desc_builder_is_null(raw) {
@@ -112,16 +112,16 @@ pub fn ComputePipelineDescError::message(
 }
 
 ///|
-pub const COMPUTE_PIPELINE_DESC_ERR_NULL_DESCRIPTOR : UInt = 1U
+pub const COMPUTE_PIPELINE_DESC_ERR_NULL_DESCRIPTOR : UInt32 = 1U
 
 ///|
-pub const COMPUTE_PIPELINE_DESC_ERR_ENTRY_EMPTY : UInt = 2U
+pub const COMPUTE_PIPELINE_DESC_ERR_ENTRY_EMPTY : UInt32 = 2U
 
 ///|
-pub const COMPUTE_PIPELINE_DESC_ERR_ENTRY_TOO_LONG : UInt = 3U
+pub const COMPUTE_PIPELINE_DESC_ERR_ENTRY_TOO_LONG : UInt32 = 3U
 
 ///|
-pub const COMPUTE_PIPELINE_DESC_ERR_OOM : UInt = 4U
+pub const COMPUTE_PIPELINE_DESC_ERR_OOM : UInt32 = 4U
 
 ///|
 /// RenderPipelineDescriptor arena builder (MVP).
@@ -133,7 +133,7 @@ pub const COMPUTE_PIPELINE_DESC_ERR_OOM : UInt = 4U
 /// builder automatically.
 pub fn RenderPipelineDescBuilder::new(
   shader_module : ShaderModule,
-  layout? : PipelineLayout = { raw: @c.null_pipeline_layout(), },
+  layout~ : PipelineLayout = { raw: @c.null_pipeline_layout(), },
 ) -> RenderPipelineDescBuilder raise RenderPipelineDescError {
   let raw = @c.render_pipeline_desc_builder_new(layout.raw, shader_module.raw)
   if @c.render_pipeline_desc_builder_is_null(raw) {
@@ -181,7 +181,7 @@ pub fn RenderPipelineDescBuilder::set_color_target_format(
 ///|
 pub fn RenderPipelineDescBuilder::set_color_target_count(
   self : RenderPipelineDescBuilder,
-  count_u32 : UInt,
+  count_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_color_target_count(
     self.raw,
@@ -196,7 +196,7 @@ pub fn RenderPipelineDescBuilder::set_color_target_count(
 ///|
 pub fn RenderPipelineDescBuilder::set_color_target_format_at(
   self : RenderPipelineDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   format : TextureFormat,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_color_target_format_at(
@@ -213,7 +213,7 @@ pub fn RenderPipelineDescBuilder::set_color_target_format_at(
 ///|
 pub fn RenderPipelineDescBuilder::set_color_target_unused_at(
   self : RenderPipelineDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_color_target_unused_at(
     self.raw,
@@ -243,7 +243,7 @@ pub fn RenderPipelineDescBuilder::set_color_target_write_mask(
 ///|
 pub fn RenderPipelineDescBuilder::set_color_target_write_mask_at(
   self : RenderPipelineDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   write_mask_u64 : UInt64,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_color_target_write_mask_at(
@@ -260,12 +260,12 @@ pub fn RenderPipelineDescBuilder::set_color_target_write_mask_at(
 ///|
 pub fn RenderPipelineDescBuilder::set_blend_components(
   self : RenderPipelineDescBuilder,
-  color_src_factor_u32 : UInt,
-  color_dst_factor_u32 : UInt,
-  color_operation_u32 : UInt,
-  alpha_src_factor_u32 : UInt,
-  alpha_dst_factor_u32 : UInt,
-  alpha_operation_u32 : UInt,
+  color_src_factor_u32 : UInt32,
+  color_dst_factor_u32 : UInt32,
+  color_operation_u32 : UInt32,
+  alpha_src_factor_u32 : UInt32,
+  alpha_dst_factor_u32 : UInt32,
+  alpha_operation_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_blend_components(
     self.raw,
@@ -308,7 +308,7 @@ pub fn RenderPipelineDescBuilder::disable_blend(
 pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(
   self : RenderPipelineDescBuilder,
   array_stride : UInt64,
-  step_mode_u32 : UInt,
+  step_mode_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_vertex_buffer_layout(
     self.raw,
@@ -325,8 +325,8 @@ pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(
 pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(
   self : RenderPipelineDescBuilder,
   array_stride : UInt64,
-  step_mode_u32 : UInt,
-) -> UInt raise RenderPipelineDescError {
+  step_mode_u32 : UInt32,
+) -> UInt32 raise RenderPipelineDescError {
   let idx = @c.render_pipeline_desc_builder_add_vertex_buffer_layout(
     self.raw,
     array_stride,
@@ -342,9 +342,9 @@ pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(
 ///|
 pub fn RenderPipelineDescBuilder::add_vertex_attribute(
   self : RenderPipelineDescBuilder,
-  format_u32 : UInt,
+  format_u32 : UInt32,
   offset : UInt64,
-  shader_location : UInt,
+  shader_location : UInt32,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_add_vertex_attribute(
     self.raw,
@@ -361,7 +361,7 @@ pub fn RenderPipelineDescBuilder::add_vertex_attribute(
 ///|
 pub fn RenderPipelineDescBuilder::set_topology_u32(
   self : RenderPipelineDescBuilder,
-  topology_u32 : UInt,
+  topology_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_topology(self.raw, topology_u32)
   if err != 0U {
@@ -373,7 +373,7 @@ pub fn RenderPipelineDescBuilder::set_topology_u32(
 ///|
 pub fn RenderPipelineDescBuilder::set_strip_index_format_u32(
   self : RenderPipelineDescBuilder,
-  index_format_u32 : UInt,
+  index_format_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_strip_index_format(
     self.raw,
@@ -388,7 +388,7 @@ pub fn RenderPipelineDescBuilder::set_strip_index_format_u32(
 ///|
 pub fn RenderPipelineDescBuilder::set_cull_mode_u32(
   self : RenderPipelineDescBuilder,
-  cull_mode_u32 : UInt,
+  cull_mode_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_cull_mode(
     self.raw,
@@ -459,7 +459,7 @@ pub fn RenderPipelineDescBuilder::clear_fragment(
 ///|
 pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(
   self : RenderPipelineDescBuilder,
-  polygon_mode_u32 : UInt,
+  polygon_mode_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_polygon_mode(
     self.raw,
@@ -501,11 +501,11 @@ pub fn RenderPipelineDescBuilder::clear_primitive_extras(
 pub fn RenderPipelineDescBuilder::set_depth_stencil(
   self : RenderPipelineDescBuilder,
   depth_format : TextureFormat,
-  depth_write_enabled? : Bool = true,
-  depth_compare_u32? : UInt = COMPARE_FUNCTION_LESS,
-  depth_bias? : Int = 0,
-  depth_bias_slope_scale? : Float = 0.0,
-  depth_bias_clamp? : Float = 0.0,
+  depth_write_enabled~ : Bool = true,
+  depth_compare_u32~ : UInt32 = COMPARE_FUNCTION_LESS,
+  depth_bias~ : Int32 = 0,
+  depth_bias_slope_scale~ : Float = 0.0,
+  depth_bias_clamp~ : Float = 0.0,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_depth_stencil(
     self.raw,
@@ -525,9 +525,9 @@ pub fn RenderPipelineDescBuilder::set_depth_stencil(
 ///|
 pub fn RenderPipelineDescBuilder::set_multisample(
   self : RenderPipelineDescBuilder,
-  count_u32 : UInt,
-  mask_u32? : UInt = 0xFFFFFFFFU,
-  alpha_to_coverage_enabled? : Bool = false,
+  count_u32 : UInt32,
+  mask_u32~ : UInt32 = 0xFFFFFFFFU,
+  alpha_to_coverage_enabled~ : Bool = false,
 ) -> Unit raise RenderPipelineDescError {
   let err = @c.render_pipeline_desc_builder_set_multisample(
     self.raw,
@@ -615,34 +615,34 @@ pub fn RenderPipelineDescError::message(
 }
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_NULL_BUILDER : UInt = 1U
+pub const RENDER_PIPELINE_DESC_ERR_NULL_BUILDER : UInt32 = 1U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_ENTRY_EMPTY : UInt = 2U
+pub const RENDER_PIPELINE_DESC_ERR_ENTRY_EMPTY : UInt32 = 2U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_ENTRY_TOO_LONG : UInt = 3U
+pub const RENDER_PIPELINE_DESC_ERR_ENTRY_TOO_LONG : UInt32 = 3U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_ZERO : UInt = 4U
+pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_ZERO : UInt32 = 4U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_EXCEEDS_MAX : UInt = 5U
+pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_COUNT_EXCEEDS_MAX : UInt32 = 5U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_INDEX_OOB : UInt = 6U
+pub const RENDER_PIPELINE_DESC_ERR_COLOR_TARGET_INDEX_OOB : UInt32 = 6U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_NO_VERTEX_BUFFER_LAYOUT : UInt = 7U
+pub const RENDER_PIPELINE_DESC_ERR_NO_VERTEX_BUFFER_LAYOUT : UInt32 = 7U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_VERTEX_BUFFER_LAYOUT_EXCEEDS_MAX : UInt = 8U
+pub const RENDER_PIPELINE_DESC_ERR_VERTEX_BUFFER_LAYOUT_EXCEEDS_MAX : UInt32 = 8U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_VERTEX_ATTRIBUTE_EXCEEDS_MAX : UInt = 9U
+pub const RENDER_PIPELINE_DESC_ERR_VERTEX_ATTRIBUTE_EXCEEDS_MAX : UInt32 = 9U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_INTERNAL : UInt = 10U
+pub const RENDER_PIPELINE_DESC_ERR_INTERNAL : UInt32 = 10U
 
 ///|
-pub const RENDER_PIPELINE_DESC_ERR_OOM : UInt = 11U
+pub const RENDER_PIPELINE_DESC_ERR_OOM : UInt32 = 11U

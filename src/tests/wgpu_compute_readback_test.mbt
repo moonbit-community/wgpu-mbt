@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-fn readback_u32_le(bytes : Bytes) -> UInt {
+fn readback_u32_le(bytes : Bytes) -> UInt32 {
   if bytes.length() < 4 {
     return 0U
   }
@@ -31,8 +31,14 @@ test "wgpu compute storage buffer readback" {
   let queue = device.queue()
   let storage_usage = @wgpu.BUFFER_USAGE_STORAGE | @wgpu.BUFFER_USAGE_COPY_SRC
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage_buf = device.create_buffer(size=4UL, usage=bu(storage_usage))
-  let readback_buf = device.create_buffer(size=4UL, usage=bu(readback_usage))
+  let storage_buf = device.create_buffer(
+    size=4UL,
+    usage=@tests.bu(storage_usage),
+  )
+  let readback_buf = device.create_buffer(
+    size=4UL,
+    usage=@tests.bu(readback_usage),
+  )
   let bgl = device.create_bind_group_layout_storage_buffer()
   let pl = device.create_pipeline_layout_1(bgl)
   let bg = device.create_bind_group_storage_buffer(bgl, storage_buf)

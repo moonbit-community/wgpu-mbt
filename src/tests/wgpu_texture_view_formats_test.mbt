@@ -50,23 +50,26 @@ test "wgpu texture view formats (sRGB view)" {
     @wgpu.BUFFER_USAGE_COPY_SRC |
     @wgpu.BUFFER_USAGE_COPY_DST
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage = device.create_buffer(size=8UL, usage=bu(storage_usage))
-  let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let storage = device.create_buffer(size=8UL, usage=@tests.bu(storage_usage))
+  let readback = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=3UL)
   let bgl_ok0 = bglb.add_sampler(
     0U,
-    ss(@wgpu.SHADER_STAGE_COMPUTE),
+    @tests.ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.SAMPLER_BINDING_TYPE_FILTERING,
   )
   let bgl_ok1 = bglb.add_texture(
     1U,
-    ss(@wgpu.SHADER_STAGE_COMPUTE),
+    @tests.ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.TEXTURE_SAMPLE_TYPE_FLOAT,
     @wgpu.TEXTURE_VIEW_DIMENSION_2D,
   )
   let bgl_ok2 = bglb.add_buffer(
     2U,
-    ss(@wgpu.SHADER_STAGE_COMPUTE),
+    @tests.ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.BUFFER_BINDING_TYPE_STORAGE,
   )
   @debug.debug_inspect(
@@ -107,7 +110,10 @@ test "wgpu texture view formats (sRGB view)" {
   queue.submit_one(cmd)
   let _done = device.poll(wait=true)
   let out = readback.readback(instance, 0UL, 8UL)
-  @debug.debug_inspect([u32le_at(out, 0), u32le_at(out, 4)], content="[16, 8]")
+  @debug.debug_inspect(
+    [@tests.u32le_at(out, 0), @tests.u32le_at(out, 4)],
+    content="[16, 8]",
+  )
   cmd.release()
   encoder.release()
   cp.release()

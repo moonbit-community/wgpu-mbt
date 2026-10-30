@@ -30,7 +30,7 @@ test "wgpu timestamp query (feature-gated)" {
   let qs = device.create_query_set_timestamp(2U)
   let resolve = device.create_buffer(
     size=16UL,
-    usage=bu(
+    usage=@tests.bu(
       @wgpu.BUFFER_USAGE_COPY_SRC |
       @wgpu.BUFFER_USAGE_COPY_DST |
       @wgpu.BUFFER_USAGE_QUERY_RESOLVE,
@@ -38,7 +38,7 @@ test "wgpu timestamp query (feature-gated)" {
   )
   let readback = device.create_buffer(
     size=16UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   encoder.write_timestamp(qs, 0U)
@@ -48,8 +48,8 @@ test "wgpu timestamp query (feature-gated)" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 16UL)
-  let a = u64le_at(out, 0)
-  let b = u64le_at(out, 8)
+  let a = @tests.u64le_at(out, 0)
+  let b = @tests.u64le_at(out, 8)
   if a == 0UL && b == 0UL {
     inspect("unsupported", content="unsupported")
   } else {

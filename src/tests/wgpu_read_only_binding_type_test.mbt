@@ -47,7 +47,11 @@ test "read-only binding type helper follows storage-buffer limits" {
 
   let one_binding_type = device.get_supported_read_only_binding_type_u32(1U)
   let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=1UL)
-  let ok = bglb.add_buffer(0U, ss(@wgpu.SHADER_STAGE_COMPUTE), one_binding_type)
+  let ok = bglb.add_buffer(
+    0U,
+    @tests.ss(@wgpu.SHADER_STAGE_COMPUTE),
+    one_binding_type,
+  )
   inspect(ok, content="true")
   let bgl = bglb.finish(device)
 

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-fn bgra_bytes(b : UInt, g : UInt, r : UInt, a : UInt) -> Bytes {
+fn bgra_bytes(b : UInt32, g : UInt32, r : UInt32, a : UInt32) -> Bytes {
   let b0 = (b & 0xFF).reinterpret_as_int().to_byte()
   let b1 = (g & 0xFF).reinterpret_as_int().to_byte()
   let b2 = (r & 0xFF).reinterpret_as_int().to_byte()
@@ -48,7 +48,7 @@ test "wgpu texture: write_texture_2d_bytes_per_pixel (BGRA8Unorm)" {
   )
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   encoder.copy_texture_to_buffer_bytes_per_pixel(tex, readback, 1U, 1U, 4U)

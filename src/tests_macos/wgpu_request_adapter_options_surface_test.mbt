@@ -49,7 +49,7 @@ test "wgpu request_adapter options: compatibleSurface (Metal contract)" {
 test "wgpu request_adapter options: compatibleSurface rejects backend mismatch (Metal contract)" {
   let instance = @wgpu.Instance::create()
   let surface = instance.create_surface_metal_layer()
-  let failed : Ref[Bool] = @ref.new(false)
+  let failed : Ref[Bool] = Ref(false)
   try {
     let adapter = instance.request_adapter_sync_options_surface_u32(
       surface,

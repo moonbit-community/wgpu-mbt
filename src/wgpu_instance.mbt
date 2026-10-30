@@ -33,14 +33,14 @@ pub fn Instance::create_ptr(
 /// published upstream binaries do not share a stable `WGPUInstanceExtras`
 /// layout for that field yet.
 pub fn Instance::create_with_extras_u32(
-  backends_u64? : UInt64 = INSTANCE_BACKEND_ALL,
-  flags_u32? : UInt = INSTANCE_FLAG_DEFAULT,
-  dx12_shader_compiler_u32? : UInt = DX12_COMPILER_UNDEFINED,
-  gles3_minor_version_u32? : UInt = GLES3_MINOR_VERSION_AUTOMATIC,
-  gl_fence_behaviour_u32? : UInt = GL_FENCE_BEHAVIOUR_NORMAL,
-  dxc_max_shader_model_u32? : UInt = DXC_MAX_SHADER_MODEL_V6_0,
-  dx12_presentation_system_u32? : UInt = DX12_SWAPCHAIN_KIND_UNDEFINED,
-  dxc_path? : String = "",
+  backends_u64~ : UInt64 = INSTANCE_BACKEND_ALL,
+  flags_u32~ : UInt32 = INSTANCE_FLAG_DEFAULT,
+  dx12_shader_compiler_u32~ : UInt32 = DX12_COMPILER_UNDEFINED,
+  gles3_minor_version_u32~ : UInt32 = GLES3_MINOR_VERSION_AUTOMATIC,
+  gl_fence_behaviour_u32~ : UInt32 = GL_FENCE_BEHAVIOUR_NORMAL,
+  dxc_max_shader_model_u32~ : UInt32 = DXC_MAX_SHADER_MODEL_V6_0,
+  dx12_presentation_system_u32~ : UInt32 = DX12_SWAPCHAIN_KIND_UNDEFINED,
+  dxc_path~ : String = "",
 ) -> Instance raise WgpuError {
   require_native()
   let dxc_path_utf8 = utf8_bytes(dxc_path)
@@ -118,9 +118,9 @@ pub fn Instance::request_adapter_sync(
     BACKEND_TYPE_UNDEFINED
   }
   fn try_request(
-    feature_level_u32 : UInt,
+    feature_level_u32 : UInt32,
     force_fallback_adapter : Bool,
-    backend_type_u32 : UInt,
+    backend_type_u32 : UInt32,
   ) -> @c.Adapter {
     @c.instance_request_adapter_sync_options_u32(
       self.raw,
@@ -132,7 +132,7 @@ pub fn Instance::request_adapter_sync(
     )
   }
 
-  let attempts : Array[(UInt, Bool, UInt)] = [
+  let attempts : Array[(UInt32, Bool, UInt32)] = [
     // Prefer the default backend selection first.
     (FEATURE_LEVEL_CORE, false, BACKEND_TYPE_UNDEFINED),
     (FEATURE_LEVEL_CORE, false, backend),
@@ -180,10 +180,10 @@ pub fn Instance::request_adapter_sync_ptr(
 ///|
 pub fn Instance::request_adapter_sync_options_u32(
   self : Instance,
-  feature_level_u32? : UInt = FEATURE_LEVEL_CORE,
-  power_preference_u32? : UInt = POWER_PREFERENCE_UNDEFINED,
-  force_fallback_adapter? : Bool = false,
-  backend_type_u32? : UInt = BACKEND_TYPE_UNDEFINED,
+  feature_level_u32~ : UInt32 = FEATURE_LEVEL_CORE,
+  power_preference_u32~ : UInt32 = POWER_PREFERENCE_UNDEFINED,
+  force_fallback_adapter~ : Bool = false,
+  backend_type_u32~ : UInt32 = BACKEND_TYPE_UNDEFINED,
 ) -> Adapter raise WgpuError {
   require_native()
   require_native_symbol("wgpuInstanceRequestAdapter")
@@ -208,10 +208,10 @@ pub fn Instance::request_adapter_sync_options_u32(
 pub fn Instance::request_adapter_sync_options_surface_u32(
   self : Instance,
   surface : Surface,
-  feature_level_u32? : UInt = FEATURE_LEVEL_CORE,
-  power_preference_u32? : UInt = POWER_PREFERENCE_UNDEFINED,
-  force_fallback_adapter? : Bool = false,
-  backend_type_u32? : UInt = BACKEND_TYPE_UNDEFINED,
+  feature_level_u32~ : UInt32 = FEATURE_LEVEL_CORE,
+  power_preference_u32~ : UInt32 = POWER_PREFERENCE_UNDEFINED,
+  force_fallback_adapter~ : Bool = false,
+  backend_type_u32~ : UInt32 = BACKEND_TYPE_UNDEFINED,
 ) -> Adapter raise WgpuError {
   require_native()
   require_native_symbol("wgpuInstanceRequestAdapter")
@@ -235,7 +235,7 @@ pub fn Instance::request_adapter_sync_options_surface_u32(
 ///|
 pub fn Instance::request_adapter_future_id_u64(
   self : Instance,
-  options? : @c.WGPURequestAdapterOptionsPtr = @c.null_request_adapter_options_ptr(),
+  options~ : @c.WGPURequestAdapterOptionsPtr = @c.null_request_adapter_options_ptr(),
 ) -> UInt64 {
   if !native_available() || !native_supported() {
     return 0UL
@@ -250,7 +250,7 @@ pub fn Instance::request_adapter_future_id_u64(
 pub fn Instance::request_adapter_async_status_u32(
   self : Instance,
   future_id : UInt64,
-) -> UInt {
+) -> UInt32 {
   let _ = self
   @c.instance_request_adapter_async_status_u32(future_id)
 }
@@ -318,7 +318,7 @@ pub fn Instance::process_events(self : Instance) -> Unit {
 pub fn Instance::wait_any_one(
   self : Instance,
   future_id : UInt64,
-  timeout_ns? : UInt64 = 0UL,
+  timeout_ns~ : UInt64 = 0UL,
 ) -> WaitAnyResult {
   let packed = @c.instance_wait_any_one_packed_u64(
     self.raw,
@@ -334,7 +334,7 @@ pub fn Instance::wait_any_one(
 pub fn Instance::wait_any_one_or_raise(
   self : Instance,
   future_id : UInt64,
-  timeout_ns? : UInt64 = 0UL,
+  timeout_ns~ : UInt64 = 0UL,
 ) -> WaitAnyResult raise WaitAnyError {
   let result = self.wait_any_one(future_id, timeout_ns~)
   if result.status != WAIT_STATUS_SUCCESS {
@@ -439,7 +439,7 @@ pub fn Instance::create_surface_wayland(
 pub fn Instance::create_surface_xcb(
   self : Instance,
   connection : @c.OpaquePtr,
-  window : UInt,
+  window : UInt32,
 ) -> Surface {
   {
     raw: @c.instance_create_surface_xcb(self.raw, connection, window),

@@ -19,7 +19,7 @@ suberror LifecycleHelperTestError {
 
 ///|
 test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases stack" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let report0 = instance.generate_report()
     let kept0_devices = report0.hub_devices_num_kept_from_user()
@@ -39,7 +39,7 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases stack" {
 
       let buf = device.create_buffer(
         size=4UL,
-        usage=bu(@wgpu.BUFFER_USAGE_COPY_DST),
+        usage=@tests.bu(@wgpu.BUFFER_USAGE_COPY_DST),
       )
       ignore(buf.size())
       buf.release()
@@ -58,7 +58,7 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases stack" {
 
 ///|
 test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases on callback error" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let report0 = instance.generate_report()
     let kept0_devices = report0.hub_devices_num_kept_from_user()
@@ -70,7 +70,7 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases on callb
     instance.with_device_queue_sync((device, _queue) => {
       let buf = device.create_buffer(
         size=4UL,
-        usage=bu(@wgpu.BUFFER_USAGE_COPY_DST),
+        usage=@tests.bu(@wgpu.BUFFER_USAGE_COPY_DST),
       )
       buf.release()
       raise LifecycleHelperCallbackFailed("callback error")
@@ -92,7 +92,7 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_sync releases on callb
 
 ///|
 test "wgpu lifecycle helpers: Instance::with_device_queue_auto_release releases on callback error" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let report0 = instance.generate_report()
     let kept0_devices = report0.hub_devices_num_kept_from_user()
@@ -105,7 +105,10 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_auto_release releases 
 
     instance.with_device_queue_auto_release((device, _queue, pool) => {
       let buf = pool.track_buffer(
-        device.create_buffer(size=4UL, usage=bu(@wgpu.BUFFER_USAGE_COPY_DST)),
+        device.create_buffer(
+          size=4UL,
+          usage=@tests.bu(@wgpu.BUFFER_USAGE_COPY_DST),
+        ),
       )
       ignore(buf.size())
       raise LifecycleHelperCallbackFailed("callback error")
@@ -129,7 +132,7 @@ test "wgpu lifecycle helpers: Instance::with_device_queue_auto_release releases 
 
 ///|
 test "wgpu lifecycle helpers: with_default_device_queue_sync runs a smoke flow" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     @wgpu.with_default_device_queue_sync((instance, device, queue) => {
       let _ = instance
       let wgsl =
@@ -157,7 +160,7 @@ test "wgpu lifecycle helpers: with_default_device_queue_sync runs a smoke flow" 
 
 ///|
 test "wgpu lifecycle helpers: with_default_device_queue_auto_release runs a smoke flow" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     @wgpu.with_default_device_queue_auto_release((instance, device, queue, pool) => {
       let _ = instance
       let wgsl =
@@ -184,7 +187,7 @@ test "wgpu lifecycle helpers: with_default_device_queue_auto_release runs a smok
 
 ///|
 test "wgpu lifecycle helpers: with_default_device_queue_managed runs a smoke flow" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     @wgpu.with_default_device_queue_managed((instance, device, queue) => {
       let _ = instance
       let wgsl =

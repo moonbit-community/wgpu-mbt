@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-fn classify_0_255_mid(x : UInt) -> String {
+fn classify_0_255_mid(x : UInt32) -> String {
   if x == 0U {
     "zero"
   } else if x == 255U {
@@ -54,7 +54,7 @@ test "wgpu sampler: linear vs nearest produces different mid-sample" {
   let out_linear_view = out_linear.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let bgl = device.create_bind_group_layout_sampler_texture_2d()
   let pl = device.create_pipeline_layout_1(bgl)
@@ -158,13 +158,18 @@ test "wgpu sampler: clamp-to-edge clamps out-of-range UVs" {
   let queue = device.queue()
   let src = device.create_texture_rgba8_2d(1U, 1U)
   let src_view = src.create_view()
-  queue.write_texture_rgba8_2d(src, 1U, 1U, rgba_bytes(0U, 255U, 0U, 255U))
+  queue.write_texture_rgba8_2d(
+    src,
+    1U,
+    1U,
+    @tests.rgba_bytes(0U, 255U, 0U, 255U),
+  )
   submit_empty(device, queue)
   let out_tex = device.create_texture_rgba8_2d(1U, 1U)
   let out_view = out_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let bgl = device.create_bind_group_layout_sampler_texture_2d()
   let pl = device.create_pipeline_layout_1(bgl)
@@ -238,13 +243,18 @@ test "wgpu sampler: linear clamp-to-edge clamps out-of-range UVs" {
   let queue = device.queue()
   let src = device.create_texture_rgba8_2d(1U, 1U)
   let src_view = src.create_view()
-  queue.write_texture_rgba8_2d(src, 1U, 1U, rgba_bytes(255U, 0U, 0U, 255U))
+  queue.write_texture_rgba8_2d(
+    src,
+    1U,
+    1U,
+    @tests.rgba_bytes(255U, 0U, 0U, 255U),
+  )
   submit_empty(device, queue)
   let out_tex = device.create_texture_rgba8_2d(1U, 1U)
   let out_view = out_tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let bgl = device.create_bind_group_layout_sampler_texture_2d()
   let pl = device.create_pipeline_layout_1(bgl)

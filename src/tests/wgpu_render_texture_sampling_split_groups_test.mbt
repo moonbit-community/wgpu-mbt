@@ -19,14 +19,20 @@ test "wgpu render texture sampling (split bind groups)" {
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
   let upload_usage = @wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_COPY_DST
-  let upload_buf = device.create_buffer(size=256UL, usage=bu(upload_usage))
-  queue.write_buffer(upload_buf, 0UL, rgba_bytes(255U, 0U, 0U, 255U))
+  let upload_buf = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(upload_usage),
+  )
+  queue.write_buffer(upload_buf, 0UL, @tests.rgba_bytes(255U, 0U, 0U, 255U))
   let src_tex = device.create_texture_rgba8_2d(1U, 1U)
   let src_view = src_tex.create_view()
   let dst_tex = device.create_texture_rgba8_2d(1U, 1U)
   let dst_view = dst_tex.create_view()
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback_buf = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let sampler = device.create_sampler_nearest_clamp()
   let bgl_sampler = device.create_bind_group_layout_sampler_filtering()
   let bgl_tex = device.create_bind_group_layout_texture_2d_float()
@@ -62,7 +68,7 @@ test "wgpu render texture sampling (split bind groups)" {
   encoder.copy_buffer_to_texture_rgba8(upload_buf, src_tex, 1U, 1U)
   let pass = encoder.begin_render_pass_color(dst_view)
   pass.set_pipeline(pipeline)
-  let empty_offsets : Array[UInt] = []
+  let empty_offsets : Array[UInt32] = []
   pass.set_bind_group(0U, bg_sampler, empty_offsets)
   pass.set_bind_group(1U, bg_tex, empty_offsets)
   pass.draw(3U, 1U, 0U, 0U)
@@ -72,7 +78,7 @@ test "wgpu render texture sampling (split bind groups)" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback_buf.readback(instance, 0UL, 4UL)
-  let rgba : Array[UInt] = [
+  let rgba : Array[UInt32] = [
     out[0].to_uint(),
     out[1].to_uint(),
     out[2].to_uint(),

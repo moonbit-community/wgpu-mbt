@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-fn array_contains_u32(xs : Array[UInt], v : UInt) -> Bool {
+fn array_contains_u32(xs : Array[UInt32], v : UInt32) -> Bool {
   let n = xs.length()
   for i = 0; i < n; i = i + 1 {
     if xs[i] == v {
@@ -25,8 +25,8 @@ fn array_contains_u32(xs : Array[UInt], v : UInt) -> Bool {
 
 ///|
 fn classify_optional_symbol_error_kind(
-  kind : UInt,
-  accepted : Array[UInt],
+  kind : UInt32,
+  accepted : Array[UInt32],
 ) -> String {
   if array_contains_u32(accepted, kind) {
     "expected"
@@ -125,7 +125,7 @@ test "optional symbol or_raise: compilation info disabled => runtime fail" {
     #|fn main() {}
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
-  let outcome : Ref[String] = @ref.new("unreached")
+  let outcome : Ref[String] = Ref("unreached")
   try {
     let _ = sm.get_compilation_info_sync_or_raise(instance)
     outcome.val = "unexpected_success"
@@ -168,7 +168,7 @@ test "optional symbol or_raise: pipeline async disabled => disabled error" {
     pl.raw_handle(),
     sm_compute.raw_handle(),
   )
-  let outcome : Ref[String] = @ref.new("unreached")
+  let outcome : Ref[String] = Ref("unreached")
   try {
     let cp = device.create_compute_pipeline_async_sync_ptr_or_raise(
       instance, cp_desc,
@@ -232,7 +232,7 @@ test "optional symbol or_raise: render pipeline async strict path is repo-gated"
     pl.raw_handle(),
     sm.raw_handle(),
   )
-  let outcome : Ref[String] = @ref.new("unreached")
+  let outcome : Ref[String] = Ref("unreached")
   try {
     let rp = device.create_render_pipeline_async_sync_ptr_or_raise(
       instance, rp_desc,

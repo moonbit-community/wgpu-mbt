@@ -23,7 +23,7 @@ fn compose_supported_rust_features_u64(
   has_subgroup : Bool,
   has_texture_int64_atomic : Bool,
 ) -> UInt64 {
-  let supported : Ref[UInt64] = @ref.new(0UL)
+  let supported : Ref[UInt64] = Ref(0UL)
   if has_depth_clip_control {
     supported.val = supported.val | FEATURES_DEPTH_CLIP_CONTROL
   }

@@ -25,7 +25,7 @@ test "wgpu render: occlusion query (best-effort)" {
   // into an intermediate buffer and copy into a mappable readback buffer.
   let resolve = device.create_buffer(
     size=8UL,
-    usage=bu(
+    usage=@tests.bu(
       @wgpu.BUFFER_USAGE_COPY_SRC |
       @wgpu.BUFFER_USAGE_COPY_DST |
       @wgpu.BUFFER_USAGE_QUERY_RESOLVE,
@@ -33,7 +33,7 @@ test "wgpu render: occlusion query (best-effort)" {
   )
   let readback = device.create_buffer(
     size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -75,7 +75,7 @@ test "wgpu render: occlusion query (best-effort)" {
   if out.length() < 8 {
     inspect("unsupported", content="unsupported")
   } else {
-    let v = u64le_at(out, 0)
+    let v = @tests.u64le_at(out, 0)
     inspect(v > 0UL, content="true")
   }
   cmd.release()

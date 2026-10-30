@@ -27,7 +27,10 @@ test "wgpu immediates (feature-gated)" {
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
     #|
@@ -50,7 +53,7 @@ test "wgpu immediates (feature-gated)" {
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
   let layout = device.create_pipeline_layout_immediates(
-    ss(@wgpu.SHADER_STAGE_FRAGMENT),
+    @tests.ss(@wgpu.SHADER_STAGE_FRAGMENT),
     0U,
     4U,
   )
@@ -59,9 +62,9 @@ test "wgpu immediates (feature-gated)" {
   let pass = encoder.begin_render_pass_color_clear(view, 0.0, 0.0, 0.0, 1.0)
   pass.set_pipeline(pipeline)
   pass.set_immediates(
-    ss(@wgpu.SHADER_STAGE_FRAGMENT),
+    @tests.ss(@wgpu.SHADER_STAGE_FRAGMENT),
     0U,
-    rgba_bytes(1U, 2U, 3U, 4U),
+    @tests.rgba_bytes(1U, 2U, 3U, 4U),
   )
   pass.draw(3U, 1U, 0U, 0U)
   pass.end()
@@ -70,7 +73,7 @@ test "wgpu immediates (feature-gated)" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  let rgba : Array[UInt] = [
+  let rgba : Array[UInt32] = [
     out[0].to_uint(),
     out[1].to_uint(),
     out[2].to_uint(),
@@ -106,7 +109,10 @@ test "wgpu immediates many ranges (feature-gated)" {
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
     #|struct Pc {
@@ -141,17 +147,25 @@ test "wgpu immediates many ranges (feature-gated)" {
     #|
   let sm = device.create_shader_module_wgsl(wgsl)
   let layout = device.create_pipeline_layout_immediates_many(
-    ss(@wgpu.SHADER_STAGE_VERTEX),
+    @tests.ss(@wgpu.SHADER_STAGE_VERTEX),
     0U,
     4U,
-    [(ss(@wgpu.SHADER_STAGE_FRAGMENT), 4U, 8U)],
+    [(@tests.ss(@wgpu.SHADER_STAGE_FRAGMENT), 4U, 8U)],
   )
   let pipeline = device.create_render_pipeline_rgba8_with_layout(layout, sm)
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color_clear(view, 0.0, 0.0, 0.0, 1.0)
   pass.set_pipeline(pipeline)
-  pass.set_immediates(ss(@wgpu.SHADER_STAGE_VERTEX), 0U, u32le_pack([1U]))
-  pass.set_immediates(ss(@wgpu.SHADER_STAGE_FRAGMENT), 4U, u32le_pack([1U]))
+  pass.set_immediates(
+    @tests.ss(@wgpu.SHADER_STAGE_VERTEX),
+    0U,
+    @tests.u32le_pack([1U]),
+  )
+  pass.set_immediates(
+    @tests.ss(@wgpu.SHADER_STAGE_FRAGMENT),
+    4U,
+    @tests.u32le_pack([1U]),
+  )
   pass.draw(3U, 1U, 0U, 0U)
   pass.end()
   pass.release()
@@ -159,7 +173,7 @@ test "wgpu immediates many ranges (feature-gated)" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 4UL)
-  let rgba : Array[UInt] = [
+  let rgba : Array[UInt32] = [
     out[0].to_uint(),
     out[1].to_uint(),
     out[2].to_uint(),
@@ -194,11 +208,17 @@ test "wgpu pipeline layout combines bind group and immediates (feature-gated)" {
   let queue = device.queue()
   let storage_usage = @wgpu.BUFFER_USAGE_STORAGE | @wgpu.BUFFER_USAGE_COPY_SRC
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage_buf = device.create_buffer(size=4UL, usage=bu(storage_usage))
-  let readback_buf = device.create_buffer(size=4UL, usage=bu(readback_usage))
+  let storage_buf = device.create_buffer(
+    size=4UL,
+    usage=@tests.bu(storage_usage),
+  )
+  let readback_buf = device.create_buffer(
+    size=4UL,
+    usage=@tests.bu(readback_usage),
+  )
   let bgl = device.create_bind_group_layout_storage_buffer()
   let layout = device.create_pipeline_layout_with_immediates([bgl], [
-    (ss(@wgpu.SHADER_STAGE_COMPUTE), 0U, 8U),
+    (@tests.ss(@wgpu.SHADER_STAGE_COMPUTE), 0U, 8U),
   ])
   let bg = device.create_bind_group_storage_buffer(bgl, storage_buf)
   let wgsl : String =
@@ -222,7 +242,7 @@ test "wgpu pipeline layout combines bind group and immediates (feature-gated)" {
   let pass = encoder.begin_compute_pass()
   pass.set_pipeline(pipeline)
   pass.set_bind_group0(bg)
-  pass.set_immediates(0U, u32le_pack([19U, 23U]))
+  pass.set_immediates(0U, @tests.u32le_pack([19U, 23U]))
   pass.dispatch_workgroups(1U, 1U, 1U)
   pass.end()
   pass.release()
@@ -230,7 +250,7 @@ test "wgpu pipeline layout combines bind group and immediates (feature-gated)" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback_buf.readback(instance, 0UL, 4UL)
-  inspect(u32le_at(out, 0), content="42")
+  inspect(@tests.u32le_at(out, 0), content="42")
   cmd.release()
   encoder.release()
   bg.release()

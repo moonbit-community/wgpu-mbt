@@ -21,10 +21,13 @@ test "wgpu render viewport + scissor" {
   let tex = device.create_texture_rgba8_2d(4U, 4U)
   let view = tex.create_view()
   let vb_usage = @wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST
-  let vb = device.create_buffer(size=24UL, usage=bu(vb_usage))
-  queue.write_buffer(vb, 0UL, vertices_pos2_bytes())
+  let vb = device.create_buffer(size=24UL, usage=@tests.bu(vb_usage))
+  queue.write_buffer(vb, 0UL, @tests.vertices_pos2_bytes())
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=1024UL, usage=bu(readback_usage))
+  let readback_buf = device.create_buffer(
+    size=1024UL,
+    usage=@tests.bu(readback_usage),
+  )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
     #|
@@ -55,7 +58,7 @@ test "wgpu render viewport + scissor" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let in_px = readback_buf.readback(instance, 0UL, 4UL)
-  let in_rgba : Array[UInt] = [
+  let in_rgba : Array[UInt32] = [
     in_px[0].to_uint(),
     in_px[1].to_uint(),
     in_px[2].to_uint(),
@@ -63,7 +66,7 @@ test "wgpu render viewport + scissor" {
   ]
   @debug.debug_inspect(in_rgba, content="[255, 0, 0, 255]")
   let out_px = readback_buf.readback(instance, 4UL, 4UL)
-  let out_rgba : Array[UInt] = [
+  let out_rgba : Array[UInt32] = [
     out_px[0].to_uint(),
     out_px[1].to_uint(),
     out_px[2].to_uint(),

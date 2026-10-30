@@ -30,7 +30,7 @@ test "wgpu timestamp query inside passes (feature-gated)" {
   let qs = device.create_query_set_timestamp(4U)
   let resolve = device.create_buffer(
     size=32UL,
-    usage=bu(
+    usage=@tests.bu(
       @wgpu.BUFFER_USAGE_COPY_SRC |
       @wgpu.BUFFER_USAGE_COPY_DST |
       @wgpu.BUFFER_USAGE_QUERY_RESOLVE,
@@ -38,7 +38,7 @@ test "wgpu timestamp query inside passes (feature-gated)" {
   )
   let readback = device.create_buffer(
     size=32UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   let wgsl_compute : String =
@@ -96,10 +96,10 @@ test "wgpu timestamp query inside passes (feature-gated)" {
   let cmd = encoder.finish()
   queue.submit_one(cmd)
   let out = readback.readback(instance, 0UL, 32UL)
-  let t0 = u64le_at(out, 0)
-  let t1 = u64le_at(out, 8)
-  let t2 = u64le_at(out, 16)
-  let t3 = u64le_at(out, 24)
+  let t0 = @tests.u64le_at(out, 0)
+  let t1 = @tests.u64le_at(out, 8)
+  let t2 = @tests.u64le_at(out, 16)
+  let t3 = @tests.u64le_at(out, 24)
   if t0 == 0UL && t1 == 0UL && t2 == 0UL && t3 == 0UL {
     inspect("unsupported", content="unsupported")
   } else {

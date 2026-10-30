@@ -19,7 +19,7 @@ pub struct RenderPassDescBuilder {
 
 ///|
 suberror RenderPassDescError {
-  RenderPassDescError(UInt, UInt, UInt)
+  RenderPassDescError(UInt32, UInt32, UInt32)
 }
 
 ///|
@@ -31,7 +31,7 @@ suberror RenderPassDescError {
 /// `begin(encoder)` is the consuming high-level path and frees the builder
 /// automatically.
 pub fn RenderPassDescBuilder::new(
-  color_attachment_count : UInt,
+  color_attachment_count : UInt32,
 ) -> RenderPassDescBuilder raise RenderPassDescError {
   let raw = @c.render_pass_desc_builder_new(color_attachment_count)
   if @c.render_pass_desc_builder_is_null(raw) {
@@ -43,14 +43,14 @@ pub fn RenderPassDescBuilder::new(
 ///|
 pub fn RenderPassDescBuilder::set_color_attachment(
   self : RenderPassDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   view : TextureView,
-  load_op_u32? : UInt = LOAD_OP_CLEAR,
-  store_op_u32? : UInt = STORE_OP_STORE,
-  clear_r_f32? : Float = 0.0,
-  clear_g_f32? : Float = 0.0,
-  clear_b_f32? : Float = 0.0,
-  clear_a_f32? : Float = 1.0,
+  load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  store_op_u32~ : UInt32 = STORE_OP_STORE,
+  clear_r_f32~ : Float = 0.0,
+  clear_g_f32~ : Float = 0.0,
+  clear_b_f32~ : Float = 0.0,
+  clear_a_f32~ : Float = 1.0,
 ) -> Unit raise RenderPassDescError {
   let err = @c.render_pass_desc_builder_set_color_attachment_u32(
     self.raw,
@@ -72,7 +72,7 @@ pub fn RenderPassDescBuilder::set_color_attachment(
 ///|
 pub fn RenderPassDescBuilder::set_color_attachment_resolve_target(
   self : RenderPassDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   resolve_target : TextureView,
 ) -> Unit raise RenderPassDescError {
   let err = @c.render_pass_desc_builder_set_color_attachment_resolve_target(
@@ -89,7 +89,7 @@ pub fn RenderPassDescBuilder::set_color_attachment_resolve_target(
 ///|
 pub fn RenderPassDescBuilder::clear_color_attachment_resolve_target(
   self : RenderPassDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
 ) -> Unit raise RenderPassDescError {
   let err = @c.render_pass_desc_builder_clear_color_attachment_resolve_target(
     self.raw,
@@ -105,14 +105,14 @@ pub fn RenderPassDescBuilder::clear_color_attachment_resolve_target(
 pub fn RenderPassDescBuilder::set_depth_stencil_attachment(
   self : RenderPassDescBuilder,
   depth_view : TextureView,
-  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  depth_store_op_u32? : UInt = STORE_OP_STORE,
-  depth_clear_value_f32? : Float = 1.0,
-  stencil_load_op_u32? : UInt = LOAD_OP_UNDEFINED,
-  stencil_store_op_u32? : UInt = STORE_OP_UNDEFINED,
-  stencil_clear_value_u32? : UInt = 0U,
-  depth_read_only? : Bool = false,
-  stencil_read_only? : Bool = false,
+  depth_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  depth_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  depth_clear_value_f32~ : Float = 1.0,
+  stencil_load_op_u32~ : UInt32 = LOAD_OP_UNDEFINED,
+  stencil_store_op_u32~ : UInt32 = STORE_OP_UNDEFINED,
+  stencil_clear_value_u32~ : UInt32 = 0U,
+  depth_read_only~ : Bool = false,
+  stencil_read_only~ : Bool = false,
 ) -> Unit raise RenderPassDescError {
   let err = @c.render_pass_desc_builder_set_depth_stencil_attachment_u32(
     self.raw,
@@ -205,10 +205,10 @@ pub fn RenderPassDescError::message(self : RenderPassDescError) -> String {
 }
 
 ///|
-pub const RENDER_PASS_DESC_ERR_NULL_BUILDER : UInt = 1U
+pub const RENDER_PASS_DESC_ERR_NULL_BUILDER : UInt32 = 1U
 
 ///|
-pub const RENDER_PASS_DESC_ERR_COLOR_ATTACHMENT_INDEX_OOB : UInt = 2U
+pub const RENDER_PASS_DESC_ERR_COLOR_ATTACHMENT_INDEX_OOB : UInt32 = 2U
 
 ///|
-pub const RENDER_PASS_DESC_ERR_OOM : UInt = 3U
+pub const RENDER_PASS_DESC_ERR_OOM : UInt32 = 3U

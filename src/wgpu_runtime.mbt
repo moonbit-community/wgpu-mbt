@@ -28,7 +28,7 @@ fn align_up(value : UInt64, align : UInt64) -> UInt64 {
 }
 
 ///|
-fn align_up_int(value : Int, align : Int) -> Int {
+fn align_up_int(value : Int32, align : Int32) -> Int32 {
   let rem = value % align
   if rem == 0 {
     value
@@ -38,7 +38,7 @@ fn align_up_int(value : Int, align : Int) -> Int {
 }
 
 ///|
-pub fn get_version() -> UInt {
+pub fn get_version() -> UInt32 {
   @c.wgpuGetVersion()
 }
 
@@ -145,7 +145,7 @@ pub fn require_native_symbol(name : String) -> Unit raise WgpuError {
 }
 
 ///|
-pub fn set_log_level(level : UInt) -> Unit {
+pub fn set_log_level(level : UInt32) -> Unit {
   @c.wgpuSetLogLevel(level)
 }
 
@@ -175,7 +175,7 @@ pub fn pipeline_async_enabled() -> Bool {
 }
 
 ///|
-pub fn pipeline_async_availability_kind_u32() -> UInt {
+pub fn pipeline_async_availability_kind_u32() -> UInt32 {
   @c.pipeline_async_availability_u32()
 }
 
@@ -196,7 +196,7 @@ pub fn compilation_info_enabled() -> Bool {
 }
 
 ///|
-pub fn compilation_info_availability_kind_u32() -> UInt {
+pub fn compilation_info_availability_kind_u32() -> UInt32 {
   @c.compilation_info_availability_u32()
 }
 
@@ -219,7 +219,7 @@ pub fn set_debug_labels_enabled(enabled : Bool) -> Unit {
 }
 
 ///|
-fn array_contains_u32(xs : Array[UInt], v : UInt) -> Bool {
+fn array_contains_u32(xs : Array[UInt32], v : UInt32) -> Bool {
   let n = xs.length()
   for i = 0; i < n; i = i + 1 {
     if xs[i] == v {
@@ -230,7 +230,10 @@ fn array_contains_u32(xs : Array[UInt], v : UInt) -> Bool {
 }
 
 ///|
-fn pick_first_supported_u32(xs : Array[UInt], prefs : Array[UInt]) -> UInt {
+fn pick_first_supported_u32(
+  xs : Array[UInt32],
+  prefs : Array[UInt32],
+) -> UInt32 {
   let n = prefs.length()
   for i = 0; i < n; i = i + 1 {
     let v = prefs[i]

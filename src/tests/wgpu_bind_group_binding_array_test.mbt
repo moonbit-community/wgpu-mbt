@@ -46,24 +46,24 @@ test "wgpu bind group builder (binding arrays via extras)" {
   let view1 = tex1.create_view()
   let sampler = device.create_sampler_linear_clamp()
   let storage_usage = @wgpu.BUFFER_USAGE_STORAGE
-  let storage = device.create_buffer(size=16UL, usage=bu(storage_usage))
+  let storage = device.create_buffer(size=16UL, usage=@tests.bu(storage_usage))
   let bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=3UL)
   let bgl_ok0 = bglb.add_texture(
     0U,
-    ss(@wgpu.SHADER_STAGE_COMPUTE),
+    @tests.ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.TEXTURE_SAMPLE_TYPE_FLOAT,
     @wgpu.TEXTURE_VIEW_DIMENSION_2D,
     count=2U,
   )
   let bgl_ok1 = bglb.add_sampler(
     1U,
-    ss(@wgpu.SHADER_STAGE_COMPUTE),
+    @tests.ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.SAMPLER_BINDING_TYPE_FILTERING,
     count=2U,
   )
   let bgl_ok2 = bglb.add_buffer(
     2U,
-    ss(@wgpu.SHADER_STAGE_COMPUTE),
+    @tests.ss(@wgpu.SHADER_STAGE_COMPUTE),
     @wgpu.BUFFER_BINDING_TYPE_STORAGE,
   )
   @debug.debug_inspect(
@@ -176,14 +176,14 @@ test "wgpu bind group builder: sampler binding array renders with dynamic index"
   let sampler_repeat = device.create_sampler_nearest_repeat()
   let slot = device.create_buffer(
     size=16UL,
-    usage=bu(@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_UNIFORM | @wgpu.BUFFER_USAGE_COPY_DST),
   )
-  queue.write_buffer(slot, 0UL, u32le_pack([1U, 0U, 0U, 0U]))
+  queue.write_buffer(slot, 0UL, @tests.u32le_pack([1U, 0U, 0U, 0U]))
 
   let slot_bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=1UL)
   let slot_ok = slot_bglb.add_buffer(
     0U,
-    ss(@wgpu.SHADER_STAGE_FRAGMENT),
+    @tests.ss(@wgpu.SHADER_STAGE_FRAGMENT),
     @wgpu.BUFFER_BINDING_TYPE_UNIFORM,
     min_binding_size=4UL,
   )
@@ -193,14 +193,14 @@ test "wgpu bind group builder: sampler binding array renders with dynamic index"
   let arrays_bglb = @wgpu.BindGroupLayoutBuilder::new(max_entries=2UL)
   let arrays_ok0 = arrays_bglb.add_texture(
     4U,
-    ss(@wgpu.SHADER_STAGE_FRAGMENT),
+    @tests.ss(@wgpu.SHADER_STAGE_FRAGMENT),
     @wgpu.TEXTURE_SAMPLE_TYPE_FLOAT,
     @wgpu.TEXTURE_VIEW_DIMENSION_2D,
     count=2U,
   )
   let arrays_ok1 = arrays_bglb.add_sampler(
     5U,
-    ss(@wgpu.SHADER_STAGE_FRAGMENT),
+    @tests.ss(@wgpu.SHADER_STAGE_FRAGMENT),
     @wgpu.SAMPLER_BINDING_TYPE_FILTERING,
     count=2U,
   )
@@ -265,7 +265,7 @@ test "wgpu bind group builder: sampler binding array renders with dynamic index"
   let dst_view = dst.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color(dst_view)

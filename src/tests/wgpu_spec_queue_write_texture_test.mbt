@@ -18,13 +18,16 @@ test "spec: queue.write_texture_rgba8_2d" {
   let adapter = instance.request_adapter_sync()
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
-  let data = rgba_bytes(0U, 0U, 255U, 255U)
+  let data = @tests.rgba_bytes(0U, 0U, 255U, 255U)
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
   let out_tex = device.create_texture_rgba8_2d(1U, 1U)
   let out_view = out_tex.create_view()
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback_buf = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let sampler = device.create_sampler_nearest_clamp()
   let bgl = device.create_bind_group_layout_sampler_texture_2d()
   let pl = device.create_pipeline_layout_1(bgl)

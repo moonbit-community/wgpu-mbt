@@ -29,7 +29,7 @@ test "buffer sync helpers: readback_or_raise raises on OOB" {
     @wgpu.BUFFER_USAGE_COPY_SRC | @wgpu.BUFFER_USAGE_MAP_READ,
   )
   let buffer = device.create_buffer(size=16UL, usage~)
-  let raised : Ref[Bool] = @ref.new(false)
+  let raised : Ref[Bool] = Ref(false)
   try {
     let _ = buffer.readback_or_raise(instance, 17UL, 1UL)
     ()

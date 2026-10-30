@@ -47,12 +47,15 @@ test "wgpu GlobalReport leak check (buffers/textures/pipelines)" {
     @wgpu.BUFFER_USAGE_COPY_SRC |
     @wgpu.BUFFER_USAGE_COPY_DST
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let storage = device.create_buffer(size=4UL, usage=bu(storage_usage))
+  let storage = device.create_buffer(size=4UL, usage=@tests.bu(storage_usage))
   let readback_storage = device.create_buffer(
     size=256UL,
-    usage=bu(readback_usage),
+    usage=@tests.bu(readback_usage),
   )
-  let readback_tex = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback_tex = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let tex = device.create_texture_rgba8_2d(1U, 1U)
   let view = tex.create_view()
   let sampler = device.create_sampler_linear_clamp()
@@ -109,10 +112,10 @@ test "wgpu GlobalReport leak check (buffers/textures/pipelines)" {
   queue.submit_one(cmd)
   let _done = device.poll(wait=true)
   let out0 = readback_storage.readback(instance, 0UL, 4UL)
-  inspect(u32le_at(out0, 0), content="7")
+  inspect(@tests.u32le_at(out0, 0), content="7")
   let out1 = readback_tex.readback(instance, 0UL, 256UL)
   @debug.debug_inspect(
-    read_rgba8_from_copy_out(out1, 0U, 0U),
+    @tests.read_rgba8_from_copy_out(out1, 0U, 0U),
     content=(
       #|<FixedArray: [0, 255, 0, 255]>
     ),
@@ -213,7 +216,7 @@ test "wgpu GlobalReport leak check (lifecycle helper and builder ergonomics)" {
   instance.with_device_queue_sync((device, queue) => {
     let scratch = device.create_buffer(
       size=4UL,
-      usage=bu(@wgpu.BUFFER_USAGE_COPY_DST),
+      usage=@tests.bu(@wgpu.BUFFER_USAGE_COPY_DST),
     )
     let tex = device.create_texture_rgba8_2d(1U, 1U)
     let view = tex.create_view()
@@ -346,7 +349,10 @@ test "wgpu GlobalReport leak check (auto-release pool helper)" {
 
   instance.with_device_queue_auto_release((device, queue, pool) => {
     let scratch = pool.track_buffer(
-      device.create_buffer(size=4UL, usage=bu(@wgpu.BUFFER_USAGE_COPY_DST)),
+      device.create_buffer(
+        size=4UL,
+        usage=@tests.bu(@wgpu.BUFFER_USAGE_COPY_DST),
+      ),
     )
     ignore(scratch.size())
 
@@ -418,7 +424,7 @@ test "wgpu GlobalReport leak check (managed helper)" {
   instance.with_device_queue_managed((device, queue) => {
     let scratch = device.create_buffer(
       size=4UL,
-      usage=bu(@wgpu.BUFFER_USAGE_COPY_DST),
+      usage=@tests.bu(@wgpu.BUFFER_USAGE_COPY_DST),
     )
     ignore(scratch.size())
 

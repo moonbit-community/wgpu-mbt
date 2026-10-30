@@ -45,13 +45,13 @@ pub extern "C" fn macos_test_surface_release_on_worker(
 ) -> Bool = "mbt_wgpu_macos_test_surface_release_on_worker"
 
 ///|
-pub extern "C" fn cametallayer_drawable_width_u32(layer : OpaquePtr) -> UInt = "mbt_wgpu_cametallayer_drawable_width_u32"
+pub extern "C" fn cametallayer_drawable_width_u32(layer : OpaquePtr) -> UInt32 = "mbt_wgpu_cametallayer_drawable_width_u32"
 
 ///|
-pub extern "C" fn cametallayer_drawable_height_u32(layer : OpaquePtr) -> UInt = "mbt_wgpu_cametallayer_drawable_height_u32"
+pub extern "C" fn cametallayer_drawable_height_u32(layer : OpaquePtr) -> UInt32 = "mbt_wgpu_cametallayer_drawable_height_u32"
 
 ///|
-pub extern "C" fn macos_surface_last_status_u32() -> UInt = "mbt_wgpu_macos_surface_last_status_u32"
+pub extern "C" fn macos_surface_last_status_u32() -> UInt32 = "mbt_wgpu_macos_surface_last_status_u32"
 
 ///|
 #borrow(ns_view)
@@ -69,13 +69,13 @@ pub fn macos_ns_view_prepare_metal_layer_u64(ns_view : UInt64) -> OpaquePtr {
 pub extern "C" fn macos_ns_view_sync_metal_layer(
   ns_view : OpaquePtr,
   layer : OpaquePtr,
-) -> UInt = "mbt_wgpu_macos_ns_view_sync_metal_layer"
+) -> UInt32 = "mbt_wgpu_macos_ns_view_sync_metal_layer"
 
 ///|
 pub fn macos_ns_view_sync_metal_layer_u64(
   ns_view : UInt64,
   layer : OpaquePtr,
-) -> UInt {
+) -> UInt32 {
   macos_ns_view_sync_metal_layer(opaque_ptr_from_u64(ns_view), layer)
 }
 
@@ -84,14 +84,14 @@ pub extern "C" fn surface_is_null(surface : WGPUSurface) -> Bool = "mbt_wgpu_opa
 
 ///|
 pub extern "C" fn macos_test_ns_view_new(
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> OpaquePtr = "mbt_wgpu_macos_test_ns_view_new"
 
 ///|
 pub extern "C" fn macos_test_window_new(
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> OpaquePtr = "mbt_wgpu_macos_test_window_new"
 
 ///|
@@ -105,7 +105,7 @@ pub extern "C" fn macos_test_window_content_view(
 pub extern "C" fn macos_test_window_show(window : OpaquePtr) -> Unit = "mbt_wgpu_macos_test_window_show"
 
 ///|
-pub extern "C" fn macos_test_pump_events(iterations : UInt) -> Unit = "mbt_wgpu_macos_test_pump_events"
+pub extern "C" fn macos_test_pump_events(iterations : UInt32) -> Unit = "mbt_wgpu_macos_test_pump_events"
 
 ///|
 #borrow(window)
@@ -115,8 +115,8 @@ pub extern "C" fn macos_test_window_release(window : OpaquePtr) -> Unit = "mbt_w
 #borrow(ns_view)
 pub extern "C" fn macos_test_ns_view_set_size(
   ns_view : OpaquePtr,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit = "mbt_wgpu_macos_test_ns_view_set_size"
 
 ///|
@@ -146,7 +146,7 @@ pub extern "C" fn instance_create_surface_wayland(
 pub extern "C" fn instance_create_surface_xcb(
   instance : Instance,
   connection : OpaquePtr,
-  window : UInt,
+  window : UInt32,
 ) -> WGPUSurface = "mbt_wgpu_instance_create_surface_xcb"
 
 ///|
@@ -184,22 +184,22 @@ pub extern "C" fn surface_configure_default(
   surface : WGPUSurface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : UInt64,
-  desired_maximum_frame_latency : UInt,
-) -> UInt = "mbt_wgpu_surface_configure_default"
+  desired_maximum_frame_latency : UInt32,
+) -> UInt32 = "mbt_wgpu_surface_configure_default"
 
 ///|
 pub extern "C" fn surface_configure_u32(
   surface : WGPUSurface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : UInt64,
-  format_u32 : UInt,
-  present_mode_u32 : UInt,
+  format_u32 : UInt32,
+  present_mode_u32 : UInt32,
   alpha_mode_and_desired_maximum_frame_latency_u64 : UInt64,
 ) -> Bool = "mbt_wgpu_surface_configure_u32"
 
@@ -209,14 +209,14 @@ pub extern "C" fn surface_configure_view_formats_u32(
   surface : WGPUSurface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : UInt64,
-  format_u32 : UInt,
-  present_mode_u32 : UInt,
+  format_u32 : UInt32,
+  present_mode_u32 : UInt32,
   alpha_mode_and_desired_maximum_frame_latency_u64 : UInt64,
   view_format_count : UInt64,
-  view_formats : FixedArray[UInt],
+  view_formats : FixedArray[UInt32],
 ) -> Bool = "mbt_wgpu_surface_configure_view_formats_u32"
 
 ///|
@@ -224,7 +224,7 @@ pub extern "C" fn surface_texture_acquire(surface : WGPUSurface) -> OpaquePtr = 
 
 ///|
 #borrow(st)
-pub extern "C" fn surface_texture_status(st : OpaquePtr) -> UInt = "mbt_wgpu_surface_texture_status"
+pub extern "C" fn surface_texture_status(st : OpaquePtr) -> UInt32 = "mbt_wgpu_surface_texture_status"
 
 ///|
 #borrow(st)
@@ -235,7 +235,7 @@ pub extern "C" fn surface_texture_take_texture(st : OpaquePtr) -> Texture = "mbt
 pub extern "C" fn surface_texture_free(st : OpaquePtr) -> Unit = "mbt_wgpu_surface_texture_free"
 
 ///|
-pub extern "C" fn surface_present_u32(surface : WGPUSurface) -> UInt = "mbt_wgpu_surface_present_u32"
+pub extern "C" fn surface_present_u32(surface : WGPUSurface) -> UInt32 = "mbt_wgpu_surface_present_u32"
 
 ///|
 pub extern "C" fn surface_unconfigure(surface : WGPUSurface) -> Unit = "mbt_wgpu_surface_unconfigure"
@@ -272,18 +272,18 @@ pub extern "C" fn surface_capabilities_format_u32_at(
   surface : WGPUSurface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt = "mbt_wgpu_surface_capabilities_format_u32_at"
+) -> UInt32 = "mbt_wgpu_surface_capabilities_format_u32_at"
 
 ///|
 pub extern "C" fn surface_capabilities_present_mode_u32_at(
   surface : WGPUSurface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt = "mbt_wgpu_surface_capabilities_present_mode_u32_at"
+) -> UInt32 = "mbt_wgpu_surface_capabilities_present_mode_u32_at"
 
 ///|
 pub extern "C" fn surface_capabilities_alpha_mode_u32_at(
   surface : WGPUSurface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt = "mbt_wgpu_surface_capabilities_alpha_mode_u32_at"
+) -> UInt32 = "mbt_wgpu_surface_capabilities_alpha_mode_u32_at"

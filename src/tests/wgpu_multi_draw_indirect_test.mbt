@@ -23,7 +23,7 @@ test "wgpu render: multi_draw_indirect (best-effort)" {
   let qs = device.create_query_set_occlusion(1U)
   let resolve = device.create_buffer(
     size=8UL,
-    usage=bu(
+    usage=@tests.bu(
       @wgpu.BUFFER_USAGE_COPY_SRC |
       @wgpu.BUFFER_USAGE_COPY_DST |
       @wgpu.BUFFER_USAGE_QUERY_RESOLVE,
@@ -31,7 +31,7 @@ test "wgpu render: multi_draw_indirect (best-effort)" {
   )
   let readback = device.create_buffer(
     size=8UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -58,8 +58,10 @@ test "wgpu render: multi_draw_indirect (best-effort)" {
 
   // Two back-to-back draw-indirect commands.
   // struct DrawIndirectArgs { u32 vertexCount; u32 instanceCount; u32 firstVertex; u32 firstInstance; }
-  let indirect_data = u32le_pack([3U, 1U, 0U, 0U, 3U, 1U, 0U, 0U])
-  let usage = bu(@wgpu.BUFFER_USAGE_INDIRECT | @wgpu.BUFFER_USAGE_COPY_DST)
+  let indirect_data = @tests.u32le_pack([3U, 1U, 0U, 0U, 3U, 1U, 0U, 0U])
+  let usage = @tests.bu(
+    @wgpu.BUFFER_USAGE_INDIRECT | @wgpu.BUFFER_USAGE_COPY_DST,
+  )
   let indirect = device.create_buffer_init(usage~, indirect_data)
   let encoder = device.create_command_encoder()
   let pass = encoder.begin_render_pass_color_occlusion(view, qs)
@@ -77,7 +79,7 @@ test "wgpu render: multi_draw_indirect (best-effort)" {
   if out.length() < 8 {
     inspect("unsupported", content="unsupported")
   } else {
-    let v = u64le_at(out, 0)
+    let v = @tests.u64le_at(out, 0)
     if v >= 2UL {
       inspect("ok", content="ok")
     } else {

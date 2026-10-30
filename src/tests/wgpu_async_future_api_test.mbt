@@ -14,12 +14,12 @@
 
 ///|
 test "wgpu async future API: request adapter and device" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter_future = instance.request_adapter_future_id_u64()
     assert_eq(adapter_future == 0UL, false)
 
-    let adapter_done : Ref[Bool] = @ref.new(false)
+    let adapter_done : Ref[Bool] = Ref(false)
     for _i = 0; _i < 4000 && !adapter_done.val; _i = _i + 1 {
       let wait = instance.wait_any_one(adapter_future)
       if wait.completed {
@@ -39,7 +39,7 @@ test "wgpu async future API: request adapter and device" {
     let device_future = adapter.request_device_future_id_u64()
     assert_eq(device_future == 0UL, false)
 
-    let device_done : Ref[Bool] = @ref.new(false)
+    let device_done : Ref[Bool] = Ref(false)
     for _i = 0; _i < 4000 && !device_done.val; _i = _i + 1 {
       let wait = instance.wait_any_one(device_future)
       if wait.completed {

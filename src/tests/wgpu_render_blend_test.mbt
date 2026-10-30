@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-fn bucket_half_u8(x : UInt) -> String {
+fn bucket_half_u8(x : UInt32) -> String {
   if x <= 16U {
     "zero"
   } else if x >= 239U {
@@ -26,7 +26,7 @@ fn bucket_half_u8(x : UInt) -> String {
 }
 
 ///|
-fn u16le_at(bytes : Bytes, off : Int) -> UInt {
+fn u16le_at(bytes : Bytes, off : Int32) -> UInt32 {
   bytes[off].to_uint() | (bytes[off + 1].to_uint() << 8)
 }
 
@@ -40,7 +40,7 @@ test "wgpu render: alpha blending over loaded color" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_green : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -153,7 +153,7 @@ test "wgpu render: constant-factor blending over loaded RGBA16Float color" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_green : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -280,7 +280,7 @@ test "wgpu render: alpha blending + arbitrary format pipeline (BGRA8Unorm)" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_green : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -400,13 +400,13 @@ test "wgpu render pipeline desc builder: pos2 + alpha blend + arbitrary format (
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let vb = device.create_buffer(
     size=24UL,
-    usage=bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
   )
-  queue.write_buffer(vb, 0UL, vertices_pos2_bytes())
+  queue.write_buffer(vb, 0UL, @tests.vertices_pos2_bytes())
   let wgsl_green : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
     #|
@@ -513,7 +513,7 @@ test "wgpu render pipeline desc builder: custom blend components" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_green_a0 : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -626,7 +626,7 @@ test "wgpu render pipeline desc builder: color target write mask setters" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_green_a0 : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -733,7 +733,7 @@ test "wgpu render pipeline desc builder: disable blend after enable" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_green : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };

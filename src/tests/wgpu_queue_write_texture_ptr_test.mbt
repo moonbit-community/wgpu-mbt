@@ -19,7 +19,7 @@ test "wgpu Queue::write_texture_ptr writes pixel" {
   let device = adapter.request_device_sync(instance)
   let queue = device.queue()
   let tex = device.create_texture_rgba8_2d(1U, 1U)
-  let payload = rgba_bytes(0U, 0U, 255U, 255U)
+  let payload = @tests.rgba_bytes(0U, 0U, 255U, 255U)
   let dst = @wgpu_c.texel_copy_texture_info_default_new(tex.raw_handle())
   let layout = @wgpu_c.texel_copy_buffer_layout_new(0UL, 256U, 1U)
   let extent = @wgpu_c.extent3d_new(1U, 1U, 1U)
@@ -28,7 +28,10 @@ test "wgpu Queue::write_texture_ptr writes pixel" {
   @wgpu_c.texel_copy_buffer_layout_free(layout)
   @wgpu_c.texel_copy_texture_info_free(dst)
   let readback_usage = @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST
-  let readback_buf = device.create_buffer(size=256UL, usage=bu(readback_usage))
+  let readback_buf = device.create_buffer(
+    size=256UL,
+    usage=@tests.bu(readback_usage),
+  )
   let encoder = device.create_command_encoder()
   let src = @wgpu_c.texel_copy_texture_info_default_new(tex.raw_handle())
   let dst2 = @wgpu_c.texel_copy_buffer_info_new(

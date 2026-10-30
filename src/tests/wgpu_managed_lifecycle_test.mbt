@@ -14,7 +14,7 @@
 
 ///|
 test "wgpu managed lifecycle: offscreen render pipeline" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     @wgpu.with_default_device_queue_managed((instance, device, queue) => {
       let tex = device.create_texture_rgba8_2d(1U, 1U)
       let view = tex.create_view()
@@ -22,7 +22,7 @@ test "wgpu managed lifecycle: offscreen render pipeline" {
         @wgpu.BUFFER_USAGE_COPY_DST
       let readback_buf = device.create_buffer(
         size=256UL,
-        usage=bu(readback_usage),
+        usage=@tests.bu(readback_usage),
       )
       let wgsl : String =
         #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -56,7 +56,7 @@ test "wgpu managed lifecycle: offscreen render pipeline" {
       queue.submit_one(cmd)
       let out = readback_buf.readback(instance, 0UL, 256UL)
       @debug.debug_inspect(
-        read_rgba8_from_copy_out(out, 0U, 0U),
+        @tests.read_rgba8_from_copy_out(out, 0U, 0U),
         content=(
           #|<FixedArray: [0, 255, 0, 255]>
         ),
@@ -67,7 +67,7 @@ test "wgpu managed lifecycle: offscreen render pipeline" {
 
 ///|
 test "wgpu managed lifecycle: repeated create and release does not drift report" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let report0 = instance.generate_report()
     let kept0_devices = report0.hub_devices_num_kept_from_user()
@@ -95,7 +95,9 @@ test "wgpu managed lifecycle: repeated create and release does not drift report"
         let view = tex.create_view()
         let readback_buf = device.create_buffer(
           size=256UL,
-          usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+          usage=@tests.bu(
+            @wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST,
+          ),
         )
         let wgsl : String =
           #|struct VSOut { @builtin(position) pos: vec4<f32> };

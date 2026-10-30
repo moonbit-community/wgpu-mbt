@@ -14,7 +14,7 @@
 
 ///|
 #declaration_only
-declare pub fn get_version() -> UInt
+declare pub fn get_version() -> UInt32
 
 ///|
 #declaration_only
@@ -46,7 +46,7 @@ declare pub fn native_recovery_hint() -> String
 
 ///|
 #declaration_only
-declare pub fn set_log_level(level : UInt) -> Unit
+declare pub fn set_log_level(level : UInt32) -> Unit
 
 ///|
 #declaration_only
@@ -66,7 +66,7 @@ declare pub fn pipeline_async_enabled() -> Bool
 
 ///|
 #declaration_only
-declare pub fn pipeline_async_availability_kind_u32() -> UInt
+declare pub fn pipeline_async_availability_kind_u32() -> UInt32
 
 ///|
 #declaration_only
@@ -82,7 +82,7 @@ declare pub fn compilation_info_enabled() -> Bool
 
 ///|
 #declaration_only
-declare pub fn compilation_info_availability_kind_u32() -> UInt
+declare pub fn compilation_info_availability_kind_u32() -> UInt32
 
 ///|
 #declaration_only
@@ -101,14 +101,14 @@ declare pub fn Instance::create_ptr(
 ///|
 #declaration_only
 declare pub fn Instance::create_with_extras_u32(
-  backends_u64? : UInt64 = INSTANCE_BACKEND_ALL,
-  flags_u32? : UInt = INSTANCE_FLAG_DEFAULT,
-  dx12_shader_compiler_u32? : UInt = DX12_COMPILER_UNDEFINED,
-  gles3_minor_version_u32? : UInt = GLES3_MINOR_VERSION_AUTOMATIC,
-  gl_fence_behaviour_u32? : UInt = GL_FENCE_BEHAVIOUR_NORMAL,
-  dxc_max_shader_model_u32? : UInt = DXC_MAX_SHADER_MODEL_V6_0,
-  dx12_presentation_system_u32? : UInt = DX12_SWAPCHAIN_KIND_UNDEFINED,
-  dxc_path? : String = "",
+  backends_u64~ : UInt64 = INSTANCE_BACKEND_ALL,
+  flags_u32~ : UInt32 = INSTANCE_FLAG_DEFAULT,
+  dx12_shader_compiler_u32~ : UInt32 = DX12_COMPILER_UNDEFINED,
+  gles3_minor_version_u32~ : UInt32 = GLES3_MINOR_VERSION_AUTOMATIC,
+  gl_fence_behaviour_u32~ : UInt32 = GL_FENCE_BEHAVIOUR_NORMAL,
+  dxc_max_shader_model_u32~ : UInt32 = DXC_MAX_SHADER_MODEL_V6_0,
+  dx12_presentation_system_u32~ : UInt32 = DX12_SWAPCHAIN_KIND_UNDEFINED,
+  dxc_path~ : String = "",
 ) -> Instance raise WgpuError
 
 ///|
@@ -303,7 +303,7 @@ declare pub fn ManagedDevice::create_buffer(
   self : ManagedDevice,
   size~ : UInt64,
   usage~ : BufferUsage,
-  mapped_at_creation? : Bool = false,
+  mapped_at_creation~ : Bool = false,
 ) -> ManagedBuffer
 
 ///|
@@ -317,8 +317,8 @@ declare pub fn ManagedDevice::create_shader_module_wgsl(
 #declaration_only
 declare pub fn ManagedDevice::create_texture_rgba8_2d(
   self : ManagedDevice,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> ManagedTexture
 
 ///|
@@ -345,7 +345,7 @@ declare pub fn ManagedDevice::create_command_encoder(
 #declaration_only
 declare pub fn ManagedDevice::poll(
   self : ManagedDevice,
-  wait? : Bool = false,
+  wait~ : Bool = false,
 ) -> Bool
 
 ///|
@@ -393,8 +393,8 @@ declare pub fn ManagedCommandEncoder::copy_texture_to_buffer_rgba8(
   self : ManagedCommandEncoder,
   texture : ManagedTexture,
   buffer : ManagedBuffer,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
@@ -414,9 +414,9 @@ declare pub fn ManagedComputePass::set_pipeline(
 #declaration_only
 declare pub fn ManagedComputePass::dispatch_workgroups(
   self : ManagedComputePass,
-  x : UInt,
-  y : UInt,
-  z : UInt,
+  x : UInt32,
+  y : UInt32,
+  z : UInt32,
 ) -> Unit
 
 ///|
@@ -434,10 +434,10 @@ declare pub fn ManagedRenderPass::set_pipeline(
 #declaration_only
 declare pub fn ManagedRenderPass::draw(
   self : ManagedRenderPass,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit
 
 ///|
@@ -448,7 +448,7 @@ declare pub fn ManagedRenderPass::end(self : ManagedRenderPass) -> Unit
 #declaration_only
 declare pub fn Instance::request_adapter_future_id_u64(
   self : Instance,
-  options? : @c.WGPURequestAdapterOptionsPtr = @c.null_request_adapter_options_ptr(),
+  options~ : @c.WGPURequestAdapterOptionsPtr = @c.null_request_adapter_options_ptr(),
 ) -> UInt64
 
 ///|
@@ -456,7 +456,7 @@ declare pub fn Instance::request_adapter_future_id_u64(
 declare pub fn Instance::request_adapter_async_status_u32(
   self : Instance,
   future_id : UInt64,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -495,7 +495,7 @@ declare pub fn Instance::process_events(self : Instance) -> Unit
 declare pub fn Instance::wait_any_one(
   self : Instance,
   future_id : UInt64,
-  timeout_ns? : UInt64 = 0UL,
+  timeout_ns~ : UInt64 = 0UL,
 ) -> WaitAnyResult
 
 ///|
@@ -503,7 +503,7 @@ declare pub fn Instance::wait_any_one(
 declare pub fn Instance::wait_any_one_or_raise(
   self : Instance,
   future_id : UInt64,
-  timeout_ns? : UInt64 = 0UL,
+  timeout_ns~ : UInt64 = 0UL,
 ) -> WaitAnyResult raise WaitAnyError
 
 ///|
@@ -561,7 +561,7 @@ declare pub fn Instance::create_surface_wayland(
 declare pub fn Instance::create_surface_xcb(
   self : Instance,
   connection : @c.OpaquePtr,
-  window : UInt,
+  window : UInt32,
 ) -> Surface
 
 ///|
@@ -618,7 +618,7 @@ declare pub fn surface_descriptor_windows_hwnd_new(
 ///|
 declare pub fn surface_descriptor_xcb_new(
   connection : @c.OpaquePtr,
-  window : UInt,
+  window : UInt32,
 ) -> @c.WGPUSurfaceDescriptorPtr
 
 ///|
@@ -676,8 +676,8 @@ declare pub fn Surface::sync_macos_window_handle(
 
 ///|
 declare pub fn SurfaceConfiguration::new(
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
   present_mode : PresentMode,
@@ -695,7 +695,7 @@ declare pub fn SurfaceConfiguration::with_view_formats(
 #declaration_only
 declare pub fn SurfaceConfiguration::with_desired_maximum_frame_latency(
   self : SurfaceConfiguration,
-  desired_maximum_frame_latency : UInt,
+  desired_maximum_frame_latency : UInt32,
 ) -> SurfaceConfiguration
 
 ///|
@@ -704,10 +704,10 @@ declare pub fn Surface::configure_default(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> TextureFormat
 
 ///|
@@ -734,13 +734,13 @@ declare pub fn Surface::configure_u32(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Bool
 
 ///|
@@ -749,13 +749,13 @@ declare pub fn Surface::configure_u32_or_raise(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Unit raise SurfaceConfigureError
 
 ///|
@@ -764,14 +764,14 @@ declare pub fn Surface::configure_view_formats_u32(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
   view_formats : Array[TextureFormat],
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Bool
 
 ///|
@@ -780,14 +780,14 @@ declare pub fn Surface::configure_view_formats_u32_or_raise(
   self : Surface,
   adapter : Adapter,
   device : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
   format : TextureFormat,
-  present_mode_u32 : UInt,
-  alpha_mode_u32 : UInt,
+  present_mode_u32 : UInt32,
+  alpha_mode_u32 : UInt32,
   view_formats : Array[TextureFormat],
-  desired_maximum_frame_latency? : UInt = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
+  desired_maximum_frame_latency~ : UInt32 = SURFACE_DEFAULT_DESIRED_MAXIMUM_FRAME_LATENCY,
 ) -> Unit raise SurfaceConfigureError
 
 ///|
@@ -808,7 +808,7 @@ declare pub fn Surface::get_current_frame_or_raise(
 
 ///|
 #declaration_only
-declare pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt
+declare pub fn SurfaceTexture::status(self : SurfaceTexture) -> UInt32
 
 ///|
 #declaration_only
@@ -828,7 +828,7 @@ declare pub fn SurfaceTexture::take_texture_or_raise(
 
 ///|
 #declaration_only
-declare pub fn SurfaceFrame::present(self : SurfaceFrame) -> UInt
+declare pub fn SurfaceFrame::present(self : SurfaceFrame) -> UInt32
 
 ///|
 #declaration_only
@@ -874,7 +874,7 @@ declare pub fn GlobalReport::release(self : GlobalReport) -> Unit
 
 ///|
 #declaration_only
-declare pub fn Surface::present(self : Surface) -> UInt
+declare pub fn Surface::present(self : Surface) -> UInt32
 
 ///|
 #declaration_only
@@ -921,7 +921,7 @@ declare pub fn Surface::capabilities_present_mode_u32_at(
   self : Surface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -929,7 +929,7 @@ declare pub fn Surface::capabilities_alpha_mode_u32_at(
   self : Surface,
   adapter : Adapter,
   index : UInt64,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -943,14 +943,14 @@ declare pub fn Surface::capabilities_formats(
 declare pub fn Surface::capabilities_present_modes(
   self : Surface,
   adapter : Adapter,
-) -> Array[UInt]
+) -> Array[UInt32]
 
 ///|
 #declaration_only
 declare pub fn Surface::capabilities_alpha_modes(
   self : Surface,
   adapter : Adapter,
-) -> Array[UInt]
+) -> Array[UInt32]
 
 ///|
 #declaration_only
@@ -972,10 +972,10 @@ declare pub fn Adapter::request_device_sync_ptr(
 declare pub fn Adapter::request_device_sync_with_features(
   self : Adapter,
   instance : Instance,
-  required_features_u32 : Array[UInt],
-  label? : String = "",
-  queue_label? : String = "",
-  trace_path? : String = "",
+  required_features_u32 : Array[UInt32],
+  label~ : String = "",
+  queue_label~ : String = "",
+  trace_path~ : String = "",
 ) -> Device raise WgpuError
 
 ///|
@@ -983,27 +983,27 @@ declare pub fn Adapter::request_device_sync_with_features(
 declare pub fn Adapter::request_device_sync_with_features_and_limits(
   self : Adapter,
   instance : Instance,
-  required_features_u32 : Array[UInt],
-  max_bind_groups_u32? : UInt = 0U,
-  max_dynamic_uniform_buffers_u32? : UInt = 0U,
-  max_uniform_buffer_binding_size? : UInt64 = 0UL,
-  max_storage_buffer_binding_size? : UInt64 = 0UL,
-  max_sampled_textures_per_shader_stage_u32? : UInt = 0U,
-  max_samplers_per_shader_stage_u32? : UInt = 0U,
-  max_immediate_size_u32? : UInt = 0U,
-  max_non_sampler_bindings_u32? : UInt = 0U,
-  max_binding_array_elements_per_shader_stage_u32? : UInt = 0U,
-  max_binding_array_sampler_elements_per_shader_stage_u32? : UInt = 0U,
-  label? : String = "",
-  queue_label? : String = "",
-  trace_path? : String = "",
+  required_features_u32 : Array[UInt32],
+  max_bind_groups_u32~ : UInt32 = 0U,
+  max_dynamic_uniform_buffers_u32~ : UInt32 = 0U,
+  max_uniform_buffer_binding_size~ : UInt64 = 0UL,
+  max_storage_buffer_binding_size~ : UInt64 = 0UL,
+  max_sampled_textures_per_shader_stage_u32~ : UInt32 = 0U,
+  max_samplers_per_shader_stage_u32~ : UInt32 = 0U,
+  max_immediate_size_u32~ : UInt32 = 0U,
+  max_non_sampler_bindings_u32~ : UInt32 = 0U,
+  max_binding_array_elements_per_shader_stage_u32~ : UInt32 = 0U,
+  max_binding_array_sampler_elements_per_shader_stage_u32~ : UInt32 = 0U,
+  label~ : String = "",
+  queue_label~ : String = "",
+  trace_path~ : String = "",
 ) -> Device raise WgpuError
 
 ///|
 #declaration_only
 declare pub fn Adapter::request_device_future_id_u64(
   self : Adapter,
-  descriptor? : @c.WGPUDeviceDescriptorPtr = @c.null_device_descriptor_ptr(),
+  descriptor~ : @c.WGPUDeviceDescriptorPtr = @c.null_device_descriptor_ptr(),
 ) -> UInt64
 
 ///|
@@ -1011,7 +1011,7 @@ declare pub fn Adapter::request_device_future_id_u64(
 declare pub fn Adapter::request_device_async_status_u32(
   self : Adapter,
   future_id : UInt64,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -1109,7 +1109,7 @@ declare pub fn Adapter::request_device_sync_spirv_shader_passthrough(
 declare pub fn Adapter::request_device_sync_native_feature(
   self : Adapter,
   instance : Instance,
-  native_feature_u32 : UInt,
+  native_feature_u32 : UInt32,
 ) -> Device raise WgpuError
 
 ///|
@@ -1299,7 +1299,7 @@ declare pub fn Adapter::has_feature_timestamp_query(self : Adapter) -> Bool
 #declaration_only
 declare pub fn Adapter::has_feature_native_u32(
   self : Adapter,
-  native_feature_u32 : UInt,
+  native_feature_u32 : UInt32,
 ) -> Bool
 
 ///|
@@ -1498,19 +1498,19 @@ declare pub fn Adapter::has_feature_native_texture_adapter_specific_format_featu
 
 ///|
 #declaration_only
-declare pub fn Adapter::info_backend_type_u32(self : Adapter) -> UInt
+declare pub fn Adapter::info_backend_type_u32(self : Adapter) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Adapter::info_adapter_type_u32(self : Adapter) -> UInt
+declare pub fn Adapter::info_adapter_type_u32(self : Adapter) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Adapter::info_vendor_id_u32(self : Adapter) -> UInt
+declare pub fn Adapter::info_vendor_id_u32(self : Adapter) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Adapter::info_device_id_u32(self : Adapter) -> UInt
+declare pub fn Adapter::info_device_id_u32(self : Adapter) -> UInt32
 
 ///|
 #declaration_only
@@ -1531,83 +1531,83 @@ declare pub fn Adapter::info_description(self : Adapter) -> String
 ///|
 declare pub fn Adapter::limits_max_texture_dimension_1d_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_texture_dimension_2d_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_texture_dimension_3d_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_texture_array_layers_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Adapter::limits_max_bind_groups_u32(self : Adapter) -> UInt
+declare pub fn Adapter::limits_max_bind_groups_u32(self : Adapter) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_bind_groups_plus_vertex_buffers_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_bindings_per_bind_group_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_dynamic_storage_buffers_per_pipeline_layout_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_sampled_textures_per_shader_stage_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_samplers_per_shader_stage_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_storage_buffers_per_shader_stage_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_storage_textures_per_shader_stage_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_uniform_buffers_per_shader_stage_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -1625,17 +1625,17 @@ declare pub fn Adapter::limits_max_storage_buffer_binding_size_u64(
 #declaration_only
 declare pub fn Adapter::limits_min_uniform_buffer_offset_alignment_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_min_storage_buffer_offset_alignment_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Adapter::limits_max_vertex_buffers_u32(self : Adapter) -> UInt
+declare pub fn Adapter::limits_max_vertex_buffers_u32(self : Adapter) -> UInt32
 
 ///|
 #declaration_only
@@ -1643,87 +1643,91 @@ declare pub fn Adapter::limits_max_buffer_size_u64(self : Adapter) -> UInt64
 
 ///|
 #declaration_only
-declare pub fn Adapter::limits_max_vertex_attributes_u32(self : Adapter) -> UInt
+declare pub fn Adapter::limits_max_vertex_attributes_u32(
+  self : Adapter,
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_vertex_buffer_array_stride_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_inter_stage_shader_variables_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Adapter::limits_max_color_attachments_u32(self : Adapter) -> UInt
+declare pub fn Adapter::limits_max_color_attachments_u32(
+  self : Adapter,
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_color_attachment_bytes_per_sample_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_compute_workgroup_storage_size_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_compute_invocations_per_workgroup_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Adapter::limits_max_immediate_size_u32(self : Adapter) -> UInt
+declare pub fn Adapter::limits_max_immediate_size_u32(self : Adapter) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_compute_workgroup_size_x_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_compute_workgroup_size_y_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_compute_workgroup_size_z_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_compute_workgroups_per_dimension_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_non_sampler_bindings_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_binding_array_elements_per_shader_stage_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Adapter::limits_max_binding_array_sampler_elements_per_shader_stage_u32(
   self : Adapter,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -1733,7 +1737,7 @@ declare pub fn Adapter::supported_features_count_u64(self : Adapter) -> UInt64
 #declaration_only
 declare pub fn Adapter::supported_features_contains_u32(
   self : Adapter,
-  feature_u32 : UInt,
+  feature_u32 : UInt32,
 ) -> Bool
 
 ///|
@@ -1741,7 +1745,7 @@ declare pub fn Adapter::supported_features_contains_u32(
 declare pub fn Adapter::supported_feature_u32_at(
   self : Adapter,
   index : UInt64,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -1755,7 +1759,7 @@ declare pub fn Device::create_command_encoder(self : Device) -> CommandEncoder
 #declaration_only
 declare pub fn Device::push_error_scope(
   self : Device,
-  filter_u32 : UInt,
+  filter_u32 : UInt32,
 ) -> Unit
 
 ///|
@@ -1763,7 +1767,7 @@ declare pub fn Device::push_error_scope(
 declare pub fn Device::pop_error_scope_sync(
   self : Device,
   instance : Instance,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -1780,7 +1784,7 @@ declare pub fn Device::supported_features_count_u64(self : Device) -> UInt64
 #declaration_only
 declare pub fn Device::supported_features_contains_u32(
   self : Device,
-  feature_u32 : UInt,
+  feature_u32 : UInt32,
 ) -> Bool
 
 ///|
@@ -1788,13 +1792,13 @@ declare pub fn Device::supported_features_contains_u32(
 declare pub fn Device::supported_feature_u32_at(
   self : Device,
   index : UInt64,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::has_feature_u32(
   self : Device,
-  feature_u32 : UInt,
+  feature_u32 : UInt32,
 ) -> Bool
 
 ///|
@@ -1805,7 +1809,7 @@ declare pub fn Device::has_feature_timestamp_query(self : Device) -> Bool
 #declaration_only
 declare pub fn Device::has_feature_native_u32(
   self : Device,
-  native_feature_u32 : UInt,
+  native_feature_u32 : UInt32,
 ) -> Bool
 
 ///|
@@ -2002,19 +2006,19 @@ declare pub fn Device::has_feature_native_texture_adapter_specific_format_featur
 
 ///|
 #declaration_only
-declare pub fn Device::info_backend_type_u32(self : Device) -> UInt
+declare pub fn Device::info_backend_type_u32(self : Device) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Device::info_adapter_type_u32(self : Device) -> UInt
+declare pub fn Device::info_adapter_type_u32(self : Device) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Device::info_vendor_id_u32(self : Device) -> UInt
+declare pub fn Device::info_vendor_id_u32(self : Device) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Device::info_device_id_u32(self : Device) -> UInt
+declare pub fn Device::info_device_id_u32(self : Device) -> UInt32
 
 ///|
 #declaration_only
@@ -2036,97 +2040,97 @@ declare pub fn Device::info_description(self : Device) -> String
 #declaration_only
 declare pub fn Device::limits_max_texture_dimension_1d_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_texture_dimension_2d_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_texture_dimension_3d_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_texture_array_layers_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Device::limits_max_bind_groups_u32(self : Device) -> UInt
+declare pub fn Device::limits_max_bind_groups_u32(self : Device) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_bind_groups_plus_vertex_buffers_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_bindings_per_bind_group_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_dynamic_uniform_buffers_per_pipeline_layout_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_dynamic_storage_buffers_per_pipeline_layout_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_sampled_textures_per_shader_stage_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_samplers_per_shader_stage_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_storage_buffers_per_shader_stage_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::supports_read_only_storage_buffer_binding(
   self : Device,
-  required_storage_buffers_per_shader_stage : UInt,
+  required_storage_buffers_per_shader_stage : UInt32,
 ) -> Bool
 
 ///|
 #declaration_only
 declare pub fn Device::get_supported_read_only_binding_type_u32(
   self : Device,
-  required_storage_buffers_per_shader_stage : UInt,
-) -> UInt
+  required_storage_buffers_per_shader_stage : UInt32,
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_storage_textures_per_shader_stage_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_uniform_buffers_per_shader_stage_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -2144,17 +2148,17 @@ declare pub fn Device::limits_max_storage_buffer_binding_size_u64(
 #declaration_only
 declare pub fn Device::limits_min_uniform_buffer_offset_alignment_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_min_storage_buffer_offset_alignment_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Device::limits_max_vertex_buffers_u32(self : Device) -> UInt
+declare pub fn Device::limits_max_vertex_buffers_u32(self : Device) -> UInt32
 
 ///|
 #declaration_only
@@ -2162,87 +2166,87 @@ declare pub fn Device::limits_max_buffer_size_u64(self : Device) -> UInt64
 
 ///|
 #declaration_only
-declare pub fn Device::limits_max_vertex_attributes_u32(self : Device) -> UInt
+declare pub fn Device::limits_max_vertex_attributes_u32(self : Device) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_vertex_buffer_array_stride_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_inter_stage_shader_variables_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Device::limits_max_color_attachments_u32(self : Device) -> UInt
+declare pub fn Device::limits_max_color_attachments_u32(self : Device) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_color_attachment_bytes_per_sample_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_compute_workgroup_storage_size_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_compute_invocations_per_workgroup_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Device::limits_max_immediate_size_u32(self : Device) -> UInt
+declare pub fn Device::limits_max_immediate_size_u32(self : Device) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_compute_workgroup_size_x_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_compute_workgroup_size_y_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_compute_workgroup_size_z_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_compute_workgroups_per_dimension_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_non_sampler_bindings_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_binding_array_elements_per_shader_stage_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::limits_max_binding_array_sampler_elements_per_shader_stage_u32(
   self : Device,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -2250,7 +2254,7 @@ declare pub fn Device::create_buffer(
   self : Device,
   size~ : UInt64,
   usage~ : BufferUsage,
-  mapped_at_creation? : Bool = false,
+  mapped_at_creation~ : Bool = false,
 ) -> Buffer
 
 ///|
@@ -2265,31 +2269,31 @@ declare pub fn Device::create_buffer_init(
 #declaration_only
 declare pub fn Device::create_query_set_occlusion(
   self : Device,
-  count : UInt,
+  count : UInt32,
 ) -> QuerySet
 
 ///|
 #declaration_only
 declare pub fn Device::create_query_set_timestamp(
   self : Device,
-  count : UInt,
+  count : UInt32,
 ) -> QuerySet
 
 ///|
 #declaration_only
 declare pub fn Device::create_query_set_pipeline_statistics(
   self : Device,
-  count : UInt,
-  statistic_name : UInt,
+  count : UInt32,
+  statistic_name : UInt32,
 ) -> QuerySet
 
 ///|
 #declaration_only
 declare pub fn Device::create_query_set_pipeline_statistics_many(
   self : Device,
-  count : UInt,
-  first_statistic_name_u32 : UInt,
-  other_statistic_names_u32 : Array[UInt],
+  count : UInt32,
+  first_statistic_name_u32 : UInt32,
+  other_statistic_names_u32 : Array[UInt32],
 ) -> QuerySet
 
 ///|
@@ -2350,24 +2354,24 @@ declare pub fn Device::create_compute_pipeline_with_layout_entry(
 #declaration_only
 declare pub fn Device::create_texture_rgba8_2d(
   self : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Texture
 
 ///|
 #declaration_only
 declare pub fn Device::create_texture_depth24plus_2d(
   self : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Texture
 
 ///|
 #declaration_only
 declare pub fn Device::create_texture_rgba8_2d_with_usage(
   self : Device,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   usage : TextureUsage,
 ) -> Texture
 
@@ -2375,20 +2379,20 @@ declare pub fn Device::create_texture_rgba8_2d_with_usage(
 #declaration_only
 declare pub fn Device::create_texture_rgba8_2d_array(
   self : Device,
-  width : UInt,
-  height : UInt,
-  layers : UInt,
-  mip_level_count : UInt,
+  width : UInt32,
+  height : UInt32,
+  layers : UInt32,
+  mip_level_count : UInt32,
 ) -> Texture
 
 ///|
 #declaration_only
 declare pub fn Device::create_texture_rgba8_2d_array_with_usage(
   self : Device,
-  width : UInt,
-  height : UInt,
-  layers : UInt,
-  mip_level_count : UInt,
+  width : UInt32,
+  height : UInt32,
+  layers : UInt32,
+  mip_level_count : UInt32,
   usage : TextureUsage,
 ) -> Texture
 
@@ -2396,15 +2400,15 @@ declare pub fn Device::create_texture_rgba8_2d_array_with_usage(
 #declaration_only
 declare pub fn Device::create_texture_u32(
   self : Device,
-  width : UInt,
-  height : UInt,
-  depth_or_array_layers : UInt,
+  width : UInt32,
+  height : UInt32,
+  depth_or_array_layers : UInt32,
   usage : TextureUsage,
   dimension : TextureDimension,
   format : TextureFormat,
-  mip_level_count? : UInt = 1U,
-  sample_count? : UInt = 1U,
-  view_formats? : Array[TextureFormat] = [],
+  mip_level_count~ : UInt32 = 1U,
+  sample_count~ : UInt32 = 1U,
+  view_formats~ : Array[TextureFormat] = [],
 ) -> Texture
 
 ///|
@@ -2416,51 +2420,51 @@ declare pub fn Texture::create_view(self : Texture) -> TextureView
 declare pub fn Texture::create_view_u32(
   self : Texture,
   format : TextureFormat,
-  view_dimension_u32 : UInt,
-  aspect_u32 : UInt,
-  base_array_layer : UInt,
-  array_layer_count : UInt,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  view_dimension_u32 : UInt32,
+  aspect_u32 : UInt32,
+  base_array_layer : UInt32,
+  array_layer_count : UInt32,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> TextureView
 
 ///|
 #declaration_only
 declare pub fn Texture::create_view_2d(
   self : Texture,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> TextureView
 
 ///|
 #declaration_only
 declare pub fn Texture::create_view_2d_array(
   self : Texture,
-  base_array_layer : UInt,
-  array_layer_count : UInt,
-  base_mip_level : UInt,
-  mip_level_count : UInt,
+  base_array_layer : UInt32,
+  array_layer_count : UInt32,
+  base_mip_level : UInt32,
+  mip_level_count : UInt32,
 ) -> TextureView
 
 ///|
 #declaration_only
-declare pub fn Texture::width_u32(self : Texture) -> UInt
+declare pub fn Texture::width_u32(self : Texture) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Texture::height_u32(self : Texture) -> UInt
+declare pub fn Texture::height_u32(self : Texture) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Texture::depth_or_array_layers_u32(self : Texture) -> UInt
+declare pub fn Texture::depth_or_array_layers_u32(self : Texture) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Texture::mip_level_count_u32(self : Texture) -> UInt
+declare pub fn Texture::mip_level_count_u32(self : Texture) -> UInt32
 
 ///|
 #declaration_only
-declare pub fn Texture::sample_count_u32(self : Texture) -> UInt
+declare pub fn Texture::sample_count_u32(self : Texture) -> UInt32
 
 ///|
 #declaration_only
@@ -2506,16 +2510,16 @@ declare pub fn Device::create_sampler_linear_mirror_repeat(
 #declaration_only
 declare pub fn Device::create_sampler_u32(
   self : Device,
-  address_mode_u_u32 : UInt,
-  address_mode_v_u32 : UInt,
-  address_mode_w_u32 : UInt,
-  mag_filter_u32 : UInt,
-  min_filter_u32 : UInt,
-  mipmap_filter_u32 : UInt,
-  lod_min_clamp_f32? : Float = 0.0,
-  lod_max_clamp_f32? : Float = 32.0,
-  compare_u32? : UInt = COMPARE_FUNCTION_UNDEFINED,
-  max_anisotropy_u32? : UInt = 1U,
+  address_mode_u_u32 : UInt32,
+  address_mode_v_u32 : UInt32,
+  address_mode_w_u32 : UInt32,
+  mag_filter_u32 : UInt32,
+  min_filter_u32 : UInt32,
+  mipmap_filter_u32 : UInt32,
+  lod_min_clamp_f32~ : Float = 0.0,
+  lod_max_clamp_f32~ : Float = 32.0,
+  compare_u32~ : UInt32 = COMPARE_FUNCTION_UNDEFINED,
+  max_anisotropy_u32~ : UInt32 = 1U,
 ) -> Sampler
 
 ///|
@@ -2706,46 +2710,46 @@ declare pub fn BindGroupLayoutBuilder::new(
 #declaration_only
 declare pub fn BindGroupLayoutBuilder::add_buffer(
   self : BindGroupLayoutBuilder,
-  binding : UInt,
+  binding : UInt32,
   visibility : ShaderStage,
-  type_u32 : UInt,
-  has_dynamic_offset? : Bool = false,
-  min_binding_size? : UInt64 = 0UL,
-  count? : UInt = 1U,
+  type_u32 : UInt32,
+  has_dynamic_offset~ : Bool = false,
+  min_binding_size~ : UInt64 = 0UL,
+  count~ : UInt32 = 1U,
 ) -> Bool
 
 ///|
 #declaration_only
 declare pub fn BindGroupLayoutBuilder::add_sampler(
   self : BindGroupLayoutBuilder,
-  binding : UInt,
+  binding : UInt32,
   visibility : ShaderStage,
-  type_u32 : UInt,
-  count? : UInt = 1U,
+  type_u32 : UInt32,
+  count~ : UInt32 = 1U,
 ) -> Bool
 
 ///|
 #declaration_only
 declare pub fn BindGroupLayoutBuilder::add_texture(
   self : BindGroupLayoutBuilder,
-  binding : UInt,
+  binding : UInt32,
   visibility : ShaderStage,
-  sample_type_u32 : UInt,
-  view_dimension_u32 : UInt,
-  multisampled? : Bool = false,
-  count? : UInt = 1U,
+  sample_type_u32 : UInt32,
+  view_dimension_u32 : UInt32,
+  multisampled~ : Bool = false,
+  count~ : UInt32 = 1U,
 ) -> Bool
 
 ///|
 #declaration_only
 declare pub fn BindGroupLayoutBuilder::add_storage_texture(
   self : BindGroupLayoutBuilder,
-  binding : UInt,
+  binding : UInt32,
   visibility : ShaderStage,
-  access_u32 : UInt,
+  access_u32 : UInt32,
   format : TextureFormat,
-  view_dimension_u32 : UInt,
-  count? : UInt = 1U,
+  view_dimension_u32 : UInt32,
+  count~ : UInt32 = 1U,
 ) -> Bool
 
 ///|
@@ -2753,7 +2757,7 @@ declare pub fn BindGroupLayoutBuilder::add_storage_texture(
 declare pub fn BindGroupLayoutBuilder::finish(
   self : BindGroupLayoutBuilder,
   device : Device,
-  label? : String = "",
+  label~ : String = "",
 ) -> BindGroupLayout
 
 ///|
@@ -2770,27 +2774,27 @@ declare pub fn BindGroupBuilder::new(max_entries~ : UInt64) -> BindGroupBuilder
 #declaration_only
 declare pub fn BindGroupBuilder::add_buffer(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   buffer : Buffer,
-  offset? : UInt64 = 0UL,
-  size? : UInt64 = WHOLE_SIZE,
+  offset~ : UInt64 = 0UL,
+  size~ : UInt64 = WHOLE_SIZE,
 ) -> Bool
 
 ///|
 #declaration_only
 declare pub fn BindGroupBuilder::add_buffer_array(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   buffers : Array[Buffer],
-  offset? : UInt64 = 0UL,
-  size? : UInt64 = WHOLE_SIZE,
+  offset~ : UInt64 = 0UL,
+  size~ : UInt64 = WHOLE_SIZE,
 ) -> Bool
 
 ///|
 #declaration_only
 declare pub fn BindGroupBuilder::add_sampler(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   sampler : Sampler,
 ) -> Bool
 
@@ -2798,7 +2802,7 @@ declare pub fn BindGroupBuilder::add_sampler(
 #declaration_only
 declare pub fn BindGroupBuilder::add_sampler_array(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   samplers : Array[Sampler],
 ) -> Bool
 
@@ -2806,7 +2810,7 @@ declare pub fn BindGroupBuilder::add_sampler_array(
 #declaration_only
 declare pub fn BindGroupBuilder::add_texture_view(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   view : TextureView,
 ) -> Bool
 
@@ -2814,7 +2818,7 @@ declare pub fn BindGroupBuilder::add_texture_view(
 #declaration_only
 declare pub fn BindGroupBuilder::add_texture_view_array(
   self : BindGroupBuilder,
-  binding : UInt,
+  binding : UInt32,
   views : Array[TextureView],
 ) -> Bool
 
@@ -2824,7 +2828,7 @@ declare pub fn BindGroupBuilder::finish(
   self : BindGroupBuilder,
   device : Device,
   layout : BindGroupLayout,
-  label? : String = "",
+  label~ : String = "",
 ) -> BindGroup
 
 ///|
@@ -2835,7 +2839,7 @@ declare pub fn BindGroupBuilder::free(self : BindGroupBuilder) -> Unit
 #declaration_only
 declare pub fn ComputePipelineDescBuilder::new(
   shader_module : ShaderModule,
-  layout? : PipelineLayout = { raw: @c.null_pipeline_layout(), },
+  layout~ : PipelineLayout = { raw: @c.null_pipeline_layout(), },
 ) -> ComputePipelineDescBuilder raise ComputePipelineDescError
 
 ///|
@@ -2879,28 +2883,28 @@ declare pub fn ComputePipelineDescError::message(
 ///|
 #declaration_only
 declare pub fn RenderPassDescBuilder::new(
-  color_attachment_count : UInt,
+  color_attachment_count : UInt32,
 ) -> RenderPassDescBuilder raise RenderPassDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPassDescBuilder::set_color_attachment(
   self : RenderPassDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   view : TextureView,
-  load_op_u32? : UInt = LOAD_OP_CLEAR,
-  store_op_u32? : UInt = STORE_OP_STORE,
-  clear_r_f32? : Float = 0.0,
-  clear_g_f32? : Float = 0.0,
-  clear_b_f32? : Float = 0.0,
-  clear_a_f32? : Float = 1.0,
+  load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  store_op_u32~ : UInt32 = STORE_OP_STORE,
+  clear_r_f32~ : Float = 0.0,
+  clear_g_f32~ : Float = 0.0,
+  clear_b_f32~ : Float = 0.0,
+  clear_a_f32~ : Float = 1.0,
 ) -> Unit raise RenderPassDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPassDescBuilder::set_color_attachment_resolve_target(
   self : RenderPassDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   resolve_target : TextureView,
 ) -> Unit raise RenderPassDescError
 
@@ -2908,7 +2912,7 @@ declare pub fn RenderPassDescBuilder::set_color_attachment_resolve_target(
 #declaration_only
 declare pub fn RenderPassDescBuilder::clear_color_attachment_resolve_target(
   self : RenderPassDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
 ) -> Unit raise RenderPassDescError
 
 ///|
@@ -2916,14 +2920,14 @@ declare pub fn RenderPassDescBuilder::clear_color_attachment_resolve_target(
 declare pub fn RenderPassDescBuilder::set_depth_stencil_attachment(
   self : RenderPassDescBuilder,
   depth_view : TextureView,
-  depth_load_op_u32? : UInt = LOAD_OP_CLEAR,
-  depth_store_op_u32? : UInt = STORE_OP_STORE,
-  depth_clear_value_f32? : Float = 1.0,
-  stencil_load_op_u32? : UInt = LOAD_OP_UNDEFINED,
-  stencil_store_op_u32? : UInt = STORE_OP_UNDEFINED,
-  stencil_clear_value_u32? : UInt = 0U,
-  depth_read_only? : Bool = false,
-  stencil_read_only? : Bool = false,
+  depth_load_op_u32~ : UInt32 = LOAD_OP_CLEAR,
+  depth_store_op_u32~ : UInt32 = STORE_OP_STORE,
+  depth_clear_value_f32~ : Float = 1.0,
+  stencil_load_op_u32~ : UInt32 = LOAD_OP_UNDEFINED,
+  stencil_store_op_u32~ : UInt32 = STORE_OP_UNDEFINED,
+  stencil_clear_value_u32~ : UInt32 = 0U,
+  depth_read_only~ : Bool = false,
+  stencil_read_only~ : Bool = false,
 ) -> Unit raise RenderPassDescError
 
 ///|
@@ -2972,7 +2976,7 @@ declare pub fn RenderPassDescError::message(
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::new(
   shader_module : ShaderModule,
-  layout? : PipelineLayout = { raw: @c.null_pipeline_layout(), },
+  layout~ : PipelineLayout = { raw: @c.null_pipeline_layout(), },
 ) -> RenderPipelineDescBuilder raise RenderPipelineDescError
 
 ///|
@@ -2994,14 +2998,14 @@ declare pub fn RenderPipelineDescBuilder::set_color_target_format(
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_color_target_count(
   self : RenderPipelineDescBuilder,
-  count_u32 : UInt,
+  count_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_color_target_format_at(
   self : RenderPipelineDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   format : TextureFormat,
 ) -> Unit raise RenderPipelineDescError
 
@@ -3009,7 +3013,7 @@ declare pub fn RenderPipelineDescBuilder::set_color_target_format_at(
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_color_target_unused_at(
   self : RenderPipelineDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
@@ -3023,7 +3027,7 @@ declare pub fn RenderPipelineDescBuilder::set_color_target_write_mask(
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_color_target_write_mask_at(
   self : RenderPipelineDescBuilder,
-  index_u32 : UInt,
+  index_u32 : UInt32,
   write_mask_u64 : UInt64,
 ) -> Unit raise RenderPipelineDescError
 
@@ -3031,12 +3035,12 @@ declare pub fn RenderPipelineDescBuilder::set_color_target_write_mask_at(
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_blend_components(
   self : RenderPipelineDescBuilder,
-  color_src_factor_u32 : UInt,
-  color_dst_factor_u32 : UInt,
-  color_operation_u32 : UInt,
-  alpha_src_factor_u32 : UInt,
-  alpha_dst_factor_u32 : UInt,
-  alpha_operation_u32 : UInt,
+  color_src_factor_u32 : UInt32,
+  color_dst_factor_u32 : UInt32,
+  color_operation_u32 : UInt32,
+  alpha_src_factor_u32 : UInt32,
+  alpha_dst_factor_u32 : UInt32,
+  alpha_operation_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
@@ -3056,7 +3060,7 @@ declare pub fn RenderPipelineDescBuilder::disable_blend(
 declare pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(
   self : RenderPipelineDescBuilder,
   array_stride : UInt64,
-  step_mode_u32 : UInt,
+  step_mode_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
@@ -3064,37 +3068,37 @@ declare pub fn RenderPipelineDescBuilder::set_vertex_buffer_layout(
 declare pub fn RenderPipelineDescBuilder::add_vertex_buffer_layout(
   self : RenderPipelineDescBuilder,
   array_stride : UInt64,
-  step_mode_u32 : UInt,
-) -> UInt raise RenderPipelineDescError
+  step_mode_u32 : UInt32,
+) -> UInt32 raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::add_vertex_attribute(
   self : RenderPipelineDescBuilder,
-  format_u32 : UInt,
+  format_u32 : UInt32,
   offset : UInt64,
-  shader_location : UInt,
+  shader_location : UInt32,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_topology_u32(
   self : RenderPipelineDescBuilder,
-  topology_u32 : UInt,
+  topology_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_strip_index_format_u32(
   self : RenderPipelineDescBuilder,
-  index_format_u32 : UInt,
+  index_format_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_cull_mode_u32(
   self : RenderPipelineDescBuilder,
-  cull_mode_u32 : UInt,
+  cull_mode_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
@@ -3128,7 +3132,7 @@ declare pub fn RenderPipelineDescBuilder::clear_fragment(
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_polygon_mode_u32(
   self : RenderPipelineDescBuilder,
-  polygon_mode_u32 : UInt,
+  polygon_mode_u32 : UInt32,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
@@ -3149,20 +3153,20 @@ declare pub fn RenderPipelineDescBuilder::clear_primitive_extras(
 declare pub fn RenderPipelineDescBuilder::set_depth_stencil(
   self : RenderPipelineDescBuilder,
   depth_format : TextureFormat,
-  depth_write_enabled? : Bool = true,
-  depth_compare_u32? : UInt = COMPARE_FUNCTION_LESS,
-  depth_bias? : Int = 0,
-  depth_bias_slope_scale? : Float = 0.0,
-  depth_bias_clamp? : Float = 0.0,
+  depth_write_enabled~ : Bool = true,
+  depth_compare_u32~ : UInt32 = COMPARE_FUNCTION_LESS,
+  depth_bias~ : Int32 = 0,
+  depth_bias_slope_scale~ : Float = 0.0,
+  depth_bias_clamp~ : Float = 0.0,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
 #declaration_only
 declare pub fn RenderPipelineDescBuilder::set_multisample(
   self : RenderPipelineDescBuilder,
-  count_u32 : UInt,
-  mask_u32? : UInt = 0xFFFFFFFFU,
-  alpha_to_coverage_enabled? : Bool = false,
+  count_u32 : UInt32,
+  mask_u32~ : UInt32 = 0xFFFFFFFFU,
+  alpha_to_coverage_enabled~ : Bool = false,
 ) -> Unit raise RenderPipelineDescError
 
 ///|
@@ -3223,8 +3227,8 @@ declare pub fn Device::create_pipeline_layout_many(
 declare pub fn Device::create_pipeline_layout_immediates(
   self : Device,
   stages : ShaderStage,
-  start : UInt,
-  end : UInt,
+  start : UInt32,
+  end : UInt32,
 ) -> PipelineLayout
 
 ///|
@@ -3232,9 +3236,9 @@ declare pub fn Device::create_pipeline_layout_immediates(
 declare pub fn Device::create_pipeline_layout_immediates_many(
   self : Device,
   first_stages : ShaderStage,
-  first_start : UInt,
-  first_end : UInt,
-  other_ranges : Array[(ShaderStage, UInt, UInt)],
+  first_start : UInt32,
+  first_end : UInt32,
+  other_ranges : Array[(ShaderStage, UInt32, UInt32)],
 ) -> PipelineLayout
 
 ///|
@@ -3242,7 +3246,7 @@ declare pub fn Device::create_pipeline_layout_immediates_many(
 declare pub fn Device::create_pipeline_layout_with_immediates(
   self : Device,
   bind_group_layouts : Array[BindGroupLayout],
-  ranges : Array[(ShaderStage, UInt, UInt)],
+  ranges : Array[(ShaderStage, UInt32, UInt32)],
 ) -> PipelineLayout
 
 ///|
@@ -3251,18 +3255,18 @@ declare pub fn Device::release(self : Device) -> Unit
 
 ///|
 #declaration_only
-declare pub fn Device::poll(self : Device, wait? : Bool = false) -> Bool
+declare pub fn Device::poll(self : Device, wait~ : Bool = false) -> Bool
 
 ///|
 #declaration_only
-declare pub fn Device::take_lost_reason(self : Device) -> UInt
+declare pub fn Device::take_lost_reason(self : Device) -> UInt32
 
 ///|
 #declaration_only
 declare pub fn Device::wait_lost_reason_sync(
   self : Device,
   instance : Instance,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -3295,7 +3299,7 @@ declare pub fn Queue::submit_for_index(
 declare pub fn Queue::on_submitted_work_done_sync(
   self : Queue,
   instance : Instance,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -3315,7 +3319,7 @@ declare pub fn Queue::on_submitted_work_done_future_id_u64(
 declare pub fn Queue::on_submitted_work_done_async_status_u32(
   self : Queue,
   future_id : UInt64,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -3339,7 +3343,7 @@ declare pub fn Queue::submit_one_and_map_read_async(
 declare pub fn Queue::map_read_async_status_u32(
   self : Queue,
   future_id : UInt64,
-) -> UInt
+) -> UInt32
 
 ///|
 #declaration_only
@@ -3367,7 +3371,7 @@ declare pub fn Queue::on_submitted_work_done_async_take_or_raise(
 declare pub fn Queue::on_submitted_work_done_wait_or_raise(
   self : Queue,
   instance : Instance,
-  timeout_ns? : UInt64 = 0UL,
+  timeout_ns~ : UInt64 = 0UL,
 ) -> Unit raise QueueWorkDoneWaitError
 
 ///|
@@ -3388,8 +3392,8 @@ declare pub fn Queue::write_buffer(
 declare pub fn Queue::write_texture_rgba8_2d(
   self : Queue,
   texture : Texture,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   data : Bytes,
 ) -> Unit
 
@@ -3398,10 +3402,10 @@ declare pub fn Queue::write_texture_rgba8_2d(
 declare pub fn Queue::write_texture_rgba8_2d_mip_layer(
   self : Queue,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
-  width : UInt,
-  height : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
   data : Bytes,
 ) -> Unit
 
@@ -3413,7 +3417,7 @@ declare pub fn Queue::write_texture_ptr(
   data : Bytes,
   data_layout : @c.WGPUTexelCopyBufferLayoutPtr,
   write_size : @c.WGPUExtent3DPtr,
-  data_size? : UInt64 = 0UL,
+  data_size~ : UInt64 = 0UL,
 ) -> Unit
 
 ///|
@@ -3482,25 +3486,25 @@ declare pub fn CommandEncoder::begin_render_pass_color2_depth_sparse_u32(
   color0_view : TextureView,
   color1_view : TextureView,
   depth_view : TextureView,
-  color0_load_op_u32? : UInt,
-  color0_store_op_u32? : UInt,
+  color0_load_op_u32? : UInt32,
+  color0_store_op_u32? : UInt32,
   color0_clear_r_f32? : Float,
   color0_clear_g_f32? : Float,
   color0_clear_b_f32? : Float,
   color0_clear_a_f32? : Float,
-  color1_load_op_u32? : UInt,
-  color1_store_op_u32? : UInt,
+  color1_load_op_u32? : UInt32,
+  color1_store_op_u32? : UInt32,
   color1_clear_r_f32? : Float,
   color1_clear_g_f32? : Float,
   color1_clear_b_f32? : Float,
   color1_clear_a_f32? : Float,
-  depth_load_op_u32? : UInt,
-  depth_store_op_u32? : UInt,
+  depth_load_op_u32? : UInt32,
+  depth_store_op_u32? : UInt32,
   depth_clear_value_f32? : Float,
   depth_read_only? : Bool,
-  stencil_load_op_u32? : UInt,
-  stencil_store_op_u32? : UInt,
-  stencil_clear_value_u32? : UInt,
+  stencil_load_op_u32? : UInt32,
+  stencil_store_op_u32? : UInt32,
+  stencil_clear_value_u32? : UInt32,
   stencil_read_only? : Bool,
 ) -> RenderPass
 
@@ -3510,19 +3514,19 @@ declare pub fn CommandEncoder::begin_render_pass_color1_depth_u32(
   self : CommandEncoder,
   color1_view : TextureView,
   depth_view : TextureView,
-  color1_load_op_u32? : UInt,
-  color1_store_op_u32? : UInt,
+  color1_load_op_u32? : UInt32,
+  color1_store_op_u32? : UInt32,
   color1_clear_r_f32? : Float,
   color1_clear_g_f32? : Float,
   color1_clear_b_f32? : Float,
   color1_clear_a_f32? : Float,
-  depth_load_op_u32? : UInt,
-  depth_store_op_u32? : UInt,
+  depth_load_op_u32? : UInt32,
+  depth_store_op_u32? : UInt32,
   depth_clear_value_f32? : Float,
   depth_read_only? : Bool,
-  stencil_load_op_u32? : UInt,
-  stencil_store_op_u32? : UInt,
-  stencil_clear_value_u32? : UInt,
+  stencil_load_op_u32? : UInt32,
+  stencil_store_op_u32? : UInt32,
+  stencil_clear_value_u32? : UInt32,
   stencil_read_only? : Bool,
 ) -> RenderPass
 
@@ -3533,25 +3537,25 @@ declare pub fn CommandEncoder::begin_render_pass_color2_depth_u32(
   color0_view : TextureView,
   color1_view : TextureView,
   depth_view : TextureView,
-  color0_load_op_u32? : UInt,
-  color0_store_op_u32? : UInt,
+  color0_load_op_u32? : UInt32,
+  color0_store_op_u32? : UInt32,
   color0_clear_r_f32? : Float,
   color0_clear_g_f32? : Float,
   color0_clear_b_f32? : Float,
   color0_clear_a_f32? : Float,
-  color1_load_op_u32? : UInt,
-  color1_store_op_u32? : UInt,
+  color1_load_op_u32? : UInt32,
+  color1_store_op_u32? : UInt32,
   color1_clear_r_f32? : Float,
   color1_clear_g_f32? : Float,
   color1_clear_b_f32? : Float,
   color1_clear_a_f32? : Float,
-  depth_load_op_u32? : UInt,
-  depth_store_op_u32? : UInt,
+  depth_load_op_u32? : UInt32,
+  depth_store_op_u32? : UInt32,
   depth_clear_value_f32? : Float,
   depth_read_only? : Bool,
-  stencil_load_op_u32? : UInt,
-  stencil_store_op_u32? : UInt,
-  stencil_clear_value_u32? : UInt,
+  stencil_load_op_u32? : UInt32,
+  stencil_store_op_u32? : UInt32,
+  stencil_clear_value_u32? : UInt32,
   stencil_read_only? : Bool,
 ) -> RenderPass
 
@@ -3567,13 +3571,13 @@ declare pub fn CommandEncoder::begin_render_pass_depth(
 declare pub fn CommandEncoder::begin_render_pass_depth_u32(
   self : CommandEncoder,
   depth_view : TextureView,
-  depth_load_op_u32? : UInt,
-  depth_store_op_u32? : UInt,
+  depth_load_op_u32? : UInt32,
+  depth_store_op_u32? : UInt32,
   depth_clear_value_f32? : Float,
   depth_read_only? : Bool,
-  stencil_load_op_u32? : UInt,
-  stencil_store_op_u32? : UInt,
-  stencil_clear_value_u32? : UInt,
+  stencil_load_op_u32? : UInt32,
+  stencil_store_op_u32? : UInt32,
+  stencil_clear_value_u32? : UInt32,
   stencil_read_only? : Bool,
 ) -> RenderPass
 
@@ -3617,19 +3621,19 @@ declare pub fn CommandEncoder::begin_render_pass_color_depth_u32(
   self : CommandEncoder,
   color_view : TextureView,
   depth_view : TextureView,
-  color_load_op_u32? : UInt,
-  color_store_op_u32? : UInt,
+  color_load_op_u32? : UInt32,
+  color_store_op_u32? : UInt32,
   color_clear_r_f32? : Float,
   color_clear_g_f32? : Float,
   color_clear_b_f32? : Float,
   color_clear_a_f32? : Float,
-  depth_load_op_u32? : UInt,
-  depth_store_op_u32? : UInt,
+  depth_load_op_u32? : UInt32,
+  depth_store_op_u32? : UInt32,
   depth_clear_value_f32? : Float,
   depth_read_only? : Bool,
-  stencil_load_op_u32? : UInt,
-  stencil_store_op_u32? : UInt,
-  stencil_clear_value_u32? : UInt,
+  stencil_load_op_u32? : UInt32,
+  stencil_store_op_u32? : UInt32,
+  stencil_clear_value_u32? : UInt32,
   stencil_read_only? : Bool,
 ) -> RenderPass
 
@@ -3677,8 +3681,8 @@ declare pub fn CommandEncoder::copy_texture_to_buffer_rgba8(
   self : CommandEncoder,
   texture : Texture,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
@@ -3686,11 +3690,11 @@ declare pub fn CommandEncoder::copy_texture_to_buffer_rgba8(
 declare pub fn CommandEncoder::copy_texture_to_buffer_rgba8_mip_layer(
   self : CommandEncoder,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
   buffer : Buffer,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
@@ -3699,8 +3703,8 @@ declare pub fn CommandEncoder::copy_buffer_to_texture_rgba8(
   self : CommandEncoder,
   buffer : Buffer,
   texture : Texture,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
@@ -3709,10 +3713,10 @@ declare pub fn CommandEncoder::copy_buffer_to_texture_rgba8_mip_layer(
   self : CommandEncoder,
   buffer : Buffer,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
-  width : UInt,
-  height : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
@@ -3721,8 +3725,8 @@ declare pub fn CommandEncoder::copy_texture_to_texture_rgba8(
   self : CommandEncoder,
   src : Texture,
   dst : Texture,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
@@ -3730,13 +3734,13 @@ declare pub fn CommandEncoder::copy_texture_to_texture_rgba8(
 declare pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(
   self : CommandEncoder,
   src : Texture,
-  src_mip_level : UInt,
-  src_array_layer : UInt,
+  src_mip_level : UInt32,
+  src_array_layer : UInt32,
   dst : Texture,
-  dst_mip_level : UInt,
-  dst_array_layer : UInt,
-  width : UInt,
-  height : UInt,
+  dst_mip_level : UInt32,
+  dst_array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
@@ -3744,8 +3748,8 @@ declare pub fn CommandEncoder::copy_texture_to_texture_rgba8_mip_layer(
 declare pub fn CommandEncoder::resolve_query_set(
   self : CommandEncoder,
   query_set : QuerySet,
-  first_query : UInt,
-  query_count : UInt,
+  first_query : UInt32,
+  query_count : UInt32,
   destination : Buffer,
   destination_offset : UInt64,
 ) -> Unit
@@ -3755,7 +3759,7 @@ declare pub fn CommandEncoder::resolve_query_set(
 declare pub fn CommandEncoder::write_timestamp(
   self : CommandEncoder,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -3790,7 +3794,7 @@ declare pub fn ComputePass::set_pipeline(
 #declaration_only
 declare pub fn ComputePass::set_immediates(
   self : ComputePass,
-  offset : UInt,
+  offset : UInt32,
   data : Bytes,
 ) -> Unit
 
@@ -3805,18 +3809,18 @@ declare pub fn ComputePass::set_bind_group0(
 #declaration_only
 declare pub fn ComputePass::set_bind_group(
   self : ComputePass,
-  index : UInt,
+  index : UInt32,
   group : BindGroup,
-  dynamic_offsets : Array[UInt],
+  dynamic_offsets : Array[UInt32],
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn ComputePass::dispatch_workgroups(
   self : ComputePass,
-  x : UInt,
-  y : UInt,
-  z : UInt,
+  x : UInt32,
+  y : UInt32,
+  z : UInt32,
 ) -> Unit
 
 ///|
@@ -3832,7 +3836,7 @@ declare pub fn ComputePass::dispatch_workgroups_indirect(
 declare pub fn ComputePass::write_timestamp(
   self : ComputePass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -3840,7 +3844,7 @@ declare pub fn ComputePass::write_timestamp(
 declare pub fn ComputePass::begin_pipeline_statistics_query(
   self : ComputePass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -3894,7 +3898,7 @@ declare pub fn RenderPass::set_pipeline(
 declare pub fn RenderPass::set_immediates(
   self : RenderPass,
   stages : ShaderStage,
-  offset : UInt,
+  offset : UInt32,
   data : Bytes,
 ) -> Unit
 
@@ -3916,16 +3920,16 @@ declare pub fn RenderPass::set_bind_group0(
 #declaration_only
 declare pub fn RenderPass::set_bind_group(
   self : RenderPass,
-  index : UInt,
+  index : UInt32,
   group : BindGroup,
-  dynamic_offsets : Array[UInt],
+  dynamic_offsets : Array[UInt32],
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderPass::set_vertex_buffer(
   self : RenderPass,
-  slot : UInt,
+  slot : UInt32,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,
@@ -3965,31 +3969,31 @@ declare pub fn RenderPass::set_viewport(
 #declaration_only
 declare pub fn RenderPass::set_scissor_rect(
   self : RenderPass,
-  x : UInt,
-  y : UInt,
-  width : UInt,
-  height : UInt,
+  x : UInt32,
+  y : UInt32,
+  width : UInt32,
+  height : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderPass::draw(
   self : RenderPass,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderPass::draw_indexed(
   self : RenderPass,
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex : Int,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex : Int32,
+  first_instance : UInt32,
 ) -> Unit
 
 ///|
@@ -4014,7 +4018,7 @@ declare pub fn RenderPass::multi_draw_indirect(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit
 
 ///|
@@ -4023,7 +4027,7 @@ declare pub fn RenderPass::multi_draw_indexed_indirect(
   self : RenderPass,
   indirect_buffer : Buffer,
   indirect_offset : UInt64,
-  count : UInt,
+  count : UInt32,
 ) -> Unit
 
 ///|
@@ -4034,7 +4038,7 @@ declare pub fn RenderPass::multi_draw_indirect_count(
   indirect_offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit
 
 ///|
@@ -4045,14 +4049,14 @@ declare pub fn RenderPass::multi_draw_indexed_indirect_count(
   indirect_offset : UInt64,
   count_buffer : Buffer,
   count_buffer_offset : UInt64,
-  max_count : UInt,
+  max_count : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderPass::begin_occlusion_query(
   self : RenderPass,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -4060,7 +4064,7 @@ declare pub fn RenderPass::begin_occlusion_query(
 declare pub fn RenderPass::write_timestamp(
   self : RenderPass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -4068,7 +4072,7 @@ declare pub fn RenderPass::write_timestamp(
 declare pub fn RenderPass::begin_pipeline_statistics_query(
   self : RenderPass,
   query_set : QuerySet,
-  query_index : UInt,
+  query_index : UInt32,
 ) -> Unit
 
 ///|
@@ -4085,7 +4089,7 @@ declare pub fn RenderPass::end_occlusion_query(self : RenderPass) -> Unit
 #declaration_only
 declare pub fn RenderPass::set_stencil_reference(
   self : RenderPass,
-  reference : UInt,
+  reference : UInt32,
 ) -> Unit
 
 ///|
@@ -4254,7 +4258,7 @@ declare pub fn RenderBundleEncoder::set_pipeline(
 declare pub fn RenderBundleEncoder::set_immediates(
   self : RenderBundleEncoder,
   stages : ShaderStage,
-  offset : UInt,
+  offset : UInt32,
   data : Bytes,
 ) -> Unit
 
@@ -4262,21 +4266,21 @@ declare pub fn RenderBundleEncoder::set_immediates(
 #declaration_only
 declare pub fn RenderBundleEncoder::draw(
   self : RenderBundleEncoder,
-  vertex_count : UInt,
-  instance_count : UInt,
-  first_vertex : UInt,
-  first_instance : UInt,
+  vertex_count : UInt32,
+  instance_count : UInt32,
+  first_vertex : UInt32,
+  first_instance : UInt32,
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderBundleEncoder::draw_indexed(
   self : RenderBundleEncoder,
-  index_count : UInt,
-  instance_count : UInt,
-  first_index : UInt,
-  base_vertex : Int,
-  first_instance : UInt,
+  index_count : UInt32,
+  instance_count : UInt32,
+  first_index : UInt32,
+  base_vertex : Int32,
+  first_instance : UInt32,
 ) -> Unit
 
 ///|
@@ -4306,16 +4310,16 @@ declare pub fn RenderBundleEncoder::set_bind_group0(
 #declaration_only
 declare pub fn RenderBundleEncoder::set_bind_group(
   self : RenderBundleEncoder,
-  index : UInt,
+  index : UInt32,
   group : BindGroup,
-  dynamic_offsets : Array[UInt],
+  dynamic_offsets : Array[UInt32],
 ) -> Unit
 
 ///|
 #declaration_only
 declare pub fn RenderBundleEncoder::set_vertex_buffer(
   self : RenderBundleEncoder,
-  slot : UInt,
+  slot : UInt32,
   buffer : Buffer,
   offset : UInt64,
   size : UInt64,

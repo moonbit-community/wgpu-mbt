@@ -59,21 +59,21 @@ pub extern "C" fn platform_is_linux() -> Bool = "mbt_wgpu_platform_is_linux"
 pub extern "C" fn platform_is_windows() -> Bool = "mbt_wgpu_platform_is_windows"
 
 ///|
-pub extern "C" fn buffer_map_state_u32(state : WGPUBufferMapState) -> UInt = "mbt_wgpu_buffer_map_state_u32"
+pub extern "C" fn buffer_map_state_u32(state : WGPUBufferMapState) -> UInt32 = "mbt_wgpu_buffer_map_state_u32"
 
 ///|
 pub extern "C" fn wgsl_language_feature_name_from_u32(
-  raw : UInt,
+  raw : UInt32,
 ) -> WGPUWGSLLanguageFeatureName = "mbt_wgpu_wgsl_language_feature_name_from_u32"
 
 ///|
-pub extern "C" fn native_available_u32() -> UInt = "mbt_wgpu_native_available_u32"
+pub extern "C" fn native_available_u32() -> UInt32 = "mbt_wgpu_native_available_u32"
 
 ///|
-pub extern "C" fn native_supported_u32() -> UInt = "mbt_wgpu_native_supported_u32"
+pub extern "C" fn native_supported_u32() -> UInt32 = "mbt_wgpu_native_supported_u32"
 
 ///|
-pub extern "C" fn native_static_linked_u32() -> UInt = "mbt_wgpu_native_static_linked_u32"
+pub extern "C" fn native_static_linked_u32() -> UInt32 = "mbt_wgpu_native_static_linked_u32"
 
 ///|
 pub extern "C" fn native_expected_tag_utf8_len() -> UInt64 = "mbt_wgpu_native_expected_tag_utf8_len"
@@ -166,7 +166,7 @@ pub extern "C" fn render_pass_descriptor_ptr_is_null(
 ) -> Bool = "mbt_wgpu_render_pass_descriptor_ptr_is_null"
 
 ///|
-fn align_up_u32(value : UInt, align : UInt) -> UInt {
+fn align_up_u32(value : UInt32, align : UInt32) -> UInt32 {
   let rem = value % align
   if rem == 0U {
     value

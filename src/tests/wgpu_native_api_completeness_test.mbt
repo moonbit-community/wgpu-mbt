@@ -14,7 +14,7 @@
 
 ///|
 test "wgpu native api: instance extras + descriptor coverage" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create_with_extras_u32(dxc_path="_build/dxc")
     let nullp = @wgpu_c.null_opaque_ptr()
 
@@ -100,7 +100,7 @@ test "wgpu native api: instance extras + descriptor coverage" {
 
 ///|
 test "wgpu native api: primitive extras builder calls" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let _ = adapter.limits_max_immediate_size_u32()

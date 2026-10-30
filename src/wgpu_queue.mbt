@@ -53,7 +53,7 @@ pub fn Queue::submit_for_index(
 pub fn Queue::on_submitted_work_done_sync(
   self : Queue,
   instance : Instance,
-) -> UInt {
+) -> UInt32 {
   @c.queue_on_submitted_work_done_sync(instance.raw, self.raw)
 }
 
@@ -77,7 +77,7 @@ pub fn Queue::on_submitted_work_done_future_id_u64(self : Queue) -> UInt64 {
 pub fn Queue::on_submitted_work_done_async_status_u32(
   self : Queue,
   future_id : UInt64,
-) -> UInt {
+) -> UInt32 {
   let _ = self
   @c.queue_on_submitted_work_done_async_status_u32(future_id)
 }
@@ -112,7 +112,7 @@ pub fn Queue::submit_one_and_map_read_async(
 pub fn Queue::map_read_async_status_u32(
   self : Queue,
   future_id : UInt64,
-) -> UInt {
+) -> UInt32 {
   let _ = self
   @c.queue_map_read_async_status_u32(future_id)
 }
@@ -154,7 +154,7 @@ pub fn Queue::on_submitted_work_done_async_take_or_raise(
 pub fn Queue::on_submitted_work_done_wait_or_raise(
   self : Queue,
   instance : Instance,
-  timeout_ns? : UInt64 = 0UL,
+  timeout_ns~ : UInt64 = 0UL,
 ) -> Unit raise QueueWorkDoneWaitError {
   if timeout_ns == 0UL {
     let status = self.on_submitted_work_done_sync(instance)
@@ -218,8 +218,8 @@ pub fn Queue::write_buffer(
 pub fn Queue::write_texture_rgba8_2d(
   self : Queue,
   texture : Texture,
-  width : UInt,
-  height : UInt,
+  width : UInt32,
+  height : UInt32,
   data : Bytes,
 ) -> Unit {
   let row_bytes = (width * 4U).reinterpret_as_int()
@@ -255,10 +255,10 @@ pub fn Queue::write_texture_rgba8_2d(
 pub fn Queue::write_texture_rgba8_2d_mip_layer(
   self : Queue,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
-  width : UInt,
-  height : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
   data : Bytes,
 ) -> Unit {
   let row_bytes = (width * 4U).reinterpret_as_int()
@@ -296,9 +296,9 @@ pub fn Queue::write_texture_rgba8_2d_mip_layer(
 pub fn Queue::write_texture_2d_bytes_per_pixel(
   self : Queue,
   texture : Texture,
-  width : UInt,
-  height : UInt,
-  bytes_per_pixel : UInt,
+  width : UInt32,
+  height : UInt32,
+  bytes_per_pixel : UInt32,
   data : Bytes,
 ) -> Unit {
   let row_bytes = (width * bytes_per_pixel).reinterpret_as_int()
@@ -335,11 +335,11 @@ pub fn Queue::write_texture_2d_bytes_per_pixel(
 pub fn Queue::write_texture_2d_bytes_per_pixel_mip_layer(
   self : Queue,
   texture : Texture,
-  mip_level : UInt,
-  array_layer : UInt,
-  width : UInt,
-  height : UInt,
-  bytes_per_pixel : UInt,
+  mip_level : UInt32,
+  array_layer : UInt32,
+  width : UInt32,
+  height : UInt32,
+  bytes_per_pixel : UInt32,
   data : Bytes,
 ) -> Unit {
   let row_bytes = (width * bytes_per_pixel).reinterpret_as_int()
@@ -381,7 +381,7 @@ pub fn Queue::write_texture_ptr(
   data : Bytes,
   data_layout : @c.WGPUTexelCopyBufferLayoutPtr,
   write_size : @c.WGPUExtent3DPtr,
-  data_size? : UInt64 = 0UL,
+  data_size~ : UInt64 = 0UL,
 ) -> Unit {
   let size = if data_size == 0UL {
     data.length().to_uint64()

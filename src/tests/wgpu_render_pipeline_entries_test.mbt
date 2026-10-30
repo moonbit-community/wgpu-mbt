@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-fn bucket_u8(x : UInt) -> String {
+fn bucket_u8(x : UInt32) -> String {
   if x <= 16U {
     "zero"
   } else if x >= 239U {
@@ -33,7 +33,7 @@ test "wgpu render pipeline: custom entry points via descriptor builder" {
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };
@@ -104,7 +104,7 @@ test "wgpu render pipeline: descriptor builder replaces modules and primitive fl
   let view = tex.create_view()
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let wgsl_red : String =
     #|struct VSOut { @builtin(position) pos: vec4<f32> };

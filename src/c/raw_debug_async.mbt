@@ -28,16 +28,16 @@ pub extern "C" fn set_pipeline_async_enabled(enabled : Bool) -> Unit = "mbt_wgpu
 pub extern "C" fn set_compilation_info_enabled(enabled : Bool) -> Unit = "mbt_wgpu_set_compilation_info_enabled"
 
 ///|
-pub extern "C" fn pipeline_async_enabled_u32() -> UInt = "mbt_wgpu_pipeline_async_enabled_u32"
+pub extern "C" fn pipeline_async_enabled_u32() -> UInt32 = "mbt_wgpu_pipeline_async_enabled_u32"
 
 ///|
-pub extern "C" fn compilation_info_enabled_u32() -> UInt = "mbt_wgpu_compilation_info_enabled_u32"
+pub extern "C" fn compilation_info_enabled_u32() -> UInt32 = "mbt_wgpu_compilation_info_enabled_u32"
 
 ///|
-pub extern "C" fn pipeline_async_availability_u32() -> UInt = "mbt_wgpu_pipeline_async_availability_u32"
+pub extern "C" fn pipeline_async_availability_u32() -> UInt32 = "mbt_wgpu_pipeline_async_availability_u32"
 
 ///|
-pub extern "C" fn compilation_info_availability_u32() -> UInt = "mbt_wgpu_compilation_info_availability_u32"
+pub extern "C" fn compilation_info_availability_u32() -> UInt32 = "mbt_wgpu_compilation_info_availability_u32"
 
 ///|
 #borrow(label)
@@ -261,22 +261,22 @@ pub extern "C" fn device_create_render_pipeline_async_sync_ptr_strict(
 ) -> RenderPipeline = "mbt_wgpu_device_create_render_pipeline_async_sync_ptr_strict"
 
 ///|
-pub extern "C" fn pipeline_async_last_status_u32() -> UInt = "mbt_wgpu_pipeline_async_last_status_u32"
+pub extern "C" fn pipeline_async_last_status_u32() -> UInt32 = "mbt_wgpu_pipeline_async_last_status_u32"
 
 ///|
-pub extern "C" fn pipeline_async_last_error_kind_u32() -> UInt = "mbt_wgpu_pipeline_async_last_error_kind_u32"
+pub extern "C" fn pipeline_async_last_error_kind_u32() -> UInt32 = "mbt_wgpu_pipeline_async_last_error_kind_u32"
 
 ///|
-pub extern "C" fn compilation_info_last_status_u32() -> UInt = "mbt_wgpu_compilation_info_last_status_u32"
+pub extern "C" fn compilation_info_last_status_u32() -> UInt32 = "mbt_wgpu_compilation_info_last_status_u32"
 
 ///|
-pub extern "C" fn compilation_info_last_error_kind_u32() -> UInt = "mbt_wgpu_compilation_info_last_error_kind_u32"
+pub extern "C" fn compilation_info_last_error_kind_u32() -> UInt32 = "mbt_wgpu_compilation_info_last_error_kind_u32"
 
 ///|
 pub extern "C" fn shader_module_get_compilation_info_sync_status_u32(
   instance : Instance,
   shader_module : ShaderModule,
-) -> UInt = "mbt_wgpu_shader_module_get_compilation_info_sync_status_u32"
+) -> UInt32 = "mbt_wgpu_shader_module_get_compilation_info_sync_status_u32"
 
 ///|
 pub extern "C" fn shader_module_get_compilation_info_sync_new(
@@ -290,59 +290,61 @@ pub extern "C" fn compilation_info_free(info : OpaquePtr) -> Unit = "mbt_wgpu_co
 
 ///|
 #borrow(info)
-pub extern "C" fn compilation_info_status_u32(info : OpaquePtr) -> UInt = "mbt_wgpu_compilation_info_status_u32"
+pub extern "C" fn compilation_info_status_u32(info : OpaquePtr) -> UInt32 = "mbt_wgpu_compilation_info_status_u32"
 
 ///|
 #borrow(info)
-pub extern "C" fn compilation_info_message_count_u32(info : OpaquePtr) -> UInt = "mbt_wgpu_compilation_info_message_count_u32"
+pub extern "C" fn compilation_info_message_count_u32(
+  info : OpaquePtr,
+) -> UInt32 = "mbt_wgpu_compilation_info_message_count_u32"
 
 ///|
 #borrow(info)
 pub extern "C" fn compilation_info_message_type_u32(
   info : OpaquePtr,
-  index : UInt,
-) -> UInt = "mbt_wgpu_compilation_info_message_type_u32"
+  index : UInt32,
+) -> UInt32 = "mbt_wgpu_compilation_info_message_type_u32"
 
 ///|
 #borrow(info)
 pub extern "C" fn compilation_info_message_line_num_u64(
   info : OpaquePtr,
-  index : UInt,
+  index : UInt32,
 ) -> UInt64 = "mbt_wgpu_compilation_info_message_line_num_u64"
 
 ///|
 #borrow(info)
 pub extern "C" fn compilation_info_message_line_pos_u64(
   info : OpaquePtr,
-  index : UInt,
+  index : UInt32,
 ) -> UInt64 = "mbt_wgpu_compilation_info_message_line_pos_u64"
 
 ///|
 #borrow(info)
 pub extern "C" fn compilation_info_message_offset_u64(
   info : OpaquePtr,
-  index : UInt,
+  index : UInt32,
 ) -> UInt64 = "mbt_wgpu_compilation_info_message_offset_u64"
 
 ///|
 #borrow(info)
 pub extern "C" fn compilation_info_message_length_u64(
   info : OpaquePtr,
-  index : UInt,
+  index : UInt32,
 ) -> UInt64 = "mbt_wgpu_compilation_info_message_length_u64"
 
 ///|
 #borrow(info)
 pub extern "C" fn compilation_info_message_utf8_len(
   info : OpaquePtr,
-  index : UInt,
+  index : UInt32,
 ) -> UInt64 = "mbt_wgpu_compilation_info_message_utf8_len"
 
 ///|
 #borrow(info, out)
 pub extern "C" fn compilation_info_message_utf8(
   info : OpaquePtr,
-  index : UInt,
+  index : UInt32,
   out : Bytes,
   out_len : UInt64,
 ) -> Bool = "mbt_wgpu_compilation_info_message_utf8"

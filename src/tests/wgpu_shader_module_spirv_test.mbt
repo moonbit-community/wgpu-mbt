@@ -13,7 +13,7 @@
 // limitations under the License.
 
 ///|
-fn u32_le_bytes(v : UInt) -> Bytes {
+fn u32_le_bytes(v : UInt32) -> Bytes {
   let b0 = (v & 0xFF).reinterpret_as_int().to_byte()
   let b1 = ((v >> 8) & 0xFF).reinterpret_as_int().to_byte()
   let b2 = ((v >> 16) & 0xFF).reinterpret_as_int().to_byte()
@@ -31,7 +31,7 @@ fn spirv_push_bytes(dst : Ref[Array[Byte]], src : Bytes) -> Unit {
 ///|
 // A small SPIR-V vertex shader module taken from wgpu-native vendored GLFW example.
 fn spirv_vertex_shader_bytes() -> Bytes {
-  let words : Array[UInt] = [
+  let words : Array[UInt32] = [
     0x07230203U, 0x00010000U, 0x00080007U, 0x00000018U, 0x00000000U, 0x00020011U,
     0x00000001U, 0x0006000bU, 0x00000001U, 0x4c534c47U, 0x6474732eU, 0x3035342eU,
     0x00000000U, 0x0003000eU, 0x00000000U, 0x00000001U, 0x0009000fU, 0x00000000U,
@@ -65,7 +65,7 @@ fn spirv_vertex_shader_bytes() -> Bytes {
     0x00000017U, 0x00000010U, 0x00000012U, 0x0003003eU, 0x00000017U, 0x00000015U,
     0x000100fdU, 0x00010038U,
   ]
-  let out : Ref[Array[Byte]] = @ref.new([])
+  let out : Ref[Array[Byte]] = Ref([])
   for i = 0; i < words.length(); i = i + 1 {
     spirv_push_bytes(out, u32_le_bytes(words[i]))
   }

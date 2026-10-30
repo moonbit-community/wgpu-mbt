@@ -31,7 +31,7 @@ test "wgpu generated handles: safe getters round-trip through raw descriptors" {
   let device = adapter.request_device_sync(instance)
   let buffer = device.create_buffer(
     size=16UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   inspect(buffer.size(), content="16")
 
@@ -54,19 +54,21 @@ test "wgpu generated handles: safe getters round-trip through raw descriptors" {
 
 ///|
 test "wgpu generated handles: buffer map_state follows repo-managed mapping" {
-  run_on_supported_native_platform(() => {
+  @tests.run_on_supported_native_platform(() => {
     let instance = @wgpu.Instance::create()
     let adapter = instance.request_adapter_sync()
     let device = adapter.request_device_sync(instance)
     let buffer = device.create_buffer(
       size=8UL,
-      usage=bu(@wgpu.BUFFER_USAGE_MAP_WRITE | @wgpu.BUFFER_USAGE_COPY_SRC),
+      usage=@tests.bu(
+        @wgpu.BUFFER_USAGE_MAP_WRITE | @wgpu.BUFFER_USAGE_COPY_SRC,
+      ),
       mapped_at_creation=true,
     )
     inspect(@wgpu_c.buffer_map_state_u32(buffer.get_map_state()), content="3")
     buffer.unmap()
     inspect(@wgpu_c.buffer_map_state_u32(buffer.get_map_state()), content="1")
-    buffer.map_write_sync(instance, 0UL, rgba_bytes(1U, 2U, 3U, 4U))
+    buffer.map_write_sync(instance, 0UL, @tests.rgba_bytes(1U, 2U, 3U, 4U))
     inspect(@wgpu_c.buffer_map_state_u32(buffer.get_map_state()), content="3")
     buffer.unmap_raw()
     inspect(@wgpu_c.buffer_map_state_u32(buffer.get_map_state()), content="1")
@@ -97,7 +99,7 @@ test "wgpu generated handles: add_ref keeps compute-side handles alive" {
 
   let buffer0 = device.create_buffer(
     size=4UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let buffer = buffer0.add_ref()
   buffer0.release()
@@ -187,15 +189,15 @@ test "wgpu generated handles: add_ref keeps render bundle path alive" {
 
   let vb0 = device.create_buffer(
     size=24UL,
-    usage=bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_VERTEX | @wgpu.BUFFER_USAGE_COPY_DST),
   )
   let vb = vb0.add_ref()
   vb0.release()
-  queue.write_buffer(vb, 0UL, vertices_pos2_fullscreen_tri_bytes())
+  queue.write_buffer(vb, 0UL, @tests.vertices_pos2_fullscreen_tri_bytes())
 
   let readback = device.create_buffer(
     size=256UL,
-    usage=bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
+    usage=@tests.bu(@wgpu.BUFFER_USAGE_MAP_READ | @wgpu.BUFFER_USAGE_COPY_DST),
   )
 
   let render_shader_wgsl : String =
